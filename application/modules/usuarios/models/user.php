@@ -16,7 +16,7 @@ class User extends CI_Model{
 	
 	private $data = array();
 	
-	private $table = 'usuario';
+	private $table = 'users';
 	
 	
 	
@@ -258,6 +258,76 @@ class User extends CI_Model{
 		return $this->data[0];
 		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+// Querys for logins
+	public function setLogin( $data = array() ) {
+		
+		
+		// If data in $_POST is empty return false
+		if( empty( $data ) ) return false;
+		
+			
+        $this->db->where( array( 'username'  => $data['username'], 'password'  => md5( $data['password'] ) )  );
+        $this->db->limit( 1 ); // Limit 1 record
+
+		// Get Resutls
+        $query = $this->db->get( $this->table );
+		
+		
+		
+		if ($query->num_rows() == 0) return false;
+ 	
+		
+		// Clean vars
+		unset( $this->data );
+
+		$this->data = array();
+		
+		
+		
+		// Getting data
+		foreach ($query->result() as $row) {
+
+			$this->data[] = array( 
+		    	'id' => $row->id,
+		    	'agency_id' => $row->agency_id,
+				'office_id' => $row->office_id,			
+				'name' => $row->name,
+				'lastname' => $row->lastname,
+				'agencia' => $row->agencia,
+				'email' => $row->email,
+				'working_since' => $row->working_since,
+				'disabled' => $row->disabled,
+		    	'date' => date( 'd-m-Y H:i:s', $row->date ),
+		    	'last_updated' => date( 'd-m-Y H:i:s', $row->last_updated )
+		    );
+
+		}
+
+		return $this->data;
+		
+   }	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 }

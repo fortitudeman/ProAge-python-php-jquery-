@@ -16,17 +16,12 @@
 class Usuarios extends CI_Controller {
 
 /**
- |	nav -> Setting User Navigate 
- |	session ->	User Session 
- |	userInfo -> Setting Info User 
- |	perm -> Setting User Perm Module 
+ |	sessions ->	Save User Session 
  |	data -> Setting Array list data
  *  view -> Set Config to render a view
  **/	
 	
-	public $session = '';
-	
-	public $perm = array();
+	public $sessions = '';
 	
 	public $data = array();
 	
@@ -40,49 +35,177 @@ class Usuarios extends CI_Controller {
 		parent::__construct();
 		
 				
-		/** Getting Info User **
+		/** Getting Info User **/
 		
 		$this->load->model( 'users' );
-		
-		$this->userInfo = $this->users->getInfo( $this->session->userdata('system') );
-		
-		/** Setting Perm **
-					
-		$this->load->model( 'modules' );
-		
-		$this->perm['status'] = $this->modules->user( 
-		
-				array( 'request' => 'status', 'field' => 'status', 'module' => $this->id, 'user' => $this->session->userdata('system')  )			
-		
-		);
-		
-		$this->perm['view'] = $this->modules->user( 
-		
-				array( 'request' => 'status', 'field' => 'view', 'module' => $this->id, 'user' => $this->session->userdata('system')  )			
-		
-		);
-		
-		$this->perm['create'] = $this->modules->user( 
-		
-				array( 'request' => 'status', 'field' => 'create', 'module' => $this->id, 'user' => $this->session->userdata('system')  )			
-		
-		);
-		
-		$this->perm['edit'] = $this->modules->user( 
-		
-				array( 'request' => 'status', 'field' => 'edit', 'module' => $this->id, 'user' => $this->session->userdata('system')  )			
-		
-		);
-		
-		$this->perm['delete'] = $this->modules->user( 
-		
-				array( 'request' => 'status', 'field' => 'delete', 'module' => $this->id, 'user' => $this->session->userdata('system')  )			
-		
-		);
-		*/
 				
+		// Get Session
+		$this->sessions = $this->session->userdata('system');
+				
+		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
+			
 	}
+	
+	
+// Login method	
+	public function login(){
+		
+		
+		if( !empty( $_POST ) ){
+						
+			// Validations
+			$this->form_validation->set_rules('username', 'Usuario', 'required|xxs_clean');
+			$this->form_validation->set_rules('password', 'Password', 'required|xxs_clean');
+			
+			// Run Validation
+			if ( $this->form_validation->run() == TRUE ){
+			
+				   
+				    
+					
+					// Load Model
+					$this->load->model( 'user' );
+					
+					
+					// Getting data for the user
+					$user = $this->user->setLogin( $this->input->post() );
+					
+					
+					// Validation for empty user, not exist
+					if( empty( $user ) ){ 
+												
+							// Set true message		
+							$this->session->set_flashdata( 'message', array( 
+								
+								'type' => false,	
+								'message' => 'Los datos que ingresaste no son correctos, verificalos.'
+											
+							));												
+							
+							
+							redirect( 'usuarios/login', 'refresh' );
+							
+							
+					}
+					
+					
+					
+					// Save Session
+					$this->session->set_userdata( array( 'system' => $user[0] ) );
+					
+					redirect( 'proages', 'refresh' );
+					
+					
+				}else{
+					
+					
+					// Set false message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => false,	
+						'message' => 'Debes de ingresar tu nombre de usuario y contraseña.'
+									
+					));												
+					
+					
+					redirect( 'usuarios/login', 'refresh' );
+						
+				}			
+			
+			exit;
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// Config view
+		$this->view = array(
+				
+		  'title' => 'Login',
+		  'css' => array(),
+		  'scripts' =>  array(
+		  		
+				'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			    '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			    '<script src="'.base_url().'scripts/config.js"></script>',	
+				'<script src="'.base_url().'usuarios/assets/scripts/md5.js"></script>',							
+				'<script src="'.base_url().'usuarios/assets/scripts/login.js"></script>'		
+				
+				
+		  ),
+		  'message' => $this->session->flashdata('message') // Return Message, true and false if have		  
+		  		
+		);
+				
+		// Render view 
+		$this->load->view( 'login', $this->view );	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
+// User logout	
+	public function logout(){
+	
+		
+		// Remove vars of user login
+		$this->session->unset_userdata( 'system' );
+		
+		
+		/*  
+			$this->session->unset_userdata( 'id' );
+			$this->session->unset_userdata( 'agency_id' );
+			$this->session->unset_userdata( 'office_id' );
+			$this->session->unset_userdata( 'name' );
+			$this->session->unset_userdata( 'lastname' );
+			$this->session->unset_userdata( 'agencia' );
+			$this->session->unset_userdata( 'email' );
+			$this->session->unset_userdata( 'working_since' );
+			$this->session->unset_userdata( 'disabled' );
+			$this->session->unset_userdata( 'date' );
+			$this->session->unset_userdata( 'last_updated' );
+		*/
+		
+		
+		redirect( 'usuaros/login', 'refresh' );
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 // Show all records	
 	public function index(){
