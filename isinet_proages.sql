@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version: 5.5.24)
-# Date: 2013-06-27 17:59:02
+# Date: 2013-06-28 12:05:57
 # Generator: MySQL-Front 5.3  (Build 4.4)
 
 /*!40101 SET NAMES utf8 */;
@@ -13,10 +13,10 @@ CREATE TABLE `actions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `label` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` int(11) NOT NULL,
+  `last_updated` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "actions"
@@ -35,10 +35,10 @@ CREATE TABLE `agencies` (
   `address` text CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `insurance` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `joined_since` date DEFAULT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "agencies"
@@ -55,10 +55,10 @@ CREATE TABLE `agent_uids` (
   `agent_id` int(11) NOT NULL,
   `type` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `uid` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "agent_uids"
@@ -78,10 +78,10 @@ CREATE TABLE `agents` (
   `birthdate` date DEFAULT NULL,
   `connection_date` date DEFAULT NULL,
   `license_expired_date` date DEFAULT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "agents"
@@ -97,10 +97,10 @@ CREATE TABLE `currencies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `label` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "currencies"
@@ -115,10 +115,10 @@ DROP TABLE IF EXISTS `folder`;
 CREATE TABLE `folder` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "folder"
@@ -133,10 +133,10 @@ DROP TABLE IF EXISTS `log_types`;
 CREATE TABLE `log_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "log_types"
@@ -156,10 +156,10 @@ CREATE TABLE `logs` (
   `ip` varchar(20) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `user_agent` text CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `referer` varchar(150) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "logs"
@@ -175,10 +175,10 @@ CREATE TABLE `modules` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `label` varchar(45) NOT NULL DEFAULT '',
-  `last_uploaded` int(11) NOT NULL,
+  `last_updated` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "modules"
@@ -194,10 +194,10 @@ DROP TABLE IF EXISTS `notification_types`;
 CREATE TABLE `notification_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "notification_types"
@@ -222,7 +222,7 @@ CREATE TABLE `notifications` (
   `unread` tinyint(4) NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "notifications"
@@ -239,10 +239,10 @@ CREATE TABLE `offices` (
   `agency_id` int(11) NOT NULL,
   `label` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "offices"
@@ -258,10 +258,10 @@ CREATE TABLE `payment_intervals` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `label` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "payment_intervals"
@@ -277,10 +277,10 @@ CREATE TABLE `payment_methods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `label` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "payment_methods"
@@ -298,10 +298,10 @@ CREATE TABLE `payments` (
   `currency_id` int(11) NOT NULL,
   `amount` int(11) NOT NULL,
   `payment_date` date NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "payments"
@@ -325,10 +325,10 @@ CREATE TABLE `policies` (
   `lastname_mother` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `year_premium` decimal(10,0) DEFAULT NULL,
   `expired_date` datetime DEFAULT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "policies"
@@ -345,7 +345,7 @@ CREATE TABLE `policies_vs_users` (
   `policy_id` int(11) NOT NULL,
   `percentage` int(11) NOT NULL,
   `since` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "policies_vs_users"
@@ -360,10 +360,10 @@ DROP TABLE IF EXISTS `product_group`;
 CREATE TABLE `product_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "product_group"
@@ -379,10 +379,10 @@ CREATE TABLE `products` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `product_group_id` int(11) NOT NULL,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "products"
@@ -402,10 +402,10 @@ CREATE TABLE `representatives` (
   `office_phone` varchar(13) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `office_ext` varchar(5) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `movile` varchar(13) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "representatives"
@@ -421,10 +421,10 @@ CREATE TABLE `sources` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `label` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "sources"
@@ -440,10 +440,10 @@ CREATE TABLE `user_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `label` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` int(11) NOT NULL,
+  `last_updated` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "user_roles"
@@ -467,10 +467,10 @@ CREATE TABLE `users` (
   `email` varchar(150) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `working_since` date NOT NULL,
   `disabled` tinyint(4) NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "users"
@@ -487,10 +487,10 @@ CREATE TABLE `users_role_vs_access` (
   `user_role_id` int(11) NOT NULL,
   `module_id` int(11) NOT NULL,
   `action_id` int(11) NOT NULL,
-  `last_uploaded` int(11) NOT NULL,
-  `date` int(11) NOT NULL,
+  `last_updated` datetime NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "users_role_vs_access"
@@ -511,10 +511,10 @@ CREATE TABLE `work_order` (
   `creation_date` datetime NOT NULL,
   `comments` text CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `duration` int(11) NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "work_order"
@@ -533,10 +533,10 @@ CREATE TABLE `work_order_history` (
   `field` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `original` text CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `new` text CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "work_order_history"
@@ -551,10 +551,10 @@ DROP TABLE IF EXISTS `work_order_status`;
 CREATE TABLE `work_order_status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "work_order_status"
@@ -571,10 +571,10 @@ CREATE TABLE `work_order_types` (
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `description` varchar(250) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `duration` int(11) NOT NULL,
-  `last_uploaded` datetime NOT NULL,
+  `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "work_order_types"
