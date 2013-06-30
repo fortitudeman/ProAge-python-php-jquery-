@@ -21,7 +21,7 @@ class Usuarios extends CI_Controller {
  *  view -> Set Config to render a view
  **/	
 	
-	public $sessions = '';
+	public $sessions = null;
 	
 	public $data = array();
 	
@@ -42,7 +42,7 @@ class Usuarios extends CI_Controller {
 		// Get Session
 		$this->sessions = $this->session->userdata('system');
 				
-		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
+		//if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
 			
 	}
 	
@@ -258,7 +258,13 @@ class Usuarios extends CI_Controller {
 				
 		  'title' => 'Usuarios',
 		  'css' => array(),
-		  'scripts' =>  array(),
+		  'scripts' =>  array(
+		  	  
+			  '<script src="'.base_url().'scripts/config.js"></script>',
+			  '<script src="'.base_url().'usuarios/assets/scripts/find.js"></script>'	
+			  
+			 
+		  ),
 		  'content' => 'usuarios/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  'data' => $this->user->all( $begin )		  
@@ -369,6 +375,65 @@ class Usuarios extends CI_Controller {
 		$this->load->view( 'index', $this->view );	
 	
 	}
+	
+	
+// Find for field name filter	
+	public function find(){  
+		
+		
+		// If is not ajax request redirect
+		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
+		
+		
+		// Load MOdel
+		$this->load->model( 'user' );
+		
+		
+		// Filter method
+		$this->data = $this->user->find(  $this->input->post( 'find' ) );
+		
+		
+		// If empty load all records again
+		if( empty( $this->data ) )
+			
+			$this->data = $this->user->all( 0 );
+		
+		
+		// Load Helper
+		$this->load->helper( 'user' );
+		
+		
+		
+		// Getting table
+		echo renderTable( $this->data );
+		
+		exit;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 // Update role	

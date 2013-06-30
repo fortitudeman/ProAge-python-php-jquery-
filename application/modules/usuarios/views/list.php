@@ -18,8 +18,17 @@
 
 <div>
     <ul class="breadcrumb">
+       
+		
         <li>
-            Usuarios
+            <a href="<?php echo base_url() ?>">Admin</a> <span class="divider">/</span>
+        </li>
+        <li>
+           <a href="<?php echo base_url() ?>usuarios.html">Users</a> <span class="divider">/</span>
+        </li>
+               
+        <li>
+            Overview
         </li>
     </ul>
 </div>
@@ -27,7 +36,7 @@
 <div class="row-fluid sortable">		
     <div class="box span12">
         <div class="box-header well" data-original-title>
-            <h2><i class="icon-user"></i> Usuarios</h2>
+            <h2></h2>
             <div class="box-icon">
                <a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-round"><i class="icon-plus"></i></a>
             </div>
@@ -45,7 +54,7 @@
                     <div class="alert alert-success">
                           <button type="button" class="close" data-dismiss="alert">×</button>
                           <img src="<?php echo base_url() ?>images/true.png" width="20" height="20" />
-                          <strong>Correcto: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
+                          <strong>Success: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
                     </div>
                 <?php endif; ?>
                
@@ -62,7 +71,28 @@
 			
 			<?php endif; ?>
             
-        
+           
+            
+            <table class="table">
+              <thead>
+                  <tr>
+                      <th>Search</th>
+                      <th colspan="2"><input type="text" id="find"/></th> 
+                      <th colspan="5"></th>
+                      <th><a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-link">Create</a></th>
+                      <th><a href="#" class="btn btn-link">Import XLS</a></th>
+                      <th><a href="#" class="btn btn-link">Esport XLS</a></th>
+                  </tr>
+              </thead>   
+              
+            </table>  
+        	
+            
+            
+             <div id="loading"></div>
+            
+            
+            
         
         	<?php if( !empty( $data ) ): ?>
             <table class="table table-striped table-bordered bootstrap-datatable datatable">
@@ -81,7 +111,7 @@
                       <th>Actions</th>
                   </tr>
               </thead>   
-              <tbody>
+              <tbody id="data">
                 <?php  foreach( $data as $value ):  ?>
                 <tr>
                 	<td class="center"><?php echo $value['clave'] ?></td>
@@ -92,8 +122,8 @@
                     <td class="center"><?php echo $value['apellidos'] ?></td>
                     <td class="center"><?php echo $value['email'] ?></td>
                     <td class="center"><?php echo $value['tipo'] ?></td>
-                    <td class="center"><?php echo $value['created'] ?></td>
-                    <td class="center"><?php echo $value['modified'] ?></td>
+                    <td class="center"><?php echo $value['date'] ?></td>
+                    <td class="center"><?php echo $value['last_updated'] ?></td>
                     <td class="center">
                         <a class="btn btn-success" href="<?php echo base_url() ?>usuarios/permisions/<?php echo $value['id'] ?>.html" title="Ver información completa">
                             <i class="icon-zoom-in icon-white"></i>         
@@ -117,7 +147,7 @@
 		  
 		  	<div class="alert alert-block">
                   <button type="button" class="close" data-dismiss="alert">×</button>
-                  <strong>Atención: </strong> No hay registros todavía, Agrega uno <a href="<?php echo base_url() ?>roles/create.html" class="btn btn-link">aquí</a>
+                  <strong>Warning: </strong> No records found, Add one <a href="<?php echo base_url() ?>roles/create.html" class="btn btn-link">here</a>
             </div>
 		  <?php endif; ?>
                            

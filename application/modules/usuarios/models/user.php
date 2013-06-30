@@ -188,8 +188,8 @@ class User extends CI_Model{
 				'agencia' => $row->agencia,
 				'email' => $row->email,
 				'tipo' => $row->tipo,
-		    	'created' => date( 'd-m-Y H:i:s', $row->created ),
-		    	'modified' => date( 'd-m-Y H:i:s', $row->modified )
+		    	'date' => date( 'd-m-Y H:i:s', $row->date ),
+		    	'last_updated' => date( 'd-m-Y H:i:s', $row->last_updated )
 		    );
 
 		}
@@ -199,23 +199,70 @@ class User extends CI_Model{
    }
 
 	
-	
-	
-	
-	
-	
-
-
-
-
-
-
 
 
 // Count records for pagination
 	public function record_count() {
         return $this->db->count_all( $this->table );
     }
+
+
+
+
+
+
+
+
+
+
+
+// FInd Method
+	public function find( $name =  null ) {
+		
+		
+		if( empty( $name ) ) return false;
+		
+       $this->db->like( $this->table, $name);
+
+		
+		if ($query->num_rows() == 0) return false;
+ 	
+		
+		// Clean vars
+		unset( $this->data );
+
+		$this->data = array();
+		
+		
+		
+		foreach ($query->result() as $row) {
+
+			$this->data[] = array( 
+		    	'id' => $row->id,
+		    	'clave' => $row->clave,
+				'folio_nacional' => $row->folio_nacional,
+				'folio_provicional' => $row->folio_provincial,				
+				'nombre' => $row->nombre,
+				'apellidos' => $row->apellidos,
+				'agencia' => $row->agencia,
+				'email' => $row->email,
+				'tipo' => $row->tipo,
+		    	'date' => date( 'd-m-Y H:i:s', $row->date ),
+		    	'last_updated' => date( 'd-m-Y H:i:s', $row->last_updated )
+		    );
+
+		}
+
+		return $this->data;
+		
+   }
+
+
+
+
+
+
+
 
 
 
