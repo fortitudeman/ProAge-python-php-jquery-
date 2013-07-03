@@ -273,12 +273,12 @@ class Rol extends CI_Model{
 				
 		if ($query->num_rows() == 0) return '';
  	
-		$ckeckboxes = '';
+		$checkbox = '';
 		
 		
 		foreach ($query->result() as $row)
 
-			$checkbox .= '<input type="checkbox" name="group[]" value="'.$row->id.'"> '.  $row->name;
+			$checkbox .= '<input type="checkbox" class="required roles" name="group[]" value="'.$row->id.'"> '.  $row->name.'<br>';
 		
 
 		return $checkbox;
