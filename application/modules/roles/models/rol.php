@@ -53,7 +53,7 @@ class Rol extends CI_Model{
 		$timestamp = strtotime( date( 'd-m-Y H:i:s' ) );
 		
 		// Set timestamp unix
-		$values['last_uploaded'] = $timestamp;
+		$values['last_updated'] = $timestamp;
 		$values['date'] = $timestamp;
 		
 			
@@ -104,7 +104,7 @@ class Rol extends CI_Model{
 		// Set timestamp unix
 		$timestamp = strtotime( date( 'd-m-Y H:i:s' ) );
 		
-		$values['last_uploaded'] = $timestamp;
+		$values['last_updated'] = $timestamp;
 					
 		
 		
@@ -160,7 +160,7 @@ class Rol extends CI_Model{
 	
 	public function all( $start = 0 ) {
 		
-        $this->db->limit( 2, $start );
+        $this->db->limit( 20, $start );
 
         $query = $this->db->get( $this->table );
 
@@ -183,7 +183,7 @@ class Rol extends CI_Model{
 		    	'name' => $row->name,
 				'label' => $row->label,
 		    	'date' => date( 'd-m-Y H:i:s', $row->date ),
-		    	'last_uploaded' => date( 'd-m-Y H:i:s', $row->last_uploaded )
+		    	'last_updated' => date( 'd-m-Y H:i:s', $row->last_updated )
 		    );
 
 		}
@@ -254,6 +254,57 @@ class Rol extends CI_Model{
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//  Getting Checkbox	
+	public function checkbox() {
+	
+	
+	    $query = $this->db->get( $this->table );
+				
+		if ($query->num_rows() == 0) return '';
+ 	
+		$ckeckboxes = '';
+		
+		
+		foreach ($query->result() as $row)
+
+			$checkbox .= '<input type="checkbox" name="group[]" value="'.$row->id.'"> '.  $row->name;
+		
+
+		return $checkbox;
+		
+   }
+   
+
+// Getting Selects    
+	public function options() {
+	
+	
+	    $query = $this->db->get( $this->table );
+				
+		if ($query->num_rows() == 0) return '';
+ 				
+		$options = '';
+		
+		
+		foreach ($query->result() as $row)
+
+			$options .= '<option value="'.$row->id.'"> '.  $row->name .'</option>';
+		
+
+		return $options;
+		
+   }
 
 }
 ?>

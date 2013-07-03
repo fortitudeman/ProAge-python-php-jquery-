@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version: 5.5.24)
-# Date: 2013-06-28 12:05:57
+# Date: 2013-07-02 19:29:06
 # Generator: MySQL-Front 5.3  (Build 4.4)
 
 /*!40101 SET NAMES utf8 */;
@@ -8,7 +8,6 @@
 # Source for table "actions"
 #
 
-DROP TABLE IF EXISTS `actions`;
 CREATE TABLE `actions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -27,7 +26,6 @@ CREATE TABLE `actions` (
 # Source for table "agencies"
 #
 
-DROP TABLE IF EXISTS `agencies`;
 CREATE TABLE `agencies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -49,7 +47,6 @@ CREATE TABLE `agencies` (
 # Source for table "agent_uids"
 #
 
-DROP TABLE IF EXISTS `agent_uids`;
 CREATE TABLE `agent_uids` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `agent_id` int(11) NOT NULL,
@@ -69,7 +66,6 @@ CREATE TABLE `agent_uids` (
 # Source for table "agents"
 #
 
-DROP TABLE IF EXISTS `agents`;
 CREATE TABLE `agents` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -92,7 +88,6 @@ CREATE TABLE `agents` (
 # Source for table "currencies"
 #
 
-DROP TABLE IF EXISTS `currencies`;
 CREATE TABLE `currencies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -111,7 +106,6 @@ CREATE TABLE `currencies` (
 # Source for table "folder"
 #
 
-DROP TABLE IF EXISTS `folder`;
 CREATE TABLE `folder` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -129,7 +123,6 @@ CREATE TABLE `folder` (
 # Source for table "log_types"
 #
 
-DROP TABLE IF EXISTS `log_types`;
 CREATE TABLE `log_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -147,7 +140,6 @@ CREATE TABLE `log_types` (
 # Source for table "logs"
 #
 
-DROP TABLE IF EXISTS `logs`;
 CREATE TABLE `logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `log_type_id` int(11) NOT NULL,
@@ -170,7 +162,6 @@ CREATE TABLE `logs` (
 # Source for table "modules"
 #
 
-DROP TABLE IF EXISTS `modules`;
 CREATE TABLE `modules` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -190,7 +181,6 @@ INSERT INTO `modules` VALUES (2,'Usuarios','',1372286547,1372286547);
 # Source for table "notification_types"
 #
 
-DROP TABLE IF EXISTS `notification_types`;
 CREATE TABLE `notification_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -208,7 +198,6 @@ CREATE TABLE `notification_types` (
 # Source for table "notifications"
 #
 
-DROP TABLE IF EXISTS `notifications`;
 CREATE TABLE `notifications` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `notification_type_id` int(11) NOT NULL,
@@ -233,7 +222,6 @@ CREATE TABLE `notifications` (
 # Source for table "offices"
 #
 
-DROP TABLE IF EXISTS `offices`;
 CREATE TABLE `offices` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `agency_id` int(11) NOT NULL,
@@ -253,7 +241,6 @@ CREATE TABLE `offices` (
 # Source for table "payment_intervals"
 #
 
-DROP TABLE IF EXISTS `payment_intervals`;
 CREATE TABLE `payment_intervals` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -272,7 +259,6 @@ CREATE TABLE `payment_intervals` (
 # Source for table "payment_methods"
 #
 
-DROP TABLE IF EXISTS `payment_methods`;
 CREATE TABLE `payment_methods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -291,7 +277,6 @@ CREATE TABLE `payment_methods` (
 # Source for table "payments"
 #
 
-DROP TABLE IF EXISTS `payments`;
 CREATE TABLE `payments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `policy_id` int(11) NOT NULL,
@@ -312,7 +297,6 @@ CREATE TABLE `payments` (
 # Source for table "policies"
 #
 
-DROP TABLE IF EXISTS `policies`;
 CREATE TABLE `policies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
@@ -339,7 +323,6 @@ CREATE TABLE `policies` (
 # Source for table "policies_vs_users"
 #
 
-DROP TABLE IF EXISTS `policies_vs_users`;
 CREATE TABLE `policies_vs_users` (
   `user_id` int(11) NOT NULL,
   `policy_id` int(11) NOT NULL,
@@ -356,7 +339,6 @@ CREATE TABLE `policies_vs_users` (
 # Source for table "product_group"
 #
 
-DROP TABLE IF EXISTS `product_group`;
 CREATE TABLE `product_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -374,7 +356,6 @@ CREATE TABLE `product_group` (
 # Source for table "products"
 #
 
-DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `product_group_id` int(11) NOT NULL,
@@ -393,7 +374,6 @@ CREATE TABLE `products` (
 # Source for table "representatives"
 #
 
-DROP TABLE IF EXISTS `representatives`;
 CREATE TABLE `representatives` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -401,7 +381,7 @@ CREATE TABLE `representatives` (
   `lastnames` varchar(150) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `office_phone` varchar(13) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `office_ext` varchar(5) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `movile` varchar(13) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `mobile` varchar(13) NOT NULL,
   `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
@@ -416,7 +396,6 @@ CREATE TABLE `representatives` (
 # Source for table "sources"
 #
 
-DROP TABLE IF EXISTS `sources`;
 CREATE TABLE `sources` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -435,7 +414,6 @@ CREATE TABLE `sources` (
 # Source for table "user_roles"
 #
 
-DROP TABLE IF EXISTS `user_roles`;
 CREATE TABLE `user_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -449,12 +427,12 @@ CREATE TABLE `user_roles` (
 # Data for table "user_roles"
 #
 
+INSERT INTO `user_roles` VALUES (1,'Agente','',1372810673,1372810673),(2,'Coordinador','',1372810735,1372810735),(3,'Gerente','',1372810751,1372810751),(4,'Director','',1372810758,1372810758),(5,'Administrador','',1372810768,1372810768);
 
 #
 # Source for table "users"
 #
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `agency_id` int(11) NOT NULL,
@@ -481,7 +459,6 @@ CREATE TABLE `users` (
 # Source for table "users_role_vs_access"
 #
 
-DROP TABLE IF EXISTS `users_role_vs_access`;
 CREATE TABLE `users_role_vs_access` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_role_id` int(11) NOT NULL,
@@ -501,7 +478,6 @@ CREATE TABLE `users_role_vs_access` (
 # Source for table "work_order"
 #
 
-DROP TABLE IF EXISTS `work_order`;
 CREATE TABLE `work_order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `policy_id` int(11) NOT NULL,
@@ -525,7 +501,6 @@ CREATE TABLE `work_order` (
 # Source for table "work_order_history"
 #
 
-DROP TABLE IF EXISTS `work_order_history`;
 CREATE TABLE `work_order_history` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `work_order_id` int(11) NOT NULL,
@@ -547,7 +522,6 @@ CREATE TABLE `work_order_history` (
 # Source for table "work_order_status"
 #
 
-DROP TABLE IF EXISTS `work_order_status`;
 CREATE TABLE `work_order_status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -565,7 +539,6 @@ CREATE TABLE `work_order_status` (
 # Source for table "work_order_types"
 #
 
-DROP TABLE IF EXISTS `work_order_types`;
 CREATE TABLE `work_order_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,

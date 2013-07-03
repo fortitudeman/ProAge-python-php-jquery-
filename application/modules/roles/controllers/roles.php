@@ -122,7 +122,7 @@ class Roles extends CI_Controller {
 		$config['num_tag_close'] = '</li>';					
 		$config['base_url'] = base_url().'roles/index/';
 		$config['total_rows'] = $this->rol->record_count();
-		$config['per_page'] = 2;
+		$config['per_page'] = 20;
 		$config['num_links'] = 5;
 		$config['uri_segment'] = 3;
 		$config['use_page_numbers'] = TRUE;

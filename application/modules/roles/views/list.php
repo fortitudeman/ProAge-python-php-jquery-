@@ -81,11 +81,8 @@
                     <td><?php echo $value['name'] ?></td>
                     <td><?php echo $value['label'] ?></td>
                     <td class="center"><?php echo $value['date'] ?></td>
-                    <td class="center"><?php echo $value['last_uploaded'] ?></td>
+                    <td class="center"><?php echo $value['last_updated'] ?></td>
                     <td class="center">
-                        <a class="btn btn-success" href="<?php echo base_url() ?>roles/permisions/<?php echo $value['id'] ?>.html" title="Ver y asignar permisos de este rol">
-                            <i class="icon-zoom-in icon-white"></i>         
-                        </a>
                         <a class="btn btn-info" href="<?php echo base_url() ?>roles/update/<?php echo $value['id'] ?>.html" title="Editar rol">
                             <i class="icon-edit icon-white"></i>            
                         </a>

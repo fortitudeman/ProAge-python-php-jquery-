@@ -19,7 +19,7 @@
 <div>
     <ul class="breadcrumb">
         <li>
-            <a href="<?php echo base_url() ?>roles.html">Role</a> <span class="divider">/</span>
+            <a href="<?php echo base_url() ?>roles.html">Rol</a> <span class="divider">/</span>
         </li>
         <li>
             Crear
