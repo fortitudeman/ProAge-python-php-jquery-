@@ -53,7 +53,7 @@ class Modulo extends CI_Model{
 		$timestamp = strtotime( date( 'd-m-Y H:i:s' ) );
 		
 		// Set timestamp unix
-		$values['last_uploaded'] = $timestamp;
+		$values['last_updated'] = $timestamp;
 		$values['date'] = $timestamp;
 		
 			
@@ -103,7 +103,7 @@ class Modulo extends CI_Model{
 		// Set timestamp unix
 		$timestamp = strtotime( date( 'd-m-Y H:i:s' ) );
 		
-		$values['last_uploaded'] = $timestamp;
+		$values['last_updated'] = $timestamp;
 					
 		
 		
@@ -182,7 +182,7 @@ class Modulo extends CI_Model{
 		    	'name' => $row->name,
 				'label' => $row->label,
 		    	'date' => date( 'd-m-Y H:i:s', $row->date ),
-		    	'last_uploaded' => date( 'd-m-Y H:i:s', $row->last_uploaded )
+		    	'last_updated' => date( 'd-m-Y H:i:s', $row->last_updated )
 		    );
 
 		}
