@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version: 5.5.24)
-# Date: 2013-07-02 19:29:06
+# Date: 2013-07-04 16:14:40
 # Generator: MySQL-Front 5.3  (Build 4.4)
 
 /*!40101 SET NAMES utf8 */;
@@ -421,7 +421,7 @@ CREATE TABLE `user_roles` (
   `last_updated` int(11) NOT NULL,
   `date` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "user_roles"
@@ -435,15 +435,12 @@ INSERT INTO `user_roles` VALUES (1,'Agente','',1372810673,1372810673),(2,'Coordi
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `agency_id` int(11) NOT NULL,
   `office_id` int(11) NOT NULL,
-  `user_role_id` int(11) NOT NULL,
+  `manager_id` int(11) NOT NULL,
+  `company_name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
   `username` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `password` varchar(250) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `lastname` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `email` varchar(150) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `working_since` date NOT NULL,
   `disabled` tinyint(4) NOT NULL,
   `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -475,14 +472,31 @@ CREATE TABLE `users_role_vs_access` (
 
 
 #
+# Source for table "users_vs_user_roles"
+#
+
+CREATE TABLE `users_vs_user_roles` (
+  `user_id` int(11) NOT NULL,
+  `user_role_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+#
+# Data for table "users_vs_user_roles"
+#
+
+
+#
 # Source for table "work_order"
 #
 
 CREATE TABLE `work_order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `policy_id` int(11) NOT NULL,
+  `product_group_id` int(11) NOT NULL,
   `work_order_type_id` int(11) NOT NULL,
   `work_order_status_id` int(11) NOT NULL,
+  `work_order_reason_id` int(11) NOT NULL,
+  `work_order_responsible_id` int(11) NOT NULL,
   `uid` varchar(250) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `creation_date` datetime NOT NULL,
   `comments` text CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -519,6 +533,40 @@ CREATE TABLE `work_order_history` (
 
 
 #
+# Source for table "work_order_reason"
+#
+
+CREATE TABLE `work_order_reason` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `last_updated` datetime NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+#
+# Data for table "work_order_reason"
+#
+
+
+#
+# Source for table "work_order_responsibles"
+#
+
+CREATE TABLE `work_order_responsibles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `last_updated` datetime NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+#
+# Data for table "work_order_responsibles"
+#
+
+
+#
 # Source for table "work_order_status"
 #
 
@@ -541,6 +589,7 @@ CREATE TABLE `work_order_status` (
 
 CREATE TABLE `work_order_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `patent_id` int(11) NOT NULL,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `description` varchar(250) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `duration` int(11) NOT NULL,
