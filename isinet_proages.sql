@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version: 5.5.24)
-# Date: 2013-07-04 16:14:40
+# Date: 2013-07-09 20:52:12
 # Generator: MySQL-Front 5.3  (Build 4.4)
 
 /*!40101 SET NAMES utf8 */;
@@ -69,9 +69,6 @@ CREATE TABLE `agent_uids` (
 CREATE TABLE `agents` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `name` varchar(150) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `lastnames` varchar(150) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
-  `birthdate` date DEFAULT NULL,
   `connection_date` date DEFAULT NULL,
   `license_expired_date` date DEFAULT NULL,
   `last_updated` datetime NOT NULL,
@@ -440,17 +437,21 @@ CREATE TABLE `users` (
   `company_name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
   `username` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `password` varchar(250) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
+  `name` varchar(150) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `lastnames` varchar(150) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
+  `birthdate` date DEFAULT NULL,
   `email` varchar(150) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `disabled` tinyint(4) NOT NULL,
   `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "users"
 #
 
+INSERT INTO `users` VALUES (1,0,0,'SOS','gerente','cf7d4bdd2afbb023f0b265b3e99ba1f9','Gerente','APP','2013-07-09','gerente@gmail.com',1,'2013-07-09 20:21:36','2013-07-09 20:51:17');
 
 #
 # Source for table "users_role_vs_access"
@@ -484,6 +485,7 @@ CREATE TABLE `users_vs_user_roles` (
 # Data for table "users_vs_user_roles"
 #
 
+INSERT INTO `users_vs_user_roles` VALUES (1,3);
 
 #
 # Source for table "work_order"
