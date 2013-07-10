@@ -147,7 +147,7 @@
 		  
 		  	<div class="alert alert-block">
                   <button type="button" class="close" data-dismiss="alert">×</button>
-                  <strong>Warning: </strong> No records found, Add one <a href="<?php echo base_url() ?>roles/create.html" class="btn btn-link">here</a>
+                  <strong>Warning: </strong> No records found, Add one <a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-link">here</a>
             </div>
 		  <?php endif; ?>
                            

@@ -16,10 +16,9 @@ class User extends CI_Model{
 	
 	private $data = array();
 	
-	private $table = 'users';
+	private $insertId;
 	
-	
-	
+		
 	public function __construct(){
 		
         parent::__construct();
@@ -27,40 +26,50 @@ class User extends CI_Model{
     }
 	
 
+/*
+ *	CRUD Functions, dynamic table.
+ **/
 
-// Add role method	
-	public function create( $values = array() ){
+
+// Add
+	public function create( $table = 'users', $values = array() ){
         
 		
-		if( empty( $values ) ) return false;
-			
-		
-		// Validation form not repear name
-		$this->db->
-					select()
-				  ->
-				   from( $this->table )	
-				  ->
-				   where( array( 'name' => $values['name'] ) );
-		
-		$query = $this->db->get();
-		
-		if( $query->num_rows > 0 ) return false;
-		
+		if( empty( $table ) or empty( $values ) ) return false;
 				
+		// Set timestamp unix
+		$timestamp = date( 'Y-m-d H:i:s' ) ;
 		
 		// Set timestamp unix
-		$timestamp = strtotime( date( 'd-m-Y H:i:s' ) );
+		$values['last_updated'] = $timestamp;
+		$values['date'] = $timestamp;
 		
-		// Set timestamp unix
-		$values['modified'] = $timestamp;
-		$values['created'] = $timestamp;
 		
 			
-		if( $this->db->insert( $this->table, $values ) )
+		if( $this->db->insert( $table, $values ) ){
+			
+			$this->insertId = $this->db->insert_id();
 			
 			return true;
-		else
+		
+		}else
+		
+			return false;
+       
+    }
+	
+	
+	public function create_banch( $table = '', $values = array() ){
+        
+		
+		if( empty( $table ) or empty( $values ) ) return false;
+				
+			
+		if( $this->db->insert_batch( $table, $values ) ){
+									
+			return true;
+		
+		}else
 		
 			return false;
        
@@ -74,41 +83,16 @@ class User extends CI_Model{
  |	Update
  **/ 
 
-    public function update( $id = 0, $values = array() ){
+    public function update( $table = 'users', $id = 0, $values = array() ){
         
-		if( empty( $values ) or empty( $id ) ) return false;
-			
-		unset( $this->data ); $this->data = array();
-		
-				
-		// Validation form not repear name
-		$this->db->
-					select()
-				  ->
-				   from( $this->table )	
-				  ->
-				   where( array( 'name' => $values['name'] ) )
-				  ->
-				   limit( 1 ) ;
-		
-		$query = $this->db->get();
-		
-		if( $query->num_rows > 0 ){
-				
-			foreach ($query->result() as $row)
-				
-				if( $id !=  $row->id ) return false;
-				
-		}
-			
+		if( empty( $table ) or empty( $values ) or empty( $id ) ) return false;
+					
 		// Set timestamp unix
 		$timestamp = strtotime( date( 'd-m-Y H:i:s' ) );
 		
 		$values['modified'] = $timestamp;
-					
 		
-		
-        if( $this->db->update( $this->table , $values, array( 'id' => $id ) ) )
+        if( $this->db->update( $table, $values, array( 'id' => $id ) ) )
 			
 			return true;
         
@@ -122,11 +106,11 @@ class User extends CI_Model{
 /**
  |	Remove 
  **/ 	
-	 public function delete( $id ){
+	 public function delete( $table = 'users', $id ){
         
-		if( empty( $id ) ) return false;
+		if( empty( $table ) or empty( $id ) ) return false;
 					   
-			if( $this->db->delete( $this->table, array('id' => $id ) ) )
+			if( $this->db->delete( $table, array('id' => $id ) ) )
 			
 					return true;
 			
@@ -142,8 +126,8 @@ class User extends CI_Model{
 
 
 
-
-
+// Return insert id
+	public function insert_id(){   return $this->insertId;  }
 
 
 
@@ -158,7 +142,7 @@ class User extends CI_Model{
  |	Getting All
  **/ 
 	
-	public function all( $start = 0 ) {
+	public function overview( $start = 0 ) {
 		
         $this->db->limit( 2, $start );
 
@@ -370,6 +354,32 @@ class User extends CI_Model{
 	
 	
 	
+
+// Get Selects
+	public function getSelectsGerentes(){
+		
+	
+		
+		$query = $this->db->query(' SELECT DISTINCT(users.name), users.id  
+									FROM `users_vs_user_roles` 
+									JOIN users ON users.id = `user_id` 
+									WHERE user_role_id=3;');
+						
+		
+		if ($query->num_rows() == 0) return false;
+ 	
+		
+		$options = '';	
+		
+		// Getting data
+		foreach ($query->result() as $row)
+			
+			$options .= '<option value="'.$row->id.'">'.$row->name.'</option>';
+			
+		
+		return $options;
+		
+	}	
 	
 	
 	

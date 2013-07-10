@@ -18,8 +18,13 @@
 <div>
     <ul class="breadcrumb">
         <li>
-            <a href="<?php echo base_url() ?>roles.html">Usuarios</a> <span class="divider">/</span>
+            <a href="<?php echo base_url() ?>">Admin</a> <span class="divider">/</span>
         </li>
+        
+        <li>
+            <a href="<?php echo base_url() ?>usuarios.html">Usuarios</a> <span class="divider">/</span>
+        </li>
+        
         <li>
             Crear
         </li>
@@ -29,7 +34,7 @@
 <div class="row-fluid sortable">
     <div class="box span12">
         <div class="box-header well" data-original-title>
-            <h2><i class="icon-edit"></i> Agregar nuevo usuario</h2>
+            <h2></h2>
             <div class="box-icon">
                 
             </div>
@@ -43,7 +48,7 @@
             
             <?php $validation = validation_errors(); ?>
             
-            <?php if( !empty( $message ) ): ?>
+            <?php if( !empty( $validation ) ): ?>
             <div class="alert alert-error">
                   <button type="button" class="close" data-dismiss="alert">×</button>
                   <strong>Error: </strong> <?php  echo $validation; // Show Dinamical message error ?>
@@ -53,105 +58,203 @@
             
             
         
-            <form id="form" action="<?php echo base_url() ?>roles/create.html" class="form-horizontal" method="post">
+            <form id="form" action="<?php echo base_url() ?>usuarios/create.html" class="form-horizontal" method="post">
                 <fieldset>
                   
+                  <div class="control-group error">
+                    <label class="control-label" for="inputError">Rol</label>
+                    <div class="controls">
+                      
+                      <?php echo $group ?>
+                      
+                    </div>
+                  </div>
+                                                      
                   
                   <div class="control-group error">
                     <label class="control-label" for="inputError">Persona</label>
                     <div class="controls">
-                      <input type="radio" value="fisica" name="persona" checked="checked" />&nbsp;&nbsp;Física
-                      <input type="radio" value="moral" name="persona" />&nbsp;&nbsp;Moral
+                      <input type="radio" value="fisica" name="persona" class="persona" />&nbsp;&nbsp;Física
+                      <input type="radio" value="moral" name="persona"  class="persona" />&nbsp;&nbsp;Moral
                     </div>
                   </div>
                   
                   
-                  <div class="control-group error">
-                    <label class="control-label" for="inputError">Tipo</label>
+                  
+                  
+                  <div class="control-group error input-agente">
+                    <label class="control-label" for="inputError">En proceso de conexión</label>
                     <div class="controls">
-                      <select class="input-xlarge focused required" id="tipo" name="tipo">
-                      	<option value="">Seleccione</option>
-                        
-                        <option value="administrador">Administrador</option>
-                        <option value="gerente">Gerente</option>
-                        <option value="agente">Agente</option>
-                        <option value="coordinador">Coordinador</option>
-                        <option value="director">Director</option>
-                        
-                      </select>
+                      <input type="radio" value="1" name="type" class="agente" checked="checked"/>&nbsp;&nbsp;Si
+                      <input type="radio" value="2" name="type" class="agente"  />&nbsp;&nbsp;No
                     </div>
                   </div>
-                  <!--
                   
                   
                   
                   
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  
-                  <div class="control-group error">
+                  <div class="control-group error input-novel-agente">
                     <label class="control-label" for="inputError">Clave</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="clave" name="clave" type="text">
                     </div>
                   </div>
                   
-                  <div class="control-group error">
+                  <div class="control-group error input-novel-agente">
                     <label class="control-label" for="inputError">Folio Nacional</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="folio_nacional" name="folio_nacional" type="text">
+                      <input class="input-xlarge focused required" name="folio_nacional[]" type="text"> 
+                       <a href="javascript:void(0)" id="folio_nacional_add" class="btn btn-link" >+</a>
+                      <div id="folio_nacional_fields"></div>
                     </div>
                   </div>
                   
                   
-                  <div class="control-group error">
+                  <div class="control-group error input-novel-agente">
                     <label class="control-label" for="inputError">Folio Provicional</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="folio_provincial" name="folio_provincial" type="text">
+                      <input class="input-xlarge focused required" name="folio_provincial[]" type="text">
+                       <a href="javascript:void(0)" id="folio_provicional_add" class="btn btn-link" >+</a>
+                      <div id="folio_provicional_fields"></div>
                     </div>
                   </div>
                   
-                                    
-                  <div class="control-group error">
+                  
+                  
+                  
+                 <div class="control-group error input-agente">
+                    <label class="control-label" for="inputError">Fecha de conexión</label>
+                    <div class="controls">
+                      <input class="input-xlarge focused required" id="connection_date" name="connection_date" type="text" readonly="readonly">
+                    </div>
+                  </div>
+                  
+                  
+                  <div class="control-group error input-agente">
+                    <label class="control-label" for="inputError">Expiración de licencia</label>
+                    <div class="controls">
+                      <input class="input-xlarge focused required" id="license_expired_date" name="license_expired_date" type="text" readonly="readonly">
+                    </div>
+                  </div>
+                 
+                 
+                 
+                 
+                 
+                 
+                 <div class="control-group error input-agente">
+                    <label class="control-label" for="inputError">Gerente</label>
+                    <div class="controls">
+                      <select class="input-xlarge focused required" id="manager_id" name="manager_id">
+                      	<option value="">Seleccione</option>
+                        <?php echo $gerentes ?>
+                      </select>
+                    </div>
+                  </div>
+                 
+                 
+                 
+                 <div class="control-group error input-fisica input-moral">
+                    <label class="control-label" for="inputError"> Nombre de compania:</label>
+                    <div class="controls">
+                      <input class="input-xlarge focused required" id="company_name" name="company_name" type="text">
+                    </div>
+                  </div>
+                
+                 
+                 
+                 
+                 <div class="control-group error input-fisica">
                     <label class="control-label" for="inputError">Nombre</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="nombre" name="nombre" type="text">
+                      <input class="input-xlarge focused required" id="name" name="name" type="text">
                     </div>
                   </div>
                   
                   
-                  <div class="control-group error">
+                  <div class="control-group error input-fisica">
                     <label class="control-label" for="inputError">Apellidos</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="apellidos" name="apellidos" type="text">
+                      <input class="input-xlarge focused required" id="lastname" name="lastname" type="text">
                     </div>
                   </div>
-                                    
-                  <div class="control-group error">
-                    <label class="control-label" for="inputError">Correo</label>
+                 
+                  
+                  <div class="control-group error input-fisica">
+                    <label class="control-label" for="inputError">Fecha de nacimiento</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="email" name="email" type="text">
+                      <input class="input-xlarge focused required" id="birthdate" name="birthdate" type="text" readonly="readonly">
                     </div>
                   </div>
+                	
+                   
+                   <!-- ¨Persona Moral Settings -->
+                   <fieldset class="block-moral">
+                   
+                   	   <a href="javascript:void(0)" id="moral_add" class="btn btn-link input-moral pull-right" >+</a>
+                       
+                       <div class="control-group error input-moral">
+                        <label class="control-label" for="inputError">Nombre</label>
+                        <div class="controls">
+                          <input class="input-xlarge focused required" name="name_r[]" type="text">
+                        </div>
+                      </div>
+                      
+                      
+                      <div class="control-group error input-moral">
+                        <label class="control-label" for="inputError">Apellidos</label>
+                        <div class="controls">
+                          <input class="input-xlarge focused required" name="lastname_r[]" type="text">
+                        </div>
+                      </div>
+                       
+                       
+                     
+                       <div class="control-group error input-moral">
+                        <label class="control-label" for="inputError">Teléfono oficina</label>
+                        <div class="controls">
+                          <input class="input-xlarge focused required" name="office_phone[]" type="text">
+                        </div>
+                      </div>
+                      
+                       <div class="control-group error input-moral">
+                        <label class="control-label" for="inputError">Extensión</label>
+                        <div class="controls">
+                          <input class="input-xlarge focused required" name="office_ext[]" type="text">
+                        </div>
+                      </div>
+                      
+                      <div class="control-group error input-moral">
+                        <label class="control-label" for="inputError">Teléfono movil</label>
+                        <div class="controls">
+                          <input class="input-xlarge focused required" name="mobile[]" type="text">
+                        </div>
+                      </div>
+                  
+                      <div id="moral-fields" class="input-moral"></div>
+                  
+                  </fieldset>
+                  
+                  
+                   
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                 
                   
                                  
                   
                   <div class="control-group error">
                     <label class="control-label" for="inputError">Usuario</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="usuario" name="usuario" type="text" placeholder="El nombre de rol">
+                      <input class="input-xlarge focused required" id="username" name="username" type="text">
                     </div>
                   </div>
                  
@@ -159,83 +262,35 @@
                  <div class="control-group error">
                     <label class="control-label" for="inputError">Contraseña</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="password" name="password" type="text">
-                    </div>
-                  </div>
-                 
-                 
-                 
-                 
-                  
-                  
-                  <div class="control-group error">
-                    <label class="control-label" for="inputError">Estatus</label>
-                    <div class="controls">
-                      <select class="input-xlarge focused required" id="estatus" name="estatus">
-                      	<option value="">Seleccione</option>
-                        <option value="1">Agente vigente</option>
-                        <option value="2">Agente cancelado</option>
-                      </select>
-                    </div>
-                  </div>
-                 
-                 
-                 <div class="control-group error">
-                    <label class="control-label" for="inputError">Tipo de Persona</label>
-                    <div class="controls">
-                      <select class="input-xlarge focused required" id="persona" name="persona">
-                      	<option value="">Seleccione</option>
-                        <option value="1">Persona Fisica</option>
-                        <option value="2">Persona Moral</option>
-                      </select>
-                    </div>
-                  </div>
-                 
-                 
-                  <div class="control-group error">
-                    <label class="control-label" for="inputError">Fecha nacimiento</label>
-                    <div class="controls">
-                      <input class="input-xlarge focused required" id="fecha_nacimiento" name="fecha_nacimiento" type="text">
+                      <input class="input-xlarge focused required" id="password" name="password" type="password">
                     </div>
                   </div>
                   
                   <div class="control-group error">
-                    <label class="control-label" for="inputError">Fecha vencimiento cédula</label>
+                    <label class="control-label" for="inputError">Correo</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="fecha_vencimiento" name="fecha_vencimiento" type="text">
+                      <input class="input-xlarge focused required email" id="email" name="email" type="text">
                     </div>
                   </div>
                   
                   
                   <div class="control-group error">
-                    <label class="control-label" for="inputError">Representante</label>
+                    <label class="control-label" for="inputError">Activar</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="representante" name="representante" type="text">
-                    </div>
-                  </div>
-                 
-                 
-                 
-                 <div class="control-group error">
-                    <label class="control-label" for="inputError">Teléfono oficina</label>
-                    <div class="controls">
-                      <input class="input-xlarge focused required" id="telefono_oficina" name="telefono_oficina" type="text">
+                      <input type="radio" value="1" name="disabled" checked="checked"/>&nbsp;&nbsp;Si
+                      <input type="radio" value="2" name="disabled" />&nbsp;&nbsp;No
                     </div>
                   </div>
                   
                   
-                  <div class="control-group error">
-                    <label class="control-label" for="inputError">Teléfono movil</label>
-                    <div class="controls">
-                      <input class="input-xlarge focused required" id="telefono_movil" name="telefono_movil" type="text">
-                    </div>
-                  </div>
-                 -->
-                 
-                 
+                  
+                  
+                  
+                  
+                                    
                   <div id="actions-buttons-forms" class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <button class="btn" onclick="history.back()">Cancelar</button>
+                    <button class="btn" onclick="javascript: history.back()">Cancelar</button>
                   </div>
                 </fieldset>
               </form>
