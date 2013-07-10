@@ -139,7 +139,7 @@ $( document ).ready(function() {
 	
 	
 	// Field Dates
-	$( '#birthdate' ).datepicker({ dateFormat: "yy-mm-dd" });
+	$( '#birthdate' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });
 	$( '#connection_date' ).datepicker({ dateFormat: "yy-mm-dd" });
 	$( '#license_expired_date' ).datepicker({ dateFormat: "yy-mm-dd" });
 	
