@@ -245,7 +245,7 @@ class Usuarios extends CI_Controller {
 		$config['num_tag_close'] = '</li>';					
 		$config['base_url'] = base_url().'usuarios/index/';
 		$config['total_rows'] = $this->user->record_count();
-		$config['per_page'] = 2;
+		$config['per_page'] = 30;
 		$config['num_links'] = 5;
 		$config['uri_segment'] = 3;
 		$config['use_page_numbers'] = TRUE;
@@ -267,7 +267,7 @@ class Usuarios extends CI_Controller {
 		  ),
 		  'content' => 'usuarios/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'data' => $this->user->all( $begin )		  
+		  'data' => $this->user->overview( $begin )		  
 		  		
 		);
 				

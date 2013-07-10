@@ -101,40 +101,28 @@
                       <th>Clave</th>
                       <th>Folio Nal</th> 
                       <th>Folio Prov</th>
-                      <th>Gerencia</th>
+                      <th>Gerente</th>
                       <th>Nombre</th>
-                      <th>Aepllidos</th>
+                      <th>Apellidos</th>
                       <th>Correo</th>
                       <th>Tipo</th>
                       <th>Creado</th>
                       <th>Última modificación</th>
-                      <th>Actions</th>
                   </tr>
               </thead>   
               <tbody id="data">
                 <?php  foreach( $data as $value ):  ?>
                 <tr>
                 	<td class="center"><?php echo $value['clave'] ?></td>
-                    <td class="center"><?php echo $value['folio_nacional'] ?></td>
-                    <td class="center"><?php echo $value['folio_provicional'] ?></td>
-                    <td class="center"><?php echo $value['clave'] ?></td>
-                    <td class="center"><?php echo $value['nombre'] ?></td>
-                    <td class="center"><?php echo $value['apellidos'] ?></td>
+                    <td class="center"><?php echo $value['national'] ?></td>
+                    <td class="center"><?php echo $value['provincial'] ?></td>
+                    <td class="center"><?php echo $value['manager_id'] ?></td>
+                    <td class="center"><?php echo $value['name'] ?></td>
+                    <td class="center"><?php echo $value['lastnames'] ?></td>
                     <td class="center"><?php echo $value['email'] ?></td>
                     <td class="center"><?php echo $value['tipo'] ?></td>
                     <td class="center"><?php echo $value['date'] ?></td>
                     <td class="center"><?php echo $value['last_updated'] ?></td>
-                    <td class="center">
-                        <a class="btn btn-success" href="<?php echo base_url() ?>usuarios/permisions/<?php echo $value['id'] ?>.html" title="Ver información completa">
-                            <i class="icon-zoom-in icon-white"></i>         
-                        </a>
-                        <a class="btn btn-info" href="<?php echo base_url() ?>usuarios/update/<?php echo $value['id'] ?>.html" title="Editar Registro">
-                            <i class="icon-edit icon-white"></i>            
-                        </a>
-                        <a class="btn btn-danger" href="<?php echo base_url() ?>usuarios/delete/<?php echo $value['id'] ?>.html" title="Eliminar Registro">
-                            <i class="icon-trash icon-white"></i> 
-                        </a>
-                    </td>
                 </tr>
                 <?php endforeach;  ?>                
               </tbody>
