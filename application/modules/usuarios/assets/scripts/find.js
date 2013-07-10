@@ -17,21 +17,19 @@ $( document ).ready(function() {
 	$( '#find' ).bind( 'blur', function(){ 
 		
 		
-		if( this.value.length  == 0 ) return false;
-		
 		var Data = { find: this.value };
 				
 		
 		$.ajax({
 
-			url:  Config.base_url()+'usuarios/find',
+			url:  Config.base_url()+'usuarios/find.html',
 			type: "POST",
 			data: Data,
 			cache: false,
 			async: false,
 			beforeSend: function(){
 				
-				$( '#loading' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-1.gif">    Wait please' );
+				$( '#loading' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-1.gif">   Cargando...' );
 				
 			},
 			success: function(data){

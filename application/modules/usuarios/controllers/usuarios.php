@@ -661,6 +661,18 @@ class Usuarios extends CI_Controller {
 	}
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 // Find for field name filter	
 	public function find(){  
 		
@@ -675,12 +687,11 @@ class Usuarios extends CI_Controller {
 		
 		// Filter method
 		$this->data = $this->user->find(  $this->input->post( 'find' ) );
-		
-		
+				
 		// If empty load all records again
 		if( empty( $this->data ) )
 			
-			$this->data = $this->user->all( 0 );
+			$this->data = $this->user->overview( 0 );
 		
 		
 		// Load Helper

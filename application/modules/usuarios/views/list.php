@@ -24,7 +24,7 @@
             <a href="<?php echo base_url() ?>">Admin</a> <span class="divider">/</span>
         </li>
         <li>
-           <a href="<?php echo base_url() ?>usuarios.html">Users</a> <span class="divider">/</span>
+           <a href="<?php echo base_url() ?>usuarios.html">Usuarios</a> <span class="divider">/</span>
         </li>
                
         <li>
@@ -76,22 +76,18 @@
             <table class="table">
               <thead>
                   <tr>
-                      <th>Search</th>
+                      <th>Buscar</th>
                       <th colspan="2"><input type="text" id="find"/></th> 
                       <th colspan="5"></th>
-                      <th><a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-link">Create</a></th>
-                      <th><a href="#" class="btn btn-link">Import XLS</a></th>
-                      <th><a href="#" class="btn btn-link">Esport XLS</a></th>
+                      <th><a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-link">Crear</a></th>
+                      <th><a href="#" class="btn btn-link">Importar XLS</a></th>
+                      <th><a href="#" class="btn btn-link">Exportar XLS</a></th>
                   </tr>
               </thead>   
               
             </table>  
         	
-            
-            
-             <div id="loading"></div>
-            
-            
+            <div id="loading"></div>
             
         
         	<?php if( !empty( $data ) ): ?>
