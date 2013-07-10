@@ -14,6 +14,18 @@ $this->load->view('admin/header', array( 'no_visible_elements' => true )); ?>
 					</div>
                     
                     
+                    <?php // Return Message error ?>
+            
+					<?php $validation = validation_errors(); ?>
+                    
+                    <?php if( !empty( $validation ) ): ?>
+                    <div class="alert alert-error">
+                          <button type="button" class="close" data-dismiss="alert">×</button>
+                          <strong>Error: </strong> <?php  echo $validation; // Show Dinamical message error ?>
+                    </div>
+                    <?php endif; ?>
+                    
+                    
                     <?php // Show Messages ?>
             
 					<?php if( isset( $message['type'] ) ): ?>
@@ -55,7 +67,7 @@ $this->load->view('admin/header', array( 'no_visible_elements' => true )); ?>
 							<div class="clearfix"></div>
 
 							<div class="input-prepend">
-							<label class="remember" for="remember"><input type="checkbox" id="remember" />Remember me</label>
+								<!--<label class="remember" for="remember"><input type="checkbox" id="remember" />Remember me</label>-->
 							</div>
 							<div class="clearfix"></div>
 

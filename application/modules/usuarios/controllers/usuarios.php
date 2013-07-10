@@ -42,7 +42,7 @@ class Usuarios extends CI_Controller {
 		// Get Session
 		$this->sessions = $this->session->userdata('system');
 				
-		//if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
+		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
 			
 	}
 	
@@ -93,7 +93,7 @@ class Usuarios extends CI_Controller {
 					// Save Session
 					$this->session->set_userdata( array( 'system' => $user[0] ) );
 					
-					redirect( 'proages', 'refresh' );
+					redirect( 'home', 'refresh' );
 					
 					
 				}else{
