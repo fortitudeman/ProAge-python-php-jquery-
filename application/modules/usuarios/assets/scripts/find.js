@@ -57,9 +57,14 @@ $( document ).ready(function() {
 	
 	// Export Info
 	$( '#busactual' ).bind( 'click', function(){
-		$('#typeexport').val('busactual');
-		$( '#search' ).attr( 'action', $( '#pag' ) .val() );
-		$( '#search' ).submit();
+		
+		if( $( '#find' ) .val().length > 0 ){
+			$('#typeexport').val('busactual');
+			$( '#search' ).attr( 'action', $( '#pag' ) .val() );
+			$( '#search' ).submit();
+		}else{
+			alert( 'El campo de busqueda esta vacio' );
+		}
 	});
 	
 	

@@ -511,7 +511,7 @@ class User extends CI_Model{
 		
 		
 		// SELECT id, name, lastnames, email FROM `users`;
-		$this->db->select( 'id, name, lastnames, email, manager_id, date, last_updated' );
+		$this->db->select();
 		$this->db->from( 'users' );
         $this->db->limit( 30, $start );
 		
@@ -677,11 +677,15 @@ class User extends CI_Model{
 			
 			
 			$this->data[] = array( 
-		    	'id' => $row->id,
-		    	'name' => $row->name,
-				'lastnames' => $row->lastnames,
-				'email' => $row->email,				
+		    	'office_id' => $row->office_id,
 				'manager_id' => $manager,
+				'company_name' => $row->company_name,
+				'username' => $row->username,
+				'name' => $row->name,
+				'lastnames' => $row->lastnames,
+				'birthdate' => $row->birthdate,				
+				'email' => $row->email,		
+				'disabled' => $row->disabled,
 				'tipo' => $tipo,
 				'clave' => $clave,
 				'national' => $national,
@@ -872,11 +876,15 @@ class User extends CI_Model{
 			unset( $representative ); // Clean memory
 			
 			$this->data[] = array( 
-		    	'id' => $row->id,
-		    	'name' => $row->name,
-				'lastnames' => $row->lastnames,
-				'email' => $row->email,				
+		    	'office_id' => $row->office_id,
 				'manager_id' => $manager,
+				'company_name' => $row->company_name,
+				'username' => $row->username,
+				'name' => $row->name,
+				'lastnames' => $row->lastnames,
+				'birthdate' => $row->birthdate,				
+				'email' => $row->email,		
+				'disabled' => $row->disabled,
 				'tipo' => $tipo,
 				'clave' => $clave,
 				'national' => $national,
