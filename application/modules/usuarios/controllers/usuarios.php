@@ -168,22 +168,6 @@ class Usuarios extends CI_Controller {
 		// Remove vars of user login
 		$this->session->unset_userdata( 'system' );
 		
-		
-		/*  
-			$this->session->unset_userdata( 'id' );
-			$this->session->unset_userdata( 'agency_id' );
-			$this->session->unset_userdata( 'office_id' );
-			$this->session->unset_userdata( 'name' );
-			$this->session->unset_userdata( 'lastname' );
-			$this->session->unset_userdata( 'agencia' );
-			$this->session->unset_userdata( 'email' );
-			$this->session->unset_userdata( 'working_since' );
-			$this->session->unset_userdata( 'disabled' );
-			$this->session->unset_userdata( 'date' );
-			$this->session->unset_userdata( 'last_updated' );
-		*/
-		
-		
 		redirect( 'usuarios/login', 'refresh' );
 	
 	}
@@ -251,8 +235,10 @@ class Usuarios extends CI_Controller {
 		$config['use_page_numbers'] = TRUE;
 		
 		$this->pagination->initialize($config); 
-				
-						
+		
+		// Setting url for export currently
+		if( $begin  == 0 ) $pag = 'usuarios/exportar.html';	else $pag =  'usuarios/exportar/'.$begin.'.html';
+						 
 		// Config view
 		$this->view = array(
 				
@@ -261,13 +247,35 @@ class Usuarios extends CI_Controller {
 		  'scripts' =>  array(
 		  	  
 			  '<script src="'.base_url().'scripts/config.js"></script>',
-			  '<script src="'.base_url().'usuarios/assets/scripts/find.js"></script>'	
+			  '<script src="'.base_url().'usuarios/assets/scripts/find.js"></script>',
+			  '<script>
+				  $( "#dialog-form" ).dialog({
+					  autoOpen: false,
+					  height: 200,
+					  width: 350,
+					  modal: true,
+					  buttons: {
+						Cancel: function() {
+						  $( this ).dialog( "close" );
+						}
+					  },
+					  close: function() {
+						allFields.val( "" ).removeClass( "ui-state-error" );
+					  }
+					});
+					 $( "#create-export" )
+					  .button()
+					  .click(function() {
+						$( "#dialog-form" ).dialog( "open" );
+					  });
+			  </script>'			
 			  
 			 
 		  ),
 		  'content' => 'usuarios/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'data' => $this->user->overview( $begin )		  
+		  'data' => $this->user->overview( $begin ),
+		  'pag' => $pag	  
 		  		
 		);
 				
@@ -643,7 +651,8 @@ class Usuarios extends CI_Controller {
 			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
 			  '<script src="'.base_url().'usuarios/assets/scripts/md5.js"></script>',	
 			  '<script src="'.base_url().'usuarios/assets/scripts/usuarios.js"></script>',		
-			  '<script src="'.base_url().'scripts/config.js"></script>'				
+			  '<script src="'.base_url().'scripts/config.js"></script>'
+			  	
 		  ),
 		  'content' => 'usuarios/create', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
@@ -709,6 +718,13 @@ class Usuarios extends CI_Controller {
 	
 	
 	
+
+
+
+// Import	
+	public function importar(){
+		
+		
 	
 	
 	
@@ -719,314 +735,90 @@ class Usuarios extends CI_Controller {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-// Update role	
-	public function update( $id = null ){
-		
-		
-		
-		// Validation of id number
-		if( empty( $id ) or !is_numeric( $id ) ){
-			
-			// Set false message		
-			$this->session->set_flashdata( 'message', array( 
-				
-				'type' => false,	
-				'message' => 'No es valido. El registro no se puede encontrar.'
-							
-			));												
-			
-			
-			redirect( 'roles', 'refresh' );
-			
-		}
-		
-		
-		
-		// Load model
-		$this->load->model( 'rol' );
-		
-		
-		$data = $this->rol->id( $id );
-		
-		// Validation rol
-		if( empty( $data ) ){
-			
-			// Set false message		
-			$this->session->set_flashdata( 'message', array( 
-				
-				'type' => false,	
-				'message' => 'El registro no existe'
-							
-			));												
-			
-			
-			redirect( 'roles', 'refresh' );
-			
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		if( !empty( $_POST ) ){
-			
-			
-			// Load model
-			$this->load->model( 'rol' );
-			
-			
-			// Validations
-			$this->form_validation->set_rules('name', 'Nombre de Rol', 'required');
-			
-			
-			// Run Validation
-			if ( $this->form_validation->run() == TRUE ){
-					
-					
-				// Save Record	
-				if( $this->rol->update( $id, $this->input->post() ) == true ){
-					
-					
-					// Set true message		
-					$this->session->set_flashdata( 'message', array( 
-						
-						'type' => true,	
-						'message' => 'Se guardo el registro correctamente'
-									
-					));												
-					
-					
-					redirect( 'roles', 'refresh' );
-					
-					
-					
-				}else{
-					
-					
-					// Set false message		
-					$this->session->set_flashdata( 'message', array( 
-						
-						'type' => false,	
-						'message' => 'No se pudo guardar el registro, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
-									
-					));												
-					
-					
-					redirect( 'roles', 'refresh' );
-						
-				}						
-					
-			}	
-			
-						
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		// Config view
 		$this->view = array(
 				
-		  'title' => 'Editar role -' .$data['name'],
+		  'title' => 'Crear Usuario',
 		  'css' => array(),
 		  'scripts' =>  array(
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-			  '<script src="'.base_url().'roles/assets/scripts/roles.js"></script>',		
+			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+			  '<script src="'.base_url().'usuarios/assets/scripts/md5.js"></script>',	
 			  '<script src="'.base_url().'scripts/config.js"></script>'				
 		  ),
-		  'content' => 'roles/update', // View to load
-		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'data' => $data		
+		  'content' => 'usuarios/import', // View to load
+		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
+				
 		);
 		
 		
 		// Render view 
 		$this->load->view( 'index', $this->view );	
+	
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+// Export	
+	public function exportar( $begin = 0 ){
 		
+				
+		//header('Content-Type: application/csv');
+        //header('Content-Disposition: attachement; filename="proages_usuarios.csv"');
+		
+		
+		// Load MOdel
+		$this->load->model( 'user' );
+				
+		
+		// Load Helper 
+		$this->load->helper('usuarios/csv');
+		
+		
+		
+		// Find for name Current data
+		if( isset( $_POST['find'] ) and !empty( $_POST['find']  ) )
+			
+			$this->data = $this->user->export_find( $this->input->post( 'find' ) );
+		
+		else // Export current pag
+			
+			$this->data = $this->user->export( $begin );
+		
+		
+		echo array_to_csv($this->data, 'proages_usuarios.csv');
+		
+		exit;
 		
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-// Delete role	
-	public function delete( $id = null ){
-		
-		
-		
-		// Validation of id number
-		if( empty( $id ) or !is_numeric( $id ) ){
-			
-			// Set false message		
-			$this->session->set_flashdata( 'message', array( 
-				
-				'type' => false,	
-				'message' => 'No es valido. El registro no se puede encontrar.'
-							
-			));												
-			
-			
-			redirect( 'roles', 'refresh' );
-			
-		}
-		
-		
-		
-		// Load model
-		$this->load->model( 'rol' );
-		
-		
-		$data = $this->rol->id( $id );
-		
-		// Validation rol
-		if( empty( $data ) ){
-			
-			// Set false message		
-			$this->session->set_flashdata( 'message', array( 
-				
-				'type' => false,	
-				'message' => 'El registro no existe'
-							
-			));												
-			
-			
-			redirect( 'roles', 'refresh' );
-			
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		if( !empty( $_POST ) ){
-			
-			
-			// Load model
-			$this->load->model( 'rol' );
-			
-			// Save Record	
-			if( $this->rol->delete( $id ) == true ){
-				
-				
-				// Set true message		
-				$this->session->set_flashdata( 'message', array( 
-					
-					'type' => true,	
-					'message' => 'Se elimino el registro correctamente'
-								
-				));												
-				
-				
-				redirect( 'roles', 'refresh' );
-				
-				
-				
-			}else{
-				
-				
-				// Set false message		
-				$this->session->set_flashdata( 'message', array( 
-					
-					'type' => false,	
-					'message' => 'No se pudo eliminar el registro, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
-								
-				));												
-				
-				
-				redirect( 'roles', 'refresh' );
-					
-			}						
-			
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// Config view
-		$this->view = array(
-				
-		  'title' => 'Eliminar role -' .$data['name'],
-		  'css' => array(),
-		  'scripts' =>  array(
-			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
-			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-			  '<script src="'.base_url().'roles/assets/scripts/roles.js"></script>',		
-			  '<script src="'.base_url().'scripts/config.js"></script>'				
-		  ),
-		  'content' => 'roles/delete', // View to load
-		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'data' => $data		
-		);
-		
-		
-		// Render view 
-		$this->load->view( 'index', $this->view );	
-	}
-
-/* End of file roles.php */
-/* Location: ./application/controllers/roles.php */
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+/* End of file usuarios.php */
+/* Location: ./application/controllers/usuarios.php */
 }
 ?>

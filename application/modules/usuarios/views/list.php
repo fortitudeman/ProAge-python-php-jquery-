@@ -77,16 +77,25 @@
               <thead>
                   <tr>
                       <th>Buscar</th>
-                      <th colspan="2"><input type="text" id="find"/></th> 
-                      <th colspan="5"></th>
-                      <th><a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-link">Crear</a></th>
-                      <th><a href="#" class="btn btn-link">Importar XLS</a></th>
-                      <th><a href="#" class="btn btn-link">Exportar XLS</a></th>
+                      <th colspan="2"><form id="search" method="post"><input type="text" id="find" name="find"/><input type="hidden" id="pag" name="pag" value="<?php echo base_url() . $pag ?>" /><input type="hidden" id="typeexport" /></form></th> 
+                      <th colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                      <td><a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-link">Crear</a></td>
+                      <td><a href="<?php echo base_url() ?>usuarios/importar.html" class="btn btn-link">Importar XLS</a></td>
+                      <td><button id="create-export" class="btn btn-link">Exportar XLS</button></td>
                   </tr>
               </thead>   
               
             </table>  
         	
+            <div id="dialog-form" title="">
+  				Que quiere exportar?
+                <br /><br />
+                <a href="javascript:void(0)" class="btn btn-link" id="pagactual">Página Actual</a>
+                <a href="javascript:void(0)" class="btn btn-link" id="busactual">Resultado Actual</a>
+			</div>
+			
+            
+            
             <div id="loading"></div>
             
         
@@ -156,3 +165,4 @@
     </div><!--/row-->
 
 <?php endif; ?>
+

@@ -81,7 +81,7 @@
                     <td><?php echo $value['name'] ?></td>
                     <td><?php echo $value['label'] ?></td>
                     <td class="center"><?php echo $value['date'] ?></td>
-                    <td class="center"><?php echo $value['last_uploaded'] ?></td>
+                    <td class="center"><?php echo $value['last_updated'] ?></td>
                     <td class="center">
                         <a class="btn btn-info" href="<?php echo base_url() ?>modulos/update/<?php echo $value['id'] ?>.html" title="Editar rol">
                             <i class="icon-edit icon-white"></i>            

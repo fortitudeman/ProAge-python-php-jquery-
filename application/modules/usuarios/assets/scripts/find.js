@@ -46,4 +46,22 @@ $( document ).ready(function() {
 	});
 	
 	
+	
+	
+	// Export Info
+	$( '#pagactual' ).bind( 'click', function(){
+		$('#typeexport').val('pagactual');
+		$( '#search' ).attr( 'action', $( '#pag' ).val() );
+		$( '#search' ).submit();
+	});
+	
+	// Export Info
+	$( '#busactual' ).bind( 'click', function(){
+		$('#typeexport').val('busactual');
+		$( '#search' ).attr( 'action', $( '#pag' ) .val() );
+		$( '#search' ).submit();
+	});
+	
+	
+	
 });

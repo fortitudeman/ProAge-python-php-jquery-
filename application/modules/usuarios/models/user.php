@@ -506,6 +506,392 @@ class User extends CI_Model{
 
 
 
+// Export Method
+	public function export( $start = 0 ) {
+		
+		
+		// SELECT id, name, lastnames, email FROM `users`;
+		$this->db->select( 'id, name, lastnames, email, manager_id, date, last_updated' );
+		$this->db->from( 'users' );
+        $this->db->limit( 30, $start );
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 0) return false;
+ 	
+		
+		
+		unset( $this->data );
+
+		$this->data = array();
+		
+		
+		
+		foreach ($query->result() as $row) {
+			
+			
+			// Getting Manager name
+			if( !empty( $row->manager_id ) ){
+				
+				$manager='';
+												
+				$this->db->select( 'name' );
+				$this->db->from( 'users' );
+				$this->db->where( 'id', $row->manager_id  );
+				$this->db->limit( 1 );
+				
+				$managers = $this->db->get();
+				
+				if ($managers->num_rows() == 0) $manager = '';
+				
+				foreach ($managers->result() as $row_manager)
+						$manager = $row_manager->name;
+				
+				unset( $managers ); // Free memory
+				
+			}else{
+				$manager='';
+			}
+			
+			
+			// Getting Types
+			/*
+			SELECT user_roles.name 
+			FROM `users_vs_user_roles`
+			JOIN  `user_roles` ON user_roles.id=`users_vs_user_roles`.user_role_id
+			WHERE users_vs_user_roles.user_id=1;
+			*/
+			
+			
+			$tipo='';
+			$this->db->select( 'user_roles.name' );
+			$this->db->from( 'users_vs_user_roles' );
+			$this->db->join( 'user_roles', ' user_roles.id=users_vs_user_roles.user_role_id ' );
+			$this->db->where( 'users_vs_user_roles.user_id', $row->id  );
+			
+			$types = $this->db->get();
+			
+			if ($types->num_rows() == 0) $tipo = '';
+			
+			foreach ($types->result() as $row_types)
+					$tipo .= $row_types->name.', ';	
+				
+			unset( $types ); // Clean memory
+			
+			
+			
+			
+			
+			// Getting Clave
+			/*
+				SELECT agent_uids.uid 
+				FROM agents
+				JOIN agent_uids ON agent_uids.agent_id=agents.id
+				WHERE agent_uids.type='clave' AND agents.user_id=2;
+			*/
+			$clave='';			
+			$this->db->select( 'agent_uids.uid' );
+			$this->db->from( 'agents' );
+			$this->db->join( 'agent_uids', 'agent_uids.agent_id=agents.id' );
+			$this->db->where( array( 'agent_uids.type' => 'clave', 'agents.user_id' => $row->id )  );
+			
+			$claves = $this->db->get();
+			
+			if ($claves->num_rows() == 0) $clave = '';
+			
+			foreach ($claves->result() as $row_claves)
+					$clave .= $row_claves->uid.', ';	
+				
+			unset( $claves ); // Clean memory
+			
+			
+			
+			// Getting Clave
+			/*
+				SELECT agent_uids.uid 
+				FROM agents
+				JOIN agent_uids ON agent_uids.agent_id=agents.id
+				WHERE agent_uids.type='national' AND agents.user_id=2;
+			*/
+			$national='';			
+			$this->db->select( 'agent_uids.uid' );
+			$this->db->from( 'agents' );
+			$this->db->join( 'agent_uids', 'agent_uids.agent_id=agents.id' );
+			$this->db->where( array( 'agent_uids.type' => 'national', 'agents.user_id' => $row->id )  );
+			
+			$nationals = $this->db->get();
+			
+			if ($nationals->num_rows() == 0) $national = '';
+			
+			foreach ($nationals->result() as $row_national)
+					$national .= $row_national->uid.', ';	
+				
+			unset( $nationals ); // Clean memory
+			
+			
+			
+			
+			// Getting Clave
+			/*
+				SELECT agent_uids.uid 
+				FROM agents
+				JOIN agent_uids ON agent_uids.agent_id=agents.id
+				WHERE agent_uids.type='provincial' AND agents.user_id=2;
+			*/
+			$provincial='';			
+			$this->db->select( 'agent_uids.uid' );
+			$this->db->from( 'agents' );
+			$this->db->join( 'agent_uids', 'agent_uids.agent_id=agents.id' );
+			$this->db->where( array( 'agent_uids.type' => 'provincial', 'agents.user_id' => $row->id )  );
+			
+			$provincials = $this->db->get();
+			
+			if ($provincials->num_rows() == 0) $provincial = '';
+			
+			foreach ($provincials->result() as $row_provincial)
+					$provincial .= $row_provincial->uid.', ';	
+				
+			unset( $provincials ); // Clean memory
+			
+			
+			
+			// Representatives
+			/*
+				SELECT * 
+				FROM `representatives`
+				WHERE `user_id`=3
+			*/
+			$representatives='';			
+			$this->db->select();
+			$this->db->from( 'representatives' );
+			$this->db->where( array( 'user_id' => $row->id )  );
+			
+			$representative = $this->db->get();
+			
+			if ($representative->num_rows() == 0) $representatives = '';
+			
+			foreach ($representative->result() as $row_representative)
+					$provincial .= $row_representative->name.','.$row_representative->lastnames.','.$row_representative->office_phone.','.$row_representative->office_phone.','.$row_representative->office_ext.','.$row_representative->mobile;	
+				
+			unset( $representative ); // Clean memory
+			
+			
+			$this->data[] = array( 
+		    	'id' => $row->id,
+		    	'name' => $row->name,
+				'lastnames' => $row->lastnames,
+				'email' => $row->email,				
+				'manager_id' => $manager,
+				'tipo' => $tipo,
+				'clave' => $clave,
+				'national' => $national,
+				'provincial' => $provincial,
+				'representatives' => $representatives
+		    );
+		
+		
+
+		}
+
+		return $this->data;
+		
+   }
+
+
+
+
+
+// FInd Method export
+	public function export_find( $name =  null ) {
+		
+		
+		if( empty( $name ) ) return false;
+			
+		$this->db->select();
+		$this->db->from(  'users' );
+        $this->db->like( 'name', $name );
+		
+		$query = $this->db->get();
+		
+			
+						
+		if ($query->num_rows() == 0) return false;
+ 
+		
+		// Clean vars
+		unset( $this->data );
+
+		$this->data = array();
+		
+		
+		
+		foreach ($query->result() as $row) {
+			
+			// Getting Manager name
+			if( !empty( $row->manager_id ) ){
+				
+				$manager='';
+												
+				$this->db->select( 'name' );
+				$this->db->from( 'users' );
+				$this->db->where( 'id', $row->manager_id  );
+				$this->db->limit( 1 );
+				
+				$managers = $this->db->get();
+				
+				if ($managers->num_rows() == 0) $manager = '';
+				
+				foreach ($managers->result() as $row_manager)
+						$manager = $row_manager->name;
+				
+				unset( $managers ); // Free memory
+				
+			}else{
+				$manager='';
+			}
+			
+			
+			// Getting Types
+			/*
+			SELECT user_roles.name 
+			FROM `users_vs_user_roles`
+			JOIN  `user_roles` ON user_roles.id=`users_vs_user_roles`.user_role_id
+			WHERE users_vs_user_roles.user_id=1;
+			*/
+			
+			
+			$tipo='';
+			$this->db->select( 'user_roles.name' );
+			$this->db->from( 'users_vs_user_roles' );
+			$this->db->join( 'user_roles', ' user_roles.id=users_vs_user_roles.user_role_id ' );
+			$this->db->where( 'users_vs_user_roles.user_id', $row->id  );
+			
+			$types = $this->db->get();
+			
+			if ($types->num_rows() == 0) $tipo = '';
+			
+			foreach ($types->result() as $row_types)
+					$tipo .= $row_types->name.', ';	
+				
+			unset( $types ); // Clean memory
+			
+			
+			
+			
+			
+			// Getting Clave
+			/*
+				SELECT agent_uids.uid 
+				FROM agents
+				JOIN agent_uids ON agent_uids.agent_id=agents.id
+				WHERE agent_uids.type='clave' AND agents.user_id=2;
+			*/
+			$clave='';			
+			$this->db->select( 'agent_uids.uid' );
+			$this->db->from( 'agents' );
+			$this->db->join( 'agent_uids', 'agent_uids.agent_id=agents.id' );
+			$this->db->where( array( 'agent_uids.type' => 'clave', 'agents.user_id' => $row->id )  );
+			
+			$claves = $this->db->get();
+			
+			if ($claves->num_rows() == 0) $clave = '';
+			
+			foreach ($claves->result() as $row_claves)
+					$clave .= $row_claves->uid.', ';	
+				
+			unset( $claves ); // Clean memory
+			
+			
+			
+			// Getting Clave
+			/*
+				SELECT agent_uids.uid 
+				FROM agents
+				JOIN agent_uids ON agent_uids.agent_id=agents.id
+				WHERE agent_uids.type='national' AND agents.user_id=2;
+			*/
+			$national='';			
+			$this->db->select( 'agent_uids.uid' );
+			$this->db->from( 'agents' );
+			$this->db->join( 'agent_uids', 'agent_uids.agent_id=agents.id' );
+			$this->db->where( array( 'agent_uids.type' => 'national', 'agents.user_id' => $row->id )  );
+			
+			$nationals = $this->db->get();
+			
+			if ($nationals->num_rows() == 0) $national = '';
+			
+			foreach ($nationals->result() as $row_national)
+					$national .= $row_national->uid.', ';	
+				
+			unset( $nationals ); // Clean memory
+			
+			
+			
+			
+			// Getting Clave
+			/*
+				SELECT agent_uids.uid 
+				FROM agents
+				JOIN agent_uids ON agent_uids.agent_id=agents.id
+				WHERE agent_uids.type='provincial' AND agents.user_id=2;
+			*/
+			$provincial='';			
+			$this->db->select( 'agent_uids.uid' );
+			$this->db->from( 'agents' );
+			$this->db->join( 'agent_uids', 'agent_uids.agent_id=agents.id' );
+			$this->db->where( array( 'agent_uids.type' => 'provincial', 'agents.user_id' => $row->id )  );
+			
+			$provincials = $this->db->get();
+			
+			if ($provincials->num_rows() == 0) $provincial = '';
+			
+			foreach ($provincials->result() as $row_provincial)
+					$provincial .= $row_provincial->uid.', ';	
+				
+			unset( $provincials ); // Clean memory
+			
+			
+			// Representatives
+			/*
+				SELECT * 
+				FROM `representatives`
+				WHERE `user_id`=3
+			*/
+			$representatives='';			
+			$this->db->select();
+			$this->db->from( 'representatives' );
+			$this->db->where( array( 'user_id' => $row->id )  );
+			
+			$representative = $this->db->get();
+			
+			if ($representative->num_rows() == 0) $representatives = '';
+			
+			foreach ($representative->result() as $row_representative)
+					$provincial .= $row_representative->name.','.$row_representative->lastnames.','.$row_representative->office_phone.','.$row_representative->office_phone.','.$row_representative->office_ext.','.$row_representative->mobile;	
+				
+			unset( $representative ); // Clean memory
+			
+			$this->data[] = array( 
+		    	'id' => $row->id,
+		    	'name' => $row->name,
+				'lastnames' => $row->lastnames,
+				'email' => $row->email,				
+				'manager_id' => $manager,
+				'tipo' => $tipo,
+				'clave' => $clave,
+				'national' => $national,
+				'provincial' => $provincial,
+				'representatives' => $representatives
+		    );
+		
+			
+			
+		}
+
+		return $this->data;
+		
+   }
+
 
 
 
