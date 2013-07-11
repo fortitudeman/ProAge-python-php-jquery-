@@ -4,7 +4,7 @@ class E404 extends CI_Controller{
 
 	public function index(){
 		
-		$this->load->view( '404' ) ;
+		$this->load->view( 'admin/error.php' ) ;
 		
 	}
 }
