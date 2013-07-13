@@ -1034,7 +1034,29 @@ class User extends CI_Model{
 	
 	
 	
-	
+// Validations
+	public function is_unique( $field = null, $value = null ){
+		
+		if( empty( $field ) or empty( $value ) ) return false;
+		
+		
+		$this->db->where( array( 'name'  => $value )  );
+        $this->db->limit( 1 ); // Limit 1 record
+
+		// Get Resutls
+        $query = $this->db->get( 'users' );
+		
+		
+		if ($query->num_rows() == 0) 
+			
+			return true;
+		
+		else
+			
+			return false;
+		
+			
+	}	
 	
 	
 

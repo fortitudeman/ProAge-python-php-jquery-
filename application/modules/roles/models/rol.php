@@ -258,7 +258,38 @@ class Rol extends CI_Model{
 	
 	
 	
-	
+// Getting rol id by name
+	public function name( $name = null ){
+		
+		if( empty( $name ) ) return false;
+				
+		unset( $this->data );	$this->data = array();
+		
+		// Validation form not repear name
+		$this->db->
+					select( 'id' )
+				  ->
+				   from( $this->table )	
+				  ->
+				   where( array( 'name' => $name ) )
+				  ->
+				  	limit(1); 
+				  
+		$query = $this->db->get();
+				
+		if( $query->num_rows == 0 ) return false;
+		
+		foreach ($query->result() as $row)
+		
+			$this->data[] = array( 
+				  
+				  'id' => $row->id
+				  
+			);
+				
+		return $this->data[0]['id'];
+		
+	}	
 	
 	
 	
