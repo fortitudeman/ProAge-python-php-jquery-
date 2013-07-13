@@ -142,6 +142,7 @@
                         <li><a class="ajax-link" href="<?php echo base_url() ?>roles.html"><i class="icon-eye-open"></i><span class="hidden-tablet">Roles</span></a></li>
                         <li><a class="ajax-link" href="<?php echo base_url() ?>modulos.html"><i class="icon-eye-open"></i><span class="hidden-tablet">Módulos</span></a></li>
                         <li><a class="ajax-link" href="<?php echo base_url() ?>usuarios.html"><i class="icon-eye-open"></i><span class="hidden-tablet">Usuarios</span></a></li>
+                        <li><a class="ajax-link" href="<?php echo base_url() ?>orden_trabajo.html"><i class="icon-align-justify"></i><span class="hidden-tablet"> Orden trabajo</span></a></li>
 						<!--
                         <li><a class="ajax-link" href="form.html"><i class="icon-edit"></i><span class="hidden-tablet"> Forms</span></a></li>
 						<li><a class="ajax-link" href="chart.html"><i class="icon-list-alt"></i><span class="hidden-tablet"> Charts</span></a></li>
