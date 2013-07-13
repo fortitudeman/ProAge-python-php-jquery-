@@ -926,7 +926,7 @@ class Usuarios extends CI_Controller {
 								'manager_id' => 0,
 								'company_name'  => $item['company_name'],
 								'username'  => $item['username'],
-								'password'  => $item['password'],					
+								'password'  => md5($item['password']),					
 								'name'  => $item['name'],
 								'lastnames'  => $item['lastname'],
 								'birthdate'  => $item['birthdate'],					

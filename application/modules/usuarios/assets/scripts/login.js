@@ -21,7 +21,7 @@ $( document ).ready(function() {
 			// maybe disabling submit button
 			// then:
 			$( '#actions-buttons-forms' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-5.gif">' );
-		  	 $( '#password' ).val( calcMD5( $( '#password' ).val() ) );
+		  	//$( '#password' ).val( calcMD5( $( '#password' ).val() ) );
 			form.submit();
 		  }		
 		
