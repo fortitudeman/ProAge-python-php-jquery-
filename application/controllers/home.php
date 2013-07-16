@@ -41,7 +41,7 @@ class Home extends CI_Controller{
 		
 		// Get user rol access
 		$this->roles_vs_access = $this->rol->user_roles_vs_access( $this->user_vs_rol );
-				
+								
 								
 		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
 			
@@ -72,6 +72,7 @@ class Home extends CI_Controller{
 			'roles_vs_access' => $this->roles_vs_access,
 			'rolcount' => $rolcount,
 			'content' => 'admin/index', // View to load
+			'message' => $this->session->flashdata('message') // Return Message, true and false if have
 		
 		);
 		

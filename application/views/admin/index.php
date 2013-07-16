@@ -70,8 +70,41 @@
         </div>
         <div class="box-content">
             <h1>Proages <small>free, premium quality, responsive, multiple skin admin template.</small></h1>
+            
+            
+            <?php // Show Messages ?>
+            
+            <?php if( isset( $message['type'] ) ): ?>
+               
+               
+                <?php if( $message['type'] == true ): ?>
+                    <div class="alert alert-success">
+                          <button type="button" class="close" data-dismiss="alert">×</button>
+                          <img src="<?php echo base_url() ?>images/true.png" width="20" height="20" />
+                          <strong>Correcto: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
+                    </div>
+                <?php endif; ?>
+               
+                
+                <?php if( $message['type'] == false ): ?>
+                    <div class="alert alert-error">
+                          <button type="button" class="close" data-dismiss="alert">×</button>
+                          <img src="<?php echo base_url() ?>images/false.png" width="20" height="20" />
+                          <strong>Error: </strong> <?php  echo $message['message']; // Show Dinamical message error ?>
+                    </div>
+                <?php endif; ?>
+            
+			
+			
+			<?php endif; ?>
+            
+            
+            
             <p>Its a live demo of the template. I have created Charisma to ease the repeat work I have to do on my projects. Now I re-use Charisma as a base for my admin panel work and I am sharing it with you :)</p>
             <p><b>All pages in the menu are functional, take a look at all, please share this with your followers.</b></p>
+            
+            
+            
             
             <p class="center">
                 
