@@ -217,6 +217,117 @@ class Rol extends CI_Model{
 
 
 
+/** 
+ *	This secttions setting roles and access for an user
+ **/
+
+// Getting user_roles
+	public function user_role( $user = null ){
+		
+		if( empty( $user ) ) return false; 
+			
+			
+			$this->db->where( array( 'user_id' => $user ) );
+	
+			$query = $this->db->get( 'users_vs_user_roles' );
+	
+						
+			if ($query->num_rows() == 0) return false;
+		
+			
+			
+			unset( $this->data );
+	
+			$this->data = array();
+			
+			
+			
+			foreach ($query->result() as $row) {
+	
+				$this->data[] = array( 
+					'user_role_id' => $row->user_role_id
+				);
+	
+			}
+
+		return $this->data;
+		
+		
+	}
+
+
+// Getting access for the rol
+	public function user_roles_vs_access( $roles = array() ){
+		
+		if( empty( $roles ) ) return false; 
+			
+		$rol = array();
+		
+		
+		
+		// Added user_role_id
+		foreach( $roles as $value )
+			array_push($rol,$value['user_role_id']);//$rol[$value];
+							
+		
+		// Runin Example  query
+		/*
+			
+			SELECT * FROM `user_roles_vs_access` WHERE user_role_id=5 OR user_role_id=4;
+			
+			
+			SELECT `user_roles_vs_access` .*, modules.name, actions.name 
+			FROM `user_roles_vs_access` 
+			JOIN modules ON `user_roles_vs_access`.module_id=modules.id
+			JOIN actions ON `user_roles_vs_access`.action_id=actions.id
+			WHERE `user_roles_vs_access` .user_role_id IN (5, 4)
+		*/
+		
+		$this->db->select( 'user_roles_vs_access.*, modules.name as module_name, actions.name as action_name' );	
+		$this->db->from( 'user_roles_vs_access' );
+		$this->db->join( 'modules', 'user_roles_vs_access.module_id=modules.id' );
+		$this->db->join( 'actions', 'user_roles_vs_access.action_id=actions.id' );						
+		$this->db->where_in('user_role_id', $rol);
+		
+		$query = $this->db->get();
+
+					
+					
+					
+					
+		if ($query->num_rows() == 0) return false;
+	
+		
+		
+		unset( $this->data, $roles, $rol ); // Free memory
+
+		$this->data = array();
+		
+		
+		
+		foreach ($query->result() as $row)
+
+			$this->data[] = array( 
+				'module_name' => $row->module_name,
+				'action_name' => $row->action_name,
+				'module_id' => $row->module_id,
+				'action_id' => $row->action_id
+			);
+
+		
+
+		
+		return $this->data;
+		
+		
+	}
+
+
+
+
+
+
+
 
 /**
  |	Getting for id

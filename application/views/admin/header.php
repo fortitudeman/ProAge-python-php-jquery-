@@ -78,7 +78,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</a>
-				<a class="brand" href="index.html"> <img alt="Charisma Logo" src="<?php echo base_url() ?>images/logo20.png" /> <span>Charisma</span></a>
+				<a class="brand" href="<?php echo base_url(); ?>"> <img alt="Charisma Logo" src="<?php echo base_url() ?>images/logo20.png" /> <span>Proages</span></a>
 				
 				<!-- theme selector starts -->
 				<div class="btn-group pull-right theme-container" >
@@ -101,13 +101,14 @@
 				<!-- theme selector ends -->
 				
 				<!-- user dropdown starts -->
-				<div class="btn-group pull-right" >
-					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-						<i class="icon-user"></i><span class="hidden-phone"> admin</span>
+				<div class="btn-group pull-right" ><?php print_r( $user ); ?>
+					<a class="btn dropdown-toggle" data-toggle="dropdown" href="javascript: void(0);">
+						<img src="<?php echo base_url() . 'usuarios/assets/profiles/' . $user['picture'] ?>">
+                        <span class="hidden-phone"> <?php echo $user['name'] ?></span>
 						<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
-						<li><a href="#">Profile</a></li>
+						<li><a href="<?php echo base_url() ?>usuarios/editar_perfil.html">Editar perfil</a></li>
 						<li class="divider"></li>
 						<li><a href="<?php echo base_url() ?>usuarios/logout.html">Logout</a></li>
 					</ul>
@@ -137,12 +138,33 @@
 			<div class="span2 main-menu-span">
 				<div class="well nav-collapse sidebar-nav">
 					<ul class="nav nav-tabs nav-stacked main-menu">
-						<li class="nav-header hidden-tablet">Main</li>
-						<li><a class="ajax-link" href="<?php echo base_url() ?>"><i class="icon-home"></i><span class="hidden-tablet"> Dashboard</span></a></li>						
-                        <li><a class="ajax-link" href="<?php echo base_url() ?>roles.html"><i class="icon-eye-open"></i><span class="hidden-tablet">Roles</span></a></li>
-                        <li><a class="ajax-link" href="<?php echo base_url() ?>modulos.html"><i class="icon-eye-open"></i><span class="hidden-tablet">Módulos</span></a></li>
-                        <li><a class="ajax-link" href="<?php echo base_url() ?>usuarios.html"><i class="icon-eye-open"></i><span class="hidden-tablet">Usuarios</span></a></li>
-                        <li><a class="ajax-link" href="<?php echo base_url() ?>orden_trabajo.html"><i class="icon-align-justify"></i><span class="hidden-tablet"> Orden trabajo</span></a></li>
+						<li class="nav-header hidden-tablet">Navegación</li>
+                       
+						<li><a class="ajax-link" href="<?php echo base_url() ?>"><i class="icon-home"></i><span class="hidden-tablet"> Proages</span></a></li>						
+                        
+                        <?php 
+							/**
+							 *	Check $roles_vs_access for setting or added navigation for an user
+							 **/
+						?>
+												
+						<?php foreach( $roles_vs_access  as $value ): if( in_array( 'Modulos', $value ) ): ?>
+                        <li><a href="<?php echo base_url() ?>modulos.html"><i class="icon-th"></i><span class="hidden-tablet">Módulos</span></a></li>
+                        <?php break; endif; endforeach; ?>
+                        
+                        <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Rol', $value ) ): ?>
+                        <li><a href="<?php echo base_url() ?>roles.html"><i class="icon-th"></i><span class="hidden-tablet">Rol</span></a></li>
+                        <?php break; endif; endforeach; ?>
+                        
+                        <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ): ?>
+                        <li><a href="<?php echo base_url() ?>usuarios.html"><i class="icon-th"></i><span class="hidden-tablet">Usuarios</span></a></li>
+                        <?php break; endif; endforeach; ?>
+                        
+                        <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
+                        <li><a href="<?php echo base_url() ?>orden_trabajo.html"><i class="icon-tablet"></i><span class="hidden-tablet">Orden trabajo</span></a></li>
+                        <?php break; endif; endforeach; ?>
+                        
+                        
 						<!--
                         <li><a class="ajax-link" href="form.html"><i class="icon-edit"></i><span class="hidden-tablet"> Forms</span></a></li>
 						<li><a class="ajax-link" href="chart.html"><i class="icon-list-alt"></i><span class="hidden-tablet"> Charts</span></a></li>
@@ -163,13 +185,7 @@
 			</div><!--/span-->
 			<!-- left menu ends -->
 			
-			<noscript>
-				<div class="alert alert-block span10">
-					<h4 class="alert-heading">Warning!</h4>
-					<p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a> enabled to use this site.</p>
-				</div>
-			</noscript>
-			
+						
 			<div id="content" class="span10">
 			<!-- content starts -->
 			<?php } ?>

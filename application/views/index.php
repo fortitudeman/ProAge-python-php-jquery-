@@ -16,7 +16,10 @@
 ?>
 <?php 
 // Getting include files
-$header = array( 'title' => $title, 'css' => $css ); ?>
+$header = array();
+if( isset( $title ) ) $header['title'] = $title;   
+if( isset( $css ) ) $header['css'] = $css;
+?>
 
 <?php 
 // Render Header
@@ -39,7 +42,9 @@ $this->load->view( 'admin/header', $header ); ?>
 		  
 <?php 
 // Getting include file for footer
-$footer = array( 'scripts' => $scripts ); ?>
+$footer = array(); 
+if( isset( $cssscripts) ) $footer['scripts'] = $scripts;
+?>
 
 
 <?php 

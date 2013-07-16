@@ -52,7 +52,7 @@
 	<!-- jQuery -->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
 	<!-- jQuery UI -->
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<!--<script src="http://code.jquery.com/jquery-1.9.1.js"></script>-->
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 	<!-- transition / effect library -->
 	<script src="<?php echo base_url() ?>bootstrap/js/bootstrap-transition.js"></script>

@@ -322,6 +322,18 @@ class User extends CI_Model{
 
 
 
+// Count records for rol
+	public function record_count_roles( $role = null ) {
+        
+		
+		if( empty( $role ) ) return 0;
+		
+		// SELECT COUNT(*) from users_vs_user_roles WHERE user_role_id=1;
+		
+		
+		return $this->db->select()-> from( 'users_vs_user_roles' )->where( array( 'user_role_id' => $role ) )->count_all_results();
+    
+	}
 
 
 
@@ -989,7 +1001,8 @@ class User extends CI_Model{
 				'lastnames' => $row->lastnames,
 				'birthdate' => $row->birthdate,
 				'email' => $row->email,
-				'disabled' => $row->disabled
+				'disabled' => $row->disabled,
+				'picture' => $row->picture
 		    );
 
 		}
