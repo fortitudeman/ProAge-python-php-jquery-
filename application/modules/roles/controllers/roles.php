@@ -74,7 +74,7 @@ class Roles extends CI_Controller {
 			$this->session->set_flashdata( 'message', array( 
 				
 				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Modulos", Informe a su administrador para que le otorge los permisos necesarios.'
+				'message' => 'No tiene permisos para ingresar en esta sección "Rol", Informe a su administrador para que le otorge los permisos necesarios.'
 							
 			));	
 			
