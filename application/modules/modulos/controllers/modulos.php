@@ -588,7 +588,10 @@ class Modulos extends CI_Controller {
 		$this->view = array(
 				
 		  'title' => 'Eliminar Módulo -' .$data['name'],
-		  'css' => array(),
+		  // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
 		  'scripts' =>  array(
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
