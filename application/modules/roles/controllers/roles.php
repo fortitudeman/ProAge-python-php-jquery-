@@ -14,23 +14,25 @@
   	
 */
 class Roles extends CI_Controller {
-
-/**
- |	nav -> Setting User Navigate 
- |	session ->	User Session 
- |	userInfo -> Setting Info User 
- |	perm -> Setting User Perm Module 
- |	data -> Setting Array list data
- *  view -> Set Config to render a view
- **/	
-	
-	public $session = '';
-	
-	public $perm = array();
 	
 	public $data = array();
 	
 	public $view = array();
+	
+	public $sessions = array();
+	
+	public $user_vs_rol = array();
+	
+	public $roles_vs_access = array();
+	
+	public $access = false; // Force security
+	
+	public $access_create = false;
+	
+	public $access_update = false;
+	
+	public $access_delete = false;
+	
 	
 /** Construct Function **/
 /** Setting Load perms **/
@@ -39,47 +41,68 @@ class Roles extends CI_Controller {
 			
 		parent::__construct();
 		
+		/** Getting Info bu login User **/
+		
+		$this->load->model( array( 'usuarios/user', 'roles/rol' ) );
 				
-		/** Getting Info User **
+		// Get Session
+		$this->sessions = $this->session->userdata('system');
+				
 		
-		$this->load->model( 'users' );
+		// Get user rol		
+		$this->user_vs_rol = $this->rol->user_role( $this->sessions['id'] );
 		
-		$this->userInfo = $this->users->getInfo( $this->session->userdata('system') );
+		// Get user rol access
+		$this->roles_vs_access = $this->rol->user_roles_vs_access( $this->user_vs_rol );
 		
-		/** Setting Perm **
+		
+		
+		
+		// If exist the module name, the user accessed
+		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Rol', $value ) ):
+			
+			$this->access = true;
+			
+		break; endif; endforeach;						
+		
+		
+		
+		// Check if is empty rol 
+		if( empty( $this->roles_vs_access ) or $this->access == false ){ 
+			
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Modulos", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'home', 'refresh' );
+		}
+			
+		
+		
+		// Added Acctions for user, change the bool access
+		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Rol', $value ) ):
+			
+			
+			if( $value['action_name'] == 'Crear' )
+				$this->access_create = true;
+			
+			
+			if( $value['action_name'] == 'Editar' )
+				$this->access_update = true;
+				
+			if( $value['action_name'] == 'Eliminar' )
+				$this->access_delete = true;	
+			
 					
-		$this->load->model( 'modules' );
-		
-		$this->perm['status'] = $this->modules->user( 
-		
-				array( 'request' => 'status', 'field' => 'status', 'module' => $this->id, 'user' => $this->session->userdata('system')  )			
-		
-		);
-		
-		$this->perm['view'] = $this->modules->user( 
-		
-				array( 'request' => 'status', 'field' => 'view', 'module' => $this->id, 'user' => $this->session->userdata('system')  )			
-		
-		);
-		
-		$this->perm['create'] = $this->modules->user( 
-		
-				array( 'request' => 'status', 'field' => 'create', 'module' => $this->id, 'user' => $this->session->userdata('system')  )			
-		
-		);
-		
-		$this->perm['edit'] = $this->modules->user( 
-		
-				array( 'request' => 'status', 'field' => 'edit', 'module' => $this->id, 'user' => $this->session->userdata('system')  )			
-		
-		);
-		
-		$this->perm['delete'] = $this->modules->user( 
-		
-				array( 'request' => 'status', 'field' => 'delete', 'module' => $this->id, 'user' => $this->session->userdata('system')  )			
-		
-		);
-		*/
+		endif; endforeach;
+							
+								
+		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
 				
 	}
 
@@ -134,8 +157,14 @@ class Roles extends CI_Controller {
 		$this->view = array(
 				
 		  'title' => 'Role',
-		  'css' => array(),
-		  'scripts' =>  array(),
+		  // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'access_create' => $this->access_create,
+		  'access_update' => $this->access_update,
+		  'access_delete' => $this->access_delete,
+
 		  'content' => 'roles/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  'data' => $this->rol->all( $begin )		  
@@ -150,11 +179,21 @@ class Roles extends CI_Controller {
 // Create new role
 	public function create(){
 		
-		/*		
-		if( !isset( $this->perm['view'] )){
-			echo '<script type="text/javascript"> history.back() </script>';
+		// Check access teh user for create
+		if( $this->access_create == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Rol Crear", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'roles', 'refresh' );
+		
 		}
-		*/
 			
 			
 		
@@ -217,7 +256,10 @@ class Roles extends CI_Controller {
 		$this->view = array(
 				
 		  'title' => 'Crear role',
-		  'css' => array(),
+		  // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
 		  'scripts' =>  array(
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
@@ -238,6 +280,24 @@ class Roles extends CI_Controller {
 	
 // Update role	
 	public function update( $id = null ){
+		
+		
+		// Check access teh user for create
+		if( $this->access_update == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Rol editar", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'roles', 'refresh' );
+		
+		}
+		
 		
 		
 		
@@ -370,7 +430,10 @@ class Roles extends CI_Controller {
 		$this->view = array(
 				
 		  'title' => 'Editar role -' .$data['name'],
-		  'css' => array(),
+		  // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
 		  'scripts' =>  array(
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
@@ -403,6 +466,21 @@ class Roles extends CI_Controller {
 // Delete role	
 	public function delete( $id = null ){
 		
+		// Check access teh user for create
+		if( $this->access_delete == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Rol eliminar", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'roles', 'refresh' );
+		
+		}
 		
 		
 		// Validation of id number
@@ -514,7 +592,10 @@ class Roles extends CI_Controller {
 		$this->view = array(
 				
 		  'title' => 'Eliminar role -' .$data['name'],
-		  'css' => array(),
+		  // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
 		  'scripts' =>  array(
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
