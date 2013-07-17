@@ -53,7 +53,7 @@ class Modulo extends CI_Model{
 		$timestamp = strtotime( date( 'd-m-Y H:i:s' ) );
 		
 		// Set timestamp unix
-		$values['last_updated'] = $timestamp;
+		$values['last_updated'] = date( 'd-m-Y' );
 		$values['date'] = $timestamp;
 		
 			
@@ -101,9 +101,7 @@ class Modulo extends CI_Model{
 		}
 			
 		// Set timestamp unix
-		$timestamp = strtotime( date( 'd-m-Y H:i:s' ) );
-		
-		$values['last_updated'] = $timestamp;
+		$values['last_updated'] = date( 'd-m-Y' );
 					
 		
 		
@@ -159,7 +157,7 @@ class Modulo extends CI_Model{
 	
 	public function all( $start = 0 ) {
 		
-        $this->db->limit( 2, $start );
+        $this->db->limit( 30, $start );
 
         $query = $this->db->get( $this->table );
 
@@ -182,7 +180,7 @@ class Modulo extends CI_Model{
 		    	'name' => $row->name,
 				'label' => $row->label,
 		    	'date' => date( 'd-m-Y H:i:s', $row->date ),
-		    	'last_updated' => date( 'd-m-Y H:i:s', $row->last_updated )
+		    	'last_updated' => $row->last_updated
 		    );
 
 		}

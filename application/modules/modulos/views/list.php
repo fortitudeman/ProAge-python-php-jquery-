@@ -29,7 +29,9 @@
         <div class="box-header well" data-original-title>
             <h2></h2>
             <div class="box-icon">
+               <?php if( $access_create == true ): ?>
                <a href="<?php echo base_url() ?>modulos/create.html" class="btn btn-round"><i class="icon-plus"></i></a>
+               <?php endif; ?>
             </div>
         </div>
         <div class="box-content">
@@ -83,12 +85,16 @@
                     <td class="center"><?php echo $value['date'] ?></td>
                     <td class="center"><?php echo $value['last_updated'] ?></td>
                     <td class="center">
+                        <?php if( $access_update == true ): ?>
                         <a class="btn btn-info" href="<?php echo base_url() ?>modulos/update/<?php echo $value['id'] ?>.html" title="Editar rol">
                             <i class="icon-edit icon-white"></i>            
                         </a>
+                        <?php endif; ?>
+                        <?php if( $access_delete == true ): ?>
                         <a class="btn btn-danger" href="<?php echo base_url() ?>modulos/delete/<?php echo $value['id'] ?>.html" title="Eliminar rol">
                             <i class="icon-trash icon-white"></i> 
                         </a>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach;  ?>                
