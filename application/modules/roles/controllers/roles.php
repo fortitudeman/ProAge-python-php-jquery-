@@ -456,6 +456,197 @@ class Roles extends CI_Controller {
 
 
 
+// Edit the access role	
+	public function access( $id = null ){
+		
+		
+		// Check access teh user for create
+		if( $this->access_update == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Rol access", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'roles', 'refresh' );
+		
+		}
+		
+		
+		
+		
+		// Validation of id number
+		if( empty( $id ) or !is_numeric( $id ) ){
+			
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No es valido. El registro no se puede encontrar.'
+							
+			));												
+			
+			
+			redirect( 'roles', 'refresh' );
+			
+		}
+		
+		
+		
+		// Load model
+		$this->load->model( 'rol' );
+		
+		
+		$data = $this->rol->id( $id );
+		
+		// Validation rol
+		if( empty( $data ) ){
+			
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'El registro no existe'
+							
+			));												
+			
+			
+			redirect( 'roles', 'refresh' );
+			
+		}
+		
+		
+		
+		
+		$rol_access = $this->rol->rol_access_checkbox( $id );
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		if( !empty( $_POST ) ){
+			
+			$items = array();
+			
+			// Set timestamp unix
+			$timestamp = strtotime( date( 'd-m-Y H:i:s' ) );
+			
+			// Set timestamp unix
+			$values['last_updated'] = $timestamp;
+			$values['date'] = $timestamp;	
+			
+			
+			foreach( $this->input->post( 'access' ) as $value ){
+								
+				$explode = explode( '-', $value );
+				if( !empty( $explode ) )
+				array_push( $items, array( 'user_role_id' => $id, 'module_id' => $explode[0], 'action_id' =>$explode[1],  'last_updated' => $timestamp, 'date' => $timestamp ) );
+			
+			}
+			
+					
+			// Load model
+			$this->load->model( 'rol' );
+			
+			// Delete and clean Rol access
+			$this->rol->delete_rol_vs_access( $id );
+			
+					
+					
+			// Save Record	
+			if( $this->rol->create_banch( 'user_roles_vs_access', $items ) == true ){
+				
+				
+				// Set true message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => true,	
+					'message' => 'Se edito el acceso del rol. '.$data['name']
+								
+				));												
+				
+				
+				redirect( 'roles', 'refresh' );
+				
+				
+				
+			}else{
+				
+				
+				// Set false message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => false,	
+					'message' => 'No se pudo guardar el registro, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
+								
+				));												
+				
+				
+				redirect( 'roles', 'refresh' );
+					
+			}						
+				
+			
+						
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// Config view
+		$this->view = array(
+				
+		  'title' => 'Editar acceso rol -' . $data['name'],
+		  // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'scripts' =>  array(
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			  '<script src="'.base_url().'roles/assets/scripts/access.js"></script>',		
+			  '<script src="'.base_url().'scripts/config.js"></script>'				
+		  ),
+		  'content' => 'roles/access', // View to load
+		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+		  'rol_access' => $rol_access,
+		  'data' => $data		
+		);
+		
+		
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+		
+		
+	}
+
 
 
 

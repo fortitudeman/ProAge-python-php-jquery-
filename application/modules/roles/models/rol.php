@@ -67,6 +67,21 @@ class Rol extends CI_Model{
     }
 	
 	
+	public function create_banch( $table = '', $values = array() ){
+        
+		
+		if( empty( $table ) or empty( $values ) ) return false;
+				
+			
+		if( $this->db->insert_batch( $table, $values ) ){
+									
+			return true;
+		
+		}else
+		
+			return false;
+       
+    }
 	
 	
 
@@ -138,7 +153,22 @@ class Rol extends CI_Model{
 				
     }
 
-
+	
+	public function delete_rol_vs_access( $rol = null ){
+        
+		if( empty( $rol ) ) return false;
+					   
+			if( $this->db->delete( 'user_roles_vs_access', array('user_role_id' => $rol ) ) )
+			
+					return true;
+			
+			else
+			
+				return false;
+			
+			
+				
+    }
 
 
 
@@ -227,28 +257,28 @@ class Rol extends CI_Model{
 		if( empty( $user ) ) return false; 
 			
 			
-			$this->db->where( array( 'user_id' => $user ) );
+		$this->db->where( array( 'user_id' => $user ) );
+
+		$query = $this->db->get( 'users_vs_user_roles' );
+
+					
+		if ($query->num_rows() == 0) return false;
 	
-			$query = $this->db->get( 'users_vs_user_roles' );
-	
-						
-			if ($query->num_rows() == 0) return false;
 		
-			
-			
-			unset( $this->data );
-	
-			$this->data = array();
-			
-			
-			
-			foreach ($query->result() as $row) {
-	
-				$this->data[] = array( 
-					'user_role_id' => $row->user_role_id
-				);
-	
-			}
+		
+		unset( $this->data );
+
+		$this->data = array();
+		
+		
+		
+		foreach ($query->result() as $row) {
+
+			$this->data[] = array( 
+				'user_role_id' => $row->user_role_id
+			);
+
+		}
 
 		return $this->data;
 		
@@ -324,7 +354,122 @@ class Rol extends CI_Model{
 
 
 
-
+/**
+ * Getting Roles and access for update
+ **/
+ public function rol_access_checkbox( $rol = null ){
+ 	
+	if( empty( $rol ) ) return false;
+	// Getting all modules
+	$this->db->select( 'id, name' );
+	$modules = $this->db->get( 'modules' );
+			
+	if ($modules->num_rows() == 0) return false;
+	
+	
+	
+	$module = array();
+	
+	
+	
+	// Getting all actions
+	$this->db->select( 'id, name' );
+	$actions = $this->db->get( 'actions' );
+							
+	if ($actions->num_rows() == 0) return false;
+	
+	$action = array();
+	
+	foreach ($actions->result() as $row)
+	
+		  $action[] = array( 
+			  'id' => $row->id,
+			  'name' => $row->name
+		  );
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	foreach ($modules->result() as $row)
+	
+		  $module[] = array( 
+			  'id' => $row->id,
+			  'rol' => $rol,
+			  'name' => $row->name,
+			  'actions' => $action // Add Access to rol
+		  );
+		  
+			  
+			  
+		
+	
+	
+		
+	 
+	// Check if rol is empty
+	if( empty( $module ) ) return false;
+		
+	$checkbox = '';
+	// Creacte checboxes options
+	foreach( $module as $mod ){	
+			
+			$checkbox .= '<div class="row">';
+			
+			$checkbox .= '<div class="span4">';
+					
+				$checkbox .= $mod['name'];
+			
+			$checkbox .= '</div>';
+			
+			
+			$checkbox .= '<div class="span4">';
+				
+				if( !empty( $mod['actions'] ) )
+					
+					foreach( $mod['actions'] as $actions ){
+						
+						
+							
+						$check = '';
+						
+						$this->db->select();
+						$this->db->where( array( 'user_role_id' => $mod['rol'], 'module_id' => $mod['id'], 'action_id' => $actions['id'] ) );
+						$isAccess = $this->db->get( 'user_roles_vs_access' );
+					
+					
+						
+						if ($isAccess->num_rows() != 0) 
+							
+							$check = 'checked="checked"';
+						
+						else 
+							$check = '';
+						
+						$checkbox .= '<input '.$check.'  type="checkbox" name="access[]" class="'.$mod['name'].'" value="'.$mod['id'].'-'.$actions['id'].'">'. $actions['name'].'<br>';
+						
+												
+					}
+			$checkbox .= '</div>';
+			
+				 
+			
+			
+			$checkbox .= '</div>';
+			
+			$checkbox .= '<hr>';
+	}
+	
+	
+	return $checkbox;		
+					
+	
+ }
 
 
 

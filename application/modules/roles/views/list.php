@@ -85,6 +85,13 @@
                     <td class="center"><?php echo $value['date'] ?></td>
                     <td class="center"><?php echo $value['last_updated'] ?></td>
                     <td class="center">
+                        
+                        <?php if( $access_update == true ): ?>
+                        <a class="btn btn-primary" href="<?php echo base_url() ?>roles/access/<?php echo $value['id'] ?>.html" title="Editar Accesos de rol">
+                            <i class="icon-exchange icon-white"></i>            
+                        </a>
+                        <?php endif; ?>
+                                                
                          <?php if( $access_update == true ): ?>
                         <a class="btn btn-info" href="<?php echo base_url() ?>roles/update/<?php echo $value['id'] ?>.html" title="Editar rol">
                             <i class="icon-edit icon-white"></i>            
