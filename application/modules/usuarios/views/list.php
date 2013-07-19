@@ -76,9 +76,54 @@
             <table class="table">
               <thead>
                   <tr>
-                      <th>Buscar</th>
-                      <th colspan="2"><form id="search" method="post"><input type="text" id="find" name="find"/><input type="hidden" id="pag" name="pag" value="<?php echo base_url() . $pag ?>" /><input type="hidden" id="typeexport" /></form></th> 
-                      <th colspan="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                      <td>Buscar</td>
+                      <td colspan="2"><form id="search" method="post"><input type="text" id="find" name="find"/><input type="hidden" id="pag" name="pag" value="<?php echo base_url() . $pag ?>" /><input type="hidden" id="typeexport" /><input type="button" id="searchfind" value="Filtrar"  class="btn btn-round"/>
+                      
+                      <br />
+                      
+                      <a href="javascript:void(0)" id="showadvanced" class="btn- btn-link link-advanced">Avanzadas</a> 
+                      
+                      <div class="row advanced">
+                      	
+                                                	
+                             <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="clave" /> Clave  <input type="text" id="clave" class="hide input-small" /><br />
+                             <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="birthdate" /> Fecha nac. <input type="text" id="birthdate" class="hide input-small" readonly="readonly"/><br />
+                            
+                                              
+                      
+                      </div>
+                      
+                      
+                      <div class="row advanced">
+                      	                        	
+                              <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="national" /> Folio Nac. <input type="text" id="national" class="hide input-small" /><br />
+                              <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="provincial" /> Folio prov. <input type="text" id="provincial" class="hide input-small" /><br />
+                              <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="manager_id" /> Gerente <select id="manager_id" class="hide input-small" ><option value="">Seleccione</option><?php echo $gerentes ?></select><br />
+                                                
+                      </div>
+                      
+                      
+                      <div class="row advanced">
+                      	                        	
+                              <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="name" /> Nombre. <input type="text" id="name" class="hide input-small" /><br />
+                              <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="lastname" /> Apellido. <input type="text" id="lastname" class="hide input-small" /><br />
+                              <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="email" /> Correo. <input type="text" id="email" class="hide input-small" /><br />
+                                                
+                      </div>
+                      
+                      <div class="row advanced">
+                      	                        	
+                               <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="license_expired_date" /> Fecha de ven. <input type="text" id="license_expired_date" class="hide input-small"  readonly="readonly"/><br />
+                                                
+                      </div>
+                      
+                     			<input type="hidden" name="rol" id="rolsearch" />
+                      
+                      
+                     
+                      
+                      </form></td> 
+                      <th colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                       <td><a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-link">Crear</a></td>
                       <td><a href="<?php echo base_url() ?>usuarios/importar.html" class="btn btn-link">Importar XLS</a></td>
                       <td><button id="create-export" class="btn btn-link">Exportar XLS</button></td>
@@ -86,6 +131,19 @@
               </thead>   
               
             </table>  
+            <br />
+            <div class="row">
+            	<div class="span7 pull-right">
+					<?php if( !empty( $rol ) ): foreach(  $rol  as $value ): ?>
+						
+                        <a href="javascript:void(0)" id="<?php echo $value['id'] ?>" class="btn btn-link rol-search"><?php echo $value['name'] ?></a>
+                    
+					<?php endforeach; endif; ?>
+                    
+                    <a href="javascript:void(0)" id="" class="btn btn-link rol-search">Todos</a>
+                    
+                </div>
+            </div>
         	
             <div id="dialog-form" title="">
   				Que quiere exportar?
@@ -100,7 +158,7 @@
             
         
         	<?php if( !empty( $data ) ): ?>
-            <table class="table table-striped table-bordered bootstrap-datatable datatable">
+            <table class="table table-striped table-bordered bootstrap-datatable datatable" style="max-width:600px;">
               <thead>
                   <tr>
                       <th>Clave</th>

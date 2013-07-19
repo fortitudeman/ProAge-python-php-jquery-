@@ -15,17 +15,21 @@
 */
 class Usuarios extends CI_Controller {
 
-/**
- |	sessions ->	Save User Session 
- |	data -> Setting Array list data
- *  view -> Set Config to render a view
- **/	
-	
-	public $sessions = null;
-	
-	public $data = array();
-	
 	public $view = array();
+	
+	public $sessions = array();
+	
+	public $user_vs_rol = array();
+	
+	public $roles_vs_access = array();
+	
+	public $access = false; // Force security
+	
+	public $access_create = false;
+	
+	public $access_update = false;
+	
+	public $access_delete = false;
 	
 /** Construct Function **/
 /** Setting Load perms **/
@@ -34,14 +38,50 @@ class Usuarios extends CI_Controller {
 			
 		parent::__construct();
 		
-				
-		/** Getting Info User **/
+		/** Getting Info bu login User **/
 		
-		$this->load->model( 'user' );
+		$this->load->model( array( 'usuarios/user', 'roles/rol' ) );
 				
 		// Get Session
 		$this->sessions = $this->session->userdata('system');
 				
+		
+		// Get user rol		
+		$this->user_vs_rol = $this->rol->user_role( $this->sessions['id'] );
+		
+		// Get user rol access
+		$this->roles_vs_access = $this->rol->user_roles_vs_access( $this->user_vs_rol );
+		
+		
+	
+		// If exist the module name, the user accessed
+		if( !empty( $this->user_vs_rol ) )	
+		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ):
+
+			$this->access = true;
+			
+		break; endif; endforeach;
+		
+		
+		// Added Acctions for user, change the bool access
+		if( !empty( $this->user_vs_access ) )
+		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ):
+			
+			
+			if( $value['action_name'] == 'Crear' )
+				$this->access_create = true;
+			
+			
+			if( $value['action_name'] == 'Editar' )
+				$this->access_update = true;
+				
+			if( $value['action_name'] == 'Eliminar' )
+				$this->access_delete = true;	
+			
+					
+		endif; endforeach;
+							
+								
 		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
 			
 	}
@@ -196,8 +236,25 @@ class Usuarios extends CI_Controller {
 		
 		
 		
+		// Check access teh user for create
+		if( $this->access == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Usuarios", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'home', 'refresh' );
+		
+		}
+						
+		
 		// Load Model
-		$this->load->model( 'user' );
+		$this->load->model( array( 'user', 'rol' ) );
 		
 		
 		
@@ -229,7 +286,7 @@ class Usuarios extends CI_Controller {
 		$config['num_tag_close'] = '</li>';					
 		$config['base_url'] = base_url().'usuarios/index/';
 		$config['total_rows'] = $this->user->record_count();
-		$config['per_page'] = 30;
+		$config['per_page'] = 100;
 		$config['num_links'] = 5;
 		$config['uri_segment'] = 3;
 		$config['use_page_numbers'] = TRUE;
@@ -243,9 +300,13 @@ class Usuarios extends CI_Controller {
 		$this->view = array(
 				
 		  'title' => 'Usuarios',
-		  'css' => array(),
+		   // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
 		  'scripts' =>  array(
 		  	  
+			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
 			  '<script src="'.base_url().'scripts/config.js"></script>',
 			  '<script src="'.base_url().'usuarios/assets/scripts/find.js"></script>',
 			  '<script>
@@ -275,7 +336,9 @@ class Usuarios extends CI_Controller {
 		  'content' => 'usuarios/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  'data' => $this->user->overview( $begin ),
-		  'pag' => $pag	  
+		  'pag' => $pag,
+		  'rol' => $this->rol->all( 0 ),
+		  'gerentes' => $this->user->getSelectsGerentes()			  	  
 		  		
 		);
 				
@@ -693,14 +756,17 @@ class Usuarios extends CI_Controller {
 		// Load MOdel
 		$this->load->model( 'user' );
 		
-		
+		//print_r( $this->input->post() );
+		//exit;
 		// Filter method
-		$this->data = $this->user->find(  $this->input->post( 'find' ) );
+		$this->data = $this->user->find(  $this->input->post() );
 				
 		// If empty load all records again
 		if( empty( $this->data ) )
 			
-			$this->data = $this->user->overview( 0 );
+			echo '<tr><td colspan="10"><div class="alert alert-warning">No se encontrarón registros</div></td></tr>';
+			
+			//$this->data = $this->user->overview( 0 );
 		
 		
 		// Load Helper

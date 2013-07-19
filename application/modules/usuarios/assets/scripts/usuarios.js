@@ -36,6 +36,7 @@ $( document ).ready(function() {
 	$( '.input-novel-agente' ).hide();
 	$( '.input-fisica' ).hide();
 	$( '.input-moral' ).hide();
+
 	
 	
 	$( '.roles' ).bind( 'click', function(){ 
