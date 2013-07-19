@@ -77,7 +77,7 @@
               <thead>
                   <tr>
                       <td>Buscar</td>
-                      <td colspan="2"><form id="search" method="post"><input type="text" id="find" name="find"/><input type="hidden" id="pag" name="pag" value="<?php echo base_url() . $pag ?>" /><input type="hidden" id="typeexport" /><input type="button" id="searchfind" value="Filtrar"  class="btn btn-round"/>
+                      <td colspan="2"><form id="search" method="post"><input type="text" id="find" name="find"/><input type="hidden" id="pag" name="pag" value="<?php echo base_url() . $pag ?>" /><input type="hidden" id="typeexport" /><input type="button" id="searchfind" value="Filtrar"  class="btn btn-link"/>
                       
                       <br />
                       

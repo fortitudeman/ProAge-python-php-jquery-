@@ -64,7 +64,7 @@ class Usuarios extends CI_Controller {
 		
 		
 		// Added Acctions for user, change the bool access
-		if( !empty( $this->user_vs_access ) )
+		if( !empty( $this->user_vs_rol ) )	
 		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ):
 			
 			
@@ -361,34 +361,44 @@ class Usuarios extends CI_Controller {
 // Create new role
 	public function create(){
 		
-		/*		
-		if( !isset( $this->perm['view'] )){
-			echo '<script type="text/javascript"> history.back() </script>';
+		// Check access teh user for create
+		if( $this->access_create == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Usuarios crear", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'usuarios', 'refresh' );
+		
 		}
-		*/
 			
 			
 		
 		if( !empty( $_POST ) ){
 			
 			
+									
 			// Generals for user what does not agent
 			$this->form_validation->set_rules('group[]', 'Grupo', 'required');
 			$this->form_validation->set_rules('persona', 'Persona', 'required');
 			$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
-			$this->form_validation->set_rules('username', 'Usuario', 'required');
-			$this->form_validation->set_rules('password', 'Contraseña', 'required|md5');
+			$this->form_validation->set_rules('username', 'Usuario', 'required|is_unique[users.username]');
+			$this->form_validation->set_rules('password', 'Contraseña', 'required');
 			$this->form_validation->set_rules('email', 'Correo', 'required|valid_email|is_unique[users.email]');
 			
 			
 			if( $this->input->post('persona') == 'fisica' ){
-				$this->form_validation->set_rules('name', 'Nombre', 'required|is_unique[users.name]');
 				$this->form_validation->set_rules('lastname', 'Apellido', 'required');
 				$this->form_validation->set_rules('birthdate', 'Fecha de cumpleaños', 'required');
 			}
 			
 			if( $this->input->post('persona') == 'moral' ){
-				$this->form_validation->set_rules('name', 'Nombre', 'required|is_unique[users.name]');
+				//$this->form_validation->set_rules('name', 'Nombre', 'required|is_unique[users.name]');
 			}
 				
 			
@@ -396,7 +406,7 @@ class Usuarios extends CI_Controller {
 			if( in_array( 1, $this->input->post('group') ) ){
 				
 				// General for Agents
-				$this->form_validation->set_rules('manager_id', 'Gerente', 'required');
+				//$this->form_validation->set_rules('manager_id', 'Gerente', 'required');
 				
 				// If process of conexion == 1 or yes
 				if( $this->input->post( 'type' ) == 1 ){
@@ -408,9 +418,9 @@ class Usuarios extends CI_Controller {
 				}else{ // Else conexion == 2 or not
 					
 					// SET validation fields
-					$this->form_validation->set_rules('clave', 'Clave', 'required');
-					$this->form_validation->set_rules('folio_nacional[]', 'Folio Nacional', 'required');
-					$this->form_validation->set_rules('folio_provincial[]', 'Folio Provicional', 'required');
+					$this->form_validation->set_rules('clave', 'Clave', 'required|is_unique[agent_uids.uid]');
+					$this->form_validation->set_rules('folio_nacional[]', 'Folio Nacional', 'required|is_unique[agent_uids.uid]');
+					$this->form_validation->set_rules('folio_provincial[]', 'Folio Provicional', 'required|is_unique[agent_uids.uid]');
 					$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
 					$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia
 ', 'required');
@@ -421,21 +431,25 @@ class Usuarios extends CI_Controller {
 			}
 			
 			
+					
 			
+						
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
 					
 				
 				
 				$controlSaved = true;
-			
+				
+												
+				
 				// Save User Table							
 				$user = array(
 					'office_id'  => 0,
 					'manager_id' => 0,
 					'company_name'  => $this->input->post( 'company_name' ),
 					'username'  => $this->input->post( 'username' ),
-					'password'  => $this->input->post( 'password' ),					
+					'password'  => md5($this->input->post( 'password' )),					
 					'name'  => $this->input->post( 'name' ),
 					'lastnames'  => $this->input->post( 'lastname' ),
 					'birthdate'  => $this->input->post( 'birthdate' ),					
@@ -445,7 +459,27 @@ class Usuarios extends CI_Controller {
 				
 				// Add Manager if is an agent
 				if( in_array( 1, $this->input->post('group') ) ) $user['manager_id'] = $this->input->post( 'manager_id' );  
-								
+				
+				// Uploaded a picture
+				if( !empty( $_FILES['imagen']['name'] ) ){
+			
+						$file = $_FILES['imagen']['name'];  
+		 
+						$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
+					
+						// replace characters other than letters, numbers and . by _
+						$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
+						
+					 
+						if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) ){
+							$user['picture'] = $file;
+						}else{
+							$user['picture'] = "default.png";
+						};
+					
+				}
+				
+							
 								
 				if( $this->user->create( 'users', $user ) == false) $controlSaved = false ;
 				
@@ -669,6 +703,12 @@ class Usuarios extends CI_Controller {
 				
 				
 				
+				
+				
+				
+				
+				
+				
 				// Save Record	
 				if( $controlSaved == true ){
 					
@@ -707,6 +747,10 @@ class Usuarios extends CI_Controller {
 		$this->view = array(
 				
 		  'title' => 'Crear Usuario',
+		    // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
 		  'css' => array(),
 		  'scripts' =>  array(
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',

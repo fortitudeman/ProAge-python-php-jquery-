@@ -565,7 +565,7 @@ class Rol extends CI_Model{
 		
 		foreach ($query->result() as $row)
 
-			$checkbox .= '<input type="checkbox" class="required roles" name="group[]" value="'.$row->id.'"> '.  $row->name.'<br>';
+			$checkbox .= '<input type="checkbox" class="required roles" name="group[]" value="'.$row->id.'" '.set_radio('group[]', $row->id).'> '.  $row->name.'<br>';
 		
 
 		return $checkbox;

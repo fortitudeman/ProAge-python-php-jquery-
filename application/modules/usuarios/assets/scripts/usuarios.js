@@ -50,16 +50,15 @@ $( document ).ready(function() {
 	
 	
 	$( '.agente' ).bind( 'click', function(){ 	
-		if( this.value == 2 ){
+		if( this.value == 'No' ){
 			$( '.input-novel-agente' ).show();
 		}else{
 			$( '.input-novel-agente' ).hide();
-			$( '#folio_nacional_fields' ).html('');	// Clean and reset form
-			$( '#folio_provicional_fields' ).html('');	// Clean and reset form
 		}
 	})
 	
 	
+		
 	
 	$( '.persona' ).bind( 'click', function(){ 	
 		
@@ -68,7 +67,6 @@ $( document ).ready(function() {
 			$( '.input-moral' ).hide();	
 			$( '.input-fisica' ).show();
 			$( '.block-moral' ).removeClass( 'moral' );
-			$( '#moral-fields' ).html(''); // Clean and reset form
 			
 		}else{
 			
@@ -81,20 +79,48 @@ $( document ).ready(function() {
 	})
 	
 	
+		
+	
+	
 	// Addes Fields 
 	$( '#folio_nacional_add' ).bind( 'click', function(){
-			$( '#folio_nacional_fields' ).append( '<br><input class="input-xlarge focused" name="folio_nacional[]" type="text"><br>' )   
+			
+			var id =  parseInt($( '#countFolioNational' ).val() );
+				id++;
+				$( '#countFolioNational' ).val(id);
+			
+			var fields  = '<div id="fieldNational-'+id+'"><br><input class="input-xlarge focused" name="folio_nacional[]" type="text">';
+				fields += '<a href="javascript:void(0)" onclick="moral_folio_national('+id+')" class="btn btn-link" >-</a><br></div>';
+			$( '#folio_nacional_fields' ).append( fields ) ;
+			
 	});
 	
 	$( '#folio_provicional_add' ).bind( 'click', function(){
-			$( '#folio_provicional_fields' ).append( '<br><input class="input-xlarge focused" name="folio_provicional[]" type="text"><br>' )   
+			
+			
+			var id =  parseInt($( '#countFolioProvincial' ).val() );
+				id++;
+				$( '#countFolioProvincial' ).val(id);
+			
+			
+			var fields  = '<div id="fieldProvincial-'+id+'"><br><input class="input-xlarge focused" name="folio_provicional[]" type="text">';
+				fields += '<a href="javascript:void(0)" onclick="moral_folio_provincial('+id+')" class="btn btn-link" >-</a><br></div>';
+			
+			$( '#folio_provicional_fields' ).append( fields ) ;
+			//$( '#folio_provicional_fields' ).append( '<br><input class="input-xlarge focused" name="folio_provicional[]" type="text"><br>' )   
 	});
 	
 	
 	$( '#moral_add' ).bind( 'click', function(){
-		
-		
-			var fields =   '<div class="control-group error input-moral">';
+			
+			var id =  parseInt($( '#countMoralPerson' ).val() );
+				id++;
+				$( '#countMoralPerson' ).val(id);
+
+			
+			var fields =	'<div id="moral'+id+'"><br><hr>';
+				fields +=	'<h5>Datos de representante moral</h5>';
+				fields +=   '<div class="control-group error input-moral">';
                 fields +=  ' <label class="control-label" for="inputError">Nombre</label>';
                 fields +=   ' <div class="controls">';
                 fields +=     '<input class="input-xlarge focused required" name="name_r[]" type="text">';
@@ -133,11 +159,15 @@ $( document ).ready(function() {
                fields +=   '</div>';
 				
 			   fields += '<br>'	;
+			   
+			   fields += ' <a href="javascript:void(0)" onclick="moral_remove('+id+')" class="btn btn-link input-moral" >- Eliminar este grupo.</a> '	;
+			   
+			   fields +=   '</div>';
 				
-			$( '#moral-fields' ).append( '<br><hr>'+fields )   
+			$( '#moral-fields' ).append( fields );   
 	});
 	
-	
+		
 	
 	// Field Dates
 	$( '#birthdate' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });
@@ -147,3 +177,19 @@ $( document ).ready(function() {
 	
 	
 });
+
+function moral_remove( id ){
+	$( '#moral'+id ).hide('');
+	$( '#moral'+id ).html('');
+}
+
+function moral_folio_national( id ){
+	$( '#fieldNational-'+id ).hide('');
+	$( '#fieldNational-'+id ).html('');
+}
+
+function moral_folio_provincial( id ){
+	$( '#fieldProvincial-'+id ).hide('');
+	$( '#fieldProvincial-'+id ).html('');
+}
+
