@@ -101,18 +101,19 @@
 				<!-- theme selector ends -->
 				
 				<!-- user dropdown starts -->
-				<div class="btn-group pull-right" ><?php print_r( $user ); ?>
+				<div class="btn-group pull-right" >
 					<a class="btn dropdown-toggle" data-toggle="dropdown" href="javascript: void(0);">
-						<img src="<?php echo base_url() . 'usuarios/assets/profiles/' . $user['picture'] ?>">
+						<img src="<?php echo base_url() . 'usuarios/assets/profiles/' . $user['picture'] ?>" width="50" height="50">
                         <span class="hidden-phone"> <?php echo $user['name'] ?></span>
 						<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
-						<li><a href="<?php echo base_url() ?>usuarios/editar_perfil.html">Editar perfil</a></li>
+						<li><a href="<?php echo base_url() ?>usuarios/editar_perfil/<?php echo $user['id']; ?>.html">Editar perfil</a></li>
 						<li class="divider"></li>
 						<li><a href="<?php echo base_url() ?>usuarios/logout.html">Logout</a></li>
 					</ul>
 				</div>
+                
 				<!-- user dropdown ends -->
 				
 				<div class="top-nav nav-collapse">

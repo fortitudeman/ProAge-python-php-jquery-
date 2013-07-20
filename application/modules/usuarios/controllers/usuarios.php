@@ -477,6 +477,8 @@ class Usuarios extends CI_Controller {
 							$user['picture'] = "default.png";
 						};
 					
+				}else{
+					$user['picture'] = "default.png";
 				}
 				
 							
@@ -789,6 +791,7 @@ class Usuarios extends CI_Controller {
 	
 	
 	
+	
 // Find for field name filter	
 	public function find(){  
 		
@@ -960,9 +963,6 @@ class Usuarios extends CI_Controller {
 					if( empty( $items['email'] ) ) $message[$lin][] = array( 'messageemail' => 'El correo es requerido, linea de archivo: ' . $lin . $name );
 					
 					
-					
-					// Valid unique
-					if(  $this->user->is_unique( 'name', $items['name'] )  ) $message[$lin][] = array( 'messagenameexist' => 'El Nombre ya existe, linea de archivo: ' . $lin . $name );
 					if(  $this->user->is_unique( 'email', $items['email'] )  ) $message[$lin][] = array( 'messageemailexist' => 'El Correo ya existe, linea de archivo: ' . $lin . $name );
 					
 					
@@ -1009,10 +1009,14 @@ class Usuarios extends CI_Controller {
 							
 							}else{ // Else conexion == 2 or not
 								
+								//if(  $this->user->is_unique( 'email', $items['email'] )  ) $message[$lin][] = array( 'messageemailexist' => 'El Correo ya existe, linea de archivo: ' . $lin . $name );
 								// SET validation fields
 								if( empty( $items['clave'] ) ) $message[$lin][] = array( 'messageclave' => 'Clave es requerido, linea de archivo: ' . $lin . $name );
 								if( empty( $items['folio_nacional'] ) ) $message[$lin][] = array( 'message' => 'Folio nacional es requerido, linea de archivo: ' . $lin . $name );
 								if( empty( $items['folio_provincial'] ) ) $message[$lin][] = array( 'messagefolio_provincial' => 'Folioprovincial es requerido, linea de archivo: ' . $lin . $name );
+								
+								
+								
 								if( empty( $items['connection_date'] ) ) $message[$lin][] = array( 'messageconnection_date' => 'Fecha de conexión es requerido, linea de archivo: ' . $lin . $name );
 								if( empty( $items['license_expired_date'] ) ) $message[$lin][] = array( 'messagelicense_expired_date' => 'Expiración de licencia es requerido, linea de archivo: ' . $lin . $name );
 								
@@ -1041,7 +1045,8 @@ class Usuarios extends CI_Controller {
 								'lastnames'  => $item['lastname'],
 								'birthdate'  => $item['birthdate'],					
 								'email'  => $item['email'],
-								'disabled'  => $item['disabled']
+								'disabled'  => $item['disabled'],
+								'picture' => 'default.png'
 							);
 							
 							$group = explode( ',', strtolower(trim($items['group'])) );
@@ -1347,6 +1352,160 @@ class Usuarios extends CI_Controller {
 	}
 	
 	
+	
+// Update profile for user
+	public function editar_perfil( $id = null ){
+		
+		
+		if( empty( $id ) or $this->sessions['id'] != $id ){
+			
+							
+		  // Set false message		
+		  $this->session->set_flashdata( 'message', array( 
+			  
+			  'type' => false,	
+			  'message' => 'No puedes editar tu perfil, Informe a su administrador para que le otorge los permisos necesarios.'
+						  
+		  ));	
+		  
+		  
+		  redirect( 'home', 'refresh' );
+			
+						
+		}	
+		
+		// Load Model
+			$user = $this->user->getByIdToUpdate( $id );		
+					
+			
+		
+		if( !empty( $_POST ) ){
+			
+			
+			
+			// Generals for user what does not agent
+			if( $user['username'] != $this->input->post( 'username' ) )
+				$this->form_validation->set_rules('username', 'Usuario', 'is_unique[users.username]');
+				
+			
+			if( !empty( $_POST['password'] ) and md5($_POST['passwordlast']) == $user['password'] )
+				$this->form_validation->set_rules('password', 'Nuevo Password', 'matches[passwordnew]');
+		
+			if( $user['email'] != $this->input->post( 'email' ) )
+				$this->form_validation->set_rules('email', 'Correo', 'valid_email|is_unique[users.email]');
+			
+			
+			// Run Validation
+			if ( $this->form_validation->run() == TRUE ){
+				
+				$usernew = array();
+				
+				if( !empty( $_POST['username'] ) )
+					$usernew['username'] = $this->input->post('username');
+				
+				if( !empty( $_POST['password'] ) )
+					$usernew['password'] = md5($this->input->post('password'));
+				
+				if( !empty( $_POST['email'] ) )
+					$usernew['email'] = md5($this->input->post('email'));						
+				
+				// Uploaded a picture
+				if( !empty( $_FILES['imagen']['name'] ) ){
+						
+						// Drop Last Image
+						if( is_file( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] ) and $user['picture'] != 'default.png' )
+								unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] );
+							
+							
+							
+						$file = $_FILES['imagen']['name'];  
+		 
+						$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
+					
+						// replace characters other than letters, numbers and . by _
+						$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
+						
+						  
+					 
+						if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) ){
+							$usernew['picture'] = $file;
+						}
+				}				
+				
+				
+				if( $this->input->post( 'deleteimage' ) == 'true' ){
+				
+				// Drop Last Image
+					if( is_file( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] ) and $user['picture'] != 'default.png' )
+							unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] );
+					
+					$usernew['picture'] = 'default.png';
+				
+			}
+			
+			
+			if( $this->user->update( 'users', $id, $usernew ) == true ){
+					
+					// Set true message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => true,	
+						'message' => 'Se guardo el registro correctamente'
+									
+					));												
+					
+					
+					redirect( 'home', 'refresh' );
+					
+					
+			}else{
+				
+				// Set true message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => false,	
+						'message' => 'No se puede guardar los datos nuevos de tu perfil.'
+									
+					));												
+					
+					
+					redirect( 'home', 'refresh' );
+				
+			} 
+				
+			}
+			
+						
+		}
+		
+		
+		
+		// Config view
+		$this->view = array(
+				
+		  'title' => 'Editar perfil',
+		    // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'css' => array(),
+		  'scripts' =>  array(
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			  '<script src="'.base_url().'usuarios/assets/scripts/profile.js"></script>',		
+			  '<script src="'.base_url().'scripts/config.js"></script>'
+			  	
+		  ),
+		  'content' => 'usuarios/profile', // View to load
+		  'message' => $this->session->flashdata('message') ,// Return Message, true and false if have
+		  'data' => $user
+		);
+		
+		
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+	
+	}		
 	
 	
 	

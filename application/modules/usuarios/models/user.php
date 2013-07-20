@@ -90,7 +90,7 @@ class User extends CI_Model{
 		// Set timestamp unix
 		$timestamp = strtotime( date( 'd-m-Y H:i:s' ) );
 		
-		$values['modified'] = $timestamp;
+		$values['last_updated'] = $timestamp;
 		
         if( $this->db->update( $table, $values, array( 'id' => $id ) ) )
 			
@@ -1083,7 +1083,41 @@ class User extends CI_Model{
 	}
 	
 	
-	
+// Get user by id to update
+	public function getByIdToUpdate( $id = null ){
+		
+		if( empty( $id ) ) return false;
+				
+		unset( $this->data );	$this->data = array();
+		
+		// Validation form not repear name
+		$this->db->
+					select()
+				  ->
+				   from( 'users' )	
+				  ->
+				   where( array( 'id' => $id ) );
+		
+		$query = $this->db->get();
+				
+		if( $query->num_rows == 0 ) return false;
+		
+		foreach ($query->result() as $row)
+		
+			$this->data[] = array( 
+				  
+				  'id' => $row->id,
+				  'username' => $row->username,
+				  'password' => $row->password,
+				  'email' => $row->email,
+				  'picture' => $row->picture
+				  
+				  
+			);
+				
+		return $this->data[0];
+		
+	}	
 	
 	
 	
