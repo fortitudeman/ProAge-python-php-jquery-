@@ -31,6 +31,9 @@ class Usuarios extends CI_Controller {
 	
 	public $access_delete = false;
 	
+	public $access_request_new_user = false;
+	
+	
 /** Construct Function **/
 /** Setting Load perms **/
 	
@@ -78,6 +81,8 @@ class Usuarios extends CI_Controller {
 			if( $value['action_name'] == 'Eliminar' )
 				$this->access_delete = true;	
 			
+			if( $value['action_name'] == 'Petición nuevo usuario' )
+				$this->access_request_new_user = true;
 					
 		endif; endforeach;
 							
@@ -358,7 +363,7 @@ class Usuarios extends CI_Controller {
 	
 	
 
-// Create new role
+// Create new user
 	public function create(){
 		
 		// Check access teh user for create
@@ -409,7 +414,7 @@ class Usuarios extends CI_Controller {
 				//$this->form_validation->set_rules('manager_id', 'Gerente', 'required');
 				
 				// If process of conexion == 1 or yes
-				if( $this->input->post( 'type' ) == 1 ){
+				if( $this->input->post( 'type' ) == 'Si' ){
 					
 					// SET validation fields
 					$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
@@ -454,11 +459,12 @@ class Usuarios extends CI_Controller {
 					'lastnames'  => $this->input->post( 'lastname' ),
 					'birthdate'  => $this->input->post( 'birthdate' ),					
 					'email'  => $this->input->post( 'email' ),
-					'disabled'  => $this->input->post( 'disabled' )
 				);
 				
 				// Add Manager if is an agent
 				if( in_array( 1, $this->input->post('group') ) ) $user['manager_id'] = $this->input->post( 'manager_id' );  
+				
+				if( $this->input->post( 'disabled' ) == 'Si' ) $user['disabled']  = 1; else $user['disabled'] = 0;
 				
 				// Uploaded a picture
 				if( !empty( $_FILES['imagen']['name'] ) ){
@@ -780,6 +786,444 @@ class Usuarios extends CI_Controller {
 	
 	
 	
+
+
+
+
+
+
+
+
+
+
+
+// Create request new user
+	public function create_request_new_user(){
+		
+		// Check access teh user for create
+		if( $this->access_request_new_user == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Usuarios Crear Petición de nuevo usuario", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'usuarios', 'refresh' );
+		
+		}
+			
+			
+		
+		if( !empty( $_POST ) ){
+			
+			
+									
+			// Generals for user what does not agent
+			$this->form_validation->set_rules('group[]', 'Grupo', 'required');
+			$this->form_validation->set_rules('persona', 'Persona', 'required');
+			$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
+			$this->form_validation->set_rules('username', 'Usuario', 'required|is_unique[users.username]');
+			$this->form_validation->set_rules('password', 'Contraseña', 'required');
+			$this->form_validation->set_rules('email', 'Correo', 'required|valid_email|is_unique[users.email]');
+			
+			
+			if( $this->input->post('persona') == 'fisica' ){
+				$this->form_validation->set_rules('lastname', 'Apellido', 'required');
+				$this->form_validation->set_rules('birthdate', 'Fecha de cumpleaños', 'required');
+			}
+			
+			if( $this->input->post('persona') == 'moral' ){
+				//$this->form_validation->set_rules('name', 'Nombre', 'required|is_unique[users.name]');
+			}
+				
+			
+			// User Agent Validations
+			if( in_array( 1, $this->input->post('group') ) ){
+				
+				// General for Agents
+				//$this->form_validation->set_rules('manager_id', 'Gerente', 'required');
+				
+				// If process of conexion == 1 or yes
+				if( $this->input->post( 'type' ) == 'Si' ){
+					
+					// SET validation fields
+					$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
+					$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia
+', 'required');
+				}else{ // Else conexion == 2 or not
+					
+					// SET validation fields
+					$this->form_validation->set_rules('clave', 'Clave', 'required|is_unique[agent_uids.uid]');
+					$this->form_validation->set_rules('folio_nacional[]', 'Folio Nacional', 'required|is_unique[agent_uids.uid]');
+					$this->form_validation->set_rules('folio_provincial[]', 'Folio Provicional', 'required|is_unique[agent_uids.uid]');
+					$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
+					$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia
+', 'required');
+					
+				}
+				
+			
+			}
+			
+			
+					
+			
+						
+			// Run Validation
+			if ( $this->form_validation->run() == TRUE ){
+					
+				
+				
+				$controlSaved = true;
+				
+												
+				
+				// Save User Table							
+				$user = array(
+					'office_id'  => 0,
+					'manager_id' => 0,
+					'company_name'  => $this->input->post( 'company_name' ),
+					'username'  => $this->input->post( 'username' ),
+					'password'  => md5($this->input->post( 'password' )),					
+					'name'  => $this->input->post( 'name' ),
+					'lastnames'  => $this->input->post( 'lastname' ),
+					'birthdate'  => $this->input->post( 'birthdate' ),					
+					'email'  => $this->input->post( 'email' ),
+					
+				);
+				
+				// Add Manager if is an agent
+				if( in_array( 1, $this->input->post('group') ) ) $user['manager_id'] = $this->input->post( 'manager_id' );  
+				
+				if( $this->input->post( 'disabled' ) == 'Si' ) $user['disabled']  = 1; else $user['disabled'] = 0;
+				
+				// Uploaded a picture
+				if( !empty( $_FILES['imagen']['name'] ) ){
+			
+						$file = $_FILES['imagen']['name'];  
+		 
+						$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
+					
+						// replace characters other than letters, numbers and . by _
+						$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
+						
+					 
+						if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) ){
+							$user['picture'] = $file;
+						}else{
+							$user['picture'] = "default.png";
+						};
+					
+				}else{
+					$user['picture'] = "default.png";
+				}
+				
+							
+								
+				if( $this->user->create( 'users', $user ) == false) $controlSaved = false ;
+				
+				if( $controlSaved == false ){
+						
+					// Set false message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => false,	
+						'message' => 'No se pudo guardar el registro, Usuario, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
+									
+					));												
+					
+					
+					redirect( 'usuarios/create', 'refresh' );
+					
+				}
+			
+				// Recovery id last user saved
+				$idSaved = $this->user->insert_id();
+							
+				
+				// Added User roles groups
+				$user_roles = array();				
+				
+				
+				if( !empty( $_POST['group'] ) )
+					foreach( $this->input->post( 'group' ) as $group )
+						$user_roles[] = array( 'user_id' => $idSaved , 'user_role_id' => $group );
+				
+				if( $this->user->create_banch( 'users_vs_user_roles', $user_roles ) == false) $controlSaved = false ;
+				
+				
+				if( $controlSaved == false ){
+						
+						// Set false message		
+						$this->session->set_flashdata( 'message', array( 
+							
+							'type' => false,	
+							'message' => 'No se pudo guardar el registro, Asignación de rol, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
+										
+						));												
+						
+						
+						redirect( 'usuarios/create', 'refresh' );
+						
+				}
+							
+				/*	
+				// Save values of moral person
+				if( $_POST['persona'] == 'fisica' ){
+					
+					$fisica= array(
+						
+						'user_id'  => $idSaved,
+						'name'  => $this->input->post( 'name' ),
+						'lastnames'  => $this->input->post( 'lastname' ),
+						'birthdate'  => $this->input->post( 'birthdate' )
+						
+					);
+					
+					
+					//if( $this->user->create( 'agents', $fisica ) == false) $controlSaved = false ;
+					
+					
+				}*/
+				
+				
+				
+				
+				// Save values of moral person
+				if( $_POST['persona'] == 'moral' ){
+										
+					$timestamp = date( 'Y-m-d H:i:s' ) ;
+					
+					$moral= array();
+					
+					for( $i=0; $i<=count( $_POST['name_r'] ); $i++ )
+							
+							if( isset( $_POST['name_r'][$i] ) )
+							$moral[] = array(
+								
+								'user_id'  => $idSaved,
+								'name'  => $_POST['name_r'][$i],
+								'lastnames'  =>  $_POST['lastname_r'][$i],
+								'office_phone'  => $_POST['office_phone'][$i],
+								'office_ext'  => $_POST['office_ext'][$i],
+								'mobile'  => $_POST['mobile'][$i],
+								'last_updated' => $timestamp,
+								'date' => $timestamp
+								
+							);
+					
+					
+					
+					if( $this->user->create_banch( 'representatives', $moral ) == false) $controlSaved = false ;
+					
+					if( $controlSaved == false ){
+						
+						// Set false message		
+						$this->session->set_flashdata( 'message', array( 
+							
+							'type' => false,	
+							'message' => 'No se pudo guardar el registro, Representantes morales ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
+										
+						));												
+						
+						
+						redirect( 'usuarios/create', 'refresh' );
+						
+					}
+																
+				}
+				
+				
+				
+				
+				
+				
+					
+				
+				if( in_array( 1, $this->input->post('group') ) ){
+					
+					
+					$agent= array(
+						
+						'user_id'  => $idSaved,
+						'connection_date'  => $this->input->post( 'connection_date' ),
+						'license_expired_date'  =>$this->input->post( 'license_expired_date' ),
+						
+					);
+					
+					
+					if( $this->user->create( 'agents', $agent ) == false) $controlSaved = false ;
+					
+					
+					
+					// Saved Agents
+					if( $controlSaved == false ){
+						
+						// Set false message		
+						$this->session->set_flashdata( 'message', array( 
+							
+							'type' => false,	
+							'message' => 'No se pudo guardar el registro, agentes ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
+										
+						));												
+						
+						
+						redirect( 'usuarios/create', 'refresh' );
+						
+					}
+					
+					
+					
+					
+					
+					$idAgentSaved = $this->user->insert_id();
+																				
+					$uids_agens = array();
+					
+					$timestamp = date( 'Y-m-d H:i:s' ) ;
+					
+					// Added Clave
+					$uids_agens[] = array(
+								'agent_id' => $idAgentSaved,
+								'type' =>  'clave',
+								'uid' =>  $this->input->post( 'clave' ),
+								'last_updated' => $timestamp,
+								'date' => $timestamp
+					);
+					
+					
+					
+					// added folio nacional
+					if( !empty( $_POST['folio_nacional'] ) )
+						foreach( $this->input->post( 'folio_nacional' ) as $value )
+							$uids_agens[] = array(
+								'agent_id' => $idAgentSaved,
+								'type' =>  'national',
+								'uid' =>  $value,
+								'last_updated' => $timestamp,
+								'date' => $timestamp
+							);
+					
+					
+					
+					
+					
+					// Added folio provicional
+					if( !empty( $_POST['folio_provincial'] ) )
+						foreach( $this->input->post( 'folio_provincial' ) as $value )
+							$uids_agens[] = array(
+								'agent_id' => $idAgentSaved,
+								'type' => 'provincial',
+								'uid' =>  $value,
+								'last_updated' => $timestamp,
+								'date' => $timestamp
+							);
+					
+					
+					if( $this->user->create_banch( 'agent_uids', $uids_agens ) == false) $controlSaved = false ;
+					
+					
+					if( $controlSaved == false ){
+						
+						// Set false message		
+						$this->session->set_flashdata( 'message', array( 
+							
+							'type' => false,	
+							'message' => 'No se pudo guardar el registro, Folio provicional, Folio Nacional, Clave ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
+										
+						));												
+						
+						
+						redirect( 'usuarios/create', 'refresh' );
+						
+					}
+					
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				// Save Record	
+				if( $controlSaved == true ){
+					
+					
+					// Set true message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => true,	
+						'message' => 'Se guardo el registro correctamente'
+									
+					));												
+					
+					
+					redirect( 'usuarios', 'refresh' );
+					
+					
+					
+				}
+				
+				
+			}	
+			
+						
+		}
+		
+		
+		// Load Model Dependencies
+		$this->load->model( 
+						array( 
+							'roles/rol'
+						 ) 
+		);
+		
+		
+		// Config view
+		$this->view = array(
+				
+		  'title' => 'Crear Petición nuevo usuario',
+		    // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'css' => array(),
+		  'scripts' =>  array(
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+			  '<script src="'.base_url().'usuarios/assets/scripts/md5.js"></script>',	
+			  '<script src="'.base_url().'usuarios/assets/scripts/usuarios.js"></script>',		
+			  '<script src="'.base_url().'scripts/config.js"></script>'
+			  	
+		  ),
+		  'content' => 'usuarios/create_request_new_user', // View to load
+		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+			
+			
+		 //Selects	
+		  'group' => $this->rol->checkbox(),
+		  'gerentes' => $this->user->getSelectsGerentes()			
+		);
+		
+		
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+	
+	}
+
+
+
+
+
+
 	
 	
 	
