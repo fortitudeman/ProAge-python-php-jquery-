@@ -87,11 +87,7 @@ class User extends CI_Model{
         
 		if( empty( $table ) or empty( $values ) or empty( $id ) ) return false;
 					
-		// Set timestamp unix
-		$timestamp = strtotime( date( 'd-m-Y H:i:s' ) );
-		
-		$values['last_updated'] = $timestamp;
-		
+				
         if( $this->db->update( $table, $values, array( 'id' => $id ) ) )
 			
 			return true;
@@ -1287,6 +1283,47 @@ class User extends CI_Model{
 		
 		unset( $query );
 		
+		
+		// Getting users_vs_user_roles
+		if( !empty( $this->data ) ){
+			
+			$users_vs_user_roles = array();
+			
+			$this->db->where( array( 'user_id' => $id ) );
+		
+			$query = $this->db->get( 'users_vs_user_roles' );
+			
+			if ($query->num_rows() > 0){
+		
+				foreach ($query->result() as $row) {
+		
+					$users_vs_user_roles[] = array( 
+						'user_id' => $row->user_id,
+						'user_role_id' => $row->user_role_id
+					);
+		
+				}
+				
+				$this->data['users_vs_user_roles'] = $users_vs_user_roles;		
+			}
+			
+			
+			
+		}
+		
+		
+		
+		unset( $query );
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		// Get agents info
 		$this->db->where( array( 'user_id' => $id ) );
 		
@@ -1310,6 +1347,8 @@ class User extends CI_Model{
 			
 			$this->data['agents'] = $agents;		
 		}
+		
+		
 		
 		
 		

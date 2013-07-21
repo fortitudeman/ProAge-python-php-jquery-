@@ -408,8 +408,7 @@ class Usuarios extends CI_Controller {
 		
 		if( !empty( $_POST ) ){
 			
-			
-									
+					
 			// Generals for user what does not agent
 			$this->form_validation->set_rules('group[]', 'Grupo', 'required');
 			$this->form_validation->set_rules('persona', 'Persona', 'required');
@@ -456,7 +455,7 @@ class Usuarios extends CI_Controller {
 				
 			
 			}
-			
+		
 			
 					
 			
@@ -509,7 +508,6 @@ class Usuarios extends CI_Controller {
 					$user['picture'] = "default.png";
 				}
 				
-							
 								
 				if( $this->user->create( 'users', $user ) == false) $controlSaved = false ;
 				
@@ -587,7 +585,7 @@ class Usuarios extends CI_Controller {
 					
 					$moral= array();
 					
-					for( $i=0; $i<=count( $_POST['name_r'] ); $i++ )
+					for( $i=0; $i<=count( $_POST['name_r'] ); $i++ ){
 							
 							if( isset( $_POST['name_r'][$i] ) )
 							$moral[] = array(
@@ -602,6 +600,7 @@ class Usuarios extends CI_Controller {
 								'date' => $timestamp
 								
 							);
+					}
 					
 					
 					
@@ -2032,17 +2031,453 @@ class Usuarios extends CI_Controller {
 		
 		
 		
-		
-		
-		
-		
-		
 		$this->load->model( 'user' );
-		$user = $this->user->getForUpdateOrDelete( $id );
-		print_r( $user );
+		$data = $this->user->getForUpdateOrDelete( $id );
+		
+		// Check Record if exist
+		if( empty( $data ) ){
+			
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No existe el registro. No puede editar este registro.'
+							
+			));	
+			
+			
+			redirect( 'usuarios', 'refresh' );
+			
+		}
 		
 		
 		
+		
+		if( !empty( $_POST ) ){
+			
+			
+			
+			
+			// Generals for user what does not agent
+			$this->form_validation->set_rules('group[]', 'Grupo', 'required');
+			$this->form_validation->set_rules('persona', 'Persona', 'required');
+			$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
+			
+			
+			if( $data[0]['username'] != $this->input->post('username') )
+				$this->form_validation->set_rules('username', 'Usuario', 'required|is_unique[users.username]');
+			
+			if( $data[0]['email'] != $this->input->post('email') )
+				$this->form_validation->set_rules('email', 'Correo', 'required|valid_email|is_unique[users.email]');
+			
+			
+			if( $this->input->post('persona') == 'fisica' ){
+				$this->form_validation->set_rules('lastname', 'Apellido', 'required');
+				$this->form_validation->set_rules('birthdate', 'Fecha de cumpleaños', 'required');
+			}
+			
+						
+			// User Agent Validations
+			if( in_array( 1, $this->input->post('group') ) ){
+				
+				// General for Agents
+				//$this->form_validation->set_rules('manager_id', 'Gerente', 'required');
+				
+				// If process of conexion == 1 or yes
+				if( $this->input->post( 'type' ) == 'Si' ){
+					
+					// SET validation fields
+					$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
+					$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia
+', 'required');
+				}else{ // Else conexion == 2 or not
+					
+					// SET validation fields
+					//$this->form_validation->set_rules('clave', 'Clave', 'required|is_unique[agent_uids.uid]');
+					//$this->form_validation->set_rules('folio_nacional[]', 'Folio Nacional', 'required|is_unique[agent_uids.uid]');
+					//$this->form_validation->set_rules('folio_provincial[]', 'Folio Provicional', 'required|is_unique[agent_uids.uid]');
+					$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
+					$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia
+', 'required');
+					
+				}
+				
+			
+			}
+			
+			// Run Validation
+			if ( $this->form_validation->run() == TRUE ){
+					
+				
+				
+				
+				$controlSaved = true;
+				
+				$timestamp = date( 'Y-m-d H:i:s' ) ;
+												
+				
+				// Save User Table							
+				$user = array(
+					'office_id'  => 0,
+					'manager_id' => 0,
+					'company_name'  => $this->input->post( 'company_name' ),
+					'username'  => $this->input->post( 'username' ),			
+					'name'  => $this->input->post( 'name' ),
+					'lastnames'  => $this->input->post( 'lastname' ),
+					'birthdate'  => $this->input->post( 'birthdate' ),					
+					'email'  => $this->input->post( 'email' ),
+					'last_updated' => $timestamp,
+				);
+								
+				// Add Manager if is an agent
+				if( in_array( 1, $this->input->post('group') ) ) $user['manager_id'] = $this->input->post( 'manager_id' );  
+				
+				if( $this->input->post( 'disabled' ) == 'Si' ) $user['disabled']  = 1; else $user['disabled'] = 0;
+				
+				// Uploaded a picture
+				if( !empty( $_FILES['imagen']['name'] ) ){
+			
+						$file = $_FILES['imagen']['name'];  
+		 
+						$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
+					
+						// replace characters other than letters, numbers and . by _
+						$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
+						
+					 
+						if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) ){
+							$user['picture'] = $file;
+						}else{
+							$user['picture'] = "default.png";
+						};
+												
+						if( $data[0]['picture'] != $file and is_file( APPPATH.'modules/usuarios/assets/profiles/'.$data[0]['picture'] ) )
+							unlink( APPPATH.'modules/usuarios/assets/profiles/'.$data[0]['picture'] );
+						
+					
+				}else{
+					$user['picture'] = $data[0]['picture'];
+				}
+				
+				
+				
+				if( !empty( $_POST['password'] ) )
+					$user['password']  = md5($this->input->post( 'password' ) );		
+				
+				
+				
+				
+							
+								
+				if( $this->user->update( 'users', $id, $user ) == false) $controlSaved = false ;
+				
+				if( $controlSaved == false ){
+						
+					// Set false message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => false,	
+						'message' => 'No se pudo guardar el registro, Usuario, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
+									
+					));												
+					
+					
+					redirect( 'usuarios/update/'.$id, 'refresh' );
+					
+				}
+				
+				
+				
+				
+				
+				// Added User roles groups
+				$user_roles = array();				
+				
+				
+				if( !empty( $_POST['group'] ) ){
+					
+					$this->user->delete( 'users_vs_user_roles', 'user_id',  $data[0]['id'] );
+					
+					
+					foreach( $this->input->post( 'group' ) as $group )
+						$user_roles[] = array( 'user_id' => $id , 'user_role_id' => $group );
+				
+					if( $this->user->create_banch( 'users_vs_user_roles', $user_roles ) == false) $controlSaved = false ;
+					
+					
+					if( $controlSaved == false ){
+							
+							// Set false message		
+							$this->session->set_flashdata( 'message', array( 
+								
+								'type' => false,	
+								'message' => 'No se pudo guardar el registro, Asignación de rol, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
+											
+							));												
+							
+							
+							redirect( 'usuarios/update/'.$id, 'refresh' );
+							
+					}
+				
+				}
+				
+				
+				
+				
+							
+				/*	
+				// Save values of moral person
+				if( $_POST['persona'] == 'fisica' ){
+					
+					$fisica= array(
+						
+						'user_id'  => $idSaved,
+						'name'  => $this->input->post( 'name' ),
+						'lastnames'  => $this->input->post( 'lastname' ),
+						'birthdate'  => $this->input->post( 'birthdate' )
+						
+					);
+					
+					
+					//if( $this->user->create( 'agents', $fisica ) == false) $controlSaved = false ;
+					
+					
+				}*/
+				
+				
+				
+				
+				// Save values of moral person
+				if( $_POST['persona'] == 'moral' ){
+					
+					
+					$this->user->delete( 'representatives', 'user_id',  $data[0]['id'] );
+					
+					
+					$moral= array();
+					
+					for( $i=0; $i<=count( $_POST['name_r'] ); $i++ )
+							
+							if( isset( $_POST['name_r'][$i] ) )
+							$moral[] = array(
+								
+								'user_id'  => $id,
+								'name'  => $_POST['name_r'][$i],
+								'lastnames'  =>  $_POST['lastname_r'][$i],
+								'office_phone'  => $_POST['office_phone'][$i],
+								'office_ext'  => $_POST['office_ext'][$i],
+								'mobile'  => $_POST['mobile'][$i],
+								'last_updated' => $timestamp,
+								'date' => $timestamp
+								
+							);
+					
+					
+					
+					if( $this->user->create_banch( 'representatives', $moral ) == false) $controlSaved = false ;
+					
+					if( $controlSaved == false ){
+						
+						// Set false message		
+						$this->session->set_flashdata( 'message', array( 
+							
+							'type' => false,	
+							'message' => 'No se pudo guardar el registro, Representantes morales ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
+										
+						));												
+						
+						
+						redirect( 'usuarios/update/'.$id, 'refresh' );
+						
+					}
+																
+				}
+				
+				
+				
+				
+				
+				
+					
+				
+				if( in_array( 1, $this->input->post('group') ) ){
+					
+					
+					$this->user->delete( 'agents', 'user_id',  $data[0]['id'] );
+					
+					$agent= array(
+						
+						'user_id'  => $id,
+						'connection_date'  => $this->input->post( 'connection_date' ),
+						'license_expired_date'  =>$this->input->post( 'license_expired_date' ),
+						
+					);
+					
+					
+					if( $this->user->create( 'agents', $agent ) == false) $controlSaved = false ;
+					
+					
+					
+					// Saved Agents
+					if( $controlSaved == false ){
+						
+						// Set false message		
+						$this->session->set_flashdata( 'message', array( 
+							
+							'type' => false,	
+							'message' => 'No se pudo guardar el registro, agentes ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
+										
+						));												
+						
+						
+						redirect( 'usuarios/update/'.$id, 'refresh' );
+						
+					}
+					
+					
+					$idAgentSaved = $this->user->insert_id();
+					
+																			
+					$uids_agens = array();
+				
+					// Added Clave
+					$uids_agens[] = array(
+								'agent_id' => $idAgentSaved,
+								'type' =>  'clave',
+								'uid' =>  $this->input->post( 'clave' ),
+								'last_updated' => $timestamp,
+								'date' => $timestamp
+					);
+					
+					
+					
+					// added folio nacional
+					if( !empty( $_POST['folio_nacional'] ) )
+						foreach( $this->input->post( 'folio_nacional' ) as $value )
+							$uids_agens[] = array(
+								'agent_id' => $idAgentSaved,
+								'type' =>  'national',
+								'uid' =>  $value,
+								'last_updated' => $timestamp,
+								'date' => $timestamp
+							);
+					
+					
+					
+					
+					
+					// Added folio provicional
+					if( !empty( $_POST['folio_provincial'] ) )
+						foreach( $this->input->post( 'folio_provincial' ) as $value )
+							$uids_agens[] = array(
+								'agent_id' => $idAgentSaved,
+								'type' => 'provincial',
+								'uid' =>  $value,
+								'last_updated' => $timestamp,
+								'date' => $timestamp
+							);
+					
+					
+					$this->user->delete( 'agent_uids', 'agent_id',  $data['agents'][0]['id'] );
+					
+					if( $this->user->create_banch( 'agent_uids', $uids_agens ) == false) $controlSaved = false ;
+					
+										
+					if( $controlSaved == false ){
+						
+						// Set false message		
+						$this->session->set_flashdata( 'message', array( 
+							
+							'type' => false,	
+							'message' => 'No se pudo guardar el registro, Folio provicional, Folio Nacional, Clave ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
+										
+						));												
+						
+						
+						redirect( 'usuarios/update/'.$id, 'refresh' );
+						
+					}
+					
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				// Save Record	
+				if( $controlSaved == true ){
+					
+					
+					// Set true message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => true,	
+						'message' => 'Se guardo el registro correctamente'
+									
+					));												
+					
+					
+					redirect( 'usuarios', 'refresh' );
+					
+					
+					
+				}
+				
+				
+			}	
+			
+			
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// Config view
+		$this->view = array(
+				
+		  'title' => 'Editar Usuario',
+		    // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'css' => array(),
+		  'scripts' =>  array(
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+			  '<script src="'.base_url().'usuarios/assets/scripts/update.js"></script>',		
+			  '<script src="'.base_url().'scripts/config.js"></script>'
+			  	
+		  ),
+		  'content' => 'usuarios/update', // View to load
+		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+			
+			
+		 //Selects	
+		  'group' => $this->rol->checkbox(),
+		  'gerentes' => $this->user->getSelectsGerentes(),
+		  
+		  'data' => $data			
+		); 
+		
+		
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+				
 	}
 	
 	
@@ -2110,6 +2545,9 @@ class Usuarios extends CI_Controller {
 			// Delete from users
 			if( isset( $user[0]['id'] ) )
 				if( $this->user->delete( 'users', 'id',  $user[0]['id'] ) == false )  $deleteControl = false;
+				
+		   
+		   	
 			
 			
 			if( $deleteControl == false ){
@@ -2119,6 +2557,27 @@ class Usuarios extends CI_Controller {
 					
 					'type' => false,	
 					'message' => 'No se puede borrar el registro. Usuarios. Informe a su administrador para que le otorge los permisos necesarios.'
+								
+				));	
+				
+				
+				//redirect( 'usuarios', 'refresh' );
+				
+				
+			}
+			
+			
+			// Delete from users_vs_user_roles
+			if( isset( $user[0]['id'] ) )
+				if( $this->user->delete( 'users_vs_user_roles', 'user_id',  $user[0]['id'] ) == false )  $deleteControl = false;				
+			
+			if( $deleteControl == false ){
+				
+				// Set false message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => false,	
+					'message' => 'No se puede borrar el registro. Usuarios Roles. Informe a su administrador para que le otorge los permisos necesarios.'
 								
 				));	
 				
