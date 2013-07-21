@@ -29,7 +29,7 @@ $( document ).ready(function() {
 			checked.push( [$(this).val(), $( '#'+element ).val() ] );
 		});
 		
-		var Data = { find: this.value, rol: $( '#rolsearch' ).val(), advanced: checked };
+		var Data = { find: $('#find').val(), rol: $( '#rolsearch' ).val(), advanced: checked };
 				
 		
 		$.ajax({

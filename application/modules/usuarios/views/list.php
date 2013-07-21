@@ -38,7 +38,7 @@
         <div class="box-header well" data-original-title>
             <h2></h2>
             <div class="box-icon">
-               <a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-round"><i class="icon-plus"></i></a>
+               <?php if( $access_create == true ): ?><a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-round"><i class="icon-plus"></i></a><?php endif; ?>
             </div>
         </div>
         <div class="box-content">
@@ -123,10 +123,11 @@
                      
                       
                       </form></td> 
-                      <th colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                      <td><a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-link">Crear</a></td>
-                      <td><a href="<?php echo base_url() ?>usuarios/importar.html" class="btn btn-link">Importar XLS</a></td>
-                      <td><button id="create-export" class="btn btn-link">Exportar XLS</button></td>
+                      <th colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                      <td><?php if( $access_create == true ): ?><a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-link">Crear</a><?php endif; ?></td>
+                      <td><?php if( $access_request_new_user == true ): ?><a href="<?php echo base_url() ?>usuarios/create_request_new_user.html" class="btn btn-link">Crear Petición nuevo usuario</a><?php endif; ?></td>
+                      <td><?php if( $access_import == true ): ?><a href="<?php echo base_url() ?>usuarios/importar.html" class="btn btn-link">Importar XLS</a><?php endif; ?></td>
+                      <td><?php if( $access_export == true ): ?><button id="create-export" class="btn btn-link">Exportar XLS</button><?php endif; ?></td>
                   </tr>
               </thead>   
               
@@ -158,7 +159,7 @@
             
         
         	<?php if( !empty( $data ) ): ?>
-            <table class="table table-striped table-bordered bootstrap-datatable datatable" style="max-width:600px;">
+            <table class="table table-striped table-bordered bootstrap-datatable datatable">
               <thead>
                   <tr>
                       <th>Clave</th>
@@ -171,6 +172,7 @@
                       <th>Tipo</th>
                       <th>Creado</th>
                       <th>Última modificación</th>
+                      <th>Acciones</th>
                   </tr>
               </thead>   
               <tbody id="data">
@@ -186,6 +188,22 @@
                     <td class="center"><?php echo $value['tipo'] ?></td>
                     <td class="center"><?php echo $value['date'] ?></td>
                     <td class="center"><?php echo $value['last_updated'] ?></td>
+                    <td>
+                    	
+                                                                        
+                         <?php if( $access_update == true ): ?>
+                        <a class="btn btn-info" href="<?php echo base_url() ?>usuarios/update/<?php echo $value['id'] ?>.html" title="Editar Usuario">
+                            <i class="icon-edit icon-white"></i>            
+                        </a>
+                        <?php endif; ?>
+                        <?php if( $access_delete == true ): ?>
+                        <a class="btn btn-danger" href="<?php echo base_url() ?>usuarios/delete/<?php echo $value['id'] ?>.html" title="Eliminar Usuario">
+                            <i class="icon-trash icon-white"></i> 
+                        </a>
+                        <?php endif; ?>
+                    </td>
+                        
+                    </td>
                 </tr>
                 <?php endforeach;  ?>                
               </tbody>

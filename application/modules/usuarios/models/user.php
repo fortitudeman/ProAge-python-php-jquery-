@@ -106,11 +106,11 @@ class User extends CI_Model{
 /**
  |	Remove 
  **/ 	
-	 public function delete( $table = 'users', $id ){
+	 public function delete( $table = 'users', $field = 'id', $value = null ){
         
-		if( empty( $table ) or empty( $id ) ) return false;
+		if( empty( $table ) or empty( $field )  or empty( $value ) ) return false;
 					   
-			if( $this->db->delete( $table, array('id' => $id ) ) )
+			if( $this->db->delete( $table, array( $field => $value ) ) )
 			
 					return true;
 			
@@ -1120,6 +1120,141 @@ class User extends CI_Model{
 	}	
 	
 	
+	
+	
+	
+	// getForUpdateOrDelete
+	public function getForUpdateOrDelete( $id = null ){
+		
+		if( empty( $id ) ) return false;
+		
+		
+		
+		$this->db->where( array( 'id' => $id ) );
+		$query = $this->db->get( 'users' );
+	
+		
+		if ($query->num_rows() == 0) return false;
+		
+		
+		// Clean vars
+		unset( $this->data );
+
+		$this->data = array();
+		
+		// Getting data
+		foreach ($query->result() as $row) {
+
+			$this->data[] = array( 
+		    	'id' => $row->id,
+		    	'office_id' => $row->office_id,
+				'company_name' => $row->company_name,			
+				'username' => $row->username,
+				'name' => $row->name,
+				'lastnames' => $row->lastnames,
+				'birthdate' => $row->birthdate,
+				'email' => $row->email,
+				'disabled' => $row->disabled,
+				'picture' => $row->picture
+		    );
+
+		}
+		
+		unset( $query );
+		
+		// Get agents info
+		$this->db->where( array( 'user_id' => $id ) );
+		
+		$query = $this->db->get( 'agents' );
+		
+		$agents = array();
+		
+		
+		if ($query->num_rows() > 0){
+		
+			foreach ($query->result() as $row) {
+	
+				$agents[] = array( 
+					'id' => $row->id,
+					'user_id' => $row->user_id,
+					'connection_date' => $row->connection_date,			
+					'license_expired_date' => $row->license_expired_date
+				);
+	
+			}
+			
+			$this->data['agents'] = $agents;		
+		}
+		
+		
+		
+		// Getting data for agents
+		if( isset( $this->data['agents'] ) ){
+			
+			$agent_uids=array();
+			
+			$this->db->where( array( 'agent_id' => $this->data['agents'][0]['id'] ) );
+		
+			$query = $this->db->get( 'agent_uids' );
+			
+			if ($query->num_rows() > 0){
+			
+				
+				foreach ($query->result() as $row) {
+		
+					$agent_uids[] = array( 
+						'id' => $row->id,
+						'agent_id' => $row->agent_id,
+						'type' => $row->type,			
+						'uid' => $row->uid
+					);
+		
+				}
+			
+			}
+			
+			$this->data['agent_uids'] = $agent_uids;	
+		
+		
+		}
+		
+		
+		
+		// Getting Representatives
+		if( !empty( $this->data ) ){
+			
+			$representatives=array();
+			
+			$this->db->where( array( 'user_id' => $this->data[0]['id'] ) );
+		
+			$query = $this->db->get( 'representatives' );
+			
+			if ($query->num_rows() > 0){
+				
+				foreach ($query->result() as $row) {
+		
+					$representatives[] = array( 
+						'id' => $row->id,
+						'user_id' => $row->user_id,
+						'name' => $row->name,			
+						'lastnames' => $row->lastnames,
+						'office_phone' => $row->office_phone,
+						'office_ext' => $row->office_ext,
+						'mobile' => $row->mobile
+					);
+		
+				}
+				
+			}
+			
+			$this->data['representatives'] = $representatives;	
+			
+		}
+		
+		return $this->data;
+		
+		
+	}
 	
 	
 	

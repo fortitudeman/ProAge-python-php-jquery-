@@ -19,13 +19,16 @@
 <div>
     <ul class="breadcrumb">
         <li>
-            <a href="<?php echo base_url() ?>roles.html">Role</a> <span class="divider">/</span>
+            <a href="<?php echo base_url() ?>">Admin</a> <span class="divider">/</span>
         </li>
         <li>
-             <a href="<?php echo base_url() ?>roles/update/<?php echo $data['id'] ?>.html"> Editar </a> <span class="divider">/</span> 
+            <a href="<?php echo base_url() ?>usuarios.html">Usuarios</a> <span class="divider">/</span>
         </li>
         <li>
-            <?php echo $data['name'] ?>
+             <a href="<?php echo base_url() ?>usuarios/update/<?php echo $data[0]['id'] ?>.html"> Editar </a> <span class="divider">/</span> 
+        </li>
+        <li>
+            <?php echo $data[0]['name'] ?>
         </li>
     </ul>
 </div>
@@ -42,14 +45,14 @@
         <div class="box-content">
         	
             
-			<h3>Eliminar el rol <?php echo $data['name'] ?></h3>           
+			<h3>Eliminar el usuario <?php echo $data[0]['name'] ?></h3>           
             
             <p>Todos los datos se eliminaran por completo.</p>
             
             <p>Esta seguro de eliminar este registro.</p>
             
         
-            <form id="form" action="<?php echo base_url() ?>roles/delete/<?php echo $data['id'] ?>.html" class="form-horizontal" method="post">
+            <form id="form" action="<?php echo base_url() ?>usuarios/delete/<?php echo $data[0]['id'] ?>.html" class="form-horizontal" method="post">
                 <fieldset>
                   <input type="hidden" name="delete" value="true" />
                   <div id="actions-buttons-forms" class="form-actions">

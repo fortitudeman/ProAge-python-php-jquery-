@@ -31,8 +31,13 @@ class Usuarios extends CI_Controller {
 	
 	public $access_delete = false;
 	
+	public $access_export = false;
+	
+	public $access_import = false;
+	
 	public $access_request_new_user = false;
 	
+	public $access_send_message = false;
 	
 /** Construct Function **/
 /** Setting Load perms **/
@@ -73,8 +78,7 @@ class Usuarios extends CI_Controller {
 			
 			if( $value['action_name'] == 'Crear' )
 				$this->access_create = true;
-			
-			
+						
 			if( $value['action_name'] == 'Editar' )
 				$this->access_update = true;
 				
@@ -83,7 +87,19 @@ class Usuarios extends CI_Controller {
 			
 			if( $value['action_name'] == 'Petición nuevo usuario' )
 				$this->access_request_new_user = true;
-					
+			
+			if( $value['action_name'] == 'Import xls' )
+				$this->access_import = true;	
+			
+			if( $value['action_name'] == 'Export xls' )
+				$this->access_export = true;		
+			
+			if( $value['action_name'] == 'Enviar correo' )
+				$this->access_send_message = true;			
+			
+						
+			
+			
 		endif; endforeach;
 							
 								
@@ -309,6 +325,12 @@ class Usuarios extends CI_Controller {
 		  'user' => $this->sessions,
 		  'user_vs_rol' => $this->user_vs_rol,
 		  'roles_vs_access' => $this->roles_vs_access,
+		  'access_create' => $this->access_create,
+		  'access_update' => $this->access_update,
+		  'access_delete' => $this->access_delete,
+		  'access_import' => $this->access_import,
+		  'access_export' => $this->access_export,
+		  'access_request_new_user' => $this->access_request_new_user,
 		  'scripts' =>  array(
 		  	  
 			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
@@ -1263,10 +1285,9 @@ class Usuarios extends CI_Controller {
 		// Load Helper
 		$this->load->helper( 'user' );
 		
-		
-		
+				
 		// Getting table
-		echo renderTable( $this->data );
+		echo renderTable( $this->data, $this->access_update, $this->access_delete );
 		
 		exit;
 	}
@@ -1282,6 +1303,21 @@ class Usuarios extends CI_Controller {
 	public function importar(){
 		
 		
+		// Check access teh user for import
+		if( $this->access_import == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Usuarios Importar", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'usuarios', 'refresh' );
+		
+		}
 	
 		if( isset( $_FILES['file'] ) and !empty( $_FILES  ) ){
 			
@@ -1765,6 +1801,21 @@ class Usuarios extends CI_Controller {
 // Export	
 	public function exportar( $begin = 0 ){
 		
+		// Check access teh user for export
+		if( $this->access_export == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Usuarios Exportar", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'usuarios', 'refresh' );
+		
+		}
 				
 		//header('Content-Type: application/csv');
         //header('Content-Disposition: attachement; filename="proages_usuarios.csv"');
@@ -1879,7 +1930,7 @@ class Usuarios extends CI_Controller {
 				
 				if( $this->input->post( 'deleteimage' ) == 'true' ){
 				
-				// Drop Last Image
+					// Drop Last Image
 					if( is_file( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] ) and $user['picture'] != 'default.png' )
 							unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] );
 					
@@ -1953,6 +2004,241 @@ class Usuarios extends CI_Controller {
 	
 	
 	
+	
+// Update record	
+	public function update( $id = null ){
+		
+		
+		// Check access teh user for delete
+		if( $this->access_update == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Usuarios Editar", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'usuarios', 'refresh' );
+		
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		$this->load->model( 'user' );
+		$user = $this->user->getForUpdateOrDelete( $id );
+		print_r( $user );
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	// Delete Users
+	public function delete( $id = null ){
+		
+		
+		// Check access teh user for delete
+		if( $this->access_delete == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Usuarios Eliminar", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'usuarios', 'refresh' );
+		
+		}
+		
+		
+		// Load Model
+		$this->load->model( 'user' );
+		$user = $this->user->getForUpdateOrDelete( $id );
+		
+		// Check Record if exist
+		if( empty( $user ) ){
+			
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No existe el registro. No puede eliminar este registro.'
+							
+			));	
+			
+			
+			redirect( 'usuarios', 'refresh' );
+			
+		}
+		
+		
+		if( !empty( $_POST ) and isset( $_POST['delete'] ) and $_POST['delete'] == true ){
+			
+			$deleteControl = true;
+			
+			
+			
+			
+			// Drop Image
+			if( is_file( APPPATH.'modules/usuarios/assets/profiles/'.$user[0]['picture'] ) and $user[0]['picture'] != 'default.png' )
+					unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user[0]['picture'] );
+					
+			
+			
+			
+			// Delete from users
+			if( isset( $user[0]['id'] ) )
+				if( $this->user->delete( 'users', 'id',  $user[0]['id'] ) == false )  $deleteControl = false;
+			
+			
+			if( $deleteControl == false ){
+				
+				// Set false message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => false,	
+					'message' => 'No se puede borrar el registro. Usuarios. Informe a su administrador para que le otorge los permisos necesarios.'
+								
+				));	
+				
+				
+				//redirect( 'usuarios', 'refresh' );
+				
+				
+			}
+			
+			
+					
+			
+			
+			
+			// Delete From Agents
+			if( isset( $user['agents'] ) and !empty( $user['agents'] ) )
+				if( $this->user->delete( 'agents', 'user_id',  $user[0]['id'] ) == false )  $deleteControl = false;
+			
+			if( $deleteControl == false ){
+				
+				// Set false message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => false,	
+					'message' => 'No se puede borrar el registro. Usuarios - Agente. Informe a su administrador para que le otorge los permisos necesarios.'
+								
+				));	
+				
+				
+				redirect( 'usuarios', 'refresh' );
+				
+				
+			}
+			
+			
+			
+			// Delete From agent_uids
+			if( isset( $user['agents'][0] ) and !empty( $user['agents'][0] ) )
+				if( $this->user->delete( 'agent_uids', 'agent_id',  $user['agents'][0]['id'] ) == false )  $deleteControl = false;
+			
+			
+			if( $deleteControl == false ){
+				
+				// Set false message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => false,	
+					'message' => 'No se puede borrar el registro. Usuarios - Agente UIDS. Informe a su administrador para que le otorge los permisos necesarios.'
+								
+				));	
+				
+				
+				redirect( 'usuarios', 'refresh' );
+				
+				
+			}
+			
+			
+			// Delete From representatives
+			if( isset( $user['representatives'] ) and !empty( $user['representatives'] ) )
+				if( $this->user->delete( 'representatives', 'user_id',  $user[0]['id'] ) == false )  $deleteControl = false;
+			
+			
+			if( $deleteControl == false ){
+				
+				// Set false message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => false,	
+					'message' => 'No se puede borrar el registro. Usuarios - Agente Representantes. Informe a su administrador para que le otorge los permisos necesarios.'
+								
+				));	
+				
+				
+				redirect( 'usuarios', 'refresh' );
+				
+				
+			}	
+			
+			
+			if( $deleteControl == true ){
+				
+				// Set false message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => true,	
+					'message' => 'El registro se elimino correctamente.'
+								
+				));	
+				
+				
+				redirect( 'usuarios', 'refresh' );
+				
+				
+			}	
+			
+		}
+		
+		
+		// Config view
+		$this->view = array(
+				
+		  'title' => 'Editar perfil',
+		    // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'css' => array(),
+		  'scripts' =>  array(
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			  '<script src="'.base_url().'usuarios/assets/scripts/delete.js"></script>',		
+			  	
+		  ),
+		  'content' => 'usuarios/delete', // View to load
+		  'message' => $this->session->flashdata('message') ,// Return Message, true and false if have
+		  'data' => $user
+		);
+		
+		
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+		
+	}
 	
 	
 	
