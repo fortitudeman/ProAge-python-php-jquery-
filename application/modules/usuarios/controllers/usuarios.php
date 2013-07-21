@@ -1759,7 +1759,7 @@ class Usuarios extends CI_Controller {
 		// Config view
 		$this->view = array(
 				
-		  'title' => 'Crear Usuario',
+		  'title' => 'Crear Importar',
 		  'css' => array(),
 		  'scripts' =>  array(
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
