@@ -148,7 +148,7 @@ class User extends CI_Model{
 		// SELECT id, name, lastnames, email FROM `users`;
 		$this->db->select( 'id, name, lastnames, email, manager_id, date, last_updated' );
 		$this->db->from( 'users' );
-        $this->db->limit( 100, $start );
+        $this->db->limit( 150, $start );
 		
 		$query = $this->db->get();
 		
@@ -651,7 +651,7 @@ class User extends CI_Model{
 		// SELECT id, name, lastnames, email FROM `users`;
 		$this->db->select();
 		$this->db->from( 'users' );
-        $this->db->limit( 30, $start );
+        $this->db->limit( 150, $start );
 		
 		$query = $this->db->get();
 		
@@ -844,14 +844,135 @@ class User extends CI_Model{
 
 
 // FInd Method export
-	public function export_find( $name =  null ) {
+	public function export_find( $find =  array() ) {
 		
 		
-		if( empty( $name ) ) return false;
-			
+		if( empty( $find ) ) return false;
+		
+		
 		$this->db->select();
 		$this->db->from(  'users' );
-        $this->db->like( 'name', $name );
+		
+		if( isset( $find['rol'] ) and !empty( $find['rol'] ) ){
+			
+			/*
+				JOIN users ON users.id=users_vs_user_roles.user_id
+				WHERE users_vs_user_roles.user_role_id=1;
+			*/
+			
+			$this->db->join( 'users_vs_user_roles', 'users_vs_user_roles.user_id=users.id' );		
+			$this->db->where( array( 'users_vs_user_roles.user_role_id' => $find['rol'] ) );	
+		
+		}else{
+						
+			
+		}
+		
+		
+		if( isset( $find['find'] ) and !empty( $find['find'] ) )
+			$this->db->like( 'users.name', $find['find'] );
+		
+		
+		
+		// Advanced search
+		if( isset( $find['advanced'] ) and !empty( $find['advanced'] ) ){
+			
+			foreach( $find['advanced'] as $value ){
+			
+				if( in_array( 'clave', $value ) or in_array( 'national', $value ) or in_array( 'provincial', $value  ) or in_array( 'license_expired_date', $value  ) ){
+					
+					$this->db->join( 'agents', 'agents.user_id=users.id' );	
+					
+				}
+				
+				if( in_array( 'clave', $value ) or in_array( 'national', $value ) or in_array( 'provincial', $value  ) ){
+					
+					$this->db->join( 'agent_uids', 'agent_uids.agent_id=agents.id' );	
+					
+				}
+				break;
+			
+			}
+			
+			
+			
+			foreach( $find['advanced'] as $value )
+				
+				
+					
+					
+				
+				if( $value[0] == 'clave' ){
+					
+					$this->db->like( array( 'agent_uids.type' => $value[0], 'agent_uids.uid' => $value[1] ) );	
+					
+				}
+				
+				if( $value[0] == 'national' ){
+					
+					$this->db->like( array( 'agent_uids.type' => $value[0], 'agent_uids.uid' => $value[1] ) );	
+					
+				}
+				
+				if( $value[0] == 'provincial' ){
+					
+					$this->db->like( array( 'agent_uids.type' => $value[0], 'agent_uids.uid' => $value[1] ) );	
+					
+				}
+				
+				
+				if( $value[0] == 'birthdate' ){
+					
+					$this->db->where( array( 'users.birthdate' => $value[1] ) );	
+					
+				}
+				
+				if( $value[0] == 'manager_id' ){
+					
+					$this->db->where( array( 'users.manager_id' => $value[1] ) );	
+					
+				}
+				
+				
+				if( $value[0] == 'name' ){
+					
+					$this->db->like( array( 'users.name' => $value[1] ) );	
+					
+				}
+				
+				if( $value[0] == 'lastname' ){
+					
+					$this->db->like( array( 'users.lastnames' => $value[1] ) );	
+					
+				}
+				
+				if( $value[0] == 'email' ){
+					
+					$this->db->where( array( 'users.email' => $value[1] ) );	
+					
+				}
+				
+				if( $value[0] == 'license_expired_date' ){
+					
+					$this->db->where( array( 'agents.license_expired_date' => $value[1] ) );	
+					
+				}
+					
+					
+					
+					//clavenationalprovincial
+				
+				//print_r( $value[0] );
+			/*print_r( $fprint_r( $find['advanced'] );ind['advanced'] );
+			
+			JOIN `agents` ON agents.user_id=users.id
+			JOIN `agent_uids` ON `agent_uids`.`agent_id`=agents.id
+			WHERE type='' AND uid='';
+			*/
+			
+			//exit;
+			
+		}
 		
 		$query = $this->db->get();
 		
@@ -1013,6 +1134,10 @@ class User extends CI_Model{
 				
 			unset( $representative ); // Clean memory
 			
+			$disabled = 'Desactivado';
+			
+			if( $row->disabled == 1 ) $disabled = 'Activado';
+			
 			$this->data[] = array( 
 		    	'office_id' => $row->office_id,
 				'manager_id' => $manager,
@@ -1022,7 +1147,7 @@ class User extends CI_Model{
 				'lastnames' => $row->lastnames,
 				'birthdate' => $row->birthdate,				
 				'email' => $row->email,		
-				'disabled' => $row->disabled,
+				'disabled' => $disabled,
 				'tipo' => $tipo,
 				'clave' => $clave,
 				'national' => $national,
