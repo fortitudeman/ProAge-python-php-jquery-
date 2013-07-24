@@ -1504,6 +1504,31 @@ class User extends CI_Model{
 		
 	}	
 	
+
+// Get selects Agents 	
+	public function getAgents(){
+		
+		/*
+			SELECT agents.id, users.name FROM agents
+			JOIN users ON users.id=agents.user_id;
+		*/
+		$this->db->select( 'agents.id, users.name FROM agents' );
+		$this->db->join( 'users', 'users.id=agents.user_id' );
+		
+		$query = $this->db->get();
+		
+		$options = '<option value="">Seleccione</option>';
+		
+		if ($query->num_rows() == 0) return $options;
+		
+		// Getting data
+		foreach ($query->result() as $row)
+			
+			$options .= '<option value="'.$row->id.'">'.$row->name.'</option>';
+		
+		return $options;
+		
+	}
 	
 	
 // Validations

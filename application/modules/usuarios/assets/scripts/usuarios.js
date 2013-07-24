@@ -40,7 +40,7 @@ $( document ).ready(function() {
 	
 	/**
 	 *	Show Send Fields
-	 **/
+	 **
 	$("input[name='group[]']").each(function ()
 		{
 			if( value == $(this).val()  ) $(this).attr( 'checked', true );
@@ -89,7 +89,7 @@ $( document ).ready(function() {
 		}
 					
 	});
-	
+	*/
 	
 	
 	
