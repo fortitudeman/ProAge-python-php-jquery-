@@ -162,7 +162,7 @@
                         <?php break; endif; endforeach; ?>
                         
                         <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
-                        <li><a href="<?php echo base_url() ?>orden_trabajo.html"><i class="icon-tablet"></i><span class="hidden-tablet">Orden trabajo</span></a></li>
+                        <li><a href="<?php echo base_url() ?>ot.html"><i class="icon-tablet"></i><span class="hidden-tablet">Orden trabajo</span></a></li>
                         <?php break; endif; endforeach; ?>
                         
                         
