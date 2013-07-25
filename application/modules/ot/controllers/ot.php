@@ -150,7 +150,7 @@ class Ot extends CI_Controller {
 		  'access_create' => $this->access_create,
 		  'access_update' => $this->access_update,
 		  'access_delete' => $this->access_delete,
-		  'content' => 'orden_trabajo/list', // View to load
+		  'content' => 'ot/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  //'data' => $this->work_order->overview( $begin )
 		  		
@@ -207,21 +207,68 @@ class Ot extends CI_Controller {
 			$this->form_validation->set_rules('ramo', 'Ramo', 'required');
 			$this->form_validation->set_rules('work_order_type_id', 'Tipo de tramite', 'required');
 			$this->form_validation->set_rules('subtype', 'Sub tipo', 'required');
-			$this->form_validation->set_rules('policy_id', 'Poliza', 'required');
 			$this->form_validation->set_rules('comments', 'Comentarios', 'required');
 			
-			
-			print_r( $_POST );	
 			
 						
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
+				
+				// Load Model
+				$this->load->model( 'work_order' );
+				
+				$ot = array(
 					
+					'policy_id' => 0,
+					'product_group_id' => $this->input->post( 'ramo' ),
+					'work_order_type_id' => $this->input->post( 'subtype' ),
+					'work_order_status_id' => 0,
+					'work_order_responsible_id' => 0,
+					'uid' => 0,
+					'creation_date' => $this->input->post('creation_date'),
+					'comments' => $this->input->post('comments'),
+					'duration' => '',
+					'last_updated' => date( 'Y-m-d H:s:i' ),
+					'date' => date( 'Y-m-d H:s:i' )
+					
+				);	
+				
+				if( !empty( $_POST['policy_id'] ) )
+					 $_POST['policy_id'] =  $this->input->post( 'policy_id' );
 				
 				
+				if( $this->work_order->create( 'work_order', $ot ) == true ){
+					
+					// Set false message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => true,	
+						'message' => 'Se ha creado el registro correctamente.'
+									
+					));	
+					
+					
+					redirect( 'ot', 'refresh' );
+					
+				}else{
+					
+					// Set false message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => false,	
+						'message' => 'El reggistro no puede ser creado, consulte a su administrador..'
+									
+					));	
+					
+					
+					redirect( 'ot', 'refresh' );
+					
+				}
+									 
 			}	
 			
-						
+				
+				exit;		
 		}
 		
 				
@@ -315,7 +362,7 @@ class Ot extends CI_Controller {
 		$this->load->model( 'work_order' );	
 		
 		$options = $this->work_order->getPolicies( $this->input->post( 'ramo' ) );
-		
+		//print_r($_POST);
 		echo $options;
 		
 		

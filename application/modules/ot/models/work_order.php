@@ -228,7 +228,7 @@ class Work_order extends CI_Model{
 	public function getPolicies( $product = null ){
 		
 		
-		if( empty( $subtype ) ) return false;
+		if( empty( $product ) ) return false;
 				
 		/*
 			SELECT policies.id, products.name as product_name 
@@ -251,7 +251,7 @@ class Work_order extends CI_Model{
 		
 		foreach ($query->result() as $row)
 			
-			//$options .= '<option value="'.$row->id.'">'.$row->name.'</option>';	
+			$options .= '<option value="'.$row->id.'">'.$row->name.'</option>';	
 			
 		
 		return $options;
