@@ -22,6 +22,16 @@ $( document ).ready(function() {
 			// then:
 			$( '#actions-buttons-forms' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-5.gif">' );
 			
+			var toDay = new Date();
+			var seconds = toDay.getSeconds();
+			var minutes = toDay.getMinutes();
+			var hour = toDay.getHours();
+			
+			toDay = hour+':'+minutes+':'+seconds;
+			
+			$( '#creation_date' ).val( $( '#creation_date' ).val()+' '+ toDay);	
+			
+			
 			form.submit();
 		  }		
 		

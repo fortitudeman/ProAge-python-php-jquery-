@@ -89,7 +89,7 @@
                   
                   
                   <div class="control-group">
-                    <label class="control-label error" for="inputError">Número OT</label>
+                    <label class="control-label text-error" for="inputError">Número OT</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="ot" name="ot" type="text">
                     </div>
@@ -97,7 +97,7 @@
                   
                   
                    <div class="control-group">
-                    <label class="control-label error" for="inputError">Fecha de tramite</label>
+                    <label class="control-label text-error" for="inputError">Fecha de tramite</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="creation_date" name="creation_date" type="text" readonly="readonly">
                     </div>
@@ -105,7 +105,7 @@
                                                                                       
                   
                   <div class="control-group">
-                    <label class="control-label error" for="inputError">Ramo</label>
+                    <label class="control-label text-error" for="inputError">Ramo</label>
                     <div class="controls">
                       <input type="radio" value="1" name="ramo" class="ramo"/>&nbsp;&nbsp;Vida
                       <input type="radio" value="2" name="ramo" class="ramo"/>&nbsp;&nbsp;GIMM
@@ -116,7 +116,7 @@
                   
                   
                   <div class="control-group typtramite">
-                    <label class="control-label error" for="inputError">Tipo tramite<br /><div id="loadtype"></div></label>
+                    <label class="control-label text-error" for="inputError">Tipo tramite<br /><div id="loadtype"></div></label>
                     <div class="controls">
                       <select class="input-xlarge focused required" id="work_order_type_id" name="work_order_type_id">
                       	<option value="">Seleccione</option> 
@@ -127,7 +127,7 @@
                   
                   
                    <div class="control-group subtype">
-                    <label class="control-label error" for="inputError">Sub tipo<br /><div id="loadsubtype"></div></label>
+                    <label class="control-label text-error" for="inputError">Sub tipo<br /><div id="loadsubtype"></div></label>
                     <div class="controls">
                       <select class="input-xlarge focused required" id="subtype" name="subtype">
                       	<option value="">Seleccione</option>
@@ -142,14 +142,14 @@
                   
                   
                    <div class="control-group poliza">
-                    <label class="control-label error" for="inputError"></label>
+                    <label class="control-label text-error" for="inputError"></label>
                     <div class="controls">
                       <a href="<?php echo base_url() ?>ot/create_poliza.html" class="btn btn-link">Requerir nueva poliza</a>
                     </div>
                   </div> 
                   
                   <div class="control-group poliza">
-                    <label class="control-label error" for="inputError">Poliza</label>
+                    <label class="control-label text-error" for="inputError">Poliza</label>
                     <div class="controls">
                       <select class="input-xlarge focused" id="policy_id" name="policy_id">
                       	<option value="">Seleccione</option>
@@ -161,7 +161,7 @@
                   
                   
                   <div class="control-group">
-                    <label class="control-label error" for="inputError">Comentarios</label>
+                    <label class="control-label text-error" for="inputError">Comentarios</label>
                     <div class="controls">
                       <textarea class="input-xlarge focused required" id="comments" name="comments" rows="6"></textarea>
                     </div>
