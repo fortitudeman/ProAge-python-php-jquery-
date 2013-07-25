@@ -27,4 +27,75 @@ function comparar_fechas($fecha, $fecha_comparar = null){
  
  return false;
 }
+
+
+// Tiempo transcurrido
+function tiempo_transcurrido($fecha) {
+		
+					
+		if(empty($fecha)) {
+			  return "No hay fecha";
+		}
+		
+		
+	   
+		$intervalos = array("segundo", "minuto", "hora", "día", "semana", "mes", "año");
+		$duraciones = array("60","60","24","7","4.35","12");
+	   
+		$ahora = time();
+		$Fecha_Unix = strtotime($fecha);
+			
+		if(empty($Fecha_Unix)) {   
+			  return "Fecha incorracta";
+		}
+		if($ahora > $Fecha_Unix) {   
+			  $diferencia     =$ahora - $Fecha_Unix;
+			  $tiempo         = "Hace";
+		} else {
+			  $diferencia     = $Fecha_Unix -$ahora;
+			  $tiempo         = "Dentro de";
+		}
+		for($j = 0; $diferencia >= $duraciones[$j] && $j < count($duraciones)-1; $j++) {
+		  $diferencia /= $duraciones[$j];
+		}
+	   
+		$diferencia = round($diferencia);
+		
+		if($diferencia != 1) {
+			$intervalos[5].="e"; //MESES
+			$intervalos[$j].= "s";
+		}
+	    				
+		return "$tiempo $diferencia $intervalos[$j]";
+}
+// Ejemplos de uso
+// fecha en formato yyyy-mm-dd
+// echo tiempo_transcurrido('2010/02/05');
+// fecha y hora
+// echo tiempo_transcurrido('2010/02/10 08:30:00');
+
+/**
+ * Devuelve la diferencia entre 2 fechas según los parámetros ingresados
+ * @author Gerber Pacheco
+ * @param string $fecha_principal Fecha Principal o Mayor
+ * @param string $fecha_secundaria Fecha Secundaria o Menor
+ * @param string $obtener Tipo de resultado a obtener, puede ser SEGUNDOS, MINUTOS, HORAS, DIAS, SEMANAS
+ * @param boolean $redondear TRUE retorna el valor entero, FALSE retorna con decimales
+ * @return int Diferencia entre fechas
+ */
+function diferenciaEntreFechas($fecha_principal, $fecha_secundaria, $obtener = 'SEGUNDOS', $redondear = false){
+   $f0 = strtotime($fecha_principal);
+   $f1 = strtotime($fecha_secundaria);
+   if ($f0 == $f1) { $tmp = $f1; $f1 = $f0; $f0 = $tmp; }
+   $resultado = ($f0 - $f1);
+   switch ($obtener) {
+       default: break;
+       case "MINUTOS"   :   $resultado = $resultado / 60;   break;
+       case "HORAS"     :   $resultado = $resultado / 60 / 60;   break;
+       case "DIAS"      :   $resultado = $resultado / 60 / 60 / 24;   break;
+       case "SEMANAS"   :   $resultado = $resultado / 60 / 60 / 24 / 7;   break;
+   }
+   if($redondear) $resultado = round($resultado);
+   return $resultado;
+}
 ?>

@@ -102,7 +102,8 @@ class Ot extends CI_Controller {
 		// Load Model
 		$this->load->model( 'work_order' );
 		
-		
+		// Load Helpers
+		$this->load->helper( 'date' );
 		
 		// Pagination config	
 		$this->load->library('pagination');
@@ -132,7 +133,7 @@ class Ot extends CI_Controller {
 		$config['num_tag_close'] = '</li>';					
 		$config['base_url'] = base_url().'ot/index/';
 		$config['total_rows'] = $this->work_order->record_count();
-		$config['per_page'] = 30;
+		$config['per_page'] = 50;
 		$config['num_links'] = 5;
 		$config['uri_segment'] = 3;
 		$config['use_page_numbers'] = TRUE;
@@ -152,7 +153,7 @@ class Ot extends CI_Controller {
 		  'access_delete' => $this->access_delete,
 		  'content' => 'ot/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  //'data' => $this->work_order->overview( $begin )
+		  'data' => $this->work_order->overview( $begin )
 		  		
 		);
 				
@@ -222,7 +223,7 @@ class Ot extends CI_Controller {
 					'policy_id' => 0,
 					'product_group_id' => $this->input->post( 'ramo' ),
 					'work_order_type_id' => $this->input->post( 'subtype' ),
-					'work_order_status_id' => 0,
+					'work_order_status_id' => 5,
 					'work_order_responsible_id' => 0,
 					'uid' => 0,
 					'creation_date' => $this->input->post('creation_date'),

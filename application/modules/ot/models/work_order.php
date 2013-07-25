@@ -136,7 +136,50 @@ class Work_order extends CI_Model{
 	
 	public function overview( $start = 0 ) {
 		
+		/*
+			
+			SELECT product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*
+			FROM `work_order`
+			JOIN product_group ON product_group.id=work_order.product_group_id
+			JOIN work_order_types ON work_order_types.id=work_order.work_order_type_id 
+			JOIN work_order_status ON work_order_status.id=work_order.work_order_status_id;
+			
+		*/
+		
+		$this->db->select( 'product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
+		$this->db->from( 'work_order' );
+		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
+		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
+		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
+		$this->db->limit( 50, $start );
+		$query = $this->db->get();
+		
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$ot = array();
+		
+		foreach ($query->result() as $row) {
+
+			$ot[] = array( 
+		    	'id' => $row->id,
+				'policy' => $this->getPolicyBuId( $row->policy_id ),
+				'agents' => $this->getAgentsByPolicy( $row->policy_id ),
+		    	'product_group_id' => $row->product_group_id,
+				'group_name' => $row->group_name,
+				'type_name' => $row->type_name,
+		    	'status_name' =>  $row->status_name,
+				'creation_date' =>  $row->creation_date,
+				'duration' =>  $row->duration,
+				'last_updated' =>  $row->last_updated,
+				'date' =>  $row->date
+		    );
+
+		}
 				
+		return $ot;
+		
+		
    }
 
 	
@@ -148,7 +191,86 @@ class Work_order extends CI_Model{
     }
 
 
+	// Get Policy by Id
+	public function getPolicyBuId( $id = null ){
+		
+		if( empty( $id ) ) return false;
+		/*
+			
+			SELECT * 
+			FROM policies
+			WHERE id=1
 
+			
+		*/
+				
+		$this->db->where( 'id', $id );
+		$this->db->limit(1);
+		$query = $this->db->get('policies');
+		
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$policy = array();
+		
+		foreach ($query->result() as $row) {
+
+			$policy[] = array( 
+		    	'id' => $row->id,
+		    	'product_id' => $row->product_id,
+				'currency_id' => $row->currency_id,
+				'payment_interval_id' => $row->payment_interval_id,
+		    	'payment_method_id' =>  $row->payment_method_id,
+				'name' =>  $row->name,
+				'lastname_father' =>  $row->lastname_father,
+				'lastname_mother' =>  $row->lastname_mother,
+				'year_premium' =>  $row->year_premium,
+				'expired_date' =>  $row->expired_date,
+				'last_updated' =>  $row->last_updated,
+				'date' =>  $row->date
+		    );
+
+		}
+		
+		return $policy;
+		
+	}
+	
+	
+	public function getAgentsByPolicy( $policy = null ){
+		
+		if( empty( $policy ) ) return false;
+		/*
+		SELECT policies_vs_users.percentage, users.name, users.lastnames 
+		FROM policies_vs_users
+		JOIN agents ON agents.id=policies_vs_users.user_id
+		JOIN users ON users.id=agents.user_id
+		WHERE policy_id=1
+		*/
+		$this->db->select( ' policies_vs_users.percentage, users.name, users.lastnames ' );
+		$this->db->from( 'policies_vs_users' );
+		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
+		$this->db->join( 'users', 'users.id=agents.user_id ' );
+		$this->db->where( 'policies_vs_users.policy_id', $policy );
+		$this->db->limit(1);
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$agents = array();
+		
+		foreach ($query->result() as $row) {
+
+			$agents[] = array( 
+		    	'percentage' => $row->percentage,
+				'name' => $row->name,
+				'lastnames' => $row->lastnames
+		    );
+
+		}
+		
+		return $agents;
+	}
 
 
 
