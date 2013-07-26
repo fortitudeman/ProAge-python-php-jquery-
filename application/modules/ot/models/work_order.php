@@ -185,6 +185,76 @@ class Work_order extends CI_Model{
 	public function record_count() {
         return $this->db->count_all( '' );
     }
+
+
+/**
+ *	Getting for update
+ **/
+	public function getById( $ot = null ){
+		
+		if( empty( $ot ) )return false;
+		
+		
+		$this->db->where( 'id', $ot );
+		$this->db->limit( 1 );
+		
+		$query  = $this->db->get( 'work_order' );
+		
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$ot = array();
+		
+		foreach ($query->result() as $row) {
+
+			$ot[] = array( 
+		    	'id' => $row->id,
+				'product_group_id' => $row->product_group_id,
+				'policy_id' => $row->policy_id ,
+				'subtype' => $row->work_order_type_id,
+				'type' => $this->getParentsWorkTipes( $row->work_order_type_id ),
+		    	'uid' => $row->uid,
+				'creation_date' => date( 'Y-m-d', strtotime($row->creation_date) ),
+				'comments' => $row->comments
+		    );
+
+		}
+				
+		return $ot;
+		
+		
+	}
+	
+	
+	public function getParentsWorkTipes( $type = null ){
+		
+		if( empty( $type ) )return false;
+		
+		//SELECT patent_id FROM `work_order_types` WHERE id=61;
+		$this->db->select( 'patent_id' );
+		$this->db->where( 'id', $type );
+		$this->db->limit( 1 );
+		
+		$query  = $this->db->get( 'work_order_types' );
+		
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$type = array();
+		
+		foreach ($query->result() as $row) {
+
+			$type[] = array( 
+		    	'type' => $row->patent_id
+		    );
+
+		}
+						
+		return $type[0]['type'];
+		
+	}
+	
+	
 	
 	
 // Getting for filters	

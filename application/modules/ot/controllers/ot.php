@@ -360,7 +360,7 @@ class Ot extends CI_Controller {
 					$this->session->set_flashdata( 'message', array( 
 						
 						'type' => false,	
-						'message' => 'El reggistro no puede ser creado, consulte a su administrador..'
+						'message' => 'El registro no puede ser creado, consulte a su administrador..'
 									
 					));	
 					
@@ -856,6 +856,147 @@ class Ot extends CI_Controller {
 	}
 	
 	
+	
+
+// update work order
+	public function update( $ot = null ){
+		
+		
+		
+		
+		// Check access teh user for create
+		if( $this->access_create == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Crear", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'ot', 'refresh' );
+		
+		}
+		
+		if( empty( $ot ) ){
+			
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No existe esta orden de trabajo..'
+							
+			));	
+			
+			
+			redirect( 'ot', 'refresh' );
+			
+		}
+		
+		
+		// Load Model
+		$this->load->model( 'work_order' );
+		
+		
+		
+		if( !empty( $_POST ) ){
+			
+			
+			
+			$this->form_validation->set_rules('ramo', 'Ramo', 'required');
+			$this->form_validation->set_rules('work_order_type_id', 'Tipo de tramite', 'required');
+			$this->form_validation->set_rules('subtype', 'Sub tipo', 'required');
+			$this->form_validation->set_rules('comments', 'Comentarios', 'required');
+			
+			
+						
+			// Run Validation
+			if ( $this->form_validation->run() == TRUE ){
+				
+				
+				
+				$otupdate = array(
+					
+					'policy_id' => $this->input->post( 'policy_id' ),
+					'product_group_id' => $this->input->post( 'ramo' ),
+					'work_order_type_id' => $this->input->post( 'subtype' ),
+					'creation_date' => $this->input->post('creation_date'),
+					'comments' => $this->input->post('comments'),
+					'duration' => '',
+					'last_updated' => date( 'Y-m-d H:s:i' ),
+					'date' => date( 'Y-m-d H:s:i' )
+					
+				);	
+				
+				if( $this->work_order->update( 'work_order', $ot, $otupdate ) == true ){
+					
+					// Set false message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => true,	
+						'message' => 'Se ha guardado el registro correctamente.'
+									
+					));	
+					
+					
+					redirect( 'ot', 'refresh' );
+					
+				}else{
+					
+					// Set false message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => false,	
+						'message' => 'El registro no puede ser modificado, consulte a su administrador..'
+									
+					));	
+					
+					
+					redirect( 'ot', 'refresh' );
+					
+				}
+									 
+			}	
+			
+				
+				exit;		
+		}
+		
+		
+		
+		$data = $this->work_order->getById( $ot );
+		
+				
+		// Config view
+		$this->view = array(
+				
+		  'title' => 'Modificar OT',
+		   // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'css' => array(),
+		  'scripts' =>  array(
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+			  '<script src="'.base_url().'ot/assets/scripts/update.js"></script>',		
+			  '<script src="'.base_url().'scripts/config.js"></script>'
+			  	
+		  ),
+		  'content' => 'ot/update', // View to load
+		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+		  'data' => $data	
+	
+		);
+		
+		
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+	
+	}
 	
 	
 	
