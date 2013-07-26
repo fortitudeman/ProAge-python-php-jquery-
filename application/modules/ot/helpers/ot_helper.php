@@ -62,11 +62,18 @@ function renderTable( $data = array() ){
 			if( $color > 100 )	
 				$style = 'style="background-color:#FF0"';
 			
+			if( $value['status_name'] == 'activacion' ) $style = '';
 			
 			
 			$table .='	
-							<td class="center" '.$style.'>'. ucwords($value['status_name']) .'</td>
-							<td class="center">'. tiempo_transcurrido($value['creation_date']) .'</td>';
+							<td class="center" '.$style.'>'. ucwords($value['status_name']) .'</td>';
+			
+							
+			if( $value['status_name'] == 'activacion' )
+					$table .='<td class="center"></td>';
+			
+			else
+					$table .='<td class="center">'. tiempo_transcurrido($value['creation_date']) .'</td>';
 				
 			$table .='</tr>';
     

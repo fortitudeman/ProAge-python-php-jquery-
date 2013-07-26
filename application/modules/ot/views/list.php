@@ -135,8 +135,8 @@
 							
 					?>	
                     
-                    <td class="center" <?php echo $style ?>><?php echo ucwords($value['status_name']) ?></td>
-                    <td class="center"><?php echo tiempo_transcurrido($value['creation_date']) ?></td>
+                    <td class="center" <?php if( $value['status_name'] != 'activacion' ) echo $style ?>><?php echo ucwords($value['status_name']) ?></td>
+                    <td class="center"><?php if( $value['status_name'] != 'activacion' ) echo tiempo_transcurrido($value['creation_date']) ?></td>
                 </tr>
                 <?php endforeach;  ?>                
               </tbody>

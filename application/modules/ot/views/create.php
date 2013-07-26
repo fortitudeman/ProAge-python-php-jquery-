@@ -22,7 +22,7 @@
         </li>
         
         <li>
-            <a href="<?php echo base_url() ?>orden_trabajo.html">Orden de trabajo</a> <span class="divider">/</span>
+            <a href="<?php echo base_url() ?>ot.html">Orden de trabajo</a> <span class="divider">/</span>
         </li>
         
         <li>
