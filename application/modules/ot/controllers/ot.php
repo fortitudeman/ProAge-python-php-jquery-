@@ -32,6 +32,7 @@ class Ot extends CI_Controller {
 	
 	public $access_delete = false;
 	
+	public $access_activate = false;
 	//public $access_create_policy = false;
 	
 	
@@ -81,6 +82,8 @@ class Ot extends CI_Controller {
 			if( $value['action_name'] == 'Eliminar' )
 				$this->access_delete = true;	
 			
+			if( $value['action_name'] = 'Activar/Desactivar' )
+				$this->access_activate = true;
 						
 		endif; endforeach;
 							
@@ -139,7 +142,40 @@ class Ot extends CI_Controller {
 		$config['use_page_numbers'] = TRUE;
 		
 		$this->pagination->initialize($config); 
-				 
+		
+		$data = $this->work_order->overview( $begin );
+		
+		$scrips = '';
+		
+		if( !empty( $data ) )
+			
+			foreach( $data as $value ){
+				
+				$scrips .= '<script type="text/javascript">
+								$("#'.$value['id'].'").popover({
+										title: "Opciones",
+										trigger:"click",
+										placement:"bottom",
+										html:true, 
+										content: function(){
+											
+											var content = "Escoja una opción<br>";';
+										
+												if( $this->access_activate == true )
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activate-'.$value['id'].'\')\">Activar/Desactivar</a><br>";';
+												
+												if( $this->access_update == true )
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'update-'.$value['id'].'\')\">Editar</a><br>";';
+												if( $this->access_delete == true )
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'delete-'.$value['id'].'\')\">Eliminar</a>";
+												
+											return content;
+										}
+								});
+							 </script>';
+				
+			}
+						 
 		// Config view
 		$this->view = array(
 				
@@ -151,9 +187,15 @@ class Ot extends CI_Controller {
 		  'access_create' => $this->access_create,
 		  'access_update' => $this->access_update,
 		  'access_delete' => $this->access_delete,
+		  'scripts' => array(
+		  	
+			'<script src="'.base_url().'scripts/config.js"></script>',
+			'<script src="'.base_url().'ot/assets/scripts/overview.js"></script>',		
+			$scrips
+		  ),
 		  'content' => 'ot/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'data' => $this->work_order->overview( $begin )
+		  'data' => $data
 		  		
 		);
 				
@@ -162,8 +204,69 @@ class Ot extends CI_Controller {
 	}
 	
 	
+// Getting Filter
+	public function find(){
+		
+		// If is not ajax request redirect
+		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
+		
+		// Load Model
+		$this->load->model( 'work_order' );
+		
+		// Load Helper
+		$this->load->helper( array( 'ot', 'date' ) );
+		
+		$data = $this->work_order->find( $this->input->post( 'work_order_status_id' ) );
+		
+				
+		echo renderTable( $data );	
+		
+	}	
 	
 	
+	public function find_scripts(){
+		
+		// If is not ajax request redirect
+		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
+		
+		// Load Model
+		$this->load->model( 'work_order' );
+		
+		$data = $this->work_order->find( $this->input->post( 'work_order_status_id' ) );
+		
+		$scrips = '';
+		
+		if( !empty( $data ) )
+			
+			foreach( $data as $value ){
+				
+				$scrips .= '
+								$("#'.$value['id'].'").popover({
+										title: "Opciones",
+										trigger:"click",
+										placement:"bottom",
+										html:true, 
+										content: function(){
+											
+											var content = "Escoja una opción<br>";';
+										
+												if( $this->access_activate == true )
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activate-'.$value['id'].'\')\">Activar/Desactivar</a><br>";';
+												
+												if( $this->access_update == true )
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'update-'.$value['id'].'\')\">Editar</a><br>";';
+												if( $this->access_delete == true )
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'delete-'.$value['id'].'\')\">Eliminar</a>";
+												
+											return content;
+										}
+								});
+							 ';
+				
+			}
+		
+		echo $scrips;	
+	}
 	
 	
 	

@@ -189,7 +189,73 @@ class Work_order extends CI_Model{
 	public function record_count() {
         return $this->db->count_all( '' );
     }
+	
+	
+// Getting for filters	
+	public function find( $status = 'todos' ) {
+		
+		if( $status == 'activacion' )
+			$status =1;
+		if( $status == 'cancelada' )
+			$status =2;
+		if( $status == 'excedido' )
+			$status =3;
+		if( $status == 'pagada' )
+			$status =4;
+		if( $status == 'tramite' )
+			$status =5;		
+		
+		/*
+			
+			SELECT product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*
+			FROM `work_order`
+			JOIN product_group ON product_group.id=work_order.product_group_id
+			JOIN work_order_types ON work_order_types.id=work_order.work_order_type_id 
+			JOIN work_order_status ON work_order_status.id=work_order.work_order_status_id;
+			WHERE work_order.work_order_status_id=1;
+		*/
+		
+		$this->db->select( 'product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
+		$this->db->from( 'work_order' );
+		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
+		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
+		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
+		$this->db->where( 'work_order.work_order_status_id', $status );
+		$query = $this->db->get();
+		
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$ot = array();
+		
+		foreach ($query->result() as $row) {
 
+			$ot[] = array( 
+		    	'id' => $row->id,
+				'policy' => $this->getPolicyBuId( $row->policy_id ),
+				'agents' => $this->getAgentsByPolicy( $row->policy_id ),
+		    	'product_group_id' => $row->product_group_id,
+				'group_name' => $row->group_name,
+				'type_name' => $row->type_name,
+		    	'status_name' =>  $row->status_name,
+				'creation_date' =>  $row->creation_date,
+				'duration' =>  $row->duration,
+				'last_updated' =>  $row->last_updated,
+				'date' =>  $row->date
+		    );
+
+		}
+				
+		return $ot;
+		
+		
+   }
+	
+	
+	
+	
+	
+	
 
 	// Get Policy by Id
 	public function getPolicyBuId( $id = null ){

@@ -75,11 +75,11 @@
             <div class="row">
             	<div class="span1"></div>
             	<div class="span6">
-                	<a href="javascript:void(0);" class="btn btn-link">Todas</a>
-                    <a href="javascript:void(0);" class="btn btn-link">Tramite</a>
-                    <a href="javascript:void(0);" class="btn btn-link">Canceladas</a>
-                    <a href="javascript:void(0);" class="btn btn-link">Pagadas</a>
-                    <a href="javascript:void(0);" class="btn btn-link">Excedido</a>
+                	<a href="javascript:void(0);" class="btn btn-link find" id="todas">Todas</a>
+                    <a href="javascript:void(0);" class="btn btn-link find" id="tramite">Tramite</a>
+                    <a href="javascript:void(0);" class="btn btn-link find" id="canceladas">Canceladas</a>
+                    <a href="javascript:void(0);" class="btn btn-link find" id="pagadas">Pagadas</a>
+                    <a href="javascript:void(0);" class="btn btn-link find" id="excedido">Excedido</a>
                 </div>
                 
                 <div class="span3"></div>
@@ -105,7 +105,7 @@
               </thead>   
               <tbody id="data">
                 <?php  foreach( $data as $value ):  ?>
-                <tr>
+                <tr id="<?php echo $value['id'] ?>">
                 	<td class="center"><?php if( $value['product_group_id'] == 1 ) echo '0725V'; 
 											 if( $value['product_group_id'] == 2 ) echo '0725G';
 											 if( $value['product_group_id'] == 3 ) echo '0725A'; ?></td>
