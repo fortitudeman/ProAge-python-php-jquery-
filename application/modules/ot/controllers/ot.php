@@ -723,6 +723,149 @@ class Ot extends CI_Controller {
 	
 	
 	
+	
+	
+	
+	
+	/**
+	 *	Activate/Desactivate
+	 **/
+	public function activate( $ot = null ){
+		
+		// Check access teh user for create
+		if( $this->access_create == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Crear Politica.", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'ot', 'refresh' );
+		
+		}
+		
+		// Load Model 
+		$this->load->model( 'work_order' );
+		
+		
+		
+		
+		// Save Record
+		if( !empty( $_POST ) ){
+			
+			
+			$work_order = array(
+				
+				'work_order_status_id' => $this->input->post( 'work_order_status_id' ),
+				'work_order_reason_id' => $this->input->post( 'work_order_reason_id' ),
+				'work_order_responsible_id' => $this->input->post( 'work_order_responsible_id' ),
+				'comments' => $this->input->post( 'comments' ),
+				'last_updated' => date( 'd-m-Y H:i:s' )
+			);
+			
+			if( $this->input->post( 'work_order_status_id' ) == 1 )
+				
+				$work_order['creation_date'] = $this->input->post( 'creation_date' );
+			
+			
+			
+			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
+				
+				// Set true message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => true,	
+					'message' => 'Se ha guardado el registro correctamente.'
+								
+				));												
+				
+				
+				redirect( 'ot', 'refresh' );
+				
+			}else{
+				
+				
+				// Set true message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => false,	
+					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
+								
+				));												
+				
+				
+				redirect( 'ot', 'refresh' );
+				
+			}
+			exit;
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		$data = $this->work_order->getOtActivateDesactivate( $ot );
+		
+		
+		// Config view
+		$this->view = array(
+				
+		  'title' => 'Activar / Desactivar',
+		   // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'css' => array(),
+		  'scripts' =>  array(
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+			  '<script src="'.base_url().'ot/assets/scripts/activate_desactivate.js"></script>',		
+			  '<script src="'.base_url().'scripts/config.js"></script>'
+			  	
+		  ),
+		  'content' => 'ot/activate_desactivate', // View to load
+		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+		  
+		  'ot' => $ot,
+		  
+		  'status' => $this->work_order->getStatus( $data[0]['work_order_status_id'] ),		  
+		  'reason' => $this->work_order->getReason( $data[0]['work_order_reason_id'] ),
+		  
+		  'responsibles' => $this->work_order->getResponsibles(  $data[0]['work_order_responsible_id'] ),
+		  'data' => $data
+		  
+		);
+		
+		
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 /* End of file ot.php */
 /* Location: ./application/controllers/ot.php */
 }

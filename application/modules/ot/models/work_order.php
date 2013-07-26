@@ -78,11 +78,7 @@ class Work_order extends CI_Model{
     public function update( $table = '', $id = 0, $values = array() ){
         
 		if( empty( $table ) or empty( $values ) or empty( $id ) ) return false;
-					
-		// Set timestamp unix
-		$timestamp = strtotime( date( 'd-m-Y H:i:s' ) );
-		
-		$values['modified'] = $timestamp;
+	
 		
         if( $this->db->update( $table, $values, array( 'id' => $id ) ) )
 			
@@ -204,7 +200,7 @@ class Work_order extends CI_Model{
 			$status =4;
 		if( $status == 'tramite' )
 			$status =5;		
-		
+						
 		/*
 			
 			SELECT product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*
@@ -220,7 +216,9 @@ class Work_order extends CI_Model{
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
-		$this->db->where( 'work_order.work_order_status_id', $status );
+		if( $status != 'todos' )
+			$this->db->where( 'work_order.work_order_status_id', $status );
+		
 		$query = $this->db->get();
 		
 		
@@ -652,6 +650,112 @@ class Work_order extends CI_Model{
 		foreach ($query->result() as $row) {
 
 			$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 
+
+		}
+		
+		return $options;
+		
+	}
+
+
+
+
+/**
+ *	Activate / Desactivate
+ **/	
+ 	public function getOtActivateDesactivate( $ot = null ){
+		
+		if( empty( $ot ) ) return false;
+		
+		
+		$this->db->where( 'id', $ot );		
+		$query = $this->db->get( 'work_order' );	
+					
+		if ($query->num_rows() == 0) return false;
+		
+		$ot = array();
+		
+		foreach ($query->result() as $row) {
+
+			$ot[] = array( 
+		    	'id' => $row->id,
+		    	'work_order_status_id' => $row->work_order_status_id,
+				'work_order_reason_id' => $row->work_order_reason_id,
+		    	'work_order_responsible_id' =>  $row->work_order_responsible_id,
+				'comments' =>  $row->comments
+		    );
+
+		}
+		
+		return $ot;
+		
+	}
+ 
+	public function getStatus( $work_order_status = null ){
+				
+		$query = $this->db->get( 'work_order_status' );	
+		
+		$options = '<option value="">Seleccione</option>';
+					
+		if ($query->num_rows() == 0) return $options;
+						
+		foreach ($query->result() as $row) {
+			
+			if( !empty( $work_order_status ) and $work_order_status == $row->id )
+			
+				$options  .= '<option selected="selected" value="'.$row->id.'">'.$row->name.'</option>'; 
+			
+			else
+				
+				$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 	
+
+		}
+		
+		return $options;
+		
+	}
+	
+	public function getReason( $work_order_reason = null ){
+				
+		$query = $this->db->get( 'work_order_reason' );	
+		
+		$options = '<option value="">Seleccione</option>';
+					
+		if ($query->num_rows() == 0) return $options;
+						
+		foreach ($query->result() as $row) {
+
+			if( !empty( $work_order_reason ) and $work_order_reason == $row->id )
+			
+				$options  .= '<option selected="selected" value="'.$row->id.'">'.$row->name.'</option>'; 
+			
+			else
+				
+				$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 	
+
+		}
+		
+		return $options;
+		
+	}
+	
+	public function getResponsibles( $work_order_responsibles = null ){
+				
+		$query = $this->db->get( 'work_order_responsibles' );	
+		
+		$options = '<option value="">Seleccione</option>';
+					
+		if ($query->num_rows() == 0) return $options;
+						
+		foreach ($query->result() as $row) {
+
+			if( !empty( $work_order_responsibles ) and $work_order_responsibles == $row->id )
+			
+				$options  .= '<option selected="selected" value="'.$row->id.'">'.$row->name.'</option>'; 
+			
+			else
+				
+				$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 	
 
 		}
 		
