@@ -44,12 +44,19 @@ function renderTable( $data = array() ){
 			
 			if( !empty( $value['agents'] ) )
 								foreach( $value['agents'] as $agent ) 
-			$table .='		<td class="center">'. $agent['name']. ' '. $agent['lastnames']. ' '. $agent['percentage'] . '% <br>' .'</td>';
+									$table .='		<td class="center">'. $agent['name']. ' '. $agent['lastnames']. ' '. $agent['percentage'] . '% <br>' .'</td>';
+			
+			else
+					$table .='		<td class="center"></td>';
 			
 			$table .= '<td class="center">'.$value['group_name'] .'</td>';
+			$table .= '<td class="center">'.$value['type_name'] .'</td>';
 			
 			if( !empty( $value['policy'] ) )
-			$table .='		<td class="center">'.  $value['policy'][0]['name']. ' '. $value['policy'][0]['lastname_father']. ' '. $value['policy'][0]['lastname_mother'] .'</td>';
+				$table .='		<td class="center">'.  $value['policy'][0]['name']. ' '. $value['policy'][0]['lastname_father']. ' '. $value['policy'][0]['lastname_mother'] .'</td>';
+			else
+				$table .='		<td class="center"></td>';
+			
 			
 			$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
 			//$color = $color*.100;
@@ -66,15 +73,15 @@ function renderTable( $data = array() ){
 			
 			
 			$table .='	
-							<td class="center" '.$style.'>'. ucwords($value['status_name']) .'</td>';
+							<td class="center" '.$style.'>'. str_replace( 'Tramite', 'Pendiente', ucwords($value['status_name'] ) ) .'</td>';
 			
-							
+			/*				
 			if( $value['status_name'] == 'activacion' )
 					$table .='<td class="center"></td>';
 			
 			else
 					$table .='<td class="center">'. tiempo_transcurrido($value['creation_date']) .'</td>';
-				
+				*/
 			$table .='</tr>';
     
     

@@ -74,8 +74,9 @@
                                    
             <div class="row">
             	<div class="span1"></div>
-            	<div class="span6">
+            	<div class="span7">
                 	<a href="javascript:void(0);" class="btn btn-link find" id="todas">Todas</a>
+                    <a href="javascript:void(0);" class="btn btn-link find" id="mios">Mios</a>
                     <a href="javascript:void(0);" class="btn btn-link find" id="activadas">Activadas</a>
                     <a href="javascript:void(0);" class="btn btn-link find" id="tramite">Pendientes</a>
                     <a href="javascript:void(0);" class="btn btn-link find" id="canceladas">Canceladas</a>
@@ -83,7 +84,7 @@
                     <a href="javascript:void(0);" class="btn btn-link find" id="excedido">Excedido</a>
                 </div>
                 
-                <div class="span3"></div>
+                <div class="span2"></div>
                 <div class="span1"><a href="<?php echo base_url() ?>ot/create.html" class="btn btn-link">Agregar</a></div>
                 
             </div>
@@ -91,17 +92,17 @@
             <div id="loading"></div>
             
         
-        	<?php if( !empty( $data ) ): ?>
+        	<?php  if( !empty( $data ) ): ?>
             <table class="table table-striped table-bordered bootstrap-datatable datatable">
               <thead>
                   <tr>
-                      <th>No</th>
-                      <th>Fecha de creación</th> 
+                      <th>Número de OT</th>
+                      <th>Fecha de alta de la OT</th> 
                       <th>Agente</th>
                       <th>Ramo</th>
+                      <th>Tipo de trámite</th>
                       <th>Nombre del asegurado</th>
                       <th>Estado</th>
-                      <th>Tiempo</th>
                   </tr>
               </thead>   
               <tbody id="data">
@@ -119,6 +120,7 @@
 						?>
                     </td>
                     <td class="center"><?php echo $value['group_name'] ?></td>
+                    <td class="center"><?php echo $value['type_name'] ?></td>
                     <td class="center"><?php if( !empty( $value['policy'] ) )echo $value['policy'][0]['name']. ' '. $value['policy'][0]['lastname_father']. ' '. $value['policy'][0]['lastname_mother'] ?></td>
                     
                     <?php
@@ -132,12 +134,11 @@
 							$style = 'style="background-color:#FF0"';
 						if( $color > 100 )	
 							$style = 'style="background-color:#FF0"';
-						
+
 							
 					?>	
                     
-                    <td class="center" <?php if( $value['status_name'] != 'activacion' ) echo $style ?>><?php echo ucwords($value['status_name']) ?></td>
-                    <td class="center"><?php if( $value['status_name'] != 'activacion' ) echo tiempo_transcurrido($value['creation_date']) ?></td>
+                    <td class="center" <?php if( $value['status_name'] != 'activacion' ) echo $style ?>><?php echo str_replace( 'Tramite', 'Pendiente', ucwords($value['status_name'] ) ) ?></td>
                 </tr>
                 <?php endforeach;  ?>                
               </tbody>
