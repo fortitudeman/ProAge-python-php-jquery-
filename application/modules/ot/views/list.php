@@ -54,7 +54,7 @@
                     <div class="alert alert-success">
                           <button type="button" class="close" data-dismiss="alert">×</button>
                           <img src="<?php echo base_url() ?>images/true.png" width="20" height="20" />
-                          <strong>Success: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
+                          <strong>Correcto: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
                     </div>
                 <?php endif; ?>
                
@@ -76,7 +76,8 @@
             	<div class="span1"></div>
             	<div class="span6">
                 	<a href="javascript:void(0);" class="btn btn-link find" id="todas">Todas</a>
-                    <a href="javascript:void(0);" class="btn btn-link find" id="tramite">Tramite</a>
+                    <a href="javascript:void(0);" class="btn btn-link find" id="activadas">Activadas</a>
+                    <a href="javascript:void(0);" class="btn btn-link find" id="tramite">Pendientes</a>
                     <a href="javascript:void(0);" class="btn btn-link find" id="canceladas">Canceladas</a>
                     <a href="javascript:void(0);" class="btn btn-link find" id="pagadas">Pagadas</a>
                     <a href="javascript:void(0);" class="btn btn-link find" id="excedido">Excedido</a>
