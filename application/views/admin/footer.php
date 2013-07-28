@@ -38,8 +38,8 @@
 		</div>
 
 		<footer>
-			<p class="pull-left">&copy; <a href="http://www.ulisesrodriguez.com/" target="_blank">Ulises Rodriguez</a> <?php echo date('Y') ?></p>
-			<p class="pull-right">Powered by: Apps ISC.Ulises</p>
+			<p class="pull-left">&copy; <a href="#" target="_blank">ProAges</a> <?php echo date('Y') ?></p>
+			<!--<p class="pull-right">Powered by: Apps ISC.Ulises</p>-->
 		</footer>
 		<?php } ?>
 
