@@ -75,7 +75,9 @@
             <div class="row">
             	<div class="span1"></div>
             	<div class="span7">
-                	<a href="javascript:void(0);" class="btn btn-link find" id="todas">Todas</a>
+                	<?php if( $access_all == true ): ?>
+                    <a href="javascript:void(0);" class="btn btn-link find" id="todas">Todas</a>
+                    <?php endif; ?>
                     <a href="javascript:void(0);" class="btn btn-link find" id="mios">Mios</a>
                     <a href="javascript:void(0);" class="btn btn-link find" id="activadas">Activadas</a>
                     <a href="javascript:void(0);" class="btn btn-link find" id="tramite">Pendientes</a>

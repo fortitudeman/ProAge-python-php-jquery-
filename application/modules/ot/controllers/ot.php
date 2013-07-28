@@ -35,6 +35,7 @@ class Ot extends CI_Controller {
 	public $access_activate = false;
 	//public $access_create_policy = false;
 	
+	public $access_all = false;
 	
 /** Construct Function **/
 /** Setting Load perms **/
@@ -84,6 +85,9 @@ class Ot extends CI_Controller {
 			
 			if( $value['action_name'] = 'Activar/Desactivar' )
 				$this->access_activate = true;
+			
+			if( $value['action_name'] ='Ver todos los registros' )
+				$this->access_all = true;
 						
 		endif; endforeach;
 							
@@ -135,7 +139,12 @@ class Ot extends CI_Controller {
 		$config['num_tag_open'] = '<li>';
 		$config['num_tag_close'] = '</li>';					
 		$config['base_url'] = base_url().'ot/index/';
-		$config['total_rows'] = $this->work_order->record_count();
+		
+		if( $this->access_all == false )
+			$config['total_rows'] = $this->work_order->record_count( $this->access_all );
+		else
+			$config['total_rows'] = $this->work_order->record_count();
+		
 		$config['per_page'] = 50;
 		$config['num_links'] = 5;
 		$config['uri_segment'] = 3;
@@ -143,7 +152,15 @@ class Ot extends CI_Controller {
 		
 		$this->pagination->initialize($config); 
 		
-		$data = $this->work_order->overview( $begin );
+		
+		if( $this->access_all == false )
+		
+			$data = $this->work_order->overview( $begin, $this->sessions['id'] );
+		
+		else
+			
+			$data = $this->work_order->overview( $begin );
+			
 		
 		$scrips = '';
 		
@@ -189,6 +206,7 @@ class Ot extends CI_Controller {
 		  'access_create' => $this->access_create,
 		  'access_update' => $this->access_update,
 		  'access_delete' => $this->access_delete,
+		  'access_all' => $this->access_all,
 		  'scripts' => array(
 		  	
 			'<script src="'.base_url().'scripts/config.js"></script>',
@@ -218,8 +236,11 @@ class Ot extends CI_Controller {
 		// Load Helper
 		$this->load->helper( array( 'ot', 'date' ) );
 		
-		$data = $this->work_order->find( $this->input->post( 'work_order_status_id' ) );
+		if( $this->access_all == false )
+			$data = $this->work_order->find( $this->input->post( 'work_order_status_id' ), $this->sessions['id'] );
 		
+		else
+			$data = $this->work_order->find( $this->input->post( 'work_order_status_id' ), $this->sessions['id'] );
 				
 		echo renderTable( $data );	
 		
@@ -234,7 +255,11 @@ class Ot extends CI_Controller {
 		// Load Model
 		$this->load->model( 'work_order' );
 		
-		$data = $this->work_order->find( $this->input->post( 'work_order_status_id' ) );
+		if( $this->access_all == false )
+			$data = $this->work_order->find( $this->input->post( 'work_order_status_id' ), $this->sessions['id'] );
+		
+		else
+			$data = $this->work_order->find( $this->input->post( 'work_order_status_id' ), $this->sessions['id'] );
 		
 		$scrips = '';
 		
@@ -338,7 +363,7 @@ class Ot extends CI_Controller {
 			
 			
 			
-						
+					
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
 				
@@ -355,7 +380,7 @@ class Ot extends CI_Controller {
 					'work_order_type_id' => $this->input->post( 'subtype' ),
 					'work_order_status_id' => 5,
 					'work_order_responsible_id' => 0,
-					'uid' => 0,
+					'uid' => $this->sessions['id'],
 					'creation_date' => $this->input->post('creation_date'),
 					'comments' => $this->input->post('comments'),
 					'duration' => '',
@@ -363,7 +388,7 @@ class Ot extends CI_Controller {
 					'date' => date( 'Y-m-d H:s:i' )
 					
 				);	
-				
+								
 				if( !empty( $_POST['policy_id'] ) )
 					 $ot['policy_id'] =  $this->input->post( 'policy_id' );
 								
@@ -403,7 +428,7 @@ class Ot extends CI_Controller {
 						'currency_id' => $this->input->post( 'currency_id' ),
 						'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
 						'payment_method_id' => $this->input->post( 'payment_method_id' ),
-						'uid' => $this->input->post( 'uid' ),
+						'uid' => $this->sessions['id'],
 						'name' => $this->input->post( 'name' ),
 						'lastname_father' => $this->input->post( 'lastname_father' ),
 						'lastname_mother' => $this->input->post( 'lastname_mother' ),
@@ -437,17 +462,17 @@ class Ot extends CI_Controller {
 									'since' => date( 'Y-m-d H:i:s' )
 								
 							  );
-	
 					
-					 if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false );
+					
+					
+					
+					 if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false )
 						
 						$controlSaved = false;	
 						
 				}
 						
-				
-				
-				
+						
 				
 				if( $controlSaved == true ){
 					

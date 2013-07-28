@@ -130,7 +130,7 @@ class Work_order extends CI_Model{
  |	Getting for overview
  **/ 
 	
-	public function overview( $start = 0 ) {
+	public function overview( $start = 0, $user = null ) {
 		
 		/*
 			
@@ -147,6 +147,10 @@ class Work_order extends CI_Model{
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
+		
+		if( !empty( $user ) )
+			$this->db->where( 'work_order.uid', $user );
+		
 		$this->db->limit( 50, $start );
 		$query = $this->db->get();
 		
@@ -182,9 +186,13 @@ class Work_order extends CI_Model{
 
 
 // Count records for pagination
-	public function record_count() {
-        return $this->db->count_all( '' );
-    }
+	public function record_count( $user = null ) {
+       
+	    if( empty( $user ) )
+	    	return $this->db->count_all( 'work_order' );
+    	else
+			return $this->db->where( 'work_order.uid', $user )->count_all_results();
+	}
 
 
 /**
@@ -258,7 +266,7 @@ class Work_order extends CI_Model{
 	
 	
 // Getting for filters	
-	public function find( $status = 'todas' ) {
+	public function find( $status = 'todas', $user = null ) {
 		
 		if( $status == 'activadas' )
 			$status =1;
@@ -288,8 +296,14 @@ class Work_order extends CI_Model{
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
 		
-		if( $status != 'todas' )
+		if( $status != 'todas' and $status != 'mios'  )
 			$this->db->where( 'work_order.work_order_status_id', $status );
+		
+				
+		if( !empty( $user ) and $status == 'mios' ){
+			$this->db->where( array( 'work_order.uid' => $user ) );
+		}
+		
 		
 		$query = $this->db->get();
 		
