@@ -258,7 +258,7 @@ class Work_order extends CI_Model{
 	
 	
 // Getting for filters	
-	public function find( $status = 'todos' ) {
+	public function find( $status = 'todas' ) {
 		
 		if( $status == 'activacion' )
 			$status =1;
@@ -270,6 +270,8 @@ class Work_order extends CI_Model{
 			$status =4;
 		if( $status == 'tramite' )
 			$status =5;		
+		if( $status == 'activadas' )
+			$status =6;			
 						
 		/*
 			
@@ -286,7 +288,8 @@ class Work_order extends CI_Model{
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
-		if( $status != 'todos' )
+		
+		if( $status != 'todas' )
 			$this->db->where( 'work_order.work_order_status_id', $status );
 		
 		$query = $this->db->get();
