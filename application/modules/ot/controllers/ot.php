@@ -107,7 +107,7 @@ class Ot extends CI_Controller {
 		
 		
 		// Load Model
-		$this->load->model( 'work_order' );
+		$this->load->model( array( 'work_order', 'user' ) );
 		
 		// Load Helpers
 		$this->load->helper( 'date' );
@@ -215,7 +215,9 @@ class Ot extends CI_Controller {
 		  ),
 		  'content' => 'ot/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'data' => $data
+		  'data' => $data,
+		  'agents' => $this->user->getAgents(),
+		  'gerentes' => $this->user->getSelectsGerentes()			 
 		  		
 		);
 				
@@ -235,12 +237,12 @@ class Ot extends CI_Controller {
 		
 		// Load Helper
 		$this->load->helper( array( 'ot', 'date' ) );
-		
+					
 		if( $this->access_all == false )
-			$data = $this->work_order->find( $this->input->post( 'work_order_status_id' ), $this->sessions['id'] );
+			$data = $this->work_order->find( $this->input->post(), $this->sessions['id'] );
 		
 		else
-			$data = $this->work_order->find( $this->input->post( 'work_order_status_id' ), $this->sessions['id'] );
+			$data = $this->work_order->find( $this->input->post() );
 				
 		echo renderTable( $data );	
 		
@@ -256,10 +258,10 @@ class Ot extends CI_Controller {
 		$this->load->model( 'work_order' );
 		
 		if( $this->access_all == false )
-			$data = $this->work_order->find( $this->input->post( 'work_order_status_id' ), $this->sessions['id'] );
+			$data = $this->work_order->find( $this->input->post(), $this->sessions['id'] );
 		
 		else
-			$data = $this->work_order->find( $this->input->post( 'work_order_status_id' ), $this->sessions['id'] );
+			$data = $this->work_order->find( $this->input->post() );
 		
 		$scrips = '';
 		

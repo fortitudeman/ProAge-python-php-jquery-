@@ -21,6 +21,12 @@ function renderTable( $data = array() ){
 	if( empty( $data ) ) return false;
 	
 	
+	
+	
+	
+	
+	
+	
 	$table = null;
 	
 	foreach( $data as $value ){ 
@@ -31,12 +37,12 @@ function renderTable( $data = array() ){
 							
 							
 			if( $value['product_group_id'] == 1 )
-			$table .='				<td class="center">0725V</td>';
+			$table .='				<td class="center">'.$value['id'].'0725V</td>';
 			
 			if( $value['product_group_id'] == 2 )
-			$table .='				<td class="center">0725G</td>';								 
+			$table .='				<td class="center">'.$value['id'].'0725G</td>';								 
 			if( $value['product_group_id'] == 3 )
-			$table .='				<td class="center">0725A</td>';						
+			$table .='				<td class="center">'.$value['id'].'0725A</td>';						
 							
 			
 			

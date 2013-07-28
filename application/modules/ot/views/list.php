@@ -78,7 +78,7 @@
                 	<?php if( $access_all == true ): ?>
                     <a href="javascript:void(0);" class="btn btn-link find" id="todas">Todas</a>
                     <?php endif; ?>
-                    <a href="javascript:void(0);" class="btn btn-link find" id="mios">Mios</a>
+                    <a href="javascript:void(0);" class="btn btn-link find searchclicked" id="mios">Mios</a>
                     <a href="javascript:void(0);" class="btn btn-link find" id="activadas">Activadas</a>
                     <a href="javascript:void(0);" class="btn btn-link find" id="tramite">Pendientes</a>
                     <a href="javascript:void(0);" class="btn btn-link find" id="canceladas">Canceladas</a>
@@ -90,6 +90,51 @@
                 <div class="span1"><a href="<?php echo base_url() ?>ot/create.html" class="btn btn-link">Agregar</a></div>
                 
             </div>
+            
+            
+            <div class="row">
+            
+            	
+                <div class="span1"></div>
+                <div class="span5">
+                	
+                    <a href="javascript:void(0)" id="showadvanced" class="btn- btn-link link-advanced">Avanzadas</a> 
+                    <a href="javascript:void(0)" id="findfilters" class="btn- btn-link">Buscar</a> 
+                    <input type="hidden" id="findvalue" value="mios" />
+                    <br /><br />  
+                      <div class="row advanced">
+                      	
+                                                	
+                             <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="id" /> Número  <input type="text" id="id" class="hide input-small" /><br />
+                             <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="creation_date" /> Fecha. <input type="text" id="creation_date" class="hide input-small" readonly="readonly"/><br />
+                            
+                                              
+                      
+                      </div>
+                      
+                      
+                      <div class="row advanced">
+                      	      
+                               <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="agent" /> Agente <select id="agent" class="hide input-small" ><?php echo $agents ?></select><br />
+                                
+                                <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="ramo" /> Ramo <select id="ramo" class="hide input-small" ><option value="">Seleccione</option><option value="1">Vida</option><<option value="2">GMM</option><<option value="3">Autos</option></select><br />                      	
+                              
+                              <input type="checkbox" name="advanced[]" class="checkboxadvance"  value="gerente" /> Gerente <select id="gerente" class="hide input-small" ><option value="">Seleccione</option><?php echo $gerentes ?></select><br />
+                                                
+                      </div>
+                     
+                                    	
+                </div>
+                
+            </div>
+            
+            
+            
+            
+            
+            
+            
+            
             
             <div id="loading"></div>
             
@@ -110,7 +155,8 @@
               <tbody id="data">
                 <?php  foreach( $data as $value ):  ?>
                 <tr id="<?php echo $value['id'] ?>">
-                	<td class="center"><?php if( $value['product_group_id'] == 1 ) echo '0725V'; 
+                	<td class="center"><?php echo $value['id'];
+											 if( $value['product_group_id'] == 1 ) echo '0725V'; 
 											 if( $value['product_group_id'] == 2 ) echo '0725G';
 											 if( $value['product_group_id'] == 3 ) echo '0725A'; ?></td>
                     <td class="center"><?php echo $value['creation_date'] ?></td>

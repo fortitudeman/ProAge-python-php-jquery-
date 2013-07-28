@@ -266,20 +266,23 @@ class Work_order extends CI_Model{
 	
 	
 // Getting for filters	
-	public function find( $status = 'todas', $user = null ) {
+	public function find( $advansed = array(), $user = null ) {
 		
-		if( $status == 'activadas' )
-			$status =1;
-		if( $status == 'canceladas' )
-			$status =2;
-		if( $status == 'excedido' )
-			$status =3;
-		if( $status == 'pagadas' )
-			$status =4;
-		if( $status == 'tramite' )
-			$status =5;		
-
+		$status=0;
 						
+		if( $advansed['work_order_status_id'] == 'activadas' )
+			$status =1;
+		if( $advansed['work_order_status_id'] == 'canceladas' )
+			$status =2;
+		if( $advansed['work_order_status_id'] == 'excedido' )
+			$status =3;
+		if( $advansed['work_order_status_id'] == 'pagadas' )
+			$status =4;
+		if( $advansed['work_order_status_id'] == 'tramite' )
+			$status =5;	
+		
+				
+		unset( $advansed['work_order_status_id'] );
 		/*
 			
 			SELECT product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*
@@ -296,13 +299,86 @@ class Work_order extends CI_Model{
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
 		
-		if( $status != 'todas' and $status != 'mios'  )
+		if( $status != 0 )
 			$this->db->where( 'work_order.work_order_status_id', $status );
 		
-				
-		if( !empty( $user ) and $status == 'mios' ){
+		
+		
+		if( !empty( $user ) and $status == 0 ){
 			$this->db->where( array( 'work_order.uid' => $user ) );
 		}
+	
+		// Added Avansed
+		if( !empty( $advansed ) ){
+				
+				foreach( $advansed as $value ){
+					
+					
+					if( $value[0] == 'id' ){
+					
+						$id = str_replace( '0725V', '', $value[1]);
+						$id = str_replace( '0725G', '', $value[1]);
+						$id = str_replace( '0725A', '', $value[1]);
+						$this->db->where( array( 'work_order.id' => $id ) );	
+						
+					}
+					
+					
+					if( $value[0] == 'creation_date' )
+							$this->db->where( array( 'work_order.creation_date' => $value[1] ) );	
+					
+					if( $value[0] == 'ramo' )
+							$this->db->where( array( 'work_order.product_group_id' => $value[1] ) );			
+					
+					
+					
+					
+					// Agents
+					if( $value[0] == 'agent' ){
+						
+						/**
+						 JOIN policies_vs_users ON policies_vs_users.policy_id=work_order.policy_id
+						 WHERE policies_vs_users.user_id=1
+						*/
+						
+						$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=work_order.policy_id' );
+						$this->db->where( 'policies_vs_users.user_id', $value[1] );
+						
+					}
+					
+					
+					// Agents
+					if( $value[0] == 'agent' ){
+						
+						/**
+						 JOIN policies_vs_users ON policies_vs_users.policy_id=work_order.policy_id
+						 WHERE policies_vs_users.user_id=1
+						*/
+						
+						$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=work_order.policy_id' );
+						$this->db->where( 'policies_vs_users.gerente', $value[1] );
+						
+					}
+					
+					
+					
+					
+					
+					
+					
+					
+				}
+				
+				
+				
+		
+		}
+		
+		
+		
+		
+		
+		
 		
 		
 		$query = $this->db->get();
