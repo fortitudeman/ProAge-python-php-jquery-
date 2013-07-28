@@ -260,18 +260,17 @@ class Work_order extends CI_Model{
 // Getting for filters	
 	public function find( $status = 'todas' ) {
 		
-		if( $status == 'activacion' )
+		if( $status == 'activadas' )
 			$status =1;
-		if( $status == 'cancelada' )
+		if( $status == 'canceladas' )
 			$status =2;
 		if( $status == 'excedido' )
 			$status =3;
-		if( $status == 'pagada' )
+		if( $status == 'pagadas' )
 			$status =4;
 		if( $status == 'tramite' )
 			$status =5;		
-		if( $status == 'activadas' )
-			$status =6;			
+
 						
 		/*
 			
