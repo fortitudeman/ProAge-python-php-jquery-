@@ -88,6 +88,6 @@ function chooseOption( choose ){
 		if( choose[0] == 'update' )
 			window.location=Config.base_url()+"ot/update/"+choose[1]+".html";
 		if( choose[0] == 'delete' )
-			window.location=Config.base_url()+"ot/delete/"+choose[1]+".html";
+			window.location=Config.base_url()+"ot/cancel/"+choose[1]+".html";
 	
 }

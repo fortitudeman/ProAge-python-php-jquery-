@@ -25,7 +25,7 @@
             <a href="<?php echo base_url() ?>ot.html">Orden de trabajo</a> <span class="divider">/</span>
         </li>
         <li>
-             <a href="<?php echo base_url() ?>ot/update/<?php echo $data[0]['id'] ?>.html"> Editar </a>
+           Cancelar
         </li>
     </ul>
 </div>
@@ -47,12 +47,12 @@
             <p>Esta seguro de Canselar este registro.</p>
             
         
-            <form id="form" action="<?php echo base_url() ?>ot/delete/<?php echo $data[0]['id'] ?>.html" class="form-horizontal" method="post">
+            <form id="form" action="<?php echo base_url() ?>ot/cancel/<?php echo $data[0]['id'] ?>.html" class="form-horizontal" method="post">
                 <fieldset>
                   <input type="hidden" name="delete" value="true" />
                   <div id="actions-buttons-forms" class="form-actions">
-                    <button type="submit" class="btn btn-danger">Canselar</button>
-                    <button class="btn" onclick="history.back()">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Cancelar</button>
+                    <input type="button" class="btn" onclick="history.back()" value="Regresar">
                   </div>
                 </fieldset>
               </form>

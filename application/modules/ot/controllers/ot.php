@@ -862,6 +862,17 @@ class Ot extends CI_Controller {
 	public function update( $ot = null ){
 		
 		
+		// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Editar", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'ot', 'refresh' );
+		
 		
 		
 		// Check access teh user for create
@@ -871,7 +882,7 @@ class Ot extends CI_Controller {
 			$this->session->set_flashdata( 'message', array( 
 				
 				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Crear", Informe a su administrador para que le otorge los permisos necesarios.'
+				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Editar", Informe a su administrador para que le otorge los permisos necesarios.'
 							
 			));	
 			
@@ -999,7 +1010,7 @@ class Ot extends CI_Controller {
 
 
 // delete work order
-	public function delete( $ot = null ){
+	public function cancel( $ot = null ){
 		
 		
 		
@@ -1011,7 +1022,7 @@ class Ot extends CI_Controller {
 			$this->session->set_flashdata( 'message', array( 
 				
 				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Crear", Informe a su administrador para que le otorge los permisos necesarios.'
+				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Canselar", Informe a su administrador para que le otorge los permisos necesarios.'
 							
 			));	
 			
