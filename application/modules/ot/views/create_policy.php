@@ -73,7 +73,7 @@
                     <label class="control-label text-error" for="inputError">Ramo</label>
                     <div class="controls">
                       <input type="radio" value="1" name="ramo" class="ramo"/>&nbsp;&nbsp;Vida
-                      <input type="radio" value="2" name="ramo" class="ramo"/>&nbsp;&nbsp;GIMM
+                      <input type="radio" value="2" name="ramo" class="ramo"/>&nbsp;&nbsp;GMM
                       <input type="radio" value="3" name="ramo" class="ramo"/>&nbsp;&nbsp;Auto
                     </div>
                   </div>

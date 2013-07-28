@@ -75,7 +75,7 @@
                       <input type="radio" value="1" name="ramo" class="ramo" <?php echo $ch ?>/>&nbsp;&nbsp;Vida
                       
                       <?php if( $data[0]['product_group_id'] == 2 ) $ch = 'checked="checked"'; else $ch = ''; ?>
-                      <input type="radio" value="2" name="ramo" class="ramo" <?php echo $ch ?>/>&nbsp;&nbsp;GIMM
+                      <input type="radio" value="2" name="ramo" class="ramo" <?php echo $ch ?>/>&nbsp;&nbsp;GMM
                       
                       <?php if( $data[0]['product_group_id'] == 3 ) $ch = 'checked="checked"'; else $ch = ''; ?>
                       <input type="radio" value="3" name="ramo" class="ramo" <?php echo $ch ?>/>&nbsp;&nbsp;Auto
@@ -165,7 +165,7 @@
                                     
                   <div id="actions-buttons-forms" class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <button class="btn" onclick="javascript: history.back()">Cancelar</button>
+                    <input type="button" class="btn" onclick="javascript: history.back();" value="Cancelar">
                   </div>
                 </fieldset>
               </form>
