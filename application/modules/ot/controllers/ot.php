@@ -160,9 +160,11 @@ class Ot extends CI_Controller {
 										content: function(){
 											
 											var content = "Escoja una opción<br>";';
-										
+												
+												if( $value['status_name'] == 'activada' ) $title = 'Desactivar'; else  $title = 'Activar';
+												
 												if( $this->access_activate == true )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activate-'.$value['id'].'\')\">Activar/Desactivar</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activate-'.$value['id'].'\')\">'. $title.'</a><br>";';
 												
 												//if( $this->access_update == true )
 												//$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'update-'.$value['id'].'\')\">Editar</a><br>";';
@@ -249,9 +251,11 @@ class Ot extends CI_Controller {
 										content: function(){
 											
 											var content = "Escoja una opción<br>";';
+												
+												if( $value['status_name'] == 'activada' ) $title = 'Desactivar'; else  $title = 'Activar';
 										
 												if( $this->access_activate == true )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activate-'.$value['id'].'\')\">Activar/Desactivar</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activate-'.$value['id'].'\')\">'.$title.'</a><br>";';
 												
 												//if( $this->access_update == true )
 												//$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'update-'.$value['id'].'\')\">Editar</a><br>";';
@@ -314,9 +318,32 @@ class Ot extends CI_Controller {
 			$this->form_validation->set_rules('comments', 'Comentarios', 'required');
 			
 			
+			
+			// IF IS A NEW BUSSINESS
+			if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' ){
+				
+				// Validations
+				$this->form_validation->set_rules('product_id', 'Producto', 'required|xxs_clean');
+				$this->form_validation->set_rules('currency_id', 'Moneda', 'required|xxs_clean');
+				$this->form_validation->set_rules('payment_interval_id', 'Conducto', 'required|xxs_clean');
+				$this->form_validation->set_rules('payment_method_id', 'Forma de pago', 'required|xxs_clean');
+				$this->form_validation->set_rules('name', 'Nombre', 'required|xxs_clean');
+				$this->form_validation->set_rules('lastname_father', 'Apellido paterno', 'required|xxs_clean');
+				$this->form_validation->set_rules('lastname_mother', 'Apellido materno', 'required|xxs_clean');
+				
+			}
+			
+			
+			
+			
+			
+			
 						
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
+				
+				$controlSaved = true;
+				
 				
 				// Load Model
 				$this->load->model( 'work_order' );
@@ -338,10 +365,91 @@ class Ot extends CI_Controller {
 				);	
 				
 				if( !empty( $_POST['policy_id'] ) )
-					 $_POST['policy_id'] =  $this->input->post( 'policy_id' );
+					 $ot['policy_id'] =  $this->input->post( 'policy_id' );
+								
+				// Save OT
+				if( $this->work_order->create( 'work_order', $ot ) == false )
+					
+					 $controlSaved = false;
 				
 				
-				if( $this->work_order->create( 'work_order', $ot ) == true ){
+				if( $controlSaved == false ){
+					
+					// Set false message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => false,	
+						'message' => 'No se puede crear la orden de trabajo, consulte a su administrador.'
+									
+					));	
+					
+					
+					redirect( 'ot', 'refresh' );
+					
+				}
+				
+				
+							
+				
+				
+				
+				// IF IS A NEW BUSSINESS
+				if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' ){
+						
+						
+					$policy = array(
+				  	
+						'product_id' => $this->input->post( 'product_id' ),
+						'currency_id' => $this->input->post( 'currency_id' ),
+						'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
+						'payment_method_id' => $this->input->post( 'payment_method_id' ),
+						'uid' => $this->input->post( 'uid' ),
+						'name' => $this->input->post( 'name' ),
+						'lastname_father' => $this->input->post( 'lastname_father' ),
+						'lastname_mother' => $this->input->post( 'lastname_mother' ),
+						'year_premium' => $this->input->post( 'year_premium' ),
+						'expired_date' => $this->input->post( 'expired_date' ),
+						'last_updated' => date( 'Y-m-d H:i:s' ),
+						'date' => date( 'Y-m-d H:i:s' )
+						
+					  );
+					  
+					  if( $this->work_order->create( 'policies', $policy ) == false )
+						 
+						 $controlSaved = false;
+					  
+					  
+					  
+					  $policyId = $this->work_order->insert_id();
+					  
+					  // Agents Adds
+					  $agents = array();
+				
+					  for( $i=0; $i<=count( $this->input->post('agent') ); $i++ )
+						  
+						  if( !empty(  $_POST['agent'][$i] ) )
+						 
+							  $agents[] = array( 
+									
+									'user_id' => $_POST['agent'][$i], 
+									'policy_id' => $policyId,
+									'percentage' => $_POST['porcentaje'][$i],
+									'since' => date( 'Y-m-d H:i:s' )
+								
+							  );
+	
+					
+					 if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false );
+						
+						$controlSaved = false;	
+						
+				}
+						
+				
+				
+				
+				
+				if( $controlSaved == true ){
 					
 					// Set false message		
 					$this->session->set_flashdata( 'message', array( 
@@ -354,26 +462,33 @@ class Ot extends CI_Controller {
 					
 					redirect( 'ot', 'refresh' );
 					
-				}else{
-					
-					// Set false message		
-					$this->session->set_flashdata( 'message', array( 
-						
-						'type' => false,	
-						'message' => 'El registro no puede ser creado, consulte a su administrador..'
-									
-					));	
-					
-					
-					redirect( 'ot', 'refresh' );
-					
 				}
-									 
+				 
 			}	
 			
 				
 				exit;		
 		}
+		
+		
+		// Load Model
+		$this->load->model( 'work_order' );
+		
+		// Get products
+		$product = $this->work_order->getProductsOptions();
+		
+		
+		//Get Currency
+		$currency = $this->work_order->getCurrencyOptions();
+		
+		// Get Payments
+		$payments_methods = $this->work_order->getPaymentMethodsOptions();		
+		
+		// Get Conduct
+		$payment_conduct = $this->work_order->getPaymentMethodsConductoOptions();
+		
+		// Get Agents
+		$agents = $this->user->getAgents();
 		
 				
 		// Config view
@@ -394,8 +509,14 @@ class Ot extends CI_Controller {
 			  	
 		  ),
 		  'content' => 'ot/create', // View to load
-		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
+		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 			
+		  
+		  'product' => $product,
+		  'currency' => $currency,
+		  'payments_methods' => $payments_methods,
+		  'payment_conduct' => $payment_conduct,
+		  'agents' => $agents	
 	
 		);
 		
@@ -481,7 +602,7 @@ class Ot extends CI_Controller {
 	
 	public function create_policy(){
 		
-		
+		exit;
 		// Check access teh user for create
 		if( $this->access_create == false ){
 				

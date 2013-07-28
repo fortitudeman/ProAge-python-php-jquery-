@@ -64,7 +64,7 @@
                     <div class="alert alert-success">
                           <button type="button" class="close" data-dismiss="alert">×</button>
                           <img src="<?php echo base_url() ?>images/true.png" width="20" height="20" />
-                          <strong>Success: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
+                          <strong>Correcto: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
                     </div>
                 <?php endif; ?>
                
@@ -139,14 +139,130 @@
                   
                   <div id="loadpolicies"></div>
                   
-                  
-                  
+                  <div id="formpoliza">
+                  <!--
                    <div class="control-group poliza">
                     <label class="control-label text-error" for="inputError"></label>
                     <div class="controls">
-                      <a href="<?php echo base_url() ?>ot/create_poliza.html" class="btn btn-link">Requerir nueva poliza</a>
+                      <a href="<?php echo base_url() ?>ot/create_policy.html" class="btn btn-link">Requerir nueva poliza</a>
                     </div>
                   </div> 
+                  -->
+                  
+                  
+                  
+                  <div class="control-group typtramite">
+                    <label class="control-label text-error" for="inputError">Producto<br /><div id="loadproduct"></div></label>
+                    <div class="controls">
+                      <select class="input-xlarge focused required" id="product_id" name="product_id">
+						<?php echo $product ?>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  
+                  <div class="control-group">
+                    <label class="control-label text-error" for="inputError">Prima anual</label>
+                    <div class="controls">
+                      <input class="input-xlarge focused required" id="id" name="id" type="text">
+                    </div>
+                  </div>
+                  
+                  
+                  
+                   <div class="control-group typtramite">
+                    <label class="control-label text-error" for="inputError">Moneda<br /><div id="loadcurrency"></div></label>
+                    <div class="controls">
+                      <select class="input-xlarge focused required" id="currency_id" name="currency_id">
+                      	<?php echo $currency ?>						
+                      </select>
+                    </div>
+                  </div>
+                  
+                  
+                  <div class="control-group typtramite">
+                    <label class="control-label text-error" for="inputError">Conducto<br /><div id="loadpaymentinterval"></div></label>
+                    <div class="controls">
+                      <select class="input-xlarge focused required" id="payment_interval_id" name="payment_interval_id">
+                      	<?php echo $payment_conduct ?>
+						
+                      </select>
+                    </div>
+                  </div>
+                  
+                  
+                  <div class="control-group typtramite">
+                    <label class="control-label text-error" for="inputError">Forma de pago<br /><div id="loadpaymentmethod"></div></label>
+                    <div class="controls">
+                      <select class="input-xlarge focused required" id="payment_method_id" name="payment_method_id">
+                      	<?php echo $payments_methods ?>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  
+                  
+                  <div class="control-group">
+                    <label class="control-label text-error" for="inputError">Nombre</label>
+                    <div class="controls">
+                      <input class="input-xlarge focused required" id="name" name="name" type="text" value="<?php echo set_value( 'name' ) ?>">
+                    </div>
+                  </div>
+                  
+                  <div class="control-group">
+                    <label class="control-label text-error" for="inputError">Apellido paterno</label>
+                    <div class="controls">
+                      <input class="input-xlarge focused required" id="lastname_father" name="lastname_father" type="text" value="<?php echo set_value( 'lastname_father' ) ?>">
+                    </div>
+                  </div>
+                  
+                  <div class="control-group">
+                    <label class="control-label text-error" for="inputError">Apellido materno</label>
+                    <div class="controls">
+                      <input class="input-xlarge focused required" id="lastname_mother" name="lastname_mother" type="text" value="<?php echo set_value( 'lastname_mother' ) ?>">
+                    </div>
+                  </div>
+                  
+                  
+                  
+                  <div class="control-group">
+                    <label class="control-label text-error" for="inputError">Agente</label>
+                    <div class="controls">
+                       <select class="input-xlarge focused required" name="agent[]">
+                      	<?php echo $agents ?>
+                       </select>
+                       <input class="input-small focused required" id="agent-1" name="porcentaje[]" type="text" onblur="javascript: setFields( 'agent-1' )">
+                    </div>
+                  </div>
+                  
+                  <input type="hidden" id="countAgent" value="1" />
+                 
+                                   
+                  <div id="dinamicagent"></div>
+                  
+                  </div>
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
                   
                   <div class="control-group poliza">
                     <label class="control-label text-error" for="inputError">Poliza</label>
@@ -168,18 +284,7 @@
                   </div>
                   
                                      
-                   <!-- ¨Persona Moral Settings -->
-                   <fieldset class="block-privacy">
-                   
-                   	   <a href="javascript:void(0)" id="privacy_add" class="btn btn-link input-moral pull-right" >+</a>
-                                         
-                      <div id="privacy-fields" class="input-privacy"></div>
-                  
-                  </fieldset>
-                  
-                  
-                   
-                  
+                             
                   
                   
                   
