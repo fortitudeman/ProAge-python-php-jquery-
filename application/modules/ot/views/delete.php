@@ -33,7 +33,7 @@
 <div class="row-fluid sortable">
     <div class="box span12">
         <div class="box-header well" data-original-title>
-            <h2><i class="icon-edit"></i> Eliminar OT</h2>
+            <h2><i class="icon-edit"></i> Cancelar OT</h2>
             <div class="box-icon">
                
             </div>
@@ -42,18 +42,16 @@
         <div class="box-content">
         	
             
-			<h3>Eliminar la orden de trabajo</h3>           
+			<h3>Cancelar la orden de trabajo</h3>           
             
-            <p>Todos los datos se eliminaran por completo.</p>
-            
-            <p>Esta seguro de eliminar este registro.</p>
+            <p>Esta seguro de Canselar este registro.</p>
             
         
             <form id="form" action="<?php echo base_url() ?>ot/delete/<?php echo $data[0]['id'] ?>.html" class="form-horizontal" method="post">
                 <fieldset>
                   <input type="hidden" name="delete" value="true" />
                   <div id="actions-buttons-forms" class="form-actions">
-                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <button type="submit" class="btn btn-danger">Canselar</button>
                     <button class="btn" onclick="history.back()">Cancelar</button>
                   </div>
                 </fieldset>

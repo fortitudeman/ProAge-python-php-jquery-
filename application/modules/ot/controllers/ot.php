@@ -164,10 +164,10 @@ class Ot extends CI_Controller {
 												if( $this->access_activate == true )
 												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activate-'.$value['id'].'\')\">Activar/Desactivar</a><br>";';
 												
-												if( $this->access_update == true )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'update-'.$value['id'].'\')\">Editar</a><br>";';
+												//if( $this->access_update == true )
+												//$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'update-'.$value['id'].'\')\">Editar</a><br>";';
 												if( $this->access_delete == true )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'delete-'.$value['id'].'\')\">Eliminar</a>";
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'delete-'.$value['id'].'\')\">Cancelar</a>";
 												
 											return content;
 										}
@@ -253,10 +253,10 @@ class Ot extends CI_Controller {
 												if( $this->access_activate == true )
 												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activate-'.$value['id'].'\')\">Activar/Desactivar</a><br>";';
 												
-												if( $this->access_update == true )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'update-'.$value['id'].'\')\">Editar</a><br>";';
+												//if( $this->access_update == true )
+												//$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'update-'.$value['id'].'\')\">Editar</a><br>";';
 												if( $this->access_delete == true )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'delete-'.$value['id'].'\')\">Eliminar</a>";
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'delete-'.$value['id'].'\')\">Cancelar</a>";
 												
 											return content;
 										}
