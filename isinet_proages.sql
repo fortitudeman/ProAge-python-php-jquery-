@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version: 5.5.24)
-# Date: 2013-07-26 15:01:55
+# Date: 2013-07-28 19:00:39
 # Generator: MySQL-Front 5.3  (Build 4.4)
 
 /*!40101 SET NAMES utf8 */;
@@ -15,13 +15,13 @@ CREATE TABLE `actions` (
   `last_updated` datetime DEFAULT NULL,
   `date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "actions"
 #
 
-INSERT INTO `actions` VALUES (1,'Ver','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(2,'Crear','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(3,'Editar','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(4,'Activar/Desactivar','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(5,'Export xls','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(6,'Import xls','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(7,'Export pdf','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(8,'Cambiar estatus','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(9,'Importar payments','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(10,'Ver reporte','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(11,'Petición nuevo usuario','','2013-07-15 14:39:53','2013-07-15 14:39:53'),(12,'Eliminar','','2013-07-20 13:53:58','2013-07-20 13:53:58'),(13,'Enviar correo','','2013-07-20 13:53:58','2013-07-20 13:53:58');
+INSERT INTO `actions` VALUES (1,'Ver','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(2,'Crear','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(3,'Editar','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(4,'Activar/Desactivar','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(5,'Export xls','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(6,'Import xls','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(7,'Export pdf','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(8,'Cambiar estatus','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(9,'Importar payments','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(10,'Ver reporte','','2013-07-15 14:27:28','2013-07-15 14:27:28'),(11,'Petición nuevo usuario','','2013-07-15 14:39:53','2013-07-15 14:39:53'),(12,'Eliminar','','2013-07-20 13:53:58','2013-07-20 13:53:58'),(13,'Enviar correo','','2013-07-20 13:53:58','2013-07-20 13:53:58'),(14,'Ver todos los registros','','2013-07-28 16:07:01','2013-07-28 16:07:01');
 
 #
 # Source for table "agencies"
@@ -334,13 +334,12 @@ CREATE TABLE `policies` (
   `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "policies"
 #
 
-INSERT INTO `policies` VALUES (1,2,1,1,1,'0','Hector','Jimenez','Peres',0,'0000-00-00 00:00:00','2013-07-25 05:24:25','2013-07-25 05:24:25');
 
 #
 # Source for table "policies_vs_users"
@@ -357,7 +356,6 @@ CREATE TABLE `policies_vs_users` (
 # Data for table "policies_vs_users"
 #
 
-INSERT INTO `policies_vs_users` VALUES (1,1,20,'2013-07-25 05:24:25');
 
 #
 # Source for table "product_group"
@@ -375,7 +373,7 @@ CREATE TABLE `product_group` (
 # Data for table "product_group"
 #
 
-INSERT INTO `product_group` VALUES (1,'Vida','2013-07-22 01:20:34','2013-07-22 01:20:34'),(2,'GIMM','2013-07-22 01:20:35','2013-07-22 01:20:35'),(3,'Auto','2013-07-22 01:20:35','2013-07-22 01:20:35');
+INSERT INTO `product_group` VALUES (1,'Vida','2013-07-22 01:20:34','2013-07-22 01:20:34'),(2,'GMM','2013-07-22 01:20:35','2013-07-28 01:29:58'),(3,'Auto','2013-07-22 01:20:35','2013-07-22 01:20:35');
 
 #
 # Source for table "products"
@@ -554,13 +552,12 @@ CREATE TABLE `work_order` (
   `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "work_order"
 #
 
-INSERT INTO `work_order` VALUES (1,1,2,62,2,1,1,'0','2013-06-05 14:52:47','COMENTARIOS',0,'2013-07-26 20:23:00','2013-07-26 15:00:23');
 
 #
 # Source for table "work_order_history"
@@ -629,13 +626,13 @@ CREATE TABLE `work_order_status` (
   `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "work_order_status"
 #
 
-INSERT INTO `work_order_status` VALUES (1,'activacion','2013-07-25 10:44:12','2013-07-25 10:44:12'),(2,'cancelada','2013-07-25 10:44:12','2013-07-25 10:44:12'),(3,'excedido','2013-07-25 10:44:12','2013-07-25 10:44:12'),(4,'pagada','2013-07-25 10:44:12','2013-07-25 10:44:12'),(5,'tramite','2013-07-25 10:44:12','2013-07-25 10:44:12');
+INSERT INTO `work_order_status` VALUES (1,'activacion','2013-07-25 10:44:12','2013-07-25 10:44:12'),(2,'cancelada','2013-07-25 10:44:12','2013-07-25 10:44:12'),(3,'excedido','2013-07-25 10:44:12','2013-07-25 10:44:12'),(4,'pagada','2013-07-25 10:44:12','2013-07-25 10:44:12'),(5,'tramite','2013-07-25 10:44:12','2013-07-25 10:44:12'),(6,'activada','2013-07-28 01:15:34','2013-07-28 01:15:34'),(7,'aceptado','2013-07-28 12:24:42','2013-07-28 12:24:42'),(8,'rechazado','2013-07-28 12:24:42','2013-07-28 12:24:42');
 
 #
 # Source for table "work_order_types"
