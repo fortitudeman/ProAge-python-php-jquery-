@@ -179,27 +179,32 @@ class Ot extends CI_Controller {
 											
 											var content = "Escoja una opción<br>";';
 												
+												$new = false;
+												
+												if( $value['parent_type_name']['name'] == 'NUEVO NEGOCIO' )
+												
+													$new = true;
 												
 												if( $this->access_activate == true and $value['status_name'] ==  'desactivada' )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\')\">Activar</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')\">Activar</a><br>";';
 												
 												
 												else if( $this->access_activate == true and $value['status_name'] ==  'activada' )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'desactivar-'.$value['id'].'\')\">Desactivar</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')\">Desactivar</a><br>";';
 												else 
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\')\">Activar</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')\">Activar</a><br>";';
 												
 												
 												
 												
 												if( $this->access_update == true ){
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptar-'.$value['id'].'\')\">Marcar como aceptada</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')\">Marcar como aceptada</a><br>";';
 												
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'rechazar-'.$value['id'].'\')\">Marcar como rechazada</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')\">Marcar como rechazada</a><br>";';
 												}
 												if( $this->access_delete == true )
 												
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'cancelar-'.$value['id'].'\')\">Cancelar</a>";
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')\">Cancelar</a>";
 												
 											return content;
 										}
@@ -293,27 +298,32 @@ class Ot extends CI_Controller {
 											
 											var content = "Escoja una opción<br>";';
 												
+												$new = false;
+												
+												if( $value['parent_type_name']['name'] == 'NUEVO NEGOCIO' )
+												
+													$new = true;
+												
 												if( $this->access_activate == true and $value['status_name'] ==  'desactivada' )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\')\">Activar</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')\">Activar</a><br>";';
 												
 												
 												else if( $this->access_activate == true and $value['status_name'] ==  'activada' )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'desactivar-'.$value['id'].'\')\">Desactivar</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')\">Desactivar</a><br>";';
 												else 
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\')\">Activar</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')\">Activar</a><br>";';
 												
 												
 												
 												
 												if( $this->access_update == true ){
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptar-'.$value['id'].'\')\">Marcar como aceptada</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')\">Marcar como aceptada</a><br>";';
 												
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'rechazar-'.$value['id'].'\')\">Marcar como rechazada</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')\">Marcar como rechazada</a><br>";';
 												}
 												if( $this->access_delete == true )
 												
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'cancelar-'.$value['id'].'\')\">Cancelar</a>";
-												
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')\">Cancelar</a>";
 											return content;
 										}
 								});
@@ -1169,6 +1179,53 @@ class Ot extends CI_Controller {
 	/**
 	 *	Aceptar y rechazar
 	 **/
+	public function aceptar( $ot = null, $poliza = null ){
+		
+		
+		// Load Model
+			$this->load->model( 'work_order' );
+		
+			$work_order = array(
+				
+				'work_order_status_id' => 7,
+				'last_updated' => date( 'd-m-Y H:i:s' )
+			);
+			
+			if( !empty( $poliza ) )
+			
+				$work_order['uid'] = $poliza;
+						
+			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
+				
+				// Set true message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => true,	
+					'message' => 'Se ha guardado el registro correctamente.'
+								
+				));												
+				
+				
+				redirect( 'ot', 'refresh' );
+				
+			}else{
+				
+				
+				// Set true message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => false,	
+					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
+								
+				));												
+				
+				
+				redirect( 'ot', 'refresh' );
+				
+			}
+		
+	} 
+	 
 	public function rechazar( $ot = null ){
 			
 			// Load Model

@@ -168,7 +168,7 @@ $( document ).ready( function(){
 });
 
 
-function chooseOption( choose ){
+function chooseOption( choose, is_new ){
 	
 	var choose = choose.split('-');
 		
@@ -176,8 +176,24 @@ function chooseOption( choose ){
 			window.location=Config.base_url()+"ot/activar/"+choose[1]+".html";
 		if( choose[0] == 'desactivar' )
 			window.location=Config.base_url()+"ot/desactivar/"+choose[1]+".html";	
-		if( choose[0] == 'aceptar' )
-			window.location=Config.base_url()+"ot/aceptar/"+choose[1]+".html";	
+		if( choose[0] == 'aceptar' ){
+			
+			if( confirm( 'Seguro quiere marcar como aceptada' ) ){
+				
+				if( is_new == true ){
+					var poliza=prompt("Ingresa un número de poliza","");	
+					
+					if( poliza!=null )
+						window.location=Config.base_url()+"ot/aceptar/"+choose[1]+"/"+poliza+".html";	
+		
+				}else{
+					window.location=Config.base_url()+"ot/aceptar/"+choose[1]+".html";	
+				}
+				
+				
+			}
+			
+		}
 		if( choose[0] == 'rechazar' )
 			if( confirm( 'Seguro quiere marcar como rechazada' ) ) window.location=Config.base_url()+"ot/rechazar/"+choose[1]+".html";		
 		if( choose[0] == 'cancelar' )
