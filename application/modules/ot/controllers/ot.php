@@ -183,8 +183,12 @@ class Ot extends CI_Controller {
 												if( $this->access_activate == true )
 												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activate-'.$value['id'].'\')\">'. $title.'</a><br>";';
 												
-												//if( $this->access_update == true )
-												//$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'update-'.$value['id'].'\')\">Editar</a><br>";';
+												;
+												if( $this->access_update == true ){
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptada-'.$value['id'].'\')\">Marcar como aceptada</a><br>";';
+												
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptada-'.$value['id'].'\')\">Marcar como rechazada</a><br>";';
+												}
 												if( $this->access_delete == true )
 												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'delete-'.$value['id'].'\')\">Cancelar</a>";
 												
@@ -280,12 +284,16 @@ class Ot extends CI_Controller {
 											var content = "Escoja una opción<br>";';
 												
 												if( $value['status_name'] == 'activada' ) $title = 'Desactivar'; else  $title = 'Activar';
-										
-												if( $this->access_activate == true )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activate-'.$value['id'].'\')\">'.$title.'</a><br>";';
 												
-												//if( $this->access_update == true )
-												//$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'update-'.$value['id'].'\')\">Editar</a><br>";';
+												if( $this->access_activate == true )
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activate-'.$value['id'].'\')\">'. $title.'</a><br>";';
+												
+												;
+												if( $this->access_update == true ){
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptada-'.$value['id'].'\')\">Marcar como aceptada</a><br>";';
+												
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptada-'.$value['id'].'\')\">Marcar como rechazada</a><br>";';
+												}
 												if( $this->access_delete == true )
 												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'delete-'.$value['id'].'\')\">Cancelar</a>";
 												
