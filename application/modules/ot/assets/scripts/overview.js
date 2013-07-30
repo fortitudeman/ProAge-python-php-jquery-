@@ -172,11 +172,15 @@ function chooseOption( choose ){
 	
 	var choose = choose.split('-');
 		
-		if( choose[0] == 'activate' )
-			window.location=Config.base_url()+"ot/activate/"+choose[1]+".html";
-		if( choose[0] == 'update' )
-			window.location=Config.base_url()+"ot/update/"+choose[1]+".html";
-		if( choose[0] == 'delete' )
-			window.location=Config.base_url()+"ot/cancel/"+choose[1]+".html";
+		if( choose[0] == 'activar' )
+			window.location=Config.base_url()+"ot/activar/"+choose[1]+".html";
+		if( choose[0] == 'desactivar' )
+			window.location=Config.base_url()+"ot/desactivar/"+choose[1]+".html";	
+		if( choose[0] == 'aceptar' )
+			window.location=Config.base_url()+"ot/aceptar/"+choose[1]+".html";	
+		if( choose[0] == 'rechazar' )
+			window.location=Config.base_url()+"ot/rechazar/"+choose[1]+".html";		
+		if( choose[0] == 'cancelar' )
+			window.location=Config.base_url()+"ot/cancelar/"+choose[1]+".html";
 	
 }

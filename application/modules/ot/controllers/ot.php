@@ -178,19 +178,27 @@ class Ot extends CI_Controller {
 											
 											var content = "Escoja una opción<br>";';
 												
-												if( $value['status_name'] == 'activada' ) $title = 'Desactivar'; else  $title = 'Activar';
 												
-												if( $this->access_activate == true )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activate-'.$value['id'].'\')\">'. $title.'</a><br>";';
+												if( $this->access_activate == true and $value['status_name'] ==  'desactivada' )
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\')\">Activar</a><br>";';
 												
-												;
+												
+												else if( $this->access_activate == true and $value['status_name'] ==  'activada' )
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'desactivar-'.$value['id'].'\')\">Desactivar</a><br>";';
+												else 
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\')\">Activar</a><br>";';
+												
+												
+												
+												
 												if( $this->access_update == true ){
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptada-'.$value['id'].'\')\">Marcar como aceptada</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptar-'.$value['id'].'\')\">Marcar como aceptada</a><br>";';
 												
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptada-'.$value['id'].'\')\">Marcar como rechazada</a><br>";';
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'rechazar-'.$value['id'].'\')\">Marcar como rechazada</a><br>";';
 												}
 												if( $this->access_delete == true )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'delete-'.$value['id'].'\')\">Cancelar</a>";
+												
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'cancelar-'.$value['id'].'\')\">Cancelar</a>";
 												
 											return content;
 										}
@@ -285,9 +293,16 @@ class Ot extends CI_Controller {
 												
 												if( $value['status_name'] == 'activada' ) $title = 'Desactivar'; else  $title = 'Activar';
 												
-												if( $this->access_activate == true )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activate-'.$value['id'].'\')\">'. $title.'</a><br>";';
+												if( $this->access_activate == true and $value['status_name'] ==  'desactivada' )
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\')\">Activar</a><br>";';
 												
+												
+												if( $this->access_activate == true and $value['status_name'] ==  'activada' )
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'desactivar-'.$value['id'].'\')\">Desactivar</a><br>";';
+												
+												
+												
+																							
 												;
 												if( $this->access_update == true ){
 												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptada-'.$value['id'].'\')\">Marcar como aceptada</a><br>";';
