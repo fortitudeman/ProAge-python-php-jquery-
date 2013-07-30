@@ -51,14 +51,18 @@ $( document ).ready(function() {
 	// Setting Today
 	var toDay = new Date();
 	var year = toDay.getFullYear();
-	var month = toDay.getMonth();
+	var month = toDay.getMonth()+1;
 		if( month < 10 )
 			month='0'+month;
-	var day = toDay.getDay();
+	var day = toDay.getDate();
 		if( day < 10 )
 			day='0'+day;
+			
+			
+			
+			
 	toDay = year+'-'+month+'-'+day;
-
+		
 	$( '#creation_date' ).val(toDay);	
 	
 	$( '#creation_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });
