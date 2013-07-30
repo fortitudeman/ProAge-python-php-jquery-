@@ -20,11 +20,12 @@ $( document ).ready( function(){
 	$( '.find' ).bind( 'click', function(){
 	  	
 		// Reset Color
-		$( '.find' ).removeClass( 'searchclicked' );
-		
-		
+		$( '.find' ).removeClass( 'btn btn-primary' );
+		$(this).addClass( 'btn btn-link' );
+		$( '.find' ).css( 'margin-left', 15 ) ;
 		// Set Color
-		$(this).addClass( 'searchclicked' );
+		$(this).addClass( 'btn-primary' );
+		$(this).removeClass( 'btn-link' );
 				
 		var Data = { work_order_status_id: this.id };
 				
@@ -123,8 +124,7 @@ $( document ).ready( function(){
 	$( '#creation_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });		
 	
 	
-	$( '#findfilters' ).bind( 'click', function(){ 
-		
+	$( '.findfilters' ).bind( 'blur', function(){ 
 		
 		var checked = [];
 		$("input[name='advanced[]']:checked").each(function ()
