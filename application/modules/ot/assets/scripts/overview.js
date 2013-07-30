@@ -179,7 +179,7 @@ function chooseOption( choose ){
 		if( choose[0] == 'aceptar' )
 			window.location=Config.base_url()+"ot/aceptar/"+choose[1]+".html";	
 		if( choose[0] == 'rechazar' )
-			window.location=Config.base_url()+"ot/rechazar/"+choose[1]+".html";		
+			if( confirm( 'Seguro quiere marcar como rechazada' ) ) window.location=Config.base_url()+"ot/rechazar/"+choose[1]+".html";		
 		if( choose[0] == 'cancelar' )
 			window.location=Config.base_url()+"ot/cancelar/"+choose[1]+".html";
 	

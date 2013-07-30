@@ -1039,7 +1039,9 @@ class Ot extends CI_Controller {
 	}
 	
 	
+	public function desactivar( $ot = null ){
 	
+	}
 	
 	
 	
@@ -1049,13 +1051,13 @@ class Ot extends CI_Controller {
 	public function cancelar( $ot = null ){
 		
 		// Check access teh user for create
-		if( $this->access_activate == false ){
+		if( $this->access_delete == false ){
 				
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
 				
 				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Desactivar.", Informe a su administrador para que le otorge los permisos necesarios.'
+				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Cancelar.", Informe a su administrador para que le otorge los permisos necesarios.'
 							
 			));	
 			
@@ -1167,7 +1169,48 @@ class Ot extends CI_Controller {
 	/**
 	 *	Aceptar y rechazar
 	 **/
-	
+	public function rechazar( $ot = null ){
+			
+			// Load Model
+			$this->load->model( 'work_order' );
+		
+			$work_order = array(
+				
+				'work_order_status_id' => 8,
+				'last_updated' => date( 'd-m-Y H:i:s' )
+			);
+			
+						
+			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
+				
+				// Set true message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => true,	
+					'message' => 'Se ha guardado el registro correctamente.'
+								
+				));												
+				
+				
+				redirect( 'ot', 'refresh' );
+				
+			}else{
+				
+				
+				// Set true message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => false,	
+					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
+								
+				));												
+				
+				
+				redirect( 'ot', 'refresh' );
+				
+			}
+		
+	}	
 	
 	
 	
@@ -1290,8 +1333,8 @@ class Ot extends CI_Controller {
 		$this->load->view( 'index', $this->view );	
 	
 	}	
+*/	
 	
-*/		
 	
 	
 	
