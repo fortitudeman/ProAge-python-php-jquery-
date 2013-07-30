@@ -65,6 +65,14 @@
                       </select>
                     </div>
                   </div>
+                  
+                  
+                  <div class="control-group poliza">
+                    <label class="control-label text-error" for="inputError">Comentarios</label>
+                    <div class="controls">
+                      <textarea name="comments" class="required" rows="6"><?php echo $data[0]['comments'] ?></textarea>
+                    </div>
+                  </div>
                  
                   
                   <input type="hidden" id="creation_date" name="creation_date" />

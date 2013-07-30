@@ -953,6 +953,7 @@ class Ot extends CI_Controller {
 				'work_order_reason_id' => $this->input->post( 'work_order_reason_id' ),
 				'work_order_responsible_id' => $this->input->post( 'work_order_responsible_id' ),
 				'creation_date' => '0000-00-00 00:00:00', // Quitar el tiempo
+				'comments' => $this->input->post( 'comments' ),
 				'last_updated' => date( 'd-m-Y H:i:s' )
 			);
 			
