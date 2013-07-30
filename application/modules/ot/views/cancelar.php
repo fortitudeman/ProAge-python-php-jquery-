@@ -26,7 +26,7 @@
         </li>
         
         <li>
-            Desactivar
+            Cancelar
         </li>
     </ul>
 </div>
@@ -43,7 +43,7 @@
         <div class="box-content">
         	
             
-            <form id="form" action="<?php echo base_url() ?>ot/desactivar/<?php echo $ot ?>.html" class="form-horizontal" method="post">
+            <form id="form" action="<?php echo base_url() ?>ot/cancelar/<?php echo $ot ?>.html" class="form-horizontal" method="post">
                 <fieldset>
                      
                   
