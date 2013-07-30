@@ -140,15 +140,7 @@
                   <div id="loadpolicies"></div>
                   
                   <div id="formpoliza">
-                  <!--
-                   <div class="control-group poliza">
-                    <label class="control-label text-error" for="inputError"></label>
-                    <div class="controls">
-                      <a href="<?php echo base_url() ?>ot/create_policy.html" class="btn btn-link">Requerir nueva poliza</a>
-                    </div>
-                  </div> 
-                  -->
-                  
+                                  
                   
                   
                   <div class="control-group typtramite">
@@ -267,10 +259,7 @@
                   <div class="control-group poliza">
                     <label class="control-label text-error" for="inputError">Poliza</label>
                     <div class="controls">
-                      <select class="input-xlarge focused" id="policy_id" name="policy_id">
-                      	<option value="">Seleccione</option>
-
-                      </select>
+                       <input class="input-xlarge focused required" id="uid" name="uid" type="text" value="<?php echo set_value( 'uid' ) ?>">
                     </div>
                   </div>
                  

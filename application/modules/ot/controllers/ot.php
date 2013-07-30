@@ -369,58 +369,15 @@ class Ot extends CI_Controller {
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
 				
-				$controlSaved = true;
-				
 				
 				// Load Model
 				$this->load->model( 'work_order' );
 				
-				$ot = array(
-					
-					'policy_id' => 0,
-					'product_group_id' => $this->input->post( 'ramo' ),
-					'work_order_type_id' => $this->input->post( 'subtype' ),
-					'work_order_status_id' => 5,
-					'work_order_responsible_id' => 0,
-					'uid' => $this->sessions['id'],
-					'creation_date' => $this->input->post('creation_date'),
-					'comments' => $this->input->post('comments'),
-					'duration' => '',
-					'last_updated' => date( 'Y-m-d H:s:i' ),
-					'date' => date( 'Y-m-d H:s:i' )
-					
-				);	
-								
-				if( !empty( $_POST['policy_id'] ) )
-					 $ot['policy_id'] =  $this->input->post( 'policy_id' );
-								
-				// Save OT
-				if( $this->work_order->create( 'work_order', $ot ) == false )
-					
-					 $controlSaved = false;
+				$controlSaved = true;
 				
+				$policyId = 0;
 				
-				if( $controlSaved == false ){
-					
-					// Set false message		
-					$this->session->set_flashdata( 'message', array( 
-						
-						'type' => false,	
-						'message' => 'No se puede crear la orden de trabajo, consulte a su administrador.'
-									
-					));	
-					
-					
-					redirect( 'ot', 'refresh' );
-					
-				}
-				
-				
-							
-				
-				
-				
-				// IF IS A NEW BUSSINESS
+				// Save new bussiness
 				if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' ){
 						
 						
@@ -444,9 +401,7 @@ class Ot extends CI_Controller {
 					  if( $this->work_order->create( 'policies', $policy ) == false )
 						 
 						 $controlSaved = false;
-					  
-					  
-					  
+					  					  
 					  $policyId = $this->work_order->insert_id();
 					  
 					  // Agents Adds
@@ -473,9 +428,70 @@ class Ot extends CI_Controller {
 						$controlSaved = false;	
 						
 				}
-						
-						
 				
+				
+				
+				if( $controlSaved == false ){
+					
+					// Set false message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => false,	
+						'message' => 'No se puede crear la orden de trabajo Poliza, consulte a su administrador.'
+									
+					));	
+					
+					
+					redirect( 'ot', 'refresh' );
+					
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				$ot = array(
+					
+					'policy_id' => $policyId,
+					'product_group_id' => $this->input->post( 'ramo' ),
+					'work_order_type_id' => $this->input->post( 'subtype' ),
+					'work_order_status_id' => 5,
+					'work_order_responsible_id' => 0,
+					'uid' => $this->input->post( 'uid' ),
+					'creation_date' => $this->input->post('creation_date'),
+					'comments' => $this->input->post('comments'),
+					'duration' => '',
+					'last_updated' => date( 'Y-m-d H:s:i' ),
+					'date' => date( 'Y-m-d H:s:i' )
+					
+				);	
+							
+				// Save OT
+				if( $this->work_order->create( 'work_order', $ot ) == false )
+					
+					 $controlSaved = false;
+				
+				
+				if( $controlSaved == false ){
+					
+					// Set false message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => false,	
+						'message' => 'No se puede crear la orden de trabajo, consulte a su administrador.'
+									
+					));	
+					
+					
+					redirect( 'ot', 'refresh' );
+					
+				}
+				
+								
 				if( $controlSaved == true ){
 					
 					// Set false message		
