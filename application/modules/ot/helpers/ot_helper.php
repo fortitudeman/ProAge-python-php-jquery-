@@ -56,7 +56,7 @@ function renderTable( $data = array() ){
 					$table .='		<td class="center"></td>';
 			
 			$table .= '<td class="center">'.$value['group_name'] .'</td>';
-			$table .= '<td class="center">'.$value['type_name'] .'</td>';
+			$table .= '<td class="center">'.$value['parent_type_name']['name'] .'</td>';
 			
 			if( !empty( $value['policy'] ) )
 				$table .='		<td class="center">'.  $value['policy'][0]['name']. ' '. $value['policy'][0]['lastname_father']. ' '. $value['policy'][0]['lastname_mother'] .'</td>';

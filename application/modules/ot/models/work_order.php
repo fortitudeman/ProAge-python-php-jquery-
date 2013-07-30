@@ -160,6 +160,8 @@ class Work_order extends CI_Model{
 		$ot = array();
 		
 		foreach ($query->result() as $row) {
+			
+			$type_tramite = $this->getParentsWorkTipes( $row->work_order_type_id );
 
 			$ot[] = array( 
 		    	'id' => $row->id,
@@ -167,10 +169,11 @@ class Work_order extends CI_Model{
 				'agents' => $this->getAgentsByPolicy( $row->policy_id ),
 		    	'product_group_id' => $row->product_group_id,
 				'group_name' => $row->group_name,
+				'parent_type_name' => $this->getTypeTramiteId( $type_tramite ),
 				'type_name' => $row->type_name,
 		    	'status_name' =>  $row->status_name,
 				'creation_date' =>  $row->creation_date,
-				'duration' =>  $row->duration,
+				'duration' =>  $row->duration,				
 				'last_updated' =>  $row->last_updated,
 				'date' =>  $row->date
 		    );
@@ -389,14 +392,17 @@ class Work_order extends CI_Model{
 		$ot = array();
 		
 		foreach ($query->result() as $row) {
-
+			
+			$type_tramite = $this->getParentsWorkTipes( $row->work_order_type_id );
+			
 			$ot[] = array( 
 		    	'id' => $row->id,
 				'policy' => $this->getPolicyBuId( $row->policy_id ),
 				'agents' => $this->getAgentsByPolicy( $row->policy_id ),
 		    	'product_group_id' => $row->product_group_id,
 				'group_name' => $row->group_name,
-				'type_name' => $row->type_name,
+				'parent_type_name' => $this->getTypeTramiteId( $type_tramite ),
+				'type_name' => $row->type_name,				
 		    	'status_name' =>  $row->status_name,
 				'creation_date' =>  $row->creation_date,
 				'duration' =>  $row->duration,
@@ -539,7 +545,34 @@ class Work_order extends CI_Model{
 		return $options;
 		
 	}
-
+	
+	
+	public function getTypeTramiteId( $id = null ){
+		
+		
+		if( empty( $id ) ) return false;
+		
+		
+		// SELECT * FROM `work_order_types` WHERE patent_id=1 and duration=0;
+						
+		$this->db->where( array( 'id' => $id ) );
+		$this->db->limit(1);
+		
+		$query = $this->db->get( 'work_order_types' );
+		
+		
+		if ($query->num_rows() == 0) return $options;
+		
+		$type = array();
+				
+		foreach ($query->result() as $row)
+			
+			$type[] = array( 'id' => $row->id,  'name' => $row->name );
+			
+		
+		return $type[0];
+		
+	}
 
 // Getting getSubType for type
 	public function getSubType( $type = null ){
