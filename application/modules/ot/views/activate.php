@@ -26,7 +26,7 @@
         </li>
         
         <li>
-            Activar / Desactivar
+            Activar
         </li>
     </ul>
 </div>
@@ -43,20 +43,9 @@
         <div class="box-content">
         	
             
-            <form id="form" action="<?php echo base_url() ?>ot/activate/<?php echo $ot ?>.html" class="form-horizontal" method="post">
+            <form id="form" action="<?php echo base_url() ?>ot/activar/<?php echo $ot ?>.html" class="form-horizontal" method="post">
                 <fieldset>
                      
-                  
-                                    
-                  <div class="control-group typtramite">
-                    <label class="control-label text-error" for="inputError">Estatus</label>
-                    <div class="controls">
-                      <select class="input-xlarge focused required" id="work_order_status_id" name="work_order_status_id">
-                      	<?php echo $status ?>
-                      </select>
-                    </div>
-                  </div>
-                  
                   
                    <div class="control-group subtype">
                     <label class="control-label text-error" for="inputError">Razón</label>
@@ -78,26 +67,16 @@
                   </div>
                  
                   
-                  
-                  <div class="control-group">
-                    <label class="control-label" for="inputError">Comentarios</label>
-                    <div class="controls">
-                      <textarea class="input-xlarge focused" id="comments" name="comments" rows="6"><?php echo $data[0]['comments'] ?></textarea>
-                    </div>
-                  </div>
-                  
                   <input type="hidden" id="creation_date" name="creation_date" />
                                             
                   
                   
-                  
-                  
-                                   
+                    
                   
                                     
                   <div id="actions-buttons-forms" class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <button class="btn" onclick="javascript: history.back()">Cancelar</button>
+                    <input type="button" class="btn" onclick="javascript: history.back()" value="Cancelar">
                   </div>
                 </fieldset>
               </form>

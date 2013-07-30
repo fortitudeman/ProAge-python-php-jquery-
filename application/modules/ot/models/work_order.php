@@ -874,7 +874,8 @@ class Work_order extends CI_Model{
 
 			$ot[] = array( 
 		    	'id' => $row->id,
-		    	'work_order_status_id' => $row->work_order_status_id,
+		    	'product_group_id' => $row->product_group_id,
+				'work_order_status_id' => $row->work_order_status_id,
 				'work_order_reason_id' => $row->work_order_reason_id,
 		    	'work_order_responsible_id' =>  $row->work_order_responsible_id,
 				'comments' =>  $row->comments
@@ -909,7 +910,44 @@ class Work_order extends CI_Model{
 		return $options;
 		
 	}
-	
+
+	public function getReason( $group = null, $work_order_status = null, $work_order_reason = null ){
+				
+		
+		// And Where
+		if( !empty( $group ) )
+			$this->db->where( 'product_group_id', $group );
+		
+		
+		if( !empty( $work_order_status ) )
+			$this->db->where( 'work_order_status_id', $work_order_status );	
+		
+		
+		$query = $this->db->get( 'work_order_reason' );	
+		
+		
+		$options = '<option value="">Seleccione</option>';
+					
+		if ($query->num_rows() == 0){ return $options; }
+						
+		foreach ($query->result() as $row) {
+
+			if( !empty( $work_order_reason ) and $work_order_reason == $row->id )
+			
+				$options  .= '<option selected="selected" value="'.$row->id.'">'.$row->name.'</option>'; 
+			
+			else
+				
+				$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 	
+
+		}
+		
+				
+		return $options;
+		
+	}
+
+/*	
 	public function getReason( $work_order_reason = null ){
 				
 		$query = $this->db->get( 'work_order_reason' );	
@@ -933,7 +971,7 @@ class Work_order extends CI_Model{
 		return $options;
 		
 	}
-	
+*/	
 	public function getResponsibles( $work_order_responsibles = null ){
 				
 		$query = $this->db->get( 'work_order_responsibles' );	

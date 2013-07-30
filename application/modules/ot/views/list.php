@@ -168,7 +168,7 @@
 						?>
                     </td>
                     <td class="center"><?php echo $value['group_name'] ?></td>
-                    <td class="center"><?php echo $value['type_name'] ?></td>
+                    <td class="center"><?php echo $value['parent_type_name']['name'] ?></td>
                     <td class="center"><?php if( !empty( $value['policy'] ) )echo $value['policy'][0]['name']. ' '. $value['policy'][0]['lastname_father']. ' '. $value['policy'][0]['lastname_mother'] ?></td>
                     
                     <?php

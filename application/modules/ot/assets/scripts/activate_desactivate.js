@@ -26,10 +26,10 @@ $( document ).ready(function() {
 			// Set Date
 			var toDay = new Date();
 			var year = toDay.getFullYear();
-			var month = toDay.getMonth();
+			var month = toDay.getMonth()+1;
 				if( month < 10 )
 					month='0'+month;
-			var day = toDay.getDay();
+			var day = toDay.getDate();
 				if( day < 10 )
 					day='0'+day;
 			var seconds = toDay.getSeconds();
