@@ -159,7 +159,7 @@
 											 if( $value['product_group_id'] == 1 ) echo '0725V'; 
 											 if( $value['product_group_id'] == 2 ) echo '0725G';
 											 if( $value['product_group_id'] == 3 ) echo '0725A'; ?></td>
-                    <td class="center"><?php echo $value['creation_date'] ?></td>
+                    <td class="center"><?php if( $value['creation_date'] != '0000-00-00 00:00:00' ) echo $value['creation_date'] ?></td>
                     <td class="center">
 						<?php 
 							if( !empty( $value['agents'] ) )

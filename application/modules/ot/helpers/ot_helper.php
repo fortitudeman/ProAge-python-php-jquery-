@@ -31,7 +31,7 @@ function renderTable( $data = array() ){
 	
 	foreach( $data as $value ){ 
 	
-    
+    		if( $value['creation_date'] == '0000-00-00 00:00:00' ) $value['creation_date'] = '';
     
     		$table .= '<tr id="'.$value['id'].'">';
 							
