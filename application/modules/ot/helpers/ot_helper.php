@@ -65,21 +65,25 @@ function renderTable( $data = array() ){
 			
 			
 			$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
-			//$color = $color*.100;
-			$style = '';
+						
+			$color = $color/strtotime( date('Y-m-d H:i:s') );
+			  
+			$color = $color * 100;
+													
 			
-			if( $color == 50 ) 
-				$style = 'style="background-color:#489133"';
-			if( $color > 50 )	
-				$style = 'style="background-color:#FF0"';
-			if( $color > 100 )	
-				$style = 'style="background-color:#FF0"';
-			
-			if( $value['status_name'] == 'activacion' ) $style = '';
+			$table .= '<td class="center"> ';
 			
 			
-			$table .='	
-							<td class="center" '.$style.'>'. str_replace( 'Tramite', 'Pendiente', ucwords($value['status_name'] ) ) .'</td>';
+			if( $value['status_name'] != 'activacion' ) {
+				if( (float)$color == 5 ) 
+					$table .= '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%;"></div>';
+				else if( (float)$color > 5 )	
+					$table .= '<div style="background-color:#FF0; width: 10px;  height: 10px; border-radius: 50%;"></div>';									
+				else if( (float)$color > 10 )	
+					$table .= '<div style="background-color:#F30; width: 10px;  height: 10px; border-radius: 50%;"></div>';
+			}
+			
+			$table .= '</td>';
 			
 			/*				
 			if( $value['status_name'] == 'activacion' )

@@ -173,20 +173,27 @@
                     
                     <?php
 						$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
-						//$color = $color*.100;
-						$style = '';
 						
-						if( $color == 50 ) 
-							$style = 'style="background-color:#489133"';
-						if( $color > 50 )	
-							$style = 'style="background-color:#FF0"';
-						if( $color > 100 )	
-							$style = 'style="background-color:#FF0"';
-
-							
+						$color = $color/strtotime( date('Y-m-d H:i:s') );
+						
+						$color = $color * 100;							
 					?>	
                     
-                    <td class="center" <?php if( $value['status_name'] != 'activacion' ) echo $style ?>><?php echo str_replace( 'Tramite', 'Pendiente', ucwords($value['status_name'] ) ) ?></td>
+                    
+                    
+                    
+                    <td class="center" >
+						<?php 
+							if( $value['status_name'] != 'activacion' ) {
+								if( (float)$color == 5 ) 
+									echo '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%;"></div>';
+								else if( (float)$color > 5 )	
+									echo '<div style="background-color:#FF0; width: 10px;  height: 10px; border-radius: 50%;"></div>';									
+								else if( (float)$color > 10 )	
+									echo '<div style="background-color:#F30; width: 10px;  height: 10px; border-radius: 50%;"></div>';
+							}
+						?>
+                    </td>
                 </tr>
                 <?php endforeach;  ?>                
               </tbody>
