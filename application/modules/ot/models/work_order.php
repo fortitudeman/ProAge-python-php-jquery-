@@ -147,6 +147,9 @@ class Work_order extends CI_Model{
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
+		$this->db->where( 'work_order.work_order_status_id !=', 2 );
+		
+		
 		
 		if( !empty( $user ) )
 			$this->db->where( 'work_order.uid', $user );
@@ -192,9 +195,9 @@ class Work_order extends CI_Model{
 	public function record_count( $user = null ) {
        
 	    if( empty( $user ) )
-	    	return $this->db->count_all( 'work_order' );
+	    	 return $this->db->from( 'work_order' )->where( array( 'work_order_status_id !=' => 2 ) )->count_all_results();
     	else
-			return $this->db->where( 'work_order.uid', $user )->count_all_results();
+		  return $this->db->from( 'work_order' )->where( array( 'work_order_status_id !=' => 2, 'work_order.uid' => $user ) )->count_all_results();
 	}
 
 
@@ -301,6 +304,7 @@ class Work_order extends CI_Model{
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
+				
 		
 		if( $status != 0 )
 			$this->db->where( 'work_order.work_order_status_id', $status );
@@ -947,31 +951,6 @@ class Work_order extends CI_Model{
 		
 	}
 
-/*	
-	public function getReason( $work_order_reason = null ){
-				
-		$query = $this->db->get( 'work_order_reason' );	
-		
-		$options = '<option value="">Seleccione</option>';
-					
-		if ($query->num_rows() == 0) return $options;
-						
-		foreach ($query->result() as $row) {
-
-			if( !empty( $work_order_reason ) and $work_order_reason == $row->id )
-			
-				$options  .= '<option selected="selected" value="'.$row->id.'">'.$row->name.'</option>'; 
-			
-			else
-				
-				$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 	
-
-		}
-		
-		return $options;
-		
-	}
-*/	
 	public function getResponsibles( $work_order_responsibles = null ){
 				
 		$query = $this->db->get( 'work_order_responsibles' );	
