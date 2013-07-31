@@ -132,7 +132,7 @@ $( document ).ready( function(){
 			
 			
 			var x=$('.link-advanced'); 
-				x.text("Ocultar Avanzadas");
+				x.text("Ocultar Filtros");
 						
 			
 		}else{
@@ -141,7 +141,7 @@ $( document ).ready( function(){
 			$( '.advanced' ).hide();
 			
 			var x=$('.link-advanced'); 
-				x.text("Mostrar Avanzadas");
+				x.text("Mostrar Filtros");
 			
 		}
 			

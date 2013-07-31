@@ -79,7 +79,7 @@
                     <a href="javascript:void(0);" class="btn btn-link find" id="todas">Todas</a>
                     <?php endif; ?>
                     <a href="javascript:void(0);" class="btn find btn-primary" id="mios">Mios</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="javascript:void(0)" id="showadvanced" class="btn- btn-link link-advanced">Mostrar Avanzadas</a> 
+                    <a href="javascript:void(0)" id="showadvanced" class="btn- btn-link link-advanced">Mostrar Filtros</a> 
                 </div>
                 
                 <div class="span2"></div>
