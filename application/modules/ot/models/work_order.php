@@ -277,7 +277,7 @@ class Work_order extends CI_Model{
 		$status=0;
 						
 		if( $advansed['work_order_status_id'] == 'activadas' )
-			$status =1;
+			$status =6;
 		if( $advansed['work_order_status_id'] == 'canceladas' )
 			$status =2;
 		if( $advansed['work_order_status_id'] == 'excedido' )
@@ -447,7 +447,8 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-				
+		
+						
 		return $ot;
 		
 		

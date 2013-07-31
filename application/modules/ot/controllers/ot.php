@@ -164,7 +164,7 @@ class Ot extends CI_Controller {
 		
 		
 		$scrips = '';
-		
+
 		if( !empty( $data ) )
 			
 			foreach( $data as $value ){
@@ -175,9 +175,12 @@ class Ot extends CI_Controller {
 										trigger:"click",
 										placement:"bottom",
 										html:true, 
-										content: function(){
+										content: function(){';
 											
-											var content = "Escoja una opción<br>";';
+					
+					if( $value['status_name']['name'] != 'cancelada' ){
+					
+					$scrips .= '				var content = "Escoja una opción<br>";';
 												
 												$new = false;
 												
@@ -204,9 +207,13 @@ class Ot extends CI_Controller {
 												}
 												if( $this->access_delete == true )
 												
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')\">Cancelar</a>";
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')\">Cancelar</a>";';
 												
-											return content;
+					}
+												
+												
+					
+											$scrips .= 'return content;
 										}
 								});
 							 </script>';
@@ -294,10 +301,12 @@ class Ot extends CI_Controller {
 										trigger:"click",
 										placement:"bottom",
 										html:true, 
-										content: function(){
+										content: function(){';
 											
-											var content = "Escoja una opción<br>";';
+											if( $value['status_name']['name'] != 'cancelada' ){
 												
+												$scrips .= 'var content = "Escoja una opción<br>";';
+																													
 												$new = false;
 												
 												if( $value['parent_type_name']['name'] == 'NUEVO NEGOCIO' )
@@ -323,8 +332,13 @@ class Ot extends CI_Controller {
 												}
 												if( $this->access_delete == true )
 												
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')\">Cancelar</a>";
-											return content;
+												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')\">Cancelar</a>";';
+												
+												}
+												
+												
+					
+												$scrips .= 'return content;
 										}
 								});
 							 ';

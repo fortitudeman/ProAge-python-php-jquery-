@@ -151,7 +151,7 @@
             <div id="loading"></div>
             
         
-        	<?php  if( !empty( $data ) ): ?>
+        	
             <table class="table table-striped table-bordered bootstrap-datatable datatable">
               <thead>
                   <tr>
@@ -165,12 +165,36 @@
                   </tr>
               </thead>   
               <tbody id="data">
+                <?php  if( !empty( $data ) ): ?>
                 <?php  foreach( $data as $value ):  ?>
                 <tr id="<?php echo $value['id'] ?>">
-                	<td class="center"><?php echo $value['id'];
+                	<td class="center"><?php 
+										    
+											 $color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
+						
+											$color = $color/strtotime( date('Y-m-d H:i:s') );
+											
+											$color = $color * 100;	
+											
+											if( $value['status_name'] == 'tramite' ) {
+												if( (float)$color <= 5 ) 
+													echo '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
+												else if( (float)$color > 5 )	
+													echo '<div style="background-color:#FF0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';									
+												else if( (float)$color > 10 )	
+													echo '<div style="background-color:#F30; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
+											}
+											 
+											 echo $value['id'];
 											 if( $value['product_group_id'] == 1 ) echo '0725V'; 
 											 if( $value['product_group_id'] == 2 ) echo '0725G';
-											 if( $value['product_group_id'] == 3 ) echo '0725A'; ?></td>
+											 if( $value['product_group_id'] == 3 ) echo '0725A'; 
+											
+										?>
+                                             
+                                             
+                                             
+                                             </td>
                     <td class="center"><?php if( $value['creation_date'] != '0000-00-00 00:00:00' ) echo $value['creation_date'] ?></td>
                     <td class="center">
 						<?php 
@@ -182,45 +206,27 @@
                     <td class="center"><?php echo $value['group_name'] ?></td>
                     <td class="center"><?php echo $value['parent_type_name']['name'] ?></td>
                     <td class="center"><?php if( !empty( $value['policy'] ) )echo $value['policy'][0]['name']. ' '. $value['policy'][0]['lastname_father']. ' '. $value['policy'][0]['lastname_mother'] ?></td>
-                    
-                    <?php
-						$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
-						
-						$color = $color/strtotime( date('Y-m-d H:i:s') );
-						
-						$color = $color * 100;							
-					?>	
-                    
-                    
-                    
-                    
-                    <td class="center" >
-						<?php 
-							if( $value['status_name'] != 'activacion' ) {
-								if( (float)$color <= 5 ) 
-									echo '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%;"></div>';
-								else if( (float)$color > 5 )	
-									echo '<div style="background-color:#FF0; width: 10px;  height: 10px; border-radius: 50%;"></div>';									
-								else if( (float)$color > 10 )	
-									echo '<div style="background-color:#F30; width: 10px;  height: 10px; border-radius: 50%;"></div>';
-							}
-						?>
-                    </td>
+                                       
+                    <td class="center" ><?php echo ucwords(str_replace( 'tramite', 'pendiente', $value['status_name'])); ?></td>
                 </tr>
-                <?php endforeach;  ?>                
+                <?php endforeach;  ?> 
+                <?php else: ?>
+		        <tr>
+                	<td colspan="7">
+                        <div class="alert alert-block">
+                              <button type="button" class="close" data-dismiss="alert">×</button>
+                              <strong>Atención: </strong> No se encontrarón registros, agregar uno <a href="<?php echo base_url() ?>ot/create.html" class="btn btn-link">Aquí</a>
+                        </div>
+                	</td>
+                </tr>
+              <?php endif; ?>               
               </tbody>
           </table>    
           
           
           
           
-          <?php else: ?>
-		  
-		  	<div class="alert alert-block">
-                  <button type="button" class="close" data-dismiss="alert">×</button>
-                  <strong>Atención: </strong> No se encontrarón registros, agregar uno <a href="<?php echo base_url() ?>ot/create.html" class="btn btn-link">Aquí</a>
-            </div>
-		  <?php endif; ?>
+          
                            
         </div>
     </div><!--/span-->
