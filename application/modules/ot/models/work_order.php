@@ -285,7 +285,9 @@ class Work_order extends CI_Model{
 		if( $advansed['work_order_status_id'] == 'pagadas' )
 			$status =4;
 		if( $advansed['work_order_status_id'] == 'tramite' )
-			$status =5;	
+			$status =5;
+		if( $advansed['work_order_status_id'] == 'todas' )
+			$status =0;		
 		
 		
 		$filter_user = $advansed['user'];
