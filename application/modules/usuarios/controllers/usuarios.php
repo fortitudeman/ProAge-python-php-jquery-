@@ -253,7 +253,7 @@ class Usuarios extends CI_Controller {
 	
 
 // Show all records	
-	public function index(){
+	public function index( $filter = null ){
 		
 		
 		
@@ -306,7 +306,7 @@ class Usuarios extends CI_Controller {
 		$config['num_tag_open'] = '<li>';
 		$config['num_tag_close'] = '</li>';					
 		$config['base_url'] = base_url().'usuarios/index/';
-		$config['total_rows'] = $this->user->record_count();
+		$config['total_rows'] = $this->user->record_count( $filter );
 		$config['per_page'] = 150;
 		$config['num_links'] = 5;
 		$config['uri_segment'] = 3;
@@ -341,7 +341,7 @@ class Usuarios extends CI_Controller {
 		  ),
 		  'content' => 'usuarios/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'data' => $this->user->overview( $begin ),
+		  'data' => $this->user->overview( $begin, $filter ),
 		  'pag' => $pag,
 		  'rol' => $this->rol->all( 0 ),
 		  'gerentes' => $this->user->getSelectsGerentes()			  	  

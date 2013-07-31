@@ -138,15 +138,31 @@ class User extends CI_Model{
  |	Getting for overview
  **/ 
 	
-	public function overview( $start = 0 ) {
+	public function overview( $start = 0, $filter = null ) {
 		
+		/*
+		 SELECT id, name, lastnames, email 
+		 FROM `users` 
+		 JOIN users_vs_user_roles ON users_vs_user_roles.user_id=users.id 
+		 WHERE users_vs_user_roles.user_role_id=1;
 		
-		// SELECT id, name, lastnames, email FROM `users`;
+		*/
 		$this->db->select( 'id, name, lastnames, email, manager_id, date, last_updated' );
 		$this->db->from( 'users' );
-        $this->db->limit( 150, $start );
+        
 		
-		$query = $this->db->get();
+		if( !empty( $filter ) ){
+			
+			$this->db->join( 'users_vs_user_roles', 'users_vs_user_roles.user_id=users.id '  );
+			$this->db->where( 'users_vs_user_roles.user_role_id', $filter );
+			
+		}else{
+					
+			$this->db->limit( 150, $start );
+		
+		}
+		
+		$query = $this->db->get();	
 		
 		if ($query->num_rows() == 0) return false;
  	
@@ -311,8 +327,12 @@ class User extends CI_Model{
 
 
 // Count records for pagination
-	public function record_count() {
-        return $this->db->count_all( 'users' );
+	public function record_count( $filter = null ) {
+       
+	   	if( empty( $filter ) )
+	   	 return $this->db->count_all( 'users' );
+		else
+		   return $this->db->from( 'users_vs_user_roles' )->where( array( 'user_role_id' => $filter ) )->count_all_results();
     }
 
 
