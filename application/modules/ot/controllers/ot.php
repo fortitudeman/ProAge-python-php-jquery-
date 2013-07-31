@@ -175,8 +175,13 @@ class Ot extends CI_Controller {
 										trigger:"click",
 										placement:"bottom",
 										html:true, 
-										content: function(){';
-											
+										content: function(){ hideAllPopovers();';
+												
+													
+												
+												
+												
+												
 					
 					if( $value['status_name']['name'] != 'cancelada' ){
 					
@@ -302,7 +307,7 @@ class Ot extends CI_Controller {
 										trigger:"click",
 										placement:"bottom",
 										html:true, 
-										content: function(){';
+										content: function(){ hideAllPopovers();';
 											
 											if( $value['status_name']['name'] != 'cancelada' ){
 												

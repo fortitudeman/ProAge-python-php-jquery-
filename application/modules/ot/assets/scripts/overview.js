@@ -214,7 +214,6 @@ $( document ).ready( function(){
 				
 			},
 			success: function(data){
-	alert( data );
 				$( '#loading' ).html( '' );	
 				$( '#data' ).html( data );
 												
@@ -250,10 +249,15 @@ $( document ).ready( function(){
 		});
 				
 	}); 
-	 
-	  
-	  
+		 	  
 });
+
+
+var hideAllPopovers = function() {
+       $('tr[class="popup"]').each(function() {
+            $(this).popover('hide');
+        });  
+    };
 
 
 function chooseOption( choose, is_new ){

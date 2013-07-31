@@ -170,7 +170,7 @@
               <tbody id="data">
                 <?php  if( !empty( $data ) ): ?>
                 <?php  foreach( $data as $value ):  ?>
-                <tr id="<?php echo $value['id'] ?>">
+                <tr id="<?php echo $value['id'] ?>" class="popup">
                 	<td class="center"><?php 
 										    
 											 $color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
