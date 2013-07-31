@@ -1415,7 +1415,7 @@ class Usuarios extends CI_Controller {
 					// Validations geenral										
 					if( empty( $items['group'] ) ) $message[$lin][] = array( 'messagerol' => 'El rol del usuario es requerido, linea de archivo: ' . $lin . $name );
 					if( empty( $items['persona'] ) ) $message[$lin][] = array( 'messagetipo' => 'El tipo de persona es requerido, linea de archivo: ' . $lin . $name );
-					if( empty( $items['company_name'] ) ) $message[$lin][] = array( 'messagecompanyname' => 'El nombre de la  empresa es requerido, linea de archivo: ' . $lin . $name );
+					//if( empty( $items['company_name'] ) ) $message[$lin][] = array( 'messagecompanyname' => 'El nombre de la  empresa es requerido, linea de archivo: ' . $lin . $name );
 					if( empty( $items['username'] ) ) $message[$lin][] = array( 'messageuser' => 'El usuario es requedido, linea de archivo: ' . $lin . $name );
 					if( empty( $items['password'] ) ) $message[$lin][] = array( 'messagepassword' => 'El password es requerido, linea de archivo: ' . $lin . $name );
 					if( empty( $items['email'] ) ) $message[$lin][] = array( 'messageemail' => 'El correo es requerido, linea de archivo: ' . $lin . $name );

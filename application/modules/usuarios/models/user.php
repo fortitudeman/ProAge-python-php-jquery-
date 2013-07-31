@@ -1557,7 +1557,7 @@ class User extends CI_Model{
 		if( empty( $field ) or empty( $value ) ) return false;
 		
 		
-		$this->db->where( array( 'name'  => $value )  );
+		$this->db->where( array( $field  => $value )  );
         $this->db->limit( 1 ); // Limit 1 record
 
 		// Get Resutls
