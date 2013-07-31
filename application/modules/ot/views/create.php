@@ -223,7 +223,7 @@
                        <select class="input-xlarge focused required" name="agent[]">
                       	<?php echo $agents ?>
                        </select>
-                       <input class="input-small focused required" id="agent-1" name="porcentaje[]" type="text" onblur="javascript: setFields( 'agent-1' )">
+                       <input class="input-small focused required" id="agent-1" name="porcentaje[]" type="text" onblur="javascript: setFields( 'agent-1' )" placeholder="%">
                     </div>
                   </div>
                   

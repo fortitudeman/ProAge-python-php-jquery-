@@ -231,8 +231,11 @@ function setFields( id ){
 		
 		$("input[name='porcentaje[]']").each(function ()
 		{
-			var val = $(this).val();
 			
+			var val = $(this).val();
+				
+				val.replace( '%',''); // Clean %			
+				
 				val = parseInt(val.replace( '%','' ));
 				
 			maxValue = maxValue+val;
@@ -262,7 +265,7 @@ function setFields( id ){
 					fields +=	'				   <select class="input-xlarge focused required" id="sel-agent-'+countAgent+'" name="agent[]">';
 					fields +=	'';					
 					fields +=	'				   </select>';
-					fields +=	'				   <input class="input-small focused required porcentaje" id ="agent-'+countAgent+'" name="porcentaje[]" type="text"  onblur="javascript: setFields( \'agent-'+countAgent+'\' )" value="'+maxValue+'">';
+					fields +=	'				   <input class="input-small focused required porcentaje" id ="agent-'+countAgent+'" name="porcentaje[]" type="text"  onblur="javascript: setFields( \'agent-'+countAgent+'\' )" value="'+maxValue+'%"  placeholder="%">';
 					fields +=	'				</div>';
 					fields +=	'			  </div>';
 			
