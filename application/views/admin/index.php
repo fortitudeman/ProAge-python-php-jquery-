@@ -21,28 +21,28 @@
     </ul>
 </div>
 <div class="sortable row-fluid">
-    <a data-rel="tooltip" title="<?php echo $rolcount['agents'] ?>." class="well span3 top-block" href="#">
+    <a data-rel="tooltip" title="<?php echo $rolcount['agents'] ?>." class="well span3 top-block" href="<?php echo base_url()  ?>usuarios/index/1.html">
         <span class="icon32 icon-red icon-user"></span>
         <div>Agentes</div>
         <div><?php echo $rolcount['agents'] ?></div>
         <span class="notification"><?php echo $rolcount['agents'] ?></span>
     </a>
 
-    <a data-rel="tooltip" title="<?php echo $rolcount['coordinador'] ?>." class="well span3 top-block" href="#">
+    <a data-rel="tooltip" title="<?php echo $rolcount['coordinador'] ?>." class="well span3 top-block" href="<?php echo base_url()  ?>usuarios/index/2.html">
         <span class="icon32 icon-red icon-user"></span>
         <div>Coordinador</div>
         <div><?php echo $rolcount['coordinador'] ?></div>
         <span class="notification green"><?php echo $rolcount['coordinador'] ?></span>
     </a>
 
-    <a data-rel="tooltip" title="<?php echo $rolcount['gerente'] ?>." class="well span3 top-block" href="#">
+    <a data-rel="tooltip" title="<?php echo $rolcount['gerente'] ?>." class="well span3 top-block" href="<?php echo base_url()  ?>usuarios/index/3.html">
         <span class="icon32 icon-red icon-user"></span>
         <div>Gerente</div>
         <div><?php echo $rolcount['gerente'] ?></div>
         <span class="notification yellow"><?php echo $rolcount['gerente'] ?></span>
     </a>
     
-    <a data-rel="tooltip" title="<?php echo $rolcount['director'] ?>." class="well span3 top-block" href="#">
+    <a data-rel="tooltip" title="<?php echo $rolcount['director'] ?>." class="well span3 top-block" href="<?php echo base_url()  ?>usuarios/index/4.html">
         <span class="icon32 icon-red icon-user"></span>
         <div>Director</div>
         <div><?php echo $rolcount['director'] ?></div>
@@ -52,7 +52,7 @@
 
 
 <div class="sortable row-fluid">
-    <a data-rel="tooltip" title="<?php echo $rolcount['administrador'] ?>." class="well span3 top-block" href="#">
+    <a data-rel="tooltip" title="<?php echo $rolcount['administrador'] ?>." class="well span3 top-block" href="<?php echo base_url()  ?>usuarios/index/5.html">
         <span class="icon32 icon-red icon-user"></span>
         <div>Administrador</div>
         <div><?php echo $rolcount['administrador'] ?></div>
@@ -66,10 +66,10 @@
 <div class="row-fluid">
     <div class="box span12">
         <div class="box-header well">
-            <h2>Introducción</h2>
+            <h2></h2>
         </div>
         <div class="box-content">
-            <h1>Proages <small>free, premium quality, responsive, multiple skin admin template.</small></h1>
+            <h1>Proages</h1>
             
             
             <?php // Show Messages ?>
@@ -98,13 +98,7 @@
 			
 			<?php endif; ?>
             
-            
-            
-            <p>Its a live demo of the template. I have created Charisma to ease the repeat work I have to do on my projects. Now I re-use Charisma as a base for my admin panel work and I am sharing it with you :)</p>
-            <p><b>All pages in the menu are functional, take a look at all, please share this with your followers.</b></p>
-            
-            
-            
+                        
             
             <p class="center">
                 
