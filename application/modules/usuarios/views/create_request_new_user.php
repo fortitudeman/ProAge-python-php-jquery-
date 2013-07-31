@@ -164,7 +164,7 @@
                  
                  
                  
-                 <div class="control-group input-fisica input-moral">
+                 <div class="control-group input-moral">
                     <label class="control-label error" for="inputError"> Nombre de compania:</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="company_name" name="company_name" type="text" value="<?php echo set_value('company_name') ?>">

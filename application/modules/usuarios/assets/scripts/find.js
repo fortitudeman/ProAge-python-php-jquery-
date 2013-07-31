@@ -18,7 +18,7 @@ $( document ).ready(function() {
 	$( '#birthdate' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });		
 	$( '#license_expired_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });		
 			
-	$( '#searchfind' ).bind( 'click', function(){ 
+	$( '.searchfind' ).bind( 'blur', function(){ 
 		
 		
 		var checked = [];
@@ -71,11 +71,15 @@ $( document ).ready(function() {
 			
 			$( '.link-advanced' ).attr( 'id', 'hideadvanced' );
 			$( '.advanced' ).show();
+			var x=$('.link-advanced'); 
+				x.text("Ocultar Filtro");
 			
 		}else{
 			
 			$( '.link-advanced' ).attr( 'id', 'showadvanced' );
 			$( '.advanced' ).hide();
+			var x=$('.link-advanced'); 
+				x.text("Mostrar Filtro");
 			
 		}
 			
@@ -97,6 +101,17 @@ $( document ).ready(function() {
 	
 	// Rol search
 	$( '.rol-search' ).bind( 'click', function(){
+		
+		
+		// Reset Color
+		$( '.rol-search' ).removeClass( 'btn btn-primary' );
+		$(this).addClass( 'btn btn-link' );
+		$( '.rol-search' ).css( 'margin-left', 15 ) ;
+		// Set Color
+		$(this).addClass( 'btn-primary' );
+		$(this).removeClass( 'btn-link' );	
+		
+		
 		
 		$( '#rolsearch' ).val( this.id );
 		
