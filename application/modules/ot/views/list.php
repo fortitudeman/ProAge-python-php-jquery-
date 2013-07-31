@@ -78,12 +78,12 @@
                 	<?php if( $access_all == true ): ?>
                     <a href="javascript:void(0);" class="btn btn-link find" id="todas">Todas</a>
                     <?php endif; ?>
-                    <a href="javascript:void(0);" class="btn find btn-primary" id="mios">Mios</a>
-                    <a href="javascript:void(0)" id="showadvanced" class="btn- btn-link link-advanced">Avanzadas</a> 
+                    <a href="javascript:void(0);" class="btn find btn-primary" id="mios">Mios</a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:void(0)" id="showadvanced" class="btn- btn-link link-advanced">Mostrar Avanzadas</a> 
                 </div>
                 
                 <div class="span2"></div>
-                <div class="span1"><a href="<?php echo base_url() ?>ot/create.html" class="btn btn-link">Agregar</a></div>
+                <div class="span1"></div>
                 
             </div>
             
@@ -92,19 +92,21 @@
             
             	
                 <div class="span1"></div>
-                <div class="span5">
+                <div class="span7">
                 	<br /><br />
                     
 
                     <input type="hidden" id="findvalue" value="mios" />
+                    <input type="hidden" id="findsubvalue" value="activadas" />
+                    
                     <br /><br />  
                       <div class="row advanced">
                       		
-                            <a href="javascript:void(0);" class="btn btn-link find" id="activadas">Activadas</a>
-                            <a href="javascript:void(0);" class="btn btn-link find" id="tramite">Pendientes</a>
-                            <a href="javascript:void(0);" class="btn btn-link find" id="canceladas">Canceladas</a>
-                            <a href="javascript:void(0);" class="btn btn-link find" id="pagadas">Pagadas</a>
-                            <a href="javascript:void(0);" class="btn btn-link find" id="excedido">Excedido</a>
+                            <a href="javascript:void(0);" class="btn btn-link findsub " id="activadas">Activadas</a>
+                            <a href="javascript:void(0);" class="btn btn-link findsub" id="tramite">Pendientes</a>
+                            <a href="javascript:void(0);" class="btn btn-link findsub" id="canceladas">Canceladas</a>
+                            <a href="javascript:void(0);" class="btn btn-link findsub" id="pagadas">Pagadas</a>
+                            <a href="javascript:void(0);" class="btn btn-link findsub" id="excedido">Excedido</a>
                             <br /><br />
                              <table class="table table-bordered bootstrap-datatable datatable">           	
                              	<tr>
@@ -194,7 +196,7 @@
                     <td class="center" >
 						<?php 
 							if( $value['status_name'] != 'activacion' ) {
-								if( (float)$color == 5 ) 
+								if( (float)$color <= 5 ) 
 									echo '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%;"></div>';
 								else if( (float)$color > 5 )	
 									echo '<div style="background-color:#FF0; width: 10px;  height: 10px; border-radius: 50%;"></div>';									

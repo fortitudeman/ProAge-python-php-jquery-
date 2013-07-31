@@ -15,21 +15,46 @@
 
 $( document ).ready( function(){
 	  
-	  
-	// Filter
 	$( '.find' ).bind( 'click', function(){
-	  	
+			
 		// Reset Color
 		$( '.find' ).removeClass( 'btn btn-primary' );
 		$(this).addClass( 'btn btn-link' );
 		$( '.find' ).css( 'margin-left', 15 ) ;
 		// Set Color
 		$(this).addClass( 'btn-primary' );
-		$(this).removeClass( 'btn-link' );
-				
-		var Data = { work_order_status_id: this.id };
-				
+		$(this).removeClass( 'btn-link' );	
+			
 		$( '#findvalue' ).val( this.id );
+			
+	});
+	
+	  
+	// Filter alls or my
+	$( '.findsub' ).bind( 'click', function(){
+	  	
+		// Reset Color
+		$( '.findsub' ).removeClass( 'btn btn-primary' );
+		$(this).addClass( 'btn btn-link' );
+		$( '.findsub' ).css( 'margin-left', 15 ) ;
+		// Set Color
+		$(this).addClass( 'btn-primary' );
+		$(this).removeClass( 'btn-link' );
+		
+		
+		var checked = [];
+		$("input[name='advanced[]']:checked").each(function ()
+		{
+			var element = $(this).val();
+										
+			checked.push( [$(this).val(), $( '#'+element ).val() ] );
+		});
+		
+		
+		
+		var Data = { user: $( '#findvalue' ).val(), work_order_status_id: $('#findvalue').val(), advanced: checked };
+						
+		$( '#findsubvalue' ).val( this.id );
 		
 		$.ajax({
 
@@ -73,7 +98,8 @@ $( document ).ready( function(){
 			},
 			success: function(data){
 				
-				console.log( data );
+				if( data != "" )
+					console.log( data );
 				$( '#loading' ).html( '' );	
 				
 				
@@ -84,6 +110,13 @@ $( document ).ready( function(){
 		
 		
 	});
+	
+	
+	
+	
+	
+	
+	
 	 
 	
 	// Filters
@@ -96,10 +129,18 @@ $( document ).ready( function(){
 			$( '.link-advanced' ).attr( 'id', 'hideadvanced' );
 			$( '.advanced' ).show();
 			
+			
+			var x=$('.link-advanced'); 
+				x.text("Ocultar Avanzadas");
+						
+			
 		}else{
 			
 			$( '.link-advanced' ).attr( 'id', 'showadvanced' );
 			$( '.advanced' ).hide();
+			
+			var x=$('.link-advanced'); 
+				x.text("Mostrar Avanzadas");
 			
 		}
 			
@@ -136,8 +177,8 @@ $( document ).ready( function(){
 		
 		
 		
-		var Data = { work_order_status_id: $('#findvalue').val(), advanced: checked };
-				
+		var Data = { user: $( '#findvalue' ).val(), work_order_status_id: $('#findvalue').val(), advanced: checked };
+		
 		$.ajax({
 
 			url:  Config.base_url()+'ot/find.html',
@@ -152,10 +193,36 @@ $( document ).ready( function(){
 				
 			},
 			success: function(data){
-					
+
 				$( '#loading' ).html( '' );	
 				$( '#data' ).html( data );
 												
+				
+			}						
+	
+		});
+		
+		$.ajax({
+
+			url:  Config.base_url()+'ot/find_scripts.html',
+			type: "POST",
+			data: Data,
+			cache: true,
+			async: false,
+			dataType: "script",
+			beforeSend: function(){
+	
+				
+				$( '#loading' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-1.gif">   Cargando...' );
+				
+								
+			},
+			success: function(data){
+				
+				if( data != "" )
+					console.log( data );
+				$( '#loading' ).html( '' );	
+				
 				
 			}						
 	

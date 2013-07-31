@@ -287,7 +287,10 @@ class Work_order extends CI_Model{
 		if( $advansed['work_order_status_id'] == 'tramite' )
 			$status =5;	
 		
-				
+		
+		$filter_user = $advansed['user'];
+
+		unset( $advansed['user'] );
 		unset( $advansed['work_order_status_id'] );
 		/*
 			
@@ -311,60 +314,87 @@ class Work_order extends CI_Model{
 		
 		
 		
-		if( !empty( $user ) and $status == 0 ){
+		if( $filter_user == 'mios' and !empty( $user ) ){
 			$this->db->where( array( 'work_order.uid' => $user ) );
 		}
-	
+		
+				
+		
 		// Added Avansed
 		if( !empty( $advansed ) ){
 				
-				foreach( $advansed as $value ){
+				foreach( $advansed['advanced'] as $value ){
 					
 					
-					if( $value[0] == 'id' ){
-					
-						$id = str_replace( '0725V', '', $value[1]);
-						$id = str_replace( '0725G', '', $value[1]);
-						$id = str_replace( '0725A', '', $value[1]);
-						$this->db->where( array( 'work_order.id' => $id ) );	
+					if( isset( $value[0] ) and $value[0] == 'id' ){
+																		
+						if( !empty( $value[1] ) ){
 						
+							$id = $value[1];
+						
+							if( !is_numeric( $id  ) )
+								
+								$id = str_replace( '0725V', '', (string)$id);
+							
+							if( !is_numeric( $id  ) )
+							
+								$id = str_replace( '0725G', '', (string)$id);
+							
+							if( !is_numeric( $id  ) )
+								
+								$id = str_replace( '0725A', '', (string)$id);
+																							
+							$this->db->where( array( 'work_order.id' => $id ) );	
+						
+						}
 					}
 					
 					
-					if( $value[0] == 'creation_date' )
-							$this->db->where( array( 'work_order.creation_date' => $value[1] ) );	
+					if( isset( $value[0] ) and $value[0] == 'creation_date' ){
+							
+							if( !empty( $value[1] ) )
+								
+								$this->db->where( array( 'work_order.creation_date' => $value[1] ) );	
 					
-					if( $value[0] == 'ramo' )
-							$this->db->where( array( 'work_order.product_group_id' => $value[1] ) );			
 					
+					}
 					
+					if( isset( $value[0] ) and $value[0] == 'ramo' ){
+							
+							if( !empty( $value[1] ) )
+							
+								$this->db->where( array( 'work_order.product_group_id' => $value[1] ) );			
+					}
 					
 					
 					// Agents
-					if( $value[0] == 'agent' ){
+					if( isset( $value[0] ) and $value[0] == 'agent' ){
 						
 						/**
 						 JOIN policies_vs_users ON policies_vs_users.policy_id=work_order.policy_id
 						 WHERE policies_vs_users.user_id=1
 						*/
 						
-						$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=work_order.policy_id' );
-						$this->db->where( 'policies_vs_users.user_id', $value[1] );
+						if( !empty( $value[1] ) ){
+							echo $value[1];
+							//$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=work_order.policy_id' );
+							//$this->db->where( 'policies_vs_users.user_id', $value[1] );
 						
+						}
 					}
 					
 					
-					// Agents
-					if( $value[0] == 'agent' ){
+					// Gerentes
+					if( isset( $value[0] ) and $value[0] == 'gerente' ){
 						
 						/**
 						 JOIN policies_vs_users ON policies_vs_users.policy_id=work_order.policy_id
 						 WHERE policies_vs_users.user_id=1
 						*/
-						
-						$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=work_order.policy_id' );
-						$this->db->where( 'policies_vs_users.gerente', $value[1] );
-						
+						if( !empty( $value[1] ) ){
+							$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=work_order.policy_id' );
+							$this->db->where( 'policies_vs_users.gerente', $value[1] );
+						}
 					}
 					
 					
@@ -488,7 +518,6 @@ class Work_order extends CI_Model{
 		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id ' );
 		$this->db->where( 'policies_vs_users.policy_id', $policy );
-		$this->db->limit(1);
 		$query = $this->db->get();
 		
 		if ($query->num_rows() == 0) return false;
