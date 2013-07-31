@@ -23,6 +23,7 @@ if ( ! function_exists('array_to_csv'))
         }
         fclose($f) or show_error("Can't close php://output");
         $str = ob_get_contents();
+		
         ob_end_clean();
 
         if ($download == "")

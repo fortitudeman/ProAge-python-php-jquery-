@@ -335,28 +335,7 @@ class Usuarios extends CI_Controller {
 		  	  
 			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
 			  '<script src="'.base_url().'scripts/config.js"></script>',
-			  '<script src="'.base_url().'usuarios/assets/scripts/find.js"></script>',
-			  '<script>
-				  $( "#dialog-form" ).dialog({
-					  autoOpen: false,
-					  height: 200,
-					  width: 350,
-					  modal: true,
-					  buttons: {
-						Cancel: function() {
-						  $( this ).dialog( "close" );
-						}
-					  },
-					  close: function() {
-						allFields.val( "" ).removeClass( "ui-state-error" );
-					  }
-					});
-					 $( "#create-export" )
-					  .button()
-					  .click(function() {
-						$( "#dialog-form" ).dialog( "open" );
-					  });
-			  </script>'			
+			  '<script src="'.base_url().'usuarios/assets/scripts/find.js"></script>'
 			  
 			 
 		  ),
@@ -1820,8 +1799,8 @@ class Usuarios extends CI_Controller {
 		
 		}
 				
-		//header('Content-Type: application/csv');
-        //header('Content-Disposition: attachement; filename="proages_usuarios.csv"');
+		header('Content-Type: application/csv');
+        header('Content-Disposition: attachement; filename="proages_usuarios.csv"');
 		
 		
 		// Load MOdel
@@ -1843,8 +1822,14 @@ class Usuarios extends CI_Controller {
 			$this->data = $this->user->export( $begin );
 		
 		
-		echo array_to_csv($this->data, 'proages_usuarios.csv');
+	 	array_to_csv($this->data, 'proages_usuarios.csv');
 		
+		if( is_file( 'proages_usuarios.csv' ) )
+			echo file_get_contents( 'proages_usuarios.csv' );
+		
+		if( is_file( 'proages_usuarios.csv' ) )
+			unlink( 'proages_usuarios.csv' );
+				
 		exit;
 		
 	}

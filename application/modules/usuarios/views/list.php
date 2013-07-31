@@ -126,8 +126,8 @@
                       <th colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                       <td><?php if( $access_create == true ): ?><a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-link">Crear</a><?php endif; ?></td>
                       <td><?php if( $access_request_new_user == true ): ?><a href="<?php echo base_url() ?>usuarios/create_request_new_user.html" class="btn btn-link">Crear Petición nuevo usuario</a><?php endif; ?></td>
-                      <td><?php if( $access_import == true ): ?><a href="<?php echo base_url() ?>usuarios/importar.html" class="btn btn-link">Importar XLS</a><?php endif; ?></td>
-                      <td><?php if( $access_export == true ): ?><button id="create-export" class="btn btn-link">Exportar XLS</button><?php endif; ?></td>
+                      <td><?php if( $access_import == true ): ?><a href="<?php echo base_url() ?>usuarios/importar.html" class="btn">Importar</a><?php endif; ?></td>
+                      <td><?php if( $access_export == true ): ?><button id="create-export" class="btn">Exportar</button><?php endif; ?></td>
                   </tr>
               </thead>   
               

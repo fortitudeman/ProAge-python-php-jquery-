@@ -150,4 +150,28 @@ $( document ).ready(function() {
 	
 	
 	
+	 $( "#dialog-form" ).dialog({
+		autoOpen: false,
+		height: 200,
+		width: 350,
+		modal: true,
+		buttons: {
+		  Cancel: function() {
+			$( this ).dialog( "close" );
+		  }
+		},
+		close: function() {
+		  
+		}
+	  });
+	   $( "#create-export" )
+		.button()
+		.click(function() {
+		  $( "#dialog-form" ).dialog( "open" );
+		});
+	  $( "#create-export" ).removeClass( " ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" );
+	  
+	
+	
+	
 });
