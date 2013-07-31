@@ -102,7 +102,7 @@
                     <br /><br />  
                       <div class="row advanced">
                       		
-                            <a href="javascript:void(0);" class="btn btn-link findsub " id="activadas">Activadas</a>
+                            <a href="javascript:void(0);" class="btn btn-link findsub" id="activadas">Activadas</a>
                             <a href="javascript:void(0);" class="btn btn-link findsub" id="tramite">Pendientes</a>
                             <a href="javascript:void(0);" class="btn btn-link findsub" id="canceladas">Canceladas</a>
                             <a href="javascript:void(0);" class="btn btn-link findsub" id="pagadas">Pagadas</a>

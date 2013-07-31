@@ -52,7 +52,8 @@ $( document ).ready( function(){
 		
 		
 		
-		var Data = { user: $( '#findvalue' ).val(), work_order_status_id: $('#findvalue').val(), advanced: checked };
+		var Data = { user: $( '#findvalue' ).val(), work_order_status_id: this.id, advanced: checked };
+		
 						
 		$( '#findsubvalue' ).val( this.id );
 		
@@ -177,7 +178,7 @@ $( document ).ready( function(){
 		
 		
 		
-		var Data = { user: $( '#findvalue' ).val(), work_order_status_id: $('#findvalue').val(), advanced: checked };
+		var Data = { user: $( '#findvalue' ).val(), work_order_status_id: $('#findsubvalue').val(), advanced: checked };
 		
 		$.ajax({
 
