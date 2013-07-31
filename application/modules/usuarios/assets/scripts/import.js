@@ -14,8 +14,8 @@
 */
 function hide( id ){
 	
-	$( '#select'+id ).hide();
-	$( '.column'+id ).hide();
+	//$( '#select'+id ).hide();
+	//$( '.column'+id ).hide();
 }
 
 $( document ).ready(function() {
