@@ -46,15 +46,19 @@ $( document ).ready( function(){
 		$("input[name='advanced[]']:checked").each(function ()
 		{
 			var element = $(this).val();
-										
-			checked.push( [$(this).val(), $( '#'+element ).val() ] );
+			
+			if(  element == 'creation_date' ) 
+				
+				checked.push( [$(this).val(), $( '#'+element ).val(), $( '#creation_date1' ).val()  ] );
+			
+			else							
+				checked.push( [$(this).val(), $( '#'+element ).val() ] );
 		});
 		
 		
 		
 		var Data = { user: $( '#findvalue' ).val(), work_order_status_id: this.id, advanced: checked };
-		
-						
+				
 		$( '#findsubvalue' ).val( this.id );
 		
 		$.ajax({
@@ -149,13 +153,23 @@ $( document ).ready( function(){
 	});
 	$( '.checkboxadvance' ).bind( 'click', function(){
 		
-		if( this.checked == true )
+		if( this.checked == true ){
 			
 			$( '#'+this.value ).show();
-		
+			
+			if( this.value == 'creation_date' )
+				$( '#creation_date1' ).show();
+				
+		}
 		else{
 			$( '#'+this.value ).hide();
 			$( '#'+this.value ).val('');
+			
+			if( this.value == 'creation_date' ){
+				$( '#creation_date1' ).hide();
+				$( '#creation_date1' ).val('');
+			}
+			
 		}
 		
 	}); 
@@ -164,6 +178,7 @@ $( document ).ready( function(){
 	 
 	 
 	$( '#creation_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });		
+	$( '#creation_date1' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });		
 	
 	
 	$( '.findfilters' ).bind( 'blur', function(){ 
@@ -172,14 +187,19 @@ $( document ).ready( function(){
 		$("input[name='advanced[]']:checked").each(function ()
 		{
 			var element = $(this).val();
-										
-			checked.push( [$(this).val(), $( '#'+element ).val() ] );
+			
+			if(  element == 'creation_date' ) 
+				
+				checked.push( [$(this).val(), $( '#'+element ).val(), $( '#creation_date1' ).val()  ] );
+			
+			else							
+				checked.push( [$(this).val(), $( '#'+element ).val() ] );
 		});
 		
 		
 		
 		var Data = { user: $( '#findvalue' ).val(), work_order_status_id: $('#findsubvalue').val(), advanced: checked };
-		
+				
 		$.ajax({
 
 			url:  Config.base_url()+'ot/find.html',
@@ -194,7 +214,7 @@ $( document ).ready( function(){
 				
 			},
 			success: function(data){
-
+	alert( data );
 				$( '#loading' ).html( '' );	
 				$( '#data' ).html( data );
 												

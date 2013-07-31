@@ -117,7 +117,10 @@
                                 
                                 <tr>
                                   <td><input type="checkbox" name="advanced[]" class="checkboxadvance"  value="creation_date" /> Fecha. </td>
-                                  <td><input type="text" id="creation_date" class="hide input findfilters" readonly="readonly"/></td>
+                                  <td>
+                                  	  <input type="text" id="creation_date" class="hide input-small" readonly="readonly" placeholder="De"/>
+                                  	  <input type="text" id="creation_date1" class="hide input-small findfilters" readonly="readonly" placeholder="A"/>
+                                  </td>
                                 </tr>
                                 <tr>
                                   <td><input type="checkbox" name="advanced[]" class="checkboxadvance"  value="agent" /> Agente</td>

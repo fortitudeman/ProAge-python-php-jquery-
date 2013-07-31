@@ -353,10 +353,10 @@ class Work_order extends CI_Model{
 					
 					
 					if( isset( $value[0] ) and $value[0] == 'creation_date' ){
-							
-							if( !empty( $value[1] ) )
+							print_r( $value );
+							if( !empty( $value[1] ) and !empty( $value[2] ) )
 								
-								$this->db->where( array( 'work_order.creation_date' => $value[1] ) );	
+								$this->db->where( array( 'work_order.creation_date >=' => $value[1], 'work_order.creation_date <=' => $value[2]  ) );	
 					
 					
 					}
