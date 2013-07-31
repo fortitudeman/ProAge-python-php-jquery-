@@ -1401,7 +1401,7 @@ class Usuarios extends CI_Controller {
 				// Message saved errors
 				$message = array();
 				
-				$lin=0;
+				$lin=1;
 				
 				// Validations
 				foreach( $file_array as $items ){
@@ -1421,7 +1421,7 @@ class Usuarios extends CI_Controller {
 					if( empty( $items['email'] ) ) $message[$lin][] = array( 'messageemail' => 'El correo es requerido, linea de archivo: ' . $lin . $name );
 					
 					
-					if(  $this->user->is_unique( 'email', $items['email'] )  ) $message[$lin][] = array( 'messageemailexist' => 'El Correo ya existe, linea de archivo: ' . $lin . $name );
+					if(  $this->user->is_unique( 'email', $items['email'] ) == false  ) $message[$lin][] = array( 'messageemailexist' => 'El Correo ya existe, linea de archivo: ' . $lin . $name );
 					
 					
 					
@@ -1450,7 +1450,7 @@ class Usuarios extends CI_Controller {
 					// Validation for agents
 					if( isset( $items['group'] ) ){
 					
-						$group = explode( ',', strtolower(trim($items['group'])) );
+						$group = explode( ' ', strtolower(trim($items['group'])) );
 
 						if( in_array( 'agente', $group ) ){
 							
@@ -1484,8 +1484,7 @@ class Usuarios extends CI_Controller {
 							
 							
 						}
-						
-						
+				
 						$controlSaved=true;
 						// Saved record
 						if( empty( $message[$lin] ) ){
@@ -1496,22 +1495,23 @@ class Usuarios extends CI_Controller {
 							$user = array(
 								'office_id'  => 0,
 								'manager_id' => 0,
-								'company_name'  => $item['company_name'],
-								'username'  => $item['username'],
-								'password'  => md5($item['password']),					
-								'name'  => $item['name'],
-								'lastnames'  => $item['lastname'],
-								'birthdate'  => $item['birthdate'],					
-								'email'  => $item['email'],
-								'disabled'  => $item['disabled'],
+								'company_name'  => $items['company_name'],
+								'username'  => $items['username'],
+								'password'  => md5($items['password']),					
+								'name'  => $items['name'],
+								'lastnames'  => $items['lastname'],
+								'email'  => $items['email'],
 								'picture' => 'default.png'
 							);
+							
+							if( isset( $items['disabled'] ) ) $user['disabled'] = $items['disabled'];
+							if( isset( $items['birthdate'] ) ) $user['birthdate'] = $items['birthdate'];
+							
 							
 							$group = explode( ',', strtolower(trim($items['group'])) );
 
 							if( in_array( 'agente', $group ) )  $user['manager_id'] = $items['manager_id'];  
 							
-							unset( $group ); // Free Memory
 							
 							
 							if( $this->user->create( 'users', $user ) == false) $controlSaved = false ;
@@ -1537,21 +1537,29 @@ class Usuarios extends CI_Controller {
 							
 							
 							
-							if( !empty( $group ) )
-							foreach( $group as $rol )
-								$user_roles[] = array( 'user_id' => $idSaved , 'user_role_id' => $this->rol($rol) );
+							if( !empty( $group ) and is_array( $group ) ){
+								
+								foreach( $group as $rol )
+									$user_roles[] = array( 'user_id' => $idSaved , 'user_role_id' => $this->user->getIdRol($rol) );
 						
 								
-							if( $this->user->create_banch( 'users_vs_user_roles', $user_roles ) == false) $controlSaved = false ;
-						
+								if( $this->user->create_banch( 'users_vs_user_roles', $user_roles ) == false) $controlSaved = false ;
+							
+							}else{
+								$user_roles[] = array( 'user_id' => $idSaved , 'user_role_id' => $this->user->getIdRol($group) );
+							}
 						
 							if( $controlSaved == false ){
 									
 									$message[$lin][] = array( 'messagesavederroruserrole' => 'No se pudo guardar el registro, Usuario -Rol, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador, linea de archivo: ' . $lin . $name );
-									
+								
+								unset( $group ); // Free Memory
+										
 							}
 							
 							
+							
+							/*
 							if( strtolower(trim($item['persona'])) == 'fisica' ){
 					
 								$fisica= array(
@@ -1568,20 +1576,20 @@ class Usuarios extends CI_Controller {
 								
 								
 							}
-							
+							*/
 							
 							// Save values of moral person
-							if( strtolower(trim($item['persona'])) == 'moral' ){
+							if( strtolower(trim($items['persona'])) == 'moral' ){
 													
 								$timestamp = date( 'Y-m-d H:i:s' ) ;
 								
 								$moral= array();
 								
-								$name_r = explode( ',', $item['name_r'] );
-								$lastname_r = explode( ',', $item['lastname_r'] );
-								$office_phone = explode( ',', $item['office_phone'] );
-								$office_ext = explode( ',', $item['office_ext'] );
-								$mobile = explode( ',', $item['mobile'] );
+								$name_r = explode( ',', $items['name_r'] );
+								$lastname_r = explode( ',', $items['lastname_r'] );
+								$office_phone = explode( ',', $items['office_phone'] );
+								$office_ext = explode( ',', $items['office_ext'] );
+								$mobile = explode( ',', $items['mobile'] );
 								
 								
 								for( $i=0; $i<=count( $person ); $i++ )
@@ -1619,8 +1627,8 @@ class Usuarios extends CI_Controller {
 									$agent= array(
 										
 										'user_id'  => $idSaved,
-										'connection_date'  => $item['connection_date'],
-										'license_expired_date'  => $item['license_expired_date'],
+										'connection_date'  => $items['connection_date'],
+										'license_expired_date'  => $items['license_expired_date'],
 										
 									);
 									
@@ -1696,10 +1704,7 @@ class Usuarios extends CI_Controller {
 									}
 									
 								}
-								
-								
-								
-								
+																								
 																			
 							}
 							
@@ -1713,6 +1718,25 @@ class Usuarios extends CI_Controller {
 						$lin++;	
 					}
 					
+					
+					// Save Record	
+					if( $controlSaved == true ){
+						
+						
+						// Set true message		
+						$this->session->set_flashdata( 'message', array( 
+							
+							'type' => true,	
+							'message' => 'Se importo  el archivo correctamente'
+										
+						));												
+						
+						
+						redirect( 'usuarios', 'refresh' );
+						
+						
+						
+					}
 					
 					
 														

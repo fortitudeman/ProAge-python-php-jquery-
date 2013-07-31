@@ -656,7 +656,25 @@ class User extends CI_Model{
    }
 
 
-
+	public function getIdRol( $name = null ){
+		
+		if( empty( $name ) ) return false; 
+		
+		
+		$this->db->select( 'user_roles.id' );
+		$this->db->from( 'user_roles' );
+		$this->db->where( 'name', ucwords(trim($name))  );
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 0) return false;
+		
+		foreach ($query->result() as $row)
+				return $row->id;	
+		
+		
+		
+	}
 
 
 
