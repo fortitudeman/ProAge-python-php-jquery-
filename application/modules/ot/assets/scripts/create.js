@@ -201,11 +201,41 @@ $( document ).ready(function() {
 				$( '.poliza' ).show();
 				$( '#formpoliza' ).hide();
 		}
-	
+				
 	});
 	
 	
+	$( '#product_id' ).bind( 'change', function(){
+		
+		var Data = { id : this.value };
+		
+		$.ajax({
+
+			url:  Config.base_url()+'ot/period.html',
+			type: "POST",
+			data: Data,
+			cache: false,
+			async: false,
+			beforeSend: function(){
 	
+				
+				$( '#loadperiod' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-1.gif">   Cargando...' );
+				$( '#period' ).html('');
+				
+			},
+			success: function(data){
+				
+				$( '#loadperiod' ).html( '' );	
+				$( '#period' ).html( data );
+				$( '.period' ).show();								
+												
+				
+			}						
+	
+		});
+				
+	});
+			
 	
 	
 });

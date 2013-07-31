@@ -637,7 +637,65 @@ class Work_order extends CI_Model{
 		return $options;
 		
 	}
-
+	
+	public function getPeriod( $product = null ){
+		
+		$this->db->select( 'period' );
+		
+		if( !empty( $product ) )
+			$this->db->where( array( 'id' => $product ) );
+		
+		$this->db->limit(1);
+		
+		
+		$query = $this->db->get( 'products' );
+		
+		$options = '<option value="">Seleccione</option>';	
+		
+		if ($query->num_rows() == 0) return $options;
+		
+		$period = array();
+		
+		foreach ($query->result() as $row)
+			
+			$period[] = $row->period;
+		
+		
+		if( empty( $period[0] ) )return $options;
+		
+		
+		$explode = explode( '-', $period[0] );	
+				
+						
+		
+		if( is_array( $explode ) and isset( $explode[1] ) ){
+			
+			for( $i = (int)$explode[0]; $i <= (int) $explode[1]; $i++ )
+				$options .= '<option value="'.$i.'">'.$i.'</option>';	
+		
+		}else{
+			
+			$explode = explode( ',', $period[0] );	
+				
+				foreach( $explode as $value )
+					$options .= '<option value="'.$value.'">'.$value.'</option>';	
+		}	
+		
+		
+		
+		
+		
+			
+		//print_r( $period );
+		//exit;	
+			
+		
+		return $options;
+		
+		
+		
+		
+	}
 
 /**
  *	Get Policies
@@ -740,7 +798,7 @@ class Work_order extends CI_Model{
 				
 		foreach ($query->result() as $row) {
 
-			$options  .= '<option value="'.$row->id.'">'.$row->group_name.' - '.$row->name.'</option>'; 
+			$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 
 		    
 		}
 		

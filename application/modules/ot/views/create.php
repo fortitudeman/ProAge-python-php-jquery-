@@ -152,6 +152,15 @@
                     </div>
                   </div>
                   
+                  <div class="control-group period">
+                    <label class="control-label text-error" for="inputError">Periodo<br /><div id="loadperiod"></div></label>
+                    <div class="controls">
+                      <select class="input-xlarge focused required" id="period" name="period">
+
+                      </select>
+                    </div>
+                  </div>
+                  
                   
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Prima anual</label>

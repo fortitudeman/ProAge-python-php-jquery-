@@ -433,6 +433,7 @@ class Ot extends CI_Controller {
 					$policy = array(
 				  	
 						'product_id' => $this->input->post( 'product_id' ),
+						'period' => $this->input->post( 'period' ),
 						'currency_id' => $this->input->post( 'currency_id' ),
 						'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
 						'payment_method_id' => $this->input->post( 'payment_method_id' ),
@@ -665,7 +666,24 @@ class Ot extends CI_Controller {
 		return;
 	}
 	
-	
+	public function period(){
+		
+		
+		// If is not ajax request redirect
+		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
+		
+		// Load Model
+		$this->load->model( 'work_order' );	
+		
+		$options = $this->work_order->getPeriod( $this->input->post( 'id' ) );
+		//print_r($_POST);
+		echo $options;
+		
+		
+		return;
+		
+		
+	}
 /**
  *	Condig Policies
  **/	
@@ -1064,7 +1082,45 @@ class Ot extends CI_Controller {
 	
 	
 	public function desactivar( $ot = null ){
-	
+		
+		
+			$work_order = array(
+				
+				'creation_date' => date( 'd-m-Y H:i:s' ), // Quitar el tiempo
+				'last_updated' => date( 'd-m-Y H:i:s' )
+			);
+			
+					
+			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
+				
+				// Set true message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => true,	
+					'message' => 'Se ha guardado el registro correctamente.'
+								
+				));												
+				
+				
+				redirect( 'ot', 'refresh' );
+				
+			}else{
+				
+				
+				// Set true message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => false,	
+					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
+								
+				));												
+				
+				
+				redirect( 'ot', 'refresh' );
+				
+			}
+			exit;
+		
 	}
 	
 	
