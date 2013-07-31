@@ -103,9 +103,9 @@
                
                 <div class="row advanced">
                     <div class="span7 pull-right">
-                        <?php if( !empty( $rol ) ): foreach(  $rol  as $value ): ?>
+                        <?php if( !empty( $rol ) ): foreach(  $rol  as $value ):if( isset( $filter ) and $filter == $value['id'] ) $class = 'btn-primary'; else $class = 'btn-link';?>
                             
-                            <a href="javascript:void(0)" id="<?php echo $value['id'] ?>" class="btn btn-link rol-search"><?php echo $value['name'] ?></a>
+                            <a href="javascript:void(0)" id="<?php echo $value['id'] ?>" class="btn  rol-search <?php echo $class ?>"><?php echo $value['name'] ?></a>
                         
                         <?php endforeach; endif; ?>
                         

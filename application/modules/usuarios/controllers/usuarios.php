@@ -69,8 +69,7 @@ class Usuarios extends CI_Controller {
 			$this->access = true;
 			
 		break; endif; endforeach;
-		
-		
+				
 		// Added Acctions for user, change the bool access
 		if( !empty( $this->user_vs_rol ) )	
 		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ):
@@ -347,6 +346,10 @@ class Usuarios extends CI_Controller {
 		  'gerentes' => $this->user->getSelectsGerentes()			  	  
 		  		
 		);
+		
+		
+		if( !empty( $filter ) )
+			$this->view['filter'] = $filter;
 				
 		// Render view 
 		$this->load->view( 'index', $this->view );	
