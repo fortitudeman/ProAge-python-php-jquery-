@@ -154,7 +154,7 @@
                   <tr>
                       <th>Número de OT</th>
                       <th>Fecha de alta de la OT</th> 
-                      <th>Agente</th>
+                      <th>Agente - %</th>
                       <th>Ramo</th>
                       <th>Tipo de trámite</th>
                       <th>Nombre del asegurado</th>
