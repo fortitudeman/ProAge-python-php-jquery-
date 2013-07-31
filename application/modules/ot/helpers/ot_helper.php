@@ -48,9 +48,19 @@ function renderTable( $data = array() ){
 			
 			$table .='		<td class="center">'. $value['creation_date'] .'</td>';
 			
-			if( !empty( $value['agents'] ) )
-								foreach( $value['agents'] as $agent ) 
-									$table .='		<td class="center">'. $agent['name']. ' '. $agent['lastnames']. ' '. $agent['percentage'] . '% <br>' .'</td>';
+			
+			
+			if( !empty( $value['agents'] ) ){
+					
+					$table .='		<td class="center">';
+					
+					foreach( $value['agents'] as $agent ) 
+					
+							$table .= $agent['name']. ' '. $agent['lastnames']. ' '. $agent['percentage'] . '% <br>';
+					
+					$table .='		</td>';
+					
+			}
 			
 			else
 					$table .='		<td class="center"></td>';
@@ -75,7 +85,7 @@ function renderTable( $data = array() ){
 			
 			
 			if( $value['status_name'] != 'activacion' ) {
-				if( (float)$color == 5 ) 
+				if( (float)$color <= 5 ) 
 					$table .= '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%;"></div>';
 				else if( (float)$color > 5 )	
 					$table .= '<div style="background-color:#FF0; width: 10px;  height: 10px; border-radius: 50%;"></div>';									
