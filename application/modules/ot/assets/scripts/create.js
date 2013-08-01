@@ -225,9 +225,14 @@ $( document ).ready(function() {
 			},
 			success: function(data){
 				
-				$( '#loadperiod' ).html( '' );	
-				$( '#period' ).html( data );
-				$( '.period' ).show();								
+				if( data != '<option value="">Seleccione</option>' ){
+					$( '#loadperiod' ).html( '' );	
+					$( '#period' ).html( data );
+					$( '.period' ).show();		
+					$( '#period' ).addClass( 'required' );						
+				}else{
+					$( '#period' ).removeClass( 'required' );
+				}
 												
 				
 			}						
