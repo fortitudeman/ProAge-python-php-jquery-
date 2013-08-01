@@ -114,7 +114,7 @@
 								foreach( $rows as $value ):
 																							
 								echo'<td class="column'.$i.'">
-										<select id="select'.$i.'" name="'.$i.'" style="width:100px;" onchange="hide('.$i.')">
+										<select class="required" id="select'.$i.'" name="'.$i.'" style="width:100px;" onchange="hide('.$i.')">
 											<option value="">Seleccione</option>
 											<option value="office_id">Oficina</option>
 											<option value="group">Rol</option>
