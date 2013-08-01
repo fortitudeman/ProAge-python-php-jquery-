@@ -394,7 +394,6 @@ class Usuarios extends CI_Controller {
 			// Generals for user what does not agent
 			$this->form_validation->set_rules('group[]', 'Grupo', 'required');
 			$this->form_validation->set_rules('persona', 'Persona', 'required');
-			$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
 			$this->form_validation->set_rules('username', 'Usuario', 'required|is_unique[users.username]');
 			$this->form_validation->set_rules('password', 'Contraseña', 'required');
 			$this->form_validation->set_rules('email', 'Correo', 'required|valid_email|is_unique[users.email]');
@@ -406,7 +405,7 @@ class Usuarios extends CI_Controller {
 			}
 			
 			if( $this->input->post('persona') == 'moral' ){
-				//$this->form_validation->set_rules('name', 'Nombre', 'required|is_unique[users.name]');
+				$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
 			}
 				
 			
