@@ -32,8 +32,8 @@ function renderTable( $data = array(), $access_update = false, $access_delete = 
 							<td class="center">'. $value['national'] .'</td>
 							<td class="center">'. $value['provincial'] .'</td>
 							<td class="center">'. $value['manager_id'] .'</td>
-							<td class="center">'. $value['name'] .'</td>
-							<td class="center">'. $value['lastnames'] .'</td>
+							<td class="center">'. $value['name'] . ' ' . $value['lastnames'] .'</td>
+							<td class="center">'. $value['company_name'] .'</td>
 							<td class="center">'. $value['email'] .'</td>
 							<td class="center">'. $value['tipo'] .'</td>
 							<td class="center">'. $value['date'] .'</td>

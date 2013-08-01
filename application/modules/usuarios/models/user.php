@@ -147,7 +147,7 @@ class User extends CI_Model{
 		 WHERE users_vs_user_roles.user_role_id=1;
 		
 		*/
-		$this->db->select( 'id, name, lastnames, email, manager_id, date, last_updated' );
+		$this->db->select( 'id, name, lastnames, email, company_name,  manager_id, date, last_updated' );
 		$this->db->from( 'users' );
         
 		
@@ -305,7 +305,8 @@ class User extends CI_Model{
 		    	'id' => $row->id,
 		    	'name' => $row->name,
 				'lastnames' => $row->lastnames,
-				'email' => $row->email,				
+				'email' => $row->email,		
+				'company_name' => $row->company_name,		
 				'manager_id' => $manager,
 				'tipo' => $tipo,
 				'clave' => $clave,
@@ -637,7 +638,8 @@ class User extends CI_Model{
 		    	'id' => $row->id,
 		    	'name' => $row->name,
 				'lastnames' => $row->lastnames,
-				'email' => $row->email,				
+				'email' => $row->email,	
+				'company_name' => $row->company_name,			
 				'manager_id' => $manager,
 				'tipo' => $tipo,
 				'clave' => $clave,
