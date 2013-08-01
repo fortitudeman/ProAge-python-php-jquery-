@@ -99,7 +99,7 @@
                    <div class="control-group">
                     <label class="control-label text-error" for="inputError">Fecha de tramite</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="creation_date" name="creation_date" type="text" readonly="readonly">
+                      <input class="input-xlarge focused required" id="creation_date" name="creation_date" type="text" readonly>
                     </div>
                   </div>
                                                                                       
@@ -277,7 +277,7 @@
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Comentarios</label>
                     <div class="controls">
-                      <textarea class="input-xlarge focused required" id="comments" name="comments" rows="6"></textarea>
+                      <textarea class="input-xlarge focused" id="comments" name="comments" rows="6"></textarea>
                     </div>
                   </div>
                   
