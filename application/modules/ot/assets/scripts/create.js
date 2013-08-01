@@ -225,12 +225,14 @@ $( document ).ready(function() {
 			},
 			success: function(data){
 				
-				if( data != '<option value="">Seleccione</option>' ){
-					$( '#loadperiod' ).html( '' );	
+				$( '#loadperiod' ).html( '' );	
+
+				if( data != '<option value="">Seleccione</option>' ){					
 					$( '#period' ).html( data );
 					$( '.period' ).show();		
 					$( '#period' ).addClass( 'required' );						
 				}else{
+					$( '.period' ).hide();		
 					$( '#period' ).removeClass( 'required' );
 				}
 												
