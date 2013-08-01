@@ -62,7 +62,7 @@ class Ot extends CI_Controller {
 	
 		// If exist the module name, the user accessed
 		if( !empty( $this->user_vs_rol ) )	
-		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ):
+		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ):
 
 			$this->access = true;
 			
@@ -71,7 +71,7 @@ class Ot extends CI_Controller {
 		
 		// Added Acctions for user, change the bool access
 		if( !empty( $this->user_vs_rol ) )	
-		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ):
+		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ):
 			
 			
 			if( $value['action_name'] == 'Crear' )
@@ -88,9 +88,11 @@ class Ot extends CI_Controller {
 			
 			if( $value['action_name'] ='Ver todos los registros' )
 				$this->access_all = true;
+			
+			
 						
 		endif; endforeach;
-							
+					
 								
 		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
 			
@@ -366,8 +368,7 @@ class Ot extends CI_Controller {
 	public function create(){
 		
 		
-		
-		
+				
 		// Check access teh user for create
 		if( $this->access_create == false ){
 				
