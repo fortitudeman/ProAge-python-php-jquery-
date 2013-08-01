@@ -1497,7 +1497,6 @@ class Usuarios extends CI_Controller {
 							$user = array(
 								'office_id'  => 0,
 								'manager_id' => 0,
-								'company_name'  => $items['company_name'],
 								'username'  => $items['username'],
 								'password'  => md5($items['password']),					
 								'name'  => $items['name'],
@@ -1506,6 +1505,7 @@ class Usuarios extends CI_Controller {
 								'picture' => 'default.png'
 							);
 							
+							if( isset( $items['company_name'] ) ) $user['company_name'] = $items['company_name'];
 							if( isset( $items['disabled'] ) ) $user['disabled'] = $items['disabled'];
 							if( isset( $items['birthdate'] ) ) $user['birthdate'] = $items['birthdate'];
 							
