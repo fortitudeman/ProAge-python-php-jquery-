@@ -275,6 +275,11 @@ function setFields( id ){
 				
 				val = parseInt(val.replace( '%','' ));
 				
+				$(this).val('');
+				
+				$(this).val(val);
+				
+				
 			maxValue = maxValue+val;
 			
 		});
