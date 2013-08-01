@@ -398,7 +398,6 @@ class Ot extends CI_Controller {
 			$this->form_validation->set_rules('ramo', 'Ramo', 'required');
 			$this->form_validation->set_rules('work_order_type_id', 'Tipo de tramite', 'required');
 			$this->form_validation->set_rules('subtype', 'Sub tipo', 'required');
-			$this->form_validation->set_rules('comments', 'Comentarios', 'required');
 			
 			
 			

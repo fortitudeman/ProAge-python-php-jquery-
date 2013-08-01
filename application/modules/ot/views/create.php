@@ -275,7 +275,7 @@
                   
                   
                   <div class="control-group">
-                    <label class="control-label text-error" for="inputError">Comentarios</label>
+                    <label class="control-label" for="inputError">Comentarios</label>
                     <div class="controls">
                       <textarea class="input-xlarge focused" id="comments" name="comments" rows="6"></textarea>
                     </div>
