@@ -14,9 +14,14 @@
 */
 $( document ).ready(function() {
     
+	 var toDay = new Date();
+		toDay = toDay.getFullYear();	
+	
+
+	
 	// Field Dates
-	$( '#birthdate' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });		
-	$( '#license_expired_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });		
+	$( '#birthdate' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true,yearRange: "1788:"+toDay });		
+	$( '#license_expired_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true, yearRange: "1788:"+toDay });		
 			
 	$( '.searchfind' ).bind( 'blur', function(){ 
 		
