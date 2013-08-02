@@ -49,7 +49,7 @@ $( document ).ready( function(){
 			
 			if(  element == 'creation_date' ) 
 				
-				checked.push( [$(this).val(), $( '#'+element ).val(), $( '#creation_date1' ).val()  ] );
+				checked.push( [$(this).val(), $( '#'+element ).val()+ '00:00:00', $( '#creation_date1' ).val()+'23:59:59'  ] );
 			
 			else							
 				checked.push( [$(this).val(), $( '#'+element ).val() ] );
@@ -190,7 +190,7 @@ $( document ).ready( function(){
 			
 			if(  element == 'creation_date' ) 
 				
-				checked.push( [$(this).val(), $( '#'+element ).val(), $( '#creation_date1' ).val()  ] );
+				checked.push( [$(this).val(), $( '#'+element ).val()+ '00:00:00', $( '#creation_date1' ).val()+'23:59:59'  ] );
 			
 			else							
 				checked.push( [$(this).val(), $( '#'+element ).val() ] );
@@ -252,14 +252,14 @@ $( document ).ready( function(){
 		 	  
 });
 
-
+/*
 var hideAllPopovers = function() {
        $('tr[class="popup"]').each(function() {
             $(this).popover('hide');
         });  
     };
 
-
+*/
 function chooseOption( choose, is_new ){
 	
 	var choose = choose.split('-');
