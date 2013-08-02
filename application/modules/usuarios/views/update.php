@@ -124,7 +124,7 @@
                   
                   <?php if( empty( $data['agent_uids'] ) or $clave == false ): // Add Field id not exist ?>
                   		
-                       <div class="control-group input-novel-agente">
+                       <div class="control-group input-agente input-novel-agente">
                         <label class="control-label text-error" for="inputError">Clave</label>
                         <div class="controls">
                           <input class="input-xlarge focused required" id="clave" name="clave" type="text" value="<?php echo set_value('clave') ?>">
@@ -141,7 +141,7 @@
 				  <?php $i=0; $clave = false; // For is not exist ?>
                   
                   <?php if( !empty( $data['agent_uids'] ) ): ?>         
-                  <div class="control-group input-novel-agente">
+                  <div class="control-group input-agente input-novel-agente">
                     <label class="control-label text-error" for="inputError">Folio Nacional</label>
                     <div class="controls">
                       
@@ -179,7 +179,7 @@
                   
                   <?php if( empty( $data['agent_uids'] ) or $clave == true ): ?>
 				  
-                      <div class="control-group input-novel-agente">
+                      <div class="control-group input-agente input-novel-agente">
                         <label class="control-label text-error" for="inputError">Folio Nacional</label>
                         <div class="controls">
                           <input class="input-xlarge focused required" name="folio_nacional[]" type="text"> 
