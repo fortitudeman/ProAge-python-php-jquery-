@@ -153,7 +153,7 @@
                   </div>
                   
                   <div class="control-group period">
-                    <label class="control-label text-error" for="inputError">Periodo<br /><div id="loadperiod"></div></label>
+                    <label class="control-label text-error" for="inputError">Plazo<br /><div id="loadperiod"></div></label>
                     <div class="controls">
                       <select class="input-xlarge focused required" id="period" name="period">
 
