@@ -39,17 +39,14 @@ function renderTable( $data = array() ){
 			
 			
 			$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
+					
 						
-			$color = $color/strtotime( date('Y-m-d H:i:s') );
-			  
-			$color = $color * 100;
-			
 			$table .='				<td class="center">';
 			
 			if( $value['status_name'] == 'tramite' ) {
 				if( (float)$color <= 5 ) 
 					$table .= '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
-				else if( (float)$color > 5 )	
+				else if( (float)$color > 5 and (float)$color <= 10 )	
 					$table .= '<div style="background-color:#FF0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';									
 				else if( (float)$color > 10 )	
 					$table .= '<div style="background-color:#F30; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';

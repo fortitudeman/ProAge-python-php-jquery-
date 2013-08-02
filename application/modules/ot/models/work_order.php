@@ -378,9 +378,9 @@ class Work_order extends CI_Model{
 						*/
 						
 						if( !empty( $value[1] ) ){
-							echo $value[1];
-							//$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=work_order.policy_id' );
-							//$this->db->where( 'policies_vs_users.user_id', $value[1] );
+
+							$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=work_order.policy_id' );
+							$this->db->where( 'policies_vs_users.user_id', $value[1] );
 						
 						}
 					}
