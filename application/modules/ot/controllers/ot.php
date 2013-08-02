@@ -1089,9 +1089,10 @@ class Ot extends CI_Controller {
 	
 	public function desactivar( $ot = null ){
 		
-		
+			$this->load->model( 'work_order' );
 			$work_order = array(
 				
+				'work_order_status_id' => 9,
 				'creation_date' => date( 'd-m-Y H:i:s' ), // Quitar el tiempo
 				'last_updated' => date( 'd-m-Y H:i:s' )
 			);
