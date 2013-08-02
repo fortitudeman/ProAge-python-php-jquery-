@@ -1526,6 +1526,7 @@ class Usuarios extends CI_Controller {
 							$user = array(
 								'office_id'  => 0,
 								'manager_id' => 0,
+								'disabled' => 1,
 								'username'  => $items['username'],
 								'password'  => md5($items['password']),					
 								'name'  => $items['name'],
