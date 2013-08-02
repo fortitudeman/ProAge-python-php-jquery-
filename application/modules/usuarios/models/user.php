@@ -1552,7 +1552,8 @@ class User extends CI_Model{
 			SELECT agents.id, users.name FROM agents
 			JOIN users ON users.id=agents.user_id;
 		*/
-		$this->db->select( 'agents.id, users.name FROM agents' );
+		$this->db->select( 'agents.id, users.name, users.lastnames, users.company_name' );
+		$this->db->from( 'agents' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
 		
 		$query = $this->db->get();
@@ -1564,7 +1565,11 @@ class User extends CI_Model{
 		// Getting data
 		foreach ($query->result() as $row)
 			
-			$options .= '<option value="'.$row->id.'">'.$row->name.'</option>';
+			
+			if( !empty( $row->company_name ) )
+				$options .= '<option value="'.$row->id.'">'.$row->company_name.'</option>';
+			else
+				$options .= '<option value="'.$row->id.'">'.$row->name.' '.$row->lastnames.'</option>';
 		
 		return $options;
 		
