@@ -19,7 +19,7 @@
 <div>
     <ul class="breadcrumb">
         <li>
-            <a href="<?php echo base_url() ?>roles.html">Role</a> <span class="divider">/</span>
+            <a href="<?php echo base_url() ?>roles.html">Roles</a> <span class="divider">/</span>
         </li>
         <li>
              <a href="<?php echo base_url() ?>roles/update/<?php echo $data['id'] ?>.html"> Editar </a> <span class="divider">/</span> 

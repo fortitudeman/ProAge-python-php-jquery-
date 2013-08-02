@@ -19,7 +19,7 @@
 <div>
     <ul class="breadcrumb">
         <li>
-            Role
+            Roles
         </li>
     </ul>
 </div>
