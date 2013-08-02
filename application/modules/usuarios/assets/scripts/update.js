@@ -238,10 +238,13 @@ $( document ).ready(function() {
 	
 		
 	
+	var toDay = new Date();
+		toDay = toDay.getFullYear();	
+	
 	// Field Dates
-	$( '#birthdate' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });
-	$( '#connection_date' ).datepicker({ dateFormat: "yy-mm-dd" });
-	$( '#license_expired_date' ).datepicker({ dateFormat: "yy-mm-dd" });
+	$( '#birthdate' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true, yearRange: "1788:"+toDay });
+	$( '#connection_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true, yearRange: "1788:"+toDay });
+	$( '#license_expired_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true, yearRange: "1788:"+toDay });
 	
 	
 	

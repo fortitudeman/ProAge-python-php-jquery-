@@ -38,69 +38,6 @@ $( document ).ready(function() {
 	$( '.input-moral' ).hide();
 	
 	
-	/**
-	 *	Show Send Fields
-	 **
-	$("input[name='group[]']").each(function ()
-		{
-			if( value == $(this).val()  ) $(this).attr( 'checked', true );
-			
-			
-			if( $(this).val() == 1 && this.checked == true )
-				$( '.input-agente' ).show();
-			else if( $(this).val() == 1 && this.checked == false )
-				$( '.input-agente' ).hide();	
-			
-			
-				
-	});
-	
-	
-	
-	
-	//Agents Type Conections
-	$(".agente:checked").each(function (){
-		
-		if( $(this).val() == 'No' ){
-			$( '.input-novel-agente' ).show();
-		}else{
-			$( '.input-novel-agente' ).hide();
-		}
-							
-					
-	});
-	
-	
-	// Person type
-	$(".persona:checked").each(function (){
-				
-		if( $(this).val() == 'fisica' ){
-			
-			$( '.input-moral' ).hide();	
-			$( '.input-fisica' ).show();
-			$( '.block-moral' ).removeClass( 'moral' );
-			
-		}else{
-			
-			$( '.input-fisica' ).hide();
-			$( '.input-moral' ).show();	
-			$( '.block-moral' ).addClass( 'moral' );
-			
-		}
-					
-	});
-	*/
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	$( '.roles' ).bind( 'click', function(){ 
@@ -231,12 +168,14 @@ $( document ).ready(function() {
 			$( '#moral-fields' ).append( fields );   
 	});
 	
-		
+	
+	var toDay = new Date();
+		toDay = toDay.getFullYear();	
 	
 	// Field Dates
-	$( '#birthdate' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });
-	$( '#connection_date' ).datepicker({ dateFormat: "yy-mm-dd" });
-	$( '#license_expired_date' ).datepicker({ dateFormat: "yy-mm-dd" });
+	$( '#birthdate' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true, yearRange: "1788:"+toDay });
+	$( '#connection_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true, yearRange: "1788:"+toDay });
+	$( '#license_expired_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true, yearRange: "1788:"+toDay });
 	
 	
 	
