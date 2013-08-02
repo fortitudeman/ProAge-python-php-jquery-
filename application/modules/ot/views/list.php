@@ -118,7 +118,7 @@
                                 <tr>
                                   <td><input type="checkbox" name="advanced[]" class="checkboxadvance"  value="creation_date" /> Fecha. </td>
                                   <td>
-                                  	  <input type="text" id="creation_date" class="hide input-small" readonly="readonly" placeholder="De"/>
+                                  	  <input type="text" id="creation_date" class="hide input-small" readonly="readonly" placeholder="De"/><br />
                                   	  <input type="text" id="creation_date1" class="hide input-small findfilters" readonly="readonly" placeholder="A"/>
                                   </td>
                                 </tr>
@@ -173,16 +173,12 @@
                 <tr id="<?php echo $value['id'] ?>" class="popup">
                 	<td class="center"><?php 
 										    
-											 $color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
+											$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
 						
-											$color = $color/strtotime( date('Y-m-d H:i:s') );
-											
-											$color = $color * 100;	
-											
 											if( $value['status_name'] == 'tramite' ) {
 												if( (float)$color <= 5 ) 
 													echo '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
-												else if( (float)$color > 5 )	
+												else if( (float)$color > 5 and (float)$color <= 10 )	
 													echo '<div style="background-color:#FF0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';									
 												else if( (float)$color > 10 )	
 													echo '<div style="background-color:#F30; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
