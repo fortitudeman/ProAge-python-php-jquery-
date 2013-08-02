@@ -320,7 +320,7 @@
                  
                  
                  
-                 <div class="control-group input-fisica input-agente">
+                 <div class="control-group input-fisica">
                     <label class="control-label text-error" for="inputError">Nombre</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="name" name="name" type="text" value="<?php echo set_value('name', $data[0]['name']) ?>">
@@ -328,7 +328,7 @@
                   </div>
                   
                   
-                  <div class="control-group input-fisica input-agente">
+                  <div class="control-group input-fisica">
                     <label class="control-label text-error" for="inputError">Apellidos</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="lastname" name="lastname" type="text" value="<?php echo set_value('lastname', $data[0]['lastnames']) ?>">
@@ -336,7 +336,7 @@
                   </div>
                  
                   <?php if( $data[0]['birthdate'] != '0000-00-00' ) $birthdate=$data[0]['birthdate']; else $birthdate=''; ?>
-                  <div class="control-group input-fisica input-agente">
+                  <div class="control-group input-fisica">
                     <label class="control-label text-error" for="inputError">Fecha de nacimiento</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="birthdate" name="birthdate" type="text" readonly="readonly" value="<?php echo set_value('birthdate', $birthdate) ?>">

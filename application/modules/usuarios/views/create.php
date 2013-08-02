@@ -165,7 +165,7 @@
                  
                  
                  
-                 <div class="control-group input-fisica input-agente">
+                 <div class="control-group input-fisica">
                     <label class="control-label text-error" for="inputError">Nombre</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="name" name="name" type="text" value="<?php echo set_value('name') ?>">
@@ -173,7 +173,7 @@
                   </div>
                   
                   
-                  <div class="control-group input-fisica input-agente">
+                  <div class="control-group input-fisica ">
                     <label class="control-label text-error" for="inputError">Apellidos</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="lastname" name="lastname" type="text" value="<?php echo set_value('lastname') ?>">
@@ -181,7 +181,7 @@
                   </div>
                  
                   
-                  <div class="control-group input-fisica input-agente">
+                  <div class="control-group input-fisica ">
                     <label class="control-label text-error" for="inputError">Fecha de nacimiento</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="birthdate" name="birthdate" type="text" readonly value="<?php echo set_value('birthdate') ?>">

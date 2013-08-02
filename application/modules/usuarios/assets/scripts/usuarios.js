@@ -34,7 +34,7 @@ $( document ).ready(function() {
 	// Hide And Show block agent inputs
 	$( '.input-agente' ).hide();
 	$( '.input-novel-agente' ).hide();
-	$( '.input-fisica' ).hide();
+	//$( '.input-fisica' ).hide();
 	$( '.input-moral' ).hide();
 	
 	
