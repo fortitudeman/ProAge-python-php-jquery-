@@ -109,7 +109,7 @@
                                    
                   <?php $clave = false; // For is not exist ?>
                   
-                  <?php if( !empty( $data['agent_uids'] ) ): foreach( $data['agent_uids'] as $agent_uids ): ?>                  
+                  <?php if( !empty( $data['agent_uids'] ) ): foreach( $data['agent_uids'] as $agent_uids ):?>                  
                   	
                       <?php if( in_array( 'clave', $agent_uids ) ): $clave = true; ?>
                       <div class="control-group input-novel-agente">
@@ -122,7 +122,7 @@
                   
                   <?php endforeach; endif; ?>
                   
-                  <?php if( $clave == false ): // Add Field id not exist ?>
+                  <?php if( empty( $data['agent_uids'] ) or $clave == false ): // Add Field id not exist ?>
                   		
                        <div class="control-group input-novel-agente">
                         <label class="control-label text-error" for="inputError">Clave</label>
@@ -134,7 +134,6 @@
                   <?php endif; ?>
                   
                   
-                 
                  
                   
 				  
@@ -177,7 +176,22 @@
                   </div>
                   <?php endif; ?>
                   
+                  
+                  <?php if( empty( $data['agent_uids'] ) or $clave == true ): ?>
+				  
+                      <div class="control-group input-novel-agente">
+                        <label class="control-label text-error" for="inputError">Folio Nacional</label>
+                        <div class="controls">
+                          <input class="input-xlarge focused required" name="folio_nacional[]" type="text"> 
+                           <a href="javascript:void(0)" id="folio_nacional_add" class="btn btn-link" >+</a>
+                          <div id="folio_nacional_fields"></div>
+                        </div>
+                      </div>
+                  
+                  <?php endif; ?>
                   <input type="hidden" id="countFolioNational" value="<?php echo $i+1 ?>" />
+                  
+                  
                   
                          
                          
@@ -228,6 +242,19 @@
                   </div>
                   <?php endif; ?>
                   
+                  
+                  <?php if( empty( $data['agent_uids'] ) or $clave == true ): ?>
+				  
+                      <div class="control-group input-novel-agente">
+                        <label class="control-label text-error" for="inputError">Folio Provicional</label>
+                        <div class="controls">
+                          <input class="input-xlarge focused required" name="folio_provincial[]" type="text">
+                           <a href="javascript:void(0)" id="folio_provicional_add" class="btn btn-link" >+</a>
+                          <div id="folio_provicional_fields"></div>
+                        </div>
+                      </div>
+                  
+                  <?php endif; ?>
                   
                   <input type="hidden" id="countFolioProvincial" value="<?php echo $i+1 ?>" />
                   
@@ -283,10 +310,10 @@
                  
                  
                  
-                 <div class="control-group input-fisica input-moral">
+                 <div class="control-group  input-moral">
                     <label class="control-label text-error" for="inputError"> Nombre de compania:</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="company_name" name="company_name" type="text" value="<?php echo set_value('company_name', $data[0]['company_name']) ?>">
+                      <input class="input-xlarge focused" id="company_name" name="company_name" type="text" value="<?php echo set_value('company_name', $data[0]['company_name']) ?>">
                     </div>
                   </div>
                 
@@ -373,13 +400,67 @@
                       <?php endif; ?>
                      
                       	
-                      <?php $i++; endforeach; endif; ?>
-                      	
+                      <?php $i++; endforeach; ?>
+                      
                       <div id="moral-fields" class="input-moral"></div>
                   	  
                        <a href="javascript:void(0)" id="moral_add" class="btn btn-link input-moral pull-right" >+ Agregar campos para representantes morales.</a> 
                       
+                      
+                      <?php endif; ?>
+                      	
+                      
                       <input type="hidden" id="countMoralPerson" value="<?php echo $i+1 ?>" />
+                      
+                      
+                      
+                      <?php if( empty( $data['representatives'] ) ): ?>
+                      		
+                            <h5 class="input-moral">Datos de representante moral</h5>                      
+                       <div class="control-group input-moral">
+                        <label class="control-label text-error" for="inputError">Nombre</label>
+                        <div class="controls">
+                          <input class="input-xlarge focused required" name="name_r[]" type="text">
+                        </div>
+                      </div>
+                      
+                      
+                      <div class="control-group input-moral">
+                        <label class="control-label text-error" for="inputError">Apellidos</label>
+                        <div class="controls">
+                          <input class="input-xlarge focused required" name="lastname_r[]" type="text">
+                        </div>
+                      </div>
+                       
+                       
+                     
+                       <div class="control-group input-moral">
+                        <label class="control-label text-error" for="inputError">Teléfono oficina</label>
+                        <div class="controls">
+                          <input class="input-xlarge focused required" name="office_phone[]" type="text">
+                        </div>
+                      </div>
+                      
+                       <div class="control-group input-moral">
+                        <label class="control-label text-error" for="inputError">Extensión</label>
+                        <div class="controls">
+                          <input class="input-xlarge focused required" name="office_ext[]" type="text">
+                        </div>
+                      </div>
+                      
+                      <div class="control-group input-moral">
+                        <label class="control-label text-error" for="inputError">Teléfono movil</label>
+                        <div class="controls">
+                          <input class="input-xlarge focused required" name="mobile[]" type="text">
+                        </div>
+                      </div>
+                  		
+                      <div id="moral-fields" class="input-moral"></div>
+                  	  
+                       <a href="javascript:void(0)" id="moral_add" class="btn btn-link input-moral pull-right" >+ Agregar campos para representantes morales.</a>
+                      
+                      <?php endif; ?>
+                      
                   </fieldset>
                   
                   

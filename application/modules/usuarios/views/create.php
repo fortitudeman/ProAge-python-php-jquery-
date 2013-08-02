@@ -91,16 +91,7 @@
                     </div>
                   </div>
                   
-                  <!--
-                  <div class="control-group input-agente">
-                    <label class="control-label error" for="inputError">En proceso de conexión</label>
-                    <div class="controls">
-                      <input type="radio" value="1" name="type" class="agente" checked="checked"/>&nbsp;&nbsp;Si
-                      <input type="radio" value="2" name="type" class="agente"  />&nbsp;&nbsp;No
-                    </div>
-                  </div>-->
-                  
-                  
+                                    
                   
                   
                   <div class="control-group input-novel-agente">
