@@ -71,10 +71,10 @@
                   </div>
                                                       
                   
-                  <div class="control-group">
+                  <div class="control-group input-agente">
                     <label class="control-label error" for="inputError">Persona</label>
                     <div class="controls">
-                      <input type="radio" value="fisica" name="persona" class="persona" <?php echo set_radio('persona', 'fisica'); ?> />&nbsp;&nbsp;Física
+                      <input type="radio" value="fisica" name="persona" class="persona" <?php echo set_radio('persona', 'fisica', true); ?> />&nbsp;&nbsp;Física
                       <input type="radio" value="moral" name="persona"  class="persona" <?php echo set_radio('persona', 'moral'); ?> />&nbsp;&nbsp;Moral
                     </div>
                   </div>
@@ -91,17 +91,7 @@
                     </div>
                   </div>
                   
-                  <!--
-                  <div class="control-group input-agente">
-                    <label class="control-label error" for="inputError">En proceso de conexión</label>
-                    <div class="controls">
-                      <input type="radio" value="1" name="type" class="agente" checked="checked"/>&nbsp;&nbsp;Si
-                      <input type="radio" value="2" name="type" class="agente"  />&nbsp;&nbsp;No
-                    </div>
-                  </div>-->
-                  
-                  
-                  
+                          
                   
                   <div class="control-group input-novel-agente">
                     <label class="control-label error" for="inputError">Clave</label>
@@ -174,7 +164,7 @@
                  
                  
                  
-                 <div class="control-group input-fisica">
+                 <div class="control-group input-fisica input-agente">
                     <label class="control-label error" for="inputError">Nombre</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="name" name="name" type="text" value="<?php echo set_value('name') ?>">
@@ -182,7 +172,7 @@
                   </div>
                   
                   
-                  <div class="control-group input-fisica">
+                  <div class="control-group input-fisica input-agente">
                     <label class="control-label error" for="inputError">Apellidos</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="lastname" name="lastname" type="text" value="<?php echo set_value('lastname') ?>">
@@ -190,7 +180,7 @@
                   </div>
                  
                   
-                  <div class="control-group input-fisica">
+                  <div class="control-group input-fisica input-agente">
                     <label class="control-label error" for="inputError">Fecha de nacimiento</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="birthdate" name="birthdate" type="text" readonly="readonly" value="<?php echo set_value('birthdate') ?>">
