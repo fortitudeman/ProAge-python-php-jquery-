@@ -116,29 +116,32 @@
 								echo'<td class="column'.$i.'">
 										<select class="required" id="select'.$i.'" name="'.$i.'" style="width:100px;" onchange="hide('.$i.')">
 											<option value="">Seleccione</option>
-											<option value="office_id">Oficina</option>
-											<option value="group">Rol</option>
-											<option value="persona">Persona</option>
-											<option value="clave">Clave</option>
-											<option value="folio_nacional"">Folio nacional</option>
-											<option value="folio_provincial">Folio Provicional</option>
-											<option value="type">En proceso de conexión</option>
-											<option value="connection_date">Fecha de conexión</option>
-											<option value="license_expired_date">Expiración de licencia</option>
-											<option value="manager_id">Gerente</option>
-											<option value="company_name">Nombre de compania</option>
-											<option value="name">Nombre</option>
+											<option value="disabled">Activar</option>
 											<option value="lastname">Apellidos</option>
-											<option value="birthdate">Fecha de nacimiento</option>
-											<option value="name_r">Nombre Persona Moral</option>
 											<option value="lastname_r">Apellidos Persona Moral</option>
-											<option value="office_phone">Teléfono oficina</option>
-											<option value="office_ext">Extensión</option>
-											<option value="mobile">Teléfono movil</option>
-											<option value="username">Usuario</option>
 											<option value="password">Contraseña</option>
 											<option value="email">Correo</option>
-											<option value="disabled">Activar</option>
+											<option value="clave">Clave</option>
+											<option value="office_ext">Extensión</option>
+											<option value="license_expired_date">Expiración de licencia</option>											
+											<option value="connection_date">Fecha de conexión</option>
+											<option value="type">En proceso de conexión</option>
+											<option value="birthdate">Fecha de nacimiento</option>											
+											<option value="folio_nacional"">Folio nacional</option>
+											<option value="folio_provincial">Folio Provicional</option>
+											<option value="manager_id">Gerente</option>
+											<option value="name">Nombre</option>
+											<option value="company_name">Nombre de compania</option>
+											<option value="name_r">Nombre Persona Moral</option>											
+											<option value="office_id">Oficina</option>										
+											<option value="persona">Persona</option>
+											<option value="group">Rol</option>
+											<option value="office_phone">Teléfono oficina</option>											
+											<option value="mobile">Teléfono movil</option>
+											<option value="username">Usuario</option>
+											
+											
+											
 										</select>
 									 </td>'; 
 								

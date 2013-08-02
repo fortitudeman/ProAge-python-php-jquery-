@@ -54,7 +54,7 @@
                     <div class="alert alert-success">
                           <button type="button" class="close" data-dismiss="alert">×</button>
                           <img src="<?php echo base_url() ?>images/true.png" width="20" height="20" />
-                          <strong>Success: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
+                          <strong>Listo: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
                     </div>
                 <?php endif; ?>
                
@@ -207,7 +207,6 @@
                       <th>Folio Prov</th>
                       <th>Gerente</th>
                       <th>Nombre</th>
-                      <th>Compañia</th>
                       <th>Correo</th>
                       <th>Tipo</th>
                       <th>Creado</th>
@@ -222,8 +221,7 @@
                     <td class="center"><?php echo $value['national'] ?></td>
                     <td class="center"><?php echo $value['provincial'] ?></td>
                     <td class="center"><?php echo $value['manager_id'] ?></td>
-                    <td class="center"><?php echo $value['name'] . ' ' . $value['lastnames'] ?></td>
-                    <td class="center"><?php echo $value['company_name'] ?></td>
+                    <td class="center"><?php if( !empty( $value['company_name'] ) ) echo $value['company_name']; else  echo $value['name'] . ' ' . $value['lastnames'];  ?></td>
                     <td class="center"><?php echo $value['email'] ?></td>
                     <td class="center"><?php echo $value['tipo'] ?></td>
                     <td class="center"><?php echo $value['date'] ?></td>

@@ -1299,6 +1299,11 @@ class Usuarios extends CI_Controller {
 		
 		}
 	
+	
+	
+	
+	
+// Load File
 		if( isset( $_FILES['file'] ) and !empty( $_FILES  ) ){
 			
 			
@@ -1339,7 +1344,11 @@ class Usuarios extends CI_Controller {
 			
 		}
 	
-		// Change indexes
+
+
+
+
+// Change indexes
 		if( !empty( $_POST ) ){
 			
 			// Load Model
@@ -1408,39 +1417,26 @@ class Usuarios extends CI_Controller {
 				// Validations
 				foreach( $file_array as $items ){
 					
+					
 					if( empty( $items ) ) break;
-					//echo '<pre>';print_r( $items );echo '</pre>';
+
 				
-					if( isset( $items['name'] ) ) $name = ' Nombre: '.$items['name'] . ' Apellido: '.$items['lastname']; else $name = '';
+					if( isset( $items['name'] ) and !empty( $items['name'] ) ) $name = ' Nombre: '.$items['name'] . ' Apellido: '.$items['lastname']; else $name = '';
 						
 						
 					// Validations geenral										
-					if( empty( $items['group'] ) ) $message[$lin][] = array( 'messagerol' => 'El rol del usuario es requerido, linea de archivo: ' . $lin . $name );
-					if( empty( $items['persona'] ) ) $message[$lin][] = array( 'messagetipo' => 'El tipo de persona es requerido, linea de archivo: ' . $lin . $name );
-					//if( empty( $items['company_name'] ) ) $message[$lin][] = array( 'messagecompanyname' => 'El nombre de la  empresa es requerido, linea de archivo: ' . $lin . $name );
-					if( empty( $items['username'] ) ) $message[$lin][] = array( 'messageuser' => 'El usuario es requedido, linea de archivo: ' . $lin . $name );
-					if( empty( $items['password'] ) ) $message[$lin][] = array( 'messagepassword' => 'El password es requerido, linea de archivo: ' . $lin . $name );
-					if( empty( $items['email'] ) ) $message[$lin][] = array( 'messageemail' => 'El correo es requerido, linea de archivo: ' . $lin . $name );
+					if( isset( $items['group'] ) and empty( $items['group'] ) ) $message[$lin][] = array( 'messagerol' => 'El rol del usuario es requerido, linea de archivo: ' . $lin . $name );
+					if( isset( $items['persona'] ) and empty( $items['persona'] ) ) $message[$lin][] = array( 'messagetipo' => 'El tipo de persona es requerido, linea de archivo: ' . $lin . $name );
+					
+					if( isset( $items['username'] ) and empty( $items['username'] ) ) $message[$lin][] = array( 'messageuser' => 'El usuario es requedido, linea de archivo: ' . $lin . $name );
+					if( isset( $items['password'] ) and empty( $items['password'] ) ) $message[$lin][] = array( 'messagepassword' => 'El password es requerido, linea de archivo: ' . $lin . $name );
+					if( isset( $items['email'] ) and empty( $items['email'] ) ) $message[$lin][] = array( 'messageemail' => 'El correo es requerido, linea de archivo: ' . $lin . $name );
 					
 					
 					if(  $this->user->is_unique( 'email', $items['email'] ) == false  ) $message[$lin][] = array( 'messageemailexist' => 'El Correo ya existe, linea de archivo: ' . $lin . $name );
 					
 					
-					
-					
-					
-					
-					// Validation for fisical person
-					if( isset( $items['persona'] ) and strtolower( trim($items['persona'] ) ) == 'fisica' ){
-						
-						if( empty( $items['name'] ) ) $message[$lin][] = array( 'messagepersonaname' => 'El nombre es requerido, linea de archivo: ' . $lin . $name );
-						if( empty( $items['lastname'] ) ) $message[$lin][] = array( 'messageapp' => 'El apellido es requerido, linea de archivo: ' . $lin . $name );
-						if( empty( $items['birthdate'] ) ) $message[$lin][] = array( 'messagepersonabirthdate' => 'La fecha de cumpleaños es requeda, linea de archivo: ' . $lin . $name );
-						
-					}
-					
-					
-					
+															
 					// Validation for moral person
 					if( isset( $items['persona'] ) and strtolower( trim($items['persona'] ) ) == 'moral' ){
 						
@@ -1449,6 +1445,10 @@ class Usuarios extends CI_Controller {
 					}
 										
 					
+					
+					
+					
+					
 					// Validation for agents
 					if( isset( $items['group'] ) ){
 					
@@ -1456,29 +1456,49 @@ class Usuarios extends CI_Controller {
 
 						if( in_array( 'agente', $group ) ){
 							
-							if( empty( $items['manager_id'] ) ) $message[$lin] = array( 'messageagente' => 'El gerente es requeda, linea de archivo: ' . $lin . $name );
+							if( isset( $items['manager_id'] ) and empty( $items['manager_id'] ) ) 
+									
+									$message[$lin] = array( 'messageagente' => 'El gerente es requeda, linea de archivo: ' . $lin . $name );
+																					
 							
 							// If process of conexion == 1 or yes
 							if( isset( $items['type'] ) and strtolower(trim($items['type']))  == 'si' ){
 								
 								// SET validation fields
-								if( empty( $items['connection_date'] ) ) $message[$lin][] = array( 'messagefechaconexion' => 'Fecha de conexión es requerido, linea de archivo: ' . $lin . $name );
+								if( isset( $items['connection_date'] ) and empty( $items['connection_date'] ) ) 
+											
+									$message[$lin][] = array( 'messagefechaconexion' => 'Fecha de conexión es requerido, linea de archivo: ' . $lin . $name );
 					
-								if( empty( $items['license_expired_date'] ) ) $message[$lin][] = array( 'messagelicenseexpireddate' => 'Expiración de licencia es requerido, linea de archivo: ' . $lin . $name );			
+								if( isset( $items['license_expired_date'] ) and empty( $items['license_expired_date'] ) ) 
+											
+									$message[$lin][] = array( 'messagelicenseexpireddate' => 'Expiración de licencia es requerido, linea de archivo: ' . $lin . $name );			
 							
 							
 							}else{ // Else conexion == 2 or not
 								
-								//if(  $this->user->is_unique( 'email', $items['email'] )  ) $message[$lin][] = array( 'messageemailexist' => 'El Correo ya existe, linea de archivo: ' . $lin . $name );
 								// SET validation fields
-								if( empty( $items['clave'] ) ) $message[$lin][] = array( 'messageclave' => 'Clave es requerido, linea de archivo: ' . $lin . $name );
-								if( empty( $items['folio_nacional'] ) ) $message[$lin][] = array( 'message' => 'Folio nacional es requerido, linea de archivo: ' . $lin . $name );
-								if( empty( $items['folio_provincial'] ) ) $message[$lin][] = array( 'messagefolio_provincial' => 'Folioprovincial es requerido, linea de archivo: ' . $lin . $name );
+								if( isset( $items['clave'] ) and  empty( $items['clave'] ) ) 
+									
+									$message[$lin][] = array( 'messageclave' => 'Clave es requerido, linea de archivo: ' . $lin . $name );
+								
+								if( isset( $items['folio_nacional'] ) and empty( $items['folio_nacional'] ) ) 
+										
+									$message[$lin][] = array( 'message' => 'Folio nacional es requerido, linea de archivo: ' . $lin . $name );
+								
+								
+								if( isset( $items['folio_provincial'] ) and empty( $items['folio_provincial'] ) ) 
+									
+									$message[$lin][] = array( 'messagefolio_provincial' => 'Folioprovincial es requerido, linea de archivo: ' . $lin . $name );
 								
 								
 								
-								if( empty( $items['connection_date'] ) ) $message[$lin][] = array( 'messageconnection_date' => 'Fecha de conexión es requerido, linea de archivo: ' . $lin . $name );
-								if( empty( $items['license_expired_date'] ) ) $message[$lin][] = array( 'messagelicense_expired_date' => 'Expiración de licencia es requerido, linea de archivo: ' . $lin . $name );
+								if( isset( $items['connection_date'] ) and empty( $items['connection_date'] ) ) 
+										
+									$message[$lin][] = array( 'messageconnection_date' => 'Fecha de conexión es requerido, linea de archivo: ' . $lin . $name );
+								
+								if( isset( $items['license_expired_date'] ) and empty( $items['license_expired_date'] ) ) 
+									
+									$message[$lin][] = array( 'messagelicense_expired_date' => 'Expiración de licencia es requerido, linea de archivo: ' . $lin . $name );
 								
 								
 							}
@@ -1486,6 +1506,15 @@ class Usuarios extends CI_Controller {
 							
 							
 						}
+						
+						
+						
+						
+						// Save import					
+						
+						
+						
+						
 				
 						$controlSaved=true;
 						// Saved record
@@ -1509,16 +1538,11 @@ class Usuarios extends CI_Controller {
 							if( isset( $items['disabled'] ) ) $user['disabled'] = $items['disabled'];
 							if( isset( $items['birthdate'] ) ) $user['birthdate'] = $items['birthdate'];
 							
-							
-							$group = explode( ',', strtolower(trim($items['group'])) );
-
-							if( in_array( 'agente', $group ) )  $user['manager_id'] = $items['manager_id'];  
-							
-							
-							
+																					
 							if( $this->user->create( 'users', $user ) == false) $controlSaved = false ;
 							
 							unset( $user ); // Free Memory
+							
 							
 							if( $controlSaved == false ){
 								
@@ -1528,17 +1552,20 @@ class Usuarios extends CI_Controller {
 								
 							}
 							
+									
 							// Recovery id last user saved
-							$idSaved = $this->user->insert_id();
+							$idSaved = $this->user->insert_id();		
 							
 							
 							
-							
+						
+																	
 							// Adding roles
 							$user_roles = array();
 							
 							
-							
+							$group = explode( ',', strtolower(trim($items['group'])) );
+														
 							if( !empty( $group ) and is_array( $group ) ){
 								
 								foreach( $group as $rol )
@@ -1554,34 +1581,12 @@ class Usuarios extends CI_Controller {
 							if( $controlSaved == false ){
 									
 									$message[$lin][] = array( 'messagesavederroruserrole' => 'No se pudo guardar el registro, Usuario -Rol, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador, linea de archivo: ' . $lin . $name );
-								
-								unset( $group ); // Free Memory
-										
+																										
 							}
-							
-							
-							
-							/*
-							if( strtolower(trim($item['persona'])) == 'fisica' ){
-					
-								$fisica= array(
-									
-									'user_id'  => $idSaved,
-									'name'  => $this->input->post( 'name' ),
-									'lastnames'  => $this->input->post( 'lastname' ),
-									'birthdate'  => $this->input->post( 'birthdate' )
-									
-								);
-								
-								
-								//if( $this->user->create( 'agents', $fisica ) == false) $controlSaved = false ;
-								
-								
-							}
-							*/
-							
+																												
+																												
 							// Save values of moral person
-							if( strtolower(trim($items['persona'])) == 'moral' ){
+							if( isset( $items['persona'] ) and strtolower(trim($items['persona'])) == 'moral' and isset( $items['name_r'] )){
 													
 								$timestamp = date( 'Y-m-d H:i:s' ) ;
 								
@@ -1594,9 +1599,10 @@ class Usuarios extends CI_Controller {
 								$mobile = explode( ',', $items['mobile'] );
 								
 								
-								for( $i=0; $i<=count( $person ); $i++ )
+								for( $i=0; $i<=count( $name_r ); $i++ )
 										
-										if( isset( $person[$i] ) )
+										if( isset( $name_r[$i] ) )
+										
 										$moral[] = array(
 											
 											'user_id'  => $idSaved,
@@ -1624,15 +1630,26 @@ class Usuarios extends CI_Controller {
 								
 								
 								if( in_array( 'agente', $group ) ){
-					
+									
+									$timestamp = date( 'Y-m-d H:i:s' ) ;
 					
 									$agent= array(
 										
 										'user_id'  => $idSaved,
-										'connection_date'  => $items['connection_date'],
 										'license_expired_date'  => $items['license_expired_date'],
+										'last_updated' => $timestamp,
+										'date' => $timestamp
+										
 										
 									);
+									
+									if( isset( $items['connection_date'] ) )
+									
+										$agent['connection_date'] =$items['connection_date'];
+									
+									if( isset( $items['license_expired_date'] ) )
+									
+										$agent['license_expired_date'] =$items['license_expired_date'];	
 									
 									
 									if( $this->user->create( 'agents', $agent ) == false) $controlSaved = false ;
@@ -1660,17 +1677,21 @@ class Usuarios extends CI_Controller {
 									$uids_agens[] = array(
 										'agent_id' => $idAgentSaved,
 										'type' =>  'clave',
-										'uid' =>  $items['clave'],
 										'last_updated' => $timestamp,
 										'date' => $timestamp
 									);
-									
-									
-									$folio_nacional = explode( ',', $item['folio_nacional'] );
+								
+									if( isset(  $items['clave'] ) )
+										
+										$uids_agens['uid'] = $items['clave'];
+										
+										
+									if( isset(  $item['folio_nacional'] ) )
+										$folio_nacional = explode( ',', $item['folio_nacional'] );
 									
 									
 									// added folio nacional
-									if( !empty( $folio_nacional ) )
+									if( isset( $folio_nacional ) and !empty( $folio_nacional ) and is_array( $folio_nacional ) )
 										foreach( $folio_nacional as $value )
 											$uids_agens[] = array(
 												'agent_id' => $idAgentSaved,
@@ -1681,11 +1702,12 @@ class Usuarios extends CI_Controller {
 											);
 									
 									
-									$folio_provincial = explode( ',', $item['folio_provincial'] );
+									if( isset(  $item['folio_provincial'] ) )
+										$folio_provincial = explode( ',', $item['folio_provincial'] );
 									
 									
 									// Added folio provicional
-									if( !empty( $folio_provincial ) )
+									if( isset( $folio_provincial ) and !empty( $folio_provincial ) and is_array( $folio_provincial ) )
 										foreach( $folio_provincial as $value )
 											$uids_agens[] = array(
 												'agent_id' => $idAgentSaved,
@@ -1712,41 +1734,41 @@ class Usuarios extends CI_Controller {
 							
 							
 							
-						  unset( $name_r, $lastname_r, $office_phone, $office_ext, $mobile, $group, $folio_nacional ); // Free memory
+						  unset( $name_r, $lastname_r, $office_phone, $office_ext, $mobile, $group, $folio_nacional, $folio_provincial ); // Free memory
 													
 						}
 						
 						
 						$lin++;	
 					}
-					
-					
-					// Save Record	
-					if( $controlSaved == true ){
-						
-						
-						// Set true message		
-						$this->session->set_flashdata( 'message', array( 
-							
-							'type' => true,	
-							'message' => 'Se importo  el archivo correctamente'
-										
-						));												
-						
-						
-						redirect( 'usuarios', 'refresh' );
-						
-						
-						
-					}
-					
-					
+																				
 														
 				}
 				
 				
 				if( is_file( APPPATH.'modules/usuarios/assets/tmp/' . $tmp_file  ) )
 					unlink( APPPATH.'modules/usuarios/assets/tmp/' . $tmp_file );
+				
+				
+				// Save Record	
+				if( $controlSaved == true ){
+					
+					
+					// Set true message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => true,	
+						'message' => 'Se importo  el archivo correctamente'
+									
+					));												
+					
+					
+					redirect( 'usuarios', 'refresh' );
+					
+					
+					
+				}
+				
 				
 				
 			}
