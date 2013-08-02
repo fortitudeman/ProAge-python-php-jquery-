@@ -47,7 +47,7 @@
                     <div class="alert alert-success">
                           <button type="button" class="close" data-dismiss="alert">×</button>
                           <img src="<?php echo base_url() ?>images/true.png" width="20" height="20" />
-                          <strong>Correcto: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
+                          <strong>Listo: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
                     </div>
                 <?php endif; ?>
                

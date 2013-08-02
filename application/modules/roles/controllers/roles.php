@@ -530,11 +530,11 @@ class Roles extends CI_Controller {
 		
 		
 		
-		
-		
-		if( !empty( $_POST ) ){
+		if( !empty( $_POST['accesss'] ) and $_POST['accesss'] == true ){
 			
 			$items = array();
+			
+			unset( $_POST['accesss'] );
 			
 			// Set timestamp unix
 			$timestamp = strtotime( date( 'd-m-Y H:i:s' ) );
@@ -544,6 +544,44 @@ class Roles extends CI_Controller {
 			$values['date'] = $timestamp;	
 			
 			
+			
+			
+			// Load model
+			$this->load->model( 'rol' );
+			
+			// Delete and clean Rol access
+			$this->rol->delete_rol_vs_access( $id );
+			
+			
+			
+			if( empty( $_POST['access'] ) ){
+			
+				
+				// Set true message		
+				$this->session->set_flashdata( 'message', array( 
+					
+					'type' => true,	
+					'message' => 'Se edito el acceso del rol. '.$data['name']
+								
+				));												
+				
+				
+				redirect( 'roles', 'refresh' );
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+						
 			foreach( $this->input->post( 'access' ) as $value ){
 								
 				$explode = explode( '-', $value );
@@ -553,11 +591,7 @@ class Roles extends CI_Controller {
 			}
 			
 					
-			// Load model
-			$this->load->model( 'rol' );
 			
-			// Delete and clean Rol access
-			$this->rol->delete_rol_vs_access( $id );
 			
 					
 					
@@ -592,8 +626,8 @@ class Roles extends CI_Controller {
 				
 				redirect( 'roles', 'refresh' );
 					
-			}						
-				
+							
+			}
 			
 						
 		}

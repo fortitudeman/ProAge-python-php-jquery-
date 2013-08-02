@@ -57,7 +57,7 @@
         
             <form id="form" action="<?php echo base_url() ?>roles/access/<?php echo $data['id'] ?>.html" class="form-horizontal" method="post">
                 
-                
+                <input type="hidden" name="accesss" value="true" />
                  <fieldset>
                   <div class="control-group error">
                     <label class="control-label" for="inputError"></label>
