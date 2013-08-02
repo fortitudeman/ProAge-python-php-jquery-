@@ -38,6 +38,13 @@
         <div class="box-header well" data-original-title>
             <h2></h2>
             <div class="box-icon">
+                  
+                   <?php if( $access_create == true ): ?>
+                   		<a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-link" title="Crear"><i class="icon-plus"></i></a>
+				   <?php endif; ?>
+                   <?php if( $access_request_new_user == true ): ?>
+                   		<a href="<?php echo base_url() ?>usuarios/create_request_new_user.html" class="btn btn-link" title="Crear Petición nuevo usuario"><i class="icon-plus"></i></a>
+				   <?php endif; ?>
                               
             </div>
         </div>
@@ -76,12 +83,18 @@
             	
                 <div class="span6"></div>
                 
-                <div class="span6">
-                	
-                   <?php if( $access_create == true ): ?><a href="<?php echo base_url() ?>usuarios/create.html" class="btn btn-link">Crear</a><?php endif; ?>
-                   <?php if( $access_request_new_user == true ): ?><a href="<?php echo base_url() ?>usuarios/create_request_new_user.html" class="btn btn-link">Crear Petición nuevo usuario</a><?php endif; ?>
-                   <?php if( $access_import == true ): ?><a href="<?php echo base_url() ?>usuarios/importar.html" class="btn">Importar</a><?php endif; ?>
-                   <?php if( $access_export == true ): ?><button id="create-export" class="btn">Exportar</button><?php endif; ?>
+                <div class="span4"></div>
+                
+                <div class="span1">
+                	                   
+				   <?php if( $access_import == true ): ?><a href="<?php echo base_url() ?>usuarios/importar.html" class="btn pull-right">Importar</a><?php endif; ?>
+                    
+                </div>
+                
+                <div class="span1">
+                	                  
+				   <?php if( $access_export == true ): ?><button id="create-export" class="btn pull-right">Exportar</button><?php endif; ?>
+                   
                     
                 </div>
                 
