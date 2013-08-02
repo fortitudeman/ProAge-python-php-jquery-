@@ -175,10 +175,11 @@ $( document ).ready( function(){
 	}); 
 	 
 	 
-	 
-	 
-	$( '#creation_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });		
-	$( '#creation_date1' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });		
+	 var toDay = new Date();
+		toDay = toDay.getFullYear();	
+	
+	$( '#creation_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true, yearRange: "1788:"+toDay });		
+	$( '#creation_date1' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true , yearRange: "1788:"+toDay});		
 	
 	
 	$( '.findfilters' ).bind( 'blur', function(){ 
