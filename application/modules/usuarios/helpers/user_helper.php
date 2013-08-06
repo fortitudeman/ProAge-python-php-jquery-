@@ -32,12 +32,22 @@ function renderTable( $data = array(), $access_update = false, $access_delete = 
 							<td class="center">'. $value['national'] .'</td>
 							<td class="center">'. $value['provincial'] .'</td>
 							<td class="center">'. $value['manager_id'] .'</td>
-							<td class="center">'. $value['name'] . ' ' . $value['lastnames'] .'</td>
-							<td class="center">'. $value['company_name'] .'</td>
-							<td class="center">'. $value['email'] .'</td>
+							<td class="center">';
+							
+							if( !empty( $value['company_name'] ) )
+								$table .= $value['company_name'];
+							
+							else 
+								$table .= $value['name'] . ' ' . $value['lastnames'];
+								
+			$table .=	 '</td>';
+							
+				
+				
+			$table .=	   '<td class="center">'. $value['email'] .'</td>
 							<td class="center">'. $value['tipo'] .'</td>
 							<td class="center">'. $value['date'] .'</td>
-							<td class="center">'. $value['last_updated'] .'</td>';
+							<td class="center">'. $value['last_updated'] .'</td><td>';
 				
 				if( $access_update == true )	
 					$table .= ' <a class="btn btn-info" href="'. base_url() .'usuarios/update/'. $value['id'] .'.html" title="Editar Usuario">
@@ -50,7 +60,7 @@ function renderTable( $data = array(), $access_update = false, $access_delete = 
 								</a>';
 				
 					
-			$table .='</tr>';
+			$table .='</td></tr>';
     
     
 	
