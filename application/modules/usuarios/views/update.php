@@ -177,7 +177,7 @@
                   <?php endif; ?>
                   
                   
-                  <?php if( empty( $data['agent_uids'] ) or $clave == true ): ?>
+                  <?php if( empty( $data['agent_uids'] ) or $clave == false ): ?>
 				  
                       <div class="control-group input-agente input-novel-agente">
                         <label class="control-label text-error" for="inputError">Folio Nacional</label>
@@ -243,9 +243,9 @@
                   <?php endif; ?>
                   
                   
-                  <?php if( empty( $data['agent_uids'] ) or $clave == true ): ?>
+                  <?php if( empty( $data['agent_uids'] ) or $clave == false ): ?>
 				  
-                      <div class="control-group input-novel-agente">
+                      <div class="control-group input-agente input-novel-agente">
                         <label class="control-label text-error" for="inputError">Folio Provicional</label>
                         <div class="controls">
                           <input class="input-xlarge focused required" name="folio_provincial[]" type="text">

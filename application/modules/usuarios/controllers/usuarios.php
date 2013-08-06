@@ -2095,7 +2095,6 @@ class Usuarios extends CI_Controller {
 			// Generals for user what does not agent
 			$this->form_validation->set_rules('group[]', 'Grupo', 'required');
 			$this->form_validation->set_rules('persona', 'Persona', 'required');
-			$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
 			
 			
 			if( $data[0]['username'] != $this->input->post('username') )
