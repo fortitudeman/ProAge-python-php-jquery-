@@ -44,14 +44,14 @@
         	
             
 			
-			<?php // Return Message error ?>
+			<?php // Return Message text-error ?>
             
             <?php $validation = validation_errors(); ?>
             
             <?php if( !empty( $validation ) ): ?>
-            <div class="alert alert-error">
+            <div class="alert alert-text-error">
                   <button type="button" class="close" data-dismiss="alert">×</button>
-                  <strong>Error: </strong> <?php  echo $validation; // Show Dinamical message error ?>
+                  <strong>text-error: </strong> <?php  echo $validation; // Show Dinamical message text-error ?>
             </div>
             <?php endif; ?>
             
@@ -62,7 +62,7 @@
                 <fieldset>
                   
                   <div class="control-group ">
-                    <label class="control-label error" for="inputError">Rol</label>
+                    <label class="control-label text-error" for="inputtext-error">Rol</label>
                     <div class="controls">
                       
                       <?php echo $group ?>
@@ -72,7 +72,7 @@
                                                       
                   
                   <div class="control-group input-agente">
-                    <label class="control-label error" for="inputError">Persona</label>
+                    <label class="control-label text-error" for="inputtext-error">Persona</label>
                     <div class="controls">
                       <input type="radio" value="fisica" name="persona" class="persona" <?php echo set_radio('persona', 'fisica', true); ?> />&nbsp;&nbsp;Física
                       <input type="radio" value="moral" name="persona"  class="persona" <?php echo set_radio('persona', 'moral'); ?> />&nbsp;&nbsp;Moral
@@ -84,7 +84,7 @@
                   <input type="hidden" id="countFolioProvincial" value="1" />
                   
                   <div class="control-group input-agente">
-                    <label class="control-label error" for="inputError">En proceso de conexión</label>
+                    <label class="control-label text-error" for="inputtext-error">En proceso de conexión</label>
                     <div class="controls">
                       <input type="radio" value="Si" name="type" class="agente" <?php echo set_radio('type', 'Si', true); ?>/>&nbsp;&nbsp;Si
                       <input type="radio" value="No" name="type" class="agente"  <?php echo set_radio('type', 'No'); ?>/>&nbsp;&nbsp;No
@@ -94,14 +94,14 @@
                           
                   
                   <div class="control-group input-novel-agente">
-                    <label class="control-label error" for="inputError">Clave</label>
+                    <label class="control-label text-error" for="inputtext-error">Clave</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="clave" name="clave" type="text" value="<?php echo set_value('clave') ?>">
                     </div>
                   </div>
                   
                   <div class="control-group input-novel-agente">
-                    <label class="control-label error" for="inputError">Folio Nacional</label>
+                    <label class="control-label text-error" for="inputtext-error">Folio Nacional</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" name="folio_nacional[]" type="text"> 
                        <a href="javascript:void(0)" id="folio_nacional_add" class="btn btn-link" >+</a>
@@ -111,7 +111,7 @@
                   
                   
                   <div class="control-group input-novel-agente">
-                    <label class="control-label error" for="inputError">Folio Provicional</label>
+                    <label class="control-label text-error" for="inputtext-error">Folio Provicional</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" name="folio_provincial[]" type="text">
                        <a href="javascript:void(0)" id="folio_provicional_add" class="btn btn-link" >+</a>
@@ -123,7 +123,7 @@
                   
                   
                  <div class="control-group input-agente">
-                    <label class="control-label error" for="inputError">Fecha de conexión</label>
+                    <label class="control-label text-error" for="inputtext-error">Fecha de conexión</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="connection_date" name="connection_date" type="text" readonly="readonly" value="<?php echo set_value('connection_date') ?>">
                     </div>
@@ -131,7 +131,7 @@
                   
                   
                   <div class="control-group input-agente">
-                    <label class="control-label error" for="inputError">Expiración de licencia</label>
+                    <label class="control-label text-error" for="inputtext-error">Expiración de licencia</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="license_expired_date" name="license_expired_date" type="text" readonly="readonly" value="<?php echo set_value('license_expired_date') ?>">
                     </div>
@@ -143,7 +143,7 @@
                  
                  
                  <div class="control-group input-agente">
-                    <label class="control-label" for="inputError">Gerente</label>
+                    <label class="control-label" for="inputtext-error">Gerente</label>
                     <div class="controls">
                       <select class="input-xlarge focused" id="manager_id" name="manager_id">
                       	<option value="0">Seleccione</option>
@@ -155,7 +155,7 @@
                  
                  
                  <div class="control-group input-moral">
-                    <label class="control-label error" for="inputError"> Nombre de compania:</label>
+                    <label class="control-label text-error" for="inputtext-error"> Nombre de compania:</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="company_name" name="company_name" type="text" value="<?php echo set_value('company_name') ?>">
                     </div>
@@ -165,7 +165,7 @@
                  
                  
                  <div class="control-group input-fisica ">
-                    <label class="control-label error" for="inputError">Nombre</label>
+                    <label class="control-label text-error" for="inputtext-error">Nombre</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="name" name="name" type="text" value="<?php echo set_value('name') ?>">
                     </div>
@@ -173,7 +173,7 @@
                   
                   
                   <div class="control-group input-fisica ">
-                    <label class="control-label error" for="inputError">Apellidos</label>
+                    <label class="control-label text-error" for="inputtext-error">Apellidos</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="lastname" name="lastname" type="text" value="<?php echo set_value('lastname') ?>">
                     </div>
@@ -181,7 +181,7 @@
                  
                   
                   <div class="control-group input-fisica ">
-                    <label class="control-label error" for="inputError">Fecha de nacimiento</label>
+                    <label class="control-label text-error" for="inputtext-error">Fecha de nacimiento</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="birthdate" name="birthdate" type="text" readonly="readonly" value="<?php echo set_value('birthdate') ?>">
                     </div>
@@ -193,7 +193,7 @@
                    
                    	   <h5 class="input-moral">Datos de representante moral</h5>                      
                        <div class="control-group input-moral">
-                        <label class="control-label error" for="inputError">Nombre</label>
+                        <label class="control-label text-error" for="inputtext-error">Nombre</label>
                         <div class="controls">
                           <input class="input-xlarge focused required" name="name_r[]" type="text">
                         </div>
@@ -201,7 +201,7 @@
                       
                       
                       <div class="control-group input-moral">
-                        <label class="control-label error" for="inputError">Apellidos</label>
+                        <label class="control-label text-error" for="inputtext-error">Apellidos</label>
                         <div class="controls">
                           <input class="input-xlarge focused required" name="lastname_r[]" type="text">
                         </div>
@@ -210,21 +210,21 @@
                        
                      
                        <div class="control-group input-moral">
-                        <label class="control-label error" for="inputError">Teléfono oficina</label>
+                        <label class="control-label text-error" for="inputtext-error">Teléfono oficina</label>
                         <div class="controls">
                           <input class="input-xlarge focused required" name="office_phone[]" type="text">
                         </div>
                       </div>
                       
                        <div class="control-group input-moral">
-                        <label class="control-label error" for="inputError">Extensión</label>
+                        <label class="control-label text-error" for="inputtext-error">Extensión</label>
                         <div class="controls">
                           <input class="input-xlarge focused required" name="office_ext[]" type="text">
                         </div>
                       </div>
                       
                       <div class="control-group input-moral">
-                        <label class="control-label error" for="inputError">Teléfono movil</label>
+                        <label class="control-label text-error" for="inputtext-error">Teléfono movil</label>
                         <div class="controls">
                           <input class="input-xlarge focused required" name="mobile[]" type="text">
                         </div>
@@ -253,7 +253,7 @@
                                  
                   
                   <div class="control-group">
-                    <label class="control-label error" for="inputError">Usuario</label>
+                    <label class="control-label text-error" for="inputtext-error">Usuario</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="username" name="username" type="text" value="<?php echo set_value('username') ?>">
                     </div>
@@ -261,21 +261,21 @@
                  
                  
                  <div class="control-group">
-                    <label class="control-label error" for="inputError">Contraseña</label>
+                    <label class="control-label text-error" for="inputtext-error">Contraseña</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="password" name="password" type="password" value="<?php echo set_value('password') ?>">
                     </div>
                   </div>
                   
                   <div class="control-group">
-                    <label class="control-label error" for="inputError">Correo</label>
+                    <label class="control-label text-error" for="inputtext-error">Correo</label>
                     <div class="controls">
                       <input class="input-xlarge focused required email" id="email" name="email" type="text" value="<?php echo set_value('email') ?>">
                     </div>
                   </div>
                   
                   <div class="control-group">
-                    <label class="control-label error" for="inputError">Imagen: </label>
+                    <label class="control-label text-error" for="inputtext-error">Imagen: </label>
                     <div class="controls">
                       <input type="file" name="imagen" />
                     </div>

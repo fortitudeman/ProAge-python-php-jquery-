@@ -827,7 +827,6 @@ class Usuarios extends CI_Controller {
 			// Generals for user what does not agent
 			$this->form_validation->set_rules('group[]', 'Grupo', 'required');
 			$this->form_validation->set_rules('persona', 'Persona', 'required');
-			$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
 			$this->form_validation->set_rules('username', 'Usuario', 'required|is_unique[users.username]');
 			$this->form_validation->set_rules('password', 'Contraseña', 'required');
 			$this->form_validation->set_rules('email', 'Correo', 'required|valid_email|is_unique[users.email]');
@@ -839,7 +838,7 @@ class Usuarios extends CI_Controller {
 			}
 			
 			if( $this->input->post('persona') == 'moral' ){
-				//$this->form_validation->set_rules('name', 'Nombre', 'required|is_unique[users.name]');
+				$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
 			}
 				
 			
@@ -870,7 +869,7 @@ class Usuarios extends CI_Controller {
 				
 			
 			}
-			
+		
 			
 					
 			
@@ -895,7 +894,6 @@ class Usuarios extends CI_Controller {
 					'lastnames'  => $this->input->post( 'lastname' ),
 					'birthdate'  => $this->input->post( 'birthdate' ),					
 					'email'  => $this->input->post( 'email' ),
-					
 				);
 				
 				// Add Manager if is an agent
@@ -924,7 +922,6 @@ class Usuarios extends CI_Controller {
 					$user['picture'] = "default.png";
 				}
 				
-							
 								
 				if( $this->user->create( 'users', $user ) == false) $controlSaved = false ;
 				
@@ -1002,7 +999,7 @@ class Usuarios extends CI_Controller {
 					
 					$moral= array();
 					
-					for( $i=0; $i<=count( $_POST['name_r'] ); $i++ )
+					for( $i=0; $i<=count( $_POST['name_r'] ); $i++ ){
 							
 							if( isset( $_POST['name_r'][$i] ) )
 							$moral[] = array(
@@ -1017,6 +1014,7 @@ class Usuarios extends CI_Controller {
 								'date' => $timestamp
 								
 							);
+					}
 					
 					
 					
@@ -1175,7 +1173,6 @@ class Usuarios extends CI_Controller {
 				
 				
 			}	
-			
 						
 		}
 		
