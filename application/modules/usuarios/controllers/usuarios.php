@@ -63,15 +63,16 @@ class Usuarios extends CI_Controller {
 		
 	
 		// If exist the module name, the user accessed
-		if( !empty( $this->user_vs_rol ) )	
+		if( !empty( $this->user_vs_rol )  and !empty( $this->roles_vs_access ) )	
 		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ):
 
 			$this->access = true;
 			
 		break; endif; endforeach;
-				
+
+
 		// Added Acctions for user, change the bool access
-		if( !empty( $this->user_vs_rol ) )	
+		if( !empty( $this->user_vs_rol ) and !empty( $this->roles_vs_access ) )	
 		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ):
 			
 			
@@ -224,6 +225,7 @@ class Usuarios extends CI_Controller {
 // User logout	
 	public function logout(){
 	
+		
 		
 		// Remove vars of user login
 		$this->session->unset_userdata( 'system' );

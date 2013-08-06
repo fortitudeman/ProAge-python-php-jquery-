@@ -99,6 +99,8 @@
             	Especifique a qué campos corresponde la información que está importando en las siguientes cajas de selección
             </div>
             
+            <div style="max-width:1000px; overflow:scroll">
+            
             <table class="table table-rounder">
             
             
@@ -188,6 +190,8 @@
 			?>
             
             </table>
+            
+            </div>
             
             <div id="actions-buttons-forms-send" class="form-actions">
               <button type="submit" class="btn btn-primary">Importar</button>

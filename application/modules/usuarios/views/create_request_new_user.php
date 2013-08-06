@@ -131,7 +131,7 @@
                   
                   
                   <div class="control-group input-agente">
-                    <label class="control-label text-error" for="inputtext-error">Expiración de licencia</label>
+                    <label class="control-label text-error" for="inputtext-error">Vencimiento de cédula</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="license_expired_date" name="license_expired_date" type="text" readonly="readonly" value="<?php echo set_value('license_expired_date') ?>">
                     </div>
