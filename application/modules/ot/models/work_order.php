@@ -516,7 +516,7 @@ class Work_order extends CI_Model{
 		JOIN users ON users.id=agents.user_id
 		WHERE policy_id=1
 		*/
-		$this->db->select( ' policies_vs_users.percentage, users.name, users.lastnames ' );
+		$this->db->select( ' policies_vs_users.percentage, users.name, users.lastnames, users.company_name ' );
 		$this->db->from( 'policies_vs_users' );
 		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id ' );
@@ -532,7 +532,8 @@ class Work_order extends CI_Model{
 			$agents[] = array( 
 		    	'percentage' => $row->percentage,
 				'name' => $row->name,
-				'lastnames' => $row->lastnames
+				'lastnames' => $row->lastnames,
+				'company_name' => $row->company_name
 		    );
 
 		}

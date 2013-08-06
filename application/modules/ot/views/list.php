@@ -199,7 +199,11 @@
 						<?php 
 							if( !empty( $value['agents'] ) )
 								foreach( $value['agents'] as $agent ) 
-									echo $agent['name']. ' '. $agent['lastnames']. ' '. $agent['percentage'] . '% <br>'
+									
+									if( !empty( $agent['company_name'] ) )
+										echo $agent['company_name'] . ' '. $agent['percentage'] . '% <br>';
+									else
+										echo $agent['name']. ' '. $agent['lastnames']. ' '. $agent['percentage'] . '% <br>'
 						?>
                     </td>
                     <td class="center"><?php echo $value['group_name'] ?></td>

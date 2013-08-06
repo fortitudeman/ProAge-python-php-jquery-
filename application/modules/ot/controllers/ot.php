@@ -1093,11 +1093,11 @@ class Ot extends CI_Controller {
 			$work_order = array(
 				
 				'work_order_status_id' => 9,
-				'creation_date' => date( 'd-m-Y H:i:s' ), // Quitar el tiempo
-				'last_updated' => date( 'd-m-Y H:i:s' )
+				'creation_date' => date( 'Y-m-d H:i:s' ), // Quitar el tiempo
+				'last_updated' => date( 'Y-m-d H:i:s' )
 			);
 			
-					
+				
 			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
 				
 				// Set true message		

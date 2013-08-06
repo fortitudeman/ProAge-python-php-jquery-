@@ -74,8 +74,11 @@ function renderTable( $data = array() ){
 					$table .='		<td class="center">';
 					
 					foreach( $value['agents'] as $agent ) 
-					
-							$table .= $agent['name']. ' '. $agent['lastnames']. ' '. $agent['percentage'] . '% <br>';
+							
+							if( !empty( $agent['company_name'] ) )
+								$table .=  $agent['company_name'] . ' '. $agent['percentage'] . '% <br>';
+							else
+								$table .= $agent['name']. ' '. $agent['lastnames']. ' '. $agent['percentage'] . '% <br>';
 					
 					$table .='		</td>';
 					
