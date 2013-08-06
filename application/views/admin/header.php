@@ -149,21 +149,21 @@
 							 **/
 						?>
 												
-						<?php foreach( $roles_vs_access  as $value ): if( in_array( 'Modulos', $value ) ): ?>
+						<?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Modulos', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>modulos.html"><i class="icon-th"></i><span class="hidden-tablet">Módulos</span></a></li>
-                        <?php break; endif; endforeach; ?>
+                        <?php break; endif; endforeach; endif; ?>
                         
-                        <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Rol', $value ) ): ?>
+                        <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Rol', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>roles.html"><i class="icon-th"></i><span class="hidden-tablet">Rol</span></a></li>
-                        <?php break; endif; endforeach; ?>
+                        <?php break; endif; endforeach; endif; ?>
                         
-                        <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ): ?>
+                        <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>usuarios.html"><i class="icon-th"></i><span class="hidden-tablet">Usuarios</span></a></li>
-                        <?php break; endif; endforeach; ?>
+                        <?php break; endif; endforeach; endif; ?>
                         
-                        <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
+                        <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>ot.html"><i class="icon-tablet"></i><span class="hidden-tablet">Orden trabajo</span></a></li>
-                        <?php break; endif; endforeach; ?>
+                        <?php break; endif; endforeach; endif; ?>
                         
                         
 						<!--
