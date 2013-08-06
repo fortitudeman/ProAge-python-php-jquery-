@@ -171,6 +171,9 @@ class Ot extends CI_Controller {
 			
 			foreach( $data as $value ){
 				
+				if( $value['status_name'] != 'aceptado' and $value['status_name'] != 'rechazado' and  $value['status_name'] != 'cancelada' ){
+												
+				
 				$scrips .= '<script type="text/javascript">
 								$("#'.$value['id'].'").popover({
 										title: "Opciones",
@@ -185,7 +188,7 @@ class Ot extends CI_Controller {
 												
 												
 					
-					if( $value['status_name']['name'] != 'cancelada' ){
+					if( $value['status_name'] != 'cancelada' ){
 					
 					$scrips .= '				var content = "Escoja una opción<br>";';
 												
@@ -225,6 +228,7 @@ class Ot extends CI_Controller {
 								});
 							 </script>';
 				
+				}
 			}
 						 
 		// Config view
@@ -303,6 +307,8 @@ class Ot extends CI_Controller {
 			
 			foreach( $data as $value ){
 				
+				if( $value['status_name'] != 'aceptado' and $value['status_name'] != 'rechazado' and  $value['status_name'] != 'cancelada' ){
+				
 				$scrips .= '
 								$("#'.$value['id'].'").popover({
 										title: "Opciones",
@@ -311,7 +317,7 @@ class Ot extends CI_Controller {
 										html:true, 
 										content: function(){';
 											
-											if( $value['status_name']['name'] != 'cancelada' ){
+											if( $value['status_name'] != 'cancelada' ){
 												
 												$scrips .= 'var content = "Escoja una opción<br>";';
 																													
@@ -350,7 +356,7 @@ class Ot extends CI_Controller {
 										}
 								});
 							 ';
-				
+				}
 			}
 		
 		echo $scrips;	
