@@ -95,7 +95,9 @@
             
             <input type="hidden" name="tmp_file" value="<?php echo $tmp_file ?>">
             
-            <span class="small"></span>
+            <div class="alert alert-info">
+            	Especifique a qué campos corresponde la información que está importando en las siguientes cajas de selección
+            </div>
             
             <table class="table table-rounder">
             
@@ -143,6 +145,7 @@
 											
 											
 										</select>
+										<p class="text-error">Requerido</p>
 									 </td>'; 
 								
 								$i++;
