@@ -86,8 +86,8 @@
                   <div class="control-group input-agente">
                     <label class="control-label text-error" for="inputError">En proceso de conexión</label>
                     <div class="controls">
-                      <input type="radio" value="Si" name="type" class="agente" <?php echo set_radio('type', 'Si', true); ?>/>&nbsp;&nbsp;Si
-                      <input type="radio" value="No" name="type" class="agente"  <?php echo set_radio('type', 'No'); ?>/>&nbsp;&nbsp;No
+                      <input type="radio" value="Si" name="type" class="agente" <?php echo set_radio('type', 'Si'); ?>/>&nbsp;&nbsp;Si
+                      <input type="radio" value="No" name="type" class="agente"  <?php echo set_radio('type', 'No', true); ?>/>&nbsp;&nbsp;No
                     </div>
                   </div>
                   

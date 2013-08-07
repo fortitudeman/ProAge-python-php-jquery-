@@ -42,10 +42,12 @@ $( document ).ready(function() {
 	
 	$( '.roles' ).bind( 'click', function(){ 
 				
-		if( this.value == 1 && this.checked == true )
+		if( this.value == 1 && this.checked == true ){
 			$( '.input-agente' ).show();
-		else if( this.value == 1 && this.checked == false )
+			$( '.input-novel-agente' ).show();
+		}else if( this.value == 1 && this.checked == false ){
 			$( '.input-agente' ).hide();	
+		}
 	
 	})
 	
