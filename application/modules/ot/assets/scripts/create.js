@@ -202,6 +202,7 @@ $( document ).ready(function() {
 		
 		var Data = { type : this.value };
 		
+						
 		$.ajax({
 
 			url:  Config.base_url()+'ot/subtype.html',
@@ -227,7 +228,7 @@ $( document ).ready(function() {
 	
 		});
 		
-		
+						
 	});
 
 
@@ -246,6 +247,14 @@ $( document ).ready(function() {
 				$( '.poliza' ).show();
 				$( '#formpoliza' ).hide();
 		}
+		
+		
+		if( $( '#work_order_type_id' ).val() == 109 ){
+			
+			$( '.poliza' ).hide();
+			$( '#uid' ).removeClass( 'required' );
+		}
+		
 				
 	});
 	
