@@ -133,6 +133,10 @@
                                 <tr>
                                   <td><input type="checkbox" name="advanced[]" class="checkboxadvance"  value="gerente" /> Gerente</td>
                                   <td><select id="gerente" class="hide input-small findfilters" ><option value="">Seleccione</option><?php echo $gerentes ?></select></td>
+                                </tr>                                  
+                                <tr>
+                                  <td></td>
+                                  <td><input type="button" value="Filtrar" class="btn btn-inverse filtros" /></td>
                                 </tr>                                
                              </table>
                              

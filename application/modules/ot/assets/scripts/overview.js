@@ -182,7 +182,7 @@ $( document ).ready( function(){
 	$( '#creation_date1' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true , yearRange: "1788:"+toDay});		
 	
 	
-	$( '.findfilters' ).bind( 'blur', function(){ 
+	$( '.filtros' ).bind( 'click', function(){ 
 		
 		var checked = [];
 		$("input[name='advanced[]']:checked").each(function ()
