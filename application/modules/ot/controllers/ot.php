@@ -449,7 +449,7 @@ class Ot extends CI_Controller {
 						'currency_id' => $this->input->post( 'currency_id' ),
 						'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
 						'payment_method_id' => $this->input->post( 'payment_method_id' ),
-						'uid' => $this->sessions['id'],
+						'uid' => $this->input->post( 'uid' ),
 						'name' => $this->input->post( 'name' ),
 						'lastname_father' => $this->input->post( 'lastname_father' ),
 						'lastname_mother' => $this->input->post( 'lastname_mother' ),
@@ -523,7 +523,7 @@ class Ot extends CI_Controller {
 					'work_order_type_id' => $this->input->post( 'subtype' ),
 					'work_order_status_id' => 5,
 					'work_order_responsible_id' => 0,
-					'uid' => $this->input->post( 'uid' ),
+					'uid' => $this->input->post( 'ot' ),
 					'creation_date' => $this->input->post('creation_date'),
 					'comments' => $this->input->post('comments'),
 					'duration' => '',
@@ -1273,10 +1273,20 @@ class Ot extends CI_Controller {
 				'work_order_status_id' => 7,
 				'last_updated' => date( 'd-m-Y H:i:s' )
 			);
+			/*
+			$policy = $this->work_order->getWorkOrderById( $ot );
 			
-			if( !empty( $poliza ) )
+			if( !empty( $policy[0]['policy_id'] ) ){
 			
-				$work_order['uid'] = $poliza;
+				//$work_order['uid'] = $poliza;
+			
+			}else{
+			
+			
+			}
+			*/
+			
+			
 						
 			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
 				

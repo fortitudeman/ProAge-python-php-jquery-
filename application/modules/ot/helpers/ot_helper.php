@@ -54,13 +54,7 @@ function renderTable( $data = array() ){
 			
 							
 							
-			if( $value['product_group_id'] == 1 )
-				$table .= $value['id'].'0725V';
-			
-			if( $value['product_group_id'] == 2 )
-				$table .= $value['id'].'0725G';								 
-			if( $value['product_group_id'] == 3 )
-				$table .= $value['id'].'0725A';						
+			$table .= $value['uid'];
 			
 			$table .='</td>';				
 			

@@ -184,10 +184,7 @@
 													echo '<div style="background-color:#F30; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
 											}
 											 
-											 echo $value['id'];
-											 if( $value['product_group_id'] == 1 ) echo '0725V'; 
-											 if( $value['product_group_id'] == 2 ) echo '0725G';
-											 if( $value['product_group_id'] == 3 ) echo '0725A'; 
+											 echo $value['uid'];
 											
 										?>
                                              

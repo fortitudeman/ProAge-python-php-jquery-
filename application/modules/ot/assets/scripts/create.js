@@ -118,12 +118,14 @@ $( document ).ready(function() {
 		
 		var Data = { ramo : this.value };
 		
+		// XXYYZ
+		
 		if( this.value == 1 )
-			$('#ot').val('0725V'); 
+			$('#ot').val( month+day+'V' ); 
 		if( this.value == 2 )
-			$('#ot').val('0725G'); 
+			$('#ot').val( month+day+'G' ); 
 		if( this.value == 3 )
-			$('#ot').val('0725A'); 	
+			$('#ot').val( month+day+'A' ); 	
 		
 		$.ajax({
 
