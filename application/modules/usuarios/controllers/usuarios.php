@@ -421,18 +421,16 @@ class Usuarios extends CI_Controller {
 				if( $this->input->post( 'type' ) == 'Si' ){
 					
 					// SET validation fields
-					$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
-					$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia
-', 'required');
+					//$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
+					//$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia', 'required');
 				}else{ // Else conexion == 2 or not
 					
 					// SET validation fields
 					$this->form_validation->set_rules('clave', 'Clave', 'required|is_unique[agent_uids.uid]');
 					$this->form_validation->set_rules('folio_nacional[]', 'Folio Nacional', 'required|is_unique[agent_uids.uid]');
 					$this->form_validation->set_rules('folio_provincial[]', 'Folio Provicional', 'required|is_unique[agent_uids.uid]');
-					$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
-					$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia
-', 'required');
+					//$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
+					//$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia', 'required');
 					
 				}
 				
@@ -854,18 +852,16 @@ class Usuarios extends CI_Controller {
 				if( $this->input->post( 'type' ) == 'Si' ){
 					
 					// SET validation fields
-					$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
-					$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia
-', 'required');
+					//$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
+					//$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia', 'required');
 				}else{ // Else conexion == 2 or not
 					
 					// SET validation fields
 					$this->form_validation->set_rules('clave', 'Clave', 'required|is_unique[agent_uids.uid]');
 					$this->form_validation->set_rules('folio_nacional[]', 'Folio Nacional', 'required|is_unique[agent_uids.uid]');
 					$this->form_validation->set_rules('folio_provincial[]', 'Folio Provicional', 'required|is_unique[agent_uids.uid]');
-					$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
-					$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia
-', 'required');
+					//$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
+					//$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia', 'required');
 					
 				}
 				
@@ -2119,18 +2115,16 @@ class Usuarios extends CI_Controller {
 				if( $this->input->post( 'type' ) == 'Si' ){
 					
 					// SET validation fields
-					$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
-					$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia
-', 'required');
+					//$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
+					//$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia', 'required');
 				}else{ // Else conexion == 2 or not
 					
 					// SET validation fields
 					//$this->form_validation->set_rules('clave', 'Clave', 'required|is_unique[agent_uids.uid]');
 					//$this->form_validation->set_rules('folio_nacional[]', 'Folio Nacional', 'required|is_unique[agent_uids.uid]');
 					//$this->form_validation->set_rules('folio_provincial[]', 'Folio Provicional', 'required|is_unique[agent_uids.uid]');
-					$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
-					$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia
-', 'required');
+					//$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
+					//$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia', 'required');
 					
 				}
 				
