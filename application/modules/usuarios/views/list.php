@@ -178,6 +178,11 @@
                                         <tr>
                                           <td><input type="checkbox" name="advanced[]" class="checkboxadvance"  value="license_expired_date" /> Fecha de ven. </td>
                                           <td><input type="text" id="license_expired_date" class="hide input searchfind"  readonly="readonly"/></td>
+                                        </tr> 
+                                        
+                                        <tr>
+                                          <td></td>
+                                          <td><input type="button" class="btn btn-inverse searchfind filters" value="Filtrar"/></td>
                                         </tr>     
                                                                    
                                      </table>

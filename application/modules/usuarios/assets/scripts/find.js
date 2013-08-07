@@ -23,7 +23,7 @@ $( document ).ready(function() {
 	$( '#birthdate' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true,yearRange: "1788:"+toDay });		
 	$( '#license_expired_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true, yearRange: "1788:"+toDay });		
 			
-	$( '.searchfind' ).bind( 'blur', function(){ 
+	$( '.filters' ).bind( 'click', function(){ 
 		
 		
 		var checked = [];
