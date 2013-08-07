@@ -121,41 +121,41 @@ $( document ).ready(function() {
 			
 			var fields =	'<div id="moral'+id+'"><br><hr>';
 				fields +=	'<h5>Datos de representante moral</h5>';
-				fields +=   '<div class="control-group text-error input-moral">';
+				fields +=   '<div class="control-group input-moral">';
                 fields +=  ' <label class="control-label" for="inputError">Nombre</label>';
                 fields +=   ' <div class="controls">';
-                fields +=     '<input class="input-xlarge focused required" name="name_r[]" type="text">';
+                fields +=     '<input class="input-xlarge focused" name="name_r[]" type="text">';
                 fields +=    '</div>';
                 fields +=  '</div>';
                   
                   
-               fields +=   '<div class="control-group text-error input-moral">';
+               fields +=   '<div class="control-group input-moral">';
                fields +=     '<label class="control-label" for="inputError">Apellidos</label>';
                fields +=     '<div class="controls">';
-               fields +=      ' <input class="input-xlarge focused required" name="lastname_r[]" type="text">';
+               fields +=      ' <input class="input-xlarge focused" name="lastname_r[]" type="text">';
                fields +=    ' </div>';
                fields +=  ' </div>';
                    
                    
                  
-               fields +=    '<div class="control-group text-error input-moral">';
+               fields +=    '<div class="control-group input-moral">';
                fields +=     '<label class="control-label" for="inputError">Teléfono oficina</label>';
                fields +=     '<div class="controls">';
-               fields +=       '<input class="input-xlarge focused required" name="office_phone[]" type="text">';
+               fields +=       '<input class="input-xlarge focused" name="office_phone[]" type="text">';
                fields +=    ' </div>';
                fields +=   '</div>';
                   
-               fields +=    '<div class="control-group text-error input-moral">';
+               fields +=    '<div class="control-group input-moral">';
                fields +=     '<label class="control-label" for="inputError">Extensión</label>';
                fields +=      '<div class="controls">';
-               fields +=      ' <input class="input-xlarge focused required" name="office_ext[]" type="text">';
+               fields +=      ' <input class="input-xlarge focused" name="office_ext[]" type="text">';
                fields +=    ' </div>';
                fields +=  ' </div>';
                   
-               fields +=  '<div class="control-group text-error input-moral">';
+               fields +=  '<div class="control-group input-moral">';
                fields +=    '<label class="control-label" for="inputError">Teléfono movil</label>';
                fields +=     '<div class="controls">';
-               fields +=      ' <input class="input-xlarge focused required" name="mobile[]" type="text">';
+               fields +=      ' <input class="input-xlarge focused" name="mobile[]" type="text">';
                fields +=    ' </div>';
                fields +=   '</div>';
 				

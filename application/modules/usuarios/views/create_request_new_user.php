@@ -122,18 +122,18 @@
                   
                   
                   
-                 <div class="control-group input-agente">
+                 <div class="control-group hide">
                     <label class="control-label" for="inputtext-error">Fecha de conexión</label>
                     <div class="controls">
-                      <input class="input-xlarge focused" id="connection_date" name="connection_date" type="text" readonly="readonly" value="<?php echo set_value('connection_date') ?>">
+                      <input class="input-xlarge" id="connection_date" name="connection_date" type="text" readonly="readonly" value="<?php echo set_value('connection_date') ?>">
                     </div>
                   </div>
                   
                   
-                  <div class="control-group input-agente">
+                  <div class="control-group hide">
                     <label class="control-label" for="inputtext-error">Vencimiento de cédula</label>
                     <div class="controls">
-                      <input class="input-xlarge focused" id="license_expired_date" name="license_expired_date" type="text" readonly="readonly" value="<?php echo set_value('license_expired_date') ?>">
+                      <input class="input-xlarge" id="license_expired_date" name="license_expired_date" type="text" readonly="readonly" value="<?php echo set_value('license_expired_date') ?>">
                     </div>
                   </div>
                  
@@ -193,40 +193,40 @@
                    
                    	   <h5 class="input-moral">Datos de representante moral</h5>                      
                        <div class="control-group input-moral">
-                        <label class="control-label text-error" for="inputtext-error">Nombre</label>
+                        <label class="control-label" for="inputtext-error">Nombre</label>
                         <div class="controls">
-                          <input class="input-xlarge focused required" name="name_r[]" type="text">
+                          <input class="input-xlarge focused" name="name_r[]" type="text">
                         </div>
                       </div>
                       
                       
                       <div class="control-group input-moral">
-                        <label class="control-label text-error" for="inputtext-error">Apellidos</label>
+                        <label class="control-label" for="inputtext-error">Apellidos</label>
                         <div class="controls">
-                          <input class="input-xlarge focused required" name="lastname_r[]" type="text">
+                          <input class="input-xlarge focused" name="lastname_r[]" type="text">
                         </div>
                       </div>
                        
                        
                      
                        <div class="control-group input-moral">
-                        <label class="control-label text-error" for="inputtext-error">Teléfono oficina</label>
+                        <label class="control-label" for="inputtext-error">Teléfono oficina</label>
                         <div class="controls">
-                          <input class="input-xlarge focused required" name="office_phone[]" type="text">
+                          <input class="input-xlarge focused" name="office_phone[]" type="text">
                         </div>
                       </div>
                       
                        <div class="control-group input-moral">
-                        <label class="control-label text-error" for="inputtext-error">Extensión</label>
+                        <label class="control-label" for="inputtext-error">Extensión</label>
                         <div class="controls">
-                          <input class="input-xlarge focused required" name="office_ext[]" type="text">
+                          <input class="input-xlarge focused" name="office_ext[]" type="text">
                         </div>
                       </div>
                       
                       <div class="control-group input-moral">
-                        <label class="control-label text-error" for="inputtext-error">Teléfono movil</label>
+                        <label class="control-label" for="inputtext-error">Teléfono movil</label>
                         <div class="controls">
-                          <input class="input-xlarge focused required" name="mobile[]" type="text">
+                          <input class="input-xlarge focused" name="mobile[]" type="text">
                         </div>
                       </div>
                   		

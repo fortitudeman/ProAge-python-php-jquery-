@@ -123,7 +123,7 @@
                   
                   
                   
-                 <div class="control-group input-agente">
+                 <div class="control-group hide">
                     <label class="control-label" for="inputError">Fecha de conexión</label>
                     <div class="controls">
                       <input class="input-xlarge focused" id="connection_date" name="connection_date" type="text" readonly value="<?php echo set_value('connection_date') ?>">
@@ -131,7 +131,7 @@
                   </div>
                   
                   
-                  <div class="control-group input-agente">
+                  <div class="control-group hide">
                     <label class="control-label" for="inputError">Vencimiento de cédula</label>
                     <div class="controls">
                       <input class="input-xlarge focused" id="license_expired_date" name="license_expired_date" type="text" readonly value="<?php echo set_value('license_expired_date') ?>">
@@ -194,40 +194,40 @@
                    
                    	   <h5 class="input-moral">Datos de representante moral</h5>                      
                        <div class="control-group input-moral">
-                        <label class="control-label text-error" for="inputError">Nombre</label>
+                        <label class="control-label" for="inputError">Nombre</label>
                         <div class="controls">
-                          <input class="input-xlarge focused required" name="name_r[]" type="text">
+                          <input class="input-xlarge focused" name="name_r[]" type="text">
                         </div>
                       </div>
                       
                       
                       <div class="control-group input-moral">
-                        <label class="control-label text-error" for="inputError">Apellidos</label>
+                        <label class="control-label" for="inputError">Apellidos</label>
                         <div class="controls">
-                          <input class="input-xlarge focused required" name="lastname_r[]" type="text">
+                          <input class="input-xlarge focused" name="lastname_r[]" type="text">
                         </div>
                       </div>
                        
                        
                      
                        <div class="control-group input-moral">
-                        <label class="control-label text-error" for="inputError">Teléfono oficina</label>
+                        <label class="control-label" for="inputError">Teléfono oficina</label>
                         <div class="controls">
-                          <input class="input-xlarge focused required" name="office_phone[]" type="text">
+                          <input class="input-xlarge focused" name="office_phone[]" type="text">
                         </div>
                       </div>
                       
                        <div class="control-group input-moral">
-                        <label class="control-label text-error" for="inputError">Extensión</label>
+                        <label class="control-label" for="inputError">Extensión</label>
                         <div class="controls">
-                          <input class="input-xlarge focused required" name="office_ext[]" type="text">
+                          <input class="input-xlarge focused" name="office_ext[]" type="text">
                         </div>
                       </div>
                       
                       <div class="control-group input-moral">
-                        <label class="control-label text-error" for="inputError">Teléfono movil</label>
+                        <label class="control-label" for="inputError">Teléfono movil</label>
                         <div class="controls">
-                          <input class="input-xlarge focused required" name="mobile[]" type="text">
+                          <input class="input-xlarge focused" name="mobile[]" type="text">
                         </div>
                       </div>
                   		
