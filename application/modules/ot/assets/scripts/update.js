@@ -58,7 +58,6 @@ $( document ).ready(function() {
 				
 				form.submit();
 			}else{
-				$( '#actions-buttons-forms' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-5.gif">' );
 				alert( "Debe de cubir un porcentaje total de 100%" );
 			}	
 		  }		

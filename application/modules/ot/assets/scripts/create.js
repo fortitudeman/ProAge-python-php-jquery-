@@ -44,6 +44,7 @@ $( document ).ready(function() {
 			
 			if( maxValue == 100 ){
 			
+				$( '#actions-buttons-forms' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-5.gif">' );
 				var toDay = new Date();
 				var seconds = toDay.getSeconds();
 				var minutes = toDay.getMinutes();
@@ -56,7 +57,7 @@ $( document ).ready(function() {
 				
 				form.submit();
 			}else{
-				$( '#actions-buttons-forms' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-5.gif">' );
+			
 				alert( "Debe de cubir un porcentaje total de 100%" );
 			}
 		  }		
