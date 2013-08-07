@@ -101,7 +101,7 @@ function renderTable( $data = array() ){
 			$table .= '<td class="center"> ';
 			
 			
-			$table .=  ucwords(str_replace( 'tramite', 'pendiente', $value['status_name']));
+			$table .=  ucwords(str_replace( 'tramite', 'en trámite', $value['status_name']));
 			
 			
 			

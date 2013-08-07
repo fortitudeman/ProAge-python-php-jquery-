@@ -210,7 +210,7 @@
                     <td class="center"><?php echo $value['parent_type_name']['name'] ?></td>
                     <td class="center"><?php if( !empty( $value['policy'] ) )echo $value['policy'][0]['name']. ' '. $value['policy'][0]['lastname_father']. ' '. $value['policy'][0]['lastname_mother'] ?></td>
                                        
-                    <td class="center" ><?php echo ucwords(str_replace( 'tramite', 'pendiente', $value['status_name'])); ?></td>
+                    <td class="center" ><?php echo ucwords(str_replace( 'tramite', 'en trámite', $value['status_name'])); ?></td>
                 </tr>
                 <?php endforeach;  ?> 
                 <?php else: ?>
