@@ -20,19 +20,45 @@ $( document ).ready(function() {
 			// some other code
 			// maybe disabling submit button
 			// then:
-			$( '#actions-buttons-forms' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-5.gif">' );
+						
 			
-			var toDay = new Date();
-			var seconds = toDay.getSeconds();
-			var minutes = toDay.getMinutes();
-			var hour = toDay.getHours();
+			var maxValue=0;
+		
+			$("input[name='porcentaje[]']").each(function ()
+			{
+				
+				var val = $(this).val();
+					
+					val.replace( '%',''); // Clean %			
+					
+					val = parseInt(val.replace( '%','' ));
+					
+					$(this).val('');
+					
+					$(this).val(val);
+					
+					
+				maxValue = maxValue+val;
+				
+			});
 			
-			toDay = hour+':'+minutes+':'+seconds;
+			if( maxValue == 100 ){
 			
-			$( '#creation_date' ).val( $( '#creation_date' ).val()+' '+ toDay);	
-			
-			
-			form.submit();
+				var toDay = new Date();
+				var seconds = toDay.getSeconds();
+				var minutes = toDay.getMinutes();
+				var hour = toDay.getHours();
+				
+				toDay = hour+':'+minutes+':'+seconds;
+				
+				$( '#creation_date' ).val( $( '#creation_date' ).val()+' '+ toDay);	
+				
+				
+				form.submit();
+			}else{
+				$( '#actions-buttons-forms' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-5.gif">' );
+				alert( "Debe de cubir un porcentaje total de 100%" );
+			}
 		  }		
 		
 	});
