@@ -102,7 +102,23 @@
                       <input class="input-xlarge focused required" id="creation_date" name="creation_date" type="text" readonly>
                     </div>
                   </div>
-                                                                                      
+                  
+                  <input type="hidden" id="agenconfirm" value="true" />
+                  
+                  <div class="control-group">
+                    <label class="control-label text-error" for="inputError">Agente</label>
+                    <div class="controls">
+                       <select class="input-xlarge focused required" name="agent[]">
+                      	<?php echo $agents ?>
+                       </select>
+                       <input class="input-small focused required" id="agent-1" name="porcentaje[]" type="text" onblur="javascript: setFields( 'agent-1' )" placeholder="%">
+                    </div>
+                  </div>
+                  
+                  <input type="hidden" id="countAgent" value="1" />
+                 
+                                   
+                  <div id="dinamicagent"></div>                                                                    
                   
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Ramo</label>
@@ -112,6 +128,7 @@
                       <input type="radio" value="3" name="ramo" class="ramo"/>&nbsp;&nbsp;Auto
                     </div>
                   </div>
+                  
                   
                   
                   
@@ -226,20 +243,7 @@
                   
                   
                   
-                  <div class="control-group">
-                    <label class="control-label text-error" for="inputError">Agente</label>
-                    <div class="controls">
-                       <select class="input-xlarge focused required" name="agent[]">
-                      	<?php echo $agents ?>
-                       </select>
-                       <input class="input-small focused required" id="agent-1" name="porcentaje[]" type="text" onblur="javascript: setFields( 'agent-1' )" placeholder="%">
-                    </div>
-                  </div>
                   
-                  <input type="hidden" id="countAgent" value="1" />
-                 
-                                   
-                  <div id="dinamicagent"></div>
                   
                   </div>
                   

@@ -23,7 +23,7 @@ $( document ).ready(function() {
 						
 			
 			var maxValue=0;
-		
+		    					   
 			$("input[name='porcentaje[]']").each(function ()
 			{
 				
@@ -42,7 +42,23 @@ $( document ).ready(function() {
 				
 			});
 			
-			if( maxValue == 100 ){
+			
+			$("select[name='agent[]']").each(function ()
+			{
+						
+				if( $(this).val() == '' ){
+					$( '#agenconfirm' ).val(false);
+					return;
+					
+				}else{
+					$( '#agenconfirm' ).val(true);
+				}	
+				
+				
+			});
+								
+							
+			if( maxValue == 100 && $( '#agenconfirm' ).val() == 'true' ){
 			
 				$( '#actions-buttons-forms' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-5.gif">' );
 				var toDay = new Date();
@@ -58,7 +74,7 @@ $( document ).ready(function() {
 				form.submit();
 			}else{
 			
-				alert( "Debe de cubir un porcentaje total de 100%" );
+				alert( "Debe de cubir un porcentaje total de 100% y todos los campos de agentes son requeridos" );
 			}
 		  }		
 		
@@ -331,7 +347,7 @@ function setFields( id ){
 				var fields  =	'<div id="agent-field-'+countAgent+'" class="control-group">';
 					fields +=	'	<label class="control-label text-error" for="inputError">Agente</label>';
 					fields +=	'				<div class="controls">';
-					fields +=	'				   <select class="input-xlarge focused required" id="sel-agent-'+countAgent+'" name="agent[]">';
+					fields +=	'				   <select class="input-xlarge focused" id="sel-agent-'+countAgent+'" name="agent[]">';
 					fields +=	'';					
 					fields +=	'				   </select>';
 					fields +=	'				   <input class="input-small focused required porcentaje" id ="agent-'+countAgent+'" name="porcentaje[]" type="text"  onblur="javascript: setFields( \'agent-'+countAgent+'\' )" value="'+maxValue+'%"  placeholder="%"><small>Ponga un 0 para eliminar este campo.</small>';
@@ -340,11 +356,8 @@ function setFields( id ){
 			
 		
 				$( '#dinamicagent' ).append( fields );
-			/*
-			$('#agent-'+countAgent+'').rules('add', {
-				max: maxValue
-			});
-			*/
+			
+			
 					
 		}
 		
