@@ -1510,76 +1510,84 @@ class Usuarios extends CI_Controller {
 						
 						
 						
+						
+						
+						
 				
 						$controlSaved=true;
 						// Saved record
 						if( empty( $message[$lin] ) ){
 							
 							
-							// Adding user
-																	
+							$controlSaved = true;
+				
+												
+				
+							// Save User Table							
 							$user = array(
 								'office_id'  => 0,
 								'manager_id' => 0,
-								'disabled' => 1,
-								'username'  => $items['username'],
-								'password'  => md5($items['password']),					
-								'name'  => $items['name'],
-								'lastnames'  => $items['lastname'],
-								'email'  => $items['email'],
-								'picture' => 'default.png'
+								'company_name'  => $items['company_name'],
+								'username'  => $tems['username'],
+								'password'  => md5($tems['password']),					
+								'name'  => $tems['name'],
+								'lastnames'  => $tems['lastname'],
+								//'birthdate'  => $this->input->post( 'birthdate' ),					
+								'email'  => $tems['email'],
 							);
 							
-							if( isset( $items['company_name'] ) ) $user['company_name'] = $items['company_name'];
-							if( isset( $items['disabled'] ) ) $user['disabled'] = $items['disabled'];
-							if( isset( $items['birthdate'] ) ) $user['birthdate'] = $items['birthdate'];
+							// Add Manager if is an agent
+							//if( in_array( 1, $this->input->post('group') ) ) $user['manager_id'] = $this->input->post( 'manager_id' );  
 							
-																					
+							if( isset($tems['disabled']  ) and $tems['disabled'] == 'Si' ) $user['disabled']  = 1; else $user['disabled'] = 0;
+							
+							$user['picture'] = "default.png";
+							
+											
 							if( $this->user->create( 'users', $user ) == false) $controlSaved = false ;
-							
-							unset( $user ); // Free Memory
-							
 							
 							if( $controlSaved == false ){
 								
 								
 								$message[$lin][] = array( 'messagesavederroruser' => 'No se pudo guardar el registro, Usuario, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador, linea de archivo: ' . $lin . $name );
-															
+								
 								
 							}
-							
-									
+						
 							// Recovery id last user saved
-							$idSaved = $this->user->insert_id();		
+							$idSaved = $this->user->insert_id();
+							
+							
+							
+							// Added User roles groups
+							$user_roles = array();				
+							
+							$group = explode( ',', strtolower(trim($items['group'])) );
+							
+							if( !empty( $group ) and is_array( $group ) ){
+								foreach( $group as $group )
+									$user_roles[] = array( 'user_id' => $idSaved , 'user_role_id' => $group );
+							
+							}else{
+								$user_roles[] = array( 'user_id' => $idSaved , 'user_role_id' => $this->user->getIdRol($group) );
+							}
+							
+							
+							
+							if( $this->user->create_banch( 'users_vs_user_roles', $user_roles ) == false) $controlSaved = false ;
+							
+							
+							if( $controlSaved == false ){
+									
+									$message[$lin][] = array( 'messagesavederroruserrole' => 'No se pudo guardar el registro, Usuario -Rol, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador, linea de archivo: ' . $lin . $name );
+									
+							}
 							
 							
 							
 						
 																	
-							// Adding roles
-							$user_roles = array();
-							
-							
-							$group = explode( ',', strtolower(trim($items['group'])) );
-														
-							if( !empty( $group ) and is_array( $group ) ){
-								
-								foreach( $group as $rol )
-									$user_roles[] = array( 'user_id' => $idSaved , 'user_role_id' => $this->user->getIdRol($rol) );
-						
-								
-								if( $this->user->create_banch( 'users_vs_user_roles', $user_roles ) == false) $controlSaved = false ;
-							
-							}else{
-								$user_roles[] = array( 'user_id' => $idSaved , 'user_role_id' => $this->user->getIdRol($group) );
-							}
-						
-							if( $controlSaved == false ){
-									
-									$message[$lin][] = array( 'messagesavederroruserrole' => 'No se pudo guardar el registro, Usuario -Rol, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador, linea de archivo: ' . $lin . $name );
-																										
-							}
-																												
+																																			
 																												
 							// Save values of moral person
 							if( isset( $items['persona'] ) and strtolower(trim($items['persona'])) == 'moral' and isset( $items['name_r'] )){
@@ -1624,108 +1632,90 @@ class Usuarios extends CI_Controller {
 								
 								
 								
-								
-								if( in_array( 'agente', $group ) ){
-									
-									$timestamp = date( 'Y-m-d H:i:s' ) ;
+								if( isset( $group ) and in_array( 1, $group ) ){
 					
-									$agent= array(
-										
-										'user_id'  => $idSaved,
-										'license_expired_date'  => $items['license_expired_date'],
-										'last_updated' => $timestamp,
-										'date' => $timestamp
-										
-										
-									);
-									
-									if( isset( $items['connection_date'] ) )
-									
-										$agent['connection_date'] =$items['connection_date'];
-									
-									if( isset( $items['license_expired_date'] ) )
-									
-										$agent['license_expired_date'] =$items['license_expired_date'];	
-									
-									
-									if( $this->user->create( 'agents', $agent ) == false) $controlSaved = false ;
-									
-									
-									
-									// Saved Agents
-									if( $controlSaved == false ){
-										
-										$message[$lin][] = array( 'messagesavederroruserconexion' => 'No se pudo guardar el registro, Agente Proceso de conexión, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador, linea de archivo: ' . $lin . $name );
-										
-									}
-									
-									
-									
-									
-									
-									$idAgentSaved = $this->user->insert_id();
-																								
-									$uids_agens = array();
-									
-									$timestamp = date( 'Y-m-d H:i:s' ) ;
-									
-									// Added Clave
-									$uids_agens[] = array(
-										'agent_id' => $idAgentSaved,
-										'type' =>  'clave',
-										'last_updated' => $timestamp,
-										'date' => $timestamp
-									);
-								
-									if( isset(  $items['clave'] ) )
-										
-										$uids_agens['uid'] = $items['clave'];
+					
+										$agent= array(
+											
+											'user_id'  => $idSaved,
+											//'connection_date'  => $this->input->post( 'connection_date' ),
+											//'license_expired_date'  =>$this->input->post( 'license_expired_date' ),
+											
+										);
 										
 										
-									if( isset(  $item['folio_nacional'] ) )
-										$folio_nacional = explode( ',', $item['folio_nacional'] );
-									
-									
-									// added folio nacional
-									if( isset( $folio_nacional ) and !empty( $folio_nacional ) and is_array( $folio_nacional ) )
-										foreach( $folio_nacional as $value )
-											$uids_agens[] = array(
-												'agent_id' => $idAgentSaved,
-												'type' =>  'national',
-												'uid' =>  $value,
-												'last_updated' => $timestamp,
-												'date' => $timestamp
-											);
-									
-									
-									if( isset(  $item['folio_provincial'] ) )
-										$folio_provincial = explode( ',', $item['folio_provincial'] );
-									
-									
-									// Added folio provicional
-									if( isset( $folio_provincial ) and !empty( $folio_provincial ) and is_array( $folio_provincial ) )
-										foreach( $folio_provincial as $value )
-											$uids_agens[] = array(
-												'agent_id' => $idAgentSaved,
-												'type' => 'provincial',
-												'uid' =>  $value,
-												'last_updated' => $timestamp,
-												'date' => $timestamp
-											);
-									
-									
-									if( $this->user->create_banch( 'agent_uids', $uids_agens ) == false) $controlSaved = false ;
-									
-									
-									if( $controlSaved == false ){
+										if( $this->user->create( 'agents', $agent ) == false) $controlSaved = false ;
 										
-										$message[$lin][] = array( 'messagesavederroruserclaves' => 'No se pudo guardar el registro, Clave, Folio Nacional, Folio Provincial, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador, linea de archivo: ' . $lin . $name );
+										
+										
+										// Saved Agents
+										if( $controlSaved == false ){
+											
+											
+											$message[$lin][] = array( 'messagesavederroruserconexion' => 'No se pudo guardar el registro, Agente Proceso de conexión, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador, linea de archivo: ' . $lin . $name );
+											
+										}
+										
+										
+										
+										
+										
+										$idAgentSaved = $this->user->insert_id();
+																									
+										$uids_agens = array();
+										
+										$timestamp = date( 'Y-m-d H:i:s' ) ;
+										
+																				
+										// Added Clave
+										$uids_agens[] = array(
+													'agent_id' => $idAgentSaved,
+													'type' =>  'clave',
+													'uid' =>  $items['clave'],
+													'last_updated' => $timestamp,
+													'date' => $timestamp
+										);
+										
+										
+										
+										// added folio nacional
+										if( isset( $items['folio_nacional'] ) and !empty( $items['folio_nacional'] ) )
+											foreach( $items['folio_nacional'] as $value )
+												$uids_agens[] = array(
+													'agent_id' => $idAgentSaved,
+													'type' =>  'national',
+													'uid' =>  $value,
+													'last_updated' => $timestamp,
+													'date' => $timestamp
+												);
+										
+										
+										
+										
+										
+										// Added folio provicional
+										if( isset( $items['folio_provincial'] ) and !empty( $items['folio_provincial'] ) )
+											foreach( $items['folio_provincial'] as $value )
+												$uids_agens[] = array(
+													'agent_id' => $idAgentSaved,
+													'type' => 'provincial',
+													'uid' =>  $value,
+													'last_updated' => $timestamp,
+													'date' => $timestamp
+												);
+										
+										
+										if( $this->user->create_banch( 'agent_uids', $uids_agens ) == false) $controlSaved = false ;
+										
+										
+										if( $controlSaved == false ){
+											
+											$message[$lin][] = array( 'messagesavederroruserclaves' => 'No se pudo guardar el registro, Clave, Folio Nacional, Folio Provincial, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador, linea de archivo: ' . $lin . $name );
+											
+										}
 										
 									}
-									
-								}
-																								
-																			
+																											
 							}
 							
 							
@@ -1747,7 +1737,7 @@ class Usuarios extends CI_Controller {
 				
 				
 				// Save Record	
-				if( $controlSaved == true ){
+				if( $controlSaved == true and empty( $message ) ){
 					
 					
 					// Set true message		
@@ -1762,6 +1752,19 @@ class Usuarios extends CI_Controller {
 					redirect( 'usuarios', 'refresh' );
 					
 					
+					
+				}else{
+					
+					// Set true message		
+					$this->session->set_flashdata( 'message', array( 
+						
+						'type' => true,	
+						'message' => $message
+									
+					));												
+					
+					
+					redirect( 'usuarios/importar', 'refresh' );
 					
 				}
 				
