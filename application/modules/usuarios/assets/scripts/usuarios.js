@@ -106,7 +106,7 @@ $( document ).ready(function() {
 				$( '#countFolioProvincial' ).val(id);
 			
 			
-			var fields  = '<div id="fieldProvincial-'+id+'"><br><input class="input-xlarge focused" name="folio_provicional[]" type="text">';
+			var fields  = '<div id="fieldProvincial-'+id+'"><br><input class="input-xlarge focused" name="folio_provincial[]" type="text">';
 				fields += '<a href="javascript:void(0)" onclick="moral_folio_provincial('+id+')" class="btn btn-link" >-</a><br></div>';
 			
 			$( '#folio_provicional_fields' ).append( fields ) ;
