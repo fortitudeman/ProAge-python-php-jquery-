@@ -506,6 +506,7 @@
                     <div class="controls">
                       <img src="<?php echo base_url() . 'usuarios/assets/profiles/' . $data[0]['picture'] ?>" width="50" height="50">
                       <input type="file" name="imagen" />
+                      <small><br />Tamaño maximo: <?php echo ini_get('upload_max_filesize') ?></small>
                     </div>
                   </div>
                   

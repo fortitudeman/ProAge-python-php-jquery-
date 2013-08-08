@@ -279,6 +279,7 @@
                     <label class="control-label text-error" for="inputError">Imagen: </label>
                     <div class="controls">
                       <input type="file" name="imagen" />
+                      <small><br />Tamaño maximo: <?php echo ini_get('upload_max_filesize') ?></small>
                     </div>
                   </div>
                   
