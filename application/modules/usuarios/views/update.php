@@ -311,7 +311,7 @@
                  
                  
                  <div class="control-group  input-moral">
-                    <label class="control-label text-error" for="inputError"> Nombre de compania:</label>
+                    <label class="control-label text-error" for="inputError"> Nombre de compañia:</label>
                     <div class="controls">
                       <input class="input-xlarge focused" id="company_name" name="company_name" type="text" value="<?php echo set_value('company_name', $data[0]['company_name']) ?>">
                     </div>
@@ -354,7 +354,7 @@
                        <div id="moral<?php echo $i ?>"><br><hr> 
                        <?php endif; ?>
                         
-                   	   <h5 class="input-moral">Datos de representante moral</h5>                      
+                   	   <h5 class="input-moral">Datos de representante</h5>                      
                        <div class="control-group input-moral">
                         <label class="control-label text-error" for="inputError">Nombre</label>
                         <div class="controls">
@@ -416,7 +416,7 @@
                       
                       <?php if( empty( $data['representatives'] ) ): ?>
                       		
-                            <h5 class="input-moral">Datos de representante moral</h5>                      
+                            <h5 class="input-moral">Datos de representante</h5>                      
                        <div class="control-group input-moral">
                         <label class="control-label text-error" for="inputError">Nombre</label>
                         <div class="controls">
