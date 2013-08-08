@@ -1458,7 +1458,7 @@ class Usuarios extends CI_Controller {
 							
 							// If process of conexion == 1 or yes
 							if( isset( $items['type'] ) and strtolower(trim($items['type']))  == 'si' ){
-								
+								/*
 								// SET validation fields
 								if( isset( $items['connection_date'] ) and empty( $items['connection_date'] ) ) 
 											
@@ -1467,10 +1467,10 @@ class Usuarios extends CI_Controller {
 								if( isset( $items['license_expired_date'] ) and empty( $items['license_expired_date'] ) ) 
 											
 									$message[$lin][] = array( 'messagelicenseexpireddate' => 'Expiración de licencia es requerido, linea de archivo: ' . $lin . $name );			
-							
+								*/
 							
 							}else{ // Else conexion == 2 or not
-								
+								/*
 								// SET validation fields
 								if( isset( $items['clave'] ) and  empty( $items['clave'] ) ) 
 									
@@ -1494,7 +1494,7 @@ class Usuarios extends CI_Controller {
 								if( isset( $items['license_expired_date'] ) and empty( $items['license_expired_date'] ) ) 
 									
 									$message[$lin][] = array( 'messagelicense_expired_date' => 'Expiración de licencia es requerido, linea de archivo: ' . $lin . $name );
-								
+								*/
 								
 							}
 							
@@ -1590,9 +1590,11 @@ class Usuarios extends CI_Controller {
 																																			
 																												
 							// Save values of moral person
-							if( isset( $items['persona'] ) and strtolower(trim($items['persona'])) == 'moral' and isset( $items['name_r'] )){
+							if( isset( $items['persona'] ) and strtolower(trim($items['persona'])) == 'moral'){
 													
 								$timestamp = date( 'Y-m-d H:i:s' ) ;
+								
+								if( isset( $items['name_r'] ) ){
 								
 								$moral= array();
 								
@@ -1630,7 +1632,7 @@ class Usuarios extends CI_Controller {
 									
 								}
 								
-								
+								}
 								
 								if( isset( $group ) and in_array( 1, $group ) ){
 					
