@@ -1528,18 +1528,18 @@ class Usuarios extends CI_Controller {
 								'office_id'  => 0,
 								'manager_id' => 0,
 								'company_name'  => $items['company_name'],
-								'username'  => $tems['username'],
-								'password'  => md5($tems['password']),					
-								'name'  => $tems['name'],
-								'lastnames'  => $tems['lastname'],
+								'username'  => $items['username'],
+								'password'  => md5($items['password']),					
+								'name'  => $items['name'],
+								'lastnames'  => $items['lastname'],
 								//'birthdate'  => $this->input->post( 'birthdate' ),					
-								'email'  => $tems['email'],
+								'email'  => $items['email'],
 							);
 							
 							// Add Manager if is an agent
 							//if( in_array( 1, $this->input->post('group') ) ) $user['manager_id'] = $this->input->post( 'manager_id' );  
 							
-							if( isset($tems['disabled']  ) and $tems['disabled'] == 'Si' ) $user['disabled']  = 1; else $user['disabled'] = 0;
+							if( isset($items['disabled']  ) and $items['disabled'] == 'Si' ) $user['disabled']  = 1; else $user['disabled'] = 0;
 							
 							$user['picture'] = "default.png";
 							
