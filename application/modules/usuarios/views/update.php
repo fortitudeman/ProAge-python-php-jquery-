@@ -68,7 +68,7 @@
                   
                   
                   <div class="control-group ">
-                    <label class="control-label error" for="inputError">Rol</label>
+                    <label class="control-label text-error" for="inputError">Rol</label>
                     <div class="controls">
                       
                       <?php echo $group ?>
@@ -278,7 +278,7 @@
                   
                   
                  <?php if( isset( $data['agents'][0]['connection_date'] ) ) $connection_date = $data['agents'][0]['connection_date']; else  $connection_date=''; ?>
-                 <div class="control-group input-agente">
+                 <div class="control-group input-novel-agente">
                     <label class="control-label" for="inputError">Fecha de conexión</label>
                     <div class="controls">
                       <input class="input-xlarge focused" id="connection_date" name="connection_date" type="text" readonly="readonly" value="<?php echo set_value('connection_date',  $connection_date) ?>">
@@ -286,7 +286,7 @@
                   </div>
                   
                   <?php if( isset( $data['agents'][0]['license_expired_date'] ) ) $license_expired_date = $data['agents'][0]['license_expired_date']; else  $license_expired_date=''; ?>
-                  <div class="control-group input-agente">
+                  <div class="control-group input-novel-agente">
                     <label class="control-label" for="inputError">Vencimiento de cédula</label>
                     <div class="controls">
                       <input class="input-xlarge focused" id="license_expired_date" name="license_expired_date" type="text" readonly="readonly" value="<?php echo set_value('license_expired_date', $license_expired_date) ?>">
