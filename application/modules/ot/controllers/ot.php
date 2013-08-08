@@ -439,11 +439,13 @@ class Ot extends CI_Controller {
 				$policyId = 0;
 				
 				// Save new bussiness
-				if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' ){
+				//if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' ){
 						
-						
+					
+				if( !empty( $_POST['product_id'] ) ){
+					
 					$policy = array(
-				  	
+					
 						'product_id' => $this->input->post( 'product_id' ),
 						'period' => $this->input->post( 'period' ),
 						'currency_id' => $this->input->post( 'currency_id' ),
@@ -460,36 +462,45 @@ class Ot extends CI_Controller {
 						
 					  );
 					  
-					  if( $this->work_order->create( 'policies', $policy ) == false )
-						 
-						 $controlSaved = false;
-					  					  
-					  $policyId = $this->work_order->insert_id();
-					  
-					  // Agents Adds
-					  $agents = array();
-				
-					  for( $i=0; $i<=count( $this->input->post('agent') ); $i++ )
-						  
-						  if( !empty(  $_POST['agent'][$i] ) )
-						 
-							  $agents[] = array( 
-									
-									'user_id' => $_POST['agent'][$i], 
-									'policy_id' => $policyId,
-									'percentage' => $_POST['porcentaje'][$i],
-									'since' => date( 'Y-m-d H:i:s' )
-								
-							  );
-					
-					
-					
-					
-					 if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false )
-						
-						$controlSaved = false;	
-						
+				}else{
+					$policy = array(
+						'uid' => $this->input->post( 'uid' ),
+						'last_updated' => date( 'Y-m-d H:i:s' ),
+						'date' => date( 'Y-m-d H:i:s' )
+					);
 				}
+				
+				  
+				if( $this->work_order->create( 'policies', $policy ) == false )
+				   
+				   $controlSaved = false;
+									  
+				  $policyId = $this->work_order->insert_id();
+				
+				// Agents Adds
+				$agents = array();
+				
+				for( $i=0; $i<=count( $this->input->post('agent') ); $i++ )
+					
+					if( !empty(  $_POST['agent'][$i] ) )
+				   
+						$agents[] = array( 
+							  
+							  'user_id' => $_POST['agent'][$i], 
+							  'policy_id' => $policyId,
+							  'percentage' => $_POST['porcentaje'][$i],
+							  'since' => date( 'Y-m-d H:i:s' )
+						  
+						);
+			  
+			  
+			  
+			  
+			   if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false )
+				  
+				  $controlSaved = false;	
+						
+				//}
 				
 				
 				
