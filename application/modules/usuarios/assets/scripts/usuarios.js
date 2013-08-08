@@ -34,7 +34,7 @@ $( document ).ready(function() {
 	// Hide And Show block agent inputs
 	$( '.input-agente' ).hide();
 	$( '.input-novel-agente' ).hide();
-	$( '.input-novel-agente2' ).hide();
+	//$( '.input-novel-agente2' ).hide();
 	//$( '.input-fisica' ).hide();
 	$( '.input-moral' ).hide();
 	
@@ -56,10 +56,10 @@ $( document ).ready(function() {
 	$( '.agente' ).bind( 'click', function(){ 	
 		if( this.value == 'No' ){
 			$( '.input-novel-agente' ).show();
-			$( '.input-novel-agente2' ).hide();
+			//$( '.input-novel-agente2' ).hide();
 		}else{
 			$( '.input-novel-agente' ).hide();
-			$( '.input-novel-agente2' ).show();
+			//$( '.input-novel-agente2' ).show();
 		}
 	})
 	

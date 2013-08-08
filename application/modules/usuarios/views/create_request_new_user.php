@@ -122,7 +122,7 @@
                   
                   
                   
-                 <div class="control-group hide input-novel-agente2">
+                 <div class="control-group hide input-novel-agente">
                     <label class="control-label" for="inputtext-error">Fecha de conexión</label>
                     <div class="controls">
                       <input class="input-xlarge" id="connection_date" name="connection_date" type="text" readonly="readonly" value="<?php echo set_value('connection_date') ?>">
@@ -130,7 +130,7 @@
                   </div>
                   
                   
-                  <div class="control-group hide input-novel-agente2">
+                  <div class="control-group hide input-novel-agente">
                     <label class="control-label" for="inputtext-error">Vencimiento de cédula</label>
                     <div class="controls">
                       <input class="input-xlarge" id="license_expired_date" name="license_expired_date" type="text" readonly="readonly" value="<?php echo set_value('license_expired_date') ?>">
