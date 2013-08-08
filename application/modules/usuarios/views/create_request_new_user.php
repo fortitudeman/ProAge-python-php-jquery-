@@ -155,7 +155,7 @@
                  
                  
                  <div class="control-group input-moral">
-                    <label class="control-label text-error" for="inputtext-error"> Nombre de compañia:</label>
+                    <label class="control-label text-error" for="inputtext-error"> Nombre de compañía:</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="company_name" name="company_name" type="text" value="<?php echo set_value('company_name') ?>">
                     </div>
@@ -181,9 +181,9 @@
                  
                   
                   <div class="control-group input-fisica ">
-                    <label class="control-label text-error" for="inputtext-error">Fecha de nacimiento</label>
+                    <label class="control-label" for="inputtext-error">Fecha de nacimiento</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="birthdate" name="birthdate" type="text" readonly="readonly" value="<?php echo set_value('birthdate') ?>">
+                      <input class="input-xlarge focused" id="birthdate" name="birthdate" type="text" readonly="readonly" value="<?php echo set_value('birthdate') ?>">
                     </div>
                   </div>
                 	

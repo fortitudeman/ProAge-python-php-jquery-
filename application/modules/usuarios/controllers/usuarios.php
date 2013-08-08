@@ -403,11 +403,11 @@ class Usuarios extends CI_Controller {
 			
 			if( $this->input->post('persona') == 'fisica' ){
 				$this->form_validation->set_rules('lastname', 'Apellido', 'required');
-				$this->form_validation->set_rules('birthdate', 'Fecha de cumpleaños', 'required');
+				//$this->form_validation->set_rules('birthdate', 'Fecha de cumpleaños', 'required');
 			}
 			
 			if( $this->input->post('persona') == 'moral' ){
-				$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
+				//$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
 			}
 				
 			
@@ -834,11 +834,11 @@ class Usuarios extends CI_Controller {
 			
 			if( $this->input->post('persona') == 'fisica' ){
 				$this->form_validation->set_rules('lastname', 'Apellido', 'required');
-				$this->form_validation->set_rules('birthdate', 'Fecha de cumpleaños', 'required');
+				//$this->form_validation->set_rules('birthdate', 'Fecha de cumpleaños', 'required');
 			}
 			
 			if( $this->input->post('persona') == 'moral' ){
-				$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
+				//$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
 			}
 				
 			
@@ -2101,7 +2101,7 @@ class Usuarios extends CI_Controller {
 			
 			if( $this->input->post('persona') == 'fisica' ){
 				$this->form_validation->set_rules('lastname', 'Apellido', 'required');
-				$this->form_validation->set_rules('birthdate', 'Fecha de cumpleaños', 'required');
+				//$this->form_validation->set_rules('birthdate', 'Fecha de cumpleaños', 'required');
 			}
 			
 						
