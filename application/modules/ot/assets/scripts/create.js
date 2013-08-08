@@ -120,12 +120,16 @@ $( document ).ready(function() {
 		
 		// XXYYZ
 		
+		var date = $( '#creation_date' ).val();
+			date = date.split('-');
+		
+		
 		if( this.value == 1 )
-			$('#ot').val( month+day+'V' ); 
+			$('#ot').val( date[1]+date[2]+'V' ); 
 		if( this.value == 2 )
-			$('#ot').val( month+day+'G' ); 
+			$('#ot').val( date[1]+date[2]+'G' ); 
 		if( this.value == 3 )
-			$('#ot').val( month+day+'A' ); 	
+			$('#ot').val( date[1]+date[2]+'A' ); 	
 		
 		$.ajax({
 
