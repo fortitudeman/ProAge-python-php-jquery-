@@ -53,15 +53,35 @@
 				  		
 						foreach( $message as $raiz ):
 							
-							foreach( $raiz as $array ):
-								
-								foreach( $array as $mes ):
-								
-									echo '<pre>';
-									print_r(  $mes ); 
-									echo '</pre>';
+							
+							if( !empty( $raiz ) ):
+							
+														
+								foreach( $raiz as $array ):
+									
+									if( !empty( $array ) ):
+									
+										foreach( $array as $mes ):
+											
+											if( !empty( $mes ) ):
+												
+												foreach( $mes as $key => $messagetext ):
+												
+												echo $messagetext.'<br>';
+
+												
+												endforeach;
+											
+											endif;	
+												
+										endforeach;
+									
+									endif;
+									
 								endforeach;
-							endforeach;
+						
+							endif;
+						
 						endforeach;
 				  
 				  ?>
@@ -99,7 +119,7 @@
             	Especifique a qué campos corresponde la información que está importando en las siguientes cajas de selección
             </div>
             
-            <div style="max-width:1000px; overflow:scroll">
+            <div style="max-width:100%; overflow:scroll">
             
             <table class="table table-rounder">
             
@@ -122,7 +142,7 @@
 											<option value="">Seleccione</option>
 											<option value="disabled">Activar</option>
 											<option value="lastname">Apellidos</option>
-											<option value="lastname_r">Apellidos Persona Moral</option>
+											<option value="lastname_r">Apellidos de representante persona Moral</option>
 											<option value="password">Contraseña</option>
 											<option value="email">Correo</option>
 											<option value="clave">Clave</option>
@@ -135,13 +155,13 @@
 											<option value="folio_provincial">Folio Provicional</option>
 											<option value="manager_id">Gerente</option>
 											<option value="name">Nombre</option>
-											<option value="company_name">Nombre de compania</option>
-											<option value="name_r">Nombre Persona Moral</option>											
-											<option value="office_id">Oficina</option>										
-											<option value="persona">Persona</option>
+											<option value="company_name">Nombre de compañía</option>
+											<option value="name_r">Nombre de representante persona Moral</option>											
+											<option value="office_id">Oficina</option>	
 											<option value="group">Rol</option>
 											<option value="office_phone">Teléfono oficina</option>											
 											<option value="mobile">Teléfono movil</option>
+											<option value="persona">Tipo de persona</option>
 											<option value="username">Usuario</option>
 											
 											
