@@ -287,8 +287,8 @@
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Vigente</label>
                     <div class="controls">
-                      <input type="radio" value="Si" name="disabled" <?php echo set_radio('disabled', 1, true); ?> />&nbsp;&nbsp;Si
-                      <input type="radio" value="No" name="disabled" <?php echo set_radio('disabled', 0); ?>/>&nbsp;&nbsp;No
+                      <input type="radio" value="Si" name="disabled" <?php echo set_radio('disabled', 'Si', true); ?> />&nbsp;&nbsp;Si
+                      <input type="radio" value="No" name="disabled" <?php echo set_radio('disabled', 'No'); ?>/>&nbsp;&nbsp;No
                     </div>
                   </div>
                   
