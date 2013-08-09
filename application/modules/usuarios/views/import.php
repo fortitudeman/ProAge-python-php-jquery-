@@ -67,6 +67,7 @@
 												
 												foreach( $mes as $key => $messagetext ):
 												
+												
 												echo $messagetext.'<br>';
 
 												

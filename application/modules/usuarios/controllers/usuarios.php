@@ -1979,7 +1979,7 @@ class Usuarios extends CI_Controller {
 					$usernew['password'] = md5($this->input->post('password'));
 				
 				if( !empty( $_POST['email'] ) )
-					$usernew['email'] = md5($this->input->post('email'));						
+					$usernew['email'] = $this->input->post('email');						
 				
 				// Uploaded a picture
 				if( !empty( $_FILES['imagen']['name'] ) ){

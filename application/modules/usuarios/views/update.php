@@ -515,9 +515,9 @@
                     <label class="control-label text-error" for="inputError">Activar</label>
                     <div class="controls">
                       <?php if( $data[0]['disabled'] == 1 ) $check = true; else $check = false; ?>
-                      <input type="radio" value="Si" name="disabled"  <?php echo set_radio('disabled', 'Si', $check); ?>/>&nbsp;&nbsp;Si
+                      <input type="radio" value="Si" name="disabled"  <?php echo set_radio('disabled', 1, $check); ?>/>&nbsp;&nbsp;Si
                       <?php if( $data[0]['disabled'] == 0 ) $check = true; else $check = false; ?>
-                      <input type="radio" value="No" name="disabled" <?php echo set_radio('disabled', 'No', $check); ?>/>&nbsp;&nbsp;No
+                      <input type="radio" value="No" name="disabled" <?php echo set_radio('disabled', 0, $check); ?>/>&nbsp;&nbsp;No
                     </div>
                   </div>
                   

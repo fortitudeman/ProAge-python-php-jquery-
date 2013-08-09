@@ -282,7 +282,7 @@
                     </div>
                   </div>
                   
-                  <input type="hidden" name="disabled" value="No" />
+                  <input type="hidden" name="disabled" value="0" />
                                   
                   
                   
