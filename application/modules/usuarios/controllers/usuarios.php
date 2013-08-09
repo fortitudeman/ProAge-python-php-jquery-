@@ -1433,11 +1433,11 @@ class Usuarios extends CI_Controller {
 					
 															
 					// Validation for moral person
-					if( isset( $items['persona'] ) and strtolower( trim($items['persona'] ) ) == 'moral' ){
+					//if( isset( $items['persona'] ) and strtolower( trim($items['persona'] ) ) == 'moral' ){
 						
-						if( empty( $items['name'] ) ) $message[$lin][] = array( 'messagepersonaname' => 'El nombre es requerido, linea de archivo: ' . $lin . $name );
+						//if( empty( $items['name'] ) ) $message[$lin][] = array( 'messagepersonaname' => 'El nombre es requerido, linea de archivo: ' . $lin . $name );
 												
-					}
+					//}
 										
 					
 					
@@ -1679,25 +1679,52 @@ class Usuarios extends CI_Controller {
 										);
 										
 										
+										$folio_nacional = '';
+																				
 										
 										// added folio nacional
-										if( isset( $items['folio_nacional'] ) and !empty( $items['folio_nacional'] ) )
-											foreach( $items['folio_nacional'] as $value )
+										if( isset( $items['folio_nacional'] ) and !empty( $items['folio_nacional'] ) ){
+											
+											$folio_nacional  = explode( ',', $items['folio_nacional'] );
+											
+											
+											if( is_array( $folio_nacional ) )
+											
+												foreach( $folio_nacional as $value )
+													$uids_agens[] = array(
+														'agent_id' => $idAgentSaved,
+														'type' =>  'national',
+														'uid' =>  $value,
+														'last_updated' => $timestamp,
+														'date' => $timestamp
+													);
+											
+											else
+												
 												$uids_agens[] = array(
-													'agent_id' => $idAgentSaved,
-													'type' =>  'national',
-													'uid' =>  $value,
-													'last_updated' => $timestamp,
-													'date' => $timestamp
-												);
+														'agent_id' => $idAgentSaved,
+														'type' =>  'national',
+														'uid' =>  $folio_nacional,
+														'last_updated' => $timestamp,
+														'date' => $timestamp
+													);
+												
 										
+										}
 										
-										
+										$folio_provincial = '';
 										
 										
 										// Added folio provicional
-										if( isset( $items['folio_provincial'] ) and !empty( $items['folio_provincial'] ) )
-											foreach( $items['folio_provincial'] as $value )
+										if( isset( $items['folio_provincial'] ) and !empty( $items['folio_provincial'] ) ){
+											
+											$folio_provincial  = explode( ',', $items['folio_provincial'] );
+											
+											
+											if( is_array( $folio_nacional ) )
+											
+											
+											foreach( $folio_provincial as $value )
 												$uids_agens[] = array(
 													'agent_id' => $idAgentSaved,
 													'type' => 'provincial',
@@ -1705,7 +1732,20 @@ class Usuarios extends CI_Controller {
 													'last_updated' => $timestamp,
 													'date' => $timestamp
 												);
+											
+											else
+												
+												$uids_agens[] = array(
+													'agent_id' => $idAgentSaved,
+													'type' => 'provincial',
+													'uid' =>  $folio_provincial,
+													'last_updated' => $timestamp,
+													'date' => $timestamp
+												);
+												
 										
+										
+										}
 										
 										if( $this->user->create_banch( 'agent_uids', $uids_agens ) == false) $controlSaved = false ;
 										
