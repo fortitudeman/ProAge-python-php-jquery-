@@ -1633,131 +1633,131 @@ class Usuarios extends CI_Controller {
 								}
 								
 								}
-								
-								if( ( isset( $group ) and in_array( 'agente', $group ) ) or $group == 'agente' ){
-					
-					
-										$agent= array(
-											
-											'user_id'  => $idSaved,
-											//'connection_date'  => $this->input->post( 'connection_date' ),
-											//'license_expired_date'  =>$this->input->post( 'license_expired_date' ),
-											
-										);
-										
-										
-										if( $this->user->create( 'agents', $agent ) == false) $controlSaved = false ;
-										
-										
-										
-										// Saved Agents
-										if( $controlSaved == false ){
-											
-											
-											$message[$lin][] = array( 'messagesavederroruserconexion' => 'No se pudo guardar el registro, Agente Proceso de conexión, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador, linea de archivo: ' . $lin . $name );
-											
-										}
-										
-										
-										
-										
-										
-										$idAgentSaved = $this->user->insert_id();
-																									
-										$uids_agens = array();
-										
-										$timestamp = date( 'Y-m-d H:i:s' ) ;
-										
-																				
-										// Added Clave
-										$uids_agens[] = array(
-													'agent_id' => $idAgentSaved,
-													'type' =>  'clave',
-													'uid' =>  $items['clave'],
-													'last_updated' => $timestamp,
-													'date' => $timestamp
-										);
-										
-										
-										$folio_nacional = '';
-																				
-										
-										// added folio nacional
-										if( isset( $items['folio_nacional'] ) and !empty( $items['folio_nacional'] ) ){
-											
-											$folio_nacional  = explode( ',', $items['folio_nacional'] );
-											
-											
-											if( is_array( $folio_nacional ) )
-											
-												foreach( $folio_nacional as $value )
-													$uids_agens[] = array(
-														'agent_id' => $idAgentSaved,
-														'type' =>  'national',
-														'uid' =>  $value,
-														'last_updated' => $timestamp,
-														'date' => $timestamp
-													);
-											
-											else
-												
-												$uids_agens[] = array(
-														'agent_id' => $idAgentSaved,
-														'type' =>  'national',
-														'uid' =>  $folio_nacional,
-														'last_updated' => $timestamp,
-														'date' => $timestamp
-													);
-												
-										
-										}
-										
-										$folio_provincial = '';
-										
-										
-										// Added folio provicional
-										if( isset( $items['folio_provincial'] ) and !empty( $items['folio_provincial'] ) ){
-											
-											$folio_provincial  = explode( ',', $items['folio_provincial'] );
-											
-											
-											if( is_array( $folio_nacional ) )
-											
-											
-											foreach( $folio_provincial as $value )
-												$uids_agens[] = array(
-													'agent_id' => $idAgentSaved,
-													'type' => 'provincial',
-													'uid' =>  $value,
-													'last_updated' => $timestamp,
-													'date' => $timestamp
-												);
-											
-											else
-												
-												$uids_agens[] = array(
-													'agent_id' => $idAgentSaved,
-													'type' => 'provincial',
-													'uid' =>  $folio_provincial,
-													'last_updated' => $timestamp,
-													'date' => $timestamp
-												);
-												
-										
-										
-										}
-										
-										if( $this->user->create_banch( 'agent_uids', $uids_agens ) == false) $controlSaved = false ;
-										
-										
-										if( $controlSaved == false ){
-											
-											$message[$lin][] = array( 'messagesavederroruserclaves' => 'No se pudo guardar el registro, Clave, Folio Nacional, Folio Provincial, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador, linea de archivo: ' . $lin . $name );
-											
-										}
-										
-									}
 																											
+							}
+							
+							if( ( isset( $group ) and in_array( 'agente', $group ) ) or $group == 'agente' ){
+					
+					
+								$agent= array(
+									
+									'user_id'  => $idSaved,
+									//'connection_date'  => $this->input->post( 'connection_date' ),
+									//'license_expired_date'  =>$this->input->post( 'license_expired_date' ),
+									
+								);
+								
+								
+								if( $this->user->create( 'agents', $agent ) == false) $controlSaved = false ;
+								
+								
+								
+								// Saved Agents
+								if( $controlSaved == false ){
+									
+									
+									$message[$lin][] = array( 'messagesavederroruserconexion' => 'No se pudo guardar el registro, Agente Proceso de conexión, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador, linea de archivo: ' . $lin . $name );
+									
+								}
+								
+								
+								
+								
+								
+								$idAgentSaved = $this->user->insert_id();
+																							
+								$uids_agens = array();
+								
+								$timestamp = date( 'Y-m-d H:i:s' ) ;
+								
+																		
+								// Added Clave
+								$uids_agens[] = array(
+											'agent_id' => $idAgentSaved,
+											'type' =>  'clave',
+											'uid' =>  $items['clave'],
+											'last_updated' => $timestamp,
+											'date' => $timestamp
+								);
+								
+								
+								$folio_nacional = '';
+																		
+								
+								// added folio nacional
+								if( isset( $items['folio_nacional'] ) and !empty( $items['folio_nacional'] ) ){
+									
+									$folio_nacional  = explode( ',', $items['folio_nacional'] );
+									
+									
+									if( is_array( $folio_nacional ) )
+									
+										foreach( $folio_nacional as $value )
+											$uids_agens[] = array(
+												'agent_id' => $idAgentSaved,
+												'type' =>  'national',
+												'uid' =>  $value,
+												'last_updated' => $timestamp,
+												'date' => $timestamp
+											);
+									
+									else
+										
+										$uids_agens[] = array(
+												'agent_id' => $idAgentSaved,
+												'type' =>  'national',
+												'uid' =>  $folio_nacional,
+												'last_updated' => $timestamp,
+												'date' => $timestamp
+											);
+										
+								
+								}
+								
+								$folio_provincial = '';
+								
+								
+								// Added folio provicional
+								if( isset( $items['folio_provincial'] ) and !empty( $items['folio_provincial'] ) ){
+									
+									$folio_provincial  = explode( ',', $items['folio_provincial'] );
+									
+									
+									if( is_array( $folio_nacional ) )
+									
+									
+									foreach( $folio_provincial as $value )
+										$uids_agens[] = array(
+											'agent_id' => $idAgentSaved,
+											'type' => 'provincial',
+											'uid' =>  $value,
+											'last_updated' => $timestamp,
+											'date' => $timestamp
+										);
+									
+									else
+										
+										$uids_agens[] = array(
+											'agent_id' => $idAgentSaved,
+											'type' => 'provincial',
+											'uid' =>  $folio_provincial,
+											'last_updated' => $timestamp,
+											'date' => $timestamp
+										);
+										
+								
+								
+								}
+								
+								if( $this->user->create_banch( 'agent_uids', $uids_agens ) == false) $controlSaved = false ;
+								
+								
+								if( $controlSaved == false ){
+									
+									$message[$lin][] = array( 'messagesavederroruserclaves' => 'No se pudo guardar el registro, Clave, Folio Nacional, Folio Provincial, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador, linea de archivo: ' . $lin . $name );
+									
+								}
+								
 							}
 							
 							
