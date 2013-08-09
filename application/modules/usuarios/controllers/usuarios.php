@@ -1449,11 +1449,11 @@ class Usuarios extends CI_Controller {
 					
 						$group = explode( ' ', strtolower(trim($items['group'])) );
 
-						if( in_array( 'agente', $group ) ){
+						if( ( is_array( $group ) and in_array( 'agente', $group ) ) or $group  == 'agente' ){
 							
-							if( isset( $items['manager_id'] ) and empty( $items['manager_id'] ) ) 
+							//if( isset( $items['manager_id'] ) and empty( $items['manager_id'] ) ) 
 									
-									$message[$lin] = array( 'messageagente' => 'El gerente es requeda, linea de archivo: ' . $lin . $name );
+									//$message[$lin] = array( 'messageagente' => 'El gerente es requeda, linea de archivo: ' . $lin . $name );
 																					
 							
 							// If process of conexion == 1 or yes
@@ -1634,7 +1634,7 @@ class Usuarios extends CI_Controller {
 								
 								}
 								
-								if( isset( $group ) and in_array( 1, $group ) ){
+								if( ( isset( $group ) and in_array( 'agente', $group ) ) or $group == 'agente' ){
 					
 					
 										$agent= array(
