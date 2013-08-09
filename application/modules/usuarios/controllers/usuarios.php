@@ -1566,7 +1566,7 @@ class Usuarios extends CI_Controller {
 							
 							if( !empty( $group ) and is_array( $group ) ){
 								foreach( $group as $group )
-									$user_roles[] = array( 'user_id' => $idSaved , 'user_role_id' => $group );
+									$user_roles[] = array( 'user_id' => $idSaved , 'user_role_id' => $this->user->getIdRol($group) );
 							
 							}else{
 								$user_roles[] = array( 'user_id' => $idSaved , 'user_role_id' => $this->user->getIdRol($group) );
