@@ -51,38 +51,28 @@
                   <strong>Error: </strong> 
 				  <?php  // Show Dinamical message error 
 				  		
-						foreach( $message as $raiz ):
-							
-							
-							if( !empty( $raiz ) ):
-							
+						foreach( $message['message'] as $raiz ):
 														
+							if( empty( $raiz ) ) break;
+								
+																						
 								foreach( $raiz as $array ):
 									
-									if( !empty( $array ) ):
+									if( empty( $array ) ) break;
 									
-										foreach( $array as $mes ):
+										foreach( $array as $messagetext ):
 											
-											if( !empty( $mes ) ):
-												
-												foreach( $mes as $key => $messagetext ):
-												
-												
-												echo $messagetext.'<br>';
-
-												
-												endforeach;
-											
-											endif;	
+											if( empty( $messagetext ) ) break;
+													
+													echo $messagetext.'<br>';
 												
 										endforeach;
 									
-									endif;
 									
 								endforeach;
-						
-							endif;
-						
+								
+								
+													
 						endforeach;
 				  
 				  ?>
@@ -152,8 +142,8 @@
 											<option value="connection_date">Fecha de conexión</option>
 											<option value="type">En proceso de conexión</option>
 											<option value="birthdate">Fecha de nacimiento</option>											
-											<option value="folio_nacional"">Folio nacional</option>
-											<option value="folio_provincial">Folio Provicional</option>
+											<option value="folio_nacional"">Folio Nacional</option>
+											<option value="folio_provincial">Folio Provincial</option>
 											<option value="manager_id">Gerente</option>
 											<option value="name">Nombre</option>
 											<option value="company_name">Nombre de compañía</option>
@@ -168,7 +158,7 @@
 											
 											
 										</select>
-										<p class="text-error">Requerido</p>
+										
 									 </td>'; 
 								
 								$i++;

@@ -1953,18 +1953,18 @@ class Usuarios extends CI_Controller {
 		
 		if( !empty( $_POST ) ){
 			
-			
-			
+						
 			// Generals for user what does not agent
 			if( $user['username'] != $this->input->post( 'username' ) )
 				$this->form_validation->set_rules('username', 'Usuario', 'is_unique[users.username]');
 				
 			
 			if( !empty( $_POST['password'] ) and md5($_POST['passwordlast']) == $user['password'] )
-				$this->form_validation->set_rules('password', 'Nuevo Password', 'matches[passwordnew]');
+				$this->form_validation->set_rules('password', 'Nuevo Password', 'required');
 		
 			if( $user['email'] != $this->input->post( 'email' ) )
 				$this->form_validation->set_rules('email', 'Correo', 'valid_email|is_unique[users.email]');
+			
 			
 			
 			// Run Validation
@@ -2013,41 +2013,41 @@ class Usuarios extends CI_Controller {
 					
 					$usernew['picture'] = 'default.png';
 				
-			}
+				}
 			
 			
-			if( $this->user->update( 'users', $id, $usernew ) == true ){
+				if( $this->user->update( 'users', $id, $usernew ) == true ){
+						
+						// Set true message		
+						$this->session->set_flashdata( 'message', array( 
+							
+							'type' => true,	
+							'message' => 'Se guardo el registro correctamente'
+										
+						));												
+						
+						
+						redirect( 'home', 'refresh' );
+						
+						
+				}else{
 					
 					// Set true message		
-					$this->session->set_flashdata( 'message', array( 
+						$this->session->set_flashdata( 'message', array( 
+							
+							'type' => false,	
+							'message' => 'No se puede guardar los datos nuevos de tu perfil.'
+										
+						));												
 						
-						'type' => true,	
-						'message' => 'Se guardo el registro correctamente'
-									
-					));												
-					
-					
-					redirect( 'home', 'refresh' );
-					
-					
-			}else{
-				
-				// Set true message		
-					$this->session->set_flashdata( 'message', array( 
 						
-						'type' => false,	
-						'message' => 'No se puede guardar los datos nuevos de tu perfil.'
-									
-					));												
+						redirect( 'home', 'refresh' );
 					
-					
-					redirect( 'home', 'refresh' );
+				} 
 				
-			} 
 				
 			}
-			
-						
+									
 		}
 		
 		
