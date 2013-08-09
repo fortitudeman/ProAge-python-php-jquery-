@@ -57,7 +57,7 @@
                   <input type="hidden" name="delete" value="true" />
                   <div id="actions-buttons-forms" class="form-actions">
                     <button type="submit" class="btn btn-danger">Eliminar</button>
-                    <button class="btn" onclick="history.back()">Cancelar</button>
+                    <input type="button" class="btn" onclick="javascript: history.back()" value="Cancelar">
                   </div>
                 </fieldset>
               </form>
