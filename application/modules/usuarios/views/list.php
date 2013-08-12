@@ -108,7 +108,7 @@
                 
                     
                     <div class="span1"></div>
-                    <div class="span4">Buscar <input type="text" id="find" name="find" class="searchfind"/></div>
+                    <div class="span4 hide">Buscar <input type="text" id="find" name="find" class="searchfind"/></div>
                     <div class="span4"><a href="javascript:void(0)" id="showadvanced" class="btn- btn-link link-advanced">Mostrar Filtro</a></div>
                     
                 </div>

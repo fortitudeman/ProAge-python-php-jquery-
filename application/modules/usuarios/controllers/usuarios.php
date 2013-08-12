@@ -1960,7 +1960,7 @@ class Usuarios extends CI_Controller {
 				
 			
 			if( !empty( $_POST['password'] ) and md5($_POST['passwordlast']) == $user['password'] )
-				$this->form_validation->set_rules('password', 'Nuevo Password', 'required');
+				$this->form_validation->set_rules('password', 'Nuevo Password', 'required|matches[passwordnew]');
 		
 			if( $user['email'] != $this->input->post( 'email' ) )
 				$this->form_validation->set_rules('email', 'Correo', 'valid_email|is_unique[users.email]');
