@@ -97,7 +97,7 @@
                     
 
                     <input type="hidden" id="findvalue" value="mios" />
-                    <input type="hidden" id="findsubvalue" value="activadas" />
+                    <input type="hidden" id="findsubvalue" value="todas" />
                     
                     <br /><br />  
                       <div class="row advanced">
