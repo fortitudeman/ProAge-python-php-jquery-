@@ -103,10 +103,11 @@
                       <div class="row advanced">
                       		
                             <a href="javascript:void(0);" class="btn btn-link findsub" id="activadas">Activadas</a>
-                            <a href="javascript:void(0);" class="btn btn-link findsub" id="tramite">Pendientes</a>
+                            <a href="javascript:void(0);" class="btn btn-link findsub" id="tramite">En trámite</a>
+                            <a href="javascript:void(0);" class="btn btn-link findsub" id="terminada"> Terminadas</a>
                             <a href="javascript:void(0);" class="btn btn-link findsub" id="canceladas">Canceladas</a>
-                            <a href="javascript:void(0);" class="btn btn-link findsub" id="pagadas">Pagadas</a>
-                            <a href="javascript:void(0);" class="btn btn-link findsub" id="excedido">Excedido</a>
+                          <!--  <a href="javascript:void(0);" class="btn btn-link findsub" id="pagadas">Pagadas</a>
+                            <a href="javascript:void(0);" class="btn btn-link findsub" id="excedido">Excedido</a>-->
                             <a href="javascript:void(0);" class="btn btn-primary findsub" id="todas">Todas</a>
                             <br /><br />
                              <table class="table table-bordered bootstrap-datatable datatable">           	

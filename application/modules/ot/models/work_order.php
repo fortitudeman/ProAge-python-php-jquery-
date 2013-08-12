@@ -276,17 +276,17 @@ class Work_order extends CI_Model{
 	public function find( $advansed = array(), $user = null ) {
 		
 		$status=0;
+		
+		
 						
 		if( $advansed['work_order_status_id'] == 'activadas' )
 			$status =6;
 		if( $advansed['work_order_status_id'] == 'canceladas' )
 			$status =2;
-		if( $advansed['work_order_status_id'] == 'excedido' )
-			$status =3;
-		if( $advansed['work_order_status_id'] == 'pagadas' )
-			$status =4;
 		if( $advansed['work_order_status_id'] == 'tramite' )
-			$status =5;
+			$status =5;	
+		if( $advansed['work_order_status_id'] == 'terminada' )
+			$status =7;	
 		if( $advansed['work_order_status_id'] == 'todas' )
 			$status =0;		
 		
@@ -312,8 +312,23 @@ class Work_order extends CI_Model{
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
 
 		
-		if( $status != 0 )
-			$this->db->where( 'work_order.work_order_status_id', $status );
+		if( $status == 6 )
+			$this->db->where( 'work_order.work_order_status_id', 6 );
+		
+		if( $status == 2 )
+			$this->db->where( 'work_order.work_order_status_id', 2 );
+		
+		
+		if( $status == 5 ){
+			$this->db->where( 'work_order.work_order_status_id', 5 );	
+			$this->db->or_where( 'work_order.work_order_status_id', 9 );
+		}
+		
+		
+		if( $status == 7 ){
+			$this->db->where( 'work_order.work_order_status_id', 7 );	
+			$this->db->or_where( 'work_order.work_order_status_id', 6 );
+		}
 		
 				
 		
