@@ -221,23 +221,23 @@
                   
                   
                   <div class="control-group">
-                    <label class="control-label text-error" for="inputError">Nombre</label>
+                    <label class="control-label text-error" for="inputError">Nombre del asegurado / contratante</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="name" name="name" type="text" value="<?php echo set_value( 'name' ) ?>">
                     </div>
                   </div>
                   
-                  <div class="control-group">
+                  <div class="control-group hide">
                     <label class="control-label text-error" for="inputError">Apellido paterno</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="lastname_father" name="lastname_father" type="text" value="<?php echo set_value( 'lastname_father' ) ?>">
+                      <input class="input-xlarge focused" id="lastname_father" name="lastname_father" type="text" value="<?php echo set_value( 'lastname_father' ) ?>">
                     </div>
                   </div>
                   
-                  <div class="control-group">
+                  <div class="control-group hide">
                     <label class="control-label text-error" for="inputError">Apellido materno</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="lastname_mother" name="lastname_mother" type="text" value="<?php echo set_value( 'lastname_mother' ) ?>">
+                      <input class="input-xlarge focused" id="lastname_mother" name="lastname_mother" type="text" value="<?php echo set_value( 'lastname_mother' ) ?>">
                     </div>
                   </div>
                   

@@ -37,6 +37,12 @@ class Ot extends CI_Controller {
 	
 	public $access_all = false;
 	
+	public $access_import_payments = false;
+	
+	
+	
+	
+	
 /** Construct Function **/
 /** Setting Load perms **/
 	
@@ -88,6 +94,9 @@ class Ot extends CI_Controller {
 			
 			if( $value['action_name'] ='Ver todos los registros' )
 				$this->access_all = true;
+			
+			if( $value['action_name'] ='Importar payments' )
+				$this->access_import_payments = true;	
 			
 			
 						
@@ -416,8 +425,8 @@ class Ot extends CI_Controller {
 				$this->form_validation->set_rules('payment_interval_id', 'Conducto', 'required|xxs_clean');
 				$this->form_validation->set_rules('payment_method_id', 'Forma de pago', 'required|xxs_clean');
 				$this->form_validation->set_rules('name', 'Nombre', 'required|xxs_clean');
-				$this->form_validation->set_rules('lastname_father', 'Apellido paterno', 'required|xxs_clean');
-				$this->form_validation->set_rules('lastname_mother', 'Apellido materno', 'required|xxs_clean');
+				//$this->form_validation->set_rules('lastname_father', 'Apellido paterno', 'required|xxs_clean');
+				//$this->form_validation->set_rules('lastname_mother', 'Apellido materno', 'required|xxs_clean');
 				
 			}
 			
@@ -1663,6 +1672,160 @@ class Ot extends CI_Controller {
 	}
 
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 *	Payments
+	 **/
+	public function import_payments(){
+		
+		// Check access teh for import
+		if( $this->access_import_payments == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Importar", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( '/', 'refresh' );
+		
+		}
+		
+		
+		
+		
+		
+		
+		if( isset( $_FILES['file'] ) and !empty( $_FILES  ) ){
+			
+			
+			// Setting file temporal file named			
+			$tmp_file = $_FILES['file']['name'];
+
+			$tmp_file = strtr($tmp_file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
+
+			$tmp_file = preg_replace('/([^.a-z0-9]+)/i', '_', $tmp_file);
+
+			
+			
+			// Upload Temporal file CSV			
+			if( is_dir( APPPATH.'modules/ot/assets/tmp/' ) )
+					
+					move_uploaded_file( $_FILES['file']['tmp_name'],  APPPATH.'modules/ot/assets/tmp/'  . $tmp_file );
+					
+			
+			
+			
+			// Read File			
+			if( is_file( APPPATH.'modules/ot/assets/tmp/' . $tmp_file ) ){
+						
+				$file_handle = fopen( APPPATH.'modules/ot/assets/tmp/'  . $tmp_file, "r");
+				
+				
+				$file_array = array();
+				
+				
+				while (!feof($file_handle) )
+				
+					$file_array[] = fgetcsv($file_handle, 1024);
+					
+				
+				fclose($file_handle);
+				
+			}
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// Config view
+		$this->view = array(
+				
+		  'title' => 'Ot Importar',
+		   // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'css' => array(),
+		  'scripts' =>  array(
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',	
+			  '<script src="'.base_url().'scripts/config.js"></script>',
+			  '<script src="'.base_url().'ot/assets/scripts/import.js"></script>'				
+		  ),
+		  'content' => 'ot/import_payments', // View to load
+		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
+				
+		);
+		
+		
+		if( isset( $message ) ){ $this->view['message'] = $message; unset( $tmp_file, $file_array ); }
+		
+		
+		if( isset( $tmp_file ) and !empty( $tmp_file ) ) $this->view['tmp_file'] = $tmp_file;
+		
+		if( isset( $file_array ) and !empty( $file_array ) ) $this->view['file_array'] = $file_array;
+		
+		
+		
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+		
+	}
+	
+	
+	
+	
 	
 	
 	
