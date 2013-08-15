@@ -147,8 +147,8 @@ class Work_order extends CI_Model{
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
-		$this->db->where( 'work_order.work_order_status_id !=', 2 );
-		
+		$this->db->where( 'work_order.work_order_status_id', 6 );
+		$this->db->or_where( 'work_order.work_order_status_id', 5  );
 		
 		
 		if( !empty( $user ) )
