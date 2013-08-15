@@ -91,6 +91,7 @@
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Número OT</label>
                     <div class="controls">
+                      <input class="input-small focused" id="otnumber" type="text" readonly="readonly">
                       <input class="input-xlarge focused required" id="ot" name="ot" type="text">
                     </div>
                   </div>

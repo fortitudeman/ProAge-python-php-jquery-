@@ -71,6 +71,8 @@ $( document ).ready(function() {
 				$( '#creation_date' ).val( $( '#creation_date' ).val()+' '+ toDay);	
 				
 				
+				$( '#ot' ).val( $( '#otnumber' ).val()+$( '#ot' ).val() );
+				
 				form.submit();
 			}else{
 			
@@ -125,11 +127,11 @@ $( document ).ready(function() {
 		
 		
 		if( this.value == 1 )
-			$('#ot').val( date[1]+date[2]+'V' ); 
+			$('#otnumber').val( date[1]+date[2]+'V' ); 
 		if( this.value == 2 )
-			$('#ot').val( date[1]+date[2]+'G' ); 
+			$('#otnumber').val( date[1]+date[2]+'G' ); 
 		if( this.value == 3 )
-			$('#ot').val( date[1]+date[2]+'A' ); 	
+			$('#otnumber').val( date[1]+date[2]+'A' ); 	
 		
 		$.ajax({
 
