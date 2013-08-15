@@ -1555,6 +1555,7 @@ class User extends CI_Model{
 		$this->db->select( 'agents.id, users.name, users.lastnames, users.company_name' );
 		$this->db->from( 'agents' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
+		$this->db->order_by( 'users.company_name', 'asc' );
 		
 		$query = $this->db->get();
 		
