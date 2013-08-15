@@ -106,13 +106,13 @@
                   
                   <input type="hidden" id="agenconfirm" value="true" />
                   
-                  <div class="control-group">
+                  <div class="control-group new-bussiness">
                     <label class="control-label text-error" for="inputError">Agente</label>
                     <div class="controls">
-                       <select class="input-xlarge focused required" name="agent[]">
+                       <select class="input-xlarge focused required" name="agent[]" id="agent-select">
                       	<?php echo $agents ?>
                        </select>
-                       <input class="input-small focused required" id="agent-1" name="porcentaje[]" type="text" onblur="javascript: setFields( 'agent-1' )" placeholder="%">
+                       <input value="100%" class="input-small focused required" id="agent-1" name="porcentaje[]" type="text" onblur="javascript: setFields( 'agent-1' )" placeholder="%">
                     </div>
                   </div>
                   

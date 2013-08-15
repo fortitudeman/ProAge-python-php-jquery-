@@ -207,8 +207,7 @@ $( document ).ready(function() {
 	$( '#work_order_type_id' ).bind( 'change', function(){
 		
 		var Data = { type : this.value };
-		
-						
+					
 		$.ajax({
 
 			url:  Config.base_url()+'ot/subtype.html',
@@ -233,6 +232,20 @@ $( document ).ready(function() {
 			}						
 	
 		});
+		
+		
+		if( this.value != 47 && this.value != 90 ){
+			
+			$( '.new-bussiness' ).hide();
+			$( '#agent-1' ).val( '100%' );
+			$( '#agent-select' ).removeClass( 'required' );
+		}else{
+			
+			$( '.new-bussiness' ).show();
+			$( '#agent-1' ).val( '100%' );
+			$( '#agent-select' ).addClass( 'required' );
+			
+		}	
 		
 						
 	});
