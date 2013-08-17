@@ -43,7 +43,7 @@ function renderTable( $data = array() ){
 						
 			$table .='				<td class="center">';
 			
-			if( $value['status_name'] == 'tramite' ) {
+			if( $value['status_name'] == 'tramite' or $value['status_name'] == 'desactivada' ) {
 				if( (float)$color <= 5 ) 
 					$table .= '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
 				else if( (float)$color > 5 and (float)$color <= 10 )	

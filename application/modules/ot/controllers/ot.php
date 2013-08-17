@@ -187,14 +187,14 @@ class Ot extends CI_Controller {
 								$("#'.$value['id'].'").popover({
 										title: "Opciones",
 										trigger:"click",
-										placement:"bottom",
+										placement:"left",
 										html:true, 
-										content: function(){';
+										content: function(){ ';
 												
 													
 												
 												
-												
+														
 												
 					
 					if( $value['status_name'] != 'cancelada' ){
@@ -322,7 +322,7 @@ class Ot extends CI_Controller {
 								$("#'.$value['id'].'").popover({
 										title: "Opciones",
 										trigger:"click",
-										placement:"bottom",
+										placement:"left",
 										html:true, 
 										content: function(){';
 											
