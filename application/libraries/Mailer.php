@@ -160,12 +160,13 @@ class Mailer{
 												  <td>'.$notification[0]['policy'][0]['products'][0]['name'].'</td>    
 												</tr>';
 								  
-								 if( !empty( $notification[0]['policy'][0]['products'][0]['name'] ) )
+								 if( !empty( $notification[0]['policy'][0]['prima'] ) )
 								  
 										  $body .= '<tr>
 													  <td><b>Prima:</b></td>
 													  <td>'.$notification[0]['policy'][0]['prima'].'</td>    
 												  </tr> ';
+								 
 								 if( !empty( $notification[0]['policy'][0]['payment_intervals_name'] ) )	  
 										  
 										  
@@ -234,6 +235,13 @@ class Mailer{
 						
 			@mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
 					
+			
+			echo '<pre>';
+			print_r( $notification );
+			echo '</pre>';
+			echo $body;
+			exit;
+			
 			
 			/*
 						
