@@ -43,7 +43,7 @@ class Mailer{
 		$status_name = '';
 		$stat_name = '';
 		
-		if( $notification[0]['status_name'] == 'tramite' ){
+		if( $notification[0]['status_name'] == 'en trámite' ){
 			$status_name = 'Creación';
 			$stat_name = 'creada';
 		}
