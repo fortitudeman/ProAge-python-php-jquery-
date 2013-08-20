@@ -202,7 +202,77 @@ class Work_order extends CI_Model{
 		  return $this->db->from( 'work_order' )->where( array( 'work_order_status_id !=' => 2, 'work_order.uid' => $user ) )->count_all_results();
 	}
 
+	
+	
+	
+// Notifications
+	public function getNotification( $id = null ){
+		
+		if( empty( $id ) ) return false;
+		
+		/*
+			
+			SELECT product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*
+			FROM `work_order`
+			JOIN product_group ON product_group.id=work_order.product_group_id
+			JOIN work_order_types ON work_order_types.id=work_order.work_order_type_id 
+			JOIN work_order_status ON work_order_status.id=work_order.work_order_status_id;
+			
+		*/
+		
+		$this->db->select( 'product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
+		$this->db->from( 'work_order' );
+		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
+		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
+		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
+		$this->db->where( 'work_order.id', $id );
+						
+		$this->db->limit( 1 );
+		
+		$query = $this->db->get();
+		
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$ot = array();
+		
+		foreach ($query->result() as $row) {
+			
+			$type_tramite = $this->getParentsWorkTipes( $row->work_order_type_id );
 
+			$ot[] = array( 
+		    	'id' => $row->id,
+				'uid' => $row->uid,
+				'policy' => $this->getPolicyBuId( $row->policy_id ),
+				'agents' => $this->getAgentsByPolicy( $row->policy_id ),
+		    	'product_group_id' => $row->product_group_id,
+				'group_name' => $row->group_name,
+				'parent_type_name' => $this->getTypeTramiteId( $type_tramite ),
+				'type_name' => $row->type_name,
+		    	'status_name' =>  $row->status_name,
+				'creation_date' =>  $row->creation_date,
+				'duration' =>  $row->duration,			
+				'comments' => $row->comments,	
+				'last_updated' =>  $row->last_updated,
+				'date' =>  $row->date
+		    );
+
+		}
+				
+		return $ot;
+		
+	}	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 /**
  *	Getting for update
  **/
@@ -520,8 +590,10 @@ class Work_order extends CI_Model{
 
 			
 		*/
-				
-		$this->db->where( 'id', $id );
+		$this->db->select( 'policies.*, payment_methods.name as payment_method_name, payment_intervals.name as payment_intervals_name' );		
+		$this->db->join( 'payment_methods', 'payment_methods.id=policies.payment_method_id' );	
+		$this->db->join( 'payment_intervals', 'payment_intervals.id=policies.payment_interval_id' );	
+		$this->db->where( 'policies.id', $id );
 		$this->db->limit(1);
 		$query = $this->db->get('policies');
 		
@@ -537,12 +609,16 @@ class Work_order extends CI_Model{
 		    	'product_id' => $row->product_id,
 				'currency_id' => $row->currency_id,
 				'payment_interval_id' => $row->payment_interval_id,
+				'payment_intervals_name' => $row->payment_intervals_name,
 		    	'payment_method_id' =>  $row->payment_method_id,
+				'payment_method_name' => $row->payment_method_name,
+				'prima' => $row->prima,
 				'name' =>  $row->name,
 				'lastname_father' =>  $row->lastname_father,
 				'lastname_mother' =>  $row->lastname_mother,
 				'year_premium' =>  $row->year_premium,
 				'expired_date' =>  $row->expired_date,
+				'products' => $this->getProductsByPolicy( $row->id ),
 				'last_updated' =>  $row->last_updated,
 				'date' =>  $row->date
 		    );
@@ -550,6 +626,37 @@ class Work_order extends CI_Model{
 		}
 		
 		return $policy;
+		
+	}
+	
+	public function getProductsByPolicy( $policy = null ){
+		
+		if( empty( $policy ) ) return false;
+		
+		$this->db->where( 'id', $policy );
+		$this->db->limit(1);
+		$query = $this->db->get('products');
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$products = array();
+		
+		foreach ($query->result() as $row) {
+
+			$products[] = array( 
+		    	'id' => $row->id,
+		    	'platform_id' => $row->platform_id,
+				'product_group_id' => $row->product_group_id,
+				'name' => $row->name,
+		    	'period' =>  $row->period,
+				'active' =>  $row->active,
+				'last_updated' =>  $row->last_updated,
+				'date' =>  $row->date
+		    );
+
+		}
+		
+		return $products;
 		
 	}
 	
@@ -564,7 +671,7 @@ class Work_order extends CI_Model{
 		JOIN users ON users.id=agents.user_id
 		WHERE policy_id=1
 		*/
-		$this->db->select( ' policies_vs_users.percentage, users.name, users.lastnames, users.company_name ' );
+		$this->db->select( ' policies_vs_users.percentage, users.name, users.lastnames, users.company_name, users.email ' );
 		$this->db->from( 'policies_vs_users' );
 		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id ' );
@@ -581,7 +688,8 @@ class Work_order extends CI_Model{
 		    	'percentage' => $row->percentage,
 				'name' => $row->name,
 				'lastnames' => $row->lastnames,
-				'company_name' => $row->company_name
+				'company_name' => $row->company_name,
+				'email' => $row->email
 		    );
 
 		}
