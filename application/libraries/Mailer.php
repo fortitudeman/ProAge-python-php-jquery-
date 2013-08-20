@@ -74,10 +74,18 @@ class Mailer{
 						<td bgcolor="#FFFFFF" width="30">&nbsp;</td>
 						<td bgcolor="#FFFFFF" align="left" style="font-family:Helvetica,arial,sans-serif;font-size:14px;line-height:15px">
 							<p style="color:rgb(79,79,79)">'.$agentes.'</p>
-							<p><font color="#4f4f4f">Le notificamos que la solicitud con la Orden de trabajo  '.$notification[0]['uid'].' fue </font><font color="#0433ff">'.$notification[0]['status_name'].'</font><font color="#4f4f4f">.</font></p>
-							<p><font color="#008f00"><b>Razón</b>: '.$razon.'</font></p>
-							<p><font color="#008f00"><b>Responsable</b>: '.$responsable.'</font></p><div><font color="#008f00"><b>Comentarios</b>: '.$notification[0]['comments'].'</font></div><div style="color:rgb(79,79,79)"><br></div>
-							 <table width="80%" align="center" style="color:rgb(79,79,79)">
+							<p><font color="#4f4f4f">Le notificamos que la solicitud con la Orden de trabajo  '.$notification[0]['uid'].' fue </font><font color="#0433ff">'.$notification[0]['status_name'].'</font><font color="#4f4f4f">.</font></p>';
+							
+							
+							if( !empty( $razon ) and !empty( $responsable ) ):
+							
+							$body .= '<p><font color="#008f00"><b>Razón</b>: '.$razon.'</font></p>
+									  <p><font color="#008f00"><b>Responsable</b>: '.$responsable.'</font></p>
+									  <div><font color="#008f00"><b>Comentarios</b>: '.$notification[0]['comments'].'</font></div><div style="color:rgb(79,79,79)"><br></div>';
+							
+							endif;
+							
+							$body .= ' <table width="80%" align="center" style="color:rgb(79,79,79)">
 								  <tbody><tr>
 									  <td colspan="2" align="center"><p><b>Detalles de la Orden de Trabajo</b></p>
 									  </td>

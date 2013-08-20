@@ -578,6 +578,13 @@ class Ot extends CI_Controller {
 				
 				
 				
+				// Send Email		
+				$this->load->library( 'mailer' );
+				
+				$notification = $this->work_order->getNotification();
+						
+				$this->mailer->notifications( $notification );
+				
 				
 								
 				if( $controlSaved == true ){
