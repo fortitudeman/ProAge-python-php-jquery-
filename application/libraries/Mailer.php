@@ -234,13 +234,6 @@ class Mailer{
 			
 						
 			@mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
-					
-			
-			echo '<pre>';
-			print_r( $notification );
-			echo '</pre>';
-			echo $body;
-			exit;
 			
 			
 			/*
