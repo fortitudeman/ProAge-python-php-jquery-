@@ -32,7 +32,9 @@ class Mailer{
 		$agentes = '';
 		
 		if( !empty( $notification[0]['agents'] ) ){
+			
 			foreach( $notification[0]['agents'] as $value ){
+				
 				if( !empty( $value['company_name'] ) )
 					$agentes .=  $value['company_name'];
 				else
@@ -154,7 +156,7 @@ class Mailer{
 			
 			
 			
-			mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
+			@mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
 			
 			
 			
@@ -191,7 +193,6 @@ class Mailer{
 			
 		  }
 			
-			exit;
 		}
 		
 		
