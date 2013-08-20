@@ -656,7 +656,7 @@ class Work_order extends CI_Model{
 				'lastname_mother' =>  $row->lastname_mother,
 				'year_premium' =>  $row->year_premium,
 				'expired_date' =>  $row->expired_date,
-				'products' => $this->getProductsByPolicy( $row->id ),
+				'products' => $this->getProductsByPolicy( $row->product_id ),
 				'last_updated' =>  $row->last_updated,
 				'date' =>  $row->date
 		    );
