@@ -10,8 +10,7 @@ class Mailer{
         require_once('PHPMailer/class.phpmailer.php');
  
         // the true param means it will throw exceptions on errors, which we need to catch
-        $this->mail = new PHPMailer(true);
- 
+        $this->mail = new PHPMailer(); 
         $this->mail->IsSMTP(); // telling the class to use SMTP
  	    $this->mail->SMTPDebug  = 0;                     // enables SMTP debug information
         $this->mail->SMTPAuth   = false;                  // enable SMTP authentication
