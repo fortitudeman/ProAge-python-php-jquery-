@@ -104,7 +104,16 @@ class Ot extends CI_Controller {
 					
 								
 		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
-			
+	
+		/*
+		$this->load->model( 'work_order' );
+		
+		$this->load->library( 'mailer' );
+		
+		$notification = $this->work_order->getNotification( 3 );
+				
+		$this->mailer->notifications( 'ing.ulisesrodriguez@gmail.com', 'Ulises Rodriguez', $notification );
+			*/	
 	}
 	
 	
@@ -460,6 +469,7 @@ class Ot extends CI_Controller {
 						'currency_id' => $this->input->post( 'currency_id' ),
 						'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
 						'payment_method_id' => $this->input->post( 'payment_method_id' ),
+						'prima' => $this->input->post( 'prima' ),
 						'uid' => $this->input->post( 'uid' ),
 						'name' => $this->input->post( 'name' ),
 						'lastname_father' => $this->input->post( 'lastname_father' ),
