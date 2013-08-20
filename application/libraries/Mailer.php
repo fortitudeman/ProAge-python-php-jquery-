@@ -29,9 +29,7 @@ class Mailer{
         
 		if( empty( $notification ) ) return false;
 		
-		echo '<pre>';
-		print_r( $notification );
-		echo '</pre>';			
+			
 						
 		$agentes = '';
 		
@@ -235,8 +233,7 @@ class Mailer{
 			
 						
 			@mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
-			
-			
+						
 			
 			/*
 						

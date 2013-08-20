@@ -602,20 +602,53 @@ class Work_order extends CI_Model{
 		$query = $this->db->get('policies');
 		
 		
-		if ($query->num_rows() == 0) return false;
+		if ($query->num_rows() == 0) {
+		
+				
+			$this->db->select();		
+			$this->db->where( 'policies.id', $id );
+			$this->db->limit(1);
+			$query = $this->db->get('policies');
+			
+			
+			
+			if ($query->num_rows() == 0) return false;
+		
+		
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		$policy = array();
 		
 		foreach ($query->result() as $row) {
-
+			
+			$payment_intervals_name='';
+			$payment_method_name='';
+			if( isset( $row->payment_intervals_name ) )
+				$payment_intervals_name=$row->payment_intervals_name;
+			if( isset( $row->payment_method_name ) )
+				$payment_method_name=$row->payment_method_name;	
+			
 			$policy[] = array( 
 		    	'id' => $row->id,
 		    	'product_id' => $row->product_id,
 				'currency_id' => $row->currency_id,
 				'payment_interval_id' => $row->payment_interval_id,
-				'payment_intervals_name' => $row->payment_intervals_name,
+				'payment_intervals_name' => $payment_intervals_name,
 		    	'payment_method_id' =>  $row->payment_method_id,
-				'payment_method_name' => $row->payment_method_name,
+				'payment_method_name' => $payment_method_name,
 				'prima' => $row->prima,
 				'name' =>  $row->name,
 				'uid' =>  $row->uid,
