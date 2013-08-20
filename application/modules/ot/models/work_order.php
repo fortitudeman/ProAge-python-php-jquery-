@@ -207,9 +207,7 @@ class Work_order extends CI_Model{
 	
 // Notifications
 	public function getNotification( $id = null ){
-		
-		if( empty( $id ) ) return false;
-		
+						
 		/*
 			
 			SELECT product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*
@@ -225,7 +223,13 @@ class Work_order extends CI_Model{
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
-		$this->db->where( 'work_order.id', $id );
+		
+		if( !empty(  $id ) )				
+			$this->db->where( 'work_order.id', $id );
+		
+		$this->db->order_by( 'work_order.id', 'desc' );
+		
+		
 						
 		$this->db->limit( 1 );
 		
