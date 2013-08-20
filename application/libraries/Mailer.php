@@ -16,7 +16,7 @@ class Mailer{
  	    $this->mail->SMTPDebug  = 0;                     // enables SMTP debug information
         $this->mail->SMTPAuth   = false;                  // enable SMTP authentication
         $this->mail->CharSet = "utf-8";                  // 一定要設定 CharSet 才能正確處理中文
-        $this->mail->SMTPDebug  = 0;                     // enables SMTP debug information
+       // $this->mail->SMTPDebug  = 0;                     // enables SMTP debug information
         // $this->mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
         // $this->mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
         // $this->mail->Port       = 465;                   // set the SMTP port for the GMAIL server
@@ -163,7 +163,8 @@ class Mailer{
 			
 		  
 		  }
-		
+			
+			exit;
 		}
     }
 		
