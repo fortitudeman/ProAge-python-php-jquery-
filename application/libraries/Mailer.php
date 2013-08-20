@@ -142,29 +142,59 @@ class Mailer{
 					</div></div>';
 		
 		
-		
-						
-			try{
-				
-				$this->mail->AddAddress( $value['email'], $agentes);
-	 
-				$this->mail->Subject = $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'];
-				$this->mail->Body    = $body;
-	 
-				$this->mail->Send();
-					echo "Message Sent OK</p>\n";
-	 
-			} catch (phpmailerException $e) {
-				echo $e->errorMessage(); //Pretty error messages from PHPMailer
-			} catch (Exception $e) {
-				echo $e->getMessage(); //Boring error messages from anything else!
-			}
+			//if( !empty( $value['email'] ) ){
 			
-		  
+			
+			$headers = "From: info+proages@isinet.mx\r\n";
+			$headers .= "Reply-To: info+proages@isinet.mx\r\n";
+			$headers .= "MIME-Version: 1.0\r\n";
+			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+			
+			
+			
+			
+			
+			mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
+			
+			
+			
+			/*
+						
+				try{
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					/*
+					
+								
+					$this->mail->AddAddress( $value['email'], $agentes);
+		 
+					$this->mail->Subject = $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'];
+					$this->mail->Body    = $body;
+		 
+					$this->mail->Send();
+						echo "Message Sent OK</p>\n";
+		 
+				} catch (phpmailerException $e) {
+					echo $e->errorMessage(); //Pretty error messages from PHPMailer
+				} catch (Exception $e) {
+					echo $e->getMessage(); //Boring error messages from anything else!
+				}
+				
+			}*/			
+			
 		  }
 			
 			exit;
 		}
+		
+		
     }
 		
 }
