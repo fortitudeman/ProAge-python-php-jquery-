@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version: 5.5.24)
-# Date: 2013-07-31 00:05:10
+# Date: 2013-08-19 23:24:38
 # Generator: MySQL-Front 5.3  (Build 4.4)
 
 /*!40101 SET NAMES utf8 */;
@@ -8,6 +8,7 @@
 # Source for table "actions"
 #
 
+DROP TABLE IF EXISTS `actions`;
 CREATE TABLE `actions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -27,6 +28,7 @@ INSERT INTO `actions` VALUES (1,'Ver','','2013-07-15 14:27:28','2013-07-15 14:27
 # Source for table "agencies"
 #
 
+DROP TABLE IF EXISTS `agencies`;
 CREATE TABLE `agencies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -48,6 +50,7 @@ CREATE TABLE `agencies` (
 # Source for table "agent_uids"
 #
 
+DROP TABLE IF EXISTS `agent_uids`;
 CREATE TABLE `agent_uids` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `agent_id` int(11) NOT NULL,
@@ -56,18 +59,19 @@ CREATE TABLE `agent_uids` (
   `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "agent_uids"
 #
 
-INSERT INTO `agent_uids` VALUES (1,1,'clave','','2013-07-24 21:23:33','2013-07-24 21:23:33'),(2,1,'national','','2013-07-24 21:23:33','2013-07-24 21:23:33'),(3,1,'provincial','','2013-07-24 21:23:33','2013-07-24 21:23:33'),(4,2,'clave','','2013-07-24 21:24:50','2013-07-24 21:24:50'),(5,2,'national','','2013-07-24 21:24:50','2013-07-24 21:24:50'),(6,2,'provincial','','2013-07-24 21:24:50','2013-07-24 21:24:50');
+INSERT INTO `agent_uids` VALUES (1,1,'clave','','2013-07-24 21:23:33','2013-07-24 21:23:33'),(2,1,'national','','2013-07-24 21:23:33','2013-07-24 21:23:33'),(3,1,'provincial','','2013-07-24 21:23:33','2013-07-24 21:23:33'),(4,2,'clave','','2013-07-24 21:24:50','2013-07-24 21:24:50'),(5,2,'national','','2013-07-24 21:24:50','2013-07-24 21:24:50'),(6,2,'provincial','','2013-07-24 21:24:50','2013-07-24 21:24:50'),(15,5,'clave','1421424','2013-08-08 04:25:22','2013-08-08 04:25:22'),(16,5,'national','12414124124','2013-08-08 04:25:22','2013-08-08 04:25:22'),(17,5,'national','214212141241424','2013-08-08 04:25:22','2013-08-08 04:25:22'),(18,5,'provincial','12421412414','2013-08-08 04:25:22','2013-08-08 04:25:22'),(19,5,'provincial','124124124','2013-08-08 04:25:22','2013-08-08 04:25:22'),(20,5,'provincial','124124','2013-08-08 04:25:22','2013-08-08 04:25:22'),(21,5,'provincial','214142','2013-08-08 04:25:22','2013-08-08 04:25:22'),(22,5,'provincial','1242424','2013-08-08 04:25:22','2013-08-08 04:25:22'),(23,5,'provincial','23432424','2013-08-08 04:25:22','2013-08-08 04:25:22'),(24,6,'clave','767676767','2013-08-09 03:54:01','2013-08-09 03:54:01'),(25,6,'national','N54567','2013-08-09 03:54:01','2013-08-09 03:54:01'),(26,6,'provincial','P343343','2013-08-09 03:54:01','2013-08-09 03:54:01');
 
 #
 # Source for table "agents"
 #
 
+DROP TABLE IF EXISTS `agents`;
 CREATE TABLE `agents` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -76,18 +80,19 @@ CREATE TABLE `agents` (
   `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "agents"
 #
 
-INSERT INTO `agents` VALUES (1,7,'2013-07-24','2013-07-24','2013-07-24 21:23:33','2013-07-24 21:23:33'),(2,8,'2013-07-24','2013-07-24','2013-07-24 21:24:50','2013-07-24 21:24:50');
+INSERT INTO `agents` VALUES (1,7,'2013-07-24','2013-07-24','2013-07-24 21:23:33','2013-07-24 21:23:33'),(2,8,'2013-07-24','2013-07-24','2013-07-24 21:24:50','2013-07-24 21:24:50'),(5,27,'0000-00-00','0000-00-00','2013-08-08 04:25:22','2013-08-08 04:25:22'),(6,30,NULL,NULL,'2013-08-09 03:54:01','2013-08-09 03:54:01');
 
 #
 # Source for table "currencies"
 #
 
+DROP TABLE IF EXISTS `currencies`;
 CREATE TABLE `currencies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -107,6 +112,7 @@ INSERT INTO `currencies` VALUES (1,'Moneda Nacional','','2013-07-24 16:01:43','2
 # Source for table "folder"
 #
 
+DROP TABLE IF EXISTS `folder`;
 CREATE TABLE `folder` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -124,6 +130,7 @@ CREATE TABLE `folder` (
 # Source for table "log_types"
 #
 
+DROP TABLE IF EXISTS `log_types`;
 CREATE TABLE `log_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -141,6 +148,7 @@ CREATE TABLE `log_types` (
 # Source for table "logs"
 #
 
+DROP TABLE IF EXISTS `logs`;
 CREATE TABLE `logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `log_type_id` int(11) NOT NULL,
@@ -163,6 +171,7 @@ CREATE TABLE `logs` (
 # Source for table "modules"
 #
 
+DROP TABLE IF EXISTS `modules`;
 CREATE TABLE `modules` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -182,6 +191,7 @@ INSERT INTO `modules` VALUES (2,'Usuarios','','2013-07-15',1372286547),(3,'Modul
 # Source for table "notification_types"
 #
 
+DROP TABLE IF EXISTS `notification_types`;
 CREATE TABLE `notification_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -199,6 +209,7 @@ CREATE TABLE `notification_types` (
 # Source for table "notifications"
 #
 
+DROP TABLE IF EXISTS `notifications`;
 CREATE TABLE `notifications` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `notification_type_id` int(11) NOT NULL,
@@ -223,6 +234,7 @@ CREATE TABLE `notifications` (
 # Source for table "offices"
 #
 
+DROP TABLE IF EXISTS `offices`;
 CREATE TABLE `offices` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `agency_id` int(11) NOT NULL,
@@ -242,6 +254,7 @@ CREATE TABLE `offices` (
 # Source for table "payment_intervals"
 #
 
+DROP TABLE IF EXISTS `payment_intervals`;
 CREATE TABLE `payment_intervals` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -261,6 +274,7 @@ INSERT INTO `payment_intervals` VALUES (1,'Mensual','','2013-07-24 16:03:12','20
 # Source for table "payment_methods"
 #
 
+DROP TABLE IF EXISTS `payment_methods`;
 CREATE TABLE `payment_methods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -280,6 +294,7 @@ INSERT INTO `payment_methods` VALUES (1,'Oficina de servicio','','2013-07-24 16:
 # Source for table "payments"
 #
 
+DROP TABLE IF EXISTS `payments`;
 CREATE TABLE `payments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `policy_id` int(11) NOT NULL,
@@ -300,6 +315,7 @@ CREATE TABLE `payments` (
 # Source for table "platforms"
 #
 
+DROP TABLE IF EXISTS `platforms`;
 CREATE TABLE `platforms` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -319,6 +335,7 @@ INSERT INTO `platforms` VALUES (1,'tradicional','traditional',NULL,NULL),(2,'uni
 # Source for table "policies"
 #
 
+DROP TABLE IF EXISTS `policies`;
 CREATE TABLE `policies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
@@ -326,6 +343,7 @@ CREATE TABLE `policies` (
   `currency_id` int(11) NOT NULL,
   `payment_interval_id` int(11) NOT NULL,
   `payment_method_id` int(11) NOT NULL,
+  `prima` float(8,2) DEFAULT NULL,
   `uid` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
   `lastname_father` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -341,11 +359,13 @@ CREATE TABLE `policies` (
 # Data for table "policies"
 #
 
+INSERT INTO `policies` VALUES (1,1,'8',2,1,1,NULL,'','Nombre del asegurado','','',0,'0000-00-00 00:00:00','2013-08-14 17:57:40','2013-08-14 17:57:40');
 
 #
 # Source for table "policies_vs_users"
 #
 
+DROP TABLE IF EXISTS `policies_vs_users`;
 CREATE TABLE `policies_vs_users` (
   `user_id` int(11) NOT NULL,
   `policy_id` int(11) NOT NULL,
@@ -357,11 +377,13 @@ CREATE TABLE `policies_vs_users` (
 # Data for table "policies_vs_users"
 #
 
+INSERT INTO `policies_vs_users` VALUES (6,1,100,'2013-08-14 17:57:40');
 
 #
 # Source for table "product_group"
 #
 
+DROP TABLE IF EXISTS `product_group`;
 CREATE TABLE `product_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -380,6 +402,7 @@ INSERT INTO `product_group` VALUES (1,'Vida','2013-07-22 01:20:34','2013-07-22 0
 # Source for table "products"
 #
 
+DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `platform_id` int(11) DEFAULT NULL,
@@ -402,6 +425,7 @@ INSERT INTO `products` VALUES (1,1,1,'PROFESIONAL','7-18',1,'2013-07-23 12:54:01
 # Source for table "products_vs_currencies"
 #
 
+DROP TABLE IF EXISTS `products_vs_currencies`;
 CREATE TABLE `products_vs_currencies` (
   `product_id` int(11) NOT NULL,
   `currency_id` int(11) NOT NULL
@@ -416,6 +440,7 @@ CREATE TABLE `products_vs_currencies` (
 # Source for table "representatives"
 #
 
+DROP TABLE IF EXISTS `representatives`;
 CREATE TABLE `representatives` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
@@ -438,6 +463,7 @@ CREATE TABLE `representatives` (
 # Source for table "sources"
 #
 
+DROP TABLE IF EXISTS `sources`;
 CREATE TABLE `sources` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -456,6 +482,7 @@ CREATE TABLE `sources` (
 # Source for table "user_roles"
 #
 
+DROP TABLE IF EXISTS `user_roles`;
 CREATE TABLE `user_roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -475,6 +502,7 @@ INSERT INTO `user_roles` VALUES (1,'Agente','',1372810673,1372810673),(2,'Coordi
 # Source for table "user_roles_vs_access"
 #
 
+DROP TABLE IF EXISTS `user_roles_vs_access`;
 CREATE TABLE `user_roles_vs_access` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_role_id` int(11) NOT NULL,
@@ -489,12 +517,13 @@ CREATE TABLE `user_roles_vs_access` (
 # Data for table "user_roles_vs_access"
 #
 
-INSERT INTO `user_roles_vs_access` VALUES (8,4,2,1,'2013-07-15 22:44:39','2013-07-15 22:44:39'),(9,4,2,5,'2013-07-15 22:44:39','2013-07-15 22:44:39'),(10,4,2,11,'2013-07-15 22:44:39','2013-07-15 22:44:39'),(11,3,2,1,'2013-07-15 22:44:39','2013-07-15 22:44:39'),(12,3,2,5,'2013-07-15 22:44:39','2013-07-15 22:44:39'),(13,3,2,11,'2013-07-15 22:44:39','2013-07-15 22:44:39'),(53,1,2,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(54,1,2,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(55,1,2,3,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(83,5,2,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(84,5,2,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(85,5,2,3,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(86,5,2,4,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(87,5,2,5,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(88,5,2,6,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(89,5,2,7,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(90,5,2,8,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(91,5,2,9,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(92,5,2,10,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(93,5,2,11,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(94,5,2,12,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(95,5,2,13,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(96,5,3,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(97,5,3,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(98,5,3,3,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(99,5,4,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(100,5,4,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(101,5,4,3,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(102,5,5,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(103,5,5,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(104,5,5,3,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(105,5,5,4,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(106,5,5,5,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(107,5,5,6,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(108,5,5,7,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(109,5,5,8,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(110,5,5,9,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(111,5,5,10,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(112,2,5,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(113,2,5,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(114,2,5,3,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(115,2,5,4,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(116,2,5,5,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(117,2,5,6,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(118,2,5,8,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(119,2,5,9,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(120,2,5,10,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(121,2,5,12,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(122,2,5,13,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(123,2,5,14,'0000-00-00 00:00:00','0000-00-00 00:00:00');
+INSERT INTO `user_roles_vs_access` VALUES (11,3,2,1,'2013-07-15 22:44:39','2013-07-15 22:44:39'),(12,3,2,5,'2013-07-15 22:44:39','2013-07-15 22:44:39'),(13,3,2,11,'2013-07-15 22:44:39','2013-07-15 22:44:39'),(53,1,2,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(54,1,2,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(55,1,2,3,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(83,5,2,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(84,5,2,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(85,5,2,3,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(86,5,2,4,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(87,5,2,5,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(88,5,2,6,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(89,5,2,7,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(90,5,2,8,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(91,5,2,9,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(92,5,2,10,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(93,5,2,11,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(94,5,2,12,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(95,5,2,13,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(96,5,3,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(97,5,3,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(98,5,3,3,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(99,5,4,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(100,5,4,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(101,5,4,3,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(102,5,5,1,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(103,5,5,2,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(104,5,5,3,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(105,5,5,4,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(106,5,5,5,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(107,5,5,6,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(108,5,5,7,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(109,5,5,8,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(110,5,5,9,'0000-00-00 00:00:00','0000-00-00 00:00:00'),(111,5,5,10,'0000-00-00 00:00:00','0000-00-00 00:00:00');
 
 #
 # Source for table "users"
 #
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `office_id` int(11) NOT NULL,
@@ -511,18 +540,19 @@ CREATE TABLE `users` (
   `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "users"
 #
 
-INSERT INTO `users` VALUES (5,0,0,'SOS','administrador','827ccb0eea8a706c4c34a16891f84e7b','Administrador','Admin','1994-07-05','administrador@gmail.com','default.png',1,'2013-07-21 07:05:33','2013-07-21 02:05:33'),(6,0,0,'SOS','admin','827ccb0eea8a706c4c34a16891f84e7b','Ulises','Rodriguez','2013-07-19','admin@gmail.com','2w53xh2.jpg',0,'2013-07-21 07:07:31','2013-07-21 02:07:31'),(7,0,0,'SOS','agente','827ccb0eea8a706c4c34a16891f84e7b','Ulises','Rodriguez','2013-07-24','agente@gmail.com','default.png',1,'2013-07-24 21:23:33','2013-07-24 21:23:33'),(8,0,0,'SOS','agente2','827ccb0eea8a706c4c34a16891f84e7b','Hector','Jimenez','2013-07-24','agent2@gmail.com','default.png',1,'2013-07-24 21:24:50','2013-07-24 21:24:50'),(9,0,0,'Compañia','coordinador','827ccb0eea8a706c4c34a16891f84e7b','coordinador','coordinador','2013-02-19','coordinador@corre.com','default.png',1,'2013-07-31 01:14:30','2013-07-31 01:14:30');
+INSERT INTO `users` VALUES (5,0,0,'SOS','administrador','827ccb0eea8a706c4c34a16891f84e7b','Administrador','Admin','1994-07-05','administrador@gmail.com','esqueleto.jpg',1,'2013-08-07 04:03:03','2013-08-09 13:45:22'),(6,0,0,'SOS','admin','827ccb0eea8a706c4c34a16891f84e7b','Ulises','Rodriguez','2013-07-19','admin@gmail.com','2w53xh2.jpg',0,'2013-07-21 07:07:31','2013-07-21 02:07:31'),(7,0,0,'SOS','agente','827ccb0eea8a706c4c34a16891f84e7b','Ulises','Rodriguez','2013-07-24','agente@gmail.com','default.png',1,'2013-07-24 21:23:33','2013-07-24 21:23:33'),(9,0,0,'Compañia','coordinador','827ccb0eea8a706c4c34a16891f84e7b','coordinador','coordinador','2013-02-19','coordinador@corre.com','default.png',1,'2013-07-31 01:14:30','2013-07-31 01:14:30'),(20,0,0,NULL,'Usuario','4c882dcb24bcb1bc225391a602feca7c','Nombre','Apellido',NULL,'email4@email.com','default.png',0,'2013-07-31 06:06:15','2013-07-31 06:06:15'),(25,0,0,NULL,'hlandiaz','3ab9071536d62f29aa8b3fd39141f6ad','Héctor Ignacio','Landeros Díaz',NULL,'hlandiaz@aevum.com.mx','default.png',0,'2013-08-02 05:31:19','2013-08-02 05:31:19'),(26,0,0,NULL,'amorales','e052450f29b2e0e9a53fd4eb389e25a9','Alejandro','Morales Garduño',NULL,'alejandromorales@aevum.com.mx','default.png',0,'2013-08-02 05:31:19','2013-08-02 05:31:19'),(27,0,0,'','agentenuevo','827ccb0eea8a706c4c34a16891f84e7b','agente nuevo','agente nuevo','0000-00-00','agentenuevo@gmail.com','default.png',1,'2013-08-08 04:25:22','2013-08-07 23:25:22'),(28,0,0,'','juanagente','dc0a37940f89f27fc31cd0c22f637dc9','Juan Agente','Campa',NULL,'juan+agente@gmail.com','default.png',0,'2013-08-09 03:54:00','2013-08-09 03:54:00'),(29,0,0,'','pepecoordinador','dc0a37940f89f27fc31cd0c22f637dc9','Pepe Coordinador','Lora',NULL,'pepe+coordinador@gmail.com','default.png',0,'2013-08-09 03:54:01','2013-08-09 03:54:01'),(30,0,0,'Agentes Modernos SC','agentesmodernos','dc0a37940f89f27fc31cd0c22f637dc9','','',NULL,'agentes@gmail.com','default.png',0,'2013-08-09 03:54:01','2013-08-09 03:54:01'),(31,0,0,'','agentecancelado','dc0a37940f89f27fc31cd0c22f637dc9','Agente','Cancelado',NULL,'agente.cancelado@gmail.com','default.png',0,'2013-08-09 03:54:01','2013-08-09 03:54:01');
 
 #
 # Source for table "users_vs_user_roles"
 #
 
+DROP TABLE IF EXISTS `users_vs_user_roles`;
 CREATE TABLE `users_vs_user_roles` (
   `user_id` int(11) NOT NULL,
   `user_role_id` int(11) NOT NULL
@@ -532,12 +562,13 @@ CREATE TABLE `users_vs_user_roles` (
 # Data for table "users_vs_user_roles"
 #
 
-INSERT INTO `users_vs_user_roles` VALUES (5,5),(6,5),(7,1),(8,1),(9,2);
+INSERT INTO `users_vs_user_roles` VALUES (6,5),(7,1),(9,2),(20,2),(25,4),(26,4),(5,5),(27,1),(28,0),(29,0),(30,0),(31,0);
 
 #
 # Source for table "work_order"
 #
 
+DROP TABLE IF EXISTS `work_order`;
 CREATE TABLE `work_order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `policy_id` int(11) NOT NULL,
@@ -553,17 +584,19 @@ CREATE TABLE `work_order` (
   `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "work_order"
 #
 
+INSERT INTO `work_order` VALUES (1,0,1,2,5,0,0,'0807V','2013-08-07 01:05:52','',0,'2013-08-07 06:52:05','2013-08-07 06:52:05'),(2,0,3,110,5,0,0,'0807A','2013-08-07 01:29:49','',0,'2013-08-07 06:49:29','2013-08-12 12:27:11'),(3,1,1,48,9,1,1,'0814V','2013-08-17 18:51:54','saaasf',0,'2013-08-17 18:51:54','2013-08-17 13:51:54');
 
 #
 # Source for table "work_order_history"
 #
 
+DROP TABLE IF EXISTS `work_order_history`;
 CREATE TABLE `work_order_history` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `work_order_id` int(11) NOT NULL,
@@ -585,6 +618,7 @@ CREATE TABLE `work_order_history` (
 # Source for table "work_order_reason"
 #
 
+DROP TABLE IF EXISTS `work_order_reason`;
 CREATE TABLE `work_order_reason` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `product_group_id` int(11) NOT NULL,
@@ -605,6 +639,7 @@ INSERT INTO `work_order_reason` VALUES (1,1,6,'INFORMACION MEDICA ADICIONAL Y/O 
 # Source for table "work_order_responsibles"
 #
 
+DROP TABLE IF EXISTS `work_order_responsibles`;
 CREATE TABLE `work_order_responsibles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -623,6 +658,7 @@ INSERT INTO `work_order_responsibles` VALUES (1,'Agente','2013-07-25 11:52:07','
 # Source for table "work_order_status"
 #
 
+DROP TABLE IF EXISTS `work_order_status`;
 CREATE TABLE `work_order_status` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) CHARACTER SET utf8 COLLATE utf8_spanish_ci NOT NULL,
@@ -641,6 +677,7 @@ INSERT INTO `work_order_status` VALUES (2,'cancelada','2013-07-25 10:44:12','201
 # Source for table "work_order_types"
 #
 
+DROP TABLE IF EXISTS `work_order_types`;
 CREATE TABLE `work_order_types` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `patent_id` int(11) NOT NULL,
@@ -650,7 +687,7 @@ CREATE TABLE `work_order_types` (
   `last_updated` datetime NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "work_order_types"
