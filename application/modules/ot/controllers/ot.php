@@ -475,6 +475,7 @@ class Ot extends CI_Controller {
 					  
 				}else{
 					$policy = array(
+						'name' => $this->input->post( 'name' ),
 						'uid' => $this->input->post( 'uid' ),
 						'last_updated' => date( 'Y-m-d H:i:s' ),
 						'date' => date( 'Y-m-d H:i:s' )
