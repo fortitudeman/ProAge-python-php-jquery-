@@ -42,7 +42,7 @@ class Mailer{
 		
 		$status_name = '';
 		
-		if( $notification[0]['status_name'] == 'creada' )
+		if( $notification[0]['status_name'] == 'en trámite' )
 			$status_name = 'Creación';
 		if( $notification[0]['status_name'] == 'activada' )
 			$status_name = 'Activación';
@@ -150,7 +150,7 @@ class Mailer{
 			$headers = "From: info+proages@isinet.mx\r\n";
 			$headers .= "Reply-To: info+proages@isinet.mx\r\n";
 			$headers .= "MIME-Version: 1.0\r\n";
-			$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+			$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 			
 			
 			
