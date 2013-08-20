@@ -73,9 +73,8 @@ class Mailer{
 					
 					
 					
-					 <table width="650" cellspacing="0" cellpadding="0" border="0" align="center" style="border-left-width:1px;border-left-style:solid;border-left-color:rgb(197,197,197);border-right-width:1px;border-right-style:solid;border-right-color:rgb(197,197,197)"><tbody><tr><td bgcolor="#FFFFFF" align="center" height="50" style="line-height:29px"><span style="font-size:22px"><b><font color="#ff2600">
-					
-					'.$status_name.'</font></b></span><span style="color:rgb(25,25,25);font-family:Helvetica,arial,sans-serif;font-size:22px;font-weight:bold"> de la Orden de Trabajo '.$notification[0]['uid'].'</span></td></tr></tbody></table>
+					 <table width="650" cellspacing="0" cellpadding="0" border="0" align="center" style="border-left-width:1px;border-left-style:solid;border-left-color:rgb(197,197,197);border-right-width:1px;border-right-style:solid;border-right-color:rgb(197,197,197)"><tbody><tr><td bgcolor="#FFFFFF" align="center" height="50" style="line-height:29px"><span style="font-size:22px"><b>					
+					'.$status_name.'</b></span><span style="color:rgb(25,25,25);font-family:Helvetica,arial,sans-serif;font-size:22px;font-weight:bold"> de la Orden de Trabajo '.$notification[0]['uid'].'</span></td></tr></tbody></table>
 					
 					
 					 <table width="650" cellspacing="0" cellpadding="0" border="0" align="center" style="border-left:1px solid #c5c5c5;border-right:1px solid #c5c5c5"><tbody><tr><td bgcolor="#FFFFFF" height="20" valign="top"><img width="648" height="1" style="display:block" src="http://serviciosisinet.com/img/divider.jpg"></td>
