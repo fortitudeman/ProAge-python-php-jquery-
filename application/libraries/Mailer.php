@@ -88,7 +88,7 @@ class Mailer{
 						<td bgcolor="#FFFFFF" width="30">&nbsp;</td>
 						<td bgcolor="#FFFFFF" align="left" style="font-family:Helvetica,arial,sans-serif;font-size:14px;line-height:15px">
 							<p style="color:rgb(79,79,79)">'.$agentes.'</p>
-							<p><font color="#4f4f4f">Le notificamos que la solicitud con la Orden de trabajo  '.$notification[0]['uid'].' fue </font><font color="#0433ff">'.$stat_name.'</font><font color="#4f4f4f">.</font></p>';
+							<p><font color="#4f4f4f">Le notificamos que la solicitud con la Orden de trabajo  '.$notification[0]['uid'].' fue '.$stat_name.'</font><font color="#4f4f4f">.</font></p>';
 							
 							
 							if( !empty( $razon ) and !empty( $responsable ) ):
