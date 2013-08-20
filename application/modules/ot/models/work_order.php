@@ -618,6 +618,7 @@ class Work_order extends CI_Model{
 				'payment_method_name' => $row->payment_method_name,
 				'prima' => $row->prima,
 				'name' =>  $row->name,
+				'uid' =>  $row->uid,
 				'lastname_father' =>  $row->lastname_father,
 				'lastname_mother' =>  $row->lastname_mother,
 				'year_premium' =>  $row->year_premium,

@@ -28,6 +28,10 @@ class Mailer{
     public function notifications( $notification = array(), $razon = null, $responsable = null ){
         
 		if( empty( $notification ) ) return false;
+		
+		echo '<pre>';
+		print_r( $notification );
+		echo '</pre>';			
 						
 		$agentes = '';
 		
@@ -93,10 +97,36 @@ class Mailer{
 							if( !empty( $razon ) and !empty( $responsable ) ):
 							
 							$body .= '<p><font color="#008f00"><b>Razón</b>: '.$razon.'</font></p>
-									  <p><font color="#008f00"><b>Responsable</b>: '.$responsable.'</font></p>
-									  <div><font color="#008f00"><b>Comentarios</b>: '.$notification[0]['comments'].'</font></div><div style="color:rgb(79,79,79)"><br></div>';
-							
+									  <p><font color="#008f00"><b>Responsable</b>: '.$responsable.'</font></p>';
+									  							
 							endif;
+							
+							
+							
+							
+							/*
+							Número de OT
+							Fecha de trámite
+							Ramo
+							Tipo de trámite
+							Sub tipo
+							Producto
+							Prima
+							Forma de Pago
+							Conducto
+							Nombre del asegurado
+							Póliza (si existe)
+							Comentarios (si existen)*/
+							
+							
+								
+							
+							
+							
+							
+							
+							
+							
 							
 							$body .= ' <table width="80%" align="center" style="color:rgb(79,79,79)">
 								  <tbody><tr>
@@ -111,31 +141,70 @@ class Mailer{
 									  <td><b>Fecha de tramite:</b><br><small>(año-mes-dia)</small></td>
 									  <td> '.date( 'Y-m-d', strtotime($notification[0]['creation_date'] ) ).'</td>
 								  </tr>
-								  <tr>
-									  <td><b>Asegurado:</b></td>
-									  <td> '.$notification[0]['policy'][0]['name'].'</td>    
-								  </tr>
+								  
 								  <tr>
 									  <td><b>Ramo:</b></td>
 									  <td>'.$notification[0]['group_name'].'</td>    
 								  </tr>
-								  <tr>
-									  <td><b>Producto:</b></td>
-									  <td>'.$notification[0]['policy'][0]['products'][0]['name'].'</td>    
+								   <tr>
+									  <td><b>Tipo de trámite:</b></td>
+									  <td>'.$notification[0]['parent_type_name']['name'].'</td>    
 								  </tr>
-								  <tr>
-									  <td><b>Prima:</b></td>
-									  <td>'.$notification[0]['policy'][0]['prima'].'</td>    
-								  </tr>
-								  <tr>
-									  <td><b>Forma de Pago:</b></td>
-									  <td>'.$notification[0]['policy'][0]['payment_intervals_name'].'</td>    
-								  </tr>
-								  <tr>
-									  <td><b>Conducto:</b></td>
-									  <td>'.$notification[0]['policy'][0]['payment_method_name'].'</td>    
-								  </tr>
-							 </tbody></table>
+								   <tr>
+									  <td><b>Sub tipo:</b></td>
+									  <td>'.$notification[0]['type_name'].'</td>    
+								  </tr>';
+								  
+								  if( !empty( $notification[0]['policy'][0]['products'][0]['name'] ) )
+								  
+									  $body .= '<tr>
+												  <td><b>Producto:</b></td>
+												  <td>'.$notification[0]['policy'][0]['products'][0]['name'].'</td>    
+												</tr>';
+								  
+								 if( !empty( $notification[0]['policy'][0]['products'][0]['name'] ) )
+								  
+										  $body .= '<tr>
+													  <td><b>Prima:</b></td>
+													  <td>'.$notification[0]['policy'][0]['prima'].'</td>    
+												  </tr> ';
+								 if( !empty( $notification[0]['policy'][0]['payment_intervals_name'] ) )	  
+										  
+										  
+								  $body .= '<tr>
+										  <td><b>Forma de Pago:</b></td>
+										  <td>'.$notification[0]['policy'][0]['payment_intervals_name'].'</td>    
+									  </tr>';
+								 
+								  if( !empty( $notification[0]['policy'][0]['payment_method_name'] ) )	  
+
+									   $body .= '<tr>
+										  <td><b>Conducto:</b></td>
+										  <td>'.$notification[0]['policy'][0]['payment_method_name'].'</td>    
+									  </tr>';
+									  
+									  
+					    $body .= '<tr>
+									  <td><b>Asegurado:</b></td>
+									  <td> '.$notification[0]['policy'][0]['name'].'</td>    
+								  </tr>';
+								  
+								   if( !empty( $notification[0]['policy'][0]['uid'] ) )	  
+								   
+								    $body .= '<tr>
+										  <td><b>Poliza:</b></td>
+										  <td> '.$notification[0]['policy'][0]['uid'].'</td>    
+									  </tr>';
+								  
+								  
+								  if( !empty($notification[0]['comments'] ) )	  
+								   $body .= '<tr>
+									  <td><b>Comentarios:</b></td>
+									  <td> '.$notification[0]['comments'].'</td>    
+								  </tr>';								  
+							
+							
+							 $body .= ' </tbody></table>
 					
 						</td>
 						<td bgcolor="#FFFFFF" width="30">&nbsp;</td>
@@ -164,10 +233,7 @@ class Mailer{
 			$headers .= "MIME-Version: 1.0\r\n";
 			$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 			
-			
-			
-			
-			
+						
 			@mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
 			
 			
