@@ -106,7 +106,7 @@
                   
                   <input type="hidden" id="agenconfirm" value="true" />
                   
-                  <div class="control-group new-bussiness">
+                  <div class="control-group *new-bussiness">
                     <label class="control-label text-error" for="inputError">Agente</label>
                     <div class="controls">
                        <select class="input-xlarge focused required" name="agent[]" id="agent-select">
