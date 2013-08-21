@@ -176,71 +176,7 @@ class Ot extends CI_Controller {
 		
 		
 		$scrips = '';
-
-		if( !empty( $data ) )
-			
-			foreach( $data as $value ){
-				
-				if( $value['status_name'] != 'aceptado' and $value['status_name'] != 'rechazado' and  $value['status_name'] != 'cancelada' ){
-												
-				
-				$scrips .= '<script type="text/javascript">
-								$("#'.$value['id'].'").popover({
-										title: "Opciones",
-										trigger:"click",
-										placement:"left",
-										html:true, 
-										content: function(){ ';
-												
-													
-												
-												
-														
-												
-					
-					if( $value['status_name'] != 'cancelada' ){
-					
-					$scrips .= '				var content = "Escoja una opción<br>";';
-												
-												$new = false;
-												
-												if( $value['parent_type_name']['name'] == 'NUEVO NEGOCIO' )
-												
-													$new = true;
-												
-												if( $this->access_activate == true and $value['status_name'] ==  'desactivada' )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')\">Activar</a><br>";';
-												
-												
-												else if( $this->access_activate == true and $value['status_name'] ==  'activada' )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')\">Desactivar</a><br>";';
-												else 
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')\">Activar</a><br>";';
-												
-												
-												
-												
-												if( $this->access_update == true ){
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')\">Marcar como aceptada</a><br>";';
-												
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')\">Marcar como rechazada</a><br>";';
-												}
-												if( $this->access_delete == true )
-												
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')\">Cancelar</a>";';
-												
-					}
-												
-												
-					
-											$scrips .= 'return content;
-										}
-								});
-							 </script>';
-				
-				}
-			}
-						 
+								 
 		// Config view
 		$this->view = array(
 				
@@ -292,7 +228,7 @@ class Ot extends CI_Controller {
 		else
 			$data = $this->work_order->find( $this->input->post() );
 				
-		echo renderTable( $data );	
+		echo renderTable( $data, $this->access_activate, $this->access_update, $this->access_delete );	
 		
 	}	
 	
@@ -302,74 +238,9 @@ class Ot extends CI_Controller {
 		// If is not ajax request redirect
 		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
 		
-		// Load Model
-		$this->load->model( 'work_order' );
 		
-		if( $this->access_all == false )
-			$data = $this->work_order->find( $this->input->post(), $this->sessions['id'] );
+		echo " $( '.popup' ).hide(); $( '.btn-hide' ).bind( 'click', function(){ $( '.popup' ).hide(); });  ";exit;
 		
-		else
-			$data = $this->work_order->find( $this->input->post() );
-		
-		$scrips = '';
-		
-		if( !empty( $data ) )
-			
-			foreach( $data as $value ){
-				
-				if( $value['status_name'] != 'aceptado' and $value['status_name'] != 'rechazado' and  $value['status_name'] != 'cancelada' ){
-				
-				$scrips .= '
-								$("#'.$value['id'].'").popover({
-										title: "Opciones",
-										trigger:"click",
-										placement:"left",
-										html:true, 
-										content: function(){';
-											
-											if( $value['status_name'] != 'cancelada' ){
-												
-												$scrips .= 'var content = "Escoja una opción<br>";';
-																													
-												$new = false;
-												
-												if( $value['parent_type_name']['name'] == 'NUEVO NEGOCIO' )
-												
-													$new = true;
-												
-												if( $this->access_activate == true and $value['status_name'] ==  'desactivada' )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')\">Activar</a><br>";';
-												
-												
-												else if( $this->access_activate == true and $value['status_name'] ==  'activada' )
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')\">Desactivar</a><br>";';
-												else 
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')\">Activar</a><br>";';
-												
-												
-												
-												
-												if( $this->access_update == true ){
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')\">Marcar como aceptada</a><br>";';
-												
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')\">Marcar como rechazada</a><br>";';
-												}
-												if( $this->access_delete == true )
-												
-												$scrips .= 'content += "<a href=\"javascript:void(0)\" onclick=\"chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')\">Cancelar</a>";';
-												
-												}
-												
-												
-					
-												$scrips .= 'return content;
-										}
-								});
-							 ';
-				}
-			}
-		
-		echo $scrips;	
 	}
 	
 	

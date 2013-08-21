@@ -12,9 +12,16 @@
 
   	
 */
+function menu( item ){
+  $( '.popup' ).hide();
+  $( '#'+item ).show();
+}
 
 $( document ).ready( function(){
-			  
+	
+	$( '.popup' ).hide();	
+	  
+	$( '.btn-hide' ).bind( 'click', function(){ $( '.popup' ).hide(); });  
 	  
 	$( '.find' ).bind( 'click', function(){
 			

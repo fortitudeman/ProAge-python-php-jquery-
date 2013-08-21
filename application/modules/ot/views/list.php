@@ -175,7 +175,7 @@
               <tbody id="data">
                 <?php  if( !empty( $data ) ): ?>
                 <?php  foreach( $data as $value ):  ?>
-                <tr id="<?php echo $value['id'] ?>" class="popup">
+                <tr onclick="menu('menu-<?php echo $value['id'] ?>');">
                 	<td class="center"><?php 
 										    
 											$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
@@ -213,10 +213,62 @@
                     </td>
                     <td class="center"><?php echo $value['group_name'] ?></td>
                     <td class="center"><?php echo $value['parent_type_name']['name'] ?></td>
-                    <td class="center"><?php if( !empty( $value['policy'] ) )echo $value['policy'][0]['name']. ' '. $value['policy'][0]['lastname_father']. ' '. $value['policy'][0]['lastname_mother'] ?></td>
+                    <td class="center"><?php echo $value['policy'][0]['name'] ?></td>
                                        
                     <td class="center" ><?php echo ucwords(str_replace( 'tramite', 'en trámite', $value['status_name'])); ?></td>
                 </tr>
+                
+                
+                
+                <tr id="menu-<?php echo $value['id'] ?>" class="popup">
+                	<td colspan="8">
+                   
+                    <?php 
+					
+					$new = false;
+												
+					if( $value['parent_type_name']['name'] == 'NUEVO NEGOCIO' )
+					
+						$new = true;
+					
+					$scrips='';
+					
+					if( $this->access_activate == true and $value['status_name'] ==  'desactivada' )
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp;';
+												
+									
+					else if( $this->access_activate == true and $value['status_name'] ==  'activada' )
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')">Desactivar</a>&nbsp;&nbsp;';
+					
+					else 
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp;';
+												
+												
+												
+												
+					if( $this->access_update == true ){
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')">Marcar como aceptada</a>&nbsp;&nbsp;';
+												
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>&nbsp;&nbsp;';
+												}
+					if( $this->access_delete == true )
+												
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')">Cancelar</a>&nbsp;&nbsp;';
+					
+					
+					echo $scrips;
+												
+					?>
+                    <a href="javascript:void(0)" class="btn btn-link btn-hide">^</a>
+                    </td>
+                </tr>
+                
+                
+                
+                
+                
+                
+                
                 <?php endforeach;  ?> 
                 <?php else: ?>
 		        <tr>
@@ -227,6 +279,7 @@
                         </div>
                 	</td>
                 </tr>
+                                
               <?php endif; ?>               
               </tbody>
           </table>    
