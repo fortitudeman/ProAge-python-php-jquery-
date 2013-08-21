@@ -247,6 +247,8 @@ class Work_order extends CI_Model{
 			$ot[] = array( 
 		    	'id' => $row->id,
 				'uid' => $row->uid,
+				'work_order_responsible_id' => $row->work_order_responsible_id,
+				'work_order_reason_id' => $row->work_order_reason_id,
 				'policy' => $this->getPolicyBuId( $row->policy_id ),
 				'agents' => $this->getAgentsByPolicy( $row->policy_id ),
 		    	'product_group_id' => $row->product_group_id,
@@ -268,7 +270,59 @@ class Work_order extends CI_Model{
 	}	
 	
 	
+	public function getResponsiblesById( $id = null ){
+		
+		if( empty( $id ) ) return false;
+		
+		$this->db->where( 'id', $id );
+		
+		$query = $this->db->get( 'work_order_responsibles' );
+		
+		if ($query->num_rows() == 0) return false;
+		
+		
+		$responsibles = array();
+		
+		foreach ($query->result() as $row) {
+			
+			$responsibles[] = array( 
+		    	'id' => $row->id,
+				'name' => $row->name,
+				'last_updated' =>  $row->last_updated,
+				'date' =>  $row->date
+		    );
+
+		}
+				
+		return $responsibles;
+	}
 	
+	public function getReasonById( $id = null ){
+		
+		if( empty( $id ) ) return false;
+		
+		$this->db->where( 'id', $id );
+		
+		$query = $this->db->get( 'work_order_reason' );
+		
+		if ($query->num_rows() == 0) return false;
+		
+		
+		$reason = array();
+		
+		foreach ($query->result() as $row) {
+			
+			$reason[] = array( 
+		    	'id' => $row->id,
+				'name' => $row->name,
+				'last_updated' =>  $row->last_updated,
+				'date' =>  $row->date
+		    );
+
+		}
+				
+		return $reason;
+	}
 	
 	
 	

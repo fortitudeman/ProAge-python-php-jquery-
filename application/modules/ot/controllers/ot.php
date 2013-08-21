@@ -1009,6 +1009,8 @@ class Ot extends CI_Controller {
 	 **/
 	public function activar( $ot = null ){
 		
+		
+		
 		// Check access teh user for create
 		if( $this->access_activate == false ){
 				
@@ -1035,6 +1037,8 @@ class Ot extends CI_Controller {
 		if( !empty( $_POST ) ){
 			
 			
+					
+			
 			$work_order = array(
 				
 				'work_order_status_id' => 6,
@@ -1047,6 +1051,19 @@ class Ot extends CI_Controller {
 			
 					
 			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
+												
+				
+			// Send Email		
+			$this->load->library( 'mailer' );
+			
+			$notification = $this->work_order->getNotification( $ot );
+			
+			
+			$responsible = $this->work_order->getResponsiblesById( $notification[0]['work_order_responsible_id'] );
+			$reason = $this->work_order->getResponsiblesById( $notification[0]['work_order_reason_id'] );
+					
+			$this->mailer->notifications( $notification, $reason[0]['name'], $responsible[0]['name'] );
+				
 				
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
@@ -1140,6 +1157,19 @@ class Ot extends CI_Controller {
 				
 			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
 				
+				
+				// Send Email		
+				$this->load->library( 'mailer' );
+				
+				$notification = $this->work_order->getNotification( $ot );
+				
+				
+				$responsible = $this->work_order->getResponsiblesById( $notification[0]['work_order_responsible_id'] );
+				$reason = $this->work_order->getResponsiblesById( $notification[0]['work_order_reason_id'] );
+						
+				$this->mailer->notifications( $notification, $reason[0]['name'], $responsible[0]['name'] );
+				
+				
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
 					
@@ -1212,6 +1242,16 @@ class Ot extends CI_Controller {
 			);
 			
 			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
+				
+				
+				
+				// Send Email		
+				$this->load->library( 'mailer' );
+				
+				$notification = $this->work_order->getNotification( $ot );
+								
+				$this->mailer->notifications( $notification );
+				
 				
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
@@ -1324,6 +1364,14 @@ class Ot extends CI_Controller {
 						
 			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
 				
+				
+				// Send Email		
+				$this->load->library( 'mailer' );
+				
+				$notification = $this->work_order->getNotification( $ot );
+								
+				$this->mailer->notifications( $notification );
+				
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
 					
@@ -1366,6 +1414,14 @@ class Ot extends CI_Controller {
 			
 						
 			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
+				
+				
+				// Send Email		
+				$this->load->library( 'mailer' );
+				
+				$notification = $this->work_order->getNotification( $ot );
+								
+				$this->mailer->notifications( $notification );
 				
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
