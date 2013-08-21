@@ -1959,9 +1959,10 @@ class Usuarios extends CI_Controller {
 				$this->form_validation->set_rules('username', 'Usuario', 'is_unique[users.username]');
 				
 			
-			if( !empty( $_POST['password'] ) and md5($_POST['passwordlast']) == $user['password'] )
+			if( !empty( $_POST['password'] ) ){
 				$this->form_validation->set_rules('password', 'Nuevo Password', 'required|matches[passwordnew]');
-		
+				$this->form_validation->set_rules('passwordnew', 'Nuevo Password Repetir', 'required');
+			}
 			if( $user['email'] != $this->input->post( 'email' ) )
 				$this->form_validation->set_rules('email', 'Correo', 'valid_email|is_unique[users.email]');
 			
@@ -2046,7 +2047,19 @@ class Usuarios extends CI_Controller {
 				} 
 				
 				
+				
 			}
+			
+			// Set true message		
+						$this->session->set_flashdata( 'message', array( 
+							
+							'type' => true,	
+							'message' => 'Se guardo el registro correctamente'
+										
+						));												
+						
+						
+						redirect( 'home', 'refresh' );
 									
 		}
 		
