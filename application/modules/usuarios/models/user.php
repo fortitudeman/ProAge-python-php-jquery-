@@ -1555,7 +1555,7 @@ class User extends CI_Model{
 		$this->db->select( 'agents.id, users.name, users.lastnames, users.company_name' );
 		$this->db->from( 'agents' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
-		$this->db->order_by( 'users.company_name', 'asc' );
+		//$this->db->order_by( 'users.company_name', 'asc' );
 		
 		$query = $this->db->get();
 		
@@ -1563,14 +1563,28 @@ class User extends CI_Model{
 		
 		if ($query->num_rows() == 0) return $options;
 		
+		$agents = array();
+		
 		// Getting data
-		foreach ($query->result() as $row)
+		foreach ($query->result() as $row){
 			
 			
 			if( !empty( $row->company_name ) )
-				$options .= '<option value="'.$row->id.'">'.$row->company_name.'</option>';
+				$agents[] = array( 'id' => $row->id, 'name' => $row->company_name );
+			
 			else
-				$options .= '<option value="'.$row->id.'">'.$row->name.' '.$row->lastnames.'</option>';
+				$agents[] = array( 'id' => $row->id, 'name' => $row->name.' '.$row->lastnames );	
+			
+			
+		}
+		
+		
+		 sort($agents,SORT_STRING);
+			
+			
+		 foreach( $agents as $value )
+		
+				$options .= '<option value="'.$value['id'].'">'.$value['name'].'</option>';
 		
 		return $options;
 		
