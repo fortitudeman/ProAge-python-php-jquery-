@@ -188,6 +188,9 @@
 												else if( (float)$color > 10 )	
 													echo '<div style="background-color:#F30; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
 											}
+											
+											if( $value['status_name'] == 'activada' )
+												echo '<div style="background-color:#000; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
 											 
 											 echo $value['uid'];
 											
