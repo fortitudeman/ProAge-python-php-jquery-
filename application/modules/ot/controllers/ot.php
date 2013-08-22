@@ -476,9 +476,7 @@ class Ot extends CI_Controller {
 				}
 				 
 			}	
-			
-				
-				exit;		
+						
 		}
 		
 		
