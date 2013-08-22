@@ -222,7 +222,7 @@ class Mailer{
 					 <table width="650" cellspacing="0" cellpadding="0" border="0" align="center"><tbody><tr><td height="22"><img width="650" height="22" style="display:block" src="http://serviciosisinet.com/img/bottom.jpg"></td></tr></tbody></table>
 					
 					
-					<table width="650" cellspacing="0" cellpadding="0" border="0" align="center"><tbody><tr><td width="650" bgcolor="#f4f4f4" align="center"><span style="font-family:Helvetica,arial,sans-serif;font-size:11px;color:#636363;font-style:normal;line-height:16px">Si usted no puede ver el mensaje correctamente <a href="http://serviciosisinet.com/email/index.php?id=164" style="text-decoration:none;color:#315e8b;font-weight:bold" target="_blank">haga click aquí</a>. </span></td>
+					<table width="650" cellspacing="0" cellpadding="0" border="0" align="center"><tbody><tr><td width="650" bgcolor="#f4f4f4" align="center"><span style="font-family:Helvetica,arial,sans-serif;font-size:11px;color:#636363;font-style:normal;line-height:16px"></span></td>
 					
 					</tr></tbody></table><div class="yj6qo"></div><div class="adL">
 					</div></div>';
