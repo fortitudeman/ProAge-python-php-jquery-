@@ -65,7 +65,7 @@ class Mailer{
 			$status_name = 'Aceptación';
 			$stat_name = 'aceptada';
 		}
-		if( $notification[0]['status_name'] == 'rechazada' ){
+		if( $notification[0]['status_name'] == 'rechazado' ){
 			$status_name = 'Rechazo';					
 			$stat_name = 'rechazada';
 		}
@@ -94,8 +94,8 @@ class Mailer{
 							
 							if( !empty( $razon ) and !empty( $responsable ) ):
 							
-							$body .= '<p><font color="#008f00"><b>Razón</b>: '.$razon.'</font></p>
-									  <p><font color="#008f00"><b>Responsable</b>: '.$responsable.'</font></p>';
+							$body .= '<p><b>Razón</b>: '.$razon.'</p>
+									  <p><b>Responsable</b>: '.$responsable.'</p>';
 									  							
 							endif;
 							
@@ -134,13 +134,17 @@ class Mailer{
 								  <tr>
 									  <td width="30%"><b>Orden de Trabajo:</b></td>
 									  <td width="70%"> '.$notification[0]['uid'].'</td>    
-								  </tr>
-								  <tr>
+								  </tr>';
+								 
+								 
+								   if( $notification[0]['creation_date'] != '0000-00-00 00:00:00'  )
+								 
+								  $body .= '<tr>
 									  <td><b>Fecha de tramite:</b><br><small>(año-mes-dia)</small></td>
 									  <td> '.date( 'Y-m-d', strtotime($notification[0]['creation_date'] ) ).'</td>
-								  </tr>
+								  </tr>';
 								  
-								  <tr>
+							$body .= '<tr>
 									  <td><b>Ramo:</b></td>
 									  <td>'.$notification[0]['group_name'].'</td>    
 								  </tr>
