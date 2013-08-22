@@ -222,6 +222,8 @@
                 
                 <tr id="menu-<?php echo $value['id'] ?>" class="popup">
                 	<td colspan="8">
+                    
+                    <a href="javascript:void(0)" class="btn btn-link btn-hide"><i class="icon-arrow-up"></i></a>
                    
                     <?php 
 					
@@ -234,20 +236,20 @@
 					$scrips='';
 					
 					if( $this->access_activate == true and $value['status_name'] ==  'desactivada' )
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp;';
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp; |&nbsp;&nbsp;';
 												
 									
 					else if( $this->access_activate == true and $value['status_name'] ==  'activada' )
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')">Desactivar</a>&nbsp;&nbsp;';
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')">Desactivar</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
 					
 					else 
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp;';
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
 												
 												
 												
 												
 					if( $this->access_update == true ){
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')">Marcar como aceptada</a>&nbsp;&nbsp;';
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')">Marcar como aceptada</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
 												
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>&nbsp;&nbsp;';
 												}
@@ -256,10 +258,11 @@
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')">Cancelar</a>&nbsp;&nbsp;';
 					
 					
+					if( $value['status_name'] != 'cancelada' and $value['status_name'] != 'aceptado' and $value['status_name'] != 'rechazado' )
 					echo $scrips;
 												
 					?>
-                    <a href="javascript:void(0)" class="btn btn-link btn-hide">^</a>
+                    
                     </td>
                 </tr>
                 

@@ -105,6 +105,7 @@ function renderTable( $data = array(), $access_activate = false, $access_update 
 			$table .='<tr id="menu-'. $value['id'] .'" class="popup">
                 	<td colspan="8">';
                    
+   				    $table .= '<a href="javascript:void(0)" class="btn btn-link btn-hide"><i class="icon-arrow-up"></i></a>';
 					
 					$new = false;
 												
@@ -115,32 +116,32 @@ function renderTable( $data = array(), $access_activate = false, $access_update 
 					$scrips='';
 					
 					if( $access_activate == true and $value['status_name'] ==  'desactivada' )
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp;';
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
 												
 									
 					else if( $access_activate == true and $value['status_name'] ==  'activada' )
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')">Desactivar</a>&nbsp;&nbsp;';
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')">Desactivar</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
 					
 					else 
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp;';
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
 												
 												
 												
 												
 					if( $access_update == true ){
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')">Marcar como aceptada</a>&nbsp;&nbsp;';
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')">Marcar como aceptada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
 												
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>&nbsp;&nbsp;';
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>';
 												}
 					if( $access_delete == true )
 												
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')">Cancelar</a>&nbsp;&nbsp;';
 					
-					
+					if( $value['status_name'] != 'cancelada' and $value['status_name'] != 'aceptado' and $value['status_name'] != 'rechazado' )
 					$table .=  $scrips;
 												
 					
-                    $table .= '<a href="javascript:void(0)" class="btn btn-link btn-hide">^</a>
+                    $table .= '
                     </td>
                 </tr>    ';
 	
