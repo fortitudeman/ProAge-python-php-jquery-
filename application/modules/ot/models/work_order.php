@@ -1209,8 +1209,7 @@ class Work_order extends CI_Model{
 		$this->db->where( 'id', $ot );		
 		$query = $this->db->get( 'work_order' );	
 					
-		if ($query->num_rows() == 0) return false;
-		
+				
 		$ot = array();
 		
 		foreach ($query->result() as $row) {
@@ -1229,6 +1228,50 @@ class Work_order extends CI_Model{
 		return $ot;
 		
 	}
+	
+	
+	public function setPolicy( $ot = null, $policy = null ){
+		
+		if( empty( $ot ) or empty( $policy ) ) return false;
+		
+		$this->db->select( 'policy_id' );
+		$this->db->where( 'id', $ot );		
+		$this->db->limit(1);
+		$query = $this->db->get( 'work_order' );	
+		
+		
+		if ($query->num_rows() == 0) return false;
+		
+		
+		$policies = array();
+		
+		foreach ($query->result() as $row) {
+
+			$policies[] = array( 
+		    	'policy_id' => $row->policy_id
+		    );
+
+		}
+		
+		$updatepolicy = array( 'uid' =>  $policy );
+		
+		
+		
+		if( $this->db->update( 'policies', $updatepolicy, array( 'id' => $policies[0]['policy_id'] ) ) )
+			
+			return true;
+        
+		else
+        	
+			return false;
+		
+		
+		
+		
+		
+		
+	}
+	
  
 	public function getStatus( $work_order_status = null ){
 				

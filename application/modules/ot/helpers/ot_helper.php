@@ -101,9 +101,20 @@ function renderTable( $data = array(), $access_activate = false, $access_update 
 			$table .= '</td>';
 			
 			$table .='</tr>';
-    
-			$table .='<tr id="menu-'. $value['id'] .'" class="popup">
-                	<td colspan="8">';
+    		
+			
+			
+			if( $value['status_name'] != 'cancelada' and $value['status_name'] != 'aceptado' and $value['status_name'] != 'rechazado' )
+				$table .='<tr id="menu-'. $value['id'] .'" class="popup">';
+			else
+				$table .='<tr class="popup">';	
+			
+			
+			
+			
+			
+			
+            $table .='    	<td colspan="8">';
                    
    				    $table .= '<a href="javascript:void(0)" class="btn btn-link btn-hide"><i class="icon-arrow-up"></i></a>';
 					
@@ -131,7 +142,7 @@ function renderTable( $data = array(), $access_activate = false, $access_update 
 					if( $access_update == true ){
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')">Marcar como aceptada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
 												
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>';
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
 												}
 					if( $access_delete == true )
 												

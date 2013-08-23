@@ -175,7 +175,7 @@
               <tbody id="data">
                 <?php  if( !empty( $data ) ): ?>
                 <?php  foreach( $data as $value ):  ?>
-                <tr onclick="menu('menu-<?php echo $value['id'] ?>');">
+                <tr <?php if( $value['status_name'] != 'cancelada' and $value['status_name'] != 'aceptado' and $value['status_name'] != 'rechazado' ): ?> onclick="menu('menu-<?php echo $value['id'] ?>');" <?php endif; ?>>
                 	<td class="center"><?php 
 										    
 											$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
@@ -251,7 +251,7 @@
 					if( $this->access_update == true ){
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')">Marcar como aceptada</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
 												
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>&nbsp;&nbsp;';
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
 												}
 					if( $this->access_delete == true )
 												

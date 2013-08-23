@@ -1220,20 +1220,9 @@ class Ot extends CI_Controller {
 				'work_order_status_id' => 7,
 				'last_updated' => date( 'd-m-Y H:i:s' )
 			);
-			/*
-			$policy = $this->work_order->getWorkOrderById( $ot );
-			
-			if( !empty( $policy[0]['policy_id'] ) ){
-			
-				//$work_order['uid'] = $poliza;
-			
-			}else{
 			
 			
-			}
-			*/
-			
-			
+			$this->work_order->setPolicy( $ot, $poliza );
 						
 			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
 				
