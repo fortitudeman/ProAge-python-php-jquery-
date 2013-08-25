@@ -175,12 +175,12 @@
               <tbody id="data">
                 <?php  if( !empty( $data ) ): ?>
                 <?php  foreach( $data as $value ):  ?>
-                <tr <?php if( $value['status_name'] != 'cancelada' and $value['status_name'] != 'aceptado' and $value['status_name'] != 'rechazado' ): ?> onclick="menu('menu-<?php echo $value['id'] ?>');" <?php endif; ?>>
+                <tr <?php if( $value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 7 and $value['work_order_status_id'] != 8 ): ?> onclick="menu('menu-<?php echo $value['id'] ?>');" <?php endif; ?>>
                 	<td class="center"><?php 
 										    
 											$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
 						
-											if( $value['status_name'] == 'en trámite' or $value['status_name'] == 'desactivada' ) {
+											if( $value['work_order_status_id'] == 5 or $value['work_order_status_id'] == 9 ) {
 												if( (float)$color <= 5 ) 
 													echo '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
 												else if( (float)$color > 5 and (float)$color <= 10 )	
@@ -189,7 +189,7 @@
 													echo '<div style="background-color:#F30; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
 											}
 											
-											if( $value['status_name'] == 'activada' )
+											if( $value['work_order_status_id'] == 6 )
 												echo '<div style="background-color:#000; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
 											 
 											 echo $value['uid'];
@@ -215,7 +215,7 @@
                     <td class="center"><?php echo $value['parent_type_name']['name'] ?></td>
                     <td class="center"><?php echo $value['policy'][0]['name'] ?></td>
                                        
-                    <td class="center" ><?php echo ucwords(str_replace( 'tramite', 'en trámite', $value['status_name'])); ?></td>
+                    <td class="center" ><?php echo ucwords(str_replace( 'desactivada', 'en trámite', $value['status_name'])); ?></td>
                 </tr>
                 
                 
@@ -235,11 +235,11 @@
 					
 					$scrips='';
 					
-					if( $this->access_activate == true and $value['status_name'] ==  'desactivada' )
+					if( $this->access_activate == true and $value['work_order_status_id'] ==  9 )
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp; |&nbsp;&nbsp;';
 												
 									
-					else if( $this->access_activate == true and $value['status_name'] ==  'activada' )
+					else if( $this->access_activate == true and $value['work_order_status_id'] ==  6 )
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')">Desactivar</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
 					
 					else 
@@ -258,7 +258,7 @@
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')">Cancelar</a>&nbsp;&nbsp;';
 					
 					
-					if( $value['status_name'] != 'cancelada' and $value['status_name'] != 'aceptado' and $value['status_name'] != 'rechazado' )
+					if( $value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 7 and $value['work_order_status_id'] != 8 )
 					echo $scrips;
 												
 					?>

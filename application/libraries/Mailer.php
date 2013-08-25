@@ -45,30 +45,32 @@ class Mailer{
 		$status_name = '';
 		$stat_name = '';
 		
-		if( $notification[0]['status_name'] == 'en trámite' ){
+		
+		if( $notification[0]['work_order_status_id'] == 5 ){
 			$status_name = 'Creación';
 			$stat_name = 'creada';
 		}
-		if( $notification[0]['status_name'] == 'activada' ){
+		if( $notification[0]['work_order_status_id'] == 6 ){
 			$status_name = 'Activación';
 			$stat_name = 'activada';
 		}
-		if( $notification[0]['status_name'] == 'desactivada' ){
+		if( $notification[0]['status_name'] == 9 ){
 			$status_name = 'Desactivación';
 			$stat_name = 'desactivada';
 		}
-		if( $notification[0]['status_name'] == 'cancelada' ){
+		if( $notification[0]['work_order_status_id'] == 2 ){
 			$status_name = 'Cancelación';
 			$stat_name = 'cancelada';
 		}
-		if( $notification[0]['status_name'] == 'aceptada' ){
+		if( $notification[0]['work_order_status_id'] == 7 ){
 			$status_name = 'Aceptación';
 			$stat_name = 'aceptada';
 		}
-		if( $notification[0]['status_name'] == 'rechazado' ){
+		if( $notification[0]['work_order_status_id'] == 8 ){
 			$status_name = 'Rechazo';					
 			$stat_name = 'rechazada';
 		}
+		
 		
 		$body = '<div bgcolor="#f4f4f4">
 					 <table width="650" cellspacing="0" cellpadding="0" border="0" align="center"><tbody><tr><td height="3"><img width="650" height="3" style="display:block" src="http://serviciosisinet.com/img/top.jpg"></td></tr></tbody></table>
@@ -95,7 +97,8 @@ class Mailer{
 							if( !empty( $razon ) and !empty( $responsable ) ):
 							
 							$body .= '<p><b>Razón</b>: '.$razon.'</p>
-									  <p><b>Responsable</b>: '.$responsable.'</p>';
+									  <p><b>Responsable</b>: '.$responsable.'</p>
+									  <td><b>Comentarios:</b> '.$notification[0]['comments'].'</td> ';
 									  							
 							endif;
 							

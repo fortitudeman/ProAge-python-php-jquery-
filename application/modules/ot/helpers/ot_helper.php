@@ -43,7 +43,7 @@ function renderTable( $data = array(), $access_activate = false, $access_update 
 						
 			$table .='				<td class="center">';
 			
-			if( $value['status_name'] == 'en trámite' or $value['status_name'] == 'desactivada' ) {
+			if( $value['work_order_status_id'] == 5 or $value['work_order_status_id'] == 9 ) {
 				if( (float)$color <= 5 ) 
 					$table .= '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
 				else if( (float)$color > 5 and (float)$color <= 10 )	
@@ -53,7 +53,7 @@ function renderTable( $data = array(), $access_activate = false, $access_update 
 			}
 			
 			
-			if( $value['status_name'] == 'activada' )
+			if( $value['work_order_status_id'] == 6 )
 				$table .= '<div style="background-color:#000; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
 							
 							
@@ -94,7 +94,7 @@ function renderTable( $data = array(), $access_activate = false, $access_update 
 			$table .= '<td class="center"> ';
 			
 			
-			$table .=  ucwords(str_replace( 'tramite', 'en trámite', $value['status_name']));
+			$table .=  ucwords(str_replace( 'desactivada', 'en trámite', $value['status_name']));
 			
 			
 			
@@ -104,7 +104,7 @@ function renderTable( $data = array(), $access_activate = false, $access_update 
     		
 			
 			
-			if( $value['status_name'] != 'cancelada' and $value['status_name'] != 'aceptado' and $value['status_name'] != 'rechazado' )
+			if( $value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 7 and $value['work_order_status_id'] != 8 )
 				$table .='<tr id="menu-'. $value['id'] .'" class="popup">';
 			else
 				$table .='<tr class="popup">';	
@@ -126,11 +126,11 @@ function renderTable( $data = array(), $access_activate = false, $access_update 
 					
 					$scrips='';
 					
-					if( $access_activate == true and $value['status_name'] ==  'desactivada' )
+					if( $access_activate == true and $value['work_order_status_id'] ==  9 )
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
 												
 									
-					else if( $access_activate == true and $value['status_name'] ==  'activada' )
+					else if( $access_activate == true and $value['work_order_status_id'] ==  6 )
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')">Desactivar</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
 					
 					else 
@@ -148,7 +148,7 @@ function renderTable( $data = array(), $access_activate = false, $access_update 
 												
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')">Cancelar</a>&nbsp;&nbsp;';
 					
-					if( $value['status_name'] != 'cancelada' and $value['status_name'] != 'aceptado' and $value['status_name'] != 'rechazado' )
+					if( $value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 7 and $value['work_order_status_id'] != 8 )
 					$table .=  $scrips;
 												
 					
