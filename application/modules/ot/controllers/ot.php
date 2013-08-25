@@ -1032,12 +1032,8 @@ class Ot extends CI_Controller {
 				$this->load->library( 'mailer' );
 				
 				$notification = $this->work_order->getNotification( $ot );
-				
-				
-				$responsible = $this->work_order->getResponsiblesById( $notification[0]['work_order_responsible_id'] );
-				$reason = $this->work_order->getResponsiblesById( $notification[0]['work_order_reason_id'] );
-						
-				$this->mailer->notifications( $notification, $reason[0]['name'], $responsible[0]['name'] );
+													
+				$this->mailer->notifications( $notification );
 				
 				
 				// Set true message		
