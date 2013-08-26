@@ -54,7 +54,7 @@ class Mailer{
 			$status_name = 'Activación';
 			$stat_name = 'activada';
 		}
-		if( $notification[0]['status_name'] == 9 ){
+		if( $notification[0]['work_order_status_id'] == 9 ){
 			$status_name = 'Desactivación';
 			$stat_name = 'desactivada';
 		}
@@ -98,7 +98,7 @@ class Mailer{
 							
 							$body .= '<p><b>Razón</b>: '.$razon.'</p>
 									  <p><b>Responsable</b>: '.$responsable.'</p>
-									  <td><b>Comentarios:</b> '.$notification[0]['comments'].'</td> ';
+									  <p><b>Comentarios:</b> '.$notification[0]['comments'].'</p> ';
 									  							
 							endif;
 							
