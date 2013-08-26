@@ -1570,18 +1570,16 @@ class User extends CI_Model{
 			
 			
 			if( !empty( $row->company_name ) )
-				$agents[] = array( 'id' => $row->id, 'name' => $row->company_name );
+				$agents[] = array( 'name' => $row->company_name, 'id' => $row->id );
 			
 			else
-				$agents[] = array( 'id' => $row->id, 'name' => $row->name.' '.$row->lastnames );	
+				$agents[] = array( 'name' => $row->name.' '.$row->lastnames, 'id' => $row->id );	
 			
 			
 		}
-		
-		
-		 asort($agents,SORT_STRING);
-			
-			
+				
+		 asort($agents);
+				 	
 		 foreach( $agents as $value )
 		
 				$options .= '<option value="'.$value['id'].'">'.$value['name'].'</option>';
