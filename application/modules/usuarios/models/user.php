@@ -1579,7 +1579,7 @@ class User extends CI_Model{
 		}
 		
 		
-		 sort($agents,SORT_STRING);
+		 asort($agents,SORT_STRING);
 			
 			
 		 foreach( $agents as $value )
