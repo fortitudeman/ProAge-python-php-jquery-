@@ -1598,8 +1598,8 @@ class Ot extends CI_Controller {
 		$this->load->view( 'index', $this->view );	
 	
 	}
+	
 
-
 	
 	
 	
@@ -1612,11 +1612,76 @@ class Ot extends CI_Controller {
 	
 	
 	
-	/**
-	 *	Payments
-	 **/
+/**
+ *	Payments
+ **/
 	public function import_payments(){
 		
+		
+		$tmp_file =null;
+		
+		$file_array = array();	
+								
+		if( !empty( $_FILES ) ){
+			
+			$name = explode( '.', $_FILES['file']['name'] );
+						
+			if( $name[1] == 'xls' ){
+			
+				// Load Library
+				$this->load->library( 'reader_excel' );
+				
+				$file = $this->reader_excel->upload();
+				
+							
+				if( !empty( $file ) ){
+					
+					 $this->reader_excel->setInstance( $file );
+					
+				 	 $file_array = $this->reader_excel->reader();
+					
+					 //$this->reader_excel->drop();
+				}
+				
+				
+				$tmp_file = $file;
+							
+			}
+			
+			if( $name[1] == 'csv' ){
+						
+				// Load Library
+				$this->load->library( 'reader_csv' );
+				
+				$file = $this->reader_csv->upload();
+											
+				if( !empty( $file ) ){
+					
+					 $this->reader_csv->setInstance( $file );
+					
+				 	 $file_array = $this->reader_csv->reader();
+					
+					 //$this->reader_csv->drop();
+				}
+				
+				$tmp_file = $file;
+			
+			}
+			
+		}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 		// Check access teh for import
 		if( $this->access_import_payments == false ){
 				
@@ -1634,85 +1699,7 @@ class Ot extends CI_Controller {
 		}
 		
 		
-		
-		
-		
-		
-		if( isset( $_FILES['file'] ) and !empty( $_FILES  ) ){
 			
-			
-			// Setting file temporal file named			
-			$tmp_file = $_FILES['file']['name'];
-
-			$tmp_file = strtr($tmp_file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-
-			$tmp_file = preg_replace('/([^.a-z0-9]+)/i', '_', $tmp_file);
-
-			
-			
-			// Upload Temporal file CSV			
-			if( is_dir( APPPATH.'modules/ot/assets/tmp/' ) )
-					
-					move_uploaded_file( $_FILES['file']['tmp_name'],  APPPATH.'modules/ot/assets/tmp/'  . $tmp_file );
-					
-			
-			
-			
-			// Read File			
-			if( is_file( APPPATH.'modules/ot/assets/tmp/' . $tmp_file ) ){
-						
-				$file_handle = fopen( APPPATH.'modules/ot/assets/tmp/'  . $tmp_file, "r");
-				
-				
-				$file_array = array();
-				
-				
-				while (!feof($file_handle) )
-				
-					$file_array[] = fgetcsv($file_handle, 1024);
-					
-				
-				fclose($file_handle);
-				
-			}
-			
-		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		// Config view
