@@ -153,7 +153,7 @@ class Work_order extends CI_Model{
 		
 		
 		if( !empty( $user ) )
-			$this->db->where( 'work_order.uid', $user );
+			$this->db->where( 'work_order.user', $user );
 		
 		$this->db->limit( 50, $start );
 		$query = $this->db->get();
@@ -200,7 +200,7 @@ class Work_order extends CI_Model{
 	    if( empty( $user ) )
 	    	 return $this->db->from( 'work_order' )->where( array( 'work_order_status_id !=' => 2 ) )->count_all_results();
     	else
-		  return $this->db->from( 'work_order' )->where( array( 'work_order_status_id !=' => 2, 'work_order.uid' => $user ) )->count_all_results();
+		  return $this->db->from( 'work_order' )->where( array( 'work_order_status_id !=' => 2, 'work_order.user' => $user ) )->count_all_results();
 	}
 
 	
@@ -464,7 +464,7 @@ class Work_order extends CI_Model{
 				
 		
 		if( $filter_user == 'mios' and !empty( $user ) ){
-			$this->db->where( array( 'work_order.uid' => $user ) );
+			$this->db->where( array( 'work_order.user' => $user ) );
 		}
 		
 				

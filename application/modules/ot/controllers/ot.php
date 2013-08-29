@@ -104,8 +104,7 @@ class Ot extends CI_Controller {
 					
 								
 		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
-		
-			
+					
 	}
 	
 	
@@ -412,7 +411,7 @@ class Ot extends CI_Controller {
 				
 				
 				$ot = array(
-					
+					'user' => $this->sessions['id'],
 					'policy_id' => $policyId,
 					'product_group_id' => $this->input->post( 'ramo' ),
 					'work_order_type_id' => $this->input->post( 'subtype' ),
