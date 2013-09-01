@@ -1587,6 +1587,171 @@ class User extends CI_Model{
 		return $options;
 		
 	}
+
+
+// Get Agents by id 	
+	public function getAgentsById( $id = null ){
+		
+		if( empty( $id ) ) return false;
+		
+		/*
+			SELECT users.name, users.company_name 
+			FROM agents
+			JOIN users ON users.id=agents.user_id
+			WHERE agents.id=5;
+		*/
+		$this->db->select( 'users.name, users.company_name, users.lastnames ' );
+		$this->db->from( 'agents' );
+		$this->db->join( 'users', 'users.id=agents.user_id' );
+		$this->db->where( 'agents.id =', $id );
+		
+		$query = $this->db->get();
+		
+		
+		
+		if ($query->num_rows() == 0) return false;
+		
+		// Getting data
+		foreach ($query->result() as $row){
+			
+			
+			if( !empty( $row->company_name ) )
+				return $row->company_name;
+			
+			else
+				return $row->name.' '.$row->lastnames;	
+			
+			
+		}
+		
+		return true;
+		
+	}	
+
+// Getting user_id	
+	public function getUserIdByAgentId( $id = null ){
+		
+		if( empty( $id ) ) return false;
+		
+		
+		/*
+			SELECT user_id
+			FROM agents
+			WHERE agents.id=5;
+		*/
+		$this->db->select( 'user_id' );
+		$this->db->from( 'agents' );
+		$this->db->where( 'agents.id =', $id );
+		
+		$query = $this->db->get();
+		
+		
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$user = null;
+		
+		// Getting data
+		foreach ($query->result() as $row)
+			
+			$user = $row->user_id;
+			
+		
+		return $user;
+		
+	}	
+	
+	
+	
+/**
+ *	Import Payments
+ **/	
+	public function getAgentByFolio( $uid = null, $optiongroup = null ){
+		
+		if( empty( $uid ) ) return false;
+		
+		/*
+			SELECT users.company_name, users.name, users.lastnames
+			FROM agent_uids 
+			JOIN `agents` ON `agents`.id=agent_uids.agent_id
+			JOIN `users` ON `users`.id=agents.user_id
+			WHERE agent_uids.`uid`='1421424';
+		*/
+		$this->db->select( ' users.company_name, users.name, users.lastnames' );
+		$this->db->from( 'agent_uids' );
+		$this->db->join( 'agents', 'agents.id=agent_uids.agent_id' );
+		$this->db->join( 'users', 'users.id=agents.user_id' );
+		$this->db->where( 'agent_uids.uid', $uid );
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 0){
+			 
+			 $options = '<select name="agent_id['.$optiongroup.']" class="required options-'.$optiongroup.'">';
+				 
+			 $options .= $this->getAgents();
+			 
+			 $options .= '</select>';
+			 
+			 $options .= '<a id="link-'.$optiongroup.'"  href="javascript:void(0)" class="create-user"><i class="icon-plus"></i></a>';
+			 
+			 return $options;
+		}
+				
+		foreach ($query->result() as $row){
+						
+			if( !empty( $row->company_name ) )
+				return $row->company_name;
+			
+			else
+				return $row->name.' '.$row->lastnames;
+			
+			
+		}
+				
+				
+		return false;
+		
+	}
+	
+	
+	
+	public function getIdAgentByFolio( $uid = null ){
+		
+		if( empty( $uid ) ) return false;
+		
+		/*
+			SELECT id 
+			FROM agent_uids
+			WHERE agent_uids.uid='';
+		*/
+		$this->db->select( ' id' );
+		$this->db->from( 'agent_uids' );
+		$this->db->where( 'agent_uids.uid', $uid );
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 0) return null;
+				
+		foreach ($query->result() as $row)
+						
+			return $row->id;
+			
+			
+		
+				
+				
+		return false;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 // Validations

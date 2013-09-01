@@ -45,10 +45,47 @@
 			
 			<?php // Return Message error ?>
                         
-            <?php if( isset( $message ) and !empty( $message ) ): ?>
+            <?php if( isset( $message ) and !empty( $message ) and $message['type'] == false ): unset( $message['type'] );?>
             <div class="alert alert-error">
                   <button type="button" class="close" data-dismiss="alert">×</button>
                   <strong>Error: </strong> 
+				  <?php  // Show Dinamical message error 
+				  		
+						foreach( $message['message'] as $raiz ):
+														
+							if( empty( $raiz ) ) break;
+								
+																						
+								foreach( $raiz as $array ):
+									
+									if( empty( $array ) ) break;
+									
+										foreach( $array as $messagetext ):
+											
+											if( empty( $messagetext ) ) break;
+													
+													echo $messagetext.'<br>';
+												
+										endforeach;
+									
+									
+								endforeach;
+								
+								
+													
+						endforeach;
+				  
+				  ?>
+            </div>
+            <?php endif; ?>
+            
+            
+            
+            
+            <?php if( isset( $message ) and !empty( $message ) and $message['type'] == true ): unset( $message['type'] );?>
+            <div class="alert alert-success">
+                  <button type="button" class="close" data-dismiss="alert">×</button>
+                  <strong>Listo: </strong> 
 				  <?php  // Show Dinamical message error 
 				  		
 						foreach( $message['message'] as $raiz ):
@@ -94,17 +131,32 @@
                
                 <div id="actions-buttons-forms" class="form-actions">
                   <button type="submit" class="btn btn-primary">Cargar</button>
-                  <button  type="button" class="btn" onclick="javascript: history.back()">Cancelar</button>
+                  <input type="button" class="btn" onclick="javascript: history.back()" value="Cancelar">
                 </div>
               </fieldset>
             </form>
         	
             
-            <?php if( isset( $tmp_file ) ): // Is is load a file?>
+            
+            
+            
+            
+            
+            
+            <?php 			
+			/**
+             *	Change Index, Selectes options fields
+			 **/
+            ?>
+            
+            
+            <?php if( isset( $tmp_file ) and $process == 'change-index' ): // Is is load a file?>
             
             <form action="<?php echo base_url() ?>ot/import_payments.html" id="import-form" method="post">
             
             <input type="hidden" name="tmp_file" value="<?php echo $tmp_file ?>">
+            
+            <input type="hidden" name="process" value="<?php echo $process ?>">
             
             <div class="alert alert-info">
             	Especifique a qué campos corresponde la información que está importando en las siguientes cajas de selección
@@ -123,22 +175,25 @@
 								
 								echo '<tr>';
 								
-								$i=0;
+								$i=1;
 								
 								foreach( $rows as $value ):
 																							
 								echo'<td class="column'.$i.'">
 										<select class="required" id="select'.$i.'" name="'.$i.'" style="width:100px;" onchange="hide('.$i.')">
 											<option value="">Seleccione</option>
-											<option value="disabled">Año Inicio Prima</option>
-											<option value="lastname">Es nuevo negocio</option>
-											<option value="lastname_r">Fecha de pago real</option>
-											<option value="password">Folio del agente</option>
-											<option value="email">Nombre del agente</option>
-											<option value="clave">Póliza</option>
-											<option value="office_ext">Porcentaje de participación</option>
-											<option value="license_expired_date">Prima</option>											
-											<option value="connection_date">Ramo</option>
+											<option value="nonimport">No importar</option>
+											<optgroup label="----------"></optgroup>
+											<!--<option value="">Año Prima</option>-->
+											<option value="is_new">Es nuevo negocio</option>
+											<option value="payment_date">Fecha de pago real</option>
+											<option value="agent_uids">Folio del agente</option>
+											<!--<option value="">Nombre del agente</option>-->
+											<option value="name">Nombre del Asegurado</option>
+											<option value="uid">Póliza</option>
+											<option value="percentage">Porcentaje de participación</option>
+											<option value="amount">Prima</option>											
+											<option value="product_id">Ramo</option>
 										</select>
 										
 									 </td>'; 
@@ -187,14 +242,259 @@
             </div>
             
             <div id="actions-buttons-forms-send" class="form-actions">
-              <button type="submit" class="btn btn-primary">Importar</button>
-              <button  type="button" class="btn" onclick="javascript: history.back()">Cancelar</button>
+              <button type="submit" class="btn btn-primary">Pre Importar</button>
+              <input type="button" class="btn" onclick="javascript: history.back()" value="Cancelar">
             </div>
             
             
             </form>
            
             <?php endif; ?>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <?php 			
+			/**
+             *	Choose Agents
+			 **/
+            ?>
+            
+            
+            <div id="dialog-form" title="Request new user" style="display:none">
+              <iframe src="<?php echo base_url() ?>usuarios/create_request_new_user.html" width="800" height="600"></iframe>
+            </div>
+            
+            <input type="hidden" id="control" />
+            
+            
+            
+            <?php if( isset( $tmp_file ) and $process == 'choose-agents' ): // Is is load a file?>
+               
+            
+            <form action="<?php echo base_url() ?>ot/import_payments.html" id="import-form" method="post">
+            
+            <input type="hidden" name="tmp_file" value="<?php echo $tmp_file ?>">
+            
+            <input type="hidden" name="process" value="<?php echo $process ?>">
+            
+            <div class="alert alert-info">
+            	Especifique y/o Verifiqué los agentes  
+            </div>
+            
+            <div style="max-width:100%; overflow:scroll; max-height:400px;">
+           
+            <table class="table table-rounder">
+            	              
+            <?php 
+           		  if( !empty( $file_array ) ):  // Show data
+				  		
+						$i=0;				
+						foreach( $file_array as $rows ):
+							
+							if( $i > 0 ) break;
+							
+							if( !empty( $rows ) ): 
+								
+								echo '<tr>';
+								
+								foreach( $rows as $key => $value ): 
+																		
+									if( $key == 'is_new' )	$key = 'Es nuevo negocio';
+									if( $key == 'payment_date' )	$key = 'Fecha de pago real';
+									if( $key == 'agent_uids' )	$key = 'Folio';
+									if( $key == 'agent' )	$key = 'Agente';
+									if( $key == 'uid' )	$key = 'Poliza';
+									if( $key == 'amount' )	$key = 'Prima';
+									if( $key == 'percentage' )	$key = 'Porcentaje';
+									if( $key == 'product_id' )	$key = 'Ramo';
+									if( $key == 'name' )	$key = 'Asegurado';
+									
+									
+									echo '<th>'.$key.'</th>'; 
+								
+								endforeach;
+            	  				
+								echo '</tr>'; 
+								
+							endif;
+				  			$i++;
+				  		endforeach;
+						
+						
+						
+						foreach( $file_array as $rows ):
+							
+							if( !empty( $rows ) ):
+								
+								echo '<tr>';
+								
+								foreach( $rows as $value ): 
+								
+									echo '<td>'.$value.'</td>'; 
+								
+								endforeach;
+            	  				
+								echo '</tr>'; 
+								
+							endif;
+				  
+				  		endforeach;
+				  
+				  endif; 
+			?>
+            
+            </table>
+            
+            </div>
+            
+            <div id="actions-buttons-forms-send" class="form-actions">
+              <button type="submit" class="btn btn-primary">Vista de importación</button>
+              <input type="button" class="btn" onclick="javascript: history.back()" value="Cancelar">
+            </div>
+            
+            
+            </form>
+           
+            <?php endif; ?>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <?php 			
+			/**
+             *	Preview save data
+			 **/
+            ?>
+            
+            
+            <?php if( isset( $tmp_file ) and $process == 'preview' ): // Is is load a file?>
+               
+            
+            <form action="<?php echo base_url() ?>ot/import_payments.html" id="import-form" method="post">
+            
+            <input type="hidden" name="tmp_file" value="<?php echo $tmp_file ?>">
+            
+            <input type="hidden" name="process" value="<?php echo $process ?>">
+            
+            <div class="alert alert-info">
+            	Revise la información.
+            </div>
+            
+            <div style="max-width:100%; overflow:scroll; max-height:400px;">
+           
+            <table class="table table-rounder">
+            	              
+            <?php
+           		  if( !empty( $file_array ) ):  // Show data
+				  		
+						$i=0;				
+						foreach( $file_array as $rows ):
+							
+							if( $i > 0 ) break;
+							
+							if( !empty( $rows ) ): 
+								
+								echo '<tr>';
+								
+								foreach( $rows as $key => $value ): 
+																		
+									if( $key == 'is_new' )	$key = 'Es nuevo negocio';
+									if( $key == 'payment_date' )	$key = 'Fecha de pago real';
+									if( $key == 'agent_uids' )	$key = 'Folio';
+									if( $key == 'agent' )	$key = 'Agente';
+									if( $key == 'uid' )	$key = 'Poliza';
+									if( $key == 'amount' )	$key = 'Prima';
+									if( $key == 'percentage' )	$key = 'Porcentaje';
+									if( $key == 'product_id' )	$key = 'Ramo';
+									
+									echo '<th>'.$key.'</th>'; 
+								
+								endforeach;
+            	  				
+								echo '</tr>'; 
+								
+							endif;
+				  			$i++;
+				  		endforeach;
+						
+						
+						
+						foreach( $file_array as $rows ):
+							
+							if( !empty( $rows ) ):
+								
+								echo '<tr>';
+								
+								foreach( $rows as $value ): 
+								
+									echo '<td>'.$value.'</td>'; 
+								
+								endforeach;
+            	  				
+								echo '</tr>'; 
+								
+							endif;
+				  
+				  		endforeach;
+				  
+				  endif; 
+			?>
+            
+            </table>
+            
+            </div>
+            
+            <div id="actions-buttons-forms-send" class="form-actions">
+              <button type="submit" class="btn btn-primary">Importar</button>
+              <input type="button" class="btn" onclick="javascript: history.back()" value="Cancelar">
+            </div>
+            
+            
+            </form>
+           
+            <?php endif; ?>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
         </div>
     </div><!--/span-->

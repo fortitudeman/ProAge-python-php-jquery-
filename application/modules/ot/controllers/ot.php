@@ -1617,11 +1617,46 @@ class Ot extends CI_Controller {
 	public function import_payments(){
 		
 		
+		
+		// Check access teh for import
+		if( $this->access_import_payments == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Importar", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( '/', 'refresh' );
+		
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		$tmp_file =null;
 		
 		$file_array = array();	
+		
+		$process = '';
 								
 		if( !empty( $_FILES ) ){
+			
+			$process = 'change-index';
 			
 			$name = explode( '.', $_FILES['file']['name'] );
 						
@@ -1639,7 +1674,6 @@ class Ot extends CI_Controller {
 					
 				 	 $file_array = $this->reader_excel->reader();
 					
-					 //$this->reader_excel->drop();
 				}
 				
 				
@@ -1660,7 +1694,6 @@ class Ot extends CI_Controller {
 					
 				 	 $file_array = $this->reader_csv->reader();
 					
-					 //$this->reader_csv->drop();
 				}
 				
 				$tmp_file = $file;
@@ -1668,38 +1701,299 @@ class Ot extends CI_Controller {
 			}
 			
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		// Chane index
+		if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'change-index' ){
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-		// Check access teh for import
-		if( $this->access_import_payments == false ){
+			$process = 'choose-agents';
+			
+			// Load Model
+			$this->load->model( 'usuarios/user' );
+			
+			$tmp_file = $_POST['tmp_file'];
+						
+			$name = explode( '.', $tmp_file );
+			
+			if( $name[1] == 'xls' ){
 				
-			// Set false message		
-			$this->session->set_flashdata( 'message', array( 
+				// Load Library
+				$this->load->library( 'reader_excel' );
+											
+				if( !empty( $tmp_file ) ){
+					
+					 $this->reader_excel->setInstance( $tmp_file );
+					
+				 	 $file_array = $this->reader_excel->reader();
+					
+				}
 				
-				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Importar", Informe a su administrador para que le otorge los permisos necesarios.'
+				
+			}else{
+				
+				
+				// Load Library
+				$this->load->library( 'reader_csv' );
+				
+				if( !empty( $tmp_file ) ){
+					
+					 $this->reader_csv->setInstance( $tmp_file );
+					
+				 	 $file_array = $this->reader_csv->reader();
+					
+				}
+				
+				
+			}
+			
+			unset( $_POST['tmp_file'], $_POST['process'] );
+			
+			for( $i=0; $i<=count( $file_array ); $i++ ){
+				
+				if( isset( $file_array[$i] ) ) 
+				
+				for( $index=1; $index<=count( $_POST ); $index++ ){
 							
-			));	
+					if( $_POST[$index] != 'nonimport' ){
+						
+						$file_array[$i][$_POST[$index]]=$file_array[$i][$index];
+																								
+						if( $_POST[$index] == 'agent_uids' ){
+														
+							$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], $i  );
+							
+							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]] );
+															
+						}
+					}
+																			
+					unset( $file_array[$i][$index] );
+					
+				}
+				
+			}
+					
+			// Load Model
+			$this->load->model( 'work_order' );
 			
+			$this->work_order->importPaymentsTmp( $file_array );
 			
-			redirect( '/', 'refresh' );
-		
+			for( $i=0; $i<=count( $file_array ); $i++ )
+				
+				unset( $file_array[$i]['agent_id'] );
+												
 		}
-		
-		
+	
+	
+	
+	
+	
+	
+	  // Chane Selects Agents
+	  if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'choose-agents' ){
+		  
+		  
+		  // Load Model
+		  $this->load->model( array( 'work_order', 'usuarios/user' ) );
+		  
+		  $file_array = $this->work_order->getImportPaymentsTmp();
+		  
+		  $file_array = json_decode( $file_array[0]['data'] );
+		  
+		  $tmp_file = $_POST['tmp_file'];
+		  
+		  $process = 'preview';
+		  		  
+		  unset( $_POST['tmp_file'], $_POST['process'] );
+		  
+		  $i=0;
+		  
+		  foreach( $file_array as $value ){
+			 			
 			
-		
+			 if( isset( $_POST['agent_id'][$i] ) and is_numeric( $_POST['agent_id'][$i] ) ){
+			 	
+				$file_array[$i]->agent_id =  $_POST['agent_id'][$i];
+				
+				$file_array[$i]->agent = $this->user->getAgentsById( $_POST['agent_id'][$i] );
+				
+			 }
+			
+			 $i++;
+			 
+			 
+		  }
+		  
+		  $this->work_order->importPaymentsTmp( $file_array );
+		  
+		  for( $i=0; $i<=count( $file_array ); $i++ )
+				
+				if( isset( $file_array[$i]->agent_id ) )
+			
+						unset( $file_array[$i]->agent_id );
+		  
+		  
+		  
+	  }
+	
+	
+	
+	
+	
+	
+	 // Chane Selects Agents
+	  if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'preview' ){
+		  
+		  // Load Model
+		  $this->load->model( array( 'work_order', 'usuarios/user' ) );
+		  		  		  
+		  $file_array = $this->work_order->getImportPaymentsTmp();
+		    
+		  
+		  $file_array = json_decode( $file_array[0]['data'] );
+		  
+		  $controlSaved = true;
+		  
+		  $i = 1;
+		  
+		  $message = array( 'type' => false );
+		   
+		  foreach( $file_array as $item ){
+			  
+			  
+			  // Verify policy
+			  $policy = $this->work_order->getPolicyByUid( $item->uid );
+			 
+			  if( empty( $policy ) ){
+			  	
+				$policy = array(
+					'uid' => $item->uid,
+					'last_updated' => date( 'Y-m-d H:i:s' ),
+					'date' => date( 'Y-m-d H:i:s' )
+				);
+				
+				if( isset(  $item->name ) )
+					
+					$policy['name'] = $item->name;
+				
+				$this->work_order->create( 'policies', $policy );
+				
+				$policy = $this->work_order->getPolicyByUid( $item->uid );
+				
+				
+				$agent = $this->user->getUserIdByAgentId( $item->agent_id  );
+				
+				$agents = array( 							  
+					  'user_id' => $agent, 
+					  'policy_id' => $policy[0]['id'],
+					  'percentage' => $item->percentage,
+					  'since' => date( 'Y-m-d H:i:s' )
+				);
+			  			  
+			 	$this->work_order->create( 'policies_vs_users', $agents );
+														
+			  }
+			 
+			  $payment = array( 
+			  	
+				'policy_id' => $policy[0]['id'],
+				'currency_id' => 1,
+				'amount' => $item->amount,
+				'payment_date' => $item->payment_date,
+				'last_updated' => date( 'Y-m-d H:i:s' ),
+				'date' => date( 'Y-m-d H:i:s' )
+				
+			  );		 
+			  
+			  
+			  if( $this->work_order->create( 'payments', $payment ) == false )	$controlSaved = false;
+			  
+			  if( $controlSaved == false )
+			  	
+				$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
+			  
+			    
+			  $i++;
+		  }
+		  
+		  
+		  
+		  if( !isset( $message['message'] ) ){
+		  	
+			$message['type'] = true;
+			$message['message'][0][0]['saved'] = 'El archivo se importo correctamente.';
+			
+			
+		  }
+		  
+		  
+		  
+		  // Clean System
+		  $tmp_file = $_POST['tmp_file'];
+						
+		  $name = explode( '.', $tmp_file );
+		  
+		  if( $name[1] == 'xls' ){
+			  
+			  // Load Library
+			  $this->load->library( 'reader_excel' );
+										  
+			  if( !empty( $tmp_file ) ){
+				  
+				   $this->reader_excel->setInstance( $tmp_file );
+				  
+				   $this->reader_excel->drop();
+				  
+			  }
+			  
+			  
+		  }else{
+			  
+			  
+			  // Load Library
+			  $this->load->library( 'reader_csv' );
+			  
+			  if( !empty( $tmp_file ) ){
+				  
+				   $this->reader_csv->setInstance( $tmp_file );
+				  
+				   $this->reader_csv->drop();
+				  
+			  }
+			  
+			  
+		  }
+		  
+		  
+		  
+		  $this->work_order->removeImportPaymentsTmp();
+		  
+	  }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 		
 		// Config view
 		$this->view = array(
@@ -1709,7 +2003,9 @@ class Ot extends CI_Controller {
 		  'user' => $this->sessions,
 		  'user_vs_rol' => $this->user_vs_rol,
 		  'roles_vs_access' => $this->roles_vs_access,
-		  'css' => array(),
+		  'css' => array(
+		  	'<link href="'. base_url() .'ot/assets/style/import_payments.css" rel="stylesheet">'
+		  ),
 		  'scripts' =>  array(
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
@@ -1724,9 +2020,10 @@ class Ot extends CI_Controller {
 		
 		
 		if( isset( $message ) ){ $this->view['message'] = $message; unset( $tmp_file, $file_array ); }
-		
-		
+				
 		if( isset( $tmp_file ) and !empty( $tmp_file ) ) $this->view['tmp_file'] = $tmp_file;
+		
+		if( isset( $process ) and !empty( $process ) ) $this->view['process'] = $process;
 		
 		if( isset( $file_array ) and !empty( $file_array ) ) $this->view['file_array'] = $file_array;
 		

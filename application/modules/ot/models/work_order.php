@@ -636,8 +636,10 @@ class Work_order extends CI_Model{
    }
 	
 	
-	
-	
+
+/**
+ *	Functions Policies
+ **/		
 
 	// Get Policy by Id
 	public function getPolicyBuId( $id = null ){
@@ -673,19 +675,6 @@ class Work_order extends CI_Model{
 		
 		
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		$policy = array();
 		
@@ -793,7 +782,40 @@ class Work_order extends CI_Model{
 	}
 
 
+// Getting policy by uid
+	public function getPolicyByUid( $uid = null ){
+		
+		if( empty( $uid ) ) return false;
+		/*
+			
+			SELECT id
+			FROM policies
+			WHERE uid='';
 
+			
+		*/
+		$this->db->select( 'id' );		
+		$this->db->where( 'policies.uid', $uid );
+		$this->db->limit(1);
+		$query = $this->db->get('policies');
+		
+		
+		if ($query->num_rows() == 0) return false;
+		
+		
+		$policy = array();
+		
+		foreach ($query->result() as $row) {
+			
+			$policy[] = array( 
+		    	'id' => $row->id
+		    );
+
+		}
+		
+		return $policy;
+		
+	}
 
 
 
@@ -1359,6 +1381,70 @@ class Work_order extends CI_Model{
 		return $options;
 		
 	}
+	
+
+
+/**
+ *	Import payments
+ **/	
+  public function importPaymentsTmp( $data = array() ){
+  		
+		if( empty( $data ) ) return false;
+		
+		$query = $this->db->get( 'payments_tmp' );	
+  		
+		if ($query->num_rows() == 0){  $this->db->insert( 'payments_tmp', array( 'data' => json_encode( $data ) ) ); return;  }
+  		
+		$id = null;
+		
+		foreach ($query->result() as $row)			
+		
+			$id	= $row->id;
+		
+  		
+	   $this->db->delete( 'payments_tmp', array('id' => $id ) );	
+	   
+	   $this->db->insert( 'payments_tmp', array( 'data' => json_encode( $data ) ) );
+	   
+	   return true;	
+  
+  }
+  
+   public function removeImportPaymentsTmp(){
+  				
+		$query = $this->db->get( 'payments_tmp' );	
+  		
+		if ($query->num_rows() == 0){  return true; }
+  		
+		$id = null;
+		
+		foreach ($query->result() as $row)			
+		
+			$id	= $row->id;
+		
+  		
+	   $this->db->delete( 'payments_tmp', array('id' => $id ) );	
+	   
+	   return true;	
+  
+  }
+  
+  public function getImportPaymentsTmp(){
+  				
+		$query = $this->db->get( 'payments_tmp' );	
+  		
+		if ($query->num_rows() == 0){  return true; }
+  		
+		$data = array();
+		
+		foreach ($query->result() as $row)			
+		
+			$data[]= array( 'id' => $row->id, 'data' => $row->data );  ;
+		
+  	
+	   return $data;	
+  
+  }
 
 }
 ?>
