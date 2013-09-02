@@ -1666,7 +1666,7 @@ class User extends CI_Model{
 /**
  *	Import Payments
  **/	
-	public function getAgentByFolio( $uid = null, $optiongroup = null ){
+	public function getAgentByFolio( $uid = null, $type = null, $optiongroup = null ){
 		
 		if( empty( $uid ) ) return false;
 		
@@ -1681,7 +1681,7 @@ class User extends CI_Model{
 		$this->db->from( 'agent_uids' );
 		$this->db->join( 'agents', 'agents.id=agent_uids.agent_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
-		$this->db->where( 'agent_uids.uid', $uid );
+		$this->db->where( array( 'agent_uids.uid' => $uid, 'agent_uids.type' => $type ) );
 		
 		$query = $this->db->get();
 		

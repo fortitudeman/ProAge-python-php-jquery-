@@ -118,13 +118,23 @@
             
             
                     	
-            <form id="form" action="<?php echo base_url() ?>ot/import_payments.html" class="form-horizontal" method="post" enctype="multipart/form-data">
+            <form id="formfile" action="<?php echo base_url() ?>ot/import_payments.html" class="form-horizontal" method="post" enctype="multipart/form-data">
               <fieldset>
-                <div class="control-group error">
-                  <label class="control-label" for="inputError">Archivo: </label>
+                <div class="control-group">
+                  <label class="control-label text-error" for="inputError">Archivo: </label>
                   <div class="controls">
-                    <input  class="input-file uniform_on" id="fileInput" name="file" type="file"><br />
+                    <input  class="input-file uniform_on required" id="fileInput" name="file" type="file"><br />
                     <small class="text">Archivo CSV o EXCEL</small>
+                  </div>
+                </div>
+                
+                
+                <div class="control-group">
+                  <label class="control-label text-error" for="inputError">Tipo de archivo: </label>
+                  <div class="controls">
+                    <select name="product" class="required">
+                    	<?php if( isset( $products ) and !empty( $products ) ) echo $products; ?>
+                    </select>
                   </div>
                 </div>
                
@@ -158,6 +168,8 @@
             
             <input type="hidden" name="process" value="<?php echo $process ?>">
             
+            <input type="hidden" name="product" value="<?php echo $product ?>" />
+            
             <div class="alert alert-info">
             	Especifique a qué campos corresponde la información que está importando en las siguientes cajas de selección
             </div>
@@ -187,7 +199,8 @@
 											<!--<option value="">Año Prima</option>-->
 											<option value="is_new">Es nuevo negocio</option>
 											<option value="payment_date">Fecha de pago real</option>
-											<option value="agent_uids">Folio del agente</option>
+											<option value="agent_uidsnational">Folio national del agente</option>
+											<option value="agent_uidsprovincial">Folio provincial del agente</option>
 											<!--<option value="">Nombre del agente</option>-->
 											<option value="name">Nombre del Asegurado</option>
 											<option value="uid">Póliza</option>
@@ -283,6 +296,8 @@
             
             <input type="hidden" name="process" value="<?php echo $process ?>">
             
+            <input type="hidden" name="product" value="<?php echo $product ?>" />
+            
             <div class="alert alert-info">
             	Especifique y/o Verifiqué los agentes  
             </div>
@@ -307,14 +322,14 @@
 																		
 									if( $key == 'is_new' )	$key = 'Es nuevo negocio';
 									if( $key == 'payment_date' )	$key = 'Fecha de pago real';
-									if( $key == 'agent_uids' )	$key = 'Folio';
+									if( $key == 'agent_uidsnational' )	$key = 'Folio national';
+									if( $key == 'agent_uidsprovincial' )	$key = 'Folio provincial';
 									if( $key == 'agent' )	$key = 'Agente';
 									if( $key == 'uid' )	$key = 'Poliza';
 									if( $key == 'amount' )	$key = 'Prima';
 									if( $key == 'percentage' )	$key = 'Porcentaje';
 									if( $key == 'product_id' )	$key = 'Ramo';
 									if( $key == 'name' )	$key = 'Asegurado';
-									
 									
 									echo '<th>'.$key.'</th>'; 
 								
@@ -387,6 +402,8 @@
             
             <input type="hidden" name="process" value="<?php echo $process ?>">
             
+            <input type="hidden" name="product" value="<?php echo $product ?>" />
+            
             <div class="alert alert-info">
             	Revise la información.
             </div>
@@ -409,15 +426,17 @@
 								
 								foreach( $rows as $key => $value ): 
 																		
+									
 									if( $key == 'is_new' )	$key = 'Es nuevo negocio';
 									if( $key == 'payment_date' )	$key = 'Fecha de pago real';
-									if( $key == 'agent_uids' )	$key = 'Folio';
+									if( $key == 'agent_uidsnational' )	$key = 'Folio national';
+									if( $key == 'agent_uidsprovincial' )	$key = 'Folio provincial';
 									if( $key == 'agent' )	$key = 'Agente';
 									if( $key == 'uid' )	$key = 'Poliza';
 									if( $key == 'amount' )	$key = 'Prima';
 									if( $key == 'percentage' )	$key = 'Porcentaje';
 									if( $key == 'product_id' )	$key = 'Ramo';
-									
+									if( $key == 'name' )	$key = 'Asegurado';
 									echo '<th>'.$key.'</th>'; 
 								
 								endforeach;

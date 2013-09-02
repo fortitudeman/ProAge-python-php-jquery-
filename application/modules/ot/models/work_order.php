@@ -1011,8 +1011,28 @@ class Work_order extends CI_Model{
 
 
 /**
- *	Products
+ *	Functions Products
  **/
+	public function getProductsGroupsOptions(){
+				
+		$query = $this->db->get( 'product_group' );	
+			
+		$options = '<option value="">Seleccione</option>';
+		
+		
+		if ($query->num_rows() == 0) return $options;
+		
+				
+		foreach ($query->result() as $row) {
+
+			$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 
+		    
+		}
+		
+		return $options;
+		
+	}
+	
 	public function getProducts( $product_group = null ){
 		
 			

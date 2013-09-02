@@ -1658,6 +1658,8 @@ class Ot extends CI_Controller {
 			
 			$process = 'change-index';
 			
+			$product = $_POST['product'];
+			
 			$name = explode( '.', $_FILES['file']['name'] );
 						
 			if( $name[1] == 'xls' ){
@@ -1722,6 +1724,8 @@ class Ot extends CI_Controller {
 	
 			$process = 'choose-agents';
 			
+			$product = $_POST['product'];
+			
 			// Load Model
 			$this->load->model( 'usuarios/user' );
 			
@@ -1760,7 +1764,7 @@ class Ot extends CI_Controller {
 				
 			}
 			
-			unset( $_POST['tmp_file'], $_POST['process'] );
+			unset( $_POST['tmp_file'], $_POST['process'], $_POST['product'] );
 			
 			for( $i=0; $i<=count( $file_array ); $i++ ){
 				
@@ -1772,12 +1776,31 @@ class Ot extends CI_Controller {
 						
 						$file_array[$i][$_POST[$index]]=$file_array[$i][$index];
 																								
-						if( $_POST[$index] == 'agent_uids' ){
+						if( $_POST[$index] == 'agent_uidsnational' ){
 														
-							$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], $i  );
+							$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], 'national', $i  );
 							
 							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]] );
 															
+						}						
+						
+						if( $_POST[$index] == 'agent_uidsprovincial' ){
+														
+							$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], 'provincial', $i  );
+							
+							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]] );
+															
+						}
+						
+						if( $_POST[$index] == 'uid' ){
+							
+							$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '00000' );
+							$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '0000' );
+							$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '000' );
+							$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '00' );
+							$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '0' );
+							
+							
 						}
 					}
 																			
@@ -1817,19 +1840,60 @@ class Ot extends CI_Controller {
 		  $tmp_file = $_POST['tmp_file'];
 		  
 		  $process = 'preview';
+		  
+		  $product = $_POST['product'];
 		  		  
-		  unset( $_POST['tmp_file'], $_POST['process'] );
-		  
+		  unset( $_POST['tmp_file'], $_POST['process'],  $_POST['product'] );
+		 		  
 		  $i=0;
-		  
+		  		  		  
 		  foreach( $file_array as $value ){
-			 			
-			
+						 	
+			 			 
 			 if( isset( $_POST['agent_id'][$i] ) and is_numeric( $_POST['agent_id'][$i] ) ){
 			 	
 				$file_array[$i]->agent_id =  $_POST['agent_id'][$i];
 				
 				$file_array[$i]->agent = $this->user->getAgentsById( $_POST['agent_id'][$i] );
+				
+				$timestamp = strtotime( date( 'Y-m-d H:s:i' ) );
+				
+				if( isset( $file_array[$i]->agent_uidsnational ) ){
+						
+					  $exist = $this->user->getIdAgentByFolio( $file_array[$i]->agent_uidsnational );
+						
+					  $uids_agens = array(
+						  'agent_id' => $file_array[$i]->agent_id,
+						  'type' => 'national',
+						  'uid' =>  $file_array[$i]->agent_uidsnational,
+						  'last_updated' => $timestamp,
+						  'date' => $timestamp
+					  );
+					  
+					  if( empty( $exist ) )
+					 	 $this->user->create( 'agent_uids', $uids_agens );
+				
+				}
+				
+							
+				
+				
+				if(  isset( $file_array[$i]->agent_uidsprovincial ) ){
+					
+					 $exist = $this->user->getIdAgentByFolio( $file_array[$i]->agent_uidsnational );
+					
+					 $uids_agens = array(
+						  'agent_id' => $file_array[$i]->agent_id,
+						  'type' => 'provincial',
+						  'uid' =>  $file_array[$i]->agent_uidsprovincial,
+						  'last_updated' => $timestamp,
+						  'date' => $timestamp
+					  );
+					  
+					  if( empty( $exist ) )
+					 	 $this->user->create( 'agent_uids', $uids_agens );
+						
+				}
 				
 			 }
 			
@@ -1846,8 +1910,7 @@ class Ot extends CI_Controller {
 			
 						unset( $file_array[$i]->agent_id );
 		  
-		  
-		  
+		 
 	  }
 	
 	
@@ -1986,14 +2049,15 @@ class Ot extends CI_Controller {
 	
 	
 	
+		
 	
 	
 	
 	
-	
-	
-	
-	
+	    // Load Model
+		$this->load->model( 'work_order' );
+		
+	    $products = $this->work_order->getProductsGroupsOptions();
 		
 		// Config view
 		$this->view = array(
@@ -2010,12 +2074,14 @@ class Ot extends CI_Controller {
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
 			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',	
+			  '<script type="text/javascript">$( document ).ready( function(){ $( "#formfile" ).validate(); });</script>',
 			  '<script src="'.base_url().'scripts/config.js"></script>',
 			  '<script src="'.base_url().'ot/assets/scripts/import.js"></script>'				
 		  ),
 		  'content' => 'ot/import_payments', // View to load
+		  'products' => $products,
 		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
-				
+		  	
 		);
 		
 		
@@ -2024,6 +2090,8 @@ class Ot extends CI_Controller {
 		if( isset( $tmp_file ) and !empty( $tmp_file ) ) $this->view['tmp_file'] = $tmp_file;
 		
 		if( isset( $process ) and !empty( $process ) ) $this->view['process'] = $process;
+		
+		if( isset( $product ) and !empty( $product ) ) $this->view['product'] = $product;
 		
 		if( isset( $file_array ) and !empty( $file_array ) ) $this->view['file_array'] = $file_array;
 		

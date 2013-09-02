@@ -64,7 +64,7 @@ class Reader_csv{
 				
 		if( !isset( $_FILES['file'] ) or empty( $_FILES['file']  ) ) return false;
 		
-		if( $_FILES['file']['type'] != 'application/vnd.ms-excel' ) return false;	
+		//if( $_FILES['file']['type'] != 'application/vnd.ms-excel' or $_FILES['file']['type'] != "text/csv" ) return false;	
 			
 		// Setting file temporal file named			
 		$name = $_FILES['file']['name'];
