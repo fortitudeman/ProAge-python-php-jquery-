@@ -1944,6 +1944,8 @@ class Ot extends CI_Controller {
 			  if( empty( $policy ) ){
 			  	
 				$policy = array(
+					'product_group_id' => $_POST['product'],
+					'prima' => $item->amount,
 					'uid' => $item->uid,
 					'last_updated' => date( 'Y-m-d H:i:s' ),
 					'date' => date( 'Y-m-d H:i:s' )
@@ -1990,11 +1992,27 @@ class Ot extends CI_Controller {
 			  if( $this->work_order->checkPayment( $item->uid, $item->amount, $item->payment_date, $user_id ) == true ){
 					  
 					  if( $this->work_order->create( 'payments', $payment ) == false )	$controlSaved = false;
+					  					  			  		
+					  
+					  if( (float)$policy[0]['prima'] >= (float)$item->amount ){
+					  		
+							$ot = $this->work_order->getWorkOrderByPolicy(  $policy[0]['id'] );
+							
+							if( !empty( $ot ) ){
+							
+								$work_order = array( 'work_order_status_id' => 4 );
+								
+								$this->work_order->update( 'work_order', $work_order[0]['id'], $ot );
+							}
+					  }
+					  	
 					  
 					  if( $controlSaved == false )
 						
 						$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
-			  							  
+					
+					
+										  
 			  }else{
 			  	
 				$message['message'] = true;

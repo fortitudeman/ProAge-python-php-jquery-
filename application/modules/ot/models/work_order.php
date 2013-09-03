@@ -634,7 +634,48 @@ class Work_order extends CI_Model{
 		return $ot;
    
    }
-	
+   
+   public function getWorkOrderByPolicy( $policy = null ){
+   		
+		if( empty( $policy ) ) return false;
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$this->db->where( 'policy_id', $id );
+		$this->db->limit(1);
+		
+		
+		$query = $this->db->get( 'work_order' );
+		
+		$ot = array();
+		
+		foreach ($query->result() as $row) {
+			
+			$type_tramite = $this->getParentsWorkTipes( $row->work_order_type_id );
+			
+			$ot[] = array( 
+		    	'id' => $row->id,
+				'uid' => $row->uid,
+				'policy_id' => $row->policy_id,
+				'policy' => $this->getPolicyBuId( $row->policy_id ),
+				'agents' => $this->getAgentsByPolicy( $row->policy_id ),
+		    	'product_group_id' => $row->product_group_id,
+				'group_name' => $row->group_name,
+				'parent_type_name' => $this->getTypeTramiteId( $type_tramite ),
+				'type_name' => $row->type_name,				
+		    	'status_name' =>  $row->status_name,
+				'creation_date' =>  $row->creation_date,
+				'duration' =>  $row->duration,
+				'last_updated' =>  $row->last_updated,
+				'date' =>  $row->date
+		    );
+
+		}
+		
+						
+		return $ot;
+   
+   }	
 	
 
 /**
