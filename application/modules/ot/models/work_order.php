@@ -1465,6 +1465,39 @@ class Work_order extends CI_Model{
 	   return $data;	
   
   }
+  
+  public function checkPayment( $uid = null, $prima = null, $payment_date = null, $user_id = null ){
+	 
+	if( empty( $uid ) ) return 'error';
+	if( empty( $prima ) ) return 'error';
+	if( empty( $payment_date ) ) return 'error';
+	if( empty( $user_id ) ) return 'error';
+	
+	/*
+	    SELECT * 
+		FROM policies
+		JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
+		JOIN payments ON payments.policy_id=policies.id
+		WHERE policies.uid='' 
+		AND policies.prima=''
+		AND payments.payment_date=''
+		AND policies_vs_users.user_id='';
+	*/
+	
+	$this->db->select();
+	$this->db->from( 'policies' );
+	$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
+	$this->db->join( 'payments', 'payments.policy_id=policies.id' );
+	$this->db->where( array( 'policies.uid' => $uid, 'policies.prima' => $prima, 'payments.payment_date' => $payment_date, 'policies_vs_users.user_id' => $user_id ) );
+	
+	
+	$query = $this->db->get();	
+		
+	if ($query->num_rows() == 0)  return true;
+		
+	return false;
+	
+  }
 
 }
 ?>

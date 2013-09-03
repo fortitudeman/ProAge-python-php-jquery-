@@ -1826,7 +1826,7 @@ class Ot extends CI_Controller {
 	
 	
 	
-	  // Chane Selects Agents
+	  // Change Selects Agents
 	  if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'choose-agents' ){
 		  
 		  
@@ -1880,7 +1880,7 @@ class Ot extends CI_Controller {
 				
 				if(  isset( $file_array[$i]->agent_uidsprovincial ) ){
 					
-					 $exist = $this->user->getIdAgentByFolio( $file_array[$i]->agent_uidsnational );
+					 $exist = $this->user->getIdAgentByFolio( $file_array[$i]->agent_uidsprovincial );
 					
 					 $uids_agens = array(
 						  'agent_id' => $file_array[$i]->agent_id,
@@ -1918,7 +1918,7 @@ class Ot extends CI_Controller {
 	
 	
 	
-	 // Chane Selects Agents
+	 // Preview
 	  if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'preview' ){
 		  
 		  // Load Model
@@ -1934,10 +1934,10 @@ class Ot extends CI_Controller {
 		  $i = 1;
 		  
 		  $message = array( 'type' => false );
-		   
+		  
+		 		  
 		  foreach( $file_array as $item ){
-			  
-			  
+			 		  
 			  // Verify policy
 			  $policy = $this->work_order->getPolicyByUid( $item->uid );
 			 
@@ -1971,6 +1971,8 @@ class Ot extends CI_Controller {
 														
 			  }
 			 
+			 			 
+			 
 			  $payment = array( 
 			  	
 				'policy_id' => $policy[0]['id'],
@@ -1983,12 +1985,22 @@ class Ot extends CI_Controller {
 			  );		 
 			  
 			  
-			  if( $this->work_order->create( 'payments', $payment ) == false )	$controlSaved = false;
-			  
-			  if( $controlSaved == false )
+			  $user_id = $this->user->getUserIdByAgentId( $item->agent_id  );
+			 			  
+			  if( $this->work_order->checkPayment( $item->uid, $item->amount, $item->payment_date, $user_id ) == true ){
+					  
+					  if( $this->work_order->create( 'payments', $payment ) == false )	$controlSaved = false;
+					  
+					  if( $controlSaved == false )
+						
+						$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
+			  							  
+			  }else{
 			  	
-				$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
-			  
+				$message['message'] = true;
+				$message['message'][0][$i]['saved'] = 'La linea '.$i.' ya existia y no se ha guardado.';
+				
+			  }
 			    
 			  $i++;
 		  }
