@@ -596,14 +596,21 @@ class Work_order extends CI_Model{
    public function getWorkOrderById( $id = null ){
    		
 		if( empty( $id ) ) return false;
+				
 		
-		if ($query->num_rows() == 0) return false;
 		
-		$this->db->where( 'id', $id );
+		$this->db->select( 'product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
+		$this->db->from( 'work_order' );
+		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
+		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
+		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
+		$this->db->where( 'work_order.id', $id );
 		$this->db->limit(1);
 		
 		
-		$query = $this->db->get( 'work_order' );
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 0) return false;
 		
 		$ot = array();
 		
@@ -639,15 +646,17 @@ class Work_order extends CI_Model{
    		
 		if( empty( $policy ) ) return false;
 		
-		if ($query->num_rows() == 0) return false;
-		
-		$this->db->where( 'policy_id', $id );
+				
+		$this->db->where( 'policy_id', $policy );
 		$this->db->limit(1);
 		
 		
 		$query = $this->db->get( 'work_order' );
 		
 		$ot = array();
+		
+		if ($query->num_rows() == 0) return false;
+		
 		
 		foreach ($query->result() as $row) {
 			
@@ -660,10 +669,7 @@ class Work_order extends CI_Model{
 				'policy' => $this->getPolicyBuId( $row->policy_id ),
 				'agents' => $this->getAgentsByPolicy( $row->policy_id ),
 		    	'product_group_id' => $row->product_group_id,
-				'group_name' => $row->group_name,
 				'parent_type_name' => $this->getTypeTramiteId( $type_tramite ),
-				'type_name' => $row->type_name,				
-		    	'status_name' =>  $row->status_name,
 				'creation_date' =>  $row->creation_date,
 				'duration' =>  $row->duration,
 				'last_updated' =>  $row->last_updated,
@@ -672,7 +678,7 @@ class Work_order extends CI_Model{
 
 		}
 		
-						
+			
 		return $ot;
    
    }	
@@ -835,7 +841,7 @@ class Work_order extends CI_Model{
 
 			
 		*/
-		$this->db->select( 'id' );		
+		$this->db->select( 'id, prima' );		
 		$this->db->where( 'policies.uid', $uid );
 		$this->db->limit(1);
 		$query = $this->db->get('policies');
@@ -849,7 +855,8 @@ class Work_order extends CI_Model{
 		foreach ($query->result() as $row) {
 			
 			$policy[] = array( 
-		    	'id' => $row->id
+		    	'id' => $row->id,
+				'prima' => $row->prima
 		    );
 
 		}
@@ -1520,7 +1527,7 @@ class Work_order extends CI_Model{
 		JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
 		JOIN payments ON payments.policy_id=policies.id
 		WHERE policies.uid='' 
-		AND policies.prima=''
+		AND policies.prima >=''
 		AND payments.payment_date=''
 		AND policies_vs_users.user_id='';
 	*/
@@ -1529,7 +1536,7 @@ class Work_order extends CI_Model{
 	$this->db->from( 'policies' );
 	$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
 	$this->db->join( 'payments', 'payments.policy_id=policies.id' );
-	$this->db->where( array( 'policies.uid' => $uid, 'policies.prima' => $prima, 'payments.payment_date' => $payment_date, 'policies_vs_users.user_id' => $user_id ) );
+	$this->db->where( array( 'policies.uid' => $uid, 'policies.prima >=' => $prima, 'payments.payment_date' => $payment_date, 'policies_vs_users.user_id' => $user_id ) );
 	
 	
 	$query = $this->db->get();	
@@ -1539,6 +1546,106 @@ class Work_order extends CI_Model{
 	return false;
 	
   }
-
+  
+  public function getWathdo( $i = 0 ){
+	
+		/*
+		SELECT work_order.id, work_order.uid,  policies.name
+		FROM work_order
+		JOIN users ON users.id=work_order.user
+		JOIN policies ON policies.id=work_order.policy_id
+		WHERE work_order.work_order_status_id=7
+		AND work_order.work_order_type_id=90
+		OR work_order.work_order_type_id=47 
+		*/
+		$this->db->select( 'work_order.id, work_order.uid,  policies.name' );
+		$this->db->from( 'work_order' );
+		$this->db->join( 'users', 'users.id=work_order.user' );
+		$this->db->join( 'policies', 'policies.id=work_order.policy_id' );
+		$this->db->where( array( 'work_order.work_order_status_id' => 1, 'work_order.work_order_type_id' => 90 ) );	
+		$this->db->or_where( 'work_order.work_order_type_id', 47 );
+		
+		$query = $this->db->get(); 
+  	
+		$options = '<select name="assing['.$i.']" class="required"><option value="">Seleccione</option>';
+		
+		if ($query->num_rows() == 0){  
+			
+			
+			$options .= '<option value="noasignar">No asignar a OT</option></select>';
+			
+				
+			return $options; 
+		
+		}
+		
+		$options .= '<option value="noasignar">No asignar a OT</option><optgroup label="-----------"></optgroup>';
+		
+		foreach ($query->result() as $row)			
+			
+			if( $this->getWathdoPayment( $row->id ) == true )
+			
+				$options .= '<option value="'.$row->id.'">'.$row->uid.' - '.$row->name.'</option></select>';
+			
+		
+		$options .= '</select>';
+		
+		return $options;
+		
+		
+		
+  }
+  
+  
+  public function getWathdoPayment( $policy = null ){
+		
+		if( empty( $policy ) ) return false;
+		/*
+		SELECT * 
+		FROM `payments`
+		WHERE `policy_id`='1'
+		*/
+		$this->db->select();
+		$this->db->from( 'payments' );
+		$this->db->where( 'policy_id', $policy );	
+		
+		$query = $this->db->get(); 
+  	
+		if ($query->num_rows() == 0) return true;		
+		
+		return false;
+  }
+  
+  public function getOtPolicyAssing( $ot = null ){
+ 	
+		if( empty( $ot ) ) return 'No se encontro la ot';
+		/*
+		SELECT work_order.id, work_order.uid,  policies.name
+		FROM work_order
+		JOIN policies ON policies.id=work_order.policy_id
+		WHERE work_order.work_order_status_id=7
+		*/
+	
+	
+	
+		$this->db->select( ' work_order.id, work_order.uid,  policies.name');
+		$this->db->from( 'work_order' );
+		$this->db->join( 'policies', 'policies.id=work_order.policy_id' );
+		$this->db->where( array( 'work_order.id ' =>  $ot  ) );	
+		
+		$query = $this->db->get(); 
+  	
+		if ($query->num_rows() == 0) return 'No se encontro la ot';		
+		
+		
+		foreach ($query->result() as $row)	
+			
+			return $row->uid.' - '.$row->name;
+		
+		
+		return true;
+ 
+  }
+  
 }
 ?>

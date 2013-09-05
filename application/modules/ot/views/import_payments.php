@@ -196,14 +196,14 @@
 											<option value="">Seleccione</option>
 											<option value="nonimport">No importar</option>
 											<optgroup label="----------"></optgroup>
-											<!--<option value="">Año Prima</option>-->
+											<option value="year_prime">Año Prima</option>
 											<option value="is_new">Es nuevo negocio</option>
 											<option value="payment_date">Fecha de pago real</option>
-											<option value="agent_uidsnational">Folio national del agente</option>
+											<option value="agent_uidsnational">Folio nacional del agente</option>
 											<option value="agent_uidsprovincial">Folio provincial del agente</option>
 											<!--<option value="">Nombre del agente</option>-->
 											<option value="name">Nombre del Asegurado</option>
-											<option value="uid">Póliza</option>
+											<option value="uid">Número de póliza</option>
 											<option value="percentage">Porcentaje de participación</option>
 											<option value="amount">Prima</option>											
 											<option value="product_id">Ramo</option>
@@ -321,6 +321,8 @@
 								foreach( $rows as $key => $value ): 
 																		
 									if( $key == 'is_new' )	$key = 'Es nuevo negocio';
+									if( $key == 'year_prime' )	$key = 'Año prima';
+									if( $key == 'wathdo' )	$key = '¿Que hacer con la póliza?';
 									if( $key == 'payment_date' )	$key = 'Fecha de pago real';
 									if( $key == 'agent_uidsnational' )	$key = 'Folio national';
 									if( $key == 'agent_uidsprovincial' )	$key = 'Folio provincial';
@@ -428,6 +430,8 @@
 																		
 									
 									if( $key == 'is_new' )	$key = 'Es nuevo negocio';
+									if( $key == 'year_prime' )	$key = 'Año prima';
+									if( $key == 'wathdo' )	$key = '¿Que hacer con la póliza?';
 									if( $key == 'payment_date' )	$key = 'Fecha de pago real';
 									if( $key == 'agent_uidsnational' )	$key = 'Folio national';
 									if( $key == 'agent_uidsprovincial' )	$key = 'Folio provincial';

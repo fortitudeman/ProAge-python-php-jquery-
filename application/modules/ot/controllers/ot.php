@@ -1727,7 +1727,7 @@ class Ot extends CI_Controller {
 			$product = $_POST['product'];
 			
 			// Load Model
-			$this->load->model( 'usuarios/user' );
+			$this->load->model( array( 'work_order', 'usuarios/user' ) );
 			
 			$tmp_file = $_POST['tmp_file'];
 						
@@ -1802,6 +1802,21 @@ class Ot extends CI_Controller {
 							
 							
 						}
+											
+						if( isset( $file_array[$i]['year_prime'] ) and $file_array[$i]['year_prime'] == 1 ){
+							
+							$policy = $this->work_order->getPolicyByUid( $item->uid );
+							
+							if( empty( $policy ) )
+								
+								$file_array[$i]['wathdo'] = $this->work_order->getWathdo( $i );
+																												
+						}else if( isset( $file_array[$i]['year_prime'] ) and $file_array[$i]['year_prime'] == 0 ){
+							
+							$file_array[$i]['wathdo'] = '';
+							
+						}
+						
 					}
 																			
 					unset( $file_array[$i][$index] );
@@ -1818,7 +1833,8 @@ class Ot extends CI_Controller {
 			for( $i=0; $i<=count( $file_array ); $i++ )
 				
 				unset( $file_array[$i]['agent_id'] );
-												
+		
+							
 		}
 	
 	
@@ -1829,7 +1845,7 @@ class Ot extends CI_Controller {
 	  // Change Selects Agents
 	  if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'choose-agents' ){
 		  
-		  
+		 
 		  // Load Model
 		  $this->load->model( array( 'work_order', 'usuarios/user' ) );
 		  
@@ -1896,11 +1912,41 @@ class Ot extends CI_Controller {
 				}
 				
 			 }
+			 
+			 
+			  if( isset( $_POST['assing'][$i] ) ){
+				    
+					
+					 if( $_POST['assing'][$i] == 'noasignar' )
+					 	
+						$value->wathdo = 'Sin Asignar';
+					
+					 else{
+					 	
+						
+						
+						$policy = $this->work_order->getPolicyByUid( $value->uid );
+					 	
+						$ot = $this->work_order->getWorkOrderById(  $_POST['assing'][$i] );
+						
+						$work_order = array( 'policy_id' => $policy[0]['id'] );
+								
+						$this->work_order->update( 'work_order', $ot[0]['id'], $work_order );
+						
+						$value->wathdo = $this->work_order->getOtPolicyAssing( $ot[0]['id'] );
+						
+					 }
+					
+			  }
+			 
 			
 			 $i++;
 			 
 			 
+			
 		  }
+		  
+		   
 		  
 		  $this->work_order->importPaymentsTmp( $file_array );
 		  
@@ -1909,8 +1955,7 @@ class Ot extends CI_Controller {
 				if( isset( $file_array[$i]->agent_id ) )
 			
 						unset( $file_array[$i]->agent_id );
-		  
-		 
+		
 	  }
 	
 	
@@ -1921,6 +1966,9 @@ class Ot extends CI_Controller {
 	 // Preview
 	  if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'preview' ){
 		  
+		  
+		  
+		 
 		  // Load Model
 		  $this->load->model( array( 'work_order', 'usuarios/user' ) );
 		  		  		  
@@ -1929,6 +1977,7 @@ class Ot extends CI_Controller {
 		  
 		  $file_array = json_decode( $file_array[0]['data'] );
 		  
+		 
 		  $controlSaved = true;
 		  
 		  $i = 1;
@@ -1988,6 +2037,8 @@ class Ot extends CI_Controller {
 			  
 			  
 			  $user_id = $this->user->getUserIdByAgentId( $item->agent_id  );
+			 
+						 
 			 			  
 			  if( $this->work_order->checkPayment( $item->uid, $item->amount, $item->payment_date, $user_id ) == true ){
 					  
@@ -2002,7 +2053,7 @@ class Ot extends CI_Controller {
 							
 								$work_order = array( 'work_order_status_id' => 4 );
 								
-								$this->work_order->update( 'work_order', $work_order[0]['id'], $ot );
+								$this->work_order->update( 'work_order', $ot[0]['id'], $work_order );
 							}
 					  }
 					  	
