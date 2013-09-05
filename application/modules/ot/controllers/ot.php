@@ -1775,6 +1775,16 @@ class Ot extends CI_Controller {
 					if( $_POST[$index] != 'nonimport' ){
 						
 						$file_array[$i][$_POST[$index]]=$file_array[$i][$index];
+						
+						
+						if( $_POST[$index] == 'clave' ){
+														
+							$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], 'clave', $i  );
+							
+							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]] );
+															
+						}		
+								
 																								
 						if( $_POST[$index] == 'agent_uidsnational' ){
 														
@@ -2039,7 +2049,7 @@ class Ot extends CI_Controller {
 			  $user_id = $this->user->getUserIdByAgentId( $item->agent_id  );
 			 
 						 
-			 			  
+			 		  
 			  if( $this->work_order->checkPayment( $item->uid, $item->amount, $item->payment_date, $user_id ) == true ){
 					  
 					  if( $this->work_order->create( 'payments', $payment ) == false )	$controlSaved = false;

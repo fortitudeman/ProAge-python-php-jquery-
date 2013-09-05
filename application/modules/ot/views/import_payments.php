@@ -199,6 +199,7 @@
 											<option value="year_prime">Año Prima</option>
 											<option value="is_new">Es nuevo negocio</option>
 											<option value="payment_date">Fecha de pago real</option>
+											<option value="clave">Clave del agente</option>
 											<option value="agent_uidsnational">Folio nacional del agente</option>
 											<option value="agent_uidsprovincial">Folio provincial del agente</option>
 											<!--<option value="">Nombre del agente</option>-->
@@ -324,6 +325,7 @@
 									if( $key == 'year_prime' )	$key = 'Año prima';
 									if( $key == 'wathdo' )	$key = '¿Que hacer con la póliza?';
 									if( $key == 'payment_date' )	$key = 'Fecha de pago real';
+									if( $key == 'clave' )	$key = 'Clave';
 									if( $key == 'agent_uidsnational' )	$key = 'Folio national';
 									if( $key == 'agent_uidsprovincial' )	$key = 'Folio provincial';
 									if( $key == 'agent' )	$key = 'Agente';
@@ -433,6 +435,7 @@
 									if( $key == 'year_prime' )	$key = 'Año prima';
 									if( $key == 'wathdo' )	$key = '¿Que hacer con la póliza?';
 									if( $key == 'payment_date' )	$key = 'Fecha de pago real';
+									if( $key == 'clave' )	$key = 'Clave';
 									if( $key == 'agent_uidsnational' )	$key = 'Folio national';
 									if( $key == 'agent_uidsprovincial' )	$key = 'Folio provincial';
 									if( $key == 'agent' )	$key = 'Agente';
