@@ -2024,10 +2024,17 @@ class Ot extends CI_Controller {
 				$agents = array( 							  
 					  'user_id' => $agent, 
 					  'policy_id' => $policy[0]['id'],
-					  'percentage' => $item->percentage,
 					  'since' => date( 'Y-m-d H:i:s' )
 				);
-			  			  
+			  	
+				if( isset( $item->percentage ) )	
+						  
+					$agents['percentage'] = $item->percentage;
+				else
+					
+					$agents['percentage'] = 100;		  
+						  
+						  
 			 	$this->work_order->create( 'policies_vs_users', $agents );
 														
 			  }
