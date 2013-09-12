@@ -37,8 +37,9 @@ class Ot extends CI_Controller {
 	
 	public $access_all = false;
 	
-	public $access_import_payments = false;
+	public $access_import_payments = false; // Import payments
 	
+	public $access_report = false; // View report
 	
 	
 	
@@ -97,6 +98,9 @@ class Ot extends CI_Controller {
 			
 			if( $value['action_name'] ='Importar payments' )
 				$this->access_import_payments = true;	
+			
+			if( $value['action_name'] ='Ver reporte' )
+				$this->access_report = true;		
 			
 			
 						
@@ -2202,6 +2206,65 @@ class Ot extends CI_Controller {
 	
 	
 	
+
+
+/**
+ *	Reports
+ **/	
+	public function reporte(){
+		
+		
+		// Check access for report
+		if( $this->access_report == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Ver Reporte", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( '/', 'refresh' );
+		
+		}
+		
+		
+		
+		// Load model
+		$this->load->model( array( 'usuarios/user', 'work_order' ) );
+		
+		//echo '<pre>';
+		//print_r( $this->user->getReport() );
+		//echo '</pre>';
+		
+		// Config view
+		$this->view = array(
+				
+		  'title' => 'Ot Ver reporte',
+		   // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'css' => array(),
+		  'scripts' =>  array(
+		  	'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+		  	'<script src="'.base_url().'ot/assets/scripts/report.js"></script>'			
+		  ),
+		  'manager' => $this->user->getSelectsGerentes(),
+		  'content' => 'ot/report', // View to load
+		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
+		  	
+		);
+						
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+		
+		
+	}
 	
 	
 	

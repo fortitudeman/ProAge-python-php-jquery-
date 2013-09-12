@@ -1777,7 +1777,301 @@ class User extends CI_Model{
 		
 			
 	}	
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ *	Report of agents
+ **/
+
 	
+	
+	public function getReport( $filter = array() ){
+ 	
+	
+	/**
+	 *	SELECT users.*, agents.id as agent_id
+		FROM `agents`
+		JOIN `users` ON users.id=agents.user_id
+	 **/
+	
+	$this->db->select( 'users.*, agents.connection_date, agents.id as agent_id' );
+	$this->db->from( 'agents' );
+	$this->db->join( 'users', 'users.id=agents.user_id' );
+	
+	$query = $this->db->get(); 
+  	
+	if ($query->num_rows() == 0) return false;		
+	
+	$report = array();
+	
+	foreach ($query->result() as $row){
+		
+		$name = null;
+		
+		if( empty(  $row->company_name ) )
+			
+			$name =  $row->name. ' ' . $row->lastnames;
+		
+		else
+			
+			$name =  $row->company_name;
+		
+		
+		
+		$report[] = array(
+			
+			'id' => $row->id,
+			'name' => $name,
+			'uids' => $this->getAgentsUids( $row->agent_id ),
+			'connection_date' => $row->connection_date,
+		    'disabled' => $row->disabled,
+			'negocio' => $this->getCountNegocio( $row->id ),
+			'negociopai' => $this->getCountNegocioPai( $row->id ),
+			'prima' => $this->getPrima( $row->id ),
+			'tramite' => $this->getTramite( $row->id ),
+			
+		);
+		
+	}	
+	
+	return $report;
+	
+	
+ }
+ 
+ 
+ public function getAgentsUids( $agent = null ){
+ 	
+	if( empty( $agent ) );
+	/*
+	SELECT * 
+	FROM `agent_uids`
+	WHERE `agent_id` =
+	*/
+	
+	$this->db->select();
+	$this->db->from( 'agent_uids' );
+	$this->db->where( 'agent_id', $agent );
+	$this->db->where( 'type', 'clave' );
+	
+	$query = $this->db->get(); 
+  	
+	if ($query->num_rows() == 0) return false;		
+ 	
+	$uids = array();
+	
+	foreach ($query->result() as $row)
+	
+		$uids[] = array(
+			'type' => $row->type,
+			'uid' => $row->uid
+		);
+		
+	return $uids;
+	
+ }
+ 
+  public function getCountNegocio( $user_id = null ){
+ 		
+		if( empty( $user_id ) ) return 0;
+		/*
+		SELECT count(*) 
+		FROM `policies_vs_users`
+		JOIN  payments ON payments.policy_id=policies_vs_users.policy_id
+		WHERE policies_vs_users.user_id=8
+		AND amount>0
+		*/
+		
+		$this->db->select( 'count(*) as count' );
+		$this->db->from( 'policies_vs_users' );
+		$this->db->join( 'payments', 'payments.policy_id=policies_vs_users.policy_id' );
+		$this->db->where( array( 'policies_vs_users.user_id' => $user_id, 'amount >' =>  0 ) );
+  		
+		$query = $this->db->get(); 
+  	
+		if ($query->num_rows() == 0) return 0;		
+		
+		foreach ($query->result() as $row)
+			
+			return $row->count;
+		
+		return 0;
+	
+  }
+  
+  public function getCountNegocioPai( $user_id = null ){
+ 		
+		
+		
+		if( empty( $user_id ) ) return 0;
+		/*
+		SELECT DISTINCT( policies_vs_users.policy_id )
+		FROM `policies_vs_users`
+		JOIN  payments ON payments.policy_id=policies_vs_users.policy_id
+		WHERE policies_vs_users.user_id=8
+		AND amount>10.000
+		*/
+		
+		$this->db->distinct( 'policies_vs_users.policy_id' );
+		$this->db->from( 'policies_vs_users' );
+		$this->db->join( 'payments', 'payments.policy_id=policies_vs_users.policy_id' );
+		$this->db->where( array( 'policies_vs_users.user_id' => $user_id, 'amount >' =>  10.000 ) );
+  		
+		$query = $this->db->get(); 
+  		
+		if ($query->num_rows() == 0) return 0;		
+		
+		$pai = array();
+		
+		foreach ($query->result() as $row){
+			
+			
+			/*
+				SELECT SUM(amount) as sum
+				FROM payments
+				WHERE policy_id=28
+			*/
+			
+			$this->db->select_sum( 'amount' );
+			$this->db->from( 'payments' );
+			$this->db->where( array( 'policy_id' => $row->policy_id ) );
+			
+			$querypai = $this->db->get(); 
+			
+			if ($querypai->num_rows() == 0) break;
+			
+			
+			foreach ($querypai->result() as $rowpai)
+				
+				if( (float)$rowpai->amount >= 5.000 )
+					
+					$pai[]=$rowpai->amount;
+					
+		
+		}
+			
+		
+			
+			
+			
+		return $pai;
+		
+	
+  }
+  
+  
+  public function getPrima( $user_id = null ){
+ 		
+		if( empty( $user_id ) ) return 0;
+		/*
+		SELECT SUM( prima )
+		FROM policies
+		JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
+		WHERE policies_vs_users.user_id=7
+		*/
+		
+		$this->db->select_sum( 'prima' );
+		$this->db->from( 'policies' );
+		$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
+		$this->db->where( array( 'policies_vs_users.user_id' => $user_id ) );
+  		
+		$query = $this->db->get(); 
+  	
+		if ($query->num_rows() == 0) return 0;		
+		
+		$prima = 0;
+		
+		foreach ($query->result() as $row)
+			
+			$prima = $row->prima;
+		
+		if( empty( $prima ) ) $prima = 0;
+		
+		return $prima;
+	
+  }
+  
+  
+  public function getTramite( $user_id = null ){
+ 		
+		if( empty( $user_id ) ) return 0;
+		/*
+		SELECT policy_id
+		FROM `work_order`
+		WHERE work_order_status_id!=7
+		AND user=9
+		AND ( `work_order_type_id`=47 OR `work_order_type_id`=90 )
+		*/
+		
+		
+		$this->db->select( 'policy_id' );
+		$this->db->from( 'work_order' );
+		$this->db->where( array( 'work_order_status_id !=' => 7, 'work_order_type_id' => 47  ) );
+		$this->db->or_where( 'work_order_type_id', 90 );
+		$this->db->where( 'user', $user_id );
+		
+		$query = $this->db->get(); 
+  	
+		if ($query->num_rows() == 0) return 0;		
+		
+		$tramite = array();
+				
+		$tramite['count'] = $query->num_rows();
+		
+		$tramite['prima'] = 0;
+		
+		foreach ($query->result() as $row){
+									
+			
+			/*
+			SELECT SUM( prima )
+			FROM policies
+			WHERE id=9
+			*/
+			
+			
+			$this->db->select_sum( 'prima' );
+			$this->db->from( 'policies' );
+			$this->db->where( array( 'id' => $row->policy_id ) );
+					
+			$queryprima = $this->db->get(); 
+			
+			$prima = 0;
+			
+			if ($queryprima->num_rows() == 0){
+				
+				$prima = 0;												
+				
+			}else{
+				
+				foreach ($queryprima->result() as $rowprima){
+					
+					if( !empty( $rowprima->prima ) ) $tramite['prima'] = (float)$tramite['prima'] + (float)$rowprima->prima;
+					
+				}
+				
+				
+				
+			}
+			
+		}
+		
+		
+		
+		return $tramite;
+	
+  }	
 	
 
 }

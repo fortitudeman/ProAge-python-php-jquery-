@@ -174,6 +174,15 @@
                         <?php endif; endforeach; endif; ?>
                         
                         
+                        <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
+                        <?php if( $value['action_name'] == 'Ver reporte' ): ?>
+                        <li><a href="<?php echo base_url() ?>ot/reporte.html"><i class="icon-tasks"></i><span class="hidden-tablet">Reporte</span></a></li>
+                        <?php endif; ?>
+                        <?php endif; endforeach; endif; ?>
+                        
+                        
+                        
+                        
 						<!--
                         <li><a class="ajax-link" href="form.html"><i class="icon-edit"></i><span class="hidden-tablet"> Forms</span></a></li>
 						<li><a class="ajax-link" href="chart.html"><i class="icon-list-alt"></i><span class="hidden-tablet"> Charts</span></a></li>
