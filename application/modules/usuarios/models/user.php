@@ -1840,6 +1840,7 @@ class User extends CI_Model{
 			'negociopai' => $this->getCountNegocioPai( $row->id ),
 			'prima' => $this->getPrima( $row->id ),
 			'tramite' => $this->getTramite( $row->id ),
+			'aceptadas' => $this->getAceptadas( $row->id )
 			
 		);
 		
@@ -2072,6 +2073,91 @@ class User extends CI_Model{
 		return $tramite;
 	
   }	
+  
+  public function getAceptadas(  $user_id = null ){
+  	
+	
+		if( empty( $user_id ) ) return 0;
+		/*
+		SELECT policy_id
+		FROM `work_order`
+		WHERE work_order_status_id=7
+		AND user=7
+		*/
+		
+		
+		$this->db->select( 'policy_id' );
+		$this->db->from( 'work_order' );
+		$this->db->where( array( 'work_order_status_id' => 7 ) );
+		$this->db->where( 'user', $user_id );
+  		
+		
+		$query = $this->db->get(); 
+  		
+		
+		if ($query->num_rows() == 0) return 0;		
+		
+		$aceptadas = array();
+		
+		$aceptadas['prima'] = 0;
+		
+		$aceptadas['count']=0;
+		
+		foreach ($query->result() as $row){
+			
+			/*
+			SELECT *
+			FROM payments
+			WHERE `policy_id`=1
+			*/
+			
+			
+			$this->db->select();
+			$this->db->from( 'payments' );
+			$this->db->where( array( 'policy_id' => $row->policy_id ) );
+					
+			$querypayments = $this->db->get(); 
+			
+			
+			if ($querypayments->num_rows() == 0){
+				
+				/*
+				SELECT SUM( prima )
+				FROM policies
+				WHERE id=1*/
+				$this->db->select_sum( 'prima' );
+				$this->db->from( 'policies' );
+				$this->db->where( array( 'id' => $row->policy_id ) );
+				
+				$querypolicies = $this->db->get(); 
+				
+				
+				if ($querypolicies->num_rows() > 0){
+					
+					foreach ($querypolicies->result() as $rowprima){
+					
+					$aceptadas['count'] = (int)$aceptadas['count']+1;
+					
+					if( !empty( $rowprima->prima ) ) $aceptadas['prima'] = (float)$aceptadas['prima'] + (float)$rowprima->prima;
+					
+				}
+					
+				}
+				
+				
+			}	
+			
+			
+		}
+		
+		
+		
+		
+		
+		
+		return $aceptadas;		
+		
+  }
 	
 
 }

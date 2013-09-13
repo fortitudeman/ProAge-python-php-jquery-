@@ -75,7 +75,7 @@
             <div class="row">
             
             	
-                 <div class="span8 offset1">
+                 <div class="span10 offset1">
                 	<br /><br />
                     
 				       <br /><br />  
@@ -121,8 +121,9 @@
                              
                       </div>
                       
+                      <div style="width:100%; overflow:scroll;">
                       
-                      <table class="table table-bordered bootstrap-datatable datatable" style="margin-left:-50px !important; max-width: 800px !important; overflow:auto;">           	
+                      <table class="table table-bordered bootstrap-datatable datatable" style="">           	
                              	<tr>
                                   <td style="vertical-align:middle">Cve Unica</td>
                                   <td style="vertical-align:middle">Nombre</td>
@@ -170,12 +171,102 @@
                                     </table>
                                   </td>
                                 </tr>
-                                     
-                              
-                                  
+                                
+                                <?php  if( !empty( $data ) ): ?>
+                					<?php  foreach( $data as $value ):  ?>    
+                              		
+                                    <?php
+										
+										$negocio = 0;
+										$prima = 0;
+										
+										$negocio += (int)$value['negocio'];
+										
+										$negocio += (int)$value['tramite']['count'];
+										
+										if( isset( $value['aceptadas']['count'] ) ) 										
+										
+											$negocio += (int)$value['aceptadas']['count'];										
+										
+										else 
+											
+											$negocio += (int)$value['aceptadas'];
+										
+										
+										$prima += (float)$value['prima'];
+										$prima += (float)$value['tramite']['prima'];
+										
+										if( isset( $value['aceptadas']['prima'] ) ) 
+											
+											$prima += (float)$value['aceptadas']['prima']; 
+										
+										else 
+											
+											$prima += (float)$value['aceptadas'];
+										
+										
+										
+										
+										
+										
+										
+									?>
+                                    
+                                    
+                                    <tr>
+                                      <td style="vertical-align:middle"><?php echo $value['uids'][0]['uid'] ?></td>
+                                      <td style="vertical-align:middle"><?php echo $value['name'] ?></td>
+                                      <td style="vertical-align:middle">Status Nal</td>
+                                      <td style="vertical-align:middle"><?php echo $value['connection_date'] ?></td>
+                                      <td style="vertical-align:middle">Gen Pai</td>
+                                      <td>
+                                        <table>
+                                            <tr>
+                                                <td style="vertical-align:middle; text-align:center;"><?php echo $value['negocio'] ?></td>
+                                                <td style="vertical-align:middle; text-align:center;"><?php if( isset( $value['negociopai'][0] ) ) echo $value['negociopai'][0]; else echo $value['negociopai'];  ?></td>
+                                                <td style="vertical-align:middle; text-align:center;"><?php echo $value['prima'] ?></td>
+                                                <td style="vertical-align:middle; text-align:center;"><?php echo $value['prima'] ?></td>
+                                            </tr>
+                                        </table>
+                                      </td>
+                                      
+                                      <td>
+                                        <table>
+                                           <tr>
+                                                <td style="vertical-align:middle; text-align:center;"><?php echo $value['tramite']['count'] ?></td>
+                                                <td style="vertical-align:middle; text-align:center;"><?php echo $value['tramite']['prima'] ?></td>
+                                            </tr>
+                                        </table>
+                                      </td>
+                                      
+                                      <td>
+                                        <table>
+                                            <tr>
+                                                <td style="vertical-align:middle; text-align:center;"><?php if( isset( $value['aceptadas']['count'] ) ) echo $value['aceptadas']['count']; else echo $value['aceptadas']; ?></td>
+                                                <td style="vertical-align:middle; text-align:center;"><?php if( isset( $value['aceptadas']['prima'] ) ) echo $value['aceptadas']['prima']; else echo $value['aceptadas']; ?></td>
+                                            </tr>
+                                        </table>
+                                      </td>
+                                      <td>
+                                        <table>
+                                               <tr>
+                                                <td style="vertical-align:middle; text-align:center;"><?php echo $negocio ?></td>
+                                                <td style="vertical-align:middle; text-align:center;"><?php echo $prima ?></td>
+                                            </tr>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                    
+                                    
+                                    
+                                    
+                                    
+                                	<?php endforeach; ?>                                
+                                <?php endif; ?>  
                                                             
                       </table>
-                                            
+                      
+                      </div>                      
                                     	
                 </div>
                 
