@@ -1867,7 +1867,7 @@ class User extends CI_Model{
 		
 		if( isset( $filter['query']['gerente'] ) and !empty( $filter['query']['gerente'] ) ){
 			
-			$this->db->where( 'users.id', $filter['query']['gerente'] ); 	
+			$this->db->where( 'users.manager_id', $filter['query']['gerente'] ); 	
 			
 		}
 		
