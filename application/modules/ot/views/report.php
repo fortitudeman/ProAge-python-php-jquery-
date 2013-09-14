@@ -84,20 +84,31 @@
                              <table class="table table-bordered bootstrap-datatable datatable">           	
                              	<tr>
                                   <td>Ramo:</td>
-                                  <td><select id="ramo" name="query[]" class="input-xlarge" ><option value="">Seleccione</option><option value="1">Vida</option><<option value="2">GMM</option><<option value="3">Autos</option></select></td>
+                                  <td><select id="ramo" name="query[]" class="input-xlarge" ><option value="">Seleccione</option><option value="1">Vida</option><option value="2">GMM</option><option value="3">Autos</option></select></td>
                                 </tr>
                                 <tr>
-                                  <td>Rango de fechas: </td>
+                                  <td>Período: </td>
                                   <td>
-                                  	  <input type="text" id="creation_date" name="query[]" class="input-small" readonly="readonly" placeholder="De"/><br />
-                                  	  <input type="text" id="creation_date1" name="query[]" class="input-small findfilters" readonly="readonly" placeholder="A"/>
+                                      <select id="periodo" name="query[]" class="input-xlarge" >
+                                      	<option value="">Seleccione</option>
+                                        <option value="1">Mes</option>
+                                        <option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+                                        <option value="3">Año</option>
+                                      </select>
+                                      
                                   </td>
                                 </tr>
                                 
                                 <tr>
-                                  <td>Tiempo de conexión: </td>
+                                  <td>Generación: </td>
                                   <td>
-                                       <input type="text" id="connection_date" name="query[]" class="input-small findfilters" readonly="readonly" placeholder=""/>
+                                  
+                                  <input type="checkbox" name="query[generacion]" value="1" /> Todos<br />
+                                  <input type="checkbox" name="query[generacion]" value="2" /> Consolidado<br />
+                                  <input type="checkbox" name="query[generacion]" value="3" /> Generación 1<br />
+                                  <input type="checkbox" name="query[generacion]" value="4" /> Generación 2<br />
+                                  <input type="checkbox" name="query[generacion]" value="5" /> Generación 3<br />
+                                  <input type="checkbox" name="query[generacion]" value="6" /> Generación 4<br />
                                   </td>
                                 </tr>
                                 
@@ -106,9 +117,13 @@
                                   <td><select id="gerente" class="input-xlarge findfilters" name="query[]" ><option value="">Seleccione</option><?php echo $manager ?></select></td>
                                 </tr>                                 
                                 <tr>
-                                  <td>Agente: </td>
+                                  <td>Status de agentes: </td>
                                   <td><select id="agent" name="query[]" class="input-xlarge findfilters">
-                                  	  <option value="">Seleccione</option><option value="1">Vigentes</option><<option value="0">Cancelados</option></select>
+                                  	  <option value="">Seleccione</option>
+                                      <option value="1">Todos</option>
+                                      <option value="2">Vigentes</option>
+                                      <option value="3">Cancelados</option>
+                                      </select>
                                   </select></td>
                                 </tr>
                                 
@@ -225,7 +240,7 @@
                                                 <td style="vertical-align:middle; text-align:center;"><?php echo $value['negocio'] ?></td>
                                                 <td style="vertical-align:middle; text-align:center;"><?php if( isset( $value['negociopai'][0] ) ) echo $value['negociopai'][0]; else echo $value['negociopai'];  ?></td>
                                                 <td style="vertical-align:middle; text-align:center;"><?php echo $value['prima'] ?></td>
-                                                <td style="vertical-align:middle; text-align:center;"><?php echo $value['prima'] ?></td>
+                                                <td style="vertical-align:middle; text-align:center;">$ <?php echo $value['prima'] ?></td>
                                             </tr>
                                         </table>
                                       </td>
@@ -234,7 +249,7 @@
                                         <table>
                                            <tr>
                                                 <td style="vertical-align:middle; text-align:center;"><?php echo $value['tramite']['count'] ?></td>
-                                                <td style="vertical-align:middle; text-align:center;"><?php echo $value['tramite']['prima'] ?></td>
+                                                <td style="vertical-align:middle; text-align:center;">$ <?php echo $value['tramite']['prima'] ?></td>
                                             </tr>
                                         </table>
                                       </td>
@@ -243,7 +258,7 @@
                                         <table>
                                             <tr>
                                                 <td style="vertical-align:middle; text-align:center;"><?php if( isset( $value['aceptadas']['count'] ) ) echo $value['aceptadas']['count']; else echo $value['aceptadas']; ?></td>
-                                                <td style="vertical-align:middle; text-align:center;"><?php if( isset( $value['aceptadas']['prima'] ) ) echo $value['aceptadas']['prima']; else echo $value['aceptadas']; ?></td>
+                                                <td style="vertical-align:middle; text-align:center;">$ <?php if( isset( $value['aceptadas']['prima'] ) ) echo $value['aceptadas']['prima']; else echo $value['aceptadas']; ?></td>
                                             </tr>
                                         </table>
                                       </td>
@@ -251,7 +266,7 @@
                                         <table>
                                                <tr>
                                                 <td style="vertical-align:middle; text-align:center;"><?php echo $negocio ?></td>
-                                                <td style="vertical-align:middle; text-align:center;"><?php echo $prima ?></td>
+                                                <td style="vertical-align:middle; text-align:center;">$ <?php echo $prima ?></td>
                                             </tr>
                                         </table>
                                       </td>
