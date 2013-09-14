@@ -17,9 +17,5 @@ $( document ).ready(function() {
 	$( '#form' ).validate();
 	
 	//$( '.advanced' ).hide();
-					
-	$( '#creation_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });
-	$( '#creation_date1' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });
-	$( '#connection_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true });
 	
 });

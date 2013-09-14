@@ -80,16 +80,16 @@
                     
 				       <br /><br />  
                       <div class="row advanced">
-                      		
+                      		 <form id="form" method="post">
                              <table class="table table-bordered bootstrap-datatable datatable">           	
                              	<tr>
                                   <td>Ramo:</td>
-                                  <td><select id="ramo" name="query[]" class="input-xlarge" ><option value="">Seleccione</option><option value="1">Vida</option><option value="2">GMM</option><option value="3">Autos</option></select></td>
+                                  <td><select id="ramo" name="query[ramo]" class="input-xlarge" ><option value="">Seleccione</option><option value="1">Vida</option><option value="2">GMM</option><option value="3">Autos</option></select></td>
                                 </tr>
                                 <tr>
                                   <td>Período: </td>
                                   <td>
-                                      <select id="periodo" name="query[]" class="input-xlarge" >
+                                      <select id="periodo" name="query[periodo]" class="input-xlarge" >
                                       	<option value="">Seleccione</option>
                                         <option value="1">Mes</option>
                                         <option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
@@ -103,22 +103,22 @@
                                   <td>Generación: </td>
                                   <td>
                                   
-                                  <input type="checkbox" name="query[generacion]" value="1" /> Todos<br />
-                                  <input type="checkbox" name="query[generacion]" value="2" /> Consolidado<br />
-                                  <input type="checkbox" name="query[generacion]" value="3" /> Generación 1<br />
-                                  <input type="checkbox" name="query[generacion]" value="4" /> Generación 2<br />
-                                  <input type="checkbox" name="query[generacion]" value="5" /> Generación 3<br />
-                                  <input type="checkbox" name="query[generacion]" value="6" /> Generación 4<br />
+                                  <input type="checkbox" name="query[generacion][]" value="1" /> Todos<br />
+                                  <input type="checkbox" name="query[generacion][]" value="2" /> Consolidado<br />
+                                  <input type="checkbox" name="query[generacion][]" value="3" /> Generación 1<br />
+                                  <input type="checkbox" name="query[generacion][]" value="4" /> Generación 2<br />
+                                  <input type="checkbox" name="query[generacion][]" value="5" /> Generación 3<br />
+                                  <input type="checkbox" name="query[generacion][]" value="6" /> Generación 4<br />
                                   </td>
                                 </tr>
                                 
                                 <tr>
                                   <td>Gerente: </td>
-                                  <td><select id="gerente" class="input-xlarge findfilters" name="query[]" ><option value="">Seleccione</option><?php echo $manager ?></select></td>
+                                  <td><select id="gerente" class="input-xlarge findfilters" name="query[gerente]" ><option value="">Seleccione</option><?php echo $manager ?></select></td>
                                 </tr>                                 
                                 <tr>
                                   <td>Status de agentes: </td>
-                                  <td><select id="agent" name="query[]" class="input-xlarge findfilters">
+                                  <td><select id="agent" name="query[agent]" class="input-xlarge findfilters">
                                   	  <option value="">Seleccione</option>
                                       <option value="1">Todos</option>
                                       <option value="2">Vigentes</option>
@@ -130,10 +130,10 @@
                                                                  
                                 <tr>
                                   <td></td>
-                                  <td><input type="button" value="Buscar" class="btn btn-inverse filtros" /></td>
+                                  <td><input type="submit" value="Buscar" class="btn btn-inverse filtros" /></td>
                                 </tr>                                
                              </table>
-                             
+                            </form> 
                       </div>
                       
                       <div style="width:100%; overflow:scroll;">

@@ -1809,6 +1809,102 @@ class User extends CI_Model{
 	$this->db->from( 'agents' );
 	$this->db->join( 'users', 'users.id=agents.user_id' );
 	
+	if( !empty( $filter ) ){
+		
+		$this->db->join( 'work_order', 'work_order.user=users.id' );
+				
+		if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
+						
+			$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
+		}
+		
+		
+		/*
+		<option value="1">Mes</option>
+		<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+		<option value="3">Año</option>
+		*/								
+		
+		$mes = date( 'Y' ).'-'.(date( 'm' )-1).'-'.date( 'd' );
+		//echo date('Y-m-d', mktime(0,0,0,date('n')-1,1,date('Y')));;
+		
+		$trimestre = date( 'Y' ).'-'.(date( 'm' )-3).'-'.date( 'd' );		
+		
+		$cuatrimetre = date( 'Y' ).'-'.(date( 'm' )-4).'-'.date( 'd' );
+		
+		$anio = (date( 'Y' )-1).'-'.date( 'm' ).'-'.date( 'd' );
+		
+		
+		if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
+			
+			if( $filter['query']['periodo'] == 1 )
+			
+				$this->db->where( 'work_order.creation_date >= ', strtotime( $mes ) ); 
+			
+			if( $filter['query']['periodo'] == 2 )
+			
+				$this->db->where( 'work_order.creation_date >= ', strtotime( $cuatrimetre ) ); 
+			
+			if( $filter['query']['periodo'] == 3 )
+			
+				$this->db->where( 'work_order.creation_date >= ', strtotime( $anio ) ); 		
+			
+		}
+		
+		
+		if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) ){
+			/*
+			foreach( $filter['query']['generacion'] as $generacion ){
+				
+				$this->db->where();
+				
+			}
+			*/
+		}
+		
+		
+		
+		
+		if( isset( $filter['query']['gerente'] ) and !empty( $filter['query']['gerente'] ) ){
+			
+			$this->db->where( 'users.id', $filter['query']['gerente'] ); 	
+			
+		}
+		
+		
+		if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) ){
+			
+			/*
+			<option value="">Seleccione</option>
+			<option value="1">Todos</option>
+			<option value="2">Vigentes</option>
+			<option value="3">Cancelados</option>
+			*/						  
+			
+			if( $filter['query']['agent'] == 1 ){
+				
+				$this->db->where( 'users.disabled', 1 ); 	
+				$this->db->or_where( 'users.disabled', 2 ); 	
+				
+			}	
+			
+			
+			if( $filter['query']['agent'] == 2 )
+				
+				$this->db->where( 'users.disabled', 1 ); 
+			
+			if( $filter['query']['agent'] == 3 )
+				
+				$this->db->where( 'users.disabled', 0 ); 	
+				
+				
+					
+		}
+		
+			
+	}
+	
+	
 	$query = $this->db->get(); 
   	
 	if ($query->num_rows() == 0) return false;		

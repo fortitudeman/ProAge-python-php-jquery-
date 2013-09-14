@@ -2230,7 +2230,13 @@ class Ot extends CI_Controller {
 		
 		}
 		
+		if( !empty( $_POST ) )
+			
+			 $data = $this->user->getReport( $_POST );
 		
+		else
+		 	
+			$data = $this->user->getReport( $_POST );
 		
 		// Load model
 		$this->load->model( array( 'usuarios/user', 'work_order' ) );
@@ -2252,7 +2258,7 @@ class Ot extends CI_Controller {
 		  ),
 		  'manager' => $this->user->getSelectsGerentes(),
 		  'content' => 'ot/report', // View to load
-		  'data' => $this->user->getReport(),
+		  'data' => $data,
 		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
 		  	
 		);
