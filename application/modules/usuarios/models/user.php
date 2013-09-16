@@ -2054,8 +2054,7 @@ class User extends CI_Model{
 				if( (float)$rowpai->amount >= 5.000 )
 					
 					$pai[]=$rowpai->amount;
-					
-		
+				
 		}
 			
 		

@@ -2236,7 +2236,7 @@ class Ot extends CI_Controller {
 		
 		else
 		 	
-			$data = $this->user->getReport( $_POST );
+			$data = $this->user->getReport( array( 'query' => array( 'ramo' => 1 ) ) );
 		
 		// Load model
 		$this->load->model( array( 'usuarios/user', 'work_order' ) );
@@ -2249,11 +2249,15 @@ class Ot extends CI_Controller {
 		  'user' => $this->sessions,
 		  'user_vs_rol' => $this->user_vs_rol,
 		  'roles_vs_access' => $this->roles_vs_access,
-		  'css' => array(),
+		  'css' => array(
+		  	'<link rel="stylesheet" type="text/css" href="'. base_url() .'ot/assets/plugins/flexigrid/css/flexigrid.css">',
+		  	'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">'
+		  ),
 		  'scripts' =>  array(
 		  	'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
 			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/plugins/flexigrid/js/flexigrid.js"></script>',
 		  	'<script src="'.base_url().'ot/assets/scripts/report.js"></script>'			
 		  ),
 		  'manager' => $this->user->getSelectsGerentes(),

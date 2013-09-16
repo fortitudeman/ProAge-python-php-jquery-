@@ -79,115 +79,132 @@
                 	<br /><br />
                     
 				       <br /><br />  
-                      <div class="row advanced">
-                      		 <form id="form" method="post">
-                             <table class="table table-bordered bootstrap-datatable datatable">           	
-                             	<tr>
-                                  <td>Ramo:</td>
-                                  <td><select id="ramo" name="query[ramo]" class="input-xlarge" ><option value="">Seleccione</option><option value="1">Vida</option><option value="2">GMM</option><option value="3">Autos</option></select></td>
-                                </tr>
-                                <tr>
-                                  <td>Período: </td>
-                                  <td>
-                                      <select id="periodo" name="query[periodo]" class="input-xlarge" >
-                                      	<option value="">Seleccione</option>
-                                        <option value="1">Mes</option>
-                                        <option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
-                                        <option value="3">Año</option>
-                                      </select>
-                                      
-                                  </td>
-                                </tr>
-                                
-                                <tr>
-                                  <td>Generación: </td>
-                                  <td>
-                                  
-                                  <input type="checkbox" name="query[generacion][]" value="1" /> Todos<br />
-                                  <input type="checkbox" name="query[generacion][]" value="2" /> Consolidado<br />
-                                  <input type="checkbox" name="query[generacion][]" value="3" /> Generación 1<br />
-                                  <input type="checkbox" name="query[generacion][]" value="4" /> Generación 2<br />
-                                  <input type="checkbox" name="query[generacion][]" value="5" /> Generación 3<br />
-                                  <input type="checkbox" name="query[generacion][]" value="6" /> Generación 4<br />
-                                  </td>
-                                </tr>
-                                
-                                <tr>
-                                  <td>Gerente: </td>
-                                  <td><select id="gerente" class="input-xlarge findfilters" name="query[gerente]" ><option value="">Seleccione</option><?php echo $manager ?></select></td>
-                                </tr>                                 
-                                <tr>
-                                  <td>Status de agentes: </td>
-                                  <td><select id="agent" name="query[agent]" class="input-xlarge findfilters">
-                                  	  <option value="">Seleccione</option>
-                                      <option value="1">Todos</option>
-                                      <option value="2">Vigentes</option>
-                                      <option value="3">Cancelados</option>
-                                      </select>
-                                  </select></td>
-                                </tr>
-                                
-                                                                 
-                                <tr>
-                                  <td></td>
-                                  <td><input type="submit" value="Buscar" class="btn btn-inverse filtros" /></td>
-                                </tr>                                
-                             </table>
-                            </form> 
-                      </div>
                       
-                      <div style="width:100%; overflow:scroll;">
-                      
-                      <table class="table table-bordered bootstrap-datatable datatable" style="">           	
-                             	<tr>
-                                  <td style="vertical-align:middle">Cve Unica</td>
-                                  <td style="vertical-align:middle">Nombre</td>
-                                  <td style="vertical-align:middle">Status Nal</td>
-                                  <td style="vertical-align:middle">Fecha de Conexión</td>
-                                  <td style="vertical-align:middle">Gen Pai</td>
-                                  <td>
-                                  	<table class="table table-bordered">
-                                    	<tr><td colspan="4" style="text-align:center">PAGADAS</td></tr>
-                                        <tr>
-                                        	<td>Negocios</td>
-                                            <td>Negocios Pai</td>
-                                            <td>Primas</td>
-                                            <td>Total con Incrementos</td>
-                                        </tr>
-                                    </table>
-                                  </td>
-                                  
-                                  <td>
-                                  	<table class="table table-bordered">
-                                    	<tr><td colspan="4" style="text-align:center">EN TRÁMITE</td></tr>
-                                        <tr>
-                                        	<td>Negocios</td>
-                                            <td>Primas</td>
-                                        </tr>
-                                    </table>
-                                  </td>
-                                  
-                                  <td>
-                                  	<table class="table table-bordered">
-                                    	<tr><td colspan="4" style="text-align:center">PENDIENTES DE PAGO</td></tr>
-                                        <tr>
-                                        	<td>Negocios</td>
-                                            <td>Primas</td>
-                                        </tr>
-                                    </table>
-                                  </td>
-                                  <td>
-                                  	<table class="table table-bordered">
-                                    	<tr><td colspan="4" style="text-align:center">PROYECCIÓN REAL</td></tr>
-                                        <tr>
-                                        	<td>Negocios</td>
-                                            <td>Primas</td>
-                                        </tr>
-                                    </table>
-                                  </td>
-                                </tr>
+                      <form id="form" method="post">
+                      	
+                          <input type="hidden" name="query[ramo]" id="ramo" />
+                          <div class="row">                                 
+                               
+                               <?php 							   		
+									if( !isset( $_POST['query']['ramo'] ) or isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 1 ):
+							   ?>                               
+                                   <div class="span1 vida item-active">
+                                      <h3><a href="javascript:void(0)" class="btn btn-link link-ramo" id="vida">Vida</a></h3>
+                                   </div>
+                               <?php else: ?>                               		
+                                    <div class="span1 vida item-desactive">
+                                      <h3><a href="javascript:void(0)" class="btn btn-link link-ramo" id="vida">Vida</a></h3>
+                                   </div>                                    
+                               <?php endif; ?>
+                               
+                                                              
+                               
+                               <?php 							   		
+									if( isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 2 ):
+							   ?> 
+                               
+                               <div class="span1 gmm item-active">
+                                  <h3><a href="javascript:void(0)" class="btn btn-link link-ramo" id="gmm">GMM</a></h3>
+                               </div>
+                               
+                               <?php else: ?>     
+                               <div class="span1 gmm item-desactive">
+                                  <h3><a href="javascript:void(0)" class="btn btn-link link-ramo" id="gmm">GMM</a></h3>
+                               </div>
+                                <?php endif; ?>
+                               
+                               <?php 							   		
+									if( isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 3 ):
+							   ?> 
+                               <div class="span1 autos item-active">
+                                  <h3><a href="javascript:void(0)" class="btn btn-link link-ramo" id="autos">Autos</a></h3>
+                               </div>
+                               <?php else: ?>     
+                               <div class="span1 autos item-desactive">
+                                  <h3><a href="javascript:void(0)" class="btn btn-link link-ramo" id="autos">Autos</a></h3>
+                               </div>
+                                <?php endif; ?>
+                               
+                               
+                               
+                           </div>
+                           <hr />
+                           <div class="row">
+                           		
+                                <div class="span1">
+                                	 <select id="periodo" name="query[periodo]">
+                                      	<option value="">Trimestre</option>
+                                        <option value="1" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 1 ) echo 'selected="selected"'?>>Mes</option>
+                                        <option value="2" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 2 ) echo 'selected="selected"'?>>Trimestre (Vida) o cuatrimestre (GMM)</option>
+                                        <option value="3" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 3 ) echo 'selected="selected"'?>>Año</option>
+                                      </select>
+                                </div>
+                                <div class="span1 offset1">
+                                	<select id="generarion" name="query[generacion]" class="select">
+                                      	<option value="">Generación</option>
+                                        <option value="1" <?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 1 ) echo 'selected="selected"'?>>Todos</option>
+                                        <option value="2"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 2 ) echo 'selected="selected"'?>>Consolidado</option>
+                                        <option value="3"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 3 ) echo 'selected="selected"'?>>Generación 1</option>
+                                        <option value="4"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 4 ) echo 'selected="selected"'?>>Generación 2</option>
+                                        <option value="5"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 5 ) echo 'selected="selected"'?>>Generación 3</option>
+                                        <option value="6"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 6 ) echo 'selected="selected"'?>>Generación 4</option>
+                                      </select>
+                                </div>
+                                <div class="span1 offset1">
+                                	<select id="gerente" name="query[gerente]" class="select2">
+                                      	<option value="">Gerente</option>
+                                        <?php echo $manager ?>
+                                      </select>
+                                </div>
                                 
-                                <?php  if( !empty( $data ) ): ?>
+                                <div class="span1 offset1">
+                                	<select id="agent" name="query[agent]" class="select3">
+                                      	<option value="">Status <br />agentes</option>
+                                        <option value="1" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 1 ) echo 'selected="selected"'?>>Todos</option>
+                                        <option value="2" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 2 ) echo 'selected="selected"'?>>Vigentes</option>
+                                        <option value="3" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 3 ) echo 'selected="selected"'?>>Cancelados</option>
+                                      </select>
+                                </div>
+                            	<div class="span1">
+                                	<input type="submit" value="Filtrar" class="btn btn-inverse" />
+                                </div>
+                                <div class="span1 offset3">
+                                	<a href=""><img src="<?php echo base_url() ?>ot/assets/images/download.png"/></a>
+                                </div>
+                           </div>
+                           
+                       </form>        
+                   		                        
+                        
+                        <?php
+							$total_negocio=0;
+							$total_negocio_pai=0;
+							$total_primas_pagadas=0;
+							$total_negocios_tramite=0;
+							$total_primas_tramite=0;
+							$total_negocio_pendiente=0;
+							$total_primas_pendientes=0;
+							$total_negocios_proyectados=0;
+							$total_primas_proyectados=0;
+						?>
+                        
+                                         	
+                        <table class="table table-bordered">          
+                            <tr>
+                                  <th>Agente</th>
+                                  <th>Negocios <br />pagados</th>
+                                  <th>Negocios <br />pai</th>
+                                  <th>Prímas <br />pagadas</th>
+                                  <th>Negocios en <br />trámite</th>
+                                  <th>Prímas en <br />trámite</th>
+                                  <th>Negocios <br />pendientes</th>
+                                  <th>Prímas <br />pendientes</th>
+                                  <th>Negocios <br />proyectados</th>
+                                  <th>Primas <br />proyectadas</th>
+                              </tr>
+                          <tbody>
+                          	
+                            	 <?php  if( !empty( $data ) ): ?>
                 					<?php  foreach( $data as $value ):  ?>    
                               		
                                     <?php
@@ -221,67 +238,114 @@
 										
 										
 										
+										if( $value['disabled'] == 1 ) $value['disabled'] = 'Activo';
+										if( $value['disabled'] == 0 ) $value['disabled'] = 'Desactivado';
+											
+										
+										$total_negocio += $value['negocio'];
+										
+										if( $value['negociopai']  != 0 ) 
+											
+											$total_negocio_pai += count( $value['negociopai'] ); 
+										
+										else
+											
+											$total_negocio_pai += $value['negociopai'];
+											
+										
+										
+										$total_primas_pagadas +=$value['prima'];
+										$total_negocios_tramite +=$value['tramite']['count'];
+										$total_primas_tramite +=  $value['tramite']['prima'];
+										
+										
+										if( isset( $value['aceptadas']['count'] ) ) 
+											
+											$total_negocio_pendiente +=  $value['aceptadas']['count']; 
+										
+										else  
+											
+											$total_negocio_pendiente += $value['aceptadas'];
+										
+										if( isset( $value['aceptadas']['prima'] ) ) 
+											
+											$total_primas_pendientes +=  $value['aceptadas']['prima']; 
+										
+										else  
+											
+											$total_primas_pendientes += $value['aceptadas'];	
 										
 										
 										
+										
+										
+										$total_negocios_proyectados +=$negocio;
+										$total_primas_proyectados +=$prima;
 										
 									?>
                                     
                                     
                                     <tr>
-                                      <td style="vertical-align:middle"><?php echo $value['uids'][0]['uid'] ?></td>
-                                      <td style="vertical-align:middle"><?php echo $value['name'] ?></td>
-                                      <td style="vertical-align:middle">Status Nal</td>
-                                      <td style="vertical-align:middle"><?php echo $value['connection_date'] ?></td>
-                                      <td style="vertical-align:middle">Gen Pai</td>
                                       <td>
-                                        <table>
-                                            <tr>
-                                                <td style="vertical-align:middle; text-align:center;"><?php echo $value['negocio'] ?></td>
-                                                <td style="vertical-align:middle; text-align:center;"><?php if( isset( $value['negociopai'][0] ) ) echo $value['negociopai'][0]; else echo $value['negociopai'];  ?></td>
-                                                <td style="vertical-align:middle; text-align:center;"><?php echo $value['prima'] ?></td>
-                                                <td style="vertical-align:middle; text-align:center;">$ <?php echo $value['prima'] ?></td>
-                                            </tr>
-                                        </table>
+                                      	<p style="color:#4CB7DB; font-size:14px; font-weight:bold;"><?php echo $value['name'] ?></p>
+                                        <?php echo $value['uids'][0]['uid'] ?> - <?php echo $value['disabled'] ?> - Generación 1<br />
+                                        Conectado <?php echo $value['connection_date'] ?>
                                       </td>
+                                      <td>
+									  	<?php echo $value['negocio'] ?><br />
+                                        <p><small>Negocios <br />pagados</small></p>
+                                      </td>
+                                      <td><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?><br />
+                                        <p><small>Negocios <br />PAI</small></p></td>
+                                      <td>$ <?php echo $value['prima'] ?><br />
+                                        <p><small>Pagados</small></p></td>
+                                      <td><?php echo $value['tramite']['count'] ?><br />
+                                        <p><small>Negocios en <br /> trámite</small></p></td>
+                                      <td>$ <?php echo $value['tramite']['prima'] ?><br />
+                                        <p><small>En <br /> trámite</small></p></td>
+                                      <td><?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?><br />
+                                        <p><small>Negocios <br /> pendientes</small></p></td>
+                                      <td>$ <?php if( isset( $value['aceptadas']['prima'] ) ) echo  $value['aceptadas']['prima']; else  echo $value['aceptadas'] ?><br />
+                                        <p><small>Prímas <br /> pendientes</small></p></td>
+                                      <td><?php echo $negocio ?><br /><p><small>Negocios <br />proyectados</small></p></td>
+                                      <td>$ <?php echo $prima ?><br /><p><small>Primas <br />proyectadas</small></p></td>
+                                    </tr>  
                                       
-                                      <td>
-                                        <table>
-                                           <tr>
-                                                <td style="vertical-align:middle; text-align:center;"><?php echo $value['tramite']['count'] ?></td>
-                                                <td style="vertical-align:middle; text-align:center;">$ <?php echo $value['tramite']['prima'] ?></td>
-                                            </tr>
-                                        </table>
-                                      </td>
                                       
-                                      <td>
-                                        <table>
-                                            <tr>
-                                                <td style="vertical-align:middle; text-align:center;"><?php if( isset( $value['aceptadas']['count'] ) ) echo $value['aceptadas']['count']; else echo $value['aceptadas']; ?></td>
-                                                <td style="vertical-align:middle; text-align:center;">$ <?php if( isset( $value['aceptadas']['prima'] ) ) echo $value['aceptadas']['prima']; else echo $value['aceptadas']; ?></td>
-                                            </tr>
-                                        </table>
-                                      </td>
-                                      <td>
-                                        <table>
-                                               <tr>
-                                                <td style="vertical-align:middle; text-align:center;"><?php echo $negocio ?></td>
-                                                <td style="vertical-align:middle; text-align:center;">$ <?php echo $prima ?></td>
-                                            </tr>
-                                        </table>
-                                      </td>
-                                    </tr>
-                                    
-                                    
-                                    
-                                    
-                                    
                                 	<?php endforeach; ?>                                
                                 <?php endif; ?>  
-                                                            
-                      </table>
-                      
-                      </div>                      
+                            
+                          </tbody>
+                          
+                          <tfoot style="background-color:#666666; color:#FFF;">
+                         	                        
+                            <tr>
+                              <td><h6 style="margin-right:5px;">Totales     </h6></td>
+                              <td><?php echo $total_negocio?><br />
+                                        <p><small>Negocios <br />pagados</small></p></td>
+                              <td><?php echo $total_negocio_pai?><br />
+                                        <p><small>Negocios <br />PAI</small></p></td>
+                              <td>$ <?php echo $total_primas_pagadas?><br />
+                                        <p><small>Pagados</small></p></td>
+                              <td><?php echo $total_negocios_tramite?><br />
+                                        <p><small>Negocios en <br /> trámite</small></p></td>
+                              <td>$ <?php echo $total_primas_tramite?><br />
+                                        <p><small>En <br /> trámite</small></p></td>
+                              <td><?php echo $total_negocio_pendiente?><br />
+                                        <p><small>Negocios <br /> pendientes</small></p></td></td>
+                              <td>$ <?php echo $total_primas_pendientes?><br />
+                                        <p><small>Prímas <br /> pendientes</small></p></td>
+                              <td><?php echo $total_negocios_proyectados?><br /><p><small>Negocios <br />proyectados</small></p></td>
+                              <td>$ <?php echo $total_primas_proyectados?><br /><p><small>Primas <br />proyectadas</small></p></td>
+                            </tr>
+                            
+                          </tfoot>	
+                            
+                            
+                          	
+                        </table>
+                                                                                  
+                   </div>
                                     	
                 </div>
                 
