@@ -1843,8 +1843,18 @@ class User extends CI_Model{
 			
 			if( $filter['query']['periodo'] == 2 )
 			
-				$this->db->where( 'work_order.creation_date >= ', strtotime( $cuatrimetre ) ); 
-			
+				
+				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 )
+					
+					$this->db->where( 'work_order.creation_date >= ', strtotime( $cuatrimetre ) ); 
+				
+				else
+					
+					$this->db->where( 'work_order.creation_date >= ', strtotime( $trimestre ) ); 
+					
+				
+				
+				
 			if( $filter['query']['periodo'] == 3 )
 			
 				$this->db->where( 'work_order.creation_date >= ', strtotime( $anio ) ); 		

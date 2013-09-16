@@ -76,13 +76,10 @@
             
             	
                  <div class="span10 offset1">
-                	<br /><br />
-                    
-				       <br /><br />  
-                      
-                      <form id="form" method="post">
-                      	
-                          <input type="hidden" name="query[ramo]" id="ramo" />
+                                    
+                      <form id="form" method="post">                      	
+                          <input type="hidden" name="query[ramo]" id="ramo" value="1" />
+                           
                           <div class="row">                                 
                                
                                <?php 							   		
@@ -133,16 +130,30 @@
                            		
                                 <div class="span1">
                                 	 <select id="periodo" name="query[periodo]">
-                                      	<option value="">Trimestre</option>
-                                        <option value="1" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 1 ) echo 'selected="selected"'?>>Mes</option>
-                                        <option value="2" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 2 ) echo 'selected="selected"'?>>Trimestre (Vida) o cuatrimestre (GMM)</option>
+                                      	<option value="1" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 1 ) echo 'selected="selected"'?>>Mes</option>
+                                        <option value="2" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 2 ) echo 'selected="selected"'?> class="set_periodo">Trimestre</option>
                                         <option value="3" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 3 ) echo 'selected="selected"'?>>Año</option>
                                       </select>
                                 </div>
                                 <div class="span1 offset1">
-                                	<select id="generarion" name="query[generacion]" class="select">
-                                      	<option value="">Generación</option>
-                                        <option value="1" <?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 1 ) echo 'selected="selected"'?>>Todos</option>
+                                	<select id="gerente" name="query[gerente]" class="select">
+                                      	<option value="">Gerente</option>
+                                        <?php echo $manager ?>
+                                      </select>
+                                </div>
+                                
+                                <div class="span1 offset1">
+                                	<select id="agent" name="query[agent]" class="select2">
+                                      	<option value="">Status agentes</option>
+                                        <option value="1" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 1 ) echo 'selected="selected"'?>>Todos</option>
+                                        <option value="2" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 2 ) echo 'selected="selected"'?>>Vigentes</option>
+                                        <option value="3" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 3 ) echo 'selected="selected"'?>>Cancelados</option>
+                                      </select>
+                                </div>
+                                
+                                <div class="span1 offset1">
+                                	<select id="generarion" name="query[generacion]" class="select3">
+                                        <option value="1" <?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 1 ) echo 'selected="selected"'?>>Generación</option>
                                         <option value="2"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 2 ) echo 'selected="selected"'?>>Consolidado</option>
                                         <option value="3"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 3 ) echo 'selected="selected"'?>>Generación 1</option>
                                         <option value="4"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 4 ) echo 'selected="selected"'?>>Generación 2</option>
@@ -150,21 +161,9 @@
                                         <option value="6"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 6 ) echo 'selected="selected"'?>>Generación 4</option>
                                       </select>
                                 </div>
-                                <div class="span1 offset1">
-                                	<select id="gerente" name="query[gerente]" class="select2">
-                                      	<option value="">Gerente</option>
-                                        <?php echo $manager ?>
-                                      </select>
-                                </div>
                                 
-                                <div class="span1 offset1">
-                                	<select id="agent" name="query[agent]" class="select3">
-                                      	<option value="">Status <br />agentes</option>
-                                        <option value="1" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 1 ) echo 'selected="selected"'?>>Todos</option>
-                                        <option value="2" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 2 ) echo 'selected="selected"'?>>Vigentes</option>
-                                        <option value="3" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 3 ) echo 'selected="selected"'?>>Cancelados</option>
-                                      </select>
-                                </div>
+                                
+                                
                             	<div class="span1">
                                 	<input type="submit" value="Filtrar" class="btn btn-inverse" />
                                 </div>

@@ -49,6 +49,8 @@ $( document ).ready(function() {
 			
 			$( '#ramo' ).val(1);
 			
+			$( '.set_periodo' ).html( 'Trimestre' );
+			
 		}
 		
 		if( this.id == 'gmm' ){
@@ -62,6 +64,8 @@ $( document ).ready(function() {
 			$( '.autos h3 a' ).css({ 'color': '#000' ,'text-decoration' : 'none' });
 			
 			$( '#ramo' ).val(2);
+			
+			$( '.set_periodo' ).html( 'Cuatrimestre' );
 		}
 		
 		if( this.id == 'autos' ){
@@ -75,6 +79,8 @@ $( document ).ready(function() {
 			$( '.gmm h3 a' ).css({ 'color': '#000' ,'text-decoration' : 'none' });
 			
 			$( '#ramo' ).val(3);
+			
+			$( '.set_periodo' ).html( 'Cuatrimestre' );
 		}
 			
 			
