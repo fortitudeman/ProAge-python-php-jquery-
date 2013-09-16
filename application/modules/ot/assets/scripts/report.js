@@ -15,6 +15,9 @@
 $( document ).ready(function() {
     
 	$( '#form' ).validate();
+
+	$('.table').dataTable();
+
 	
 	$( '.link-ramo' ).bind( 'click', function(){
 		

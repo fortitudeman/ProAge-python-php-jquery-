@@ -31,24 +31,29 @@ select {
 	background-color:#666666 !important;
 }
 
-
-
-.table tfoot tr  td{
-	border:none !important;
+.table{
+	width:100%
 }
 
-
-.table tfoot tr  td h6{
-	float:right;
-	pagging-right:5px !important;
+.table thead tr th{
+	font-weight:100;
+	font-size:12px;
+	width:auto !important;
 }
 
-.table tfoot tr  td p small{
-	color:#fff;
+.table tbody tr td{
+	font-weight:100;
+	font-size:10px;
+	width:auto !important;
 }
 
-.table tfoot tr:hover{
-	color:#000;
+.table thead tr .width_xlarge, .table tbody tr .width_xlarge{
+	width:1000px !important;
+}
+
+.table tbody{
+	overflow-y:auto;
+	overflow-x:hidden;
 }
 
 .item-active{
@@ -66,4 +71,27 @@ select {
 .item-desactive h3 a:hover{
 	text-decoration:none;
 	color:#000
+}
+
+
+.table tfoot tr  td{
+	border:none !important;
+}
+
+
+.table tfoot tr  td h6{
+	float:right;
+	pagging-right:5px !important;
+}
+
+.table tfoot tr  td p small{
+	color:#fff;
+}
+
+
+.dataTables_length, .dataTables_filter, .dataTables_info{
+	display:none
+}
+.dataTables_paginate .paginate_disabled_next{
+	float:right;
 }

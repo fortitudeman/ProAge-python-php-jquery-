@@ -188,6 +188,21 @@
                         
                                          	
                         <table class="table table-bordered">          
+                          
+                          <thead>
+                          	<tr>
+                                  <th>Agente</th>
+                                  <th>Negocios <br />pagados</th>
+                                  <th>Negocios <br />pai</th>
+                                  <th>Prímas <br />pagadas</th>
+                                  <th>Negocios en <br />trámite</th>
+                                  <th>Prímas en <br />trámite</th>
+                                  <th>Negocios <br />pendientes</th>
+                                  <th>Prímas <br />pendientes</th>
+                                  <th>Negocios <br />proyectados</th>
+                                  <th>Primas <br />proyectadas</th>
+                              </tr>
+                          </thead>  
                             
                           <tbody>
                           	
@@ -273,7 +288,7 @@
                                     
                                     
                                     <tr>
-                                      <td>
+                                      <td class="width_xlarge">
                                       	<p style="color:#4CB7DB; font-size:14px; font-weight:bold;"><?php echo $value['name'] ?></p>
                                         <?php echo $value['uids'][0]['uid'] ?> - <?php echo $value['disabled'] ?> - Generación 1<br />
                                         Conectado <?php echo $value['connection_date'] ?>
