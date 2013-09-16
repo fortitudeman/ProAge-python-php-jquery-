@@ -137,15 +137,14 @@
                                 </div>
                                 <div class="span1 offset1">
                                 	<select id="gerente" name="query[gerente]" class="select">
-                                      	<option value="">Gerente</option>
+                                      	<option value="">Todos Gerente</option>                                        
                                         <?php echo $manager ?>
                                       </select>
                                 </div>
                                 
                                 <div class="span1 offset1">
                                 	<select id="agent" name="query[agent]" class="select2">
-                                      	<option value="">Status agentes</option>
-                                        <option value="1" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 1 ) echo 'selected="selected"'?>>Todos</option>
+                                        <option value="1" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 1 ) echo 'selected="selected"'?>>Todos los agentes</option>
                                         <option value="2" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 2 ) echo 'selected="selected"'?>>Vigentes</option>
                                         <option value="3" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 3 ) echo 'selected="selected"'?>>Cancelados</option>
                                       </select>
@@ -153,7 +152,7 @@
                                 
                                 <div class="span1 offset1">
                                 	<select id="generarion" name="query[generacion]" class="select3">
-                                        <option value="1" <?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 1 ) echo 'selected="selected"'?>>Generación</option>
+                                        <option value="1" <?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 1 ) echo 'selected="selected"'?>>Todas las Generaciónes</option>
                                         <option value="2"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 2 ) echo 'selected="selected"'?>>Consolidado</option>
                                         <option value="3"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 3 ) echo 'selected="selected"'?>>Generación 1</option>
                                         <option value="4"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 4 ) echo 'selected="selected"'?>>Generación 2</option>
@@ -189,18 +188,7 @@
                         
                                          	
                         <table class="table table-bordered">          
-                            <tr>
-                                  <th>Agente</th>
-                                  <th>Negocios <br />pagados</th>
-                                  <th>Negocios <br />pai</th>
-                                  <th>Prímas <br />pagadas</th>
-                                  <th>Negocios en <br />trámite</th>
-                                  <th>Prímas en <br />trámite</th>
-                                  <th>Negocios <br />pendientes</th>
-                                  <th>Prímas <br />pendientes</th>
-                                  <th>Negocios <br />proyectados</th>
-                                  <th>Primas <br />proyectadas</th>
-                              </tr>
+                            
                           <tbody>
                           	
                             	 <?php  if( !empty( $data ) ): ?>

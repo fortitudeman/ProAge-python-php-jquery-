@@ -2236,7 +2236,7 @@ class Ot extends CI_Controller {
 		
 		else
 		 	
-			$data = $this->user->getReport( array( 'query' => array( 'ramo' => 1, 'periodo' => 1, 'generacion' => 1 ) ) );
+			$data = $this->user->getReport( /*array( 'query' => array( 'ramo' => 1, 'periodo' => 1, 'generacion' => 1 ) )*/ );
 		
 		// Load model
 		$this->load->model( array( 'usuarios/user', 'work_order' ) );

@@ -16,15 +16,6 @@ $( document ).ready(function() {
     
 	$( '#form' ).validate();
 	
-	$( '.table' ).flexigrid({
-		
-		sortname: "Agente",
-        sortorder: "asc",
-		width: 'auto',
-        height: 500
-		
-	});
-	
 	$( '.link-ramo' ).bind( 'click', function(){
 		
 		
