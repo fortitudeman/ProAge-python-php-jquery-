@@ -2236,7 +2236,7 @@ class Ot extends CI_Controller {
 		
 		else
 		 	
-			$data = $this->user->getReport( array( 'query' => array( 'ramo' => 1 ) ) );
+			$data = $this->user->getReport( array( 'query' => array( 'ramo' => 1, 'periodo' => 1 ) ) );
 		
 		$this->load->helper( 'ot' );
 		

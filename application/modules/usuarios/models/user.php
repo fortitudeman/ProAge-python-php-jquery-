@@ -1803,27 +1803,29 @@ class User extends CI_Model{
 	 *	SELECT users.*, agents.id as agent_id
 		FROM `agents`
 		JOIN `users` ON users.id=agents.user_id
+		WHERE  work_order.product_group_id=1
 	 **/
 	
 	$this->db->select( 'users.*, agents.connection_date, agents.id as agent_id' );
 	$this->db->from( 'agents' );
 	$this->db->join( 'users', 'users.id=agents.user_id' );
 	
+	/*
 	if( !empty( $filter ) ){
-		
+		/*
 		$this->db->join( 'work_order', 'work_order.user=users.id' );
 				
 		if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
 						
 			$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
 		}
-		
+		*
 		
 		/*
 		<option value="1">Mes</option>
 		<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
 		<option value="3">Año</option>
-		*/								
+		*								
 		
 		$mes = date( 'Y' ).'-'.(date( 'm' )-1).'-'.date( 'd' );
 		//echo date('Y-m-d', mktime(0,0,0,date('n')-1,1,date('Y')));;
@@ -1869,7 +1871,7 @@ class User extends CI_Model{
 				$this->db->where();
 				
 			}
-			*/
+			*
 		}
 		
 		
@@ -1889,7 +1891,7 @@ class User extends CI_Model{
 			<option value="1">Todos</option>
 			<option value="2">Vigentes</option>
 			<option value="3">Cancelados</option>
-			*/						  
+			*						  
 			
 			if( $filter['query']['agent'] == 1 ){
 				
@@ -1912,7 +1914,7 @@ class User extends CI_Model{
 		}
 		
 			
-	}
+	}*/
 	
 	
 	$query = $this->db->get(); 
