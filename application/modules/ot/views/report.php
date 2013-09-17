@@ -297,23 +297,24 @@
                                         Conectado <?php echo getFormatDate( $value['connection_date'] ) ?>
                                       </td>
                                       <td>
-									  	<?php echo $value['negocio'] ?><br />
+									  	<h4><?php echo $value['negocio'] ?><br /></h4>
                                         <p><small>Negocios <br />pagados</small></p>
                                       </td>
-                                      <td><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?><br />
+                                      <td>
+									    <h4><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?></h4><br />
                                         <p><small>Negocios <br />PAI</small></p></td>
-                                      <td>$ <?php echo $value['prima'] ?><br />
+                                      <td><h4>$ <?php echo $value['prima'] ?></h4><br />
                                         <p><small>Pagados</small></p></td>
-                                      <td><?php echo $value['tramite']['count'] ?><br />
+                                      <td><h4><?php echo $value['tramite']['count'] ?></h4><br />
                                         <p><small>Negocios en <br /> trámite</small></p></td>
-                                      <td>$ <?php echo $value['tramite']['prima'] ?><br />
+                                      <td><h4>$ <?php echo $value['tramite']['prima'] ?></h4><br />
                                         <p><small>En <br /> trámite</small></p></td>
-                                      <td><?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?><br />
+                                      <td><h4><?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?></h4><br />
                                         <p><small>Negocios <br /> pendientes</small></p></td>
-                                      <td>$ <?php if( isset( $value['aceptadas']['prima'] ) ) echo  $value['aceptadas']['prima']; else  echo $value['aceptadas'] ?><br />
+                                      <td><h4>$ <?php if( isset( $value['aceptadas']['prima'] ) ) echo  $value['aceptadas']['prima']; else  echo $value['aceptadas'] ?></h4><br />
                                         <p><small>Prímas <br /> pendientes</small></p></td>
-                                      <td><?php echo $negocio ?><br /><p><small>Negocios <br />proyectados</small></p></td>
-                                      <td>$ <?php echo $prima ?><br /><p><small>Primas <br />proyectadas</small></p></td>
+                                      <td><h4><?php echo $negocio ?></h4><br /><p><small>Negocios <br />proyectados</small></p></td>
+                                      <td><h4>$ <?php echo $prima ?></h4><br /><p><small>Primas <br />proyectadas</small></p></td>
                                     </tr>  
                                       
                                       
@@ -325,7 +326,7 @@
                           <tfoot style="background-color:#666666; color:#FFF;">
                          	                        
                             <tr>
-                              <td><h6 style="margin-right:5px;">Totales     </h6></td>
+                              <td class="width_xlarge">< style="margin-right:5px;">Totales     </></td>
                               <td><?php echo $total_negocio?><br />
                                         <p><small>Negocios <br />pagados</small></p></td>
                               <td><?php echo $total_negocio_pai?><br />

@@ -27,12 +27,20 @@ select {
 .select3{	margin-left:-90px !important;}
 
 
-.table tfoot tr:hover{
-	background-color:#666666 !important;
-}
-
 .table{
 	width:100%;
+	font-family:Verdana, Geneva, sans-serif;
+}
+
+.table tfoot{
+	position:fixed;
+	border-bottom:0px !important;
+	width:77%;
+	margin-top:107px;
+}
+
+.width_xlarge{
+	width:320px;
 }
 
 .dataTables_wrapper{
@@ -51,6 +59,10 @@ select {
 	font-weight:100;
 	font-size:10px;
 	width:auto !important;
+}
+
+.table tbody tr td h4{
+	font-size:12px;
 }
 
 .table thead tr .width_xlarge, .table tbody tr .width_xlarge{

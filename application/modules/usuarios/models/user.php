@@ -1944,11 +1944,11 @@ class User extends CI_Model{
 			'uids' => $this->getAgentsUids( $row->agent_id ),
 			'connection_date' => $row->connection_date,
 		    'disabled' => $row->disabled,
-			'negocio' => $this->getCountNegocio( $row->id ),
-			'negociopai' => $this->getCountNegocioPai( $row->id ),
-			'prima' => $this->getPrima( $row->id ),
-			'tramite' => $this->getTramite( $row->id ),
-			'aceptadas' => $this->getAceptadas( $row->id )
+			'negocio' => $this->getCountNegocio( $row->id, $filter ),
+			'negociopai' => $this->getCountNegocioPai( $row->id, $filter ),
+			'prima' => $this->getPrima( $row->id, $filter ),
+			'tramite' => $this->getTramite( $row->id, $filter ),
+			'aceptadas' => $this->getAceptadas( $row->id, $filter )
 			
 		);
 		
