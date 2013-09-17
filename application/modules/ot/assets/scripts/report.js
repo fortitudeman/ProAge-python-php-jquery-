@@ -16,7 +16,12 @@ $( document ).ready(function() {
     
 	$( '#form' ).validate();
 
-	$('.table').dataTable();
+	$('.table').dataTable({
+		"bSearchable":false,
+		"bScrollInfinite": true,
+		"bScrollCollapse": true,
+		"bPaginate": false
+	});
 
 	
 	$( '.link-ramo' ).bind( 'click', function(){

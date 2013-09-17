@@ -75,7 +75,7 @@
             <div class="row">
             
             	
-                 <div class="span10 offset1">
+                 <div class="span11 offset1">
                                     
                       <form id="form" method="post">                      	
                           <input type="hidden" name="query[ramo]" id="ramo" value="1" />
@@ -122,10 +122,13 @@
                                </div>
                                 <?php endif; ?>
                                
-                               
+                               <div class="span9"><br />
+                               	<hr />
+                               </div>
                                
                            </div>
-                           <hr />
+                           
+                           
                            <div class="row">
                            		
                                 <div class="span1">
@@ -187,7 +190,7 @@
 						?>
                         
                                          	
-                        <table class="table table-bordered">          
+                        <table class="table">          
                           
                           <thead>
                           	<tr>

@@ -2236,7 +2236,7 @@ class Ot extends CI_Controller {
 		
 		else
 		 	
-			$data = $this->user->getReport( array( 'query' => array( 'ramo' => 1, 'periodo' => 1, 'agent' => 1, 'generacion' => 1 ) ) );
+			$data = $this->user->getReport( array( 'query' => array( 'ramo' => 1 ) ) );
 		
 		// Load model
 		$this->load->model( array( 'usuarios/user', 'work_order' ) );
@@ -2271,6 +2271,33 @@ class Ot extends CI_Controller {
 		$this->load->view( 'index', $this->view );	
 		
 		
+	}
+	
+	
+	public function report_export(){
+		
+		$data = array();
+		 
+		if( !empty( $_POST ) )
+			
+			 $data = $this->user->getReport( $_POST );
+		
+		else
+		 	
+			$data = $this->user->getReport( /*array( 'query' => array( 'ramo' => 1, 'periodo' => 1, 'agent' => 1, 'generacion' => 1 ) )*/ );
+		
+		
+		$total_negocio=0;
+		$total_negocio_pai=0;
+		$total_primas_pagadas=0;
+		$total_negocios_tramite=0;
+		$total_primas_tramite=0;
+		$total_negocio_pendiente=0;
+		$total_primas_pendientes=0;
+		$total_negocios_proyectados=0;
+		$total_primas_proyectados=0;
+		
+				
 	}
 	
 	
