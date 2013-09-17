@@ -294,7 +294,7 @@
                                       <td class="width_xlarge">
                                       	<p style="color:#4CB7DB; font-size:14px; font-weight:bold;"><?php echo $value['name'] ?></p>
                                         <?php echo $value['uids'][0]['uid'] ?> - <?php echo $value['disabled'] ?> - Generación 1<br />
-                                        Conectado <?php echo $value['connection_date'] ?>
+                                        Conectado <?php echo getFormatDate( $value['connection_date'] ) ?>
                                       </td>
                                       <td>
 									  	<?php echo $value['negocio'] ?><br />

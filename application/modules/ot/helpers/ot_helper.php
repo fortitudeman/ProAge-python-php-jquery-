@@ -163,4 +163,22 @@ function renderTable( $data = array(), $access_activate = false, $access_update 
 }
 
 
+// Getting format date
+function getFormatDate( $date = null ){
+		
+	 if( empty( $date ) or $date == '0000-00-00' ) return false;
+	 
+	 	 
+	 $date = explode( '-', $date );
+	 
+	 
+	 $meses= array('01'=>"Enero",'02'=>"Febrero",'03'=>"Marzo",'04'=>"Abril",'05'=>"Mayo",'06'=>"Junio",'07'=>"Julio",'08'=>"Agosto",'09'=>"Septiembre",'10'=>"Octubre",'11'=>"Noviembre",'12'=>"Diciembre");
+	 
+	 return 'el '.$date[2].' de '.$meses[$date[1]].' del '.$date[0];
+	 
+	 
+			 
+}	
+
+
 ?>

@@ -2238,6 +2238,8 @@ class Ot extends CI_Controller {
 		 	
 			$data = $this->user->getReport( array( 'query' => array( 'ramo' => 1 ) ) );
 		
+		$this->load->helper( 'ot' );
+		
 		// Load model
 		$this->load->model( array( 'usuarios/user', 'work_order' ) );
 				
