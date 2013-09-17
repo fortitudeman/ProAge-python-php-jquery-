@@ -326,7 +326,7 @@
                           <tfoot style="background-color:#666666; color:#FFF;">
                          	                        
                             <tr>
-                              <td class="width_xlarge">< style="margin-right:5px;">Totales     </></td>
+                              <td class="width_xlarge"><h6 style="margin-right:5px;">Totales     </h6></td>
                               <td><?php echo $total_negocio?><br />
                                         <p><small>Negocios <br />pagados</small></p></td>
                               <td><?php echo $total_negocio_pai?><br />
