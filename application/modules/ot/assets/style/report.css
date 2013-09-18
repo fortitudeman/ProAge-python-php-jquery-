@@ -32,15 +32,23 @@ select {
 	font-family:Verdana, Geneva, sans-serif;
 }
 
-.table tfoot{
+.table tfoot{	
 	position:fixed;
 	border-bottom:0px !important;
 	width:77%;
 	margin-top:107px;
+	
+}
+.table tfoot tr td{
+	width:100px !important;
+}
+
+.table tfoot tr td.width_xlarge{
+	min-width:240px !important;
 }
 
 .width_xlarge{
-	width:240px;
+	min-width:240px !important;
 }
 
 .dataTables_wrapper{
@@ -58,8 +66,15 @@ select {
 .table tbody tr td{
 	font-weight:100;
 	font-size:10px;
-	width:auto !important;
+	width:100px !important;
+	height:70px !important;
 }
+
+.table tbody tr td.small{
+	width:88px !important;
+	background-color:#FEFEF1 !important;
+}
+
 
 .table tbody tr td h4{
 	font-size:12px;

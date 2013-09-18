@@ -195,9 +195,9 @@
                           <thead>
                           	<tr>
                                   <th>Agente</th>
-                                  <th>Negocios <br />pagados</th>
-                                  <th>Negocios <br />pai</th>
-                                  <th>Prímas <br />pagadas</th>
+                                  <th class="small">Negocios <br />pagados</th>
+                                  <th class="small">Negocios <br />pai</th>
+                                  <th class="small">Prímas <br />pagadas</th>
                                   <th>Negocios en <br />trámite</th>
                                   <th>Prímas en <br />trámite</th>
                                   <th>Negocios <br />pendientes</th>
@@ -297,7 +297,7 @@
                                         Conectado <?php echo getFormatDate( $value['connection_date'] ) ?>
                                       </td>
                                       <td>
-									  	<h4><?php echo $value['negocio'] ?><br /></h4>
+									  	<h4><?php echo $value['negocio'] ?><br /></h4><br />
                                         <p><small>Negocios <br />pagados</small></p>
                                       </td>
                                       <td>
@@ -327,11 +327,11 @@
                          	                        
                             <tr>
                               <td class="width_xlarge"><h6 style="margin-right:5px;">Totales     </h6></td>
-                              <td><?php echo $total_negocio?><br />
+                              <td class="small"><?php echo $total_negocio?><br />
                                         <p><small>Negocios <br />pagados</small></p></td>
-                              <td><?php echo $total_negocio_pai?><br />
+                              <td class="small"><?php echo $total_negocio_pai?><br />
                                         <p><small>Negocios <br />PAI</small></p></td>
-                              <td>$ <?php echo $total_primas_pagadas?><br />
+                              <td class="small">$ <?php echo $total_primas_pagadas?><br />
                                         <p><small>Pagados</small></p></td>
                               <td><?php echo $total_negocios_tramite?><br />
                                         <p><small>Negocios en <br /> trámite</small></p></td>
