@@ -2252,7 +2252,6 @@ class Ot extends CI_Controller {
 		  'user_vs_rol' => $this->user_vs_rol,
 		  'roles_vs_access' => $this->roles_vs_access,
 		  'css' => array(
-		  	'<link rel="stylesheet" href="'. base_url() .'ot/assets/plugins/SlickGrid/slick.grid.css" type="text/css"/>',
 			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">'
 		  ),
 		  'scripts' =>  array(

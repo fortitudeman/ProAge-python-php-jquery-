@@ -67,7 +67,7 @@ select {
 	font-weight:100;
 	font-size:10px;
 	width:100px !important;
-	height:70px !important;
+	max-height:70px !important;
 }
 
 .table tbody tr td.small{
