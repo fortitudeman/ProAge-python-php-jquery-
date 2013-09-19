@@ -140,7 +140,7 @@
                                     <th>&nbsp; </th>
                                     <th>&nbsp; </th>
                                     <th>&nbsp; </th>
-                                    <th>&nbsp; </th>
+                                    <th><input type="submit" value="Filtrar" class="btn btn-inverse" /></th>
                                     <th width="50%" align="right" > <a href="#">
                                         <img src="<?php echo base_url() ?>ot/assets/images/down.png"></a></th>
                                 </tr>
