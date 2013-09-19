@@ -84,7 +84,7 @@
                                 <div class="main  clearfix">
                     
                     
-                                <a href="javascript:void(0);" class="links-menu link-ramo" id="vida">Vida</a>
+                                <a href="javascript:void(0);" class="links-menu link-ramo btn-link" id="vida">Vida</a>
                                 <a href="javascript:void(0);" class="links-menu linkLeft link-ramo" id="gmm">GMM</a>
                                 <a href="javascript:void(0);" class="links-menu linkLeft link-ramo" id="autos">Autos</a>
                     
@@ -305,8 +305,8 @@
                             </tbody>
                          </table>
                     
-                    <div id="contentFoot" style="width:100%;">
-                        <table  class="sortable altrowstable tablesorter" id="Tfoot" style="width:100%" >
+                    <div id="contentFoot" style="width:75% !important;">
+                        <table  class="sortable altrowstable tablesorter" id="Tfoot" style="min-width:100% !important;" >
                     
                         
                                <tr>
@@ -327,7 +327,7 @@
                     </div>            
                     </div> <!-- #main -->
                 </div> <!-- #main-container -->
-                       
+                    </div>   
                                                                                                                     	
                 </div>
                 

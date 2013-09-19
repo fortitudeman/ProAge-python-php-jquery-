@@ -23,7 +23,7 @@ $( document ).ready(function() {
 									
 			$( '#ramo' ).val(1);
 			
-			$( 'label' ).text()
+			$( 'label[class="dd-option-text"]' ).html( 'Trimestre' );
 			// 'Trimestre' );
 			
 		}

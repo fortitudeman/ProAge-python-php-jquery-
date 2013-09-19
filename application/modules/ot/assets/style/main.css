@@ -455,7 +455,7 @@ table.altrowstable {
     border-width: 1px;
     border-color: #a9c6c9;
     border-collapse: collapse;
-  
+	width:100%;
 
 }
 table.altrowstable th {
@@ -603,14 +603,14 @@ margin-left: 10px;
 
 
 table.altrowstable thead tr .headerSortUp {
-    background-image: url('../img/asc.gif');
+    background-image: url('../images/asc.gif');
     background-color:white; 
     background-repeat: no-repeat;
     background-position: center right;
     cursor: pointer;
 }
 table.altrowstable thead tr .headerSortDown {
-    background-image: url('../img/desc.gif') no-repeat;
+    background-image: url('../images/desc.gif') no-repeat;
     background-color:white;
     background-repeat: no-repeat;
     background-position: center right;
@@ -620,7 +620,7 @@ table.altrowstable thead tr .headerSortDown {
 table.altrowstable thead tr th {
    
    
-    background-image: url('../img/bg.gif');
+    background-image: url('../images/bg.gif');
     background-repeat: no-repeat;
     background-position: center right;
     cursor: pointer;
