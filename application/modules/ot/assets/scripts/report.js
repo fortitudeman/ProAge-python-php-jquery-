@@ -57,4 +57,14 @@ $( document ).ready(function() {
 			
 		
 	});
+	
+	
+	
+	$( '.download' ).bind( 'click', function(){
+		
+		$( '#form' ).attr( "action", Config.base_url() + 'ot/report_export.html' );
+		
+		$( '#form' ).submit();
+	});
+	
 });

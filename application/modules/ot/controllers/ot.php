@@ -2271,6 +2271,7 @@ class Ot extends CI_Controller {
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>',
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',
 			
+			'<script src="'.base_url().'scripts/config.js"></script>'	,	
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>'			
 		  ),
 		  'manager' => $this->user->getSelectsGerentes(),
@@ -2299,16 +2300,20 @@ class Ot extends CI_Controller {
 		 	
 			$data = $this->user->getReport( /*array( 'query' => array( 'ramo' => 1, 'periodo' => 1, 'agent' => 1, 'generacion' => 1 ) )*/ );
 		
+				
+		// Load Helper 
+		$this->load->helper('usuarios/csv');
+								
 		
-		$total_negocio=0;
-		$total_negocio_pai=0;
-		$total_primas_pagadas=0;
-		$total_negocios_tramite=0;
-		$total_primas_tramite=0;
-		$total_negocio_pendiente=0;
-		$total_primas_pendientes=0;
-		$total_negocios_proyectados=0;
-		$total_primas_proyectados=0;
+	 	array_to_csv($data, 'proages_report.csv');
+		
+		if( is_file( 'proages_report.csv' ) )
+			echo file_get_contents( 'proages_report.csv' );
+		
+		if( is_file( 'proages_report.csv' ) )
+			unlink( 'proages_report.csv' );
+				
+		exit;
 		
 				
 	}
