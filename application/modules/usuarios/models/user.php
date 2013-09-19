@@ -1808,112 +1808,6 @@ class User extends CI_Model{
 	$this->db->from( 'agents' );
 	$this->db->join( 'users', 'users.id=agents.user_id' );
 	
-	/*
-	if( !empty( $filter ) ){
-		/*
-		$this->db->join( 'work_order', 'work_order.user=users.id' );
-				
-		if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
-						
-			$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
-		}
-		*
-		
-		/*
-		<option value="1">Mes</option>
-		<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
-		<option value="3">Año</option>
-		*								
-		
-		$mes = date( 'Y' ).'-'.(date( 'm' )-1).'-'.date( 'd' );
-		//echo date('Y-m-d', mktime(0,0,0,date('n')-1,1,date('Y')));;
-		
-		$trimestre = date( 'Y' ).'-'.(date( 'm' )-3).'-'.date( 'd' );		
-		
-		$cuatrimetre = date( 'Y' ).'-'.(date( 'm' )-4).'-'.date( 'd' );
-		
-		$anio = (date( 'Y' )-1).'-'.date( 'm' ).'-'.date( 'd' );
-		
-		
-		if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
-			
-			if( $filter['query']['periodo'] == 1 )
-			
-				$this->db->where( 'work_order.creation_date >= ', strtotime( $mes ) ); 
-			
-			if( $filter['query']['periodo'] == 2 )
-			
-				
-				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 )
-					
-					$this->db->where( 'work_order.creation_date >= ', strtotime( $cuatrimetre ) ); 
-				
-				else
-					
-					$this->db->where( 'work_order.creation_date >= ', strtotime( $trimestre ) ); 
-					
-				
-				
-				
-			if( $filter['query']['periodo'] == 3 )
-			
-				$this->db->where( 'work_order.creation_date >= ', strtotime( $anio ) ); 		
-			
-		}
-		
-		
-		if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) ){
-			/*
-			foreach( $filter['query']['generacion'] as $generacion ){
-				
-				$this->db->where();
-				
-			}
-			*
-		}
-		
-		
-		
-		
-		if( isset( $filter['query']['gerente'] ) and !empty( $filter['query']['gerente'] ) ){
-			
-			$this->db->where( 'users.manager_id', $filter['query']['gerente'] ); 	
-			
-		}
-		
-		
-		if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) ){
-			
-			/*
-			<option value="">Seleccione</option>
-			<option value="1">Todos</option>
-			<option value="2">Vigentes</option>
-			<option value="3">Cancelados</option>
-			*						  
-			
-			if( $filter['query']['agent'] == 1 ){
-				
-				$this->db->where( 'users.disabled', 1 ); 	
-				$this->db->or_where( 'users.disabled', 2 ); 	
-				
-			}	
-			
-			
-			if( $filter['query']['agent'] == 2 )
-				
-				$this->db->where( 'users.disabled', 1 ); 
-			
-			if( $filter['query']['agent'] == 3 )
-				
-				$this->db->where( 'users.disabled', 0 ); 	
-				
-				
-					
-		}
-		
-			
-	}*/
-	
 	
 	$query = $this->db->get(); 
   	
@@ -1942,11 +1836,11 @@ class User extends CI_Model{
 			'uids' => $this->getAgentsUids( $row->agent_id ),
 			'connection_date' => $row->connection_date,
 		    'disabled' => $row->disabled,
-			'negocio' => $this->getCountNegocio( $row->id, $filter ),
-			'negociopai' => $this->getCountNegocioPai( $row->id, $filter ),
-			'prima' => $this->getPrima( $row->id, $filter ),
-			'tramite' => $this->getTramite( $row->id, $filter ),
-			'aceptadas' => $this->getAceptadas( $row->id, $filter )
+			'negocio' => $this->getCountNegocio( $row->agent_id, $filter ),
+			'negociopai' => $this->getCountNegocioPai( $row->agent_id, $filter ),
+			'prima' => $this->getPrima( $row->agent_id, $filter ),
+			'tramite' => $this->getTramite( $row->agent_id, $filter ),
+			'aceptadas' => $this->getAceptadas( $row->agent_id, $filter )
 			
 		);
 		
@@ -1989,24 +1883,24 @@ class User extends CI_Model{
 	
  }
  
-  public function getCountNegocio( $user_id = null, $filter = array() ){
+  public function getCountNegocio( $agent_id = null, $filter = array() ){
  		
-		if( empty( $user_id ) ) return 0;
+						
+		if( empty( $agent_id ) ) return 0;
 		/*
-		SELECT count( DISTINCT( payments.id ) ) as count
+		SELECT DISTINCT( policies_vs_users.policy_id ) as policy_id
 		FROM `policies_vs_users`
-		JOIN  payments ON payments.policy_id=policies_vs_users.policy_id    
 		JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
-		JOIN  users ON users.id=policies_vs_users.user_id
-		WHERE policies_vs_users.user_id=6
-		AND payments.amount>0
+		JOIN  agents ON agents.id=policies_vs_users.user_id
+		JOIN  users ON users.id=agents.user_id
+		WHERE policies_vs_users.user_id=1
 		*/
-		$this->db->select( ' count( DISTINCT( payments.id ) ) as count' );
+		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id' );
 		$this->db->from( 'policies_vs_users' );
-		$this->db->join( 'payments', 'payments.policy_id=policies_vs_users.policy_id' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->join( 'users', 'users.id=policies_vs_users.user_id' );
-		$this->db->where( array( 'policies_vs_users.user_id' => $user_id, 'amount >' =>  0 ) );
+		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
+		$this->db->join( 'users', 'users.id=agents.user_id' );
+		$this->db->where( array( 'policies_vs_users.user_id' => $agent_id ) );
   						
 		if( !empty( $filter ) ){
 			
@@ -2108,14 +2002,50 @@ class User extends CI_Model{
 		}
 		
 		
-		
 		$query = $this->db->get(); 
   		
 		if ($query->num_rows() == 0) return 0;		
 		
-		foreach ($query->result() as $row)
+		
+		$negocio = array();
+		
+		
+		foreach ($query->result() as $row){
 			
-			return $row->count;
+			/*
+			SELECT SUM( amount )
+			FROM payments
+			WHERE policy_id=30;
+			*/
+			
+			$this->db->select_sum( 'amount' );
+			$this->db->from( 'payments' );
+			$this->db->where( 'policy_id', $row->policy_id );
+			
+			
+			$querypayemnt = $this->db->get(); 
+			
+			
+			if ($querypayemnt->num_rows() == 0)break;		
+			
+			$negocio = array();
+			
+			$negocio['count'] = 0;
+			
+				
+			foreach ($querypayemnt->result() as $rowpayemnt)
+			
+				if( (float)$rowpayemnt->amount > 0 )
+					
+					$negocio['count'] =(int)$negocio['count'] +1;
+			
+												
+			return $negocio['count'];
+		
+		
+		}
+		
+		
 		
 		return 0;
 		
