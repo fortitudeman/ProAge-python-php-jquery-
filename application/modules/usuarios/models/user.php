@@ -2053,7 +2053,7 @@ class User extends CI_Model{
 					$negocio['count'] =(int)$negocio['count'] +1;
 			
 												
-			return $negocio['count'];
+			//return $negocio['count'];
 		
 		
 		}
