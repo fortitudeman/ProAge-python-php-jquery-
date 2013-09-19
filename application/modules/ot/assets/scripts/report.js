@@ -31,9 +31,8 @@ $( document ).ready(function() {
 			
 			$( '#vida' ).css( 'color', '#06F' );
 			
-			$( '.set_periodo1' ).show();
-			$( '.set_periodo2' ).hide();
-			
+			$( '.set_periodo' ).html( 'Trimestre' );
+			// 'Trimestre' );
 			
 		}
 		
@@ -43,9 +42,7 @@ $( document ).ready(function() {
 			
 			$( '#gmm' ).css( 'color', '#06F' );
 			
-			$( '.set_periodo1' ).hide();
-			$( '.set_periodo2' ).show();
-			
+			$( '.set_periodo' ).html( 'Cuatrimestre' );
 		}
 		
 		if( this.id == 'autos' ){
@@ -54,9 +51,7 @@ $( document ).ready(function() {
 			
 			$( '#autos' ).css( 'color', '#06F' );
 			
-			$( '.set_periodo1' ).hide();
-			$( '.set_periodo2' ).show();
-			
+			$( '.set_periodo' ).html( 'Cuatrimestre' );
 		}
 			
 			
