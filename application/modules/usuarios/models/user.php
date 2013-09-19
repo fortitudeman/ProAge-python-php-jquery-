@@ -1896,14 +1896,6 @@ class User extends CI_Model{
 		WHERE policies_vs_users.user_id=1
 		*/
 		
-		echo 'SELECT DISTINCT( policies_vs_users.policy_id ) as policy_id
-				FROM `policies_vs_users`
-				JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
-				JOIN  agents ON agents.id=policies_vs_users.user_id
-				JOIN  users ON users.id=agents.user_id
-				WHERE policies_vs_users.user_id='.$agent_id.'<br>';
-		
-		
 		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id' );
 		$this->db->from( 'policies_vs_users' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
@@ -2026,11 +2018,7 @@ class User extends CI_Model{
 			FROM payments
 			WHERE policy_id=30;
 			*/
-			
-			echo 'SELECT SUM( amount )
-			FROM payments
-			WHERE policy_id='.$row->policy_id.';<br>';
-			
+					
 			$this->db->select_sum( 'amount' );
 			$this->db->from( 'payments' );
 			$this->db->where( 'policy_id', $row->policy_id );
@@ -2050,12 +2038,8 @@ class User extends CI_Model{
 			
 				if( (float)$rowpayemnt->amount > 0 )
 					
-					$negocio['count'] =(int)$negocio['count'] +1;
-			
-												
-			//return $negocio['count'];
-		
-		
+					$negocio['count'] =(int)$negocio['count']+1;
+								
 		}
 		
 		
