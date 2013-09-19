@@ -1901,7 +1901,7 @@ class User extends CI_Model{
 				JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
 				JOIN  agents ON agents.id=policies_vs_users.user_id
 				JOIN  users ON users.id=agents.user_id
-				WHERE policies_vs_users.user_id=1<br>';
+				WHERE policies_vs_users.user_id='.$agent_id.'<br>';
 		
 		
 		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id' );
@@ -2029,7 +2029,7 @@ class User extends CI_Model{
 			
 			echo 'SELECT SUM( amount )
 			FROM payments
-			WHERE policy_id=30;<br>';
+			WHERE policy_id='.$row->policy_id.';<br>';
 			
 			$this->db->select_sum( 'amount' );
 			$this->db->from( 'payments' );
