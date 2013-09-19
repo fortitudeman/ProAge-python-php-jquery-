@@ -2322,7 +2322,7 @@ class Ot extends CI_Controller {
 				
 				$data[$i]['name'] = $value['name'].' Activo Generacion 1 - Conectado '. getFormatDate( $value['connection_date'] ); 
 				
-				unset( $data[$i]['disabled'] );
+				unset( $data[$i]['disabled'], $data[$i]['connection_date'] );
 				
 				// Change Clave uid								
 				$uid = $value['uids'][0]['uid'];
@@ -2335,7 +2335,7 @@ class Ot extends CI_Controller {
 				if( isset( $value['tramite']['count'] ) ){
 					
 					$data[$i]['tramite_count'] = $value['tramite']['count'];
-					$data[$i]['tramite_prima'] = $value['tramite']['prima'];
+					$data[$i]['tramite_prima'] = '$ '.$value['tramite']['prima'];
 					
 					unset( $data[$i]['tramite'] );
 				}
@@ -2344,13 +2344,13 @@ class Ot extends CI_Controller {
 				if( isset( $value['aceptadas']['count'] ) ){
 					
 					$data[$i]['aceptadas_count'] = $value['aceptadas']['count'];
-					$data[$i]['aceptadas_prima'] = $value['aceptadas']['prima'];
+					$data[$i]['aceptadas_prima'] = '$ '.$value['aceptadas']['prima'];
 					
 					unset( $data[$i]['aceptadas'] );
 				}else{
 					
 					$data[$i]['aceptadas_count'] = 0;
-					$data[$i]['aceptadas_prima'] = 0;
+					$data[$i]['aceptadas_prima'] = '$ '. 0;
 					unset( $data[$i]['aceptadas'] );
 				}
 					
