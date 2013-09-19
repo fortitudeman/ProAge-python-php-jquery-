@@ -17,11 +17,17 @@ $( document ).ready(function() {
 	$( '#form' ).validate();
 	
 	$( '.link-ramo' ).bind( 'click', function(){
+		
+		$( '#vida' ).css({ 'color': '#000' });
+		$( '#gmm' ).css({ 'color': '#000' });
+		$( '#autos' ).css({ 'color': '#000' });
 			
-			
+		
 		if( this.id == 'vida' ){
-									
+							
 			$( '#ramo' ).val(1);
+			
+			$( '#vida' ).css( 'color', '#06F' );
 			
 			$( 'label[class="dd-option-text"]' ).html( 'Trimestre' );
 			// 'Trimestre' );
@@ -32,12 +38,16 @@ $( document ).ready(function() {
 		
 			$( '#ramo' ).val(2);
 			
+			$( '#gmm' ).css( 'color', '#06F' );
+			
 			$( 'label[class="dd-option-text"]' ).html( 'Cuatrimestre' );
 		}
 		
 		if( this.id == 'autos' ){
 			
 			$( '#ramo' ).val(3);
+			
+			$( '#autos' ).css( 'color', '#06F' );
 			
 			$( 'label[class="dd-option-text"]' ).html( 'Cuatrimestre' );
 		}

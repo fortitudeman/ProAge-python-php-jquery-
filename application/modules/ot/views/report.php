@@ -82,14 +82,28 @@
                        <div class="main-container">
 
                                 <div class="main  clearfix">
-                    
-                    
-                                <a href="javascript:void(0);" class="links-menu link-ramo btn-link" id="vida">Vida</a>
-                                <a href="javascript:void(0);" class="links-menu linkLeft link-ramo" id="gmm">GMM</a>
-                                <a href="javascript:void(0);" class="links-menu linkLeft link-ramo" id="autos">Autos</a>
-                    
-                                <p class="line">&nbsp;
-                                </p>
+                                        			                                
+                                <?php if( !isset( $_POST['query']['ramo'] ) or isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 1 ): ?>  
+                                 	<a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#06F">Vida</a>
+                                <?php else: ?>   
+                                	<a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida">Vida</a>
+                                <?php endif; ?>              
+                                
+                                <?php 	if( isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 2 ): ?> 
+                                 	<a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" style="color:#06F">GMM</a>
+                                <?php else: ?>   
+                               		<a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm">GMM</a>
+                                <?php endif; ?>     
+                                
+                                
+                                <?php if( isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 3 ): ?> 
+                                    <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" style="color:#06F">Autos</a>
+                    			<?php else: ?>   
+                                	<a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos">Autos</a>
+                                <?php endif; ?>     
+                                
+                                
+                                <p class="line">&nbsp; </p>
                     			<form id="form" method="post">                      	
                          		 <input type="hidden" name="query[ramo]" id="ramo" value="1" />
                     
@@ -107,31 +121,36 @@
                                     </th>
                                     <th>
                                             
-                                            <select id="select2" name="query[generacion]">
-                                                <option value="" <?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 1 ) echo 'selected="selected"'?>>Todas las Generaciónes</option>
-                                                <option value="2"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 2 ) echo 'selected="selected"'?>>Consolidado</option>
-                                                <option value="3"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 3 ) echo 'selected="selected"'?>>Generación 1</option>
-                                                <option value="4"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 4 ) echo 'selected="selected"'?>>Generación 2</option>
-                                                <option value="5"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 5 ) echo 'selected="selected"'?>>Generación 3</option>
-                                                <option value="6"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 6 ) echo 'selected="selected"'?>>Generación 4</option>
+                                            <select id="select2" name="query[gerente]" >
+                                                
+                                                <option value="">Todos los gerentes</option>                                        
+                                       			<?php echo $manager ?>                                                
+                                                
                                             </select>
                                            
                                     </th>
                                     <th>
                                             
-                                            <select id="select4" name="query[gerente]">
-                                                <option value="">Todos los gerentes</option>                                        
-                                       			<?php echo $manager ?>
+                                            <select id="select4"  name="query[agent]">
+                                                <option value="" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 1 ) echo 'selected="selected"'?>>Todos los agentes</option>
+                                                <option value="2" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 2 ) echo 'selected="selected"'?>>Vigentes</option>
+                                                <option value="3" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 3 ) echo 'selected="selected"'?>>Cancelados</option>
+                                               
+                                               
+                                               
                                             </select>
                                            
                                     </th>
                                     <th>
                                         
                                             
-                                            <select id="select5" name="query[agent]">
-                                                <option value="" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 1 ) echo 'selected="selected"'?>>Todos los agentes</option>
-                                                <option value="2" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 2 ) echo 'selected="selected"'?>>Vigentes</option>
-                                                <option value="3" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 3 ) echo 'selected="selected"'?>>Cancelados</option>
+                                            <select id="select5" name="query[generacion]">
+                                                 <option value="" <?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 1 ) echo 'selected="selected"'?>>Todas las Generaciónes</option>
+                                                <option value="2"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 2 ) echo 'selected="selected"'?>>Consolidado</option>
+                                                <option value="3"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 3 ) echo 'selected="selected"'?>>Generación 1</option>
+                                                <option value="4"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 4 ) echo 'selected="selected"'?>>Generación 2</option>
+                                                <option value="5"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 5 ) echo 'selected="selected"'?>>Generación 3</option>
+                                                <option value="6"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 6 ) echo 'selected="selected"'?>>Generación 4</option>
                                             </select>
                                             
                                        
