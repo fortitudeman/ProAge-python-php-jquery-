@@ -2300,9 +2300,67 @@ class Ot extends CI_Controller {
 		 	
 			$data = $this->user->getReport( /*array( 'query' => array( 'ramo' => 1, 'periodo' => 1, 'agent' => 1, 'generacion' => 1 ) )*/ );
 		
-				
+		
 		// Load Helper 
-		$this->load->helper('usuarios/csv');
+		$this->load->helper( array( 'usuarios/csv', 'ot' ) );
+		
+		
+		
+		if( !empty( $data ) )
+			
+			$i = 0;
+			
+			foreach( $data  as $value ){
+				
+				
+				unset( $data[$i]['id'] );
+				
+				
+				if( $value['disabled'] == 1 ) $data[$i]['disabled'] = 'Activo';
+				if( $value['disabled'] == 0 ) $data[$i]['disabled'] = 'Desactivado';			
+				
+				
+				$data[$i]['name'] = $value['name'].' Activo Generacion 1 - Conectado '. getFormatDate( $value['connection_date'] ); 
+				
+				unset( $data[$i]['disabled'] );
+				
+				// Change Clave uid								
+				$uid = $value['uids'][0]['uid'];
+				
+				$data[$i]['uids'] = $uid;
+				
+				$data[$i]['negociopai'] = count( $value['negociopai'] );
+					
+					
+				if( isset( $value['tramite']['count'] ) ){
+					
+					$data[$i]['tramite_count'] = $value['tramite']['count'];
+					$data[$i]['tramite_prima'] = $value['tramite']['prima'];
+					
+					unset( $data[$i]['tramite'] );
+				}
+				
+				
+				if( isset( $value['aceptadas']['count'] ) ){
+					
+					$data[$i]['aceptadas_count'] = $value['aceptadas']['count'];
+					$data[$i]['aceptadas_prima'] = $value['aceptadas']['prima'];
+					
+					unset( $data[$i]['aceptadas'] );
+				}else{
+					
+					$data[$i]['aceptadas_count'] = 0;
+					$data[$i]['aceptadas_prima'] = 0;
+					unset( $data[$i]['aceptadas'] );
+				}
+					
+												
+				$i++;				
+			}
+		
+				
+				
+		
 								
 		
 	 	array_to_csv($data, 'proages_report.csv');
