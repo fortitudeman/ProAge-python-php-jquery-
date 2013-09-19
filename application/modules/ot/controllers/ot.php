@@ -2255,7 +2255,7 @@ class Ot extends CI_Controller {
 			//'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">'
 			
 			
-			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">
+			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
              <link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">'
 			
 		  ),
