@@ -2074,6 +2074,7 @@ class User extends CI_Model{
 		
 		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id' );
 		$this->db->from( 'policies_vs_users' );
+		$this->db->join( 'policies', 'policies.id=policies_vs_users.policy_id' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
 		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
