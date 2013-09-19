@@ -2056,27 +2056,28 @@ class User extends CI_Model{
 	
   }
   
-  public function getCountNegocioPai( $user_id = null, $filter = array() ){
+  public function getCountNegocioPai( $agent_id = null, $filter = array() ){
  		
 		
 		
-		if( empty( $user_id ) ) return 0;
+		if( empty( $agent_id ) ) return 0;
 		/*
-		SELECT DISTINCT( policies_vs_users.policy_id )
+		SELECT DISTINCT( policies_vs_users.policy_id ) as policy_id
 		FROM `policies_vs_users`
-		JOIN  payments ON payments.policy_id=policies_vs_users.policy_id
+		JOIN  policies ON policies.id=policies_vs_users.policy_id
 		JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
-		JOIN  users ON users.id=policies_vs_users.user_id
-		WHERE policies_vs_users.user_id=6
-		AND payments.amount>10.000
+		JOIN  agents ON agents.id=policies_vs_users.user_id
+		JOIN  users ON users.id=agents.user_id
+		WHERE policies_vs_users.user_id=1
+    	AND policies.prima>10.000
 		*/
 		
-		$this->db->distinct( 'policies_vs_users.policy_id' );
+		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id' );
 		$this->db->from( 'policies_vs_users' );
-		$this->db->join( 'payments', 'payments.policy_id=policies_vs_users.policy_id' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->join( 'users', 'users.id=policies_vs_users.user_id' );
-		$this->db->where( array( 'policies_vs_users.user_id' => $user_id, 'payments.amount >' =>  10.000 ) );
+		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
+		$this->db->join( 'users', 'users.id=agents.user_id' );
+		$this->db->where( array( 'policies_vs_users.user_id' => $agent_id, 'policies.prima >' => 10.000 ) );
   		
 		
 		if( !empty( $filter ) ){
