@@ -2069,7 +2069,7 @@ class User extends CI_Model{
 		JOIN  agents ON agents.id=policies_vs_users.user_id
 		JOIN  users ON users.id=agents.user_id
 		WHERE policies_vs_users.user_id=1
-    	AND policies.prima>10.000
+    	AND policies.prima>10000
 		*/
 		
 		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id' );
@@ -2077,7 +2077,7 @@ class User extends CI_Model{
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
 		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
-		$this->db->where( array( 'policies_vs_users.user_id' => $agent_id, 'policies.prima >' => 10.000 ) );
+		$this->db->where( array( 'policies_vs_users.user_id' => $agent_id, 'policies.prima >' => 10000 ) );
   		
 		
 		if( !empty( $filter ) ){
@@ -2204,7 +2204,7 @@ class User extends CI_Model{
 			
 			foreach ($querypai->result() as $rowpai)
 			
-				if( (float)$rowpai->amount >= 5.000 )
+				if( (float)$rowpai->amount >= 5000 )
 					
 					$pai[]=$rowpai->amount;
 			
