@@ -2060,7 +2060,7 @@ class User extends CI_Model{
 		
 		
 		
-		return 0;
+		return $negocio['count'];
 		
 		
 		
