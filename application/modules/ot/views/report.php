@@ -76,6 +76,274 @@
             
             	
                  <div class="span11 offset1">
+                       
+                       <!--<div class="main-container" style="overflow:scroll; max-width:100%">-->
+                       
+                       <div class="main-container">
+
+                                <div class="main  clearfix">
+                    
+                    
+                                <a href="#" class="links-menu">Vida</a>
+                                <a href="#" class="links-menu linkLeft">GMM</a>
+                                <a href="#" class="links-menu linkLeft">Autos</a>
+                    
+                                <p class="line">&nbsp;
+                                </p>
+                    
+                    
+                                <table  class="filterstable" style="width:99%;">
+                                <thead>
+                                <tr>
+                                    <th>
+                                            
+                                            <select id="select1">
+                                                <option>Trimestre</option>
+                                                <option>Two</option>
+                                            </select>
+                                           
+                                    </th>
+                                    <th>
+                                            
+                                            <select id="select2">
+                                                <option>Generacion</option>
+                                                <option>Two</option>
+                                            </select>
+                                           
+                                    </th>
+                                    <th>
+                                            
+                                            <select id="select4">
+                                                <option>Gerente</option>
+                                                <option>Two</option>
+                                            </select>
+                                           
+                                    </th>
+                                    <th>
+                                        
+                                            
+                                            <select id="select5">
+                                                <option>Status Agentes 1</option>
+                                                <option>Status Agentes 1</option>
+                                            </select>
+                                            
+                                       
+                                    </th>
+                                    <th> &nbsp;</th>
+                                    <th> &nbsp;</th>
+                                    <th> &nbsp;</th>
+                                    <th> &nbsp;</th>
+                                    <th> &nbsp;</th>
+                                    <th width="50%" align="right" > <a href="#">
+                                        <img src="<?php echo base_url() ?>ot/assets/images/down.png"></a></th>
+                                </tr>
+                              </thead>
+                            </table>
+                      
+                    
+                        
+                    
+                                      
+                                    
+                    
+                    
+                    
+                                <table  class="sortable altrowstable tablesorter" id="sorter"  style="width:100%;">
+                                <thead>
+                                <tr>
+                                    <th>Agentes</th>
+                                    <th style="width:70px;">Negocios Pagados</th>
+                                    <th style="width:70px;">Negocios <br> Pal</th>
+                                    <th style="width:100px;">Primas Pagadas</th>
+                                    <th style="width:70px;">Negocios <br> en  Tramite</th>
+                                    <th style="width:100px;">Primas <br> en Tramite</th>
+                                    <th style="width:70px;">Negocios Pendientes</th>
+                                    <th style="width:100px;">Primas <br> Pendientes</th>
+                                    <th style="width:70px;">Negocios Proyectados</th>
+                                    <th style="width:100px;">Primas <br> Proyectadas</th>
+                                </tr>
+                              </thead>
+                    
+                               
+                    
+                    
+                            <tbody>
+                                <tr>
+                                    <td><div class="text_azulado">Agentes Modernos SC</div> Activo Generacion 1 - Conectado el 13 de diciembre del 2000</td>
+                                    <td class="celda_gris"><div class="numeros">14</div> Negocios Pagados</td>
+                                    <td class="celda_gris"><div class="numeros">10</div> Negocios Pal</td>
+                                    <td class="celda_gris"><div class="numeros">$16,000</div> Pagados</td>
+                                    <td class="celda_roja"><div class="numeros">10</div> Negocios en <br>Tramite</td>
+                                    <td class="celda_roja"><div class="numeros">$10,000</div> en Tramite</td>
+                                    <td class="celda_amarilla"><div class="numeros">5</div> Negocios Pendientes</td>
+                                    <td class="celda_amarilla"><div class="numeros">$32,000</div> Pendientes</td>
+                                    <td class="celda_verde"><div class="numeros">30</div> Negocios Proyectados</td>
+                                    <td class="celda_verde"><div class="numeros">$54,000</div> Proyectadas</td>
+                                </tr>
+                    
+                                <tr>
+                                    <td class=""><div class="text_azulado">Bancos Modernos SC</div> Activo Generacion 1 - Conectado el 13 de diciembre del 2000</td>
+                                    <td class="celda_gris"><div class="numeros">11</div> Negocios Pagados</td>
+                                    <td class="celda_gris"><div class="numeros">10</div> Negocios Pal</td>
+                                    <td class="celda_gris"><div class="numeros">$16,000</div> Pagados</td>
+                                    <td class="celda_roja"><div class="numeros">10</div> Negocios en <br> Tramite</td>
+                                    <td class="celda_roja"><div class="numeros">$10,000</div> en Tramite</td>
+                                    <td class="celda_amarilla"><div class="numeros">5</div> Negocios Pendientes</td>
+                                    <td class="celda_amarilla"><div class="numeros">$32,000</div> Pendientes</td>
+                                    <td class="celda_verde"><div class="numeros">30</div> Negocios Proyectados</td>
+                                    <td class="celda_verde"><div class="numeros">$54,000</div> Proyectadas</td>
+                                </tr>
+                    
+                                <tr>
+                                    <td class=""><div class="text_azulado">Carros Modernos SC</div> Activo Generacion 1 - Conectado el 13 de diciembre del 2000</td>
+                                    <td class="celda_gris"><div class="numeros">12</div> Negocios Pagados</td>
+                                    <td class="celda_gris"><div class="numeros">10</div> Negocios Pal</td>
+                                    <td class="celda_gris"><div class="numeros">$16,000</div> Pagados</td>
+                                    <td class="celda_roja"><div class="numeros">10</div> Negocios en <br> Tramite</td>
+                                    <td class="celda_roja"><div class="numeros">$10,000</div> en Tramite</td>
+                                    <td class="celda_amarilla"><div class="numeros">5</div> Negocios Pendientes</td>
+                                    <td class="celda_amarilla"><div class="numeros">$32,000</div> Pendientes</td>
+                                    <td class="celda_verde"><div class="numeros">30</div> Negocios Proyectados</td>
+                                    <td class="celda_verde"><div class="numeros">$54,000</div> Proyectadas</td>
+                                </tr>
+                    
+                                <tr>
+                                    <td class=""><div class="text_azulado">Demos Modernos SC</div> Activo Generacion 1 - Conectado el 13 de diciembre del 2000</td>
+                                    <td class="celda_gris"><div class="numeros">14</div> Negocios Pagados</td>
+                                    <td class="celda_gris"><div class="numeros">10</div> Negocios Pal</td>
+                                    <td class="celda_gris"><div class="numeros">$16,000</div> Pagados</td>
+                                    <td class="celda_roja"><div class="numeros">10</div> Negocios en <br> Tramite</td>
+                                    <td class="celda_roja"><div class="numeros">$10,000</div> en Tramite</td>
+                                    <td class="celda_amarilla"><div class="numeros">5</div> Negocios Pendientes</td>
+                                    <td class="celda_amarilla"><div class="numeros">$32,000</div> Pendientes</td>
+                                    <td class="celda_verde"><div class="numeros">30</div> Negocios Proyectados</td>
+                                    <td class="celda_verde"><div class="numeros">$54,000</div> Proyectadas</td>
+                                </tr>
+                    
+                                <tr>
+                                    <td class=""><div class="text_azulado">Agentes Modernos SC</div> Activo Generacion 1 - Conectado el 13 de diciembre del 2000</td>
+                                    <td class="celda_gris"><div class="numeros">14</div> Negocios Pagados</td>
+                                    <td class="celda_gris"><div class="numeros">10</div> Negocios Pal</td>
+                                    <td class="celda_gris"><div class="numeros">$16,000</div> Pagados</td>
+                                    <td class="celda_roja"><div class="numeros">10</div> Negocios en <br>Tramite</td>
+                                    <td class="celda_roja"><div class="numeros">$10,000</div> en Tramite</td>
+                                    <td class="celda_amarilla"><div class="numeros">5</div> Negocios Pendientes</td>
+                                    <td class="celda_amarilla"><div class="numeros">$32,000</div> Pendientes</td>
+                                    <td class="celda_verde"><div class="numeros">30</div> Negocios Proyectados</td>
+                                    <td class="celda_verde"><div class="numeros">$54,000</div> Proyectadas</td>
+                                </tr>
+                    
+                                <tr>
+                                    <td class=""><div class="text_azulado">Agentes Modernos SC</div> Activo Generacion 1 - Conectado el 13 de diciembre del 2000</td>
+                                    <td class="celda_gris"><div class="numeros">14</div> Negocios Pagados</td>
+                                    <td class="celda_gris"><div class="numeros">10</div> Negocios Pal</td>
+                                    <td class="celda_gris"><div class="numeros">$16,000</div> Pagados</td>
+                                    <td class="celda_roja"><div class="numeros">10</div> Negocios en <br> Tramite</td>
+                                    <td class="celda_roja"><div class="numeros">$10,000</div> en Tramite</td>
+                                    <td class="celda_amarilla"><div class="numeros">5</div> Negocios Pendientes</td>
+                                    <td class="celda_amarilla"><div class="numeros">$32,000</div> Pendientes</td>
+                                    <td class="celda_verde"><div class="numeros">30</div> Negocios Proyectados</td>
+                                    <td class="celda_verde"><div class="numeros">$54,000</div> Proyectadas</td>
+                                </tr>
+                    
+                                <tr>
+                                    <td class=""><div class="text_azulado">Agentes Modernos SC</div> Activo Generacion 1 - Conectado el 13 de diciembre del 2000</td>
+                                    <td class="celda_gris"><div class="numeros">14</div> Negocios Pagados</td>
+                                    <td class="celda_gris"><div class="numeros">10</div> Negocios Pal</td>
+                                    <td class="celda_gris"><div class="numeros">$16,000</div> Pagados</td>
+                                    <td class="celda_roja"><div class="numeros">10</div> Negocios en <br>  Tramite</td>
+                                    <td class="celda_roja"><div class="numeros">$10,000</div> en Tramite</td>
+                                    <td class="celda_amarilla"><div class="numeros">5</div> Negocios Pendientes</td>
+                                    <td class="celda_amarilla"><div class="numeros">$32,000</div> Pendientes</td>
+                                    <td class="celda_verde"><div class="numeros">30</div> Negocios Proyectados</td>
+                                    <td class="celda_verde"><div class="numeros">$54,000</div> Proyectadas</td>
+                                </tr>
+                    
+                    
+                                <tr>
+                                    <td class=""><div class="text_azulado">Agentes Modernos SC</div> Activo Generacion 1 - Conectado el 13 de diciembre del 2000</td>
+                                    <td class="celda_gris"><div class="numeros">14</div> Negocios Pagados</td>
+                                    <td class="celda_gris"><div class="numeros">10</div> Negocios Pal</td>
+                                    <td class="celda_gris"><div class="numeros">$16,000</div> Pagados</td>
+                                    <td class="celda_roja"><div class="numeros">10</div> Negocios en <br>  Tramite</td>
+                                    <td class="celda_roja"><div class="numeros">$10,000</div> en Tramite</td>
+                                    <td class="celda_amarilla"><div class="numeros">5</div> Negocios Pendientes</td>
+                                    <td class="celda_amarilla"><div class="numeros">$32,000</div> Pendientes</td>
+                                    <td class="celda_verde"><div class="numeros">30</div> Negocios Proyectados</td>
+                                    <td class="celda_verde"><div class="numeros">$54,000</div> Proyectadas</td>
+                                </tr>
+                            </tbody>
+                         </table>
+                    
+                    <div id="contentFoot" style="width:100%;">
+                        <table  class="sortable altrowstable tablesorter" id="Tfoot" style="width:100%" >
+                    
+                        
+                               <tr>
+                                    <td ><div class="text_total">Totales</div></td>
+                                    <td style="width:70px;"><div class="numeros">100</div>Negocios Pagados</td>
+                                    <td style="width:70px;"><div class="numeros">80</div> Negocios Pal</td>
+                                    <td style="width:100px;"><div class="numeros">$160,000</div> Pagados</td>
+                                    <td style="width:70px;" class="celda_gris_roja"><div class="numeros">100</div> Negocios en <br>  Tramite</td>
+                                    <td style="width:100px;" class="celda_gris_roja"><div class="numeros">$100,000</div> en Tramite</td>
+                                    <td style="width:70px;" class="celda_gris_amarilla"><div class="numeros">50</div> Negocios Pendientes</td>
+                                    <td style="width:100px;" class="celda_gris_amarilla"><div class="numeros">$400,000</div> Pendientes</td>
+                                    <td  style="width:70px;"class="celda_gris_verde"><div class="numeros">90</div> Negocios Proyectados</td>
+                                    <td  style="width:100px;"class="celda_gris_verde"><div class="numeros">$1,200,000</div> Proyectadas</td>
+                                </tr>
+                         
+                         </table>
+                    </div>            
+            </div> <!-- #main -->
+        </div> <!-- #main-container -->
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
+                       
                                     
                       <form id="form" method="post">                      	
                           <input type="hidden" name="query[ramo]" id="ramo" value="1" />
@@ -360,6 +628,6 @@
                            
         </div>
     </div><!--/span-->
-
+	
 </div><!--/row-->
 

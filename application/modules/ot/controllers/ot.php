@@ -2236,13 +2236,13 @@ class Ot extends CI_Controller {
 		
 		else
 		 	
-			$data = $this->user->getReport( array( 'query' => array( 'ramo' => 1, 'periodo' => 1 ) ) );
+			$data = $this->user->getReport( /*array( 'query' => array( 'ramo' => 1, 'periodo' => 1 ) )*/ );
 		
 		$this->load->helper( 'ot' );
 		
 		// Load model
 		$this->load->model( array( 'usuarios/user', 'work_order' ) );
-				
+								
 		// Config view
 		$this->view = array(
 				
@@ -2252,13 +2252,25 @@ class Ot extends CI_Controller {
 		  'user_vs_rol' => $this->user_vs_rol,
 		  'roles_vs_access' => $this->roles_vs_access,
 		  'css' => array(
-			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">'
+			//'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">'
+			
+			
+			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">
+             <link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">'
+			
 		  ),
 		  'scripts' =>  array(
 		  	'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
 			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-			'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"></script>',
+			//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',
+			
+			'<script src="'. base_url() .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
+			'<script>window.jQuery || document.write("<script src="'. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js"><\/script>")</script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.ddslick.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',
+			
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>'			
 		  ),
 		  'manager' => $this->user->getSelectsGerentes(),
