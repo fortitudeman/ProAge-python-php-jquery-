@@ -112,11 +112,29 @@
                                 <tr>
                                     <th>
                                             
-                                            <select id="select1" name="query[periodo]">
+                                            <div class="set_periodo1">
+                                            
+                                            
+                                            <select class="select1" name="query[periodo]">
                                                 <option value="1" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 1 ) echo 'selected="selected"'?>>Mes</option>
                                                 <option value="2" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 2 ) echo 'selected="selected"'?> id="set_periodo">Trimestre</option>
                                                 <option value="3" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 3 ) echo 'selected="selected"'?>>Año</option>
                                             </select>
+                                            
+                                            </div>
+                                            
+                                            
+                                            <div class="set_periodo2">
+                                            	
+                                                <select class="select6" name="query[periodo]">
+                                                <option value="1" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 1 ) echo 'selected="selected"'?>>Mes</option>
+                                                <option value="2" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 2 ) echo 'selected="selected"'?> id="set_periodo">Cuatrimestre</option>
+                                                <option value="3" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 3 ) echo 'selected="selected"'?>>Año</option>
+                                            </select>
+                                                
+                                            </div>
+                                            
+                                            
                                            
                                     </th>
                                     <th>

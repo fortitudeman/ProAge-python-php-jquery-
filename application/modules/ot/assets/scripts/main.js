@@ -40,7 +40,8 @@ function stickyFooter(){
         // sort on the first column and third column, order asc 
         sortList: [[0,0],[2,0]] 
     }); 
-             $('#select1').ddslick({width:'120'});
+             $('.select1').ddslick({width:'120'});
+			 $('.select6').ddslick({width:'120'});
              $('#select2').ddslick({width:'120'});
              $('#select4').ddslick({width:'120'});
              $('#select5').ddslick({width:'140'});

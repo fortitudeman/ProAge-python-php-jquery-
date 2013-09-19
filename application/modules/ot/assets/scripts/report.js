@@ -16,6 +16,8 @@ $( document ).ready(function() {
     
 	$( '#form' ).validate();
 	
+	$( '.set_periodo2' ).hide();
+	
 	$( '.link-ramo' ).bind( 'click', function(){
 		
 		$( '#vida' ).css({ 'color': '#000' });
@@ -29,8 +31,9 @@ $( document ).ready(function() {
 			
 			$( '#vida' ).css( 'color', '#06F' );
 			
-			$( 'label[class="dd-option-text"]' ).html( 'Trimestre' );
-			// 'Trimestre' );
+			$( '.set_periodo1' ).show();
+			$( '.set_periodo2' ).hide();
+			
 			
 		}
 		
@@ -40,7 +43,9 @@ $( document ).ready(function() {
 			
 			$( '#gmm' ).css( 'color', '#06F' );
 			
-			$( 'label[class="dd-option-text"]' ).html( 'Cuatrimestre' );
+			$( '.set_periodo1' ).hide();
+			$( '.set_periodo2' ).show();
+			
 		}
 		
 		if( this.id == 'autos' ){
@@ -49,7 +54,9 @@ $( document ).ready(function() {
 			
 			$( '#autos' ).css( 'color', '#06F' );
 			
-			$( 'label[class="dd-option-text"]' ).html( 'Cuatrimestre' );
+			$( '.set_periodo1' ).hide();
+			$( '.set_periodo2' ).show();
+			
 		}
 			
 			
