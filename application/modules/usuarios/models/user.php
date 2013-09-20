@@ -2027,17 +2027,10 @@ class User extends CI_Model{
 						
 			$querypayemnt = $this->db->get(); 
 			
-			if ($querypayemnt->num_rows() > 0){		
-									
-				
-				//foreach ($querypayemnt->result() as $rowpayemnt)
-				
-					//if( (float)$rowpayemnt->amount > 0 )
+			if ($querypayemnt->num_rows() > 0)		
 						
-						$negocio['count'] =(int)$negocio['count']+1;
-								
-			}
-										
+				$negocio['count'] =(int)$negocio['count']+1;
+													
 			
 		}
 		
@@ -2045,14 +2038,6 @@ class User extends CI_Model{
 		
 		return $negocio['count'];
 		
-		
-		
-		
-		
-		
-		
-		
-	
   }
   
   public function getCountNegocioPai( $agent_id = null, $filter = array() ){
@@ -2222,7 +2207,7 @@ class User extends CI_Model{
 		if( empty( $agent_id ) ) return 0;
 		/*
 		SELECT SUM( policies.prima )
-		FROM policies_vs_users
+		FROM  policies_vs_users
 		JOIN  policies ON policies.id=policies_vs_users.policy_id
 		JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
 		JOIN  agents ON agents.id=policies_vs_users.user_id
@@ -2349,10 +2334,9 @@ class User extends CI_Model{
 		
 		foreach ($query->result() as $row)
 			
-			$prima = $row->prima;
+			$prima = (float)$prima + $row->prima;
 		
-		if( empty( $prima ) ) $prima = 0;
-		
+						
 		return $prima;
 	
   }
