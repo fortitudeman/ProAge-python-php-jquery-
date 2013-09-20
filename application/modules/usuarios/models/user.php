@@ -2218,24 +2218,27 @@ class User extends CI_Model{
   }
   
   
-  public function getPrima( $user_id = null, $filter = array() ){
+  public function getPrima( $agent_id = null, $filter = array() ){
  		
-		if( empty( $user_id ) ) return 0;
+		if( empty( $agent_id ) ) return 0;
 		/*
-		SELECT SUM( prima )
-		FROM policies
-		JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
+		SELECT SUM( policies.prima )
+		FROM policies_vs_users
+		JOIN  policies ON policies.id=policies_vs_users.policy_id
 		JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
-		JOIN  users ON users.id=policies_vs_users.user_id
+		JOIN  agents ON agents.id=policies_vs_users.user_id
+		JOIN  users ON users.id=agents.user_id
 		WHERE policies_vs_users.user_id=6  
+		
 		*/
 		
 		$this->db->select_sum( 'prima' );
-		$this->db->from( 'policies' );
-		$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
+		$this->db->from( 'policies_vs_users' );
+		$this->db->join( 'policies', 'policies.id=policies_vs_users.policy_id' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->join( 'users', 'users.id=policies_vs_users.user_id' );
-		$this->db->where( array( 'policies_vs_users.user_id' => $user_id ) );
+		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
+		$this->db->join( 'users', 'users.id=agents.user_id' );
+		$this->db->where( array( 'policies_vs_users.user_id' => $agent_id ) );
   		
 		
 		if( !empty( $filter ) ){
@@ -2362,24 +2365,42 @@ class User extends CI_Model{
 		
 		
 		/*
-		SELECT policies_vs_users.policy_id
-		FROM policies
+		SELECT DISTINCT( policies_vs_users.policy_id ) AS policy_id
+		FROM work_order_types
+		JOIN work_order ON work_order.work_order_type_id=work_order_types.id
+		JOIN policies ON policies.id=work_order.policy_id
 		JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
-		JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
-		JOIN  users ON users.id=policies_vs_users.user_id
-		WHERE work_order.work_order_status_id!=7 
-		AND policies_vs_users.user_id=7
-		AND ( work_order.work_order_type_id =47 OR work_order.work_order_type_id=90 )		
+		JOIN agents ON agents.id=policies_vs_users.user_id
+		JOIN users ON users.id=agents.user_id
+		WHERE ( work_order.work_order_status_id=5 OR  work_order.work_order_status_id=9 )
+		AND ( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )
+		AND policies_vs_users.user_id=7		
 		*/
+		/*
+		$this->db->query(
+			
+		   'SELECT DISTINCT( policies_vs_users.policy_id ) AS policy_id
+			FROM work_order_types
+			JOIN work_order ON work_order.work_order_type_id=work_order_types.id
+			JOIN policies ON policies.id=work_order.policy_id
+			JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
+			JOIN agents ON agents.id=policies_vs_users.user_id
+			JOIN users ON users.id=agents.user_id
+			WHERE ( work_order.work_order_status_id=5 OR  work_order.work_order_status_id=9 )
+			AND ( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )
+			AND policies_vs_users.user_id='.$user_id
 		
+		);
 		
-		$this->db->select( 'policies_vs_users.policy_id' );
-		$this->db->from( 'policies' );
+		*/
+		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) AS policy_id' );
+		$this->db->from( 'work_order_types' );
+		$this->db->join( 'work_order', 'work_order.work_order_type_id=work_order_types.id' );
+		$this->db->join( 'policies', 'policies.id=work_order.policy_id' );		
 		$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
-		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->join( 'users', 'users.id=policies_vs_users.user_id' );
-		$this->db->where( array( 'work_order.work_order_status_id !=' => 7, 'work_order.work_order_type_id' => 47  ) );
-		$this->db->or_where( 'work_order.work_order_type_id', 90 );
+		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
+		$this->db->where("( work_order.work_order_status_id=5 OR  work_order.work_order_status_id=9)");
+		$this->db->where("( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )");
 		$this->db->where( 'policies_vs_users.user_id', $user_id );
 		
 		
@@ -2535,9 +2556,7 @@ class User extends CI_Model{
 			}
 			
 		}
-		
-		
-		
+						
 		return $tramite;
 	
   }	
