@@ -2205,25 +2205,24 @@ class User extends CI_Model{
   public function getPrima( $agent_id = null, $filter = array() ){
  		
 		if( empty( $agent_id ) ) return 0;
+		
 		/*
-		SELECT SUM( policies.prima )
-		FROM  policies_vs_users
+		SELECT DISTINCT( policies_vs_users.policy_id ) as policy_id, policies.prima
+		FROM `policies_vs_users`
 		JOIN  policies ON policies.id=policies_vs_users.policy_id
 		JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
 		JOIN  agents ON agents.id=policies_vs_users.user_id
 		JOIN  users ON users.id=agents.user_id
-		WHERE policies_vs_users.user_id=6  
-		
-		*/
-		
-		$this->db->select_sum( 'prima' );
+		WHERE policies_vs_users.user_id=6
+		*/		
+		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id, policies.prima' );
 		$this->db->from( 'policies_vs_users' );
 		$this->db->join( 'policies', 'policies.id=policies_vs_users.policy_id' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
 		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
-		$this->db->where( array( 'policies_vs_users.user_id' => $agent_id ) );
-  		
+		$this->db->where( 'policies_vs_users.user_id', $agent_id  );
+		
 		
 		if( !empty( $filter ) ){
 			
@@ -2332,11 +2331,34 @@ class User extends CI_Model{
 		
 		$prima = 0;
 		
-		foreach ($query->result() as $row)
+		foreach ($query->result() as $row){
 			
-			$prima = (float)$prima + $row->prima;
-		
+			/*
+			SELECT policy_id
+			FROM payments
+			WHERE policy_id=30;
+			*/
+					
+			$this->db->select();
+			$this->db->from( 'payments' );
+			$this->db->where( 'policy_id', $row->policy_id );			
 						
+			$querypayemnt = $this->db->get(); 
+			
+			if ($querypayemnt->num_rows() > 0){
+							
+				
+				$prima = (float)$prima + $row->prima;
+			
+			
+			}		
+					
+																	
+			
+		}
+		
+		
+								
 		return $prima;
 	
   }
