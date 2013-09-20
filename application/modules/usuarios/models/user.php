@@ -2399,6 +2399,7 @@ class User extends CI_Model{
 		$this->db->join( 'policies', 'policies.id=work_order.policy_id' );		
 		$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
 		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
+		$this->db->join( 'users', 'users.id=agents.user_id' );
 		$this->db->where("( work_order.work_order_status_id=5 OR  work_order.work_order_status_id=9)");
 		$this->db->where("( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )");
 		$this->db->where( 'policies_vs_users.user_id', $user_id );
@@ -2570,7 +2571,8 @@ class User extends CI_Model{
 		FROM policies
 		JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
 		JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
-		JOIN  users ON users.id=policies_vs_users.user_id		
+		JOIN agents ON agents.id=policies_vs_users.user_id
+		JOIN users ON users.id=agents.user_id	
 		WHERE work_order.work_order_status_id=7   
 		AND policies_vs_users.user_id=7
 		*/
@@ -2580,7 +2582,8 @@ class User extends CI_Model{
 		$this->db->from( 'policies' );
 		$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->join( 'users', 'users.id=policies_vs_users.user_id' );
+		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
+		$this->db->join( 'users', 'users.id=agents.user_id' );
 		$this->db->where( array( 'work_order.work_order_status_id' => 7 ) );
 		$this->db->where( 'policies_vs_users.user_id', $user_id );
   		
