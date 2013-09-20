@@ -2236,7 +2236,7 @@ class Ot extends CI_Controller {
 		
 		else
 		 	
-			$data = $this->user->getReport( /*array( 'query' => array( 'ramo' => 1, 'periodo' => 1 ) )*/ );
+			$data = $this->user->getReport( array( 'query' => array( 'ramo' => 1, 'periodo' => 1 ) ) );
 		
 		$this->load->helper( 'ot' );
 		
@@ -2298,7 +2298,7 @@ class Ot extends CI_Controller {
 		
 		else
 		 	
-			$data = $this->user->getReport( /*array( 'query' => array( 'ramo' => 1, 'periodo' => 1, 'agent' => 1, 'generacion' => 1 ) )*/ );
+			$data = $this->user->getReport( array( 'query' => array( 'ramo' => 1, 'periodo' => 1 ) ) );
 		
 		
 		// Load Helper 
@@ -2320,8 +2320,15 @@ class Ot extends CI_Controller {
 				if( $value['disabled'] == 0 ) $data[$i]['disabled'] = 'Desactivado';			
 				
 				
-				$data[$i]['name'] = $value['name'].' Activo Generacion 1 - Conectado '. getFormatDate( $value['connection_date'] ); 
+				if( $value['connection_date'] != '0000-00-00' ):
 				
+					$data[$i]['name'] = $value['name'].' '. $value['disabled'] .' Generacion 1 - Conectado '. getFormatDate( $value['connection_date'] ); 
+				
+                else: 
+                    $data[$i]['name'] = $value['name'].' '. $value['disabled'] .' Generacion 1 - No Conectado';
+                endif;
+				
+								
 				unset( $data[$i]['disabled'], $data[$i]['connection_date'] );
 				
 				// Change Clave uid								

@@ -113,7 +113,7 @@
                                     <th>
                                             
                                             
-                                            <select id="periodo" name="query[periodo]">
+                                            <select id="periodo" name="query[periodo]" >
                                                 <option value="1" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 1 ) echo 'selected="selected"'?>>Mes</option>
                                                 <option value="2" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 2 ) echo 'selected="selected"'?> class="set_periodo">Trimestre</option>
                                                 <option value="3" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 3 ) echo 'selected="selected"'?>>Año</option>
@@ -125,7 +125,7 @@
                                     </th>
                                     <th>
                                             
-                                            <select id="gerente" name="query[gerente]" class="select">
+                                            <select id="gerente" name="query[gerente]" class="select" style="width:145px;">
                                                 <option value="">Todos los gerentes</option>                                        
                                                 <?php echo $manager ?>
                                               </select>
@@ -133,7 +133,7 @@
                                     </th>
                                     <th>
                                             
-                                            <select id="agent" name="query[agent]" class="select2">
+                                            <select id="agent" name="query[agent]" class="select2"  style="width:140px;">
                                         <option value="" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 1 ) echo 'selected="selected"'?>>Todos los agentes</option>
                                         <option value="2" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 2 ) echo 'selected="selected"'?>>Vigentes</option>
                                         <option value="3" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 3 ) echo 'selected="selected"'?>>Cancelados</option>
@@ -143,7 +143,7 @@
                                     <th>
                                         
                                             
-                                            <select id="generarion" name="query[generacion]" class="select3">
+                                            <select id="generarion" name="query[generacion]" class="select3" style="width:180px;">
                                         <option value="" <?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 1 ) echo 'selected="selected"'?>>Todas las Generaciónes</option>
                                         <option value="2"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 2 ) echo 'selected="selected"'?>>Consolidado</option>
                                         <option value="3"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 3 ) echo 'selected="selected"'?>>Generación 1</option>
@@ -203,19 +203,7 @@
                     
                     
                             <tbody>
-                                <tr>
-                                    <td><div class="text_azulado">Agentes Modernos SC</div> Activo Generacion 1 - Conectado el 13 de diciembre del 2000</td>
-                                    <td class="celda_gris"><div class="numeros">14</div> Negocios Pagados</td>
-                                    <td class="celda_gris"><div class="numeros">10</div> Negocios Pal</td>
-                                    <td class="celda_gris"><div class="numeros">$16,000</div> Pagados</td>
-                                    <td class="celda_roja"><div class="numeros">10</div> Negocios en <br>Tramite</td>
-                                    <td class="celda_roja"><div class="numeros">$10,000</div> en Tramite</td>
-                                    <td class="celda_amarilla"><div class="numeros">5</div> Negocios Pendientes</td>
-                                    <td class="celda_amarilla"><div class="numeros">$32,000</div> Pendientes</td>
-                                    <td class="celda_verde"><div class="numeros">30</div> Negocios Proyectados</td>
-                                    <td class="celda_verde"><div class="numeros">$54,000</div> Proyectadas</td>
-                                </tr>
-                    			
+                              
                                 
                                 <?php  if( !empty( $data ) ): ?>
                 					<?php  foreach( $data as $value ):  ?>    
@@ -295,17 +283,25 @@
 										$total_negocios_proyectados +=$negocio;
 										$total_primas_proyectados +=$prima;
 										
+										
+										
 									?>
                                 
-                                
-                                
+                                                                                                
                                 <tr>
-                                    <td class=""><div class="text_azulado"><?php echo $value['name'] ?></div> Activo Generacion 1 - Conectado <?php echo getFormatDate( $value['connection_date'] ) ?></td>
+                                    <td class=""><div class="text_azulado"><?php echo $value['name'] ?></div> <?php echo $value['disabled'] ?> Generacion 1 - 
+                                    
+                                    <?php if( $value['connection_date'] != '0000-00-00' ): ?>
+                                    		Conectado <?php echo getFormatDate( $value['connection_date'] ) ?>
+                                    <?php else: ?>
+                                    		No Conectado
+                                    <?php endif; ?> 
+                                   </td>
                                     <td class="celda_gris"><div class="numeros"><?php echo $value['negocio'] ?></div> Negocios Pagados</td>
                                     <td class="celda_gris"><div class="numeros"><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?></div> Negocios Pal</td>
                                     <td class="celda_gris"><div class="numeros">$<?php echo $value['prima'] ?></div> Pagados</td>
-                                    <td class="celda_roja"><div class="numeros"><?php echo $value['tramite']['count'] ?></div> Negocios en <br> Tramite</td>
-                                    <td class="celda_roja"><div class="numeros">$<?php echo $value['tramite']['prima'] ?></div> en Tramite</td>
+                                    <td class="celda_roja"><div class="numeros"><?php if( isset( $value['tramite']['count'] ) ) echo $value['tramite']['count']; else echo 0; ?></div> Negocios en <br> Tramite</td>
+                                    <td class="celda_roja"><div class="numeros">$<?php if( isset( $value['tramite']['prima'] ) ) echo $value['tramite']['prima']; else echo 0; ?></div> en Tramite</td>
                                     <td class="celda_amarilla"><div class="numeros"><?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?></div> Negocios Pendientes</td>
                                     <td class="celda_amarilla"><div class="numeros">$<?php if( isset( $value['aceptadas']['prima'] ) ) echo  $value['aceptadas']['prima']; else  echo $value['aceptadas'] ?></div> Pendientes</td>
                                     <td class="celda_verde"><div class="numeros"><?php echo $negocio ?></div> Negocios Proyectados</td>
