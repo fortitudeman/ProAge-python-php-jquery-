@@ -1893,7 +1893,7 @@ class User extends CI_Model{
 		JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
 		JOIN  agents ON agents.id=policies_vs_users.user_id
 		JOIN  users ON users.id=agents.user_id
-		WHERE policies_vs_users.user_id=1
+		WHERE policies_vs_users.user_id=6
 		*/
 		
 		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id' );
@@ -2023,23 +2023,26 @@ class User extends CI_Model{
 			$this->db->from( 'payments' );
 			$this->db->where( 'policy_id', $row->policy_id );
 			
-			
+						
 			$querypayemnt = $this->db->get(); 
-			
-			
-			if ($querypayemnt->num_rows() == 0)break;		
 			
 			$negocio = array();
 			
 			$negocio['count'] = 0;
 			
-				
-			foreach ($querypayemnt->result() as $rowpayemnt)
 			
-				if( (float)$rowpayemnt->amount > 0 )
-					
-					$negocio['count'] =(int)$negocio['count']+1;
+			if ($querypayemnt->num_rows() > 0){		
+									
+				
+				foreach ($querypayemnt->result() as $rowpayemnt)
+				
+					if( (float)$rowpayemnt->amount > 0 )
+						
+						$negocio['count'] =(int)$negocio['count']+1;
 								
+			}
+										
+			
 		}
 		
 		
