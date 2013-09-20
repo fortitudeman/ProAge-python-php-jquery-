@@ -2034,9 +2034,9 @@ class User extends CI_Model{
 			if ($querypayemnt->num_rows() > 0){		
 									
 				
-				foreach ($querypayemnt->result() as $rowpayemnt)
+				//foreach ($querypayemnt->result() as $rowpayemnt)
 				
-					if( (float)$rowpayemnt->amount > 0 )
+					//if( (float)$rowpayemnt->amount > 0 )
 						
 						$negocio['count'] =(int)$negocio['count']+1;
 								
