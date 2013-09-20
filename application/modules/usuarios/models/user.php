@@ -2010,26 +2010,22 @@ class User extends CI_Model{
 		
 		$negocio = array();
 		
+		$negocio['count'] = 0;
 		
 		foreach ($query->result() as $row){
 			
 			/*
-			SELECT SUM( amount )
+			SELECT *
 			FROM payments
 			WHERE policy_id=30;
 			*/
 					
-			$this->db->select_sum( 'amount' );
+			$this->db->select();
 			$this->db->from( 'payments' );
 			$this->db->where( 'policy_id', $row->policy_id );
 			
 						
 			$querypayemnt = $this->db->get(); 
-			
-			$negocio = array();
-			
-			$negocio['count'] = 0;
-			
 			
 			if ($querypayemnt->num_rows() > 0){		
 									
