@@ -2242,7 +2242,9 @@ class Ot extends CI_Controller {
 		
 		// Load model
 		$this->load->model( array( 'usuarios/user', 'work_order' ) );
-								
+		
+		unset( $data[0] );
+										
 		// Config view
 		$this->view = array(
 				
@@ -2306,35 +2308,59 @@ class Ot extends CI_Controller {
 		
 		
 		
+		
+		/*			
+			[name] => Agentes
+            [negocio] => Negocios Pagados
+            [negociopai] => Negocios Pal
+            [prima] => Primas Pagadas
+            [tramite] => Negocios en Tramite
+            [tramite_prima] => Primas en Tramite
+            [pendientes] => Negocios Pendientes
+            [pendientes_primas] => Primas Pendientes
+            [negocios_proyectados] => Negocios Proyectados
+            [negocios_proyectados_primas] => Primas Proyectadas
+		
+		*/
+		
+		
+		$total_negocio=0;
+		$total_negocio_pai=0;
+		$total_primas_pagadas=0;
+		$total_negocios_tramite=0;
+		$total_primas_tramite=0;
+		$total_negocio_pendiente=0;
+		$total_primas_pendientes=0;
+		$total_negocios_proyectados=0;
+		$total_primas_proyectados=0;
+								
 		if( !empty( $data ) )
 			
 			$i = 0;
 			
 			foreach( $data  as $value ){
 				
+				if( $i>0 ){
 				
 				unset( $data[$i]['id'] );
 				
 				
-				if( $value['disabled'] == 1 ) $data[$i]['disabled'] = 'Activo';
-				if( $value['disabled'] == 0 ) $data[$i]['disabled'] = 'Desactivado';			
-				
-				
-				if( $value['connection_date'] != '0000-00-00' ):
-				
-					$data[$i]['name'] = $value['name'].' '. $value['disabled'] .' Generacion 1 - Conectado '. getFormatDate( $value['connection_date'] ); 
-				
-                else: 
-                    $data[$i]['name'] = $value['name'].' '. $value['disabled'] .' Generacion 1 - No Conectado';
-                endif;
-				
-								
-				unset( $data[$i]['disabled'], $data[$i]['connection_date'] );
-				
-				// Change Clave uid								
-				$uid = $value['uids'][0]['uid'];
-				
-				$data[$i]['uids'] = $uid;
+				if( $value['disabled'] == 0 ) $data[$i]['disabled'] = 'Activo';
+				if( $value['disabled'] == 1 ) $data[$i]['disabled'] = 'Desactivado';			
+												
+				$data[$i]['name'] =  $value['uids'][0]['uid']. ' - ';
+						
+				$data[$i]['name'] .= $value['disabled'] .' -  Generacion 1 - '; 
+                          
+						 
+							        
+                if( $value['connection_date'] != '0000-00-00' ) 
+                         $data[$i]['name'] .=  'Conectado'. getFormatDate( $value['connection_date'] );
+                else 
+                         $data[$i]['name'] .=   'No Conectado';
+                
+																
+				unset( $data[$i]['disabled'], $data[$i]['connection_date'], $data[$i]['uids'] );
 				
 				$data[$i]['negociopai'] = count( $value['negociopai'] );
 					
@@ -2342,33 +2368,96 @@ class Ot extends CI_Controller {
 				if( isset( $value['tramite']['count'] ) ){
 					
 					$data[$i]['tramite_count'] = $value['tramite']['count'];
-					$data[$i]['tramite_prima'] = '$ '.$value['tramite']['prima'];
+					$data[$i]['tramite_prima'] = $value['tramite']['prima'];
 					
-					unset( $data[$i]['tramite'] );
+					
+					$data[$i]['tramite'] = $data[$i]['tramite_count'];
+					
+					unset( $data[$i]['tramite_count'] );
+				}else{
+					
+					$data[$i]['tramite_count'] = 0;
+					$data[$i]['tramite_prima'] = 0;
+					
+					$data[$i]['tramite'] = $data[$i]['tramite_count'];
+					
+					unset( $data[$i]['tramite_count'] );
 				}
+				
 				
 				
 				if( isset( $value['aceptadas']['count'] ) ){
 					
-					$data[$i]['aceptadas_count'] = $value['aceptadas']['count'];
-					$data[$i]['aceptadas_prima'] = '$ '.$value['aceptadas']['prima'];
-					
+					$data[$i]['pendientes'] = $value['aceptadas']['count'];
+					$data[$i]['pendientes_primas'] = $value['aceptadas']['prima'];
 					unset( $data[$i]['aceptadas'] );
 				}else{
 					
-					$data[$i]['aceptadas_count'] = 0;
-					$data[$i]['aceptadas_prima'] = '$ '. 0;
+					$data[$i]['pendientes'] = 0;
+					$data[$i]['pendientes_primas'] = 0;
 					unset( $data[$i]['aceptadas'] );
 				}
-					
-												
-				$i++;				
+								
+			   	
+				 $data[$i]['negocios_proyectados'] = ( (int)$data[$i]['pendientes']+(int)$data[$i]['tramite']+(int)$data[$i]['negociopai']+(int)$data[$i]['negocio'] );
+				 $data[$i]['negocios_proyectados_primas'] =( (float)$data[$i]['prima']+(float)$data[$i]['pendientes_primas']+(float)$data[$i]['tramite_prima']);
+			     
+				 
+				 $total_negocio += (int)$data[$i]['negocio'];
+				 $total_negocio_pai += (int)$data[$i]['negociopai'];
+			   	 $total_primas_pagadas += (float)$data[$i]['prima'];
+				 $total_negocios_tramite += (int)$data[$i]['tramite'];
+				 $total_primas_tramite += (float)$data[$i]['tramite_prima'];
+				 $total_negocio_pendiente += (int)$data[$i]['pendientes'];
+				 $total_primas_pendientes += (float)$data[$i]['pendientes_primas'];
+				 $total_negocios_proyectados += (int) $data[$i]['negocios_proyectados'];
+				 $total_primas_proyectados += (float) $data[$i]['negocios_proyectados_primas'];
+				 
+				 
+				 $data[$i]['prima'] = '$ '.$data[$i]['prima'];
+				 $data[$i]['tramite_prima'] = '$ '.$data[$i]['tramite_prima'];
+				 $data[$i]['pendientes_primas'] = '$ '.$data[$i]['pendientes_primas'];
+				 $data[$i]['negocios_proyectados_primas'] = '$ '.$data[$i]['negocios_proyectados_primas'];
+				 
+			   }
+				
+				$i++;	
 			}
 		
+		/*
+			[name] => 12421414 - 1 -  Generacion 1 - No Conectado
+            [negocio] => 0
+            [negociopai] => 1
+            [prima] => 0
+            [tramite] => 0
+            [tramite_prima] => 0
+            [pendientes] => 0
+            [pendientes_primas] => $ 0
+            [negocios_proyectados] => 1
+            [negocios_proyectados_primas] => $ 0
+		*/
+	
+	
+		$data[$i] = array(
+			'name' => 'Totales: ',	
+			'negocio' => $total_negocio,	
+			'negociopai' => $total_negocio_pai,	
+			'prima' => '$ '.$total_primas_pagadas,	
+			'tramite' => $total_negocios_tramite,	
+			'tramite_prima' => '$ '.$total_primas_tramite,	
+			'pendientes' => $total_negocio_pendiente,	
+			'pendientes_primas' => '$ '.$total_primas_pendientes,	
+			'negocios_proyectados' => $total_negocios_proyectados,	
+			'negocios_proyectados_primas' => '$ '.$total_primas_proyectados,	
+		);
 				
-				
-		
-								
+		/*		
+		echo '<pre>';
+		print_r( $data );
+		echo '</pre>';		
+		exit;
+			*/
+							
 		
 	 	array_to_csv($data, 'proages_report.csv');
 		
@@ -2378,7 +2467,7 @@ class Ot extends CI_Controller {
 		if( is_file( 'proages_report.csv' ) )
 			unlink( 'proages_report.csv' );
 				
-		exit;
+		//exit;
 		
 				
 	}

@@ -54,11 +54,13 @@ $( document ).ready(function() {
 			$( '.set_periodo' ).html( 'Cuatrimestre' );
 		}
 			
-			
+		
+		$( '#form' ).attr( "action", '' );	
+		
+		$( '#form' ).submit();
 		
 	});
-	
-	
+			
 	$( '.filter' ).bind( 'click', function(){
 		$( '#form' ).attr( "action", '' );
 	});

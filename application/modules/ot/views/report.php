@@ -105,7 +105,7 @@
                                 
                                 <p class="line">&nbsp; </p>
                     			<form id="form" method="post">                      	
-                         		 <input type="hidden" name="query[ramo]" id="ramo" value="1" />
+                         		 <input type="hidden" name="query[ramo]" id="ramo" value="<?php if( isset( $_POST['query']['ramo'] ) ) echo $_POST['query']['ramo']; echo 1;  ?>" />
                     
                                 <table  class="filterstable" style="width:99%;">
                                 <thead>
@@ -239,8 +239,8 @@
 										
 										
 										
-										if( $value['disabled'] == 1 ) $value['disabled'] = 'Activo';
-										if( $value['disabled'] == 0 ) $value['disabled'] = 'Desactivado';
+										if( $value['disabled'] == 0 ) $value['disabled'] = 'Activo';
+										if( $value['disabled'] == 1 ) $value['disabled'] = 'Desactivado';
 											
 										
 										$total_negocio += $value['negocio'];
@@ -289,7 +289,11 @@
                                 
                                                                                                 
                                 <tr>
-                                    <td class=""><div class="text_azulado"><?php echo $value['name'] ?></div> <?php echo $value['disabled'] ?> Generacion 1 - 
+                                    <td class=""><div class="text_azulado"><?php echo $value['name'] ?></div> 
+									
+									<?php echo $value['uids'][0]['uid']. ' - ' ?>
+									
+									<?php echo $value['disabled'] .' - ' ?> Generacion 1 - 
                                     
                                     <?php if( $value['connection_date'] != '0000-00-00' ): ?>
                                     		Conectado <?php echo getFormatDate( $value['connection_date'] ) ?>

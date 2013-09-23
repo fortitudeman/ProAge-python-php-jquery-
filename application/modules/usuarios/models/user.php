@@ -1814,6 +1814,23 @@ class User extends CI_Model{
 	if ($query->num_rows() == 0) return false;		
 	
 	$report = array();
+		
+	$report[0] = array(
+		
+		'name' => 'Agentes',
+		'negocio' => 'Negocios Pagados',
+		'negociopai' => 'Negocios Pal',
+		'prima' => 'Primas Pagadas',
+		'tramite' => 'Negocios en Tramite',
+		'tramite_prima' => 'Primas en Tramite',
+		'pendientes' => 'Negocios Pendientes',
+		'pendientes_primas' => 'Primas Pendientes',
+		'negocios_proyectados' => 'Negocios Proyectados',
+		'negocios_proyectados_primas' => 'Primas Proyectadas'
+		
+	);
+	
+	
 	
 	foreach ($query->result() as $row){
 		
