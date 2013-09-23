@@ -18,6 +18,8 @@ $( document ).ready(function() {
 	
 	$( '.set_periodo2' ).hide();
 	
+	$( '#gerente' ).val( $( '#gerente_value' ).val() );
+	
 	$( '.link-ramo' ).bind( 'click', function(){
 		
 		$( '#vida' ).css({ 'color': '#000' });

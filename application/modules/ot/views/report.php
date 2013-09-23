@@ -128,7 +128,7 @@
                                            
                                     </th>
                                     <th>
-                                            
+                                            <input type="hidden" id="gerente_value" value="<?php if( isset( $_POST['query']['gerente'] ) ) echo $_POST['query']['gerente'];  ?>" />
                                             <select id="gerente" name="query[gerente]" class="select" style="width:145px;" onchange="this.form.submit();">
                                                 <option value="">Todos los gerentes</option>                                        
                                                 <?php echo $manager ?>
@@ -243,8 +243,8 @@
 										
 										
 										
-										if( $value['disabled'] == 0 ) $value['disabled'] = 'Vigente';
-										if( $value['disabled'] == 1 ) $value['disabled'] = 'Cancelado';
+										if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente';
+										if( $value['disabled'] == 0 ) $value['disabled'] = 'Cancelado';
 											
 										
 										$total_negocio += $value['negocio'];
