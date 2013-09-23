@@ -1919,7 +1919,9 @@ class User extends CI_Model{
 		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
 		$this->db->where( array( 'policies_vs_users.user_id' => $agent_id ) );
-  						
+  		
+		
+						
 		if( !empty( $filter ) ){
 			
 			
@@ -1934,37 +1936,81 @@ class User extends CI_Model{
 			<option value="3">Año</option>
 			*/	
 			
-			$mes = date( 'Y' ).'-'.(date( 'm' )-1).'-'.date( 'd' );
+			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
 			
-			$trimestre = date( 'Y' ).'-'.(date( 'm' )-3).'-'.date( 'd' );		
 			
-			$cuatrimetre = date( 'Y' ).'-'.(date( 'm' )-4).'-'.date( 'd' );
+			$trimestre = $this->trimestre();
 			
-			$anio = (date( 'Y' )-1).'-'.date( 'm' ).'-'.date( 'd' );
-			
+			$cuatrimetre = $this->cuatrimestre();
+									
+			$anio = date( 'Y' ).'-01-01';
+						
 			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
+			
 			
 			if( $filter['query']['periodo'] == 1 )
 			
 				$this->db->where( 'work_order.creation_date >= ', strtotime( $mes ) ); 
 			
+			
+			
 			if( $filter['query']['periodo'] == 2 )
 			
 				
-				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 )
+				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
 					
-					$this->db->where( 'work_order.creation_date >= ', strtotime( $cuatrimetre ) ); 
+					if( $cuatrimetre == 1 ){			
+						$begind = date( 'Y' ).'-01-01';	
+						$end = date( 'Y' ).'-04-'.date('d');	
+					}
+					
+					if( $cuatrimetre == 2 ){			
+						$begind = date( 'Y' ).'-04-01';	
+						$end = date( 'Y' ).'-08-'.date('d');	
+					}
+					
+					if( $cuatrimetre == 3 ){			
+						$begind = date( 'Y' ).'-08-01';	
+						$end = date( 'Y' ).'-12-'.date('d');	
+					}
+					
+					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
 				
-				else
+				}else{
 					
-					$this->db->where( 'work_order.creation_date >= ', strtotime( $trimestre ) ); 
 					
+					if( $trimestre == 1 ){			
+						$begind = date( 'Y' ).'-01-01';	
+						$end = date( 'Y' ).'-03-'.date('d');	
+					}
+					
+					if( $trimestre == 2 ){			
+						$begind = date( 'Y' ).'-03-01';	
+						$end = date( 'Y' ).'-06-'.date('d');	
+					}
+					
+					if( $trimestre == 3 ){			
+						$begind = date( 'Y' ).'-06-01';	
+						$end = date( 'Y' ).'-09-'.date('d');	
+					}
+					
+					if( $trimestre == 4 ){			
+						$begind = date( 'Y' ).'-09-01';	
+						$end = date( 'Y' ).'-12-'.date('d');	
+					}
+					
+						
+					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+				}
+				
+				
+				
 				
 				
 				
 			if( $filter['query']['periodo'] == 3 )
 			
-				$this->db->where( 'work_order.creation_date >= ', strtotime( $anio ) ); 		
+				$this->db->where( array( 'work_order.creation_date >= ', strtotime( $anio ), 'work_order.creation_date <=' => strtotime( date( 'Y-m-d' ) ) ) ); 
 			
 			}
 			
@@ -1988,7 +2034,7 @@ class User extends CI_Model{
 			}
 		
 		
-			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) ){
+			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 ){
 				
 				/*
 				<option value="">Seleccione</option>
@@ -1996,15 +2042,7 @@ class User extends CI_Model{
 				<option value="2">Vigentes</option>
 				<option value="3">Cancelados</option>
 				*/					  
-				
-				if( $filter['query']['agent'] == 1 ){
-					
-					$this->db->where( 'users.disabled', 1 ); 	
-					$this->db->or_where( 'users.disabled', 2 ); 	
-					
-				}	
-				
-				
+						
 				if( $filter['query']['agent'] == 2 )
 					
 					$this->db->where( 'users.disabled', 1 ); 
@@ -2096,37 +2134,81 @@ class User extends CI_Model{
 			<option value="3">Año</option>
 			*/	
 			
-			$mes = date( 'Y' ).'-'.(date( 'm' )-1).'-'.date( 'd' );
+			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
 			
-			$trimestre = date( 'Y' ).'-'.(date( 'm' )-3).'-'.date( 'd' );		
 			
-			$cuatrimetre = date( 'Y' ).'-'.(date( 'm' )-4).'-'.date( 'd' );
+			$trimestre = $this->trimestre();
 			
-			$anio = (date( 'Y' )-1).'-'.date( 'm' ).'-'.date( 'd' );
-			
+			$cuatrimetre = $this->cuatrimestre();
+									
+			$anio = date( 'Y' ).'-01-01';
+						
 			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
+			
 			
 			if( $filter['query']['periodo'] == 1 )
 			
 				$this->db->where( 'work_order.creation_date >= ', strtotime( $mes ) ); 
 			
+			
+			
 			if( $filter['query']['periodo'] == 2 )
 			
 				
-				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 )
+				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
 					
-					$this->db->where( 'work_order.creation_date >= ', strtotime( $cuatrimetre ) ); 
+					if( $cuatrimetre == 1 ){			
+						$begind = date( 'Y' ).'-01-01';	
+						$end = date( 'Y' ).'-04-'.date('d');	
+					}
+					
+					if( $cuatrimetre == 2 ){			
+						$begind = date( 'Y' ).'-04-01';	
+						$end = date( 'Y' ).'-08-'.date('d');	
+					}
+					
+					if( $cuatrimetre == 3 ){			
+						$begind = date( 'Y' ).'-08-01';	
+						$end = date( 'Y' ).'-12-'.date('d');	
+					}
+					
+					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
 				
-				else
+				}else{
 					
-					$this->db->where( 'work_order.creation_date >= ', strtotime( $trimestre ) ); 
 					
+					if( $trimestre == 1 ){			
+						$begind = date( 'Y' ).'-01-01';	
+						$end = date( 'Y' ).'-03-'.date('d');	
+					}
+					
+					if( $trimestre == 2 ){			
+						$begind = date( 'Y' ).'-03-01';	
+						$end = date( 'Y' ).'-06-'.date('d');	
+					}
+					
+					if( $trimestre == 3 ){			
+						$begind = date( 'Y' ).'-06-01';	
+						$end = date( 'Y' ).'-09-'.date('d');	
+					}
+					
+					if( $trimestre == 4 ){			
+						$begind = date( 'Y' ).'-09-01';	
+						$end = date( 'Y' ).'-12-'.date('d');	
+					}
+					
+						
+					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+				}
+				
+				
+				
 				
 				
 				
 			if( $filter['query']['periodo'] == 3 )
 			
-				$this->db->where( 'work_order.creation_date >= ', strtotime( $anio ) ); 		
+				$this->db->where( array( 'work_order.creation_date >= ', strtotime( $anio ), 'work_order.creation_date <=' => strtotime( date( 'Y-m-d' ) ) ) ); 
 			
 			}
 			
@@ -2150,7 +2232,7 @@ class User extends CI_Model{
 			}
 		
 		
-			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) ){
+			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 ){
 				
 				/*
 				<option value="">Seleccione</option>
@@ -2158,15 +2240,7 @@ class User extends CI_Model{
 				<option value="2">Vigentes</option>
 				<option value="3">Cancelados</option>
 				*/					  
-				
-				if( $filter['query']['agent'] == 1 ){
-					
-					$this->db->where( 'users.disabled', 1 ); 	
-					$this->db->or_where( 'users.disabled', 2 ); 	
-					
-				}	
-				
-				
+						
 				if( $filter['query']['agent'] == 2 )
 					
 					$this->db->where( 'users.disabled', 1 ); 
@@ -2255,37 +2329,81 @@ class User extends CI_Model{
 			<option value="3">Año</option>
 			*/	
 			
-			$mes = date( 'Y' ).'-'.(date( 'm' )-1).'-'.date( 'd' );
+			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
 			
-			$trimestre = date( 'Y' ).'-'.(date( 'm' )-3).'-'.date( 'd' );		
 			
-			$cuatrimetre = date( 'Y' ).'-'.(date( 'm' )-4).'-'.date( 'd' );
+			$trimestre = $this->trimestre();
 			
-			$anio = (date( 'Y' )-1).'-'.date( 'm' ).'-'.date( 'd' );
-			
+			$cuatrimetre = $this->cuatrimestre();
+									
+			$anio = date( 'Y' ).'-01-01';
+						
 			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
+			
 			
 			if( $filter['query']['periodo'] == 1 )
 			
 				$this->db->where( 'work_order.creation_date >= ', strtotime( $mes ) ); 
 			
+			
+			
 			if( $filter['query']['periodo'] == 2 )
 			
 				
-				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 )
+				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
 					
-					$this->db->where( 'work_order.creation_date >= ', strtotime( $cuatrimetre ) ); 
+					if( $cuatrimetre == 1 ){			
+						$begind = date( 'Y' ).'-01-01';	
+						$end = date( 'Y' ).'-04-'.date('d');	
+					}
+					
+					if( $cuatrimetre == 2 ){			
+						$begind = date( 'Y' ).'-04-01';	
+						$end = date( 'Y' ).'-08-'.date('d');	
+					}
+					
+					if( $cuatrimetre == 3 ){			
+						$begind = date( 'Y' ).'-08-01';	
+						$end = date( 'Y' ).'-12-'.date('d');	
+					}
+					
+					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
 				
-				else
+				}else{
 					
-					$this->db->where( 'work_order.creation_date >= ', strtotime( $trimestre ) ); 
 					
+					if( $trimestre == 1 ){			
+						$begind = date( 'Y' ).'-01-01';	
+						$end = date( 'Y' ).'-03-'.date('d');	
+					}
+					
+					if( $trimestre == 2 ){			
+						$begind = date( 'Y' ).'-03-01';	
+						$end = date( 'Y' ).'-06-'.date('d');	
+					}
+					
+					if( $trimestre == 3 ){			
+						$begind = date( 'Y' ).'-06-01';	
+						$end = date( 'Y' ).'-09-'.date('d');	
+					}
+					
+					if( $trimestre == 4 ){			
+						$begind = date( 'Y' ).'-09-01';	
+						$end = date( 'Y' ).'-12-'.date('d');	
+					}
+					
+						
+					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+				}
+				
+				
+				
 				
 				
 				
 			if( $filter['query']['periodo'] == 3 )
 			
-				$this->db->where( 'work_order.creation_date >= ', strtotime( $anio ) ); 		
+				$this->db->where( array( 'work_order.creation_date >= ', strtotime( $anio ), 'work_order.creation_date <=' => strtotime( date( 'Y-m-d' ) ) ) ); 
 			
 			}
 			
@@ -2309,7 +2427,7 @@ class User extends CI_Model{
 			}
 		
 		
-			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) ){
+			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 ){
 				
 				/*
 				<option value="">Seleccione</option>
@@ -2317,15 +2435,7 @@ class User extends CI_Model{
 				<option value="2">Vigentes</option>
 				<option value="3">Cancelados</option>
 				*/					  
-				
-				if( $filter['query']['agent'] == 1 ){
-					
-					$this->db->where( 'users.disabled', 1 ); 	
-					$this->db->or_where( 'users.disabled', 2 ); 	
-					
-				}	
-				
-				
+						
 				if( $filter['query']['agent'] == 2 )
 					
 					$this->db->where( 'users.disabled', 1 ); 
@@ -2441,37 +2551,81 @@ class User extends CI_Model{
 			<option value="3">Año</option>
 			*/	
 			
-			$mes = date( 'Y' ).'-'.(date( 'm' )-1).'-'.date( 'd' );
+			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
 			
-			$trimestre = date( 'Y' ).'-'.(date( 'm' )-3).'-'.date( 'd' );		
 			
-			$cuatrimetre = date( 'Y' ).'-'.(date( 'm' )-4).'-'.date( 'd' );
+			$trimestre = $this->trimestre();
 			
-			$anio = (date( 'Y' )-1).'-'.date( 'm' ).'-'.date( 'd' );
-			
+			$cuatrimetre = $this->cuatrimestre();
+									
+			$anio = date( 'Y' ).'-01-01';
+						
 			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
+			
 			
 			if( $filter['query']['periodo'] == 1 )
 			
 				$this->db->where( 'work_order.creation_date >= ', strtotime( $mes ) ); 
 			
+			
+			
 			if( $filter['query']['periodo'] == 2 )
 			
 				
-				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 )
+				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
 					
-					$this->db->where( 'work_order.creation_date >= ', strtotime( $cuatrimetre ) ); 
+					if( $cuatrimetre == 1 ){			
+						$begind = date( 'Y' ).'-01-01';	
+						$end = date( 'Y' ).'-04-'.date('d');	
+					}
+					
+					if( $cuatrimetre == 2 ){			
+						$begind = date( 'Y' ).'-04-01';	
+						$end = date( 'Y' ).'-08-'.date('d');	
+					}
+					
+					if( $cuatrimetre == 3 ){			
+						$begind = date( 'Y' ).'-08-01';	
+						$end = date( 'Y' ).'-12-'.date('d');	
+					}
+					
+					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
 				
-				else
+				}else{
 					
-					$this->db->where( 'work_order.creation_date >= ', strtotime( $trimestre ) ); 
 					
+					if( $trimestre == 1 ){			
+						$begind = date( 'Y' ).'-01-01';	
+						$end = date( 'Y' ).'-03-'.date('d');	
+					}
+					
+					if( $trimestre == 2 ){			
+						$begind = date( 'Y' ).'-03-01';	
+						$end = date( 'Y' ).'-06-'.date('d');	
+					}
+					
+					if( $trimestre == 3 ){			
+						$begind = date( 'Y' ).'-06-01';	
+						$end = date( 'Y' ).'-09-'.date('d');	
+					}
+					
+					if( $trimestre == 4 ){			
+						$begind = date( 'Y' ).'-09-01';	
+						$end = date( 'Y' ).'-12-'.date('d');	
+					}
+					
+						
+					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+				}
+				
+				
+				
 				
 				
 				
 			if( $filter['query']['periodo'] == 3 )
 			
-				$this->db->where( 'work_order.creation_date >= ', strtotime( $anio ) ); 		
+				$this->db->where( array( 'work_order.creation_date >= ', strtotime( $anio ), 'work_order.creation_date <=' => strtotime( date( 'Y-m-d' ) ) ) ); 
 			
 			}
 			
@@ -2495,7 +2649,7 @@ class User extends CI_Model{
 			}
 		
 		
-			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) ){
+			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 ){
 				
 				/*
 				<option value="">Seleccione</option>
@@ -2503,15 +2657,7 @@ class User extends CI_Model{
 				<option value="2">Vigentes</option>
 				<option value="3">Cancelados</option>
 				*/					  
-				
-				if( $filter['query']['agent'] == 1 ){
-					
-					$this->db->where( 'users.disabled', 1 ); 	
-					$this->db->or_where( 'users.disabled', 2 ); 	
-					
-				}	
-				
-				
+						
 				if( $filter['query']['agent'] == 2 )
 					
 					$this->db->where( 'users.disabled', 1 ); 
@@ -2584,7 +2730,7 @@ class User extends CI_Model{
 	
   }	
   
-  public function getAceptadas(  $user_id = null ){
+  public function getAceptadas(  $user_id = null, $filter = array() ){
   	
 	
 		if( empty( $user_id ) ) return 0;
@@ -2609,6 +2755,140 @@ class User extends CI_Model{
 		$this->db->where( array( 'work_order.work_order_status_id' => 7 ) );
 		$this->db->where( 'policies_vs_users.user_id', $user_id );
   		
+		if( !empty( $filter ) ){
+			
+			
+			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
+						
+				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
+			}
+			
+			/*
+			<option value="1">Mes</option>
+			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+			<option value="3">Año</option>
+			*/	
+			
+			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
+			
+			
+			$trimestre = $this->trimestre();
+			
+			$cuatrimetre = $this->cuatrimestre();
+									
+			$anio = date( 'Y' ).'-01-01';
+						
+			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
+			
+			
+			if( $filter['query']['periodo'] == 1 )
+			
+				$this->db->where( 'work_order.creation_date >= ', strtotime( $mes ) ); 
+			
+			
+			
+			if( $filter['query']['periodo'] == 2 )
+			
+				
+				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
+					
+					if( $cuatrimetre == 1 ){			
+						$begind = date( 'Y' ).'-01-01';	
+						$end = date( 'Y' ).'-04-'.date('d');	
+					}
+					
+					if( $cuatrimetre == 2 ){			
+						$begind = date( 'Y' ).'-04-01';	
+						$end = date( 'Y' ).'-08-'.date('d');	
+					}
+					
+					if( $cuatrimetre == 3 ){			
+						$begind = date( 'Y' ).'-08-01';	
+						$end = date( 'Y' ).'-12-'.date('d');	
+					}
+					
+					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+				
+				}else{
+					
+					
+					if( $trimestre == 1 ){			
+						$begind = date( 'Y' ).'-01-01';	
+						$end = date( 'Y' ).'-03-'.date('d');	
+					}
+					
+					if( $trimestre == 2 ){			
+						$begind = date( 'Y' ).'-03-01';	
+						$end = date( 'Y' ).'-06-'.date('d');	
+					}
+					
+					if( $trimestre == 3 ){			
+						$begind = date( 'Y' ).'-06-01';	
+						$end = date( 'Y' ).'-09-'.date('d');	
+					}
+					
+					if( $trimestre == 4 ){			
+						$begind = date( 'Y' ).'-09-01';	
+						$end = date( 'Y' ).'-12-'.date('d');	
+					}
+					
+						
+					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+				}
+				
+				
+				
+				
+				
+				
+			if( $filter['query']['periodo'] == 3 )
+			
+				$this->db->where( array( 'work_order.creation_date >= ', strtotime( $anio ), 'work_order.creation_date <=' => strtotime( date( 'Y-m-d' ) ) ) ); 
+			
+			}
+			
+			if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) ){
+				/*
+				foreach( $filter['query']['generacion'] as $generacion ){
+					
+					$this->db->where();
+					
+				}
+				*/
+			}
+		
+		
+		
+		
+			if( isset( $filter['query']['gerente'] ) and !empty( $filter['query']['gerente'] ) ){
+				
+				$this->db->where( 'users.manager_id', $filter['query']['gerente'] ); 	
+				
+			}
+		
+		
+			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 ){
+				
+				/*
+				<option value="">Seleccione</option>
+				<option value="1">Todos</option>
+				<option value="2">Vigentes</option>
+				<option value="3">Cancelados</option>
+				*/					  
+						
+				if( $filter['query']['agent'] == 2 )
+					
+					$this->db->where( 'users.disabled', 1 ); 
+				
+				if( $filter['query']['agent'] == 3 )
+					
+					$this->db->where( 'users.disabled', 0 ); 	
+					
+					
+						
+			}
+				
+		}
 		
 		$query = $this->db->get(); 
   		
@@ -2675,6 +2955,18 @@ class User extends CI_Model{
 		
 		return $aceptadas;		
 		
+  }
+  
+  public function trimestre($mes=null){	  
+	$mes = is_null($mes) ? date('m') : $mes;
+	$trim=floor(($mes-1) / 3)+1;
+	return $trim;
+  }
+  
+  public function cuatrimestre($mes=null){	  
+	$mes = is_null($mes) ? date('m') : $mes;
+	$trim=floor(($mes-1) / 4)+1;
+	return $trim;
   }
 	
 
