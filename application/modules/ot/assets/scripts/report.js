@@ -20,6 +20,14 @@ $( document ).ready(function() {
 	
 	$( '#gerente' ).val( $( '#gerente_value' ).val() );
 	
+	$( '.header_manager' ).bind( 'click', function(){ 
+		
+		$( '.header_manager' ).css( 'color', '#000' );
+		
+		$( '#'+this.id ).css( 'color', '#06F' );
+		
+	});
+	
 	$( '.link-ramo' ).bind( 'click', function(){
 		
 		$( '#vida' ).css({ 'color': '#000' });

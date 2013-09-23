@@ -190,16 +190,16 @@
                                 <table  class="sortable altrowstable tablesorter" id="sorter"  style="width:100%;">
                                 <thead>
                                 <tr>
-                                    <th>Agentes</th>
-                                    <th style="width:70px;">Negocios Pagados</th>
-                                    <th style="width:70px;">Negocios <br> Pal</th>
-                                    <th style="width:100px;">Primas Pagadas</th>
-                                    <th style="width:70px;">Negocios <br> en  Tramite</th>
-                                    <th style="width:100px;">Primas <br> en Tramite</th>
-                                    <th style="width:70px;">Negocios Pendientes</th>
-                                    <th style="width:100px;">Primas <br> Pendientes</th>
-                                    <th style="width:70px;">Negocios Proyectados</th>
-                                    <th style="width:100px;">Primas <br> Proyectadas</th>
+                                    <th id="table_agents" class="header_manager">Agentes</th>
+                                    <th id="total_negocio" class="header_manager" style="width:70px;">Negocios Pagados</th>
+                                    <th id="total_negocio_pai" class="header_manager" style="width:70px;">Negocios <br> Pal</th>
+                                    <th id="total_primas_pagadas" class="header_manager" style="width:100px;">Primas Pagadas</th>
+                                    <th id="total_negocios_tramite" class="header_manager" style="width:70px;">Negocios <br> en  Tramite</th>
+                                    <th id="total_primas_tramite" class="header_manager" style="width:100px;">Primas <br> en Tramite</th>
+                                    <th id="total_negocio_pendiente class="header_manager"" style="width:70px;">Negocios Pendientes</th>
+                                    <th id="total_primas_pendientes" class="header_manager" style="width:100px;">Primas <br> Pendientes</th>
+                                    <th id="total_negocios_proyectados" class="header_manager" style="width:70px;">Negocios Proyectados</th>
+                                    <th id="total_primas_proyectados" class="header_manager" style="width:100px;">Primas <br> Proyectadas</th>
                                 </tr>
                               </thead>
                     
