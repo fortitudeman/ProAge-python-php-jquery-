@@ -113,7 +113,7 @@
                                     <th>
                                             
                                             
-                                            <select id="periodo" name="query[periodo]" >
+                                            <select id="periodo" name="query[periodo]" onchange="this.form.submit();">
                                                 <option value="1" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 1 ) echo 'selected="selected"'?>>Mes</option>
                                                 <?php if( !isset( $_POST['query']['ramo'] ) or isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 1 ): ?> 
                                                 <option value="2" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 2 ) echo 'selected="selected"'?> class="set_periodo">Trimestre</option>
@@ -129,7 +129,7 @@
                                     </th>
                                     <th>
                                             
-                                            <select id="gerente" name="query[gerente]" class="select" style="width:145px;">
+                                            <select id="gerente" name="query[gerente]" class="select" style="width:145px;" onchange="this.form.submit();">
                                                 <option value="">Todos los gerentes</option>                                        
                                                 <?php echo $manager ?>
                                               </select>
@@ -137,7 +137,7 @@
                                     </th>
                                     <th>
                                             
-                                            <select id="agent" name="query[agent]" class="select2"  style="width:140px;">
+                                            <select id="agent" name="query[agent]" class="select2"  style="width:140px;" onchange="this.form.submit();">
                                         <option value="" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 1 ) echo 'selected="selected"'?>>Todos los agentes</option>
                                         <option value="2" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 2 ) echo 'selected="selected"'?>>Vigentes</option>
                                         <option value="3" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 3 ) echo 'selected="selected"'?>>Cancelados</option>
@@ -147,7 +147,7 @@
                                     <th>
                                         
                                             
-                                            <select id="generarion" name="query[generacion]" class="select3" style="width:180px;">
+                                            <select id="generarion" name="query[generacion]" class="select3" style="width:180px;" onchange="this.form.submit();">
                                         <option value="" <?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 1 ) echo 'selected="selected"'?>>Todas las Generaciónes</option>
                                         <option value="2"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 2 ) echo 'selected="selected"'?>>Consolidado</option>
                                         <option value="3"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 3 ) echo 'selected="selected"'?>>Generación 1</option>
@@ -243,8 +243,8 @@
 										
 										
 										
-										if( $value['disabled'] == 0 ) $value['disabled'] = 'Activo';
-										if( $value['disabled'] == 1 ) $value['disabled'] = 'Desactivado';
+										if( $value['disabled'] == 0 ) $value['disabled'] = 'Vigente';
+										if( $value['disabled'] == 1 ) $value['disabled'] = 'Cancelado';
 											
 										
 										$total_negocio += $value['negocio'];
@@ -295,7 +295,7 @@
                                 <tr>
                                     <td class=""><div class="text_azulado"><?php echo $value['name'] ?></div> 
 									
-									<?php echo $value['uids'][0]['uid']. ' - ' ?>
+									<?php if( !empty( $value['uids'][0]['uid'] ) )echo $value['uids'][0]['uid']. ' - '; else echo 'Sin clave asignada - '; ?>
 									
 									<?php echo $value['disabled'] .' - ' ?> Generacion 1 - 
                                     

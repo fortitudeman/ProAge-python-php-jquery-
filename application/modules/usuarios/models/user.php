@@ -1809,6 +1809,54 @@ class User extends CI_Model{
 	$this->db->join( 'users', 'users.id=agents.user_id' );
 	
 	
+	if( !empty( $filter ) ){
+			
+			if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) ){
+				/*
+				foreach( $filter['query']['generacion'] as $generacion ){
+					
+					$this->db->where();
+					
+				}
+				*/
+			}
+		
+		
+		
+		
+			if( isset( $filter['query']['gerente'] ) and !empty( $filter['query']['gerente'] ) ){
+				
+				$this->db->where( 'users.manager_id', $filter['query']['gerente'] ); 	
+				
+			}
+		
+		
+			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 ){
+				
+				/*
+				<option value="">Seleccione</option>
+				<option value="1">Todos</option>
+				<option value="2">Vigentes</option>
+				<option value="3">Cancelados</option>
+				*/					  
+						
+				if( $filter['query']['agent'] == 2 )
+					
+					$this->db->where( 'users.disabled', 0 ); 
+				
+				if( $filter['query']['agent'] == 3 )
+					
+					$this->db->where( 'users.disabled', 1 ); 	
+					
+					
+						
+			}
+				
+		}
+	
+	
+	
+	
 	$query = $this->db->get(); 
   	
 	if ($query->num_rows() == 0) return false;		
@@ -2013,48 +2061,7 @@ class User extends CI_Model{
 				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
 			
 			}
-			
-			if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) ){
-				/*
-				foreach( $filter['query']['generacion'] as $generacion ){
-					
-					$this->db->where();
-					
-				}
-				*/
-			}
-		
-		
-		
-		
-			if( isset( $filter['query']['gerente'] ) and !empty( $filter['query']['gerente'] ) ){
-				
-				$this->db->where( 'users.manager_id', $filter['query']['gerente'] ); 	
-				
-			}
-		
-		
-			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 ){
-				
-				/*
-				<option value="">Seleccione</option>
-				<option value="1">Todos</option>
-				<option value="2">Vigentes</option>
-				<option value="3">Cancelados</option>
-				*/					  
-						
-				if( $filter['query']['agent'] == 2 )
-					
-					$this->db->where( 'users.disabled', 1 ); 
-				
-				if( $filter['query']['agent'] == 3 )
-					
-					$this->db->where( 'users.disabled', 0 ); 	
-					
-					
-						
-			}
-				
+							
 		}
 		
 		
@@ -2211,48 +2218,7 @@ class User extends CI_Model{
 				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
 			
 			}
-			
-			if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) ){
-				/*
-				foreach( $filter['query']['generacion'] as $generacion ){
-					
-					$this->db->where();
-					
-				}
-				*/
-			}
-		
-		
-		
-		
-			if( isset( $filter['query']['gerente'] ) and !empty( $filter['query']['gerente'] ) ){
-				
-				$this->db->where( 'users.manager_id', $filter['query']['gerente'] ); 	
-				
-			}
-		
-		
-			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 ){
-				
-				/*
-				<option value="">Seleccione</option>
-				<option value="1">Todos</option>
-				<option value="2">Vigentes</option>
-				<option value="3">Cancelados</option>
-				*/					  
-						
-				if( $filter['query']['agent'] == 2 )
-					
-					$this->db->where( 'users.disabled', 1 ); 
-				
-				if( $filter['query']['agent'] == 3 )
-					
-					$this->db->where( 'users.disabled', 0 ); 	
-					
-					
-						
-			}
-				
+							
 		}
 		
 		
@@ -2405,49 +2371,7 @@ class User extends CI_Model{
 			
 				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
 			
-			}
-			
-			if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) ){
-				/*
-				foreach( $filter['query']['generacion'] as $generacion ){
-					
-					$this->db->where();
-					
-				}
-				*/
-			}
-		
-		
-		
-		
-			if( isset( $filter['query']['gerente'] ) and !empty( $filter['query']['gerente'] ) ){
-				
-				$this->db->where( 'users.manager_id', $filter['query']['gerente'] ); 	
-				
-			}
-		
-		
-			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 ){
-				
-				/*
-				<option value="">Seleccione</option>
-				<option value="1">Todos</option>
-				<option value="2">Vigentes</option>
-				<option value="3">Cancelados</option>
-				*/					  
-						
-				if( $filter['query']['agent'] == 2 )
-					
-					$this->db->where( 'users.disabled', 1 ); 
-				
-				if( $filter['query']['agent'] == 3 )
-					
-					$this->db->where( 'users.disabled', 0 ); 	
-					
-					
-						
-			}
-				
+			}				
 		}
 		
 		
@@ -2628,47 +2552,6 @@ class User extends CI_Model{
 				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
 			
 			}
-			
-			if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) ){
-				/*
-				foreach( $filter['query']['generacion'] as $generacion ){
-					
-					$this->db->where();
-					
-				}
-				*/
-			}
-		
-		
-		
-		
-			if( isset( $filter['query']['gerente'] ) and !empty( $filter['query']['gerente'] ) ){
-				
-				$this->db->where( 'users.manager_id', $filter['query']['gerente'] ); 	
-				
-			}
-		
-		
-			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 ){
-				
-				/*
-				<option value="">Seleccione</option>
-				<option value="1">Todos</option>
-				<option value="2">Vigentes</option>
-				<option value="3">Cancelados</option>
-				*/					  
-						
-				if( $filter['query']['agent'] == 2 )
-					
-					$this->db->where( 'users.disabled', 1 ); 
-				
-				if( $filter['query']['agent'] == 3 )
-					
-					$this->db->where( 'users.disabled', 0 ); 	
-					
-					
-						
-			}
 				
 		}
 		
@@ -2845,49 +2728,7 @@ class User extends CI_Model{
 			
 				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
 			
-			}
-			
-			if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) ){
-				/*
-				foreach( $filter['query']['generacion'] as $generacion ){
-					
-					$this->db->where();
-					
-				}
-				*/
-			}
-		
-		
-		
-		
-			if( isset( $filter['query']['gerente'] ) and !empty( $filter['query']['gerente'] ) ){
-				
-				$this->db->where( 'users.manager_id', $filter['query']['gerente'] ); 	
-				
-			}
-		
-		
-			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 ){
-				
-				/*
-				<option value="">Seleccione</option>
-				<option value="1">Todos</option>
-				<option value="2">Vigentes</option>
-				<option value="3">Cancelados</option>
-				*/					  
-						
-				if( $filter['query']['agent'] == 2 )
-					
-					$this->db->where( 'users.disabled', 1 ); 
-				
-				if( $filter['query']['agent'] == 3 )
-					
-					$this->db->where( 'users.disabled', 0 ); 	
-					
-					
-						
-			}
-				
+			}				
 		}
 		
 		$query = $this->db->get(); 
