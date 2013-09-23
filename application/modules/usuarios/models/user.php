@@ -1950,7 +1950,7 @@ class User extends CI_Model{
 			
 			if( $filter['query']['periodo'] == 1 )
 			
-				$this->db->where( 'work_order.creation_date >= ', strtotime( $mes ) ); 
+				$this->db->where( 'work_order.creation_date >= ', $mes); 
 			
 			
 			
@@ -1974,7 +1974,7 @@ class User extends CI_Model{
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
 					
-					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+					$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
 				
 				}else{
 					
@@ -2000,7 +2000,7 @@ class User extends CI_Model{
 					}
 					
 						
-					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+					$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
 				}
 				
 				
@@ -2010,7 +2010,7 @@ class User extends CI_Model{
 				
 			if( $filter['query']['periodo'] == 3 )
 			
-				$this->db->where( array( 'work_order.creation_date >= ', strtotime( $anio ), 'work_order.creation_date <=' => strtotime( date( 'Y-m-d' ) ) ) ); 
+				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
 			
 			}
 			
@@ -2148,7 +2148,7 @@ class User extends CI_Model{
 			
 			if( $filter['query']['periodo'] == 1 )
 			
-				$this->db->where( 'work_order.creation_date >= ', strtotime( $mes ) ); 
+				$this->db->where( 'work_order.creation_date >= ', $mes); 
 			
 			
 			
@@ -2172,7 +2172,7 @@ class User extends CI_Model{
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
 					
-					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+					$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
 				
 				}else{
 					
@@ -2198,7 +2198,7 @@ class User extends CI_Model{
 					}
 					
 						
-					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+					$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
 				}
 				
 				
@@ -2208,7 +2208,7 @@ class User extends CI_Model{
 				
 			if( $filter['query']['periodo'] == 3 )
 			
-				$this->db->where( array( 'work_order.creation_date >= ', strtotime( $anio ), 'work_order.creation_date <=' => strtotime( date( 'Y-m-d' ) ) ) ); 
+				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
 			
 			}
 			
@@ -2343,7 +2343,7 @@ class User extends CI_Model{
 			
 			if( $filter['query']['periodo'] == 1 )
 			
-				$this->db->where( 'work_order.creation_date >= ', strtotime( $mes ) ); 
+				$this->db->where( 'work_order.creation_date >= ', $mes); 
 			
 			
 			
@@ -2367,7 +2367,7 @@ class User extends CI_Model{
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
 					
-					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+					$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
 				
 				}else{
 					
@@ -2393,7 +2393,7 @@ class User extends CI_Model{
 					}
 					
 						
-					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+					$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
 				}
 				
 				
@@ -2403,7 +2403,7 @@ class User extends CI_Model{
 				
 			if( $filter['query']['periodo'] == 3 )
 			
-				$this->db->where( array( 'work_order.creation_date >= ', strtotime( $anio ), 'work_order.creation_date <=' => strtotime( date( 'Y-m-d' ) ) ) ); 
+				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
 			
 			}
 			
@@ -2565,7 +2565,7 @@ class User extends CI_Model{
 			
 			if( $filter['query']['periodo'] == 1 )
 			
-				$this->db->where( 'work_order.creation_date >= ', strtotime( $mes ) ); 
+				$this->db->where( 'work_order.creation_date >= ', $mes); 
 			
 			
 			
@@ -2589,7 +2589,7 @@ class User extends CI_Model{
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
 					
-					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+					$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
 				
 				}else{
 					
@@ -2615,7 +2615,7 @@ class User extends CI_Model{
 					}
 					
 						
-					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+					$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
 				}
 				
 				
@@ -2625,7 +2625,7 @@ class User extends CI_Model{
 				
 			if( $filter['query']['periodo'] == 3 )
 			
-				$this->db->where( array( 'work_order.creation_date >= ', strtotime( $anio ), 'work_order.creation_date <=' => strtotime( date( 'Y-m-d' ) ) ) ); 
+				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
 			
 			}
 			
@@ -2783,7 +2783,7 @@ class User extends CI_Model{
 			
 			if( $filter['query']['periodo'] == 1 )
 			
-				$this->db->where( 'work_order.creation_date >= ', strtotime( $mes ) ); 
+				$this->db->where( 'work_order.creation_date >= ', $mes); 
 			
 			
 			
@@ -2807,7 +2807,7 @@ class User extends CI_Model{
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
 					
-					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+					$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
 				
 				}else{
 					
@@ -2833,7 +2833,7 @@ class User extends CI_Model{
 					}
 					
 						
-					$this->db->where( array( 'work_order.creation_date >= ', strtotime( $begind ), 'work_order.creation_date <=' => strtotime( $end ) ) ); 
+					$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
 				}
 				
 				
@@ -2843,7 +2843,7 @@ class User extends CI_Model{
 				
 			if( $filter['query']['periodo'] == 3 )
 			
-				$this->db->where( array( 'work_order.creation_date >= ', strtotime( $anio ), 'work_order.creation_date <=' => strtotime( date( 'Y-m-d' ) ) ) ); 
+				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
 			
 			}
 			
