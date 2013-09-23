@@ -196,7 +196,7 @@
                                     <th id="total_primas_pagadas" class="header_manager" style="width:100px;">Primas Pagadas</th>
                                     <th id="total_negocios_tramite" class="header_manager" style="width:70px;">Negocios <br> en  Tramite</th>
                                     <th id="total_primas_tramite" class="header_manager" style="width:100px;">Primas <br> en Tramite</th>
-                                    <th id="total_negocio_pendiente class="header_manager"" style="width:70px;">Negocios Pendientes</th>
+                                    <th id="total_negocio_pendiente" class="header_manager" style="width:70px;">Negocios Pendientes</th>
                                     <th id="total_primas_pendientes" class="header_manager" style="width:100px;">Primas <br> Pendientes</th>
                                     <th id="total_negocios_proyectados" class="header_manager" style="width:70px;">Negocios Proyectados</th>
                                     <th id="total_primas_proyectados" class="header_manager" style="width:100px;">Primas <br> Proyectadas</th>
