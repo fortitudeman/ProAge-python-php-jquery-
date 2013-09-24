@@ -2276,13 +2276,12 @@ class Ot extends CI_Controller {
 			'<script src="'.base_url().'scripts/config.js"></script>'	,	
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>'			
 		  ),
-		  'manager' => $this->user->getSelectsGerentes(),
+		  'manager' => $this->user->getSelectsGerentes2(),
 		  'content' => 'ot/report', // View to load
 		  'data' => $data,
 		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
 		  	
 		);
-						
 		// Render view 
 		$this->load->view( 'index', $this->view );	
 		

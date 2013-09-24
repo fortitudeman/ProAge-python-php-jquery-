@@ -131,7 +131,20 @@
                                             <input type="hidden" id="gerente_value" value="<?php if( isset( $_POST['query']['gerente'] ) ) echo $_POST['query']['gerente'];  ?>" />
                                             <select id="gerente" name="query[gerente]" class="select" style="width:145px;" onchange="this.form.submit();">
                                                 <option value="">Todos los gerentes</option>                                        
-                                                <?php echo $manager ?>
+                                                <?php if( !empty( $manager ) ): foreach( $manager as $value ): ?>
+                                                	
+                                                    <?php if( isset( $_POST['query']['gerente'] ) and $_POST['query']['gerente'] == $value['id']  ): ?>
+                                                    
+                                                    <option selected="selected" value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></option>
+                                                    
+                                                    <?php else: ?>
+                                                    
+                                                    <option value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></option>
+                                                    
+                                                    <?php endif; ?>
+                                                    
+                                                    
+                                                <?php endforeach; endif; ?>
                                               </select>
                                            
                                     </th>
@@ -139,8 +152,8 @@
                                             
                                             <select id="agent" name="query[agent]" class="select2"  style="width:140px;" onchange="this.form.submit();">
                                         <option value="" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 1 ) echo 'selected="selected"'?>>Todos los agentes</option>
-                                        <option value="2" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 2 ) echo 'selected="selected"'?>>Vigentes</option>
-                                        <option value="3" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 3 ) echo 'selected="selected"'?>>Cancelados</option>
+                                        <option value="2" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 2 ) echo 'selected="selected"'?>>Cancelados</option>
+                                        <option value="3" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 3 ) echo 'selected="selected"'?>>Vigentes</option>
                                       </select>
                                            
                                     </th>

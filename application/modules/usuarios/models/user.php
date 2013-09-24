@@ -1544,6 +1544,32 @@ class User extends CI_Model{
 		
 	}	
 	
+	
+	public function getSelectsGerentes2(){
+		
+	
+		
+		$query = $this->db->query(' SELECT DISTINCT(users.name), users.id  
+									FROM `users_vs_user_roles` 
+									JOIN users ON users.id = `user_id` 
+									WHERE user_role_id=3;');
+						
+		
+		if ($query->num_rows() == 0) return false;
+ 	
+		
+		$data = array();	
+		
+		// Getting data
+		foreach ($query->result() as $row)
+			
+			$data[] = array( 'id' =>  $row->id, 'name' => $row->name );
+			
+		
+		return $data;
+		
+	}	
+	
 
 // Get selects Agents 	
 	public function getAgents(){
