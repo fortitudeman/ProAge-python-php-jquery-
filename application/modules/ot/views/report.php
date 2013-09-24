@@ -256,9 +256,7 @@
 										
 										
 										
-										if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente';
-										if( $value['disabled'] == 0 ) $value['disabled'] = 'Cancelado';
-											
+										if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente'; else $value['disabled'] = 'Cancelado';
 										
 										$total_negocio += $value['negocio'];
 										
