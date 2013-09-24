@@ -22,9 +22,9 @@ $( document ).ready(function() {
 	
 	$( '.header_manager' ).bind( 'click', function(){ 
 		
-		$( '.header_manager' ).css( 'color', '#000' );
+		$( '.header_manager' ).css({ 'color': '#000', 'font-weight':'100' } );
 		
-		$( '#'+this.id ).css( 'color', '#06F' );
+		$( '#'+this.id ).css({ 'color': '#06F', 'font-weight':'bold' });
 		
 	});
 	
