@@ -75,7 +75,7 @@
             <div class="row">
             
             	
-                 <div class="span11" style="margin-left:40px;">
+                 <div class="span11" style="margin-left:40px; width:95%">
                        
                        <!--<div class="main-container" style="overflow:scroll; max-width:100%">-->
                        
@@ -338,7 +338,7 @@
                             </tbody>
                          </table>
                     
-                    <div id="contentFoot" style="width:75% !important;">
+                    <div id="contentFoot" style="width:77% !important;">
                         <table  class="sortable altrowstable tablesorter" id="Tfoot" style="min-width:100% !important;" >
                     
                         
