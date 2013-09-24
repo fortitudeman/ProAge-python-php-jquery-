@@ -2348,7 +2348,7 @@ class Ot extends CI_Controller {
 				if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente';
 				if( $value['disabled'] == 0 ) $value['disabled'] = 'Cancelado';
 				
-				if( empty( $value['uids'][0]['uid'] ) )								
+				if( !empty( $value['uids'][0]['uid'] ) )								
 					$data[$i]['name'] =  $value['uids'][0]['uid']. ' - ';
 				
 				else
