@@ -3,7 +3,8 @@ function stickyFooter(){
 
     positionFooter(); 
     function positionFooter(){
-        $("#contentFoot").css({position: "absolute",top:($(window).scrollTop()+$(window).height()-$("#contentFoot").height())+"px"})    
+		//$("#contentFoot").css({position: "absolute",top:($(window).scrollTop()+$(window).height()-$("#contentFoot").height())+"px"})    
+		//$("#contentFoot").css({position: "absolute", bottom: '0px' })    
     }
  
     $(window)

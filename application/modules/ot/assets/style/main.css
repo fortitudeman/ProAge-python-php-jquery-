@@ -628,7 +628,11 @@ table.altrowstable thead tr th {
 }
 
 
-
+#contentFoot{
+	position:fixed !important;
+	right:40px; 
+	bottom:0px;
+}
  #Tfoot{
 background-color:#696868;
 color: white;
