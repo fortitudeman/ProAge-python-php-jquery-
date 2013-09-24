@@ -75,7 +75,7 @@
             <div class="row">
             
             	
-                 <div class="span11 offset1">
+                 <div class="span11" style="margin-left:40px;">
                        
                        <!--<div class="main-container" style="overflow:scroll; max-width:100%">-->
                        

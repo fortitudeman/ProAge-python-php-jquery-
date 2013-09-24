@@ -511,7 +511,8 @@ table.altrowstable tbody.scrollContent{
 }
 
 .numeros{
-    font-size: 13px;
+    font-size: 15px;
+	font-weight:bold;
 }
 
 .celda_gris{
@@ -603,14 +604,14 @@ margin-left: 10px;
 
 
 table.altrowstable thead tr .headerSortUp {
-    background-image: url('../images/asc.gif');
+    background-image: url('../images/desc.gif');
     background-color:white; 
     background-repeat: no-repeat;
     background-position: center right;
     cursor: pointer;
 }
 table.altrowstable thead tr .headerSortDown {
-    background-image: url('../images/desc.gif') no-repeat;
+    background-image: url('../images/asc.gif') no-repeat;
     background-color:white;
     background-repeat: no-repeat;
     background-position: center right;
