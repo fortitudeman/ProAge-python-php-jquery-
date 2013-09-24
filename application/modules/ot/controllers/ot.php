@@ -2345,10 +2345,15 @@ class Ot extends CI_Controller {
 				unset( $data[$i]['id'] );
 				
 				
-				if( $value['disabled'] == 0 ) $data[$i]['disabled'] = 'Activo';
-				if( $value['disabled'] == 1 ) $data[$i]['disabled'] = 'Desactivado';			
-												
-				$data[$i]['name'] =  $value['uids'][0]['uid']. ' - ';
+				if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente';
+				if( $value['disabled'] == 0 ) $value['disabled'] = 'Cancelado';
+				
+				if( empty( $value['uids'][0]['uid'] ) )								
+					$data[$i]['name'] =  $value['uids'][0]['uid']. ' - ';
+				
+				else
+				   $data[$i]['name'] = 'Sin clave asignada -';
+				   
 						
 				$data[$i]['name'] .= $value['disabled'] .' -  Generacion 1 - '; 
                           
