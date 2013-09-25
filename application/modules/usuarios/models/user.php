@@ -1849,26 +1849,28 @@ class User extends CI_Model{
 				
 				*/
 				
-				//Consolidado: > 3 años <option value="2">Consolidado</option>														
+				//Consolidado: < 3 años  <option value="2">Consolidado</option>														
 				if( $filter['query']['generacion'] == 2 ){
 					
 					$begin = ( date( 'Y' )-3 ).date( '-m-d' );
 					
 					$end = 	date( 'Y-m-d' );
 						
-					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
+					$this->db->where( array( 'agents.connection_date <' => $begin ) ); 	
 					
 					$generacion = 'Consolidado';
 					
 				} 
 				
 				
-				//Generación 1: Fecha de conexión < 1 año <option value="3">Generación 1</option>
+				//Generación 1: Fecha de conexión > 1 año < hoy <option value="3">Generación 1</option>
 				if( $filter['query']['generacion'] == 3 ){
 					
 					$begin = ( date( 'Y' )-1 ).date( '-m-d' );
 					
-					$this->db->where( array( 'agents.connection_date <' => $begin ) ); 	
+					$end = 	date( 'Y-m-d' );
+					
+					$this->db->where( array( 'agents.connection_date >' => $begin, 'agents.connection_date <' => $end ) ); 	
 					
 					$generacion = 'Generación 1';
 					
@@ -1976,35 +1978,31 @@ class User extends CI_Model{
 			$name =  $row->company_name;
 		
 		
-		if( empty( $generacion ) and  $row->connection_date != '0000-00-00' ){
+		if( $row->connection_date != '0000-00-00' ){
 			
-			$resultado = (strtotime( date( 'Y-m-d' ) )-strtotime( $row->connection_date ));
+			$resultado =  date( 'Y', strtotime( $row->connection_date ) );
 			
-			$resultado = date( 'Y', $resultado ).'<br>';
-			
-			//Consolidado: > 3 años
-			if( $resultado >  ( date( 'Y' )-3 ) )
-				$generacion = 'Consolidado';
-				
-			
-			//Generación 1: Fecha de conexión < 1 año
-			if( $resultado < ( date( 'Y' )-1 ) )
+			//Consolidado: < 3 años < hoy
+			if( $resultado < ( date( 'Y' )-3 ))
+				$generacion = 'Consolidado';	
+						
+			//Generación 1: Fecha de conexión > 1 año < hoy
+			if( $resultado > ( date( 'Y' )-1 )  )
 				$generacion = 'Generación 1';
-			
-			
+						
 			//Generación 2: fecha de conexión > 1  año y < 2 años
-			if(  $resultado >= ( date( 'Y' )-2 ) and $resultado <= ( date( 'Y' )-1 ) )
+			if( $resultado >= ( date( 'Y' )-2 ) and $resultado <= ( date( 'Y' )-1 ) )
 				$generacion = 'Generación 2';
-				
+			
 			//Generación 3: fecha de conexión > 2 años y < 3 años <option value="5">Generación 3</option>
 			if( $resultado >= ( date( 'Y' )-3 ) and $resultado <= ( date( 'Y' )-2 ) ) 
 				$generacion = 'Generación 3';
-			
+																			
 			
 		}else{
 			$generacion = 'Generación 1';
 		}
-						
+												
 		$report[] = array(
 			
 			'id' => $row->id,
