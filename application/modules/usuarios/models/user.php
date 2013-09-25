@@ -1834,17 +1834,74 @@ class User extends CI_Model{
 	$this->db->from( 'agents' );
 	$this->db->join( 'users', 'users.id=agents.user_id' );
 	
+	$generacion = '';
 	
 	if( !empty( $filter ) ){
 			
 			if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) ){
 				/*
-				foreach( $filter['query']['generacion'] as $generacion ){
-					
-					$this->db->where();
-					
-				}
+				<option value="">Todas las Generaciónes</option>
+				<option value="2">Consolidado</option>
+				<option value="3">Generación 1</option>
+				<option value="4">Generación 2</option>
+				<option value="5">Generación 3</option>
+				
+				
 				*/
+				
+				//Consolidado: > 3 años <option value="2">Consolidado</option>														
+				if( $filter['query']['generacion'] == 2 ){
+					
+					$begin = ( date( 'Y' )-3 ).date( '-m-d' );
+					
+					$end = 	date( 'Y-m-d' );
+						
+					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
+					
+					$generacion = 'Consolidado';
+					
+				} 
+				
+				
+				//Generación 1: Fecha de conexión < 1 año <option value="3">Generación 1</option>
+				if( $filter['query']['generacion'] == 3 ){
+					
+					$begin = ( date( 'Y' )-1 ).date( '-m-d' );
+					
+					$this->db->where( array( 'agents.connection_date <' => $begin ) ); 	
+					
+					$generacion = 'Generación 1';
+					
+				} 
+				
+				//Generación 2: fecha de conexión > 1  año y < 2 años <option value="4">Generación 2</option>				
+				if( $filter['query']['generacion'] == 4 ){
+					
+					$begin = ( date( 'Y' )-2 ).date( '-m-d' );
+					
+					$end = 	( date( 'Y' )-1 ).date( '-m-d' );
+						
+					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
+					
+					$generacion = 'Generación 2';
+				} 
+				
+				//Generación 3: fecha de conexión > 2 años y < 3 años <option value="5">Generación 3</option>
+				if( $filter['query']['generacion'] == 5 ){
+					
+					$begin = ( date( 'Y' )-3 ).date( '-m-d' );
+					
+					$end = 	( date( 'Y' )-2 ).date( '-m-d' );
+						
+					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
+					
+					$generacion = 'Generación 3';
+				} 
+				
+				
+				
+				
+				
 			}
 		
 		
@@ -1919,7 +1976,33 @@ class User extends CI_Model{
 			$name =  $row->company_name;
 		
 		
-		
+		if( empty( $generacion ) ){
+			
+			$resultado = (strtotime( date( 'Y-m-d' ) )-strtotime( $row->connection_date ));
+			
+			$resultado = date( 'Y', $resultado ).'<br>';
+			
+			//Consolidado: > 3 años
+			if( $resultado >  ( date( 'Y' )-3 ) )
+				$generacion = 'Consolidado';
+				
+			
+			//Generación 1: Fecha de conexión < 1 año
+			if( $resultado < ( date( 'Y' )-1 ) )
+				$generacion = 'Generación 1';
+			
+			
+			//Generación 2: fecha de conexión > 1  año y < 2 años
+			if(  $resultado >= ( date( 'Y' )-2 ) and $resultado <= ( date( 'Y' )-1 ) )
+				$generacion = 'Generación 2';
+				
+			//Generación 3: fecha de conexión > 2 años y < 3 años <option value="5">Generación 3</option>
+			if( $resultado >= ( date( 'Y' )-3 ) and $resultado <= ( date( 'Y' )-2 ) ) 
+				$generacion = 'Generación 3';
+			
+			
+		}
+						
 		$report[] = array(
 			
 			'id' => $row->id,
@@ -1931,7 +2014,8 @@ class User extends CI_Model{
 			'negociopai' => $this->getCountNegocioPai( $row->agent_id, $filter ),
 			'prima' => $this->getPrima( $row->agent_id, $filter ),
 			'tramite' => $this->getTramite( $row->agent_id, $filter ),
-			'aceptadas' => $this->getAceptadas( $row->agent_id, $filter )
+			'aceptadas' => $this->getAceptadas( $row->agent_id, $filter ),
+			'generacion' => $generacion
 			
 		);
 		

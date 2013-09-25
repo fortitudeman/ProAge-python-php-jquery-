@@ -150,7 +150,7 @@
                                     </th>
                                     <th>
                                             
-                                            <select id="agent" name="query[agent]" class="select2"  style="width:140px;" onchange="this.form.submit();">
+                                       <select id="agent" name="query[agent]" class="select2"  style="width:140px;" onchange="this.form.submit();">
                                         <option value="" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 1 ) echo 'selected="selected"'?>>Todos los agentes</option>
                                         <option value="2" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 2 ) echo 'selected="selected"'?>>Cancelados</option>
                                         <option value="3" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 3 ) echo 'selected="selected"'?>>Vigentes</option>
@@ -160,13 +160,13 @@
                                     <th>
                                         
                                             
-                                            <select id="generarion" name="query[generacion]" class="select3" style="width:180px;" onchange="this.form.submit();">
+                                       <select id="generarion" name="query[generacion]" class="select3" style="width:180px;" onchange="this.form.submit();">
                                         <option value="" <?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 1 ) echo 'selected="selected"'?>>Todas las Generaciónes</option>
                                         <option value="2"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 2 ) echo 'selected="selected"'?>>Consolidado</option>
                                         <option value="3"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 3 ) echo 'selected="selected"'?>>Generación 1</option>
                                         <option value="4"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 4 ) echo 'selected="selected"'?>>Generación 2</option>
                                         <option value="5"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 5 ) echo 'selected="selected"'?>>Generación 3</option>
-                                        <option value="6"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 6 ) echo 'selected="selected"'?>>Generación 4</option>
+                                       
                                       </select>
                                             
                                        
@@ -197,9 +197,7 @@
 								?>
                                       
                                     
-                    
-                    
-                    
+                   
                                 <table  class="sortable altrowstable tablesorter" id="sorter"  style="width:100%;">
                                 <thead>
                                 <tr>
@@ -300,6 +298,7 @@
 										
 										
 										
+										
 									?>
                                 
                                                                                                 
@@ -308,7 +307,7 @@
 									
 									<?php if( !empty( $value['uids'][0]['uid'] ) )echo $value['uids'][0]['uid']. ' - '; else echo 'Sin clave asignada - '; ?>
 									
-									<?php echo $value['disabled'] .' - ' ?> Generacion 1 - 
+									<?php echo $value['disabled'] .' - '. $value['generacion']. ' - ' ?>
                                     
                                     <?php if( $value['connection_date'] != '0000-00-00' ): ?>
                                     		Conectado <?php echo getFormatDate( $value['connection_date'] ) ?>
