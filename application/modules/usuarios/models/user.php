@@ -1856,7 +1856,7 @@ class User extends CI_Model{
 					
 					$end = 	date( 'Y-m-d' );
 						
-					$this->db->where( array( 'agents.connection_date <' => $begin ) ); 	
+					$this->db->where( array( 'agents.connection_date <' => $begin, 'agents.connection_date !=' => '0000-00-00' ) ); 	
 					
 					$generacion = 'Consolidado';
 					
@@ -1871,6 +1871,8 @@ class User extends CI_Model{
 					$end = 	date( 'Y-m-d' );
 					
 					$this->db->where( array( 'agents.connection_date >' => $begin, 'agents.connection_date <' => $end ) ); 	
+					
+					$this->db->or_where( array( 'agents.connection_date =' => '0000-00-00' ) ); 	
 					
 					$generacion = 'Generación 1';
 					

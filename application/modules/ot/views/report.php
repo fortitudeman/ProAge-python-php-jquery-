@@ -312,7 +312,7 @@
                                     <?php if( $value['connection_date'] != '0000-00-00' ): ?>
                                     		Conectado <?php echo getFormatDate( $value['connection_date'] ) ?>
                                     <?php else: ?>
-                                    		No Conectado
+                                    		Conectado sin fecha de conexión
                                     <?php endif; ?> 
                                    </td>
                                     <td class="celda_gris"><div class="numeros"><?php echo $value['negocio'] ?></div> Negocios Pagados</td>
