@@ -1870,11 +1870,9 @@ class User extends CI_Model{
 					
 					$end = 	date( 'Y-m-d' );
 					
-					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
-					
-					$this->db->or_where( array( 'agents.connection_date =' => '0000-00-00' ) ); 	
-					
-					$this->db->or_where( array( 'agents.connection_date =' => '' ) ); 	
+					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end, 'agents.connection_date = ' => "0000-00-00" ) ); 	
+										
+					$this->db->or_where( 'COALESCE(agents.connection_date, "") = "" ' ); 	
 					
 					$generacion = 'Generación 1';
 					

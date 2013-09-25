@@ -309,10 +309,10 @@
 									
 									<?php echo $value['disabled'] .' - '. $value['generacion']. ' - ' ?>
                                     
-                                    <?php if( $value['connection_date'] != '0000-00-00' ): ?>
+                                    <?php if( $value['connection_date'] != '0000-00-00' and $value['connection_date'] != '' ): ?>
                                     		Conectado <?php echo getFormatDate( $value['connection_date'] ) ?>
                                     <?php else: ?>
-                                    		Conectado sin fecha de conexión
+                                    		En proceso de conexión
                                     <?php endif; ?> 
                                    </td>
                                     <td class="celda_gris"><div class="numeros"><?php echo $value['negocio'] ?></div> Negocios Pagados</td>
