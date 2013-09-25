@@ -1870,9 +1870,11 @@ class User extends CI_Model{
 					
 					$end = 	date( 'Y-m-d' );
 					
-					$this->db->where( array( 'agents.connection_date >' => $begin, 'agents.connection_date <' => $end ) ); 	
+					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
 					
 					$this->db->or_where( array( 'agents.connection_date =' => '0000-00-00' ) ); 	
+					
+					$this->db->or_where( array( 'agents.connection_date =' => '' ) ); 	
 					
 					$generacion = 'Generación 1';
 					
@@ -1980,7 +1982,7 @@ class User extends CI_Model{
 			$name =  $row->company_name;
 		
 		
-		if( $row->connection_date != '0000-00-00' ){
+		if( $row->connection_date != '0000-00-00' and $row->connection_date != '' ){
 			
 			$resultado =  date( 'Y', strtotime( $row->connection_date ) );
 			
