@@ -1976,7 +1976,7 @@ class User extends CI_Model{
 			$name =  $row->company_name;
 		
 		
-		if( empty( $generacion ) ){
+		if( empty( $generacion ) and  $row->connection_date != '0000-00-00' ){
 			
 			$resultado = (strtotime( date( 'Y-m-d' ) )-strtotime( $row->connection_date ));
 			
@@ -2001,6 +2001,8 @@ class User extends CI_Model{
 				$generacion = 'Generación 3';
 			
 			
+		}else{
+			$generacion = 'Generación 1';
 		}
 						
 		$report[] = array(
