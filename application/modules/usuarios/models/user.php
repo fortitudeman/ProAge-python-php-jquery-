@@ -1709,6 +1709,13 @@ class User extends CI_Model{
 		$this->db->join( 'users', 'users.id=agents.user_id' );
 		$this->db->where( array( 'agent_uids.uid' => $uid, 'agent_uids.type' => $type ) );
 		
+		
+		if( !empty( $type ) and $type == 'national' ) 
+			$this->db->or_where( array( 'agent_uids.uid' => 'N'.$uid, 'agent_uids.type' => $type ) );
+		
+		if( !empty( $type ) and $type == 'provincial' ) 
+			$this->db->or_where( array( 'agent_uids.uid' => 'P'.$uid, 'agent_uids.type' => $type ) );
+		
 		$query = $this->db->get();
 		
 		if ($query->num_rows() == 0){
