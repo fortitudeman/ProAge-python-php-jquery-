@@ -631,9 +631,8 @@ table.altrowstable thead tr th {
 	position: relative;
 }
 
-.altrowstable tbody{
-    overflow-y:scroll;
-    height: 370px !important;
+.altrowstable > .tbody{
+   /*height:80px;overflow-y:auto;background:yellow;*/
 }
 
 #contentFoot{

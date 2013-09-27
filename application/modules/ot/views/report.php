@@ -212,7 +212,7 @@
                                
                     
                     
-                            <tbody>
+                            <tbody class="tbody">
                                
                                
                                 <?php  if( !empty( $data ) ): ?>
@@ -330,7 +330,7 @@
                                                                       
                                 	<?php endforeach; ?>                                
                                 <?php endif; ?>  
-                                             
+                                                                         
                             </tbody>
                          </table>
                     
