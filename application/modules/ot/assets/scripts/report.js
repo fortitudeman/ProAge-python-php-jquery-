@@ -85,4 +85,11 @@ $( document ).ready(function() {
 		
 	});
 	
+	
+	$( '.info' ).hide();
+	
+	$( '.text_azulado' ).bind( 'mouseover', function(){ $( '#info-'+this.id ).show(); })
+	
+	$( '.text_azulado' ).bind( 'mouseout', function(){ $( '#info-'+this.id ).hide(); })
+	
 });

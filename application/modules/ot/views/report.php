@@ -35,12 +35,7 @@
 
 <div class="row-fluid sortable">		
     <div class="box span12">
-        <div class="box-header well" data-original-title>
-            <h2></h2>
-            <div class="box-icon">
-               <a href="<?php echo base_url() ?>ot/create.html" class="btn btn-round"><i class="icon-plus"></i></a>
-            </div>
-        </div>
+      
         <div class="box-content">
         
         	
@@ -218,8 +213,8 @@
                     
                     
                             <tbody>
-                              
-                                
+                               
+                               
                                 <?php  if( !empty( $data ) ): ?>
                 					<?php  foreach( $data as $value ):  ?>    
                               		
@@ -303,8 +298,10 @@
                                 
                                                                                                 
                                 <tr>
-                                    <td class=""><div class="text_azulado"><?php echo $value['name'] ?></div> 
+                                    <td class=""><div class="text_azulado" id="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></div> 
 									
+                                    <div class="info" id="info-<?php echo $value['id'] ?>">
+                                    
 									<?php if( !empty( $value['uids'][0]['uid'] ) )echo $value['uids'][0]['uid']. ' - '; else echo 'Sin clave asignada - '; ?>
 									
 									<?php echo $value['disabled'] .' - '. $value['generacion']. ' - ' ?>
@@ -314,25 +311,26 @@
                                     <?php else: ?>
                                     		En proceso de conexión
                                     <?php endif; ?> 
+                                    
+                                    </div>
+                                    
                                    </td>
-                                    <td class="celda_gris"><div class="numeros"><?php echo $value['negocio'] ?></div> Negocios Pagados</td>
-                                    <td class="celda_gris"><div class="numeros"><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?></div> Negocios Pal</td>
-                                    <td class="celda_gris"><div class="numeros">$<?php echo $value['prima'] ?></div> Pagados</td>
-                                    <td class="celda_roja"><div class="numeros"><?php if( isset( $value['tramite']['count'] ) ) echo $value['tramite']['count']; else echo 0; ?></div> Negocios en <br> Tramite</td>
-                                    <td class="celda_roja"><div class="numeros">$<?php if( isset( $value['tramite']['prima'] ) ) echo $value['tramite']['prima']; else echo 0; ?></div> en Tramite</td>
-                                    <td class="celda_amarilla"><div class="numeros"><?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?></div> Negocios Pendientes</td>
-                                    <td class="celda_amarilla"><div class="numeros">$<?php if( isset( $value['aceptadas']['prima'] ) ) echo  $value['aceptadas']['prima']; else  echo $value['aceptadas'] ?></div> Pendientes</td>
-                                    <td class="celda_verde"><div class="numeros"><?php echo $negocio ?></div> Negocios Proyectados</td>
-                                    <td class="celda_verde"><div class="numeros">$<?php echo $prima ?></div> Proyectadas</td>
+                                    <td class="celda_gris"><div class="numeros"><?php echo $value['negocio'] ?></div></td>
+                                    <td class="celda_gris"><div class="numeros"><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?></div></td>
+                                    <td class="celda_gris"><div class="numeros">$<?php echo $value['prima'] ?></div></td>
+                                    <td class="celda_roja"><div class="numeros"><?php if( isset( $value['tramite']['count'] ) ) echo $value['tramite']['count']; else echo 0; ?></div></td>
+                                    <td class="celda_roja"><div class="numeros">$<?php if( isset( $value['tramite']['prima'] ) ) echo $value['tramite']['prima']; else echo 0; ?></div></td>
+                                    <td class="celda_amarilla"><div class="numeros"><?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?></div></td>
+                                    <td class="celda_amarilla"><div class="numeros">$<?php if( isset( $value['aceptadas']['prima'] ) ) echo  $value['aceptadas']['prima']; else  echo $value['aceptadas'] ?></div></td>
+                                    <td class="celda_verde"><div class="numeros"><?php echo $negocio ?></div></td>
+                                    <td class="celda_verde"><div class="numeros">$<?php echo $prima ?></div></td>
                                 </tr>
                     			
                                 
                                                                       
                                 	<?php endforeach; ?>                                
                                 <?php endif; ?>  
-                                
-                                
-                                
+                                             
                             </tbody>
                          </table>
                     

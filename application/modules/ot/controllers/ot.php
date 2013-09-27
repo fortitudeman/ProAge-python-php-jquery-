@@ -1791,7 +1791,7 @@ class Ot extends CI_Controller {
 								
 																								
 						if( $_POST[$index] == 'agent_uidsnational' ){
-														
+																					
 							$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], 'national', $i  );
 							
 							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]] );

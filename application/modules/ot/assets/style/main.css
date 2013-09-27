@@ -620,13 +620,21 @@ table.altrowstable thead tr .headerSortDown {
 
 table.altrowstable thead tr th {
    
-   
-    background-image: url('../images/bg.gif');
+    background-image: url('../images/desc.gif');
+    /*background-image: url('../images/bg.gif');*/
     background-repeat: no-repeat;
     background-position: center right;
     cursor: pointer;
 }
 
+.altrowstable thead tr{
+	position: relative;
+}
+
+.altrowstable tbody{
+    overflow-y:scroll;
+    height: 370px !important;
+}
 
 #contentFoot{
 	position:fixed !important;
