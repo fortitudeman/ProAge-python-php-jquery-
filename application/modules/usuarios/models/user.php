@@ -3041,6 +3041,8 @@ class User extends CI_Model{
   	
 	if ($query->num_rows() == 0) return 0;	
 	
+	$count = 0;
+	
 	foreach ($query->result() as $row){
 		
 		/*
@@ -3061,14 +3063,14 @@ class User extends CI_Model{
 			
 			foreach ( $querypolicies->result() as $rowpayment )	
 				
-				return $rowpayment->count;
+				$count += (int) $rowpayment->count;
 						
 			
 		}	
 		
 	}
 		
-	return 0;		
+	return $count;		
 	 
   }
   
@@ -3191,6 +3193,8 @@ class User extends CI_Model{
   	
 	if ($query->num_rows() == 0) return 0;	
 	
+	$count = 0;
+	
 	foreach ($query->result() as $row){
 		
 		/*
@@ -3210,14 +3214,14 @@ class User extends CI_Model{
 			
 			foreach ( $querypolicies->result() as $rowpayment )	
 				
-				return $rowpayment->count;
+				$count += (int) $rowpayment->count;
 						
 			
 		}	
 		
 	}
 		
-	return 0;	
+	return $count;	
   }
   
   public function trimestre($mes=null){	  
