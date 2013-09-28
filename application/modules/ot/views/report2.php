@@ -1,13 +1,8 @@
 <?php
-	$total_negocio=0;
-	$total_negocio_pai=0;
-	$total_primas_pagadas=0;
-	$total_negocios_tramite=0;
-	$total_primas_tramite=0;
-	$total_negocio_pendiente=0;
-	$total_primas_pendientes=0;
-	$total_negocios_proyectados=0;
-	$total_primas_proyectados=0;
+	$iniciales=0;
+	$renovacion=0;
+	$total=0;
+	$totalgeneral=0;
 ?>
 	  
 
@@ -33,80 +28,10 @@
 	
 	<?php
 		
-		$negocio = 0;
-		$prima = 0;
-		
-		$negocio += (int)$value['negocio'];
-		
-		$negocio += (int)$value['tramite']['count'];
-		
-		if( isset( $value['aceptadas']['count'] ) ) 										
-		
-			$negocio += (int)$value['aceptadas']['count'];										
-		
-		else 
-			
-			$negocio += (int)$value['aceptadas'];
-		
-		
-		$prima += (float)$value['prima'];
-		$prima += (float)$value['tramite']['prima'];
-		
-		if( isset( $value['aceptadas']['prima'] ) ) 
-			
-			$prima += (float)$value['aceptadas']['prima']; 
-		
-		else 
-			
-			$prima += (float)$value['aceptadas'];
-		
-		
-		
-		if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente'; else $value['disabled'] = 'Cancelado';
-		
-		$total_negocio += $value['negocio'];
-		
-		if( $value['negociopai']  != 0 ) 
-			
-			$total_negocio_pai += count( $value['negociopai'] ); 
-		
-		else
-			
-			$total_negocio_pai += $value['negociopai'];
-			
-		
-		
-		$total_primas_pagadas +=$value['prima'];
-		$total_negocios_tramite +=$value['tramite']['count'];
-		$total_primas_tramite +=  $value['tramite']['prima'];
-		
-		
-		if( isset( $value['aceptadas']['count'] ) ) 
-			
-			$total_negocio_pendiente +=  $value['aceptadas']['count']; 
-		
-		else  
-			
-			$total_negocio_pendiente += $value['aceptadas'];
-		
-		if( isset( $value['aceptadas']['prima'] ) ) 
-			
-			$total_primas_pendientes +=  $value['aceptadas']['prima']; 
-		
-		else  
-			
-			$total_primas_pendientes += $value['aceptadas'];	
-		
-		
-		
-		
-		
-		$total_negocios_proyectados +=$negocio;
-		$total_primas_proyectados +=$prima;
-		
-		
-		
-		
+		$iniciales += (int)$value['iniciales'];		
+		$renovacion +=(int) $value['renovacion'];		
+		$total =  (int)$value['iniciales']+(int)$value['renovacion'];
+		$totalgeneral += (int)$total;		
 	?>
 
 																
@@ -128,9 +53,9 @@
 	</div>
 	
    </td>
-	<td class="celda_gris"><div class="numeros"><?php echo $value['negocio'] ?></div></td>
-	<td class="celda_gris"><div class="numeros"><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?></div></td>
-	<td class="celda_gris"><div class="numeros">$<?php echo $value['prima'] ?></div></td>	
+	<td class="celda_gris"><div class="numeros"><?php echo $value['iniciales'] ?></div></td>
+	<td class="celda_gris"><div class="numeros"><?php echo $value['renovacion']; ?></div></td>
+	<td class="celda_gris"><div class="numeros"><?php echo $total ?></div></td>	
 </tr>
 
 
@@ -147,9 +72,9 @@
 
 <tr>
 	<td ><div class="text_total">Totales</div></td>
-	<td style="width:70px;"><div class="numeros"><?php echo $total_negocio?></div>Iniciales</td>
-	<td style="width:70px;"><div class="numeros"><?php echo $total_negocio_pai?></div> Renovación</td>
-	<td style="width:100px;"><div class="numeros">$<?php echo $total_primas_pagadas?></div> Totales</td>
+	<td style="width:70px;"><div class="numeros"><?php echo $iniciales?></div>Iniciales</td>
+	<td style="width:70px;"><div class="numeros"><?php echo $renovacion?></div> Renovación</td>
+	<td style="width:100px;"><div class="numeros"><?php echo $totalgeneral?></div> Totales</td>
 </tr>
 																
 

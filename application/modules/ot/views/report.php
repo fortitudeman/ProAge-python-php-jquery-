@@ -171,13 +171,13 @@
                                     <th>&nbsp; </th>
                                     <th>&nbsp; </th>
                                     <th></th>
-                                    <th width="50%" align="right" > <a href="javascript:void(0);" class="download">
-                                        <img src="<?php echo base_url() ?>ot/assets/images/down.png"></a></th>
+                                    <th width="50%" align="right" ><?php if( $export_xls == true ): ?><a href="javascript:void(0);" class="download">
+                                        <img src="<?php echo base_url() ?>ot/assets/images/down.png"></a><?php endif; ?></th>
                                 </tr>
                               </thead>
                             </table>
                                </form>
-                    			
+                    		
                                 <?php if( empty( $_POST ) or isset( $_POST['query']['ramo'] )  and $_POST['query']['ramo'] !=3  ): ?>
                     				<?php $this->load->view( 'report1', array( 'data' => $data ) ) ?>
                     			<?php else: ?>

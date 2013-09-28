@@ -1968,7 +1968,9 @@ class User extends CI_Model{
 		'pendientes' => 'Negocios Pendientes',
 		'pendientes_primas' => 'Primas Pendientes',
 		'negocios_proyectados' => 'Negocios Proyectados',
-		'negocios_proyectados_primas' => 'Primas Proyectadas'
+		'negocios_proyectados_primas' => 'Primas Proyectadas',
+		'iniciales' => 'Iniciales',
+		'renovaciones' => 'Renovaciones'
 		
 	);
 	
@@ -2024,6 +2026,8 @@ class User extends CI_Model{
 			'prima' => $this->getPrima( $row->agent_id, $filter ),
 			'tramite' => $this->getTramite( $row->agent_id, $filter ),
 			'aceptadas' => $this->getAceptadas( $row->agent_id, $filter ),
+			'iniciales' => $this->getIniciales( $row->agent_id, $filter ),
+			'renovacion' => $this->getRenovacion( $row->agent_id, $filter ),
 			'generacion' => $generacion
 			
 		);
@@ -2915,6 +2919,305 @@ class User extends CI_Model{
 		
 		return $aceptadas;		
 		
+  }
+  
+  
+  public function getIniciales( $user_id = null, $filter = array() ){
+	
+	if( empty( $user_id ) ) return 0; 
+	/*
+	SELECT COUNT( DISTINCT( policies_vs_users.policy_id ) ) AS policy_id
+	FROM policies
+	JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
+	JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
+	JOIN agents ON agents.id=policies_vs_users.user_id
+	JOIN users ON users.id=agents.user_id	
+	WHERE policies_vs_users.user_id=7
+	*/
+	
+	$this->db->select( 'COUNT( DISTINCT( policies_vs_users.policy_id ) ) AS policy_id' );
+	$this->db->from( 'policies' );
+	$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
+	$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
+	$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
+	$this->db->join( 'users', 'users.id=agents.user_id' );
+	$this->db->where( 'policies_vs_users.user_id', $user_id );
+	
+	if( !empty( $filter ) ){
+			
+			
+		if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
+					
+			$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
+		}
+		
+		/*
+		<option value="1">Mes</option>
+		<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+		<option value="3">Año</option>
+		*/	
+		
+		$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
+		
+		
+		$trimestre = $this->trimestre();
+		
+		$cuatrimetre = $this->cuatrimestre();
+								
+		$anio = date( 'Y' ).'-01-01';
+					
+		if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
+		
+		
+		if( $filter['query']['periodo'] == 1 )
+		
+			$this->db->where( 'work_order.creation_date >= ', $mes); 
+		
+		
+		
+		if( $filter['query']['periodo'] == 2 )
+		
+			
+			if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
+				
+				if( $cuatrimetre == 1 ){			
+					$begind = date( 'Y' ).'-01-01';	
+					$end = date( 'Y' ).'-04-'.date('d');	
+				}
+				
+				if( $cuatrimetre == 2 ){			
+					$begind = date( 'Y' ).'-04-01';	
+					$end = date( 'Y' ).'-08-'.date('d');	
+				}
+				
+				if( $cuatrimetre == 3 ){			
+					$begind = date( 'Y' ).'-08-01';	
+					$end = date( 'Y' ).'-12-'.date('d');	
+				}
+				
+				$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
+			
+			}else{
+				
+				
+				if( $trimestre == 1 ){			
+					$begind = date( 'Y' ).'-01-01';	
+					$end = date( 'Y' ).'-03-'.date('d');	
+				}
+				
+				if( $trimestre == 2 ){			
+					$begind = date( 'Y' ).'-03-01';	
+					$end = date( 'Y' ).'-06-'.date('d');	
+				}
+				
+				if( $trimestre == 3 ){			
+					$begind = date( 'Y' ).'-06-01';	
+					$end = date( 'Y' ).'-09-'.date('d');	
+				}
+				
+				if( $trimestre == 4 ){			
+					$begind = date( 'Y' ).'-09-01';	
+					$end = date( 'Y' ).'-12-'.date('d');	
+				}
+				
+					
+				$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
+			}
+			
+			
+			
+			
+			
+			
+		if( $filter['query']['periodo'] == 3 )
+		
+			$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
+		
+		}				
+	}
+	
+	
+	$query = $this->db->get(); 
+  	
+	if ($query->num_rows() == 0) return 0;	
+	
+	foreach ($query->result() as $row){
+		
+		/*
+		SELECT count(*) as count
+		FROM payments
+		WHERE `policy_id`=1
+		*/
+		
+		
+		$this->db->select( 'count(*) as count' );
+		$this->db->from( 'payments' );
+		$this->db->where( array( 'policy_id' => $row->policy_id, 'year_prime' => 1 ) );
+				
+		$querypayments = $this->db->get(); 
+		
+		
+		if ($querypayments->num_rows() == 0){
+			
+			foreach ( $querypolicies->result() as $rowpayment )	
+				
+				return $rowpayment->count;
+						
+			
+		}	
+		
+	}
+		
+	return 0;		
+	 
+  }
+  
+   
+  public function getRenovacion( $user_id = null, $filter = array() ){
+	
+	if( empty( $user_id ) ) return 0;  
+	/*
+	SELECT COUNT( DISTINCT( policies_vs_users.policy_id ) ) AS policy_id
+	FROM policies
+	JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
+	JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
+	JOIN agents ON agents.id=policies_vs_users.user_id
+	JOIN users ON users.id=agents.user_id	
+	WHERE policies_vs_users.user_id=7
+	*/
+	
+	$this->db->select( 'COUNT( DISTINCT( policies_vs_users.policy_id ) ) AS policy_id' );
+	$this->db->from( 'policies' );
+	$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
+	$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
+	$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
+	$this->db->join( 'users', 'users.id=agents.user_id' );
+	$this->db->where( 'policies_vs_users.user_id', $user_id );
+	
+	if( !empty( $filter ) ){
+			
+			
+	  if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
+				  
+		  $this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
+	  }
+	  
+	  /*
+	  <option value="1">Mes</option>
+	  <option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+	  <option value="3">Año</option>
+	  */	
+	  
+	  $mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
+	  
+	  
+	  $trimestre = $this->trimestre();
+	  
+	  $cuatrimetre = $this->cuatrimestre();
+							  
+	  $anio = date( 'Y' ).'-01-01';
+				  
+	  if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
+	  
+	  
+	  if( $filter['query']['periodo'] == 1 )
+	  
+		  $this->db->where( 'work_order.creation_date >= ', $mes); 
+	  
+	  
+	  
+	  if( $filter['query']['periodo'] == 2 )
+	  
+		  
+		  if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
+			  
+			  if( $cuatrimetre == 1 ){			
+				  $begind = date( 'Y' ).'-01-01';	
+				  $end = date( 'Y' ).'-04-'.date('d');	
+			  }
+			  
+			  if( $cuatrimetre == 2 ){			
+				  $begind = date( 'Y' ).'-04-01';	
+				  $end = date( 'Y' ).'-08-'.date('d');	
+			  }
+			  
+			  if( $cuatrimetre == 3 ){			
+				  $begind = date( 'Y' ).'-08-01';	
+				  $end = date( 'Y' ).'-12-'.date('d');	
+			  }
+			  
+			  $this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
+		  
+		  }else{
+			  
+			  
+			  if( $trimestre == 1 ){			
+				  $begind = date( 'Y' ).'-01-01';	
+				  $end = date( 'Y' ).'-03-'.date('d');	
+			  }
+			  
+			  if( $trimestre == 2 ){			
+				  $begind = date( 'Y' ).'-03-01';	
+				  $end = date( 'Y' ).'-06-'.date('d');	
+			  }
+			  
+			  if( $trimestre == 3 ){			
+				  $begind = date( 'Y' ).'-06-01';	
+				  $end = date( 'Y' ).'-09-'.date('d');	
+			  }
+			  
+			  if( $trimestre == 4 ){			
+				  $begind = date( 'Y' ).'-09-01';	
+				  $end = date( 'Y' ).'-12-'.date('d');	
+			  }
+			  
+				  
+			  $this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
+		  }
+		  
+		  
+		  
+		  
+		  
+		  
+	  if( $filter['query']['periodo'] == 3 )
+	  
+		  $this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
+	  
+	  }				
+  }
+	
+	$query = $this->db->get(); 
+  	
+	if ($query->num_rows() == 0) return 0;	
+	
+	foreach ($query->result() as $row){
+		
+		/*
+		SELECT count(*) as count
+		FROM payments
+		WHERE `policy_id`=1
+		*/
+				
+		$this->db->select( 'count(*) as count' );
+		$this->db->from( 'payments' );
+		$this->db->where( array( 'policy_id' => $row->policy_id, 'year_prime >' => 1 ) );
+				
+		$querypayments = $this->db->get(); 
+		
+		
+		if ($querypayments->num_rows() == 0){
+			
+			foreach ( $querypolicies->result() as $rowpayment )	
+				
+				return $rowpayment->count;
+						
+			
+		}	
+		
+	}
+		
+	return 0;	
   }
   
   public function trimestre($mes=null){	  

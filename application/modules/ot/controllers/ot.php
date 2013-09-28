@@ -37,6 +37,8 @@ class Ot extends CI_Controller {
 	
 	public $access_all = false;
 	
+	public $access_export_xls = false; // Import payments
+	
 	public $access_import_payments = false; // Import payments
 	
 	public $access_report = false; // View report
@@ -101,6 +103,9 @@ class Ot extends CI_Controller {
 			
 			if( $value['action_name'] ='Ver reporte' )
 				$this->access_report = true;		
+						
+			if( $value['action_name'] ='Export xls' )
+				$this->access_export_xls = true;		
 			
 			
 						
@@ -2253,6 +2258,7 @@ class Ot extends CI_Controller {
 		  'user' => $this->sessions,
 		  'user_vs_rol' => $this->user_vs_rol,
 		  'roles_vs_access' => $this->roles_vs_access,
+		  'export_xls' => $this->access_export_xls,
 		  'css' => array(
 			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
 			
