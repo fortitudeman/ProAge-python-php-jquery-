@@ -2313,7 +2313,7 @@ class Ot extends CI_Controller {
 		
 		
 		
-		
+		if( empty( $_POST ) or isset( $_POST['query']['ramo'] )  and $_POST['query']['ramo'] !=3  ):
 		/*			
 			[name] => Agentes
             [negocio] => Negocios Pagados
@@ -2324,7 +2324,9 @@ class Ot extends CI_Controller {
             [pendientes] => Negocios Pendientes
             [pendientes_primas] => Primas Pendientes
             [negocios_proyectados] => Negocios Proyectados
-            [negocios_proyectados_primas] => Primas Proyectadas
+            [negocios_proyectados_primas] => Primas Proyectadas,
+			['iniciales'] => 'Iniciales',
+			['renovaciones'] => 'Renovaciones'
 		
 		*/
 		
@@ -2434,16 +2436,18 @@ class Ot extends CI_Controller {
 			}
 		
 		/*
-			[name] => 12421414 - 1 -  Generacion 1 - No Conectado
-            [negocio] => 0
-            [negociopai] => 1
-            [prima] => 0
-            [tramite] => 0
-            [tramite_prima] => 0
-            [pendientes] => 0
-            [pendientes_primas] => $ 0
-            [negocios_proyectados] => 1
-            [negocios_proyectados_primas] => $ 0
+			[name] => Agentes
+            [negocio] => Negocios Pagados
+            [negociopai] => Negocios Pal
+            [prima] => Primas Pagadas
+            [tramite] => Negocios en Tramite
+            [tramite_prima] => Primas en Tramite
+            [pendientes] => Negocios Pendientes
+            [pendientes_primas] => Primas Pendientes
+            [negocios_proyectados] => Negocios Proyectados
+            [negocios_proyectados_primas] => Primas Proyectadas
+            [iniciales] => Iniciales
+            [renovaciones] => Renovaciones
 		*/
 	
 	
@@ -2460,13 +2464,93 @@ class Ot extends CI_Controller {
 			'negocios_proyectados_primas' => '$ '.$total_primas_proyectados,	
 		);
 				
-		/*		
-		echo '<pre>';
-		print_r( $data );
-		echo '</pre>';		
-		exit;
+		
+		else:
+			
+			$iniciales=0;
+			$renovacion=0;
+			$total=0;
+			$totalgeneral=0;
+			
+			/*[name] => Agentes
+            [negocio] => Negocios Pagados
+            [negociopai] => Negocios Pal
+            [prima] => Primas Pagadas
+            [tramite] => Negocios en Tramite
+            [tramite_prima] => Primas en Tramite
+            [pendientes] => Negocios Pendientes
+            [pendientes_primas] => Primas Pendientes
+            [negocios_proyectados] => Negocios Proyectados
+            [negocios_proyectados_primas] => Primas Proyectadas
+            [iniciales] => Iniciales
+            [renovaciones] => Renovaciones
 			*/
-							
+			
+			unset( $data[0]['negocio'],$data[0]['negociopai'],$data[0]['prima'],$data[0]['tramite'], $data[0]['tramite_prima'] );
+			unset( $data[0]['pendientes'],$data[0]['pendientes_primas'],$data[0]['negocios_proyectados'],$data[0]['negocios_proyectados_primas'] );
+			
+			 $data[0]['total'] = 'Total';
+			
+			if( !empty( $data ) ){
+			
+				$i = 0;
+				
+				foreach( $data  as $value ){
+					
+					
+					if( $i>0 ){
+					
+						unset( $data[$i]['id'] );
+				
+				
+						if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente'; else $value['disabled'] = 'Cancelado';
+						
+						if( !empty( $value['uids'][0]['uid'] ) )								
+							$data[$i]['name'] =  $value['uids'][0]['uid']. ' - ';
+						
+						else
+						   $data[$i]['name'] = 'Sin clave asignada -';
+						   
+								
+						$data[$i]['name'] .= $value['disabled'] .' -  Generacion 1 - '; 
+								  
+								 
+											
+						if( $value['connection_date'] != '0000-00-00' ) 
+								 $data[$i]['name'] .=  'Conectado'. getFormatDate( $value['connection_date'] );
+						else 
+								 $data[$i]['name'] .=   'No Conectado';
+					
+					
+						$iniciales += (int)$value['iniciales'];		
+						$renovacion +=(int) $value['renovacion'];		
+						$total =  (int)$value['iniciales']+(int)$value['renovacion'];
+						$totalgeneral += (int)$total;						
+						$data[$i]['totales'] =$total;
+					
+						unset( $data[$i]['id'], $data[$i]['uids'],$data[$i]['connection_date'],$data[$i]['disabled'],$data[$i]['negocio'] );
+						unset( $data[$i]['negociopai'],$data[$i]['prima'],$data[$i]['tramite'],$data[$i]['aceptadas'] );
+						unset( $data[$i]['generacion'] );
+						
+					}
+					$i++;
+				}
+				
+				$data[$i] = array(
+					'name' => 'Totales: ',	
+					'iniciales' => $iniciales,	
+					'renovacion' => $renovacion,	
+					'totalgeneral' => $totalgeneral
+				);
+				
+			}
+			
+			
+		
+		
+		endif;	
+		
+										
 		
 	 	array_to_csv($data, 'proages_report.csv');
 		
