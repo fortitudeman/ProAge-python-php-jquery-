@@ -164,8 +164,6 @@
                         <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>ot.html"><i class="icon-tablet"></i><span class="hidden-tablet">Orden trabajo</span></a></li>
                         <?php break; endif; endforeach; endif; ?>
-                        
-                        
                                                
                         <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
                         <?php if( $value['action_name'] == 'Importar payments' ): ?>
@@ -173,14 +171,15 @@
                         <?php endif; ?>
                         <?php endif; endforeach; endif; ?>
                         
-                        
                         <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
                         <?php if( $value['action_name'] == 'Ver reporte' ): ?>
                         <li><a href="<?php echo base_url() ?>ot/reporte.html"><i class="icon-tasks"></i><span class="hidden-tablet">Reporte</span></a></li>
                         <?php endif; ?>
                         <?php endif; endforeach; endif; ?>
                         
-                        
+                        <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Actividades', $value ) ): ?>
+                        <li><a href="<?php echo base_url() ?>activities.html"><i class="icon-tablet"></i><span class="hidden-tablet">Actividades</span></a></li>
+                        <?php break; endif; endforeach; endif; ?>
                         
                         
 						<!--

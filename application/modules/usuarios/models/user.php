@@ -1687,6 +1687,37 @@ class User extends CI_Model{
 		
 	}	
 	
+	public function getAgentIdByUser( $user = null ){
+		
+		if( empty( $user ) ) return false;
+		
+		
+		/*
+			SELECT id
+			FROM agents
+			WHERE agents.user_id=5;
+		*/
+		$this->db->select( 'id' );
+		$this->db->from( 'agents' );
+		$this->db->where( 'agents.user_id =', $user );
+		
+		$query = $this->db->get();
+		
+		
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$agent = null;
+		
+		// Getting data
+		foreach ($query->result() as $row)
+			
+			$agent = $row->id;
+			
+		
+		return $agent;
+		
+	}	 
 	
 	
 /**
