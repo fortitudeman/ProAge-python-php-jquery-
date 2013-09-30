@@ -627,9 +627,32 @@ table.altrowstable thead tr th {
     cursor: pointer;
 }
 
-.altrowstable thead tr{
-	position: relative;
+.altrowstable thead{
+	position:relative; 
 }
+
+.fixed { 
+    position:fixed !important; 
+    border-bottom: 1px solid #DDD;
+    top: 0px !important; 
+    z-index: 500;
+	width:75%;
+	background:#F5F5F5;
+	height:70px;
+	padding:5px;
+	font:Verdana, Geneva, sans-serif;
+	font-size:14px;
+}
+
+.fixed #table_agents{
+	min-width:400px !important;
+	background:#F5F5F5;
+}
+
+.fixed #total_negocio_pai{
+	background:#F5F5F5;
+}
+
 
 .altrowstable > .tbody{
    /*height:80px;overflow-y:auto;background:yellow;*/

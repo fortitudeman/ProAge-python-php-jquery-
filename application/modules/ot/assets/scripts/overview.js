@@ -17,7 +17,9 @@ function menu( item ){
   $( '#'+item ).show();
 }
 
+
 $( document ).ready( function(){
+		
 	
 	$( '.popup' ).hide();	
 	  

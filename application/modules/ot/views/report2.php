@@ -8,9 +8,9 @@
 
 
 <table  class="sortable altrowstable tablesorter" id="sorter"  style="width:100%;">
-<thead>
+<thead  class="head">
 <tr>
-	<th id="table_agents" class="header_manager">Agentes</th>
+	<th id="table_agents" class="header_manager" style="width:100px">Agentes</th>
 	<th id="total_negocio" class="header_manager" style="width:70px;">Iniciales </th>
 	<th id="total_negocio_pai" class="header_manager" style="width:70px;">Renovación</th>
 	<th id="total_primas_pagadas" class="header_manager" style="width:100px;">Totales</th>
@@ -36,7 +36,7 @@
 
 																
 <tr>
-	<td class=""><div class="text_azulado" id="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></div> 
+	<td  style="width:100px"><div class="text_azulado" id="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></div> 
 	
 	<div class="info" id="info-<?php echo $value['id'] ?>">
 	
@@ -62,7 +62,7 @@
 									  
 	<?php endforeach; ?>                                
 <?php endif; ?>  
-										 
+								 
 </tbody>
 </table>
 
@@ -71,7 +71,7 @@
 
 
 <tr>
-	<td ><div class="text_total">Totales</div></td>
+	<td style="width:100px"><div class="text_total">Totales</div></td>
 	<td style="width:70px;"><div class="numeros"><?php echo $iniciales?></div>Iniciales</td>
 	<td style="width:70px;"><div class="numeros"><?php echo $renovacion?></div> Renovación</td>
 	<td style="width:100px;"><div class="numeros"><?php echo $totalgeneral?></div> Totales</td>

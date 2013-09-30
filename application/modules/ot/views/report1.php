@@ -13,9 +13,9 @@
 
 
 <table  class="sortable altrowstable tablesorter" id="sorter"  style="width:100%;">
-<thead>
+<thead class="head">
 <tr>
-	<th id="table_agents" class="header_manager">Agentes</th>
+	<th id="table_agents" class="header_manager" style="width:auto;">Agentes</th>
 	<th id="total_negocio" class="header_manager" style="width:70px;">Negocios Pagados</th>
 	<th id="total_negocio_pai" class="header_manager" style="width:70px;">Negocios <br> Pal</th>
 	<th id="total_primas_pagadas" class="header_manager" style="width:100px;">Primas Pagadas</th>
@@ -149,7 +149,7 @@
 									  
 	<?php endforeach; ?>                                
 <?php endif; ?>  
-										 
+            							 
 </tbody>
 </table>
 
