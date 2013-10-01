@@ -230,7 +230,8 @@ class Activities extends CI_Controller {
 			
 				$_POST['agent_id'] =  $this->user->getAgentIdByUser( $this->sessions['id'] );
 				
-				if( $this->activity->exist( 'agents_activity', $_POST ) == false )
+				
+				if( $this->activity->exist( 'agents_activity', $_POST ) == true )
 								
 					if( $this->activity->create( 'agents_activity', $_POST ) == true ){
 						
