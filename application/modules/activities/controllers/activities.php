@@ -65,7 +65,7 @@ class Activities extends CI_Controller {
 
 		// Added Acctions for user, change the bool access
 		if( !empty( $this->user_vs_rol ) and !empty( $this->roles_vs_access ) )	
-		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ):
+		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Actividades', $value ) ):
 			
 			
 			if( $value['action_name'] == 'Crear' )
@@ -277,7 +277,7 @@ class Activities extends CI_Controller {
 			
 						
 		}
-								
+						
 		// Config view
 		$this->view = array(
 				
@@ -286,7 +286,9 @@ class Activities extends CI_Controller {
 		  'user' => $this->sessions,
 		  'user_vs_rol' => $this->user_vs_rol,
 		  'roles_vs_access' => $this->roles_vs_access,
+		  'access_create' => $this->access_create,
 		  'access_update' => $this->access_update,
+		  'access_delete' => $this->access_delete,
 		  'css' => array(
 		  	'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet">'
 		  ),

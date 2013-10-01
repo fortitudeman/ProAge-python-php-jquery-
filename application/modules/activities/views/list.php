@@ -81,9 +81,9 @@
                   <tr>
                       <th>Inicio</th>
                       <th>Fin</th> 
-                      <th>Prospecto</th>
                       <th>Cita</th>
                       <th>Entrevista</th>
+                      <th>Prospecto</th>
                       <th>Comentarios</th>
                       <th>Creado</th>
                       <th>Última modificación</th>
@@ -95,8 +95,8 @@
                 	<td class="center"><?php echo $value['begin'] ?></td>
                     <td class="center"><?php echo $value['end'] ?></td>
                     <td class="center"><?php echo $value['cita'] ?></td>
-                    <td class="center"><?php echo $value['prospectus'] ?></td>
                     <td class="center"><?php echo $value['interview'] ?></td>
+                    <td class="center"><?php echo $value['prospectus'] ?></td>
                     <td class="center"><?php echo $value['comments'] ?></td>
                     <td class="center"><?php echo $value['date'] ?></td>
                     <td class="center"><?php echo $value['last_updated'] ?></td>                                            

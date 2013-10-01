@@ -70,21 +70,21 @@
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Cita</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required number" id="cita" name="cita" type="text" value="<?php echo set_value('cita')  ?>">
+                      <input style="width:20px" class="focused required number" id="cita" name="cita" type="text" value="<?php echo set_value('cita')  ?>" maxlength="3">
                     </div>
                   </div>
                   
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Prospecto</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required number" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
+                      <input style="width:20px"  maxlength="3" class="focused required number" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
                     </div>
                   </div>
                   
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Entrevista</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required number" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
+                      <input style="width:20px"  maxlength="3" class="focused required number" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
                     </div>
                   </div>
                   
