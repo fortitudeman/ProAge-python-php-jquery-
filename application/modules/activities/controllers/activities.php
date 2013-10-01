@@ -218,9 +218,9 @@ class Activities extends CI_Controller {
 										
 			// Generals validations
 			$this->form_validation->set_rules('begin', 'Semana', 'required');
-			$this->form_validation->set_rules('cita', 'Cita', 'required');
-			$this->form_validation->set_rules('prospectus', 'Prospecto', 'required');
-			$this->form_validation->set_rules('interview', 'Entrevista', 'required');
+			$this->form_validation->set_rules('cita', 'Cita', 'required|numeric');
+			$this->form_validation->set_rules('prospectus', 'Prospecto', 'required|numeric');
+			$this->form_validation->set_rules('interview', 'Entrevista', 'required|numeric');
 					
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
@@ -285,6 +285,7 @@ class Activities extends CI_Controller {
 		  'user' => $this->sessions,
 		  'user_vs_rol' => $this->user_vs_rol,
 		  'roles_vs_access' => $this->roles_vs_access,
+		  'access_update' => $this->access_update,
 		  'css' => array(
 		  	'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet">'
 		  ),

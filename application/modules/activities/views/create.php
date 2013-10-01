@@ -70,23 +70,25 @@
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Cita</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="cita" name="cita" type="text" value="<?php echo set_value('cita')  ?>">
+                      <input class="input-xlarge focused required number" id="cita" name="cita" type="text" value="<?php echo set_value('cita')  ?>">
                     </div>
                   </div>
                   
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Prospecto</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
+                      <input class="input-xlarge focused required number" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
                     </div>
                   </div>
                   
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Entrevista</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
+                      <input class="input-xlarge focused required number" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
                     </div>
                   </div>
+                  
+                  <?php if( isset( $access_update ) and $access_update == true ): ?>
                   
                   <div class="control-group">
                     <label class="control-label" for="inputError">Comentarios</label>
@@ -94,6 +96,8 @@
                      <textarea name="comments" class="input-xlarge" rows="10"><?php echo set_value('comments')  ?></textarea>
                     </div>
                   </div>
+                  
+                  <?php endif; ?>
                  
                   <div id="actions-buttons-forms" class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>

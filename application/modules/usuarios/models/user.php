@@ -1734,6 +1734,12 @@ class User extends CI_Model{
 			JOIN `users` ON `users`.id=agents.user_id
 			WHERE agent_uids.`uid`='1421424';
 		*/
+		
+		$uid = str_replace( 'N', '', $uid );
+		$uid = str_replace( 'n', '', $uid );
+		$uid = str_replace( 'P', '', $uid );
+		$uid = str_replace( 'p', '', $uid );
+		
 		$this->db->select( ' users.company_name, users.name, users.lastnames' );
 		$this->db->from( 'agent_uids' );
 		$this->db->join( 'agents', 'agents.id=agent_uids.agent_id' );
@@ -1741,7 +1747,7 @@ class User extends CI_Model{
 		$this->db->where( array( 'agent_uids.uid' => $uid, 'agent_uids.type' => $type ) );
 		
 		
-		if( !empty( $type ) and $type == 'national' ) 
+		if( !empty( $type ) and $type == 'national' )
 			$this->db->or_where( array( 'agent_uids.uid' => 'N'.$uid, 'agent_uids.type' => $type ) );
 		
 		if( !empty( $type ) and $type == 'provincial' ) 

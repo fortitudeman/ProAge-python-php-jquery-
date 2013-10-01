@@ -112,7 +112,7 @@
 		  
 		  	<div class="alert alert-block">
                   <button type="button" class="close" data-dismiss="alert">×</button>
-                  <strong>Warning: </strong> No records found, Add one <a href="<?php echo base_url() ?>activities/create.html" class="btn btn-link">here</a>
+                  <strong>Atención: </strong> No hay registro de actividades. . <a href="<?php echo base_url() ?>activities/create.html" class="btn btn-link">Haga click aquí para capturar un nuevo registro</a>
             </div>
 		  <?php endif; ?>
                            
