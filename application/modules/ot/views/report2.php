@@ -50,6 +50,8 @@
 			En proceso de conexión
 	<?php endif; ?> 
 	
+    <a href="javascript:void(0)" class="btn btn-link btn-hide"><i class="icon-arrow-up"></i></a>
+    
 	</div>
 	
    </td>
@@ -62,9 +64,26 @@
 									  
 	<?php endforeach; ?>                                
 <?php endif; ?>  
+
 								 
 </tbody>
 </table>
+
+<div id="contentFoot" style="width:77% !important;" class="theader">
+<table  class="sortable altrowstable tablesorter" id="Tfoot" style="min-width:100% !important;" >
+<thead>
+<tr>
+	<td style="width:100px"><div class="text_total">Agentes</div></td>
+	<td style="width:70px;"><div class="numeros"></div>Iniciales</td>
+	<td style="width:70px;"><div class="numeros"></div>Renovación</td>
+	<td style="width:100px;"><div class="numeros"></div>Totales</td>
+</tr>
+																
+</thead>
+</table>
+</div>     
+
+
 
 <div id="contentFoot" style="width:77% !important;">
 <table  class="sortable altrowstable tablesorter" id="Tfoot" style="min-width:100% !important;" >

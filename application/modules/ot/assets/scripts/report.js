@@ -17,6 +17,8 @@ $( document ).ready(function() {
 	
 	var table = $('.head');
 	pos = table.offset();	
+	
+	$( '.theader' ).hide();
 			
 	// Esperamos al DOM
 	$(window).scroll(function(){
@@ -25,7 +27,12 @@ $( document ).ready(function() {
 		// mayor a la posición superior del tag
 		if ( ($(this).scrollTop() >= pos.top)){
 			// Añadimos la clase fixes al menú
-			table.addClass('fixed');
+			//table.addClass('fixed');
+						
+			$( '.theader' ).show();
+			
+			$('.theader').addClass('fixed');
+			
 			// Añadimos la clase scrolling al contenido **
 			//$("#content-wrapper").addClass("scrolling");
 			// Mostramos la sombre inferior del menú
@@ -34,6 +41,9 @@ $( document ).ready(function() {
 		} else if ( ($(this).scrollTop() <= pos.top)){
 			// Elimina clase fixes
 			table.removeClass('fixed');
+			$('.text_total').removeClass('fixed');
+			
+			$( '.theader' ).hide();
 			// Elimina clase scrolling
 			//$("#content-wrapper").removeClass("scrolling");
 			// Esconde la sombra
@@ -119,6 +129,6 @@ $( document ).ready(function() {
 	
 	$( '.text_azulado' ).bind( 'click', function(){ $( '#info-'+this.id ).show(); })
 	
-	$( '.text_azulado' ).bind( 'dblclick', function(){ $( '#info-'+this.id ).hide(); })
+	$( '.btn-hide' ).bind( 'click', function(){ $( '.info' ).hide(); })
 	
 });
