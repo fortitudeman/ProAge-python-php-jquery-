@@ -81,9 +81,9 @@
                   <tr>
                       <th>Inicio</th>
                       <th>Fin</th> 
-                      <th>Cita</th>
-                      <th>Entrevista</th>
-                      <th>Prospecto</th>
+                      <th>Citas</th>
+                      <th>Entrevistas</th>
+                      <th>Prospectos</th>
                       <th>Comentarios</th>
                       <th>Creado</th>
                       <th>Última modificación</th>

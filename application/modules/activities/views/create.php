@@ -67,40 +67,37 @@
                     </div>
                   </div>
                   
-                  <table>
-                  	<tr>
-                    	<td>
-                        <div class="control-group" style="width:120px;">
-                            <label class="control-label text-error" for="inputError">Cita</label>
-                            <div class="controls">
-                              <input style="width:20px" class="focused required number" id="cita" name="cita" type="text" value="<?php echo set_value('cita')  ?>" maxlength="3">
-                            </div>
+                  <div class="row">
+                  	
+                   
+                    <div class="span2">
+                    	<div class="control-group" style="width:120px;">
+                          <label class="control-label text-error" for="inputError">Citas</label>
+                          <div class="controls">
+                            <input style="width:20px" class="focused required number" id="cita" name="cita" type="text" value="<?php echo set_value('cita')  ?>" maxlength="3">
                           </div>
-                        </td>
-                        <td>
-                        	<div class="control-group" style="width:120px;">
-                                <label class="control-label text-error" for="inputError">Entrevista</label>
-                                <div class="controls">
-                                  <input style="width:20px"  maxlength="3" class="focused required number" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
-                                </div>
-                              </div>
-                        </td>
-                        <td>
-                        	
-                          <div class="control-group" style="width:50px;">
-                            <label class="control-label text-error" for="inputError">Prospecto</label>
-                            <div class="controls">
-                              <input style="width:20px"  maxlength="3" class="focused required number" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
-                            </div>
+                        </div>
+                    </div>
+                    
+                     <div class="span2">
+                    	<div class="control-group" style="width:120px;">
+                          <label class="control-label text-error" for="inputError">Entrevistas</label>
+                          <div class="controls">
+                            <input style="width:20px"  maxlength="3" class="focused required number" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
                           </div>
-                        </td>
-                    </tr>
-                  </table>
-                  
-                  
-                  
-                  
-                  
+                        </div>
+                    </div>
+                    
+                    <div class="span2">
+                    	<div class="control-group" style="width:50px;">
+                          <label class="control-label text-error" for="inputError">Prospectos</label>
+                          <div class="controls">
+                            <input style="width:20px"  maxlength="3" class="focused required number" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
+                          </div>
+                        </div>
+                    </div>
+                    
+                  </div>
                   
                   
                   

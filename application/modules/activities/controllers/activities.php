@@ -239,7 +239,7 @@ class Activities extends CI_Controller {
 						$this->session->set_flashdata( 'message', array( 
 							
 							'type' => true,	
-							'message' => 'Se creo la actividad correctament.'
+							'message' => 'Se creó la actividad correctamente.'
 										
 						));	
 						
@@ -290,7 +290,7 @@ class Activities extends CI_Controller {
 		  'access_update' => $this->access_update,
 		  'access_delete' => $this->access_delete,
 		  'css' => array(
-		  	'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet">'
+		  	'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet" media="screen">'
 		  ),
 		  'scripts' =>  array(
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
