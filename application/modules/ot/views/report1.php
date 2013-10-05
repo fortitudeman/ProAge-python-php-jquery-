@@ -136,15 +136,15 @@
 	</div>
 	
    </td>
-	<td class="celda_gris"><div class="numeros"><?php echo $value['negocio'] ?></div></td>
-	<td class="celda_gris"><div class="numeros"><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?></div></td>
-	<td class="celda_gris"><div class="numeros">$<?php echo $value['prima'] ?></div></td>
-	<td class="celda_roja"><div class="numeros"><?php if( isset( $value['tramite']['count'] ) ) echo $value['tramite']['count']; else echo 0; ?></div></td>
-	<td class="celda_roja"><div class="numeros">$<?php if( isset( $value['tramite']['prima'] ) ) echo $value['tramite']['prima']; else echo 0; ?></div></td>
-	<td class="celda_amarilla"><div class="numeros"><?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?></div></td>
-	<td class="celda_amarilla"><div class="numeros">$<?php if( isset( $value['aceptadas']['prima'] ) ) echo  $value['aceptadas']['prima']; else  echo $value['aceptadas'] ?></div></td>
-	<td class="celda_verde"><div class="numeros"><?php echo $negocio ?></div></td>
-	<td class="celda_verde"><div class="numeros">$<?php echo $prima ?></div></td>
+	<td class="celda_gris"><div class="numeros" style="text-align:center;"><?php echo $value['negocio'] ?></div></td>
+	<td class="celda_gris"><div class="numeros" style="text-align:center;"><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?></div></td>
+	<td class="celda_gris"><div class="numeros" style="text-align:right">$<?php echo $value['prima'] ?></div></td>
+	<td class="celda_roja"><div class="numeros" style="text-align:center;"><?php if( isset( $value['tramite']['count'] ) ) echo $value['tramite']['count']; else echo 0; ?></div></td>
+	<td class="celda_roja"><div class="numeros" style="text-align:right">$<?php if( isset( $value['tramite']['prima'] ) ) echo $value['tramite']['prima']; else echo 0; ?></div></td>
+	<td class="celda_amarilla"><div class="numeros"style="text-align:center;"><?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?></div></td>
+	<td class="celda_amarilla"><div class="numeros" style="text-align:right">$<?php if( isset( $value['aceptadas']['prima'] ) ) echo  $value['aceptadas']['prima']; else  echo $value['aceptadas'] ?></div></td>
+	<td class="celda_verde"><div class="numeros"style="text-align:center;"><?php echo $negocio ?></div></td>
+	<td class="celda_verde"><div class="numeros" style="text-align:right">$<?php echo $prima ?></div></td>
 </tr>
 
 

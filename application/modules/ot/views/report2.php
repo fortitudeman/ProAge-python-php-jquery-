@@ -28,10 +28,10 @@
 	
 	<?php
 		
-		$iniciales += (int)$value['iniciales'];		
-		$renovacion +=(int) $value['renovacion'];		
-		$total =  (int)$value['iniciales']+(int)$value['renovacion'];
-		$totalgeneral += (int)$total;		
+		$iniciales += (float)$value['iniciales'];		
+		$renovacion +=(float) $value['renovacion'];		
+		$total =  (float)$value['iniciales']+(int)$value['renovacion'];
+		$totalgeneral += (float)$total;		
 	?>
 
 																
@@ -55,9 +55,9 @@
 	</div>
 	
    </td>
-	<td class="celda_gris"><div class="numeros"><?php echo $value['iniciales'] ?></div></td>
-	<td class="celda_gris"><div class="numeros"><?php echo $value['renovacion']; ?></div></td>
-	<td class="celda_gris"><div class="numeros"><?php echo $total ?></div></td>	
+	<td class="celda_gris"><div class="numeros"style="text-align:right">$ <?php echo $value['iniciales'] ?></div></td>
+	<td class="celda_gris"><div class="numeros"style="text-align:right">$ <?php echo $value['renovacion']; ?></div></td>
+	<td class="celda_gris"><div class="numeros"style="text-align:right">$ <?php echo $total ?></div></td>	
 </tr>
 
 
