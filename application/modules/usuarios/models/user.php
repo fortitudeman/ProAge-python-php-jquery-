@@ -1756,12 +1756,13 @@ class User extends CI_Model{
 		$this->db->join( 'users', 'users.id=agents.user_id' );
 		$this->db->where( array( 'agent_uids.uid' => $uid, 'agent_uids.type' => $type ) );
 		
-		
+		/*
 		if( !empty( $type ) and $type == 'national' )
 			$this->db->or_where( array( 'agent_uids.uid' => 'N'.$uid, 'agent_uids.type' => $type ) );
 		
 		if( !empty( $type ) and $type == 'provincial' ) 
 			$this->db->or_where( array( 'agent_uids.uid' => 'P'.$uid, 'agent_uids.type' => $type ) );
+		*/
 		
 		$query = $this->db->get();
 		
@@ -3099,7 +3100,7 @@ class User extends CI_Model{
 		*/
 		
 		
-		$this->db->select( 'count(*) as count' );
+		$this->db->select( 'SUM(amount) as count' );
 		$this->db->from( 'payments' );
 		$this->db->where( array( 'policy_id' => $row->policy_id, 'year_prime' => 1 ) );
 				
@@ -3250,7 +3251,7 @@ class User extends CI_Model{
 		WHERE `policy_id`=1
 		*/
 				
-		$this->db->select( 'count(*) as count' );
+		$this->db->select( 'SUM(amount) as count' );
 		$this->db->from( 'payments' );
 		$this->db->where( array( 'policy_id' => $row->policy_id, 'year_prime >' => 1 ) );
 				
