@@ -40,10 +40,11 @@ $( document ).ready(function() {
     $('#week').datepicker( {
         showOtherMonths: true,
         selectOtherMonths: true,
+		firstDay:1,
         onSelect: function(dateText, inst) { 
             var date = $(this).datepicker('getDate');
             startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay()+1);
-            endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 5);
+            endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay()+7);
             var dateFormat = inst.settings.dateFormat || $.datepicker._defaults.dateFormat;
             //$('#startDate').text($.datepicker.formatDate( dateFormat, startDate, inst.settings ));
             //$('#endDate').text($.datepicker.formatDate( dateFormat, endDate, inst.settings ));
