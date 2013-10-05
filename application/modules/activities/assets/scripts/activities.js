@@ -42,12 +42,16 @@ $( document ).ready(function() {
         selectOtherMonths: true,
         onSelect: function(dateText, inst) { 
             var date = $(this).datepicker('getDate');
-            startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay());
-            endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 6);
+            startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay()+1);
+            endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 5);
             var dateFormat = inst.settings.dateFormat || $.datepicker._defaults.dateFormat;
-            $('#startDate').text($.datepicker.formatDate( dateFormat, startDate, inst.settings ));
-            $('#endDate').text($.datepicker.formatDate( dateFormat, endDate, inst.settings ));
+            //$('#startDate').text($.datepicker.formatDate( dateFormat, startDate, inst.settings ));
+            //$('#endDate').text($.datepicker.formatDate( dateFormat, endDate, inst.settings ));
             //alert( selectedWeek = $.datepicker.iso8601Week(new Date(dateText)));
+			$('#startDate').text( month(startDate.getMonth()) + ' ' +  startDate.getDate() +', ' + startDate.getFullYear());
+			
+			$('#endDate').text( ' - '+  month(endDate.getMonth()) + ' ' +  endDate.getDate() +', ' + endDate.getFullYear() );
+			
 			selectCurrentWeek();
 			
 			var Month = startDate.getMonth()+1;
@@ -55,7 +59,6 @@ $( document ).ready(function() {
 			if( Month < 10 ) Month = '0'+Month;
 													
 			$( '#begin' ).val(  startDate.getFullYear() +'-'+ Month +'-'+ startDate.getDate() );
-			
 			
 			var Month = endDate.getMonth()+1;
 			
@@ -78,6 +81,12 @@ $( document ).ready(function() {
     $('#week .ui-datepicker-calendar tr').live('mousemove', function() { $(this).find('td a').addClass('ui-state-hover'); });
     $('#week .ui-datepicker-calendar tr').live('mouseleave', function() { $(this).find('td a').removeClass('ui-state-hover'); });
 		
-	
-	
 });
+
+function month( month ){
+	
+	var monthNames = [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" ];
+	return monthNames[month];
+	
+}

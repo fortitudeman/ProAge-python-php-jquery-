@@ -61,32 +61,48 @@
                     <div class="controls">
                       
                       <div id="week"></div>
-                      <label></label> <span id="startDate"></span> - <span id="endDate"></span>
+                      <label></label> <span id="startDate"></span>  <span id="endDate"></span>
                        <input id="begin" name="begin" type="hidden" readonly="readonly" value="<?php echo set_value('begin')  ?>">
                        <input id="end" name="end" type="hidden" readonly="readonly" value="<?php echo set_value('end')  ?>">
                     </div>
                   </div>
                   
-                  <div class="control-group">
-                    <label class="control-label text-error" for="inputError">Cita</label>
-                    <div class="controls">
-                      <input style="width:20px" class="focused required number" id="cita" name="cita" type="text" value="<?php echo set_value('cita')  ?>" maxlength="3">
-                    </div>
-                  </div>
+                  <table>
+                  	<tr>
+                    	<td>
+                        <div class="control-group" style="width:120px;">
+                            <label class="control-label text-error" for="inputError">Cita</label>
+                            <div class="controls">
+                              <input style="width:20px" class="focused required number" id="cita" name="cita" type="text" value="<?php echo set_value('cita')  ?>" maxlength="3">
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                        	<div class="control-group" style="width:120px;">
+                                <label class="control-label text-error" for="inputError">Entrevista</label>
+                                <div class="controls">
+                                  <input style="width:20px"  maxlength="3" class="focused required number" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
+                                </div>
+                              </div>
+                        </td>
+                        <td>
+                        	
+                          <div class="control-group" style="width:50px;">
+                            <label class="control-label text-error" for="inputError">Prospecto</label>
+                            <div class="controls">
+                              <input style="width:20px"  maxlength="3" class="focused required number" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
+                            </div>
+                          </div>
+                        </td>
+                    </tr>
+                  </table>
                   
-                  <div class="control-group">
-                    <label class="control-label text-error" for="inputError">Prospecto</label>
-                    <div class="controls">
-                      <input style="width:20px"  maxlength="3" class="focused required number" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
-                    </div>
-                  </div>
                   
-                  <div class="control-group">
-                    <label class="control-label text-error" for="inputError">Entrevista</label>
-                    <div class="controls">
-                      <input style="width:20px"  maxlength="3" class="focused required number" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
-                    </div>
-                  </div>
+                  
+                  
+                  
+                  
+                  
                   
                   <?php if( isset( $access_update ) and $access_update == true ): ?>
                   
