@@ -1734,22 +1734,20 @@ class User extends CI_Model{
 			JOIN `users` ON `users`.id=agents.user_id
 			WHERE agent_uids.`uid`='1421424';
 		*/
-		ltrim($uid, "N");
-		ltrim($uid, "n");
-		ltrim($uid, "P");
-		ltrim($uid, "p");
+		//14011 en vez de P0014011.
 		
+		str_replace( "P0", '', $uid );
+		str_replace( "P00", '', $uid );
+		str_replace( "P000", '', $uid );
+		str_replace( "P0000", '', $uid );
+		str_replace( "P00000", '', $uid );
+		str_replace( "N0", '', $uid );
+		str_replace( "N00", '', $uid );
+		str_replace( "N000", '', $uid );
+		str_replace( "N0000", '', $uid );
+		str_replace( "N00000", '', $uid );
 		
-		ltrim($uid, "0");
-		ltrim($uid, "00");
-		ltrim($uid, "000");
-		ltrim($uid, "0000");
-		ltrim($uid, "00000");
-		ltrim($uid, "000000");
-		ltrim($uid, "0000000");
-		ltrim($uid, "00000000");
-		ltrim($uid, "000000000");
-				
+						
 		$this->db->select( ' users.company_name, users.name, users.lastnames' );
 		$this->db->from( 'agent_uids' );
 		$this->db->join( 'agents', 'agents.id=agent_uids.agent_id' );
