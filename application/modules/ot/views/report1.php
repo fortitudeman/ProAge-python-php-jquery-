@@ -183,15 +183,15 @@
 
 <tr>
 	<td ><div class="text_total">Totales</div></td>
-	<td style="width:70px;"><div class="numeros"><?php echo $total_negocio?></div>Negocios Pagados</td>
-	<td style="width:70px;"><div class="numeros"><?php echo $total_negocio_pai?></div> Negocios Pal</td>
-	<td style="width:100px;"><div class="numeros">$<?php echo $total_primas_pagadas?></div> Pagados</td>
-	<td style="width:70px;" class="celda_gris_roja"><div class="numeros"><?php echo $total_negocios_tramite?></div> Negocios en <br>  Tramite</td>
-	<td style="width:100px;" class="celda_gris_roja"><div class="numeros">$<?php echo $total_primas_tramite?></div> En Tramite</td>
-	<td style="width:70px;" class="celda_gris_amarilla"><div class="numeros"><?php echo $total_negocio_pendiente?></div> Negocios Pendientes</td>
-	<td style="width:100px;" class="celda_gris_amarilla"><div class="numeros">$<?php echo $total_primas_pendientes?></div> Pendientes</td>
-	<td  style="width:70px;"class="celda_gris_verde"><div class="numeros"><?php echo $total_negocios_proyectados?></div> Negocios Proyectados</td>
-	<td  style="width:100px;"class="celda_gris_verde"><div class="numeros">$<?php echo $total_primas_proyectados?></div> Proyectadas</td>
+	<td style="width:70px; text-align:center;"><div class="numeros"><?php echo $total_negocio?></div>Negocios Pagados</td>
+	<td style="width:70px; text-align:center;"><div class="numeros"><?php echo $total_negocio_pai?></div> Negocios Pal</td>
+	<td style="width:100px;text-align:right"><div class="numeros">$<?php echo $total_primas_pagadas?></div> Pagados</td>
+	<td style="width:70px; text-align:center;" class="celda_gris_roja"><div class="numeros"><?php echo $total_negocios_tramite?></div> Negocios en <br>  Tramite</td>
+	<td style="width:100px;text-align:right" class="celda_gris_roja"><div class="numeros">$<?php echo $total_primas_tramite?></div> En Tramite</td>
+	<td style="width:70px; text-align:center;" class="celda_gris_amarilla"><div class="numeros"><?php echo $total_negocio_pendiente?></div> Negocios Pendientes</td>
+	<td style="width:100px;text-align:right" class="celda_gris_amarilla"><div class="numeros">$<?php echo $total_primas_pendientes?></div> Pendientes</td>
+	<td  style="width:70px; text-align:center;"class="celda_gris_verde"><div class="numeros"><?php echo $total_negocios_proyectados?></div> Negocios Proyectados</td>
+	<td  style="width:100px;text-align:right"class="celda_gris_verde"><div class="numeros">$<?php echo $total_primas_proyectados?></div> Proyectadas</td>
 </tr>
 																
 

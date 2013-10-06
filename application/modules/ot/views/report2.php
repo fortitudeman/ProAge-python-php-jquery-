@@ -91,9 +91,9 @@
 
 <tr>
 	<td style="width:100px"><div class="text_total">Totales</div></td>
-	<td style="width:70px;"><div class="numeros"><?php echo $iniciales?></div>Iniciales</td>
-	<td style="width:70px;"><div class="numeros"><?php echo $renovacion?></div> Renovación</td>
-	<td style="width:100px;"><div class="numeros"><?php echo $totalgeneral?></div> Totales</td>
+	<td style="width:70px;text-align:right"><div class="numeros"><?php echo $iniciales?></div>Iniciales</td>
+	<td style="width:70px;text-align:right"><div class="numeros"><?php echo $renovacion?></div> Renovación</td>
+	<td style="width:100px;text-align:right"><div class="numeros"><?php echo $totalgeneral?></div> Totales</td>
 </tr>
 																
 
