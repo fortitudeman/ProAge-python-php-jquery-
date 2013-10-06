@@ -56,7 +56,7 @@ class Activities extends CI_Controller {
 	
 		// If exist the module name, the user accessed
 		if( !empty( $this->user_vs_rol )  and !empty( $this->roles_vs_access ) )	
-		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ):
+		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Actividades', $value ) ):
 
 			$this->access = true;
 			
