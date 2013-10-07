@@ -181,6 +181,10 @@
                         <li><a href="<?php echo base_url() ?>activities.html"><i class="icon-tablet"></i><span class="hidden-tablet">Actividades</span></a></li>
                         <?php break; endif; endforeach; endif; ?>
                         
+                        <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Simulador', $value ) ): ?>
+                        <li><a href="<?php echo base_url() ?>simulator.html"><i class="icon-list-alt"></i><span class="hidden-tablet">Simulador</span></a></li>
+                        <?php break; endif; endforeach; endif; ?>
+                        
                         
 						<!--
                         <li><a class="ajax-link" href="form.html"><i class="icon-edit"></i><span class="hidden-tablet"> Forms</span></a></li>
