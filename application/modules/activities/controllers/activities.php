@@ -162,14 +162,6 @@ class Activities extends CI_Controller {
 		  'access_create' => $this->access_create,
 		  'access_update' => $this->access_update,
 		  'access_delete' => $this->access_delete,
-		  'scripts' =>  array(
-		  	  
-			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-			  '<script src="'.base_url().'scripts/config.js"></script>',
-			  '<script src="'.base_url().'usuarios/assets/scripts/find.js"></script>'
-			  
-			 
-		  ),
 		  'content' => 'activities/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  'data' => $this->activity->overview( $begin, $this->user->getAgentIdByUser( $this->sessions['id'] ), $filter )		  	  
