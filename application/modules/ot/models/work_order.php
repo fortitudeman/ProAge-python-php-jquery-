@@ -1555,8 +1555,8 @@ class Work_order extends CI_Model{
 		JOIN users ON users.id=work_order.user
 		JOIN policies ON policies.id=work_order.policy_id
 		WHERE work_order.work_order_status_id=7
-		AND work_order.work_order_type_id=90
-		OR work_order.work_order_type_id=47 
+		AND ( work_order.work_order_type_id=90
+		OR work_order.work_order_type_id=47 )
 		*/
 		$this->db->select( 'work_order.id, work_order.uid,  policies.name' );
 		$this->db->from( 'work_order' );
