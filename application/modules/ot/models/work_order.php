@@ -1567,7 +1567,7 @@ class Work_order extends CI_Model{
 		
 		$query = $this->db->get(); 
   	
-		$options = '<select name="assing['.$i.']" class="required"><option value="">Seleccione</option>';
+		$options = '<select name="assing['.$i.']" class="required"><option value="">Seleccione OT relacionada</option>';
 		
 		if ($query->num_rows() == 0){  
 			
@@ -1583,7 +1583,7 @@ class Work_order extends CI_Model{
 		
 		foreach ($query->result() as $row)			
 			
-			if( $this->getWathdoPayment( $row->id ) == true )
+			//if( $this->getWathdoPayment( $row->id ) == true )
 			
 				$options .= '<option value="'.$row->id.'">'.$row->uid.' - '.$row->name.'</option></select>';
 			
@@ -1591,9 +1591,6 @@ class Work_order extends CI_Model{
 		$options .= '</select>';
 		
 		return $options;
-		
-		
-		
   }
   
   
