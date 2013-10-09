@@ -1763,7 +1763,7 @@ class User extends CI_Model{
 			
 			$this->db->or_where( array( 'agent_uids.uid' => $uid, 'agent_uids.type' => 'national' ) );
 			
-			$querys .= ' OR agent_uids.`uid`=\''.$uid.'\' ) AND agent_uids.type=\'national\'  ';
+			$querys .= ' OR agent_uids.`uid`=\''.$uid.'\' )';
 			
 		}
 		if( !empty( $type ) and $type == 'provincial' ) {
@@ -1777,7 +1777,7 @@ class User extends CI_Model{
 			
 			$this->db->where( 'agent_uids.type', 'provincial' );
 			
-			$querys .= ' OR agent_uids.`uid`=\''.$uid.'\' ) AND agent_uids.type=\'provincial\' ';
+			$querys .= ' OR agent_uids.`uid`=\''.$uid.'\' )';
 			
 			$this->db->or_where( array( 'agent_uids.uid' => $uid ) );
 		}
