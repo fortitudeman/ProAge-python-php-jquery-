@@ -1829,6 +1829,12 @@ class Ot extends CI_Controller {
 							if( empty( $policy ) )
 								
 								$file_array[$i]['wathdo'] = $this->work_order->getWathdo( $i );
+							/*
+							else
+								
+								$file_array[$i]['wathdo'] = $policy[0]['id'];*/							
+									
+								
 																												
 						}else if( isset( $file_array[$i]['year_prime'] ) and $file_array[$i]['year_prime'] == 0 ){
 							
@@ -1853,7 +1859,9 @@ class Ot extends CI_Controller {
 				
 				unset( $file_array[$i]['agent_id'] );
 		
-							
+			echo '<pre>';
+			print_r( $file_array );
+			echo '</pre>';				
 		}
 	
 	
@@ -1941,9 +1949,7 @@ class Ot extends CI_Controller {
 						$value->wathdo = 'Sin Asignar';
 					
 					 else{
-					 	
-						
-						
+					 							
 						$policy = $this->work_order->getPolicyByUid( $value->uid );
 					 	
 						$ot = $this->work_order->getWorkOrderById(  $_POST['assing'][$i] );

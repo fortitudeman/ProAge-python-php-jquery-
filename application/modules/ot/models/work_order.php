@@ -1581,9 +1581,7 @@ class Work_order extends CI_Model{
 		//$query = $this->db->get(); 
   	
 		$options = '<select name="assing['.$i.']" class="required"><option value="">Seleccione OT relacionada</option>';
-		
-		echo $query->num_rows();
-		
+				
 		if ($query->num_rows() == 0){  
 			
 			
