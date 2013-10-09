@@ -1552,18 +1552,19 @@ class Work_order extends CI_Model{
 		/*
 		SELECT work_order.id, work_order.uid,  policies.name
 		FROM work_order
-		JOIN users ON users.id=work_order.user
-		JOIN policies ON policies.id=work_order.policy_id
+   		JOIN policies ON policies.id=work_order.policy_id
+   	    JOIN work_order_types ON work_order_types.id=work_order.work_order_type_id
 		WHERE work_order.work_order_status_id=7
-		AND ( work_order.work_order_type_id=90
-		OR work_order.work_order_type_id=47 )
+		AND ( work_order_types.patent_id=90
+		OR work_order_types.patent_id=47 )
+   
 		*/
 		$this->db->select( 'work_order.id, work_order.uid,  policies.name' );
 		$this->db->from( 'work_order' );
-		$this->db->join( 'users', 'users.id=work_order.user' );
 		$this->db->join( 'policies', 'policies.id=work_order.policy_id' );
-		$this->db->where( array( 'work_order.work_order_status_id' => 1, 'work_order.work_order_type_id' => 90 ) );	
-		$this->db->or_where( 'work_order.work_order_type_id', 47 );
+		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id' );
+		$this->db->where( 'work_order.work_order_status_id', 1 );	
+		$this->db->where( '(work_order.work_order_type_id=90 OR work_order.work_order_type_id=47)' );
 		
 		$query = $this->db->get(); 
   	
