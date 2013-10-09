@@ -1556,8 +1556,7 @@ class Work_order extends CI_Model{
    	    JOIN work_order_types ON work_order_types.id=work_order.work_order_type_id
 		WHERE work_order.work_order_status_id=7
 		AND ( work_order_types.patent_id=90
-		OR work_order_types.patent_id=47 )
-   
+		OR work_order_types.patent_id=47 )   
 		*/
 		$this->db->select( 'work_order.id, work_order.uid,  policies.name' );
 		$this->db->from( 'work_order' );
@@ -1569,6 +1568,8 @@ class Work_order extends CI_Model{
 		$query = $this->db->get(); 
   	
 		$options = '<select name="assing['.$i.']" class="required"><option value="">Seleccione OT relacionada</option>';
+		
+		echo $query->num_rows();
 		
 		if ($query->num_rows() == 0){  
 			
@@ -1584,9 +1585,7 @@ class Work_order extends CI_Model{
 		
 		foreach ($query->result() as $row)			
 			
-			//if( $this->getWathdoPayment( $row->id ) == true )
-			
-				$options .= '<option value="'.$row->id.'">'.$row->uid.' - '.$row->name.'</option></select>';
+			$options .= '<option value="'.$row->id.'">'.$row->uid.' - '.$row->name.'</option></select>';
 			
 		
 		$options .= '</select>';
