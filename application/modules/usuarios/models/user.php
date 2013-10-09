@@ -1740,7 +1740,7 @@ class User extends CI_Model{
 			FROM agent_uids 
 			JOIN `agents` ON `agents`.id=agent_uids.agent_id
 			JOIN `users` ON `users`.id=agents.user_id
-			WHERE agent_uids.`uid`=\''.$uid.'\'';
+			WHERE ( agent_uids.`uid`=\''.$uid.'\'';
 		
 						
 		$this->db->select( ' users.company_name, users.name, users.lastnames' );
@@ -1757,12 +1757,13 @@ class User extends CI_Model{
 			$uid = str_replace( "N000", '', $uid );
 			$uid = str_replace( "N0000", '', $uid );
 			$uid = str_replace( "N00000", '', $uid );
+			$uid = str_replace( "N000000", '', $uid );
 			
 			$this->db->where( 'agent_uids.type', 'national' );
 			
 			$this->db->or_where( array( 'agent_uids.uid' => $uid, 'agent_uids.type' => 'national' ) );
 			
-			$querys .= 'AND agent_uids.type=\'national\' OR agent_uids.`uid`=\''.$uid.'\' ';
+			$querys .= ' OR agent_uids.`uid`=\''.$uid.'\' ) AND agent_uids.type=\'national\'  ';
 			
 		}
 		if( !empty( $type ) and $type == 'provincial' ) {
@@ -1772,10 +1773,11 @@ class User extends CI_Model{
 			$uid = str_replace( "P000", '', $uid );
 			$uid = str_replace( "P0000", '', $uid );
 			$uid = str_replace( "P00000", '', $uid );
+			$uid = str_replace( "P000000", '', $uid );
 			
 			$this->db->where( 'agent_uids.type', 'provincial' );
 			
-			$querys .= 'AND agent_uids.type=\'provincial\' OR agent_uids.`uid`=\''.$uid.'\' ';
+			$querys .= ' OR agent_uids.`uid`=\''.$uid.'\' ) AND agent_uids.type=\'provincial\' ';
 			
 			$this->db->or_where( array( 'agent_uids.uid' => $uid ) );
 		}
