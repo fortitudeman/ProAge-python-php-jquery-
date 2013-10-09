@@ -1757,7 +1757,7 @@ class User extends CI_Model{
 			
 			//$this->db->where( 'agent_uids.type', 'national' );
 			
-			$this->db->where( ' ( agent_uids.uid=\''.$uidorigin.'\' OR agent_uids.uid=\''.$uid.'\' ) ' );
+			$this->db->where( '(agent_uids.uid=\''.$uidorigin.'\' OR agent_uids.uid=\''.$uid.'\')' );
 			
 			
 		}
@@ -1773,7 +1773,7 @@ class User extends CI_Model{
 			
 			//$this->db->where( 'agent_uids.type', 'provincial' );
 			
-			$this->db->where( ' ( agent_uids.uid=\''.$uidorigin.'\' OR agent_uids.uid=\''.$uid.'\' ) ' );
+			$this->db->where( '(agent_uids.uid=\''.$uidorigin.'\' OR agent_uids.uid=\''.$uid.'\')' );
 		}
 		
 		$this->db->limit(1);
