@@ -1752,12 +1752,13 @@ class User extends CI_Model{
 		
 		if( !empty( $type ) and $type == 'national' ){
 			
-			$uid = str_replace( "N0", '', $uid );
-			$uid = str_replace( "N00", '', $uid );
-			$uid = str_replace( "N000", '', $uid );
-			$uid = str_replace( "N0000", '', $uid );
-			$uid = str_replace( "N00000", '', $uid );
 			$uid = str_replace( "N000000", '', $uid );
+			$uid = str_replace( "N00000", '', $uid );
+			$uid = str_replace( "N0000", '', $uid );
+			$uid = str_replace( "N000", '', $uid );
+			$uid = str_replace( "N00", '', $uid );
+			$uid = str_replace( "N0", '', $uid );			
+			$uid = ltrim( $uid, '0');
 			
 			$this->db->where( 'agent_uids.type', 'national' );
 			
@@ -1768,12 +1769,13 @@ class User extends CI_Model{
 		}
 		if( !empty( $type ) and $type == 'provincial' ) {
 			
-			$uid = str_replace( "P0", '', $uid );
-			$uid = str_replace( "P00", '', $uid );
-			$uid = str_replace( "P000", '', $uid );
-			$uid = str_replace( "P0000", '', $uid );
-			$uid = str_replace( "P00000", '', $uid );
 			$uid = str_replace( "P000000", '', $uid );
+			$uid = str_replace( "P00000", '', $uid );
+			$uid = str_replace( "P0000", '', $uid );
+			$uid = str_replace( "P000", '', $uid );
+			$uid = str_replace( "P00", '', $uid );
+			$uid = str_replace( "P0", '', $uid );
+			$uid = ltrim( $uid, '0');
 			
 			$this->db->where( 'agent_uids.type', 'provincial' );
 			
