@@ -1735,12 +1735,14 @@ class User extends CI_Model{
 			WHERE agent_uids.`uid`='1421424';
 		*/
 		//14011 en vez de P0014011.
+		
+		$uidorigin = $uid;
 						
 		$this->db->select( ' users.company_name, users.name, users.lastnames' );
 		$this->db->from( 'agent_uids' );
 		$this->db->join( 'agents', 'agents.id=agent_uids.agent_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
-		$this->db->where( array( 'agent_uids.type' => $type,  'agent_uids.uid' => $uid ) );
+		$this->db->where( array( 'agent_uids.type' => $type ) );
 		
 		
 		if( !empty( $type ) and $type == 'national' ){
@@ -1755,7 +1757,7 @@ class User extends CI_Model{
 			
 			//$this->db->where( 'agent_uids.type', 'national' );
 			
-			$this->db->or_where( array( 'agent_uids.uid' => $uid, 'agent_uids.type' => 'national' ) );
+			$this->db->where( ' ( agent_uids.uid=\''.$uidorigin.'\' OR agent_uids.uid=\''.$uid.'\' ) ' );
 			
 			
 		}
@@ -1771,7 +1773,7 @@ class User extends CI_Model{
 			
 			//$this->db->where( 'agent_uids.type', 'provincial' );
 			
-			$this->db->or_where( array( 'agent_uids.uid' => $uid ) );
+			$this->db->where( ' ( agent_uids.uid=\''.$uidorigin.'\' OR agent_uids.uid=\''.$uid.'\' ) ' );
 		}
 		
 		$this->db->limit(1);
