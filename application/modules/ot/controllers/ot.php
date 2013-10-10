@@ -1858,10 +1858,7 @@ class Ot extends CI_Controller {
 			for( $i=0; $i<=count( $file_array ); $i++ )
 				
 				unset( $file_array[$i]['agent_id'] );
-		
-			echo '<pre>';
-			print_r( $file_array );
-			echo '</pre>';				
+			
 		}
 	
 	
