@@ -1575,7 +1575,7 @@ class Work_order extends CI_Model{
 		$this->db->join( 'policies', 'policies.id=work_order.policy_id' );
 		$this->db->join( 'work_order_types', ' work_order_types.id=work_order.work_order_type_id' );
 		$this->db->where( 'work_order.work_order_status_id', 7 );	
-		$this->db->where( '(work_order.patent_id=90 OR work_order.patent_id=47)' );
+		$this->db->where( '( work_order_types.patent_id=90 OR work_order_types.patent_id=47 )' );
 		
 		
 		$query = $this->db->get(); 
