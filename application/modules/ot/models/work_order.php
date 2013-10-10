@@ -1578,7 +1578,7 @@ class Work_order extends CI_Model{
 		$this->db->where( '(work_order.work_order_type_id=90 OR work_order.work_order_type_id=47)' );
 		
 		
-		//$query = $this->db->get(); 
+		$query = $this->db->get(); 
   	
 		$options = '<select name="assing['.$i.']" class="required"><option value="">Seleccione OT relacionada</option>';
 				
