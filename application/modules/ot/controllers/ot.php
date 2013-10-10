@@ -1824,11 +1824,11 @@ class Ot extends CI_Controller {
 						
 						$file_array[$i]['wathdo'] = '';						
 						
-						echo $item->uid.'<br>';
+						echo $file_array[$i]['uid'].'<br>';
 																	
 						if( isset( $file_array[$i]['year_prime'] ) and $file_array[$i]['year_prime'] == 1 ){
-							exit;
-							$policy = $this->work_order->getPolicyByUid( $item->uid );
+							
+							$policy = $this->work_order->getPolicyByUid( $file_array[$i]['uid'] );
 							
 							if( empty( $policy ) )
 								
