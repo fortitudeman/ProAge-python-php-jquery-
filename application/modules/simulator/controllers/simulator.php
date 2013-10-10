@@ -157,7 +157,11 @@ class Simulator extends CI_Controller {
 		  'access_create' => $this->access_create,
 		  'access_update' => $this->access_update,
 		  'access_delete' => $this->access_delete,
-		  'scripts' =>  array(),
+		  'scripts' =>  array(
+		  	
+			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator.js"></script>'
+			
+		  ),
 		  'content' => 'simulator/overview', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  //'data' => $this->activity->overview( $begin, $this->user->getAgentIdByUser( $this->sessions['id'] ), $filter )		  	  

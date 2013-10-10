@@ -131,7 +131,20 @@
 			En proceso de conexión
 	<?php endif; ?> 
     
-     <a href="javascript:void(0)" class="btn btn-link btn-hide"><i class="icon-arrow-up"></i></a>
+    <?php /*
+    - Definir meta -si la meta no está definida- o Editar meta -si está definida-  
+	- Simular resultado
+	- Ver desempeño en campo (es la liga a las actividades de ese agente)
+	- Ver perfil (esta página aún no está creada, es el siguiente punto)
+    */?>
+	<br />
+	
+    <a href="#" class="btn btn-link">Definir meta</a> <br />
+    <a href="#" class="btn btn-link">Simular resultado</a><br />
+    <a href="#" class="btn btn-link">Desempeño en campo</a><br />
+    <a href="#" class="btn btn-link">Perfil</a><br />
+    
+    <a href="javascript:void(0)" class="btn btn-link btn-hide"><i class="icon-arrow-up"></i></a>
 	
 	</div>
 	

@@ -72,68 +72,45 @@
           
           
           <?php endif; ?>
-                                            
-        	<?php if( !empty( $data ) ): ?>
+          
+          <?php if( !isset( $_POST['query']['ramo'] ) or isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 1 ): ?>  
+              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#06F">Vida</a>
+          <?php else: ?>   
+              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida">Vida</a>
+          <?php endif; ?>              
+          
+          <?php 	if( isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 2 ): ?> 
+              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" style="color:#06F">GMM</a>
+          <?php else: ?>   
+              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm">GMM</a>
+          <?php endif; ?>     
+          
+          
+          <?php if( isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 3 ): ?> 
+              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" style="color:#06F">Autos</a>
+          <?php else: ?>   
+              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos">Autos</a>
+          <?php endif; ?>        
+              
+         
+         <div class="row">
+         
+         <div class="span5" style="margin-left:40px;">
+         	
+            <?php $this->load->view( 'simulador' ) ?>
+            
+         </div>
+         
+         <div class="span6" >
+         	
+            <?php $this->load->view( 'metas' ) ?>
+            
+         </div>
            
-            <table class="table table-striped table-bordered bootstrap-datatable datatable">
-              <thead>
-                  <tr>
-                      <th>Inicio</th>
-                      <th>Fin</th> 
-                      <th>Citas</th>
-                      <th>Entrevistas</th>
-                      <th>Prospectos</th>
-                      <th>Comentarios</th>
-                      <th>Creado</th>
-                      <th>Última modificación</th>
-                  </tr>
-              </thead>   
-              <tbody id="data">
-                <?php  foreach( $data as $value ): ?>
-               <tr>
-                	<td class="center"><?php echo $value['begin'] ?></td>
-                    <td class="center"><?php echo $value['end'] ?></td>
-                    <td class="center"><?php echo $value['cita'] ?></td>
-                    <td class="center"><?php echo $value['interview'] ?></td>
-                    <td class="center"><?php echo $value['prospectus'] ?></td>
-                    <td class="center"><?php echo $value['comments'] ?></td>
-                    <td class="center"><?php echo $value['date'] ?></td>
-                    <td class="center"><?php echo $value['last_updated'] ?></td>                                            
-                </tr>
-                <?php endforeach;  ?>                
-              </tbody>
-          </table>    
-          
-          
-          
-          
-          <?php else: ?>
-		  
-		  	<div class="alert alert-block">
-                  <button type="button" class="close" data-dismiss="alert">×</button>
-                  <strong>Atención: </strong> No hay registro de simulador. <a href="<?php echo base_url() ?>simulator/create.html" class="btn btn-link">Haga click aquí para capturar un nuevo registro</a>
-            </div>
-		  <?php endif; ?>
-                           
+         </div>  
+                                            
+        	                           
         </div>
     </div><!--/span-->
 
 </div><!--/row-->
-
-<?php $pagination='';//$pagination = $this->pagination->create_links(); // Set Pag ?>
-
-<?php if( !empty( $pagination ) ): ?>
-    
-    <div class="row-fluid sortable">		
-        <div class="box span12">
-            <div class="box-content">
-            
-              <?php echo $pagination?>
-                      
-            </div>
-        </div><!--/span-->
-    
-    </div><!--/row-->
-
-<?php endif; ?>
-

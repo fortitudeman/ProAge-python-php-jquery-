@@ -32,7 +32,7 @@ class Simulators extends CI_Model{
 
 
 // Add
-	public function create( $table = 'agents_activity', $values = array() ){
+	public function create( $table = '', $values = array() ){
         
 		
 		if( empty( $table ) or empty( $values ) ) return false;
@@ -83,7 +83,7 @@ class Simulators extends CI_Model{
  |	Update
  **/ 
 
-    public function update( $table = 'agents_activity', $id = 0, $values = array() ){
+    public function update( $table = '', $id = 0, $values = array() ){
         
 		if( empty( $table ) or empty( $values ) or empty( $id ) ) return false;
 					
@@ -102,7 +102,7 @@ class Simulators extends CI_Model{
 /**
  |	Remove 
  **/ 	
-	 public function delete( $table = 'agents_activity', $field = 'id', $value = null ){
+	 public function delete( $table = '', $field = 'id', $value = null ){
         
 		if( empty( $table ) or empty( $field )  or empty( $value ) ) return false;
 					   
@@ -124,6 +124,27 @@ class Simulators extends CI_Model{
 
 // Return insert id
 	public function insert_id(){   return $this->insertId;  }
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 ?>

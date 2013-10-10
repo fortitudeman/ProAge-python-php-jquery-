@@ -102,7 +102,7 @@ function ingresoPromedio(){
 	
 	total = total/parseInt( $( '#periodo' ).val() );
 	
-	$( '#inresoPromedioMensual_text' ).html(total);
+	$( '#inresoPromedioMensual_text' ).html( '$ '+total );
 	$( '#inresoPromedioMensual' ).val(total);
 		
 }
