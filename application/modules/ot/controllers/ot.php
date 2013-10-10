@@ -1833,10 +1833,10 @@ class Ot extends CI_Controller {
 							if( empty( $policy ) )
 								
 								$file_array[$i]['wathdo'] = $this->work_order->getWathdo( $i );
-							/*
+							
 							else
 								
-								$file_array[$i]['wathdo'] = $policy[0]['id'];*/							
+								$file_array[$i]['wathdo'] =  $this->work_order->getByPolicyUid( $file_array[$i]['uid'] );					
 									
 								
 																												

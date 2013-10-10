@@ -841,12 +841,7 @@ class Work_order extends CI_Model{
 
 			
 		*/
-		
-		echo 'SELECT id
-			FROM policies
-			WHERE uid=\''.$uid.'\'';
-
-		
+				
 		$this->db->select( 'id, prima' );		
 		$this->db->where( 'policies.uid', $uid );
 		$this->db->limit(1);
@@ -871,7 +866,30 @@ class Work_order extends CI_Model{
 		
 	}
 
-
+	public function getByPolicyUid( $policy_uid = null ){
+		
+		if( empty( $policy_uid ) ) return false;
+		/*
+		SELECT work_order.id, work_order.uid,  policies.name
+		FROM work_order
+   		JOIN policies ON policies.id=work_order.policy_id
+		WHERE policies.uid*/
+		$this->db->select( 'work_order.id, work_order.uid,  policies.name' );
+		$this->db->from( 'work_order' );
+		$this->db->join( 'policies', 'policies.id=work_order.policy_id' );		
+		$this->db->where( 'policies.uid', $policy_uid );
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 0) return false;
+		
+		
+		foreach ($query->result() as $row)
+		
+			return $row->uid.' - '.$row->name;
+		
+		
+	}
 
 
 /**
