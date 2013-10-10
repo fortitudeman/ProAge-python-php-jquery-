@@ -841,6 +841,12 @@ class Work_order extends CI_Model{
 
 			
 		*/
+		
+		echo 'SELECT id
+			FROM policies
+			WHERE uid=\''.$uid.'\'';
+
+		
 		$this->db->select( 'id, prima' );		
 		$this->db->where( 'policies.uid', $uid );
 		$this->db->limit(1);
