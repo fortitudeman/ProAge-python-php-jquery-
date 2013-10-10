@@ -323,7 +323,7 @@
 																		
 									if( $key == 'is_new' )	$key = 'Es nuevo negocio';
 									if( $key == 'year_prime' )	$key = 'Año prima';
-									if( $key == 'wathdo' )	$key = '¿Que hacer con la póliza?';
+									if( $key == 'wathdo' )	$key = '¿Asignar el pago a OT?';
 									if( $key == 'payment_date' )	$key = 'Fecha de pago real';
 									if( $key == 'clave' )	$key = 'Clave';
 									if( $key == 'agent_uidsnational' )	$key = 'Folio national';
