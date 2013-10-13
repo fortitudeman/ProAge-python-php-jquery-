@@ -29,3 +29,40 @@ CREATE TABLE `agents_activity` (
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+/*SIMULATOR TABLES*/
+CREATE TABLE `simulator` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `period` int not null,
+  `product_group_id` int not null,
+  `data` text not null,
+  `last_updated` datetime NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `simulator_default_estacionalidad` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `month` varchar(20) character set utf8 collate utf8_spanish_ci not null,
+  `vida` int not null,
+  `gmm` int not null,
+  `autos` int not null,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+INSERT INTO simulator_default_estacionalidad values
+( null, 'Enero', '5', '3', '3' ),
+( null, 'Febrero', '7', '9', '9' ),
+( null, 'Marzo', '14', '14', '14' ),
+( null, 'Abril', '3', '3', '3' ),
+( null, 'Mayo', '7', '7', '7' ),
+( null, 'Junio', '13', '13', '13' ),
+( null, 'Julio', '4', '4', '4' ),
+( null, 'Agosto', '7', '7', '7' ),
+( null, 'Septiembre', '2', '12', '12' ),
+( null, 'Octubre', '3', '3', '3' ),
+( null, 'Noviembre', '15', '5', '5' ),
+( null, 'Diciembre', '20', '20', '20' );
