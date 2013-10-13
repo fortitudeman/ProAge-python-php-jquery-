@@ -35,6 +35,7 @@ CREATE TABLE `agents_activity` (
 CREATE TABLE `simulator` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `period` int not null,
+  `agent_id` int not null,
   `product_group_id` int not null,
   `data` text not null,
   `last_updated` datetime NOT NULL,
