@@ -127,7 +127,40 @@ class Simulators extends CI_Model{
 	
 	
 	
-	
+
+
+// Getting by Agent
+	public function getByAgent( $agent = null ){
+		
+		if( empty( $agent ) ) return false;
+		
+		//SELECT * FROM simulator WHERE agent_id = '' ORDER BY id DESC LIMIT 1;
+		$this->db->select();
+		$this->db->from( 'simulator' );
+		$this->db->where( 'agent_id', $agent );
+		$this->db->order_by( 'id', 'desc' );
+		$this->db->limit(1);
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$data = array();
+		
+		// Getting data
+		foreach ($query->result() as $row)
+			
+			$data[]  = array(
+			
+				'id' => $row->id,
+				'data' => json_decode( $row->data )
+				
+			);
+			
+				
+		return $data;
+		
+	}	
 	
 	
 	

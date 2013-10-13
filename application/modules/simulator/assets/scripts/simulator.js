@@ -401,6 +401,43 @@ $( document ).ready(function() {
 	
 	
 	
+	$( '.link-ramo' ).bind( 'click', function(){
+		
+		$( '#vida' ).css({ 'color': '#000' });
+		$( '#gmm' ).css({ 'color': '#000' });
+		$( '#autos' ).css({ 'color': '#000' });
+			
+		
+		if( this.id == 'vida' ){
+							
+			$( '#ramo' ).val(1);
+			
+			$( '#vida' ).css( 'color', '#06F' );
+			
+			$( '#ramo' ).val( 1 );
+			// 'Trimestre' );
+			
+		}
+		
+		if( this.id == 'gmm' ){
+		
+			$( '#ramo' ).val(2);
+			
+			$( '#gmm' ).css( 'color', '#06F' );
+			
+			$( '#ramo' ).val( 2 );
+		}
+		
+		if( this.id == 'autos' ){
+			
+			$( '#ramo' ).val(3);
+			
+			$( '#autos' ).css( 'color', '#06F' );
+			
+			$( '#ramo' ).val( 3 );
+		}
+					
+	});
 	
 		
 	
@@ -434,4 +471,47 @@ function ingresoPromedio(){
 	$( '#inresoPromedioMensual_text' ).html( '$ '+total );
 	$( '#inresoPromedioMensual' ).val(total);
 		
+}
+
+function save(){
+			
+	var id = $( '#id' ).val();
+	
+	if( id == 0 ){
+	 	 	
+	  $.ajax({
+
+			url:  Config.base_url()+'simulator/save.html',
+			type: "POST",
+			data: $( '#form' ).serialize(),
+			cache: false,
+			async: false,
+			success: function(data){
+								
+				$( '#id' ).val(data);
+				
+			}						
+	
+		});
+	
+	}else{
+		
+		 $.ajax({
+
+			url:  Config.base_url()+'simulator/update.html',
+			type: "POST",
+			data: $( '#form' ).serialize(),
+			cache: false,
+			async: false,
+			success: function(data){
+				
+			}						
+	
+		});
+		
+	}
+	
+	
+	
+	
 }

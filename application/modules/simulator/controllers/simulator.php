@@ -88,7 +88,7 @@ class Simulator extends CI_Controller {
 	
 
 // Show all records	
-	public function index( $filter = null ){
+	public function index( $agentid = null ){
 		
 		
 		
@@ -107,45 +107,12 @@ class Simulator extends CI_Controller {
 			redirect( 'home', 'refresh' );
 		
 		}
-						
-		/*		
-		// Pagination config	
-		$this->load->library('pagination');
+			
+			
+		$this->load->model( array( 'user', 'simulators' ) );
 		
-		$begin = $this->uri->segment(3);
-		
-		if( empty( $begin ) ) $begin = 0;
-		
-					
-		$config['full_tag_open'] = '<div class="pagination pagination-right"><ul>'; 
-		$config['full_tag_close'] = '</ul></div>';
-		$config['first_link'] = false;
-		$config['last_link'] = false;
-		$config['first_tag_open'] = '<li>';
-		$config['first_tag_close'] = '</li>';
-		$config['prev_link'] = '&larr; Anterior';
-		$config['prev_tag_open'] = '<li class="prev">';
-		$config['prev_tag_close'] = '</li>';
-		$config['next_link'] = 'Siguiente &rarr;';
-		$config['next_tag_open'] = '<li>';
-		$config['next_tag_close'] = '</li>';
-		$config['last_tag_open'] = '<li>';
-		$config['last_tag_close'] = '</li>';
-		$config['cur_tag_open'] =  '<li class="active"><a href="#">';
-		$config['cur_tag_close'] = '</a></li>';
-		$config['num_tag_open'] = '<li>';
-		$config['num_tag_close'] = '</li>';					
-		$config['base_url'] = base_url().'activities/index/';
-		//$config['total_rows'] = $this->activity->record_count( $this->user->getAgentIdByUser( $this->sessions['id'] ), $filter );
-		//$config['total_rows'] = $this->activity->record_count( 1, $filter );
-		$config['per_page'] = 150;
-		$config['num_links'] = 5;
-		$config['uri_segment'] = 3;
-		$config['use_page_numbers'] = TRUE;
-		
-		//$this->pagination->initialize($config); 
-		*/
-					 
+		$agent = $this->user->getAgentsById( $agentid );
+						 
 		// Config view
 		$this->view = array(
 				
@@ -159,14 +126,16 @@ class Simulator extends CI_Controller {
 		  'access_delete' => $this->access_delete,
 		  'scripts' =>  array(
 		  	
+			'<script type="text/javascript" src="'.base_url().'scripts/config.js"></script>',
 			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator.js"></script>'
 			
 		  ),
 		  'content' => 'simulator/overview', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  'no_visible_elements' => true,
-		  'agent' => 'Agent Name'
-		  //'data' => $this->activity->overview( $begin, $this->user->getAgentIdByUser( $this->sessions['id'] ), $filter )		  	  
+		  'agent' =>  $agent,
+		  'agentid' =>  $agentid,
+		  'data' => $this->simulators->getByAgent( $agentid )		  	  
 		  //'data' => $this->activity->overview( $begin, 1, $filter )		  	  		
 		);
 	
@@ -176,11 +145,124 @@ class Simulator extends CI_Controller {
 	}
 	
 	
-	public function create(){}
+	public function save(){
+		
+		
+		if( $this->input->is_ajax_request() == false ){
+			
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No se puede acceder a esta sección "Simulador Crear".'
+							
+			));	
+			
+			
+			redirect( 'home', 'refresh' );
+			
+		}
+		
+		
+		// Check access teh user for create
+		if( $this->access_create == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Simulador Crear", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'home', 'refresh' );
+		
+		}
+		
+		if( empty( $_POST ) ) exit;
+		
+		$this->load->model( array( 'simulators' ) );
+		
+		$simulator = array(
+			'period' => $_POST['periodo'],
+			'agent_id' => $_POST['agent_id'],
+			'product_group_id' => $_POST['ramo'],
+			'data' => json_encode($_POST)
+		);
+		
+		if( $this->simulators->create( 'simulator', $simulator ) == true ){
+			
+			
+			$id = $this->simulators->getByAgent( $_POST['agent_id'] );
+							
+			echo $id[0]['id'];
+			
+		}else
+			
+			echo false;
+		
+			
+	}
 	
-	public function update(){}
-	
-	public function delete(){}
+	public function update(){
+		
+		if( !$this->input->is_ajax_request() ){
+			
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No se puede acceder a esta sección "Simulador Editar".'
+							
+			));	
+			
+			
+			redirect( 'home', 'refresh' );
+			
+		}
+		
+		
+		// Check access teh user for create
+		if( $this->access_update == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Simulador Editar", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'home', 'refresh' );
+		
+		}
+		
+		if( empty( $_POST ) ) exit;
+		
+		$this->load->model( array( 'simulators' ) );
+		
+		$id = $_POST['id'];
+		
+		unset( $_POST['id'] );
+		
+		$simulator = array(
+			'period' => $_POST['periodo'],
+			'agent_id' => $_POST['agent_id'],
+			'product_group_id' => $_POST['ramo'],
+			'data' => json_encode($_POST)
+		);
+		
+		if( $this->simulators->update( 'simulator', $id, $simulator ) == true )
+			
+			echo true;
+			
+		else
+			
+			echo false;
+		
+	}
 	
 /* End of file simulator.php */
 /* Location: ./application/controllers/simulator.php */

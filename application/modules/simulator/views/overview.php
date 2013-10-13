@@ -73,31 +73,43 @@
           
           <?php endif; ?>
           
-          <?php if( !isset( $_POST['query']['ramo'] ) or isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 1 ): ?>  
-              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#000">Vida</a>
+          <?php if( isset(  $data[0]['product_group_id'] ) and   $data[0]['product_group_id'] == 1 ): ?>  
+              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida">Vida</a>
           <?php else: ?>   
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida">Vida</a>
           <?php endif; ?>              
           
-          <?php 	if( isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 2 ): ?> 
+          <?php 	if( isset(  $data[0]['product_group_id'] ) and  $data[0]['product_group_id'] == 2 ): ?> 
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" style="color:#06F">GMM</a>
           <?php else: ?>   
-              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm">GMM</a>
+              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" style="color:#000">GMM</a>
           <?php endif; ?>     
           
           
-          <?php if( isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 3 ): ?> 
+          <?php if( isset(  $data[0]['product_group_id'] ) and   $data[0]['product_group_id'] == 3 ): ?> 
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" style="color:#06F">Autos</a>
           <?php else: ?>   
-              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos">Autos</a>
+              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" style="color:#000">Autos</a>
           <?php endif; ?>        
-              
+          
+          <form action="" method="post" id="form">
+          
+          <input type="hidden" id="ramo" name="ramo" value="<?php if( isset( $data[0]['product_group_id'] ) ) echo $data[0]['product_group_id']; else echo 1; ?>" />    
+          
+          <input type="hidden" id="agent_id" name="agent_id" value="<?php echo $agentid ?>" />    
+          
+          <input type="hidden" id="id" name="id" value="<?php if( isset( $data[0]['id'] ) ) echo $data[0]['id']; else echo 0; ?>" />    
          
          <div class="row">
          
          <div class="span5" style="margin-left:40px;">
          	
-            <?php $this->load->view( 'simulador' ) ?>
+            <?php if( isset( $data[0]['data'] ) )
+					 $dataview = array( 'data' => $data[0]['data'] );
+				   else $dataview = array();  
+				  
+				  
+				  $this->load->view( 'simulador', $dataview ) ?>
             
          </div>
          
@@ -108,7 +120,8 @@
          </div>
            
          </div>  
-                                            
+           
+           </form>                                 
         	                           
         </div>
     </div><!--/span-->
