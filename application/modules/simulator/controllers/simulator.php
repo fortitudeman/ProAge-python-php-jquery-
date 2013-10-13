@@ -264,6 +264,119 @@ class Simulator extends CI_Controller {
 		
 	}
 	
+	
+	
+	
+	
+	
+	public function config(){
+		
+		// Check access teh user for create
+		if( $this->access_update == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Simulador Configuración Default", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'home', 'refresh' );
+		
+		}
+		
+		
+		$this->load->model( array( 'simulators' ) );
+							 
+		// Config view
+		$this->view = array(
+				
+		  'title' => 'Simulador | Configuración Default',
+		   // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'access_create' => $this->access_create,
+		  'access_update' => $this->access_update,
+		  'access_delete' => $this->access_delete,
+		  'scripts' =>  array(
+		  	
+			'<script type="text/javascript" src="'.base_url().'scripts/config.js"></script>',
+			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/config.js"></script>'
+			
+		  ),
+		  'content' => 'simulator/config', // View to load
+		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+		  'data' => $this->simulators->getConfig()		  	  	  	  		
+		);
+	
+		
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+		
+	}
+	
+	public function configSave(){
+		
+		if( !$this->input->is_ajax_request() ){
+			
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No se puede acceder a esta sección "Simulador Configuración Default".'
+							
+			));	
+			
+			
+			redirect( 'home', 'refresh' );
+			
+		}
+		
+		
+		// Check access teh user for create
+		if( $this->access_update == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Simulador Editar", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'home', 'refresh' );
+		
+		}
+		
+		$item = explode( '-', $_POST['item'] );
+		
+		$id  = $item[0];
+		
+		if( $item[1] == 1 ) 	$field = 'vida';
+		if( $item[1] == 2 ) 	$field = 'gmm';
+		if( $item[1] == 3 ) 	$field = 'autos';
+		
+		
+		$data = array( $field => $_POST['value'] );
+		
+		$this->load->model( array( 'simulators' ) );
+		
+		if( $this->simulators-> update( 'simulator_default_estacionalidad', $id, $data ) == true )
+			
+			echo true;
+		
+		else
+			
+			echo false;
+		
+		exit;		
+		
+	}
+	
 /* End of file simulator.php */
 /* Location: ./application/controllers/simulator.php */
 }

@@ -165,7 +165,38 @@ class Simulators extends CI_Model{
 	
 	
 	
-	
+// Getting config
+	public function getConfig(){
+				
+		//SELECT * FROM simulator_default_estacionalidad ORDER BY id DESC;
+		$this->db->select();
+		$this->db->from( 'simulator_default_estacionalidad' );
+		$this->db->order_by( 'id', 'asc' );
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$data = array();
+		
+		// Getting data
+		foreach ($query->result() as $row)
+			
+			$data[]  = array(
+			
+				'id' => $row->id,
+				'month' => $row->month,
+				'vida' => $row->vida,
+				'gmm' => $row->gmm,
+				'autos' => $row->autos
+				
+				
+			);
+			
+				
+		return $data;
+		
+	}		
 	
 	
 	
