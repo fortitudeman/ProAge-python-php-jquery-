@@ -17,14 +17,6 @@
 <div style="overflow:scroll">
 <div class="box" style="width:1200px;">
 
-
-<div class="box-header well" data-original-title>
-          
-  <h2>VIDA  INDIVIDUAL</h2>
-            <div class="box-icon">
-                                                 
-            </div>
-        </div>
  <div class="box-content">
 
      <table style="width:1200px;">

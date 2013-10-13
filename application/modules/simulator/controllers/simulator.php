@@ -164,6 +164,8 @@ class Simulator extends CI_Controller {
 		  ),
 		  'content' => 'simulator/overview', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+		  'no_visible_elements' => true,
+		  'agent' => 'Agent Name'
 		  //'data' => $this->activity->overview( $begin, $this->user->getAgentIdByUser( $this->sessions['id'] ), $filter )		  	  
 		  //'data' => $this->activity->overview( $begin, 1, $filter )		  	  		
 		);

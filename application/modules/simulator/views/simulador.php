@@ -16,14 +16,36 @@
 ?>
 <div class="box">
 
-
-<div class="box-header well" data-original-title>
-          
-  <h2>VIDA  INDIVIDUAL</h2>
-            
-</div>
  <div class="box-content">
 	
+    
+    <table style="margin-top:400px; position:fixed; z-index:1000; background:#F9F9F9; color:#fff; width:38%;">
+    
+     <tr>
+           <td class="totales" style="width:250px;"><b style="color:#547EBD !important">INGRESO TOTAL:</b></td>
+
+           <td style="text-align:right">
+              <p style="color:#547EBD !important; float:right" id="ingresoTotal_text">$ 0</p>	
+              <input type="hidden" name="ingresoBonoRenovacion" id="ingresoTotal" value="0">
+           </td>
+
+        </tr>
+
+        <tr>
+
+            <td class="totales"><b style="color:#547EBD !important">INGRESO PROMEDIO MENSUAL:</b></td>
+
+           <td style="text-align:right">
+			  <p style="color:#547EBD !important; float:right" id="inresoPromedioMensual_text">$ 0</p>	
+              <input type="hidden" name="ingresoBonoRenovacion" id="inresoPromedioMensual" value="0">
+
+           </td>
+
+        </tr>
+        
+    </table>    
+    
+    
     <table>
 
         <tr>
@@ -108,7 +130,7 @@
 
            <td>
 
-              <input type="text" name="noNegocios" id="noNegocios">
+              <input type="text" name="noNegocios" id="noNegocios" value="0">
 
            </td>
 
@@ -168,7 +190,7 @@
 
               <select name="porcentajeConservacion" id="porcentajeConservacion">
 
-                 <option value="sin base">Sin base</option>
+                 <option value="0">Sin base</option>
 
                  <option value="89">89%</option>
 
@@ -276,7 +298,7 @@
 
            <td>
 
-              <input type="text" name="bonoAplicado" id="bonoAplicado" class="camposSoloLectura" value="0"  onblur="ingresoTotal(); ingresoPromedio();">
+              <input type="text" name="bonoAplicado" id="bonoAplicado" class="camposSoloLectura" value="0" readonly="readonly">
 
            </td>
 
@@ -314,7 +336,7 @@
 
            <td>
 
-              <input type="text" name="porbonoGanado" id="porbonoGanado" class="camposSoloLectura" value="0" onblur="ingresoTotal(); ingresoPromedio();">
+              <input type="text" name="porbonoGanado" id="porbonoGanado" value="0" readonly="readonly">
 
            </td>
 
@@ -340,33 +362,10 @@
            <td><br></td>
 
         </tr>
-
-        <tr>
-
-          
-
-           <td class="totales"><b style="color:#547EBD !important">INGRESO TOTAL:</b></td>
-
-           <td>
-              <p style="color:#547EBD !important; float:right" id="ingresoTotal_text">$ 0</p>	
-              <input type="hidden" name="ingresoBonoRenovacion" id="ingresoTotal" value="0">
-           </td>
-
-        </tr>
-
-        <tr>
-
-            <td class="totales"><b style="color:#547EBD !important">INGRESO PROMEDIO MENSUAL:</b></td>
-
-           <td>
-			  <p style="color:#547EBD !important; float:right" id="inresoPromedioMensual_text">$ 0</p>	
-              <input type="hidden" name="ingresoBonoRenovacion" id="inresoPromedioMensual" value="0">
-
-           </td>
-
-        </tr>
-
+       
      </table>
+	
     
+        
  </div>    
 </div>

@@ -36,11 +36,11 @@
 <div class="row-fluid sortable">		
     <div class="box span12">
         <div class="box-header well" data-original-title>
-            <h2></h2>
+            <p><?php if( isset( $agent ) ) echo $agent ?></p>
             <div class="box-icon">
-                  
+                                                       
                    <?php if( $access_create == true ): ?>
-                   		<a href="<?php echo base_url() ?>simulator/create.html" class="btn btn-link" title="Crear"><i class="icon-plus"></i></a>
+                   		<!--<a href="<?php echo base_url() ?>simulator/create.html" class="btn btn-link" title="Crear"><i class="icon-plus"></i></a>-->
 				   <?php endif; ?>
                                                  
             </div>
@@ -74,7 +74,7 @@
           <?php endif; ?>
           
           <?php if( !isset( $_POST['query']['ramo'] ) or isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 1 ): ?>  
-              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#06F">Vida</a>
+              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#000">Vida</a>
           <?php else: ?>   
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida">Vida</a>
           <?php endif; ?>              
