@@ -135,8 +135,8 @@ class Simulator extends CI_Controller {
 		  'no_visible_elements' => true,
 		  'agent' =>  $agent,
 		  'agentid' =>  $agentid,
-		  'data' => $this->simulators->getByAgent( $agentid )		  	  
-		  //'data' => $this->activity->overview( $begin, 1, $filter )		  	  		
+		  'data' => $this->simulators->getByAgent( $agentid ),		  	  
+		  'config' => $this->simulators->getConfig()		  	  	
 		);
 	
 		

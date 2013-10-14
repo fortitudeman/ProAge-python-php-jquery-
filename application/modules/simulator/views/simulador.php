@@ -18,8 +18,9 @@
 
  <div class="box-content">
 	
-    
-    <table style="margin-top:400px; position:fixed; z-index:1000; background:#F9F9F9; color:#fff; width:38%;">
+    <!--style="margin-top:400px; position:fixed; z-index:1000; background:#F9F9F9; color:#fff; width:38%;"-->
+    <table class="table-totals" style="background:#F9F9F9; color:#fff; width:38%;position:fixed !important;
+	bottom:0px;">
     
      <tr>
            <td class="totales" style="width:250px;"><b style="color:#547EBD !important">INGRESO TOTAL:</b></td>

@@ -18,7 +18,7 @@ $( document ).ready(function() {
 			
 	
 	$( '.value' ).bind( 'click', function(){
-		
+						
 		$( '#'+this.id ).hide();
 			
 		$( '#value-input-'+this.id ).show();
