@@ -124,6 +124,9 @@ class Simulator extends CI_Controller {
 		  'access_create' => $this->access_create,
 		  'access_update' => $this->access_update,
 		  'access_delete' => $this->access_delete,
+		  'css' => array(
+		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet">',
+		  ),
 		  'scripts' =>  array(
 		  	
 			'<script type="text/javascript" src="'.base_url().'scripts/config.js"></script>',

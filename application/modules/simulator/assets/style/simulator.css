@@ -1,0 +1,61 @@
+/* CSS Document */
+/*
+
+  Author		Ulises Rodríguez
+  Site:			http://www.ulisesrodriguez.com	
+  Twitter:		https://twitter.com/#!/isc_ulises
+  Facebook:		http://www.facebook.com/ISC.Ulises
+  Github:		https://github.com/ulisesrodriguez
+  Email:		ing.ulisesrodriguez@gmail.com
+  Skype:		systemonlinesoftware
+  Location:		Guadalajara Jalisco Mexíco
+
+*/
+.bgblank{
+	background-color:#FFF;
+	text-align:center !important;
+	vertical-align:middle !important;
+	width:auto;
+}
+.bglight{
+	background-color:#EBEBEB;
+	text-align:center !important;
+	vertical-align:middle !important;
+	width:auto;
+}
+
+.bgestacionalidadlight{
+	background-color:#EBEBEB;
+	text-align:right !important;
+}
+
+.bgestacionalidadbold{
+	background-color:#C0C0C0;
+	text-align:right !important;
+}
+.bgyelowlight{
+	background-color:#FDFBBE;
+}
+.bgyelowbold{
+	background-color:#FCF979;
+}
+
+.bgorangelight{
+	background-color:#FEE3AB;
+}
+.bgorangebold{
+	background-color:#FCC731;
+}
+.bggreenlight{
+	background-color:#CBE8B3;
+}
+.bggreenbold{
+	background-color:#659E3F;
+}
+.btn-save-meta{
+	color:#FFF;
+	font-size:16px;
+	background-color:#FF6D0D;
+	height:40px;
+	margin-top:-3px;
+}

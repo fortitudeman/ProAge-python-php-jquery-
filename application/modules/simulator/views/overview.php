@@ -100,6 +100,8 @@
           
           <input type="hidden" id="id" name="id" value="<?php if( isset( $data[0]['id'] ) ) echo $data[0]['id']; else echo 0; ?>" />    
          
+        <!-- <img src="<?php echo base_url() ?>images/distribucion.png" /> -->
+         
          <div class="row">
          
          <div class="span5" style="margin-left:40px;">
@@ -115,7 +117,13 @@
          
          <div class="span6" >
          	
-            <?php $this->load->view( 'metas' ) ?>
+            
+            <?php if( isset( $config ) )
+					 $dataview = array( 'config' => $config );
+				   else $dataview = array();  
+				  
+				  
+				  $this->load->view( 'metas', $dataview ) ?>
             
          </div>
            
