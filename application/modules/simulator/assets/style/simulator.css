@@ -52,6 +52,11 @@
 .bggreenbold{
 	background-color:#659E3F;
 }
+
+.bggreenbold div{
+	text-align:right !important;
+}
+
 .btn-save-meta{
 	color:#FFF;
 	font-size:16px;

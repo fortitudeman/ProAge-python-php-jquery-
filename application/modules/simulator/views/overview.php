@@ -114,10 +114,8 @@
 				  $this->load->view( 'simulador', $dataview ) ?>
             
          </div>
-         
-         <div class="span6" >
-         	
-            
+          <div class="span6" >
+                    
             <?php if( isset( $config ) )
 					 $dataview = array( 'config' => $config );
 				   else $dataview = array();  

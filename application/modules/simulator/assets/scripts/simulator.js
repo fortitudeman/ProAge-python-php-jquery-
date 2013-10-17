@@ -234,7 +234,339 @@ $( document ).ready(function() {
 		
 		ingresoTotal(); ingresoPromedio();
 		
+		
+		
+		
+		
+		// Metas
+		var totaltrimestre = 0;
+		
+		var totalprimameta = 0;
+		
+		var totalnegociometa = 0; 	
+		
+		var totalesnegociometa = 0;
+		
+		var totalsolicitudmeta= 0;	 	
+		
+		var totalessolicitudmeta = 0;	 
+		 
+		for(  var i = 1; i<=12; i++ ){
+			
+			var total = parseFloat( this.value ) /  parseInt( $( '#mes-'+i ) .val() );
+			
+			var meta =  Math.round( total* 100 )/100;
+			
+			var primapromedio = parseFloat( $( '#primas_promedio' ).val() );
+				
+				primapromedio =  Math.round( ( meta / primapromedio )*100 );
+				
+				primapromedio =  primapromedio/100;
+				
+				
+				$( "#metas-prima-promedio" ).val( $( '#primas_promedio' ).val() )
+			
+						
+			var solicitud = primapromedio / parseInt( $( '#mes-'+i ) .val() );
+				
+			// Show Values
+			$( '#primas-meta-'+i ).val( meta );
+			$( '#primas-meta-text-'+i ).html( '$ '+ meta );
+			
+			// Negocios Meta
+			$( '#primas-negocios-meta-'+i ).val( primapromedio );
+			$( '#primas-negocios-meta-text-'+i ).html( '$ '+ primapromedio.toFixed(2) );
+			
+			// Solicitud Meta
+			$( '#primas-solicitud-meta-'+i ).val( solicitud );
+			$( '#primas-solicitud-meta-text-'+i ).html( '$ '+ solicitud.toFixed(2) );
+			
+			
+			totaltrimestre+=meta;
+			
+			totalprimameta+=totaltrimestre;
+			
+			
+			totalnegociometa += primapromedio;
+			
+			totalesnegociometa += totalnegociometa;
+			
+			
+			totalsolicitudmeta += solicitud; 
+			
+			totalessolicitudmeta += totalsolicitudmeta;
+			
+			// Totales
+			if( i == 3 ){
+				
+				$( '#primas-meta-primer' ).val( totaltrimestre );
+				$( '#primas-meta-primer-text' ).html( '$ '+totaltrimestre.toFixed(2) );
+				
+				$( '#primas-negocio-meta-primer' ).val( totalnegociometa );
+				$( '#primas-negocio-meta-primer-text' ).html( '$ '+totalnegociometa.toFixed(2) );
+				
+				$( '#primas-solicitud-meta-primer' ).val( totalsolicitudmeta );
+				$( '#primas-solicitud-meta-primer-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			if( i == 6 ){
+				
+				$( '#primas-meta-segund' ).val( totaltrimestre );
+				$( '#primas-meta-segund-text' ).html( '$ '+totaltrimestre.toFixed(2) );
+				
+				$( '#primas-negocio-meta-segund' ).val( totalnegociometa );
+				$( '#primas-negocio-meta-segund-text' ).html( '$ '+totalnegociometa.toFixed(2) );
+				
+				$( '#primas-solicitud-meta-segund' ).val( totalsolicitudmeta );
+				$( '#primas-solicitud-meta-segund-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			if( i == 9 ){
+				
+				$( '#primas-meta-tercer' ).val( totaltrimestre );
+				$( '#primas-meta-tercer-text' ).html( '$ '+totaltrimestre.toFixed(2) );
+				
+				$( '#primas-negocio-meta-tercer' ).val( totalnegociometa );
+				$( '#primas-negocio-meta-tercer-text' ).html( '$ '+totalnegociometa.toFixed(2) );
+				
+				$( '#primas-solicitud-meta-tercer' ).val( totalsolicitudmeta );
+				$( '#primas-solicitud-meta-tercer-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			if( i == 12 ){
+				
+				$( '#primas-meta-cuarto' ).val( totaltrimestre );
+				$( '#primas-meta-cuarto-text' ).html( '$ '+totaltrimestre.toFixed(2) );
+				
+				$( '#primas-negocio-meta-cuarto' ).val( totalnegociometa );
+				$( '#primas-negocio-meta-cuarto-text' ).html( '$ '+totalnegociometa.toFixed(2) );
+				
+				$( '#primas-solicitud-meta-cuarto' ).val( totalsolicitudmeta );
+				$( '#primas-solicitud-meta-cuarto-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			$( '#primas-meta-total' ).val( totalprimameta );
+			$( '#primas-meta-total-text' ).html( '$ '+totalprimameta.toFixed(2) );
+			
+			$( '#primas-negocios-meta-total' ).val( totalesnegociometa );
+			$( '#primas-negocios-meta-total-text' ).html( '$ '+totalessolicitudmeta.toFixed(2) );
+			
+			$( '#primas-solicitud-meta-total' ).val( totalesnegociometa );
+			$( '#primas-solicitud-meta-total-text' ).html( '$ '+totalessolicitudmeta.toFixed(2) );
+			
+			
+						
+		}
+		
+					
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	});
+	
+	// Prima Promedio Meas
+	$( "#metas-prima-promedio" ).bind( 'blur', function(){ 
+		
+		
+		$( "#primas_promedio" ).val( $( '#metas-prima-promedio' ).val() )
+		
+		// Metas
+		var totaltrimestre = 0;
+		
+		var totalprimameta = 0;
+		
+		var totalnegociometa = 0; 	
+		
+		var totalesnegociometa = 0;
+		
+		var totalsolicitudmeta= 0;	 	
+		
+		var totalessolicitudmeta = 0;	 
+		 
+		for(  var i = 1; i<=12; i++ ){
+			
+			var total = parseFloat( this.value ) /  parseInt( $( '#mes-'+i ) .val() );
+			
+			var meta =  Math.round( total* 100 )/100;
+			
+			var primapromedio = parseFloat( $( '#metas-prima-promedio' ).val() );
+								
+				primapromedio =  Math.round( ( meta / primapromedio )*100 );
+				
+				primapromedio =  primapromedio/100;
+			
+			
+						
+			var solicitud = primapromedio / parseInt( $( '#mes-'+i ) .val() );
+				
+			// Show Values
+			$( '#primas-meta-'+i ).val( meta );
+			$( '#primas-meta-text-'+i ).html( '$ '+ meta );
+			
+			// Negocios Meta
+			$( '#primas-negocios-meta-'+i ).val( primapromedio );
+			$( '#primas-negocios-meta-text-'+i ).html( '$ '+ primapromedio.toFixed(2) );
+			
+			// Solicitud Meta
+			$( '#primas-solicitud-meta-'+i ).val( solicitud );
+			$( '#primas-solicitud-meta-text-'+i ).html( '$ '+ solicitud.toFixed(2) );
+			
+			
+			totaltrimestre+=meta;
+			
+			totalprimameta+=totaltrimestre;
+			
+			
+			totalnegociometa += primapromedio;
+			
+			totalesnegociometa += totalnegociometa;
+			
+			
+			totalsolicitudmeta += solicitud; 
+			
+			totalessolicitudmeta += totalsolicitudmeta;
+			
+			// Totales
+			if( i == 3 ){
+				
+				$( '#primas-meta-primer' ).val( totaltrimestre );
+				$( '#primas-meta-primer-text' ).html( '$ '+totaltrimestre.toFixed(2) );
+				
+				$( '#primas-negocio-meta-primer' ).val( totalnegociometa );
+				$( '#primas-negocio-meta-primer-text' ).html( '$ '+totalnegociometa.toFixed(2) );
+				
+				$( '#primas-solicitud-meta-primer' ).val( totalsolicitudmeta );
+				$( '#primas-solicitud-meta-primer-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			if( i == 6 ){
+				
+				$( '#primas-meta-segund' ).val( totaltrimestre );
+				$( '#primas-meta-segund-text' ).html( '$ '+totaltrimestre.toFixed(2) );
+				
+				$( '#primas-negocio-meta-segund' ).val( totalnegociometa );
+				$( '#primas-negocio-meta-segund-text' ).html( '$ '+totalnegociometa.toFixed(2) );
+				
+				$( '#primas-solicitud-meta-segund' ).val( totalsolicitudmeta );
+				$( '#primas-solicitud-meta-segund-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			if( i == 9 ){
+				
+				$( '#primas-meta-tercer' ).val( totaltrimestre );
+				$( '#primas-meta-tercer-text' ).html( '$ '+totaltrimestre.toFixed(2) );
+				
+				$( '#primas-negocio-meta-tercer' ).val( totalnegociometa );
+				$( '#primas-negocio-meta-tercer-text' ).html( '$ '+totalnegociometa.toFixed(2) );
+				
+				$( '#primas-solicitud-meta-tercer' ).val( totalsolicitudmeta );
+				$( '#primas-solicitud-meta-tercer-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			if( i == 12 ){
+				
+				$( '#primas-meta-cuarto' ).val( totaltrimestre );
+				$( '#primas-meta-cuarto-text' ).html( '$ '+totaltrimestre.toFixed(2) );
+				
+				$( '#primas-negocio-meta-cuarto' ).val( totalnegociometa );
+				$( '#primas-negocio-meta-cuarto-text' ).html( '$ '+totalnegociometa.toFixed(2) );
+				
+				$( '#primas-solicitud-meta-cuarto' ).val( totalsolicitudmeta );
+				$( '#primas-solicitud-meta-cuarto-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			$( '#primas-meta-total' ).val( totalprimameta );
+			$( '#primas-meta-total-text' ).html( '$ '+totalprimameta.toFixed(2) );
+			
+			$( '#primas-negocios-meta-total' ).val( totalesnegociometa );
+			$( '#primas-negocios-meta-total-text' ).html( '$ '+totalessolicitudmeta.toFixed(2) );
+			
+			$( '#primas-solicitud-meta-total' ).val( totalesnegociometa );
+			$( '#primas-solicitud-meta-total-text' ).html( '$ '+totalessolicitudmeta.toFixed(2) );
+			
+			
+						
+		}
+		
+		
+		
+	});
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -482,7 +814,7 @@ $( document ).ready(function() {
 		}
 					
 	});
-	
+				
 		
 	
 });
@@ -554,8 +886,6 @@ function save(){
 		});
 		
 	}
-	
-	
 	
 	
 }
