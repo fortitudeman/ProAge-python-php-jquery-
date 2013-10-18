@@ -58,7 +58,19 @@
 				$i=1; $total=0;
 				
 				$totalgeneral=0;
-			 
+			 	
+				$SolicitudesLogradasTotalTrimestre=0;
+				
+				$SolicitudesLogradasTotal=0;
+				
+				$NegociosLogradosTotalTrimestre=0;
+			
+				$NegociosLogradosTotal=0;
+				
+				$PrimasLogradosTotalTrimestre=0;
+			
+				$PrimasLogradosTotal=0;
+			
 			 ?> 
               
              <?php  if( !empty( $config ) ): foreach( $config as $configs ): $total += (int)$configs[$field]; ?> 
@@ -73,7 +85,17 @@
                    <input type="hidden" name="primas-solicitud-meta-<?php echo $i ?>" id="primas-solicitud-meta-<?php echo $i ?>" value="0" />
                 
                 </td>
-                <td class="bgyelowlight"></td>
+                <td class="bgyelowlight">
+                	
+                   <?php if( $i < 10 ) {
+					   		echo $SolicitudesLogradas['0'.$i]; 
+							$SolicitudesLogradasTotalTrimestre+=$SolicitudesLogradas['0'.$i]; 
+						}else{ 
+							echo $SolicitudesLogradas[$i];
+							$SolicitudesLogradasTotalTrimestre+=$SolicitudesLogradas[$i]; 
+						} ?> 
+                    
+                </td>
                 <td class="bgorangelight">
                 	
                    <div id="primas-negocios-meta-text-<?php echo $i ?>" style="text-align: center !important"></div>  
@@ -81,7 +103,18 @@
                     
                 
                 </td>
-                <td class="bgorangelight"></td>
+                <td class="bgorangelight">
+                	
+                    <?php if( $i < 10 ){
+							 echo $NegociosLogrados['0'.$i]; 
+						  	 $NegociosLogradosTotalTrimestre+=$NegociosLogrados['0'.$i]; 
+						  }else{
+							  echo $NegociosLogrados[$i]; 
+							  $NegociosLogradosTotalTrimestre+=$NegociosLogrados[$i]; 
+						  }
+					?> 
+                    
+                </td>
                 <td class="bggreenlight">
                 	
                     
@@ -90,7 +123,17 @@
                 
                     
                 </td>
-                <td class="bggreenlight"></td>
+                <td class="bggreenlight">
+                	
+                    <?php if( $i < 10 ){ 
+						  	echo $PrimasLogradas['0'.$i]; 
+						  	 $PrimasLogradosTotalTrimestre+=$PrimasLogradas['0'.$i]; 
+						  }else{ 
+						  	echo $PrimasLogradas[$i]; 
+						  	 $PrimasLogradosTotalTrimestre+=$PrimasLogradas[$i]; 
+						  }?> 
+                    
+                </td>
                                
             </tr> 
            
@@ -105,21 +148,43 @@
                     <input type="hidden" name="primas-solicitud-meta-primer" id="primas-solicitud-meta-primer" value="0" />
                     
                 </td>
-                <td class="bgyelowbold"></td>
+                <td class="bgyelowbold">
+                	<?php 
+						echo $SolicitudesLogradasTotalTrimestre; 
+						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
+						$SolicitudesLogradasTotalTrimestre=0; 
+					?>
+                </td>
                 <td class="bgorangebold">
                 	
                     <div id="primas-negocio-meta-primer-text" style="text-align: center !important"></div>  
                     <input type="hidden" name="primas-negocio-meta-primer" id="primas-negocio-meta-primer" value="0" />
                     
                 </td>
-                <td class="bgorangebold"></td>
+                <td class="bgorangebold">
+                	
+                    <?php 
+						echo $NegociosLogradosTotalTrimestre; 
+						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
+						$NegociosLogradosTotalTrimestre=0; 
+					?>
+                    
+                </td>
                 <td class="bggreenbold">
                 	
                     <div id="primas-meta-primer-text" style="text-align: right !important"></div>  
                     <input type="hidden" name="primas-meta-primer" id="primas-meta-primer" value="0" />
                 
                 </td>
-                <td class="bggreenbold"></td>                               
+                <td class="bggreenbold">
+                	
+                    <?php 
+						echo $PrimasLogradosTotalTrimestre; 
+						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
+						$PrimasLogradosTotalTrimestre=0; 
+					?>
+                    
+                </td>                               
             </tr> 
                 
            <?php endif; ?>   
@@ -135,21 +200,45 @@
                     <input type="hidden" name="primas-solicitud-meta-segund" id="primas-solicitud-meta-segund" value="0" />
                     
                 </td>
-                <td class="bgyelowbold"></td>
+                <td class="bgyelowbold">
+                	
+                    <?php 
+						echo $SolicitudesLogradasTotalTrimestre; 
+						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
+						$SolicitudesLogradasTotalTrimestre=0; 
+					?>
+                    
+                </td>
                 <td class="bgorangebold">
                 	
                     <div id="primas-negocio-meta-segund-text" style="text-align: center !important"></div>  
                     <input type="hidden" name="primas-negocio-meta-segund" id="primas-negocio-meta-segund" value="0" />
                     
                 </td>
-                <td class="bgorangebold"></td>
+                <td class="bgorangebold">
+                	
+                    <?php 
+						echo $NegociosLogradosTotalTrimestre; 
+						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
+						$NegociosLogradosTotalTrimestre=0; 
+					?>
+                    
+                </td>
                 <td class="bggreenbold">
                 	
                     <div id="primas-meta-segund-text" style="text-align: right !important"></div>  
                     <input type="hidden" name="primas-segund-primer" id="primas-segund-primer" value="0" />
                 
                 </td>
-                <td class="bggreenbold"></td>                              
+                <td class="bggreenbold">
+                	
+                    <?php 
+						echo $PrimasLogradosTotalTrimestre; 
+						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
+						$PrimasLogradosTotalTrimestre=0; 
+					?>
+                    
+                </td>                              
             </tr> 
                 
            <?php endif; ?>    
@@ -166,21 +255,45 @@
                     <input type="hidden" name="primas-solicitud-meta-tercer" id="primas-solicitud-meta-tercer" value="0" />
                     
                 </td>
-                <td class="bgyelowbold"></td>
+                <td class="bgyelowbold">
+                	
+                    <?php 
+						echo $SolicitudesLogradasTotalTrimestre; 
+						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
+						$SolicitudesLogradasTotalTrimestre=0; 
+					?>
+                    
+                </td>
                 <td class="bgorangebold">
                 	
                     <div id="primas-negocio-meta-tercer-text" style="text-align: center !important"></div>  
                     <input type="hidden" name="primas-negocio-meta-tercer" id="primas-negocio-meta-tercer" value="0" />
                     
                 </td>
-                <td class="bgorangebold"></td>
+                <td class="bgorangebold">
+                	
+                    <?php 
+						echo $NegociosLogradosTotalTrimestre; 
+						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
+						$NegociosLogradosTotalTrimestre=0; 
+					?>
+                    
+                </td>
                 <td class="bggreenbold">
                 	
                     <div id="primas-meta-tercer-text" style="text-align: center !important"></div>  
                     <input type="hidden" name="primas-tercer-primer" id="primas-tercer-primer" value="0" />
                     
                 </td>
-                <td class="bggreenbold"></td>                               
+                <td class="bggreenbold">
+                	
+                    <?php 
+						echo $PrimasLogradosTotalTrimestre; 
+						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
+						$PrimasLogradosTotalTrimestre=0; 
+					?>
+                    
+                </td>                               
             </tr> 
                 
            <?php endif; ?> 
@@ -197,21 +310,45 @@
                     <input type="hidden" name="primas-solicitud-meta-cuarto" id="primas-solicitud-meta-cuarto" value="0" />
                     
                 </td>
-                <td class="bgyelowbold"></td>
+                <td class="bgyelowbold">
+                	
+                    <?php 
+						echo $SolicitudesLogradasTotalTrimestre; 
+						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
+						$SolicitudesLogradasTotalTrimestre=0; 
+					?>
+                    
+                </td>
                 <td class="bgorangebold">
                 	
                     <div id="primas-negocio-meta-cuarto-text" style="text-align: center !important"></div>  
                     <input type="hidden" name="primas-negocio-meta-cuarto" id="primas-negocio-meta-cuarto" value="0" />
                     
                 </td>
-                <td class="bgorangebold"></td>
+                <td class="bgorangebold">
+                	
+                    <?php 
+						echo $NegociosLogradosTotalTrimestre; 
+						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
+						$NegociosLogradosTotalTrimestre=0; 
+					?>
+                    
+                </td>
                 <td class="bggreenbold">
                 	
                     <div id="primas-meta-cuarto-text" style="text-align: right !important"></div>  
                     <input type="hidden" name="primas-cuarto-primer" id="primas-cuarto-primer" value="0" />
                     
                 </td>
-                <td class="bggreenbold"></td>                               
+                <td class="bggreenbold">
+                	
+                    <?php 
+						echo $PrimasLogradosTotalTrimestre; 
+						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
+						$PrimasLogradosTotalTrimestre=0; 
+					?>
+                    
+                </td>                               
             </tr>         
                 
            <?php endif; ?>    
@@ -241,21 +378,27 @@
                     <input type="hidden" name="primas-solicitud-meta-total" id="primas-solicitud-meta-total" value="0" />
                     
                 </td>
-                <td class="bgyelowbold"></td>
+                <td class="bgyelowbold">
+                	<?php echo $SolicitudesLogradasTotal ?>
+                </td>
                 <td class="bgorangebold">
                 	
                     <div id="primas-negocios-meta-total-text" style="text-align: center !important"></div>  
                     <input type="hidden" name="primas-negocios-meta-total" id="primas-negocios-meta-total" value="0" />
                     
                 </td>
-                <td class="bgorangebold"></td>
+                <td class="bgorangebold">
+                	<?php echo $NegociosLogradosTotal ?>
+                </td>
                 <td class="bggreenbold">
                 	
                     <div id="primas-meta-total-text" style="text-align: right !important"></div>  
                     <input type="hidden" name="primas-meta-total" id="primas-meta-total" value="0" />
                     
                 </td>
-                <td class="bggreenbold"></td>                               
+                <td class="bggreenbold">
+                	<?php echo $PrimasLogradosTotal ?>
+                </td>                               
             </tr> 
         
         

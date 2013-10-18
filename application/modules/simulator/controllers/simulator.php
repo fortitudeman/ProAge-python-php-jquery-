@@ -112,6 +112,58 @@ class Simulator extends CI_Controller {
 		$this->load->model( array( 'user', 'simulators' ) );
 		
 		$agent = $this->user->getAgentsById( $agentid );
+		
+		$product_group_id = 1;
+		
+		$SolicitudesLogradas = array(
+			'01' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '01', date( 'Y' ) ),
+			'02' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '02', date( 'Y' ) ),
+			'03' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '03', date( 'Y' ) ),
+			'04' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '04', date( 'Y' ) ),
+			'05' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '05', date( 'Y' ) ),
+			'06' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '06', date( 'Y' ) ),
+			'07' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '07', date( 'Y' ) ),
+			'08' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '08', date( 'Y' ) ),
+			'09' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '09', date( 'Y' ) ),
+			'10' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '10', date( 'Y' ) ),
+			'11' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '11', date( 'Y' ) ),
+			'12' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '12', date( 'Y' ) )
+		);
+		
+		
+		$NegociosLogrados = array(
+			'01' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '01', date( 'Y' ) ),
+			'02' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '02', date( 'Y' ) ),
+			'03' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '03', date( 'Y' ) ),
+			'04' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '04', date( 'Y' ) ),
+			'05' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '05', date( 'Y' ) ),
+			'06' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '06', date( 'Y' ) ),
+			'07' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '07', date( 'Y' ) ),
+			'08' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '08', date( 'Y' ) ),
+			'09' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '09', date( 'Y' ) ),
+			'10' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '10', date( 'Y' ) ),
+			'11' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '11', date( 'Y' ) ),
+			'12' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '12', date( 'Y' ) )
+		);
+		
+		$userid = $this->user->getUserIdByAgentId( $agentid );
+		
+		
+		$PrimasLogradas = array(
+			'01' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '01', date( 'Y' ) ),
+			'02' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '02', date( 'Y' ) ),
+			'03' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '03', date( 'Y' ) ),
+			'04' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '04', date( 'Y' ) ),
+			'05' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '05', date( 'Y' ) ),
+			'06' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '06', date( 'Y' ) ),
+			'07' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '07', date( 'Y' ) ),
+			'08' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '08', date( 'Y' ) ),
+			'09' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '09', date( 'Y' ) ),
+			'10' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '10', date( 'Y' ) ),
+			'11' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '11', date( 'Y' ) ),
+			'12' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '12', date( 'Y' ) )
+		);
+				
 						 
 		// Config view
 		$this->view = array(
@@ -139,7 +191,11 @@ class Simulator extends CI_Controller {
 		  'agent' =>  $agent,
 		  'agentid' =>  $agentid,
 		  'data' => $this->simulators->getByAgent( $agentid ),		  	  
-		  'config' => $this->simulators->getConfig()		  	  	
+		  'config' => $this->simulators->getConfig(),
+		  
+		  'SolicitudesLogradas' => $SolicitudesLogradas,
+		  'NegociosLogrados' => $NegociosLogrados,	
+		  'PrimasLogradas' => $PrimasLogradas	  	  	
 		);
 	
 		

@@ -199,13 +199,147 @@ class Simulators extends CI_Model{
 	}		
 	
 	
+	/*Solicitudes logradas*/
+	public function getSolicitudLograda( $agent = null, $product_group_id = null, $month = null, $year = null ){
+		
+		if( empty( $agent ) or empty( $product_group_id ) or empty( $month ) or empty( $year ) ) return 0;		
+		/*
+		SELECT COUNT(id) AS count 
+		FROM `agents_activity` 
+		WHERE  YEAR(end) = 2013 
+		AND MONTH(end) = 09 
+		AND `agent_id` =1
+		*/
+				
+		$this->db->select( 'COUNT(id) AS count ' );
+		$this->db->from( 'agents_activity' );
+		$this->db->where( 'YEAR(end) = '. $year );
+		$this->db->where( 'MONTH(end) = '. $month );
+		$this->db->where( 'agent_id', $agent );
+				
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$data = array();
+		
+		$count = 0;
+		
+		// Getting data
+		foreach ($query->result() as $row)
+			
+			$count = $row->count;
+									
+				
+		return $count;
+		
+	}		
+	
+	
+	
+	/* Negocios logrados */
+	public function getNegociosLograda( $user = null, $product_group_id = null, $month = null, $year = null ){
+		
+		if( empty( $user ) or empty( $product_group_id ) or empty( $month ) or empty( $year ) ) return 0;		
+		/*
+		SELECT  COUNT(id) AS count  
+		FROM `work_order` 
+		WHERE  YEAR(creation_date) = 2013 
+		AND MONTH(creation_date) = 09 
+		AND `user` =1
+		AND work_order_status_id=7
+		AND product_group_id=1;
+		*/
+				
+		$this->db->select( 'COUNT(id) AS count ' );
+		$this->db->from( 'work_order' );
+		$this->db->where( 'YEAR(creation_date) = '. $year );
+		$this->db->where( 'MONTH(creation_date) = '. $month );
+		$this->db->where( 'user', $user );
+		$this->db->where( 'work_order_status_id', 7 );
+		$this->db->where( 'product_group_id', $product_group_id );
+		
+				
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$data = array();
+		
+		$count = 0;
+		
+		// Getting data
+		foreach ($query->result() as $row)
+			
+			$count = $row->count;
+									
+				
+		return $count;
+		
+	}	
 	
 	
 	
 	
-	
-	
-	
+	/*Primas logradas*/
+	public function getPrimasLograda( $user = null, $product_group_id = null, $month = null, $year = null ){
+		
+		if( empty( $user ) or empty( $product_group_id ) or empty( $month ) or empty( $year ) ) return 0;		
+		/*
+		SELECT DISTINCT(policy_id) 
+		FROM `work_order` 
+		WHERE  YEAR(creation_date) = 2013 
+		AND MONTH(creation_date) = 09 
+		AND `user` =1
+		AND work_order_status_id=7
+		AND product_group_id=1;
+		*/
+				
+		$this->db->select( 'policy_id' );
+		$this->db->from( 'work_order' );
+		$this->db->where( 'YEAR(creation_date) = '. $year );
+		$this->db->where( 'MONTH(creation_date) = '. $month );
+		$this->db->where( 'user', $user );
+		$this->db->where( 'work_order_status_id', 7 );
+		$this->db->where( 'product_group_id', $product_group_id );
+		
+				
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 0) return 0;
+		
+		$data = array();
+		
+		$prima = 0;
+		
+		// Getting data
+		foreach ($query->result() as $row){
+		
+			
+			/*
+			SELECT prima
+			FROM `policies` 
+			WHERE `id` =policy_id
+			*/
+			$this->db->select( 'prima' );
+			$this->db->from( 'policies' );
+			$this->db->where( 'id', $row->policy_id );
+			
+			$queryprima = $this->db->get();
+			
+			if ($queryprima->num_rows() == 0) return 0;
+			
+			foreach ($queryprima->result() as $rowprima)
+				
+				$prima = (float)$rowprima->prima;
+			
+			
+		
+		
+		}
+				
+		return $prima;		
+	}	
 	
 	
 	
