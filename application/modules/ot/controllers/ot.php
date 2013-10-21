@@ -1888,7 +1888,9 @@ class Ot extends CI_Controller {
 		  unset( $_POST['tmp_file'], $_POST['process'],  $_POST['product'] );
 		 		  
 		  $i=0;
-		  		  		  
+		  
+		  print_r( $file_array );
+		  exit;		  		  
 		  foreach( $file_array as $value ){
 						 	
 			 			 
