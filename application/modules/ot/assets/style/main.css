@@ -679,3 +679,19 @@ color: white;
 
 
 
+
+
+#popup_tr
+{
+    background: #DDD;
+    font-weight: normal;
+}
+#popup_table
+{
+    font-family: arial;
+    font-size: 14px;
+}
+.fancybox-wrap
+{
+    width: 900px;
+}
