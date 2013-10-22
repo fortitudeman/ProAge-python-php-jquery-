@@ -2301,6 +2301,23 @@ class Ot extends CI_Controller {
 		
 	}
 	
+        
+                /**
+ *	Reports Popup
+ **/	
+	public function reporte_popup()
+        {
+            //$data['value'] = $this->uri->segment(3);
+            $this->load->model(array('work_order'));            
+            $data['values'] = $this->work_order->pop_up_data();  
+            $this->load->view('popup_report',$data);	
+	}
+        
+        
+        
+        
+        
+        
 	
 	public function report_export(){
 		

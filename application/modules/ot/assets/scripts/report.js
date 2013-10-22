@@ -125,10 +125,59 @@ $( document ).ready(function() {
 	});
 	
 	
-	$( '.info' ).hide();
+	$('.info').hide();
 	
-	$( '.text_azulado' ).bind( 'click', function(){ $( '#info-'+this.id ).show(); })
+	$('.text_azulado' ).bind('click', function()
+        { 
+            var content = $('#info_'+this.id).html();            
+            var added_content = $('#tr_after_'+this.id).length;                
+            if(added_content == 0)
+            {
+                $('#tr_'+this.id).after('<tr class="info" id ="tr_after_'+this.id+'"><td colspan="10">'+content+'</td></tr>').slideDown(1000);            
+                $('.btn-hide i.icon-arrow-up').bind('click',function()
+                { 
+                   $('#tr_after_'+this.id).remove();
+                });
+            }
+        });
 	
-	$( '.btn-hide' ).bind( 'click', function(){ $( '.info' ).hide(); })
+       
+       
+       $(".fancybox").fancybox(
+       {
+           type: 'ajax',
+           width :1000,
+           scrolling   : 'no',
+           openEffect : 'elastic',
+           openSpeed  : 150,
+           closeEffect : 'elastic',
+           closeSpeed  : 150,
+           autoDimensions: true,
+           height: 'auto',
+           afterShow: function() 
+           {
+                $("tr.tr_pop_class").click(function() 
+                {
+                    var content = '<a href="javascript:" class="btn btn-link btn-hide"><i class="icon-arrow-up" id="'+this.id+'"></i></a><a href="#" id="send_message" class="btn btn-link">Enviar mensaje al cordinador</a>|<a href="#" class="btn btn-link">Enviar mensaje al Agenta</a>|<a href="#" class="btn btn-link">Enviar mensaje al Director</a>';
+                    var added_content = $('#tr_pop_afer'+this.id).length;                
+                    if(added_content == 0)
+                    {
+                        $('#'+this.id).after('<tr class="tr_pop_class" id ="tr_pop_afer'+this.id+'"><td></td><td colspan="11">'+content+'</td></tr>').slideDown(1000);            
+                    
+                        $('.btn-hide i.icon-arrow-up').bind('click',function()
+                        { 
+                            $('#tr_pop_afer'+this.id).remove();
+                        });
+                        
+                        
+//                        $('#send_message').bind('click',function()
+//                        {
+//                            $('#send_message').fancybox({type: 'ajax'});               
+//                        });                        
+                    }      
+                });
+            }
+       });           
+        
 	
 });

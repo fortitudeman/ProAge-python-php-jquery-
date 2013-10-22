@@ -1679,5 +1679,21 @@ class Work_order extends CI_Model{
  
   }
   
+  function pop_up_data()
+    {
+        $this->db->select('*,policies.uid AS policies_uid,policies.name AS policies_name,products.name AS products_name,policies.period AS policies_period,work_order_status.name AS work_order_status_name,payment_intervals.name AS payment_intervals_name,payment_methods.name AS payment_methods_name,currencies.name AS currencies_name,work_order.uid AS work_order_uid');
+        $this->db->from('work_order');
+        $this->db->join('work_order_status','work_order.work_order_status_id = work_order_status.id');     
+        $this->db->join('policies','work_order.policy_id = policies.id');  
+        $this->db->join('products','policies.product_id = products.id');
+        $this->db->join('payment_intervals','policies.payment_interval_id = payment_intervals.id');
+        $this->db->join('payment_methods','policies.payment_method_id = payment_methods.id');
+        $this->db->join('currencies','policies.currency_id = currencies.id');
+        $query = $this->db->get();
+        return $query->result();
+    }
+  
+  
+  
 }
 ?>
