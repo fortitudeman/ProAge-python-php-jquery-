@@ -1884,7 +1884,7 @@ class Ot extends CI_Controller {
 		  $file_array = $this->work_order->getImportPaymentsTmp();
 		  
 		  echo '<pre>';
-		   print_r( $file_array );
+		   print_r( json_decode( $file_array[0]['data'] ) );
 		  echo '</pre>';
 		  exit;	
 		  
@@ -2084,11 +2084,7 @@ class Ot extends CI_Controller {
 			  
 			  
 			  $user_id = $this->user->getUserIdByAgentId( $item->agent_id  );
-			 
-			  echo '<pre>';
-			  print_r( $file_array );
-			  echo '</pre>'		; 
-			  exit;	  
+			 			 
 			  if( $this->work_order->checkPayment( $item->uid, $item->amount, $item->payment_date, $user_id ) == true ){
 					  
 					  if( $this->work_order->create( 'payments', $payment ) == false )	$controlSaved = false;

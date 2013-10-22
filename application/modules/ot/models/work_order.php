@@ -1616,12 +1616,12 @@ class Work_order extends CI_Model{
 		
 		}
 		
-		$options .= '<option value="noasignar">No asignar a OT</option><optgroup label="-----------"></optgroup>';
+		$options .= '<option value="noasignar">No asignar a OT</option>';
 		
-		foreach ($query->result() as $row){			
+		foreach ($query->result() as $row)			
 			
 			$options .= '<option value="'.$row->id.'">'.$row->uid.' - '.$row->name.'</option>';
-		}
+		
 		
 		$options .= '</select>';
 		
