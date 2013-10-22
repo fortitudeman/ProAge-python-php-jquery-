@@ -1879,6 +1879,10 @@ class Ot extends CI_Controller {
 		  
 		  $file_array = json_decode( $file_array[0]['data'] );
 		  
+		  print_r( $file_array );
+		  exit;	
+		  
+		  
 		  $tmp_file = $_POST['tmp_file'];
 		  
 		  $process = 'preview';
@@ -1889,8 +1893,8 @@ class Ot extends CI_Controller {
 		 		  
 		  $i=0;
 		  
-		  print_r( $file_array );
-		  exit;		  		  
+		 
+		  	  		  
 		  foreach( $file_array as $value ){
 						 	
 			 			 
