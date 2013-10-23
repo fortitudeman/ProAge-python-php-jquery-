@@ -2283,7 +2283,8 @@ class Ot extends CI_Controller {
 			
 			
 			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
-             <link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">'
+             <link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
+                       '<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
 			
 		  ),
 		  'scripts' =>  array(
@@ -2299,7 +2300,8 @@ class Ot extends CI_Controller {
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',
 			
 			'<script src="'.base_url().'scripts/config.js"></script>'	,	
-			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>'			
+			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
+                      '<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
 		  ),
 		  'manager' => $this->user->getSelectsGerentes2(),
 		  'content' => 'ot/report', // View to load
@@ -2313,6 +2315,23 @@ class Ot extends CI_Controller {
 		
 	}
 	
+        
+                /**
+ *	Reports Popup
+ **/	
+	public function reporte_popup()
+        {
+            //$data['value'] = $this->uri->segment(3);
+            $this->load->model(array('work_order'));            
+            $data['values'] = $this->work_order->pop_up_data();  
+            $this->load->view('popup_report',$data);	
+	}
+        
+        
+        
+        
+        
+        
 	
 	public function report_export(){
 		

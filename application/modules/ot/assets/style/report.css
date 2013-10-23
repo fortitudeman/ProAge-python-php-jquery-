@@ -20,3 +20,33 @@ select {
 	font-size:12px;
 
 }
+
+
+.added_tr td
+{
+    margin-left:-10px;
+    
+}
+
+.added_tr a
+{
+    padding-bottom: 10px;
+}
+
+.icon-arrow-up
+{
+   margin-left: -10px;
+}
+
+
+.fancybox
+{
+    text-align:center;
+    color: #696868;
+    text-decoration: none;
+}
+
+.fancybox:hover
+{
+    text-decoration: none;
+}
