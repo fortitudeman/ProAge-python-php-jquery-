@@ -61,17 +61,17 @@ $( document ).ready(function() {
 	
 	$( '.header_manager' ).bind( 'click', function(){ 
 		
-		$( '.header_manager' ).css({ 'color': '#000', 'font-weight':'100' } );
+		$( '.header_manager' ).css({'color': '#000', 'font-weight':'100'} );
 		
-		$( '#'+this.id ).css({ 'color': '#06F', 'font-weight':'bold' });
+		$( '#'+this.id ).css({'color': '#06F', 'font-weight':'bold'});
 		
 	});
 	
 	$( '.link-ramo' ).bind( 'click', function(){
 		
-		$( '#vida' ).css({ 'color': '#000' });
-		$( '#gmm' ).css({ 'color': '#000' });
-		$( '#autos' ).css({ 'color': '#000' });
+		$( '#vida' ).css({'color': '#000'});
+		$( '#gmm' ).css({'color': '#000'});
+		$( '#autos' ).css({'color': '#000'});
 			
 		
 		if( this.id == 'vida' ){
@@ -158,7 +158,7 @@ $( document ).ready(function() {
            {
                 $("tr.tr_pop_class").click(function() 
                 {
-                    var content = '<a href="javascript:" class="btn btn-link btn-hide"><i class="icon-arrow-up" id="'+this.id+'"></i></a><a href="#" id="send_message" class="btn btn-link">Enviar mensaje al cordinador</a>|<a href="#" class="btn btn-link">Enviar mensaje al Agenta</a>|<a href="#" class="btn btn-link">Enviar mensaje al Director</a>';
+                    var content = '<a href="javascript:" class="btn btn-link btn-hide"><i class="icon-arrow-up" id="'+this.id+'"></i></a><a href="email_popup" class="btn btn-link send_message">Enviar mensaje al cordinador</a>|<a href="email_popup" class="btn btn-link send_message">Enviar mensaje al Agenta</a>|<a href="email_popup" class="btn btn-link send_message">Enviar mensaje al Director</a>';
                     var added_content = $('#tr_pop_afer'+this.id).length;                
                     if(added_content == 0)
                     {
@@ -167,17 +167,45 @@ $( document ).ready(function() {
                         $('.btn-hide i.icon-arrow-up').bind('click',function()
                         { 
                             $('#tr_pop_afer'+this.id).remove();
-                        });
+                        });                        
+
                         
-                        
-//                        $('#send_message').bind('click',function()
-//                        {
-//                            $('#send_message').fancybox({type: 'ajax'});               
-//                        });                        
+                        $('.send_message').bind('click',function()
+                        {
+                           // var value = $(this).text();  
+                            $('.send_message').fancybox(
+                            {
+                                type: 'ajax',
+                                width :800,
+                                height:400,
+                                scrolling:'no'                                
+                            });                         
+                        });                         
                     }      
                 });
             }
-       });           
-        
-	
+       });  
+       
+       
+       
+       
+       $('#popup_email').submit(function()
+       {
+           //alert('Yes');
+           email_body = $('#email_form').val();           
+           $.post("/ot/send_email",{'email_body':email_body},function(dataa)
+            {       
+//                if(dataa)
+//                {         
+//                       
+//                }
+            }, "json");
+            return false;        
+       });
+       
+       
+       
+       
+       
+       
 });
