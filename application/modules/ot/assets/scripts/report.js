@@ -143,69 +143,132 @@ $( document ).ready(function() {
 	
        
        
-       $(".fancybox").fancybox(
-       {
-           type: 'ajax',
-           width :1000,
-           scrolling   : 'no',
-           openEffect : 'elastic',
-           openSpeed  : 150,
-           closeEffect : 'elastic',
-           closeSpeed  : 150,
-           autoDimensions: true,
-           height: 'auto',
-           afterShow: function() 
-           {
-                $("tr.tr_pop_class").click(function() 
-                {
-                    var content = '<a href="javascript:" class="btn btn-link btn-hide"><i class="icon-arrow-up" id="'+this.id+'"></i></a><a href="email_popup" class="btn btn-link send_message">Enviar mensaje al cordinador</a>|<a href="email_popup" class="btn btn-link send_message">Enviar mensaje al Agenta</a>|<a href="email_popup" class="btn btn-link send_message">Enviar mensaje al Director</a>';
-                    var added_content = $('#tr_pop_afer'+this.id).length;                
-                    if(added_content == 0)
-                    {
-                        $('#'+this.id).after('<tr class="tr_pop_class" id ="tr_pop_afer'+this.id+'"><td></td><td colspan="11">'+content+'</td></tr>').slideDown(1000);            
-                    
-                        $('.btn-hide i.icon-arrow-up').bind('click',function()
-                        { 
-                            $('#tr_pop_afer'+this.id).remove();
-                        });                        
-
-                        
-                        $('.send_message').bind('click',function()
-                        {
-                           // var value = $(this).text();  
-                            $('.send_message').fancybox(
-                            {
-                                type: 'ajax',
-                                width :800,
-                                height:400,
-                                scrolling:'no'                                
-                            });                         
-                        });                         
-                    }      
-                });
-            }
-       });  
+//       $(".fancybox").fancybox(
+//       {
+//           type: 'ajax',
+//           width :1000,
+//           scrolling   : 'no',
+//           openEffect : 'elastic',
+//           openSpeed  : 150,
+//           closeEffect : 'elastic',
+//           closeSpeed  : 150,
+//           autoDimensions: true,
+//           height: 'auto',
+//           afterShow: function() 
+//           {
+//                $("tr.tr_pop_class").click(function() 
+//                {
+//                    var content = '<a href="javascript:" class="btn btn-link btn-hide"><i class="icon-arrow-up" id="'+this.id+'"></i></a><a href="email_popup" class="btn btn-link send_message">Enviar mensaje al cordinador</a>|<a href="email_popup" class="btn btn-link send_message">Enviar mensaje al Agenta</a>|<a href="email_popup" class="btn btn-link send_message">Enviar mensaje al Director</a>';
+//                    var added_content = $('#tr_pop_afer'+this.id).length;                
+//                    if(added_content == 0)
+//                    {
+//                        $('#'+this.id).after('<tr class="tr_pop_class" id ="tr_pop_afer'+this.id+'"><td></td><td colspan="11">'+content+'</td></tr>').slideDown(1000);            
+//                    
+//                        $('.btn-hide i.icon-arrow-up').bind('click',function()
+//                        { 
+//                            $('#tr_pop_afer'+this.id).remove();
+//                        });                        
+//
+//                        
+//                        $('.send_message').bind('click',function()
+//                        {
+//                           // var value = $(this).text();  
+//                            $('.send_message').fancybox(
+//                            {
+//                                type: 'ajax',
+//                                width :800,
+//                                height:400,
+//                                scrolling:'no'                                
+//                            });                         
+//                        });                         
+//                    }      
+//                });
+//            }
+//       });  
        
        
        
        
        $('#popup_email').submit(function()
        {
-           //alert('Yes');
-           email_body = $('#email_form').val();           
-           $.post("/ot/send_email",{'email_body':email_body},function(dataa)
+           email_body = $('#email_form').val();
+           email_address = $('#email_address').val();
+           wrk_ids = $('#work_ord_array').val();           
+           
+           var wrk_ord_ids = new Array();
+           wrk_ord_ids = wrk_ids.split(",");           
+           
+           $.post("ot/send_email",{'email_body':email_body,'email_address':email_address},function(dataa)
             {       
-//                if(dataa)
-//                {         
-//                       
-//                }
+                if(dataa)
+                {    
+                    $.post("ot/reporte_popup",{wrk_ord_ids:wrk_ord_ids},function(data)
+                    { 
+                        if(data)
+                        {
+                            $.fancybox(data);
+                            return false;
+                        }
+                    });
+                }
             }, "json");
             return false;        
        });
        
        
+    
+       
+        $('.send_message').bind('click',function()
+        {
+           emaill_address = this.id;
+           poliza_number = $('#poliza_number').html();
+           ot_number = $('#ot_number').html();  
+           
+           var work_ids;
+           //var arr = new Array();
+           
+           $('.wrk_ord_ids').each(function()
+           {
+              work_ids += this.id+',';
+           });           
+           
+           var result = work_ids.replace("undefined","");        
+           
+           
+           $('.send_message').fancybox(
+            {
+                type: 'ajax',
+                width :800,
+                height:400,
+                scrolling:'no',
+                afterShow: function()
+                {
+                    $("#email_address").val(emaill_address);
+                    $('#ot_numero').html(ot_number);
+                    $('#poliza_numero').html(poliza_number);
+                    $('#work_ord_array').val(result);
+                }
+             }); 
+        });
+               
+               
+               
+        $("tr.tr_pop_class").click(function() 
+        {            
+            var hide_id = this.id.replace('tr_','');  
+            $('#hide_'+hide_id).slideDown(1000);    
+        });
        
        
-       
+        $('.btn-hide i.icon-arrow-up').bind('click',function()
+        { 
+            $('#hide_'+this.id).slideUp();
+        }); 
+        
+        
+        
+        
+        
+        
        
 });
