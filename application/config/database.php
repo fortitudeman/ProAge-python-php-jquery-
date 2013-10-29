@@ -50,8 +50,8 @@ $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
 $db['default']['username'] = 'root';
-$db['default']['password'] = 'admin01_';
-$db['default']['database'] = 'isinet_proages';
+$db['default']['password'] = 'DUEaha39VEnGE';
+$db['default']['database'] = 'proages-aevum';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;

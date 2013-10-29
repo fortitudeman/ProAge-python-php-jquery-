@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost/ulisesrodriguez/codecs/Isinet/Proages/';
+$config['base_url']	= 'http://proages-test.serviciosisinet.com/aevum/';
 
 /*
 |--------------------------------------------------------------------------

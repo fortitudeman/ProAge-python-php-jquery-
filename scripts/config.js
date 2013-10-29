@@ -8,7 +8,7 @@
 var Config = {
 	
 	// Setting Url base path
-	url : 'http://localhost/ulisesrodriguez/codecs/Isinet/Proages/',
+	url : 'http://proages-test.serviciosisinet.com/aevum/',
 	
 	
 	// Return base url path
