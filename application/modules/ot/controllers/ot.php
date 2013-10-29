@@ -1855,10 +1855,10 @@ class Ot extends CI_Controller {
 			// Load Model
 			$this->load->model( 'work_order' );
 			
-			 echo '<pre>';
-			 print_r( $file_array );
-			 echo '</pre>';
-			 exit;	
+			 //echo '<pre>';
+			 //print_r( $file_array );
+			 //echo '</pre>';
+			 //exit;	
 			
 			
 			$this->work_order->importPaymentsTmp( $file_array );
