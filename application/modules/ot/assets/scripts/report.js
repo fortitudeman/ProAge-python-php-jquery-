@@ -266,7 +266,7 @@ $( document ).ready(function() {
         }); 
         
         
-        
+        $("#popup_table").tablesorter(); 
         
         
         

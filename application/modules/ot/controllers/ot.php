@@ -2139,39 +2139,22 @@ class Ot extends CI_Controller {
 			  
 			  
 		  }else{
-			  
-			  
 			  // Load Library
 			  $this->load->library( 'reader_csv' );
 			  
 			  if( !empty( $tmp_file ) ){
 				  
-				   $this->reader_csv->setInstance( $tmp_file );
-				  
-				   $this->reader_csv->drop();
-				  
-			  }
-			  
-			  
-		  }
-		  
-		  
-		  
+				   $this->reader_csv->setInstance( $tmp_file );				  
+				   $this->reader_csv->drop();				  
+			  }			 
+		  }		  
 		  $this->work_order->removeImportPaymentsTmp();
-		  
 	  }
-	
-	
-	
-		
-	
-	
-	
-	
-	    // Load Model
+
+                // Load Model
 		$this->load->model( 'work_order' );
 		
-	    $products = $this->work_order->getProductsGroupsOptions();
+                $products = $this->work_order->getProductsGroupsOptions();
 		
 		// Config view
 		$this->view = array(
@@ -2195,25 +2178,16 @@ class Ot extends CI_Controller {
 		  'content' => 'ot/import_payments', // View to load
 		  'products' => $products,
 		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
-		  	
 		);
 		
 		
-		if( isset( $message ) ){ $this->view['message'] = $message; unset( $tmp_file, $file_array ); }
-				
-		if( isset( $tmp_file ) and !empty( $tmp_file ) ) $this->view['tmp_file'] = $tmp_file;
-		
-		if( isset( $process ) and !empty( $process ) ) $this->view['process'] = $process;
-		
-		if( isset( $product ) and !empty( $product ) ) $this->view['product'] = $product;
-		
-		if( isset( $file_array ) and !empty( $file_array ) ) $this->view['file_array'] = $file_array;
-		
-		
-		
+		if( isset( $message ) ){ $this->view['message'] = $message; unset( $tmp_file, $file_array ); }				
+		if( isset( $tmp_file ) and !empty( $tmp_file ) ) $this->view['tmp_file'] = $tmp_file;		
+		if( isset( $process ) and !empty( $process ) ) $this->view['process'] = $process;		
+		if( isset( $product ) and !empty( $product ) ) $this->view['product'] = $product;		
+		if( isset( $file_array ) and !empty( $file_array ) ) $this->view['file_array'] = $file_array;                
 		// Render view 
-		$this->load->view( 'index', $this->view );	
-		
+		$this->load->view('index',$this->view );
 	}
 	
 	
@@ -2223,32 +2197,26 @@ class Ot extends CI_Controller {
 /**
  *	Reports
  **/	
-	public function reporte(){
-		
-		
+	public function reporte()
+         {	
 		// Check access for report
-		if( $this->access_report == false ){
-				
-			// Set false message		
-			$this->session->set_flashdata( 'message', array( 
-				
-				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Ver Reporte", Informe a su administrador para que le otorge los permisos necesarios.'
-							
-			));	
-			
-			
-			redirect( '/', 'refresh' );
-		
+		if( $this->access_report == false )
+                {	
+                    // Set false message		
+                    $this->session->set_flashdata( 'message', array
+                    ( 
+                        'type' => false,	
+                        'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Ver Reporte", Informe a su administrador para que le otorge los permisos necesarios.'
+                    ));	
+                    redirect( '/', 'refresh' );
 		}
 		
 		if( !empty( $_POST ) )
-			
-			 $data = $this->user->getReport( $_POST );
-		
+		{	
+                    $data = $this->user->getReport($_POST );
+                }
 		else
-		 	
-			$data = $this->user->getReport( array( 'query' => array( 'ramo' => 1, 'periodo' => 1 ) ) );
+                    $data = $this->user->getReport( array('query' => array('ramo' => 1,'periodo' => 1 ) ) );
 		
 		$this->load->helper( 'ot' );
 		
@@ -2267,26 +2235,22 @@ class Ot extends CI_Controller {
 		  'roles_vs_access' => $this->roles_vs_access,
 		  'export_xls' => $this->access_export_xls,
 		  'css' => array(
-			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
-			
-			
+			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',			
 			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
-             <link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
-                       '<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
+                        <link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
+                        '<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
 			
 		  ),
 		  'scripts' =>  array(
 		  	'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
 			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-			//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',
-			
+			//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',			
 			'<script src="'. base_url() .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
 			'<script>window.jQuery || document.write("<script src="'. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js"><\/script>")</script>',
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.ddslick.js"></script>',
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',
-			
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',			
 			'<script src="'.base_url().'scripts/config.js"></script>'	,	
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
                       '<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
@@ -2299,21 +2263,69 @@ class Ot extends CI_Controller {
 		);
 		// Render view 
 		$this->load->view( 'index', $this->view );	
-		
-		
 	}
 	
         
-                /**
+        
+/**
  *	Reports Popup
  **/	
 	public function reporte_popup()
         {
-            //$data['value'] = $this->uri->segment(3);
-            $this->load->model(array('work_order'));            
-            $data['values'] = $this->work_order->pop_up_data();  
+            $work_order_ids = $this->input->post('wrk_ord_ids');             
+            $this->load->model('work_order');   
+            $results = array();  
+            foreach($work_order_ids as $work_order_id)
+            {
+                $results[] = $this->work_order->pop_up_data($work_order_id);                
+            }
+            $data['values'] = $results;
             $this->load->view('popup_report',$data);	
 	}
+        
+        
+        
+ /**
+ *	Reports Popup
+ **/	
+	public function reporte_popup_later()
+        {
+            //$data['value'] = $this->uri->segment(3);
+            $this->load->model(array('work_order'));            
+            $data['values'] = $this->work_order->pop_up_data(); 
+            $result = $this->load->view('popup_report',$data);
+            echo json_encode($result);
+	}
+        
+        
+/**
+ *	Email Popup
+ **/	
+	public function email_popup()
+        {
+            //$data['email_address'] = $this->uri->segment(3);            
+            $this->load->view('popup_email');	
+	}        
+        
+        
+ 
+ /**
+ *	Send Email 
+ **/	
+	public function send_email()
+        {
+            $email_address = $this->input->post('email_address');            
+            $email_body = $this->input->post('email_body');            
+            $this->load->library('email');
+            $this->email->from('proAges@example.com','proAges');
+            $this->email->to($email_address);
+            $this->email->subject('Test Email');
+            $this->email->message($email_body);
+            $result = $this->email->send(); 
+            echo json_encode($result); 
+	} 
+        
+        
         
         
         
@@ -2342,16 +2354,16 @@ class Ot extends CI_Controller {
 		if( empty( $_POST ) or isset( $_POST['query']['ramo'] )  and $_POST['query']['ramo'] !=3  ):
 		/*			
 			[name] => Agentes
-            [negocio] => Negocios Pagados
-            [negociopai] => Negocios Pal
-            [prima] => Primas Pagadas
-            [tramite] => Negocios en Tramite
-            [tramite_prima] => Primas en Tramite
-            [pendientes] => Negocios Pendientes
-            [pendientes_primas] => Primas Pendientes
-            [negocios_proyectados] => Negocios Proyectados
-            [negocios_proyectados_primas] => Primas Proyectadas,
-			['iniciales'] => 'Iniciales',
+                        [negocio] => Negocios Pagados
+                        [negociopai] => Negocios Pal
+                        [prima] => Primas Pagadas
+                        [tramite] => Negocios en Tramite
+                        [tramite_prima] => Primas en Tramite
+                        [pendientes] => Negocios Pendientes
+                        [pendientes_primas] => Primas Pendientes
+                        [negocios_proyectados] => Negocios Proyectados
+                        [negocios_proyectados_primas] => Primas Proyectadas,
+                                    ['iniciales'] => 'Iniciales',
 			['renovaciones'] => 'Renovaciones'
 		
 		*/
@@ -2394,30 +2406,22 @@ class Ot extends CI_Controller {
                 if( $value['connection_date'] != '0000-00-00' ) 
                          $data[$i]['name'] .=  'Conectado'. getFormatDate( $value['connection_date'] );
                 else 
-                         $data[$i]['name'] .=   'No Conectado';
-                
+                         $data[$i]['name'] .=   'No Conectado';                
 																
-				unset( $data[$i]['disabled'], $data[$i]['connection_date'], $data[$i]['uids'] );
-				
-				$data[$i]['negociopai'] = count( $value['negociopai'] );
-					
+				unset( $data[$i]['disabled'], $data[$i]['connection_date'], $data[$i]['uids'] );				
+				$data[$i]['negociopai'] = count( $value['negociopai'] );					
 					
 				if( isset( $value['tramite']['count'] ) ){
 					
 					$data[$i]['tramite_count'] = $value['tramite']['count'];
 					$data[$i]['tramite_prima'] = $value['tramite']['prima'];
-					
-					
-					$data[$i]['tramite'] = $data[$i]['tramite_count'];
-					
+					$data[$i]['tramite'] = $data[$i]['tramite_count'];					
 					unset( $data[$i]['tramite_count'] );
 				}else{
 					
 					$data[$i]['tramite_count'] = 0;
-					$data[$i]['tramite_prima'] = 0;
-					
-					$data[$i]['tramite'] = $data[$i]['tramite_count'];
-					
+					$data[$i]['tramite_prima'] = 0;					
+					$data[$i]['tramite'] = $data[$i]['tramite_count'];					
 					unset( $data[$i]['tramite_count'] );
 				}
 				
@@ -2499,17 +2503,17 @@ class Ot extends CI_Controller {
 			$totalgeneral=0;
 			
 			/*[name] => Agentes
-            [negocio] => Negocios Pagados
-            [negociopai] => Negocios Pal
-            [prima] => Primas Pagadas
-            [tramite] => Negocios en Tramite
-            [tramite_prima] => Primas en Tramite
-            [pendientes] => Negocios Pendientes
-            [pendientes_primas] => Primas Pendientes
-            [negocios_proyectados] => Negocios Proyectados
-            [negocios_proyectados_primas] => Primas Proyectadas
-            [iniciales] => Iniciales
-            [renovaciones] => Renovaciones
+                        [negocio] => Negocios Pagados
+                        [negociopai] => Negocios Pal
+                        [prima] => Primas Pagadas
+                        [tramite] => Negocios en Tramite
+                        [tramite_prima] => Primas en Tramite
+                        [pendientes] => Negocios Pendientes
+                        [pendientes_primas] => Primas Pendientes
+                        [negocios_proyectados] => Negocios Proyectados
+                        [negocios_proyectados_primas] => Primas Proyectadas
+                        [iniciales] => Iniciales
+                        [renovaciones] => Renovaciones
 			*/
 			
 			unset( $data[0]['negocio'],$data[0]['negociopai'],$data[0]['prima'],$data[0]['tramite'], $data[0]['tramite_prima'] );
@@ -2517,13 +2521,11 @@ class Ot extends CI_Controller {
 			
 			 $data[0]['total'] = 'Total';
 			
-			if( !empty( $data ) ){
-			
+			if( !empty( $data ) )
+                            {
 				$i = 0;
-				
-				foreach( $data  as $value ){
-					
-					
+				foreach( $data  as $value )
+                                    {
 					if( $i>0 ){
 					
 						unset( $data[$i]['id'] );
@@ -2532,21 +2534,16 @@ class Ot extends CI_Controller {
 						if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente'; else $value['disabled'] = 'Cancelado';
 						
 						if( !empty( $value['uids'][0]['uid'] ) )								
-							$data[$i]['name'] =  $value['uids'][0]['uid']. ' - ';
-						
+							$data[$i]['name'] =  $value['uids'][0]['uid']. ' - ';						
 						else
-						   $data[$i]['name'] = 'Sin clave asignada -';
-						   
+						   $data[$i]['name'] = 'Sin clave asignada -';						   
 								
 						$data[$i]['name'] .= $value['disabled'] .' -  Generacion 1 - '; 
-								  
-								 
 											
 						if( $value['connection_date'] != '0000-00-00' ) 
 								 $data[$i]['name'] .=  'Conectado'. getFormatDate( $value['connection_date'] );
 						else 
 								 $data[$i]['name'] .=   'No Conectado';
-					
 					
 						$iniciales += (int)$value['iniciales'];		
 						$renovacion +=(int) $value['renovacion'];		
@@ -2557,7 +2554,6 @@ class Ot extends CI_Controller {
 						unset( $data[$i]['id'], $data[$i]['uids'],$data[$i]['connection_date'],$data[$i]['disabled'],$data[$i]['negocio'] );
 						unset( $data[$i]['negociopai'],$data[$i]['prima'],$data[$i]['tramite'],$data[$i]['aceptadas'] );
 						unset( $data[$i]['generacion'] );
-						
 					}
 					$i++;
 				}
@@ -2568,15 +2564,8 @@ class Ot extends CI_Controller {
 					'renovacion' => $renovacion,	
 					'totalgeneral' => $totalgeneral
 				);
-				
 			}
-			
-			
-		
-		
 		endif;	
-		
-										
 		
 	 	array_to_csv($data, 'proages_report.csv');
 		
@@ -2584,11 +2573,7 @@ class Ot extends CI_Controller {
 			echo file_get_contents( 'proages_report.csv' );
 		
 		if( is_file( 'proages_report.csv' ) )
-			unlink( 'proages_report.csv' );
-				
-		//exit;
-		
-				
+			unlink( 'proages_report.csv' );		
 	}
 	
 	

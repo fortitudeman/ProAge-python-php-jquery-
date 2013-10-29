@@ -1679,18 +1679,42 @@ class Work_order extends CI_Model{
  
   }
   
-  function pop_up_data()
+  
+  
+  function pop_up_data($work_order_id)
     {
-        $this->db->select('*,policies.uid AS policies_uid,policies.name AS policies_name,products.name AS products_name,policies.period AS policies_period,work_order_status.name AS work_order_status_name,payment_intervals.name AS payment_intervals_name,payment_methods.name AS payment_methods_name,currencies.name AS currencies_name,work_order.uid AS work_order_uid');
+        $this->db->select('*,work_order.id AS work_order_id,agent_user.email AS agent_user_email,policies.uid AS policies_uid,policies.name AS policies_name,products.name AS products_name,policies.period AS policies_period,work_order_status.name AS work_order_status_name,payment_methods.name AS payment_methods_name,currencies.name AS currencies_name,work_order.uid AS work_order_uid,payment_intervals.name AS payment_intervals_name');
+        //$this->db->select('*');
         $this->db->from('work_order');
-        $this->db->join('work_order_status','work_order.work_order_status_id = work_order_status.id');     
-        $this->db->join('policies','work_order.policy_id = policies.id');  
-        $this->db->join('products','policies.product_id = products.id');
-        $this->db->join('payment_intervals','policies.payment_interval_id = payment_intervals.id');
-        $this->db->join('payment_methods','policies.payment_method_id = payment_methods.id');
-        $this->db->join('currencies','policies.currency_id = currencies.id');
+        $this->db->where('work_order.id',$work_order_id); 
+        $this->db->join('users','work_order.user = users.id','inner');
+        $this->db->join('work_order_status','work_order.work_order_status_id = work_order_status.id','inner');
+        $this->db->join('policies','work_order.policy_id = policies.id','inner');
+        
+        $this->db->join('policies_vs_users','policies.id = policies_vs_users.policy_id','inner');
+        $this->db->join('agents','policies_vs_users.user_id = agents.id','inner');
+        $this->db->join('users agent_user','agents.user_id = agent_user.id','inner');
+        
+        $this->db->join('products','policies.product_id = products.id','inner');         
+        $this->db->join('payment_intervals','policies.payment_interval_id = payment_intervals.id','left'); 
+        $this->db->join('payment_methods','policies.payment_method_id = payment_methods.id','inner');
+        $this->db->join('currencies','policies.currency_id = currencies.id','inner');
+        $this->db->join('work_order_types','work_order.work_order_type_id = work_order_types.id','inner');        
+        //$query = $this->db->get_where('work_order',array('work_order.id'=>$work_order_id));
         $query = $this->db->get();
-        return $query->result();
+        
+        $result['general'] = $query->result();
+        
+        $this->db->select('email');
+        $this->db->from('users_vs_user_roles');
+        $this->db->where('users_vs_user_roles.user_role_id',4); 
+        $this->db->join('users','users_vs_user_roles.user_id = users.id');        
+        $query_later = $this->db->get();
+        
+        $result['director'] = $query_later->result();
+        
+        
+        return $result;
     }
   
   

@@ -18,33 +18,25 @@
 
 <div>
     <ul class="breadcrumb">
-       
-		
         <li>
             <a href="<?php echo base_url() ?>">Admin</a> <span class="divider">/</span>
         </li>
         <li>
            <a href="<?php echo base_url() ?>ot.html">Orden de trabajo</a> <span class="divider">/</span>
-        </li>
-               
+        </li>               
         <li>
             Reporte
         </li>
     </ul>
 </div>
 
+
+
 <div class="row-fluid sortable">		
-    <div class="box span12">
-      
+    <div class="box span12">      
         <div class="box-content">
-        
-        	
-            
-            <?php // Show Messages ?>
-            
-            <?php if( isset( $message['type'] ) ): ?>
-               
-               
+            <?php // Show Messages ?>            
+            <?php if( isset( $message['type'] ) ): ?>            
                 <?php if( $message['type'] == true ): ?>
                     <div class="alert alert-success">
                           <button type="button" class="close" data-dismiss="alert">×</button>
@@ -60,24 +52,14 @@
                           <img src="<?php echo base_url() ?>images/false.png" width="20" height="20" />
                           <strong>Error: </strong> <?php  echo $message['message']; // Show Dinamical message error ?>
                     </div>
-                <?php endif; ?>
+                <?php endif; ?>			
+            <?php endif; ?> 
             
-			
-			
-			<?php endif; ?>
             
-                      
             <div class="row">
-            
-            	
                  <div class="span11" style="margin-left:40px; width:95%">
-                       
-                       <!--<div class="main-container" style="overflow:scroll; max-width:100%">-->
-                       
                        <div class="main-container">
-
-                                <div class="main  clearfix">
-                                        			                                
+                           <div class="main  clearfix">                               
                                 <?php if( !isset( $_POST['query']['ramo'] ) or isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 1 ): ?>  
                                  	<a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#06F">Vida</a>
                                 <?php else: ?>   
@@ -99,104 +81,74 @@
                                 
                                 
                                 <p class="line">&nbsp; </p>
-                    			<form id="form" method="post">                      	
+                                    <form id="form" method="post">                      	
                          		 <input type="hidden" name="query[ramo]" id="ramo" value="<?php if( isset( $_POST['query']['ramo'] ) ) echo $_POST['query']['ramo']; else echo 1;  ?>" />
-                    
-                                <table  class="filterstable" style="width:99%;">
-                                <thead>
-                                <tr>
-                                    <th>
-                                            
-                                            
-                                            <select id="periodo" name="query[periodo]" onchange="this.form.submit();">
-                                                <option value="1" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 1 ) echo 'selected="selected"'?>>Mes</option>
-                                                <?php if( !isset( $_POST['query']['ramo'] ) or isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 1 ): ?> 
-                                                <option value="2" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 2 ) echo 'selected="selected"'?> class="set_periodo">Trimestre</option>
-                                                <?php else: ?>
-                                                	 <option value="2" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 2 ) echo 'selected="selected"'?> class="set_periodo">Cuatrimestre</option>
-                                                <?php endif; ?>
-                                                <option value="3" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 3 ) echo 'selected="selected"'?>>Año</option>
-                                              </select>
-                                            
-                                                                                                                                    
-                                            
-                                           
-                                    </th>
-                                    <th>
-                                            <input type="hidden" id="gerente_value" value="<?php if( isset( $_POST['query']['gerente'] ) ) echo $_POST['query']['gerente'];  ?>" />
-                                            <select id="gerente" name="query[gerente]" class="select" style="width:145px;" onchange="this.form.submit();">
-                                                <option value="">Todos los gerentes</option>                                        
-                                                <?php if( !empty( $manager ) ): foreach( $manager as $value ): ?>
-                                                	
-                                                    <?php if( isset( $_POST['query']['gerente'] ) and $_POST['query']['gerente'] == $value['id']  ): ?>
-                                                    
-                                                    <option selected="selected" value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></option>
-                                                    
-                                                    <?php else: ?>
-                                                    
-                                                    <option value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></option>
-                                                    
-                                                    <?php endif; ?>
-                                                    
-                                                    
-                                                <?php endforeach; endif; ?>
-                                              </select>
-                                           
-                                    </th>
-                                    <th>
-                                            
-                                       <select id="agent" name="query[agent]" class="select2"  style="width:140px;" onchange="this.form.submit();">
-                                        <option value="" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 1 ) echo 'selected="selected"'?>>Todos los agentes</option>
-                                        <option value="2" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 2 ) echo 'selected="selected"'?>>Cancelados</option>
-                                        <option value="3" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 3 ) echo 'selected="selected"'?>>Vigentes</option>
-                                      </select>
-                                           
-                                    </th>
-                                    <th>
-                                        
-                                            
-                                       <select id="generarion" name="query[generacion]" class="select3" style="width:180px;" onchange="this.form.submit();">
-                                        <option value="" <?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 1 ) echo 'selected="selected"'?>>Todas las Generaciónes</option>
-                                       
-                                        <option value="3"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 3 ) echo 'selected="selected"'?>>Generación 1</option>
-                                        <option value="4"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 4 ) echo 'selected="selected"'?>>Generación 2</option>
-                                        <option value="5"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 5 ) echo 'selected="selected"'?>>Generación 3</option>
-                                        <option value="2"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 2 ) echo 'selected="selected"'?>>Consolidado</option>
-                                      </select>
-                                            
-                                       
-                                    </th>
-                                    <th>&nbsp; </th>
-                                    <th>&nbsp; </th>
-                                    <th>&nbsp; </th>
-                                    <th>&nbsp; </th>
-                                    <th></th>
-                                    <th width="50%" align="right" ><?php if( $export_xls == true ): ?><a href="javascript:void(0);" class="download">
-                                        <img src="<?php echo base_url() ?>ot/assets/images/down.png"></a><?php endif; ?></th>
-                                </tr>
-                              </thead>
-                            </table>
-                               </form>
-                    		
-                                <?php if( empty( $_POST ) or isset( $_POST['query']['ramo'] )  and $_POST['query']['ramo'] !=3  ): ?>
-                    				<?php $this->load->view( 'report1', array( 'data' => $data ) ) ?>
-                    			<?php else: ?>
-                                	<?php $this->load->view( 'report2', array( 'data' => $data ) ) ?>                                
-								<?php endif; ?>
-                    
-                    
-                    
-                    </div> <!-- #main -->
-                </div> <!-- #main-container -->
-                    </div>   
-                                                                                                                    	
+                                
+                                         <table  class="filterstable" style="width:99%;">
+                                            <thead>
+                                                <tr>
+                                                    <th>
+                                                        <select id="periodo" name="query[periodo]" onchange="this.form.submit();">
+                                                                    <option value="1" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 1 ) echo 'selected="selected"'?>>Mes</option>
+                                                            <?php if( !isset( $_POST['query']['ramo'] ) or isset( $_POST['query']['ramo'] ) and  $_POST['query']['ramo'] == 1 ): ?> 
+                                                                    <option value="2" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 2 ) echo 'selected="selected"'?> class="set_periodo">Trimestre</option>
+                                                            <?php else: ?>
+                                                                    <option value="2" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 2 ) echo 'selected="selected"'?> class="set_periodo">Cuatrimestre</option>
+                                                            <?php endif; ?>
+                                                                    <option value="3" <?php if( isset( $_POST['query']['periodo'] ) and  $_POST['query']['periodo'] == 3 ) echo 'selected="selected"'?>>Año</option>
+                                                        </select>
+                                                    </th>
+                                                    <th>
+                                                        <input type="hidden" id="gerente_value" value="<?php if( isset( $_POST['query']['gerente'] ) ) echo $_POST['query']['gerente'];  ?>" />
+                                                        <select id="gerente" name="query[gerente]" class="select" style="width:145px;" onchange="this.form.submit();">
+                                                                    <option value="">Todos los gerentes</option>                                        
+                                                                <?php if( !empty( $manager ) ): foreach( $manager as $value ): ?>
+                                                                <?php if( isset( $_POST['query']['gerente'] ) and $_POST['query']['gerente'] == $value['id']  ): ?>
+                                                                    <option selected="selected" value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></option>
+                                                                <?php else: ?>
+                                                                    <option value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></option>
+                                                                <?php endif; ?>
+                                                            <?php endforeach; endif; ?>
+                                                        </select>
+                                                    </th>
+                                                    <th>
+                                                        <select id="agent" name="query[agent]" class="select2"  style="width:140px;" onchange="this.form.submit();">
+                                                            <option value="" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 1 ) echo 'selected="selected"'?>>Todos los agentes</option>
+                                                            <option value="2" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 2 ) echo 'selected="selected"'?>>Cancelados</option>
+                                                            <option value="3" <?php if( isset( $_POST['query']['agent'] ) and  $_POST['query']['agent'] == 3 ) echo 'selected="selected"'?>>Vigentes</option>
+                                                        </select>
+                                                    </th>
+                                                    <th>
+                                                        <select id="generarion" name="query[generacion]" class="select3" style="width:180px;" onchange="this.form.submit();">
+                                                            <option value="" <?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 1 ) echo 'selected="selected"'?>>Todas las Generaciónes</option>
+                                                            <option value="3"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 3 ) echo 'selected="selected"'?>>Generación 1</option>
+                                                            <option value="4"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 4 ) echo 'selected="selected"'?>>Generación 2</option>
+                                                            <option value="5"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 5 ) echo 'selected="selected"'?>>Generación 3</option>
+                                                            <option value="2"<?php if( isset( $_POST['query']['generacion'] ) and  $_POST['query']['generacion'] == 2 ) echo 'selected="selected"'?>>Consolidado</option>
+                                                        </select>
+                                                    </th>
+                                                    <th>&nbsp; </th>
+                                                    <th>&nbsp; </th>
+                                                    <th>&nbsp; </th>
+                                                    <th>&nbsp; </th>
+                                                    <th></th>
+                                                    <th width="50%" align="right" ><?php if( $export_xls == true ): ?><a href="javascript:void(0);" class="download">
+                                                        <img src="<?php echo base_url() ?>ot/assets/images/down.png"></a><?php endif; ?>
+                                                    </th>
+                                                </tr>
+                                              </thead>
+                                            </table>
+                                        </form>                    		
+                                        <?php if( empty( $_POST ) or isset( $_POST['query']['ramo'] )  and $_POST['query']['ramo'] !=3  ): ?>
+                                                <?php $this->load->view( 'report1', array( 'data' => $data ) ) ?>
+                                        <?php else: ?>
+                                                <?php $this->load->view( 'report2', array( 'data' => $data ) ) ?>                                
+                                        <?php endif; ?>
+                            </div> <!-- #main -->
+                        </div> <!-- #main-container -->
+                    </div>                                                                                                 	
                 </div>
-                
-            </div>          
-          
-                           
+            </div>               
         </div>
     </div><!--/span-->
-	
 </div><!--/row-->
-

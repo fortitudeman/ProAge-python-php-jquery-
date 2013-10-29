@@ -685,6 +685,7 @@ color: white;
 {
     background: #DDD;
     font-weight: normal;
+    height: 30px;
 }
 #popup_table
 {
@@ -694,4 +695,26 @@ color: white;
 .fancybox-wrap
 {
     width: 900px;
+}
+
+#email_form
+{
+    height: 400px;
+    width: 700px;    
+}
+
+.emal_popup_head
+{
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+#ot_numero
+{
+    font-weight: normal;
+}
+
+#poliza_numero
+{
+    font-weight: normal;
 }
