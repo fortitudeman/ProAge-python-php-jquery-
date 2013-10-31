@@ -2,7 +2,7 @@
 
 /*
 
-  Authors		Ulises Rodríguez / Nasir
+  Authors		Ulises Rodríguez
   Site:			http://www.ulisesrodriguez.com	
   Twitter:		https://twitter.com/#!/isc_ulises
   Facebook:		http://www.facebook.com/ISC.Ulises
