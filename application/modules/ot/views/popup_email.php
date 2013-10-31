@@ -12,5 +12,11 @@
     <input type="hidden" name="work_order_id" id="work_ord_array"/>
     <textarea id="email_form"></textarea>
     <br/>
-    <input type="submit" value="Enviar"/>
+    
+    <div>
+        <div id="register_but"></div>
+        <div style="float: right;padding-right: 20px;padding-top: 15px;">            
+            <input type="submit" value="" id="mail_send_button"/>
+        </div>
+    </div>    
 </form>

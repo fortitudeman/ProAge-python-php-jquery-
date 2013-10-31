@@ -2069,10 +2069,10 @@ class Ot extends CI_Controller {
 			  
 			  $user_id = $this->user->getUserIdByAgentId( $item->agent_id  );
 			 
-			  //echo '<pre>';
-			  //print_r( $file_array );
-			  //echo '</pre>'		; 
-			  //exit;	  
+			  echo '<pre>';
+			  print_r( $file_array );
+			  echo '</pre>'		; 
+			  exit;	  
 			  if( $this->work_order->checkPayment( $item->uid, $item->amount, $item->payment_date, $user_id ) == true ){
 					  
 					  if( $this->work_order->create( 'payments', $payment ) == false )	$controlSaved = false;
@@ -2319,18 +2319,11 @@ class Ot extends CI_Controller {
             $this->load->library('email');
             $this->email->from('proAges@example.com','proAges');
             $this->email->to($email_address);
-            $this->email->subject('Test Email');
+            $this->email->subject('Email from proAges');
             $this->email->message($email_body);
             $result = $this->email->send(); 
             echo json_encode($result); 
-	} 
-        
-        
-        
-        
-        
-        
-        
+	}         
         
 	
 	public function report_export(){

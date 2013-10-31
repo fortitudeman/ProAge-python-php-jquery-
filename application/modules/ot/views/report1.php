@@ -2,8 +2,7 @@
 
     function report_popup(wrk_ord_ids)
     {
-        ///alert(wrk_ord_ids[0]);
-        
+        //alert(wrk_ord_ids);        
         $.post("ot/reporte_popup",{wrk_ord_ids:wrk_ord_ids},function(data)
         { 
             if(data)
@@ -98,17 +97,25 @@
                 <td class="celda_gris"><div class="numeros" style="text-align:center;"><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?></div></td>
                 <td class="celda_gris"><div class="numeros" style="text-align:right">$<?php echo $value['prima'] ?></div></td>
                 <td class="celda_roja">
-                    <a class="numeros fancybox"  href="javascript:void"  title="Haga click aqui para ver los detalles" <?php if($value['tramite']['work_order_ids']){?> onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>)' <?php }?>>                    
+                    <a class="numeros fancybox"   style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>)' <?php }?>>                    
                         <?php if(isset($value['tramite']['count'])) echo $value['tramite']['count']; else echo 0; ?>
                     </a>
                 </td>
                 <td class="celda_roja">
-                    <a class="numeros fancybox"  href="<?php echo base_url();?>ot/reporte_popup/<?php echo $value['id'] ?>" title="Haga click aqui para ver los detalles" style="text-align:right">
+                    <a class="numeros fancybox"  style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>)' <?php }?>>
                         $<?php if( isset( $value['tramite']['prima'] ) ) echo $value['tramite']['prima']; else echo 0; ?>
                     </a>
                 </td>
-                <td class="celda_amarilla"><a class="numeros fancybox"  href="<?php echo base_url();?>ot/reporte_popup/<?php echo $value['id'] ?>" title="Haga click aqui para ver los detalles" style="text-align:center;"><?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?></a></td>
-                <td class="celda_amarilla"><a class="numeros fancybox"  href="<?php echo base_url();?>ot/reporte_popup/<?php echo $value['id'] ?>" title="Haga click aqui para ver los detalles" style="text-align:right">$<?php if( isset( $value['aceptadas']['prima'] ) ) echo  $value['aceptadas']['prima']; else  echo $value['aceptadas'] ?></a></td>
+                <td class="celda_amarilla">
+                    <a class="numeros fancybox"  style="text-align:center;" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo json_encode($value['aceptadas']['work_order_ids']);?>)' <?php }?>>
+                        <?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?>
+                    </a>
+                </td>
+                <td class="celda_amarilla">
+                    <a class="numeros fancybox"  style="text-align:right" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo json_encode($value['aceptadas']['work_order_ids']);?>)' <?php }?>>
+                        $<?php if( isset( $value['aceptadas']['prima'] ) ) echo  $value['aceptadas']['prima']; else  echo $value['aceptadas'] ?>
+                    </a>
+                </td>
                 <td class="celda_verde"><div class="numeros"style="text-align:center;"><?php echo $negocio ?></div></td>
                 <td class="celda_verde"><div class="numeros" style="text-align:right">$<?php echo $prima ?></div></td>
             </tr>
@@ -149,7 +156,7 @@
 </table>
 
 
-<div id="contentFoot" style="width:77% !important;" class="theader">
+<div id="contentFoot" style="height: 38px; width:77% !important;" class="theader">
     <table  class="sortable altrowstable tablesorter" id="Tfoot" style="min-width:100% !important;" >
         <thead>
             <tr>
@@ -176,10 +183,10 @@
             <td style="width:70px; text-align:center;"><div class="numeros"><?php echo $total_negocio?></div>Negocios Pagados</td>
             <td style="width:70px; text-align:center;"><div class="numeros"><?php echo $total_negocio_pai?></div> Negocios Pal</td>
             <td style="width:100px;text-align:right"><div class="numeros">$<?php echo $total_primas_pagadas?></div> Pagados</td>
-            <td style="width:70px; text-align:center;" class="celda_gris_roja"><div class="numeros"><?php echo $total_negocios_tramite?></div> Negocios en <br>  Tramite</td>
-            <td style="width:100px;text-align:right" class="celda_gris_roja"><div class="numeros">$<?php echo $total_primas_tramite?></div> En Tramite</td>
-            <td style="width:70px; text-align:center;" class="celda_gris_amarilla"><div class="numeros"><?php echo $total_negocio_pendiente?></div> Negocios Pendientes</td>
-            <td style="width:100px;text-align:right" class="celda_gris_amarilla"><div class="numeros">$<?php echo $total_primas_pendientes?></div> Pendientes</td>
+            <td style="width:70px; text-align:left;" class="celda_gris_roja"><div class="numeros"><?php echo $total_negocios_tramite?></div> Negocios en <br>  Tramite</td>
+            <td style="width:100px;text-align:left" class="celda_gris_roja"><div class="numeros">$<?php echo $total_primas_tramite?></div> En Tramite</td>
+            <td style="width:70px; text-align:left;" class="celda_gris_amarilla"><div class="numeros"><?php echo $total_negocio_pendiente?></div> Negocios Pendientes</td>
+            <td style="width:100px;text-align:left" class="celda_gris_amarilla"><div class="numeros">$<?php echo $total_primas_pendientes?></div> Pendientes</td>
             <td  style="width:70px; text-align:center;"class="celda_gris_verde"><div class="numeros"><?php echo $total_negocios_proyectados?></div> Negocios Proyectados</td>
             <td  style="width:100px;text-align:right"class="celda_gris_verde"><div class="numeros">$<?php echo $total_primas_proyectados?></div> Proyectadas</td>
         </tr>

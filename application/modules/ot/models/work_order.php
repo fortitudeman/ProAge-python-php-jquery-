@@ -1687,19 +1687,19 @@ class Work_order extends CI_Model{
         //$this->db->select('*');
         $this->db->from('work_order');
         $this->db->where('work_order.id',$work_order_id); 
-        $this->db->join('users','work_order.user = users.id','inner');
-        $this->db->join('work_order_status','work_order.work_order_status_id = work_order_status.id','inner');
-        $this->db->join('policies','work_order.policy_id = policies.id','inner');
+        $this->db->join('users','work_order.user = users.id','left');
+        $this->db->join('work_order_status','work_order.work_order_status_id = work_order_status.id','left');
+        $this->db->join('policies','work_order.policy_id = policies.id','left');
         
-        $this->db->join('policies_vs_users','policies.id = policies_vs_users.policy_id','inner');
-        $this->db->join('agents','policies_vs_users.user_id = agents.id','inner');
-        $this->db->join('users agent_user','agents.user_id = agent_user.id','inner');
+        $this->db->join('policies_vs_users','policies.id = policies_vs_users.policy_id','left');
+        $this->db->join('agents','policies_vs_users.user_id = agents.id','left');
+        $this->db->join('users agent_user','agents.user_id = agent_user.id','left');
         
-        $this->db->join('products','policies.product_id = products.id','inner');         
+        $this->db->join('products','policies.product_id = products.id','left');         
         $this->db->join('payment_intervals','policies.payment_interval_id = payment_intervals.id','left'); 
-        $this->db->join('payment_methods','policies.payment_method_id = payment_methods.id','inner');
-        $this->db->join('currencies','policies.currency_id = currencies.id','inner');
-        $this->db->join('work_order_types','work_order.work_order_type_id = work_order_types.id','inner');        
+        $this->db->join('payment_methods','policies.payment_method_id = payment_methods.id','left');
+        $this->db->join('currencies','policies.currency_id = currencies.id','left');
+        $this->db->join('work_order_types','work_order.work_order_type_id = work_order_types.id','left');        
         //$query = $this->db->get_where('work_order',array('work_order.id'=>$work_order_id));
         $query = $this->db->get();
         

@@ -196,7 +196,9 @@ $( document ).ready(function() {
            wrk_ids = $('#work_ord_array').val();           
            
            var wrk_ord_ids = new Array();
-           wrk_ord_ids = wrk_ids.split(",");           
+           wrk_ord_ids = wrk_ids.split(",");  
+           
+           wrk_ord_ids = wrk_ord_ids.slice(0,-1);
            
            $.post("ot/send_email",{'email_body':email_body,'email_address':email_address},function(dataa)
             {       

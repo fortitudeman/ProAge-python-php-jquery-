@@ -1965,24 +1965,15 @@ class User extends CI_Model{
 				} 
 				
 				//Generación 3: fecha de conexión > 2 años y < 3 años <option value="5">Generación 3</option>
-				if( $filter['query']['generacion'] == 5 ){
-					
-					$begin = ( date( 'Y' )-3 ).date( '-m-d' );
-					
-					$end = 	( date( 'Y' )-2 ).date( '-m-d' );
-						
-					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
-					
-					$generacion = 'Generación 3';
+				if( $filter['query']['generacion'] == 5 )
+                                {
+                                    $begin = ( date( 'Y' )-3 ).date( '-m-d' );					
+                                    $end = 	( date( 'Y' )-2 ).date( '-m-d' );						
+                                    $this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 					
+                                    $generacion = 'Generación 3';
 				} 
 				
-				
-				
-				
-				
 			}
-		
-		
 		
 		
 			if( isset( $filter['query']['gerente'] ) and !empty( $filter['query']['gerente'] ) )
@@ -2086,7 +2077,9 @@ class User extends CI_Model{
 			
                         'tramite'=>$this->getTramite($row->agent_id,$filter),
 			
-                        'aceptadas' => $this->getAceptadas( $row->agent_id, $filter ),
+                        'aceptadas' => $this->getAceptadas($row->agent_id,$filter),
+                    
+                    
 			'iniciales' => $this->getIniciales( $row->agent_id, $filter ),
 			'renovacion' => $this->getRenovacion( $row->agent_id, $filter ),
 			'generacion' => $generacion			
@@ -2727,26 +2720,21 @@ class User extends CI_Model{
                 
                 
                 foreach ($query->result() as $row)
-                {
-				
+                {	
 			/*
 			SELECT SUM( prima )
 			FROM policies
 			WHERE id=9
-			*/
-			
+			*/			
 			$this->db->select_sum( 'prima' );
 			$this->db->from( 'policies' );
-			$this->db->where( array( 'id' => $row->policy_id ) );
-					
-			$queryprima = $this->db->get(); 
-			
+			$this->db->where( array( 'id' => $row->policy_id ) );					
+			$queryprima = $this->db->get(); 			
 			$prima = 0;
 			
-			if ($queryprima->num_rows() == 0){
-				
-				$prima = 0;												
-				
+			if ($queryprima->num_rows() == 0)
+                        {
+                            $prima = 0;											
 			}
                         else
                         {	
@@ -2768,9 +2756,8 @@ class User extends CI_Model{
   
   
   
-  public function getAceptadas(  $user_id = null, $filter = array() ){
-  	
-	
+  public function getAceptadas(  $user_id = null, $filter = array() )
+            {
 		if( empty( $user_id ) ) return 0;
 		/*
 		SELECT DISTINCT( policies_vs_users.policy_id ) AS policy_id
@@ -2784,7 +2771,7 @@ class User extends CI_Model{
 		*/
 		
 		
-		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) AS policy_id' );
+		$this->db->select('DISTINCT( policies_vs_users.policy_id ) AS policy_id,work_order.id AS work_order_id' );
 		$this->db->from( 'policies' );
 		$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
@@ -2793,10 +2780,10 @@ class User extends CI_Model{
 		$this->db->where( array( 'work_order.work_order_status_id' => 7 ) );
 		$this->db->where( 'policies_vs_users.user_id', $user_id );
   		
-		if( !empty( $filter ) ){
-			
-			
-			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
+		if(!empty($filter))
+                {
+			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) )
+                        {
 						
 				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
 			}
@@ -2889,70 +2876,53 @@ class User extends CI_Model{
 		$query = $this->db->get(); 
   		
 		
-		if ($query->num_rows() == 0) return 0;		
-		
-		$aceptadas = array();
-		
-		$aceptadas['prima'] = 0;
-		
-		$aceptadas['count']=0;
-		
-		foreach ($query->result() as $row){
-			
-			/*
-			SELECT *
-			FROM payments
-			WHERE `policy_id`=1
-			*/
-			
-			
-			$this->db->select();
-			$this->db->from( 'payments' );
-			$this->db->where( array( 'policy_id' => $row->policy_id ) );
-					
-			$querypayments = $this->db->get(); 
-			
-			
-			if ($querypayments->num_rows() == 0){
-				
-				/*
-				SELECT SUM( prima )
-				FROM policies
-				WHERE id=1*/
-				$this->db->select_sum( 'prima' );
-				$this->db->from( 'policies' );
-				$this->db->where( array( 'id' => $row->policy_id ) );
-				
-				$querypolicies = $this->db->get(); 
-				
-				
-				if ($querypolicies->num_rows() > 0){
-					
-					foreach ($querypolicies->result() as $rowprima){
-					
-					$aceptadas['count'] = (int)$aceptadas['count']+1;
-					
-					if( !empty( $rowprima->prima ) ) $aceptadas['prima'] = (float)$aceptadas['prima'] + (float)$rowprima->prima;
-					
-				}
-					
-				}
-				
-				
-			}	
-			
-			
+		if ($query->num_rows() == 0) return 0;			
+		$aceptadas = array();	
+                $work_order_ids = array();
+		$aceptadas['prima'] = 0;		
+		$aceptadas['count']=0;		
+		foreach ($query->result() as $row)
+                {
+                    /*
+                    SELECT *
+                    FROM payments
+                    WHERE `policy_id`=1
+                    */			
+
+                    $this->db->select();
+                    $this->db->from( 'payments' );
+                    $this->db->where( array( 'policy_id' => $row->policy_id ) );
+
+                    $querypayments = $this->db->get(); 
+
+
+                    if ($querypayments->num_rows() == 0)
+                    {	
+                        /*
+                        SELECT SUM( prima )
+                        FROM policies
+                        WHERE id=1*/
+                        $this->db->select_sum( 'prima' );
+                        $this->db->from( 'policies' );
+                        $this->db->where( array( 'id' => $row->policy_id ) );
+                        $querypolicies = $this->db->get(); 
+                        if ($querypolicies->num_rows() > 0)
+                        {
+                            foreach ($querypolicies->result() as $rowprima)
+                            {
+                                $aceptadas['count'] = (int)$aceptadas['count']+1;					
+                                if( !empty( $rowprima->prima ) ) $aceptadas['prima'] = (float)$aceptadas['prima'] + (float)$rowprima->prima;					
+                            }
+                        }
+                    }
+                    $work_order_ids[] = $row->work_order_id;       
 		}
-		
-		
-		
-		
-		
-		
+                $aceptadas['work_order_ids'] = $work_order_ids; 
 		return $aceptadas;		
-		
-  }
+            }
   
+            
+            
   
   public function getIniciales( $user_id = null, $filter = array() ){
 	
