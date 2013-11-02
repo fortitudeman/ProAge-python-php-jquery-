@@ -19,7 +19,7 @@
  <div class="box-content">
 	
     <!--style="margin-top:400px; position:fixed; z-index:1000; background:#F9F9F9; color:#fff; width:38%;"-->
-    <table class="table-totals" style="background:#F9F9F9; color:#fff; width:38%;position:fixed !important;
+    <table class="table-totals" style="background:#F9F9F9; color:#fff; width:32%;position:fixed !important;
 	bottom:0px;">
     
      <tr>
@@ -55,7 +55,7 @@
 
            <td width="40%" >
 
-              <select name="periodo" id="periodo" onchange="ingresoPromedio(); save();">
+              <select name="periodo" id="periodo" onchange="ingresoPromedio(); ">
 
                  <option value="3" <?php if( isset( $data->periodo ) and $data->periodo == 3 ) echo 'selected="selected"'; ?>>TRIMESTRAL</option>
 
@@ -227,7 +227,7 @@
 
            <td>
 
-              <input type="text" name="comisionVentaInicial" id="comisionVentaInicial" value="<?php if( isset( $data->comisionVentaInicial ) ) echo $data->comisionVentaInicial; else echo 0; ?>" onblur="ingresoTotal(); save();">
+              <input type="text" name="comisionVentaInicial" id="comisionVentaInicial" value="<?php if( isset( $data->comisionVentaInicial ) ) echo $data->comisionVentaInicial; else echo 0; ?>" onblur="ingresoTotal(); ">
 
            </td>
 
@@ -260,7 +260,7 @@
 
            <td>
 
-              <input type="text" name="comisionVentaRenovacion" id="comisionVentaRenovacion" value="<?php if( isset( $data->comisionVentaRenovacion ) ) echo $data->comisionVentaRenovacion; else echo 0; ?>"  onblur="ingresoTotal(); ingresoPromedio(); save();">
+              <input type="text" name="comisionVentaRenovacion" id="comisionVentaRenovacion" value="<?php if( isset( $data->comisionVentaRenovacion ) ) echo $data->comisionVentaRenovacion; else echo 0; ?>"  onblur="ingresoTotal(); ingresoPromedio(); ">
 
            </td>
 
@@ -366,6 +366,7 @@
        
      </table>
 	
+     <input type="button" value="Guardar Meta" class="pull-right btn-save-meta" style="margin-top:40px;" onclick="save();"/>
     
         
  </div>    

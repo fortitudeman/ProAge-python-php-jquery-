@@ -27,6 +27,8 @@ function stickyFooter(){
  
 $( document ).ready(function() {
 	
+	$( '.metas' ).hide();
+	
 	stickyFooter(); 
 	
 	$(window).resize(function() {
@@ -34,6 +36,13 @@ $( document ).ready(function() {
 		var percent = ($("body").height() * 10)/100;
 		$(".table-totals").css("height", percent+'px');
 	});	
+	
+	$( '#open_simulator' ).bind( 'click', function(){
+		
+		$( '.metas' ).hide();
+		$( '.simulator' ).show();
+		
+	});
 	
 	// % Bono Productividad
 	
@@ -812,6 +821,8 @@ $( document ).ready(function() {
 			
 			$( '#ramo' ).val( 3 );
 		}
+		
+		$( '#form' ).submit();
 					
 	});
 				
@@ -852,6 +863,9 @@ function ingresoPromedio(){
 function save(){
 			
 	var id = $( '#id' ).val();
+	
+	$( '.metas' ).show();
+	$( '.simulator' ).hide();
 	
 	if( id == 0 ){
 	 	 	

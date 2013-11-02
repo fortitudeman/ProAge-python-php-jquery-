@@ -187,7 +187,7 @@ class Simulator extends CI_Controller {
 		  ),
 		  'content' => 'simulator/overview', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'no_visible_elements' => true,
+		  'no_visible_elements_2' => true,
 		  'agent' =>  $agent,
 		  'agentid' =>  $agentid,
 		  'data' => $this->simulators->getByAgent( $agentid ),		  	  

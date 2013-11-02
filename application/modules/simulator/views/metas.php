@@ -16,11 +16,15 @@
 	
   $field = 'vida';	
 
+  if( isset( $_POST['ramo'] ) and  $_POST['ramo'] == 1 ) $field = 'vida';	
+  if( isset( $_POST['ramo'] ) and  $_POST['ramo'] == 2 ) $field = 'gmm';	
+  if( isset( $_POST['ramo'] ) and  $_POST['ramo'] == 3 ) $field = 'autos';	
+	  
 ?>
 
 
-<div style="overflow:scroll">
-<div class="box" style="width:1200px;">
+<div style="overflow:scroll; width:98%;">
+<div class="box">
 
  <div class="box-content">
 	
@@ -30,7 +34,7 @@
         <div class="span2"><h6>Primas promedio</h6></div>
         <div class="span2"><input type="text" id="metas-prima-promedio" value="0" /></div> 
         
-        <div class="span2"></div>
+        <div class="span2"><input type="button"  id="open_simulator"value="Abrir simulador" class="pull-right btn-save-meta"  /></div>
         <div class="span2"><input type="button" value="Guardar Meta" class="pull-right btn-save-meta"  /></div>        
      </div>
     
@@ -77,8 +81,11 @@
               
              
               <tr>
-            	<td><?php echo $configs['month'] ?></td>
-                <td class="bgestacionalidadlight"><?php echo $configs[$field] ?> %<input type="hidden" id="mes-<?php echo $i ?>" name="mes-<?php echo $i ?>" value="<?php echo $configs[$field] ?>" /></td>
+            	<td><?php echo $configs['month']; ?></td>
+                <td class="bgestacionalidadlight">
+					<?php echo $configs[$field] ?> %
+                	<input type="hidden" id="mes-<?php echo $i ?>" name="mes-<?php echo $i ?>" value="<?php echo $configs[$field] ?>" />
+                </td>
                 <td class="bgyelowlight">
                 	
                    <div id="primas-solicitud-meta-text-<?php echo $i ?>" style="text-align: center !important"></div>  
