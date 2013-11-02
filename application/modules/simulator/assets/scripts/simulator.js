@@ -791,7 +791,6 @@ $( document ).ready(function() {
 		$( '#vida' ).css({ 'color': '#000' });
 		$( '#gmm' ).css({ 'color': '#000' });
 		$( '#autos' ).css({ 'color': '#000' });
-			
 		
 		if( this.id == 'vida' ){
 							
@@ -822,7 +821,22 @@ $( document ).ready(function() {
 			$( '#ramo' ).val( 3 );
 		}
 		
-		$( '#form' ).submit();
+		
+		 $.ajax({
+
+			url:  Config.base_url()+'simulator/getConfigMeta.html',
+			type: "POST",
+			data: { ramo: this.id },
+			cache: false,
+			async: false,
+			success: function(data){
+				$( '.metas' ).html(data);
+			}						
+	
+		});
+		
+		
+		//$( '#form' ).submit();
 					
 	});
 				

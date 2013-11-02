@@ -76,7 +76,7 @@
           <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 1 or isset( $_POST['ramo'] ) and $_POST['ramo'] == 1 ): ?>  
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#06F">Vida</a>
           <?php else: ?>   
-              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#000">Vida</a>
+              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#06F">Vida</a>
           <?php endif; ?>              
                               
           <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 2 or isset( $_POST['ramo'] ) and $_POST['ramo'] == 2 ): ?> 

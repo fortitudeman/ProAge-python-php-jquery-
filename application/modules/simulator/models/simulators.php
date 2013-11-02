@@ -343,6 +343,19 @@ class Simulators extends CI_Model{
 	
 	
 	
+	public function trimestre($mes=null){	  
+		$mes = is_null($mes) ? date('m') : $mes;
+		$trim=floor(($mes-1) / 3)+1;
+		return $trim;
+	}
+	  
+	 public function cuatrimestre($mes=null){	  
+		$mes = is_null($mes) ? date('m') : $mes;
+		$trim=floor(($mes-1) / 4)+1;
+		return $trim;
+	}
+	
+	
 	
 }
 ?>

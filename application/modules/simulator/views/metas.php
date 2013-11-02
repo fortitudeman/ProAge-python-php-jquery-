@@ -14,12 +14,10 @@
   	
 */
 	
-  $field = 'vida';	
-
-  if( isset( $_POST['ramo'] ) and  $_POST['ramo'] == 1 ) $field = 'vida';	
-  if( isset( $_POST['ramo'] ) and  $_POST['ramo'] == 2 ) $field = 'gmm';	
-  if( isset( $_POST['ramo'] ) and  $_POST['ramo'] == 3 ) $field = 'autos';	
-	  
+  $field = 'vida';
+  
+  if( isset( $ramo ) ) $field = $ramo;
+  	  
 ?>
 
 

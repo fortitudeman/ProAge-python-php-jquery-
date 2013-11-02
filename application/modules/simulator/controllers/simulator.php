@@ -203,6 +203,83 @@ class Simulator extends CI_Controller {
 		$this->load->view( 'index', $this->view );	
 	}
 	
+	public function getConfigMeta(){
+		
+		$this->load->model( array( 'user', 'simulators' ) );
+		
+		$agentid = 0;
+		
+		$agent = $this->user->getAgentsById( $agentid );
+		
+		
+	    if( isset( $_POST['ramo'] ) and  $_POST['ramo'] == 'vida' ) $product_group_id = 1;	
+	    if( isset( $_POST['ramo'] ) and  $_POST['ramo'] == 'gmm' ) $product_group_id = 2;	
+	    if( isset( $_POST['ramo'] ) and  $_POST['ramo'] == 'autos' ) $product_group_id = 3;	
+						
+		$SolicitudesLogradas = array(
+			'01' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '01', date( 'Y' ) ),
+			'02' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '02', date( 'Y' ) ),
+			'03' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '03', date( 'Y' ) ),
+			'04' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '04', date( 'Y' ) ),
+			'05' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '05', date( 'Y' ) ),
+			'06' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '06', date( 'Y' ) ),
+			'07' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '07', date( 'Y' ) ),
+			'08' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '08', date( 'Y' ) ),
+			'09' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '09', date( 'Y' ) ),
+			'10' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '10', date( 'Y' ) ),
+			'11' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '11', date( 'Y' ) ),
+			'12' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '12', date( 'Y' ) )
+		);
+		
+		
+		$NegociosLogrados = array(
+			'01' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '01', date( 'Y' ) ),
+			'02' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '02', date( 'Y' ) ),
+			'03' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '03', date( 'Y' ) ),
+			'04' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '04', date( 'Y' ) ),
+			'05' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '05', date( 'Y' ) ),
+			'06' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '06', date( 'Y' ) ),
+			'07' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '07', date( 'Y' ) ),
+			'08' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '08', date( 'Y' ) ),
+			'09' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '09', date( 'Y' ) ),
+			'10' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '10', date( 'Y' ) ),
+			'11' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '11', date( 'Y' ) ),
+			'12' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '12', date( 'Y' ) )
+		);
+		
+		$userid = $this->user->getUserIdByAgentId( $agentid );
+		
+		
+		$PrimasLogradas = array(
+			'01' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '01', date( 'Y' ) ),
+			'02' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '02', date( 'Y' ) ),
+			'03' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '03', date( 'Y' ) ),
+			'04' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '04', date( 'Y' ) ),
+			'05' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '05', date( 'Y' ) ),
+			'06' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '06', date( 'Y' ) ),
+			'07' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '07', date( 'Y' ) ),
+			'08' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '08', date( 'Y' ) ),
+			'09' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '09', date( 'Y' ) ),
+			'10' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '10', date( 'Y' ) ),
+			'11' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '11', date( 'Y' ) ),
+			'12' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '12', date( 'Y' ) )
+		);
+		
+		$config = $this->simulators->getConfig();
+		
+		if( isset( $config ) )
+		   $dataview = array( 'config' => $config );
+		 else $dataview = array();  
+		
+		$dataview['ramo'] = $_POST['ramo'];
+		$dataview['SolicitudesLogradas'] = $SolicitudesLogradas;
+		$dataview['NegociosLogrados'] = $NegociosLogrados;
+		$dataview['PrimasLogradas'] = $PrimasLogradas;
+		
+						
+		$this->load->view( 'metas', $dataview );
+		
+	}
 	
 	public function save(){
 		
