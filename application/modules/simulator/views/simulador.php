@@ -29,6 +29,8 @@
               <p style="color:#547EBD !important; float:right" id="ingresoTotal_text">$ <?php if( isset( $data->ingresoTotal ) ) echo $data->ingresoTotal; else echo 0; ?></p>	
               <input type="hidden" name="ingresoBonoRenovacion" id="ingresoTotal" value="<?php if( isset( $data->ingresoTotal ) ) echo $data->ingresoTotal; else echo 0; ?>">
            </td>
+           
+           <td rowspan="2" style="vertical-align:middle"><input type="button" value="Guardar Meta" class="pull-right btn-save-meta" style="margin-top:10px;" onclick="save();"/></td>
 
         </tr>
 
@@ -57,7 +59,9 @@
 
               <select name="periodo" id="periodo" onchange="ingresoPromedio(); ">
 
-                 <option value="3" <?php if( isset( $data->periodo ) and $data->periodo == 3 ) echo 'selected="selected"'; ?>>TRIMESTRAL</option>
+                 <option class="item-trimestre" value="3" <?php if( isset( $data->periodo ) and $data->periodo == 3 ) echo 'selected="selected"'; ?>>TRIMESTRAL</option>
+                 
+                 <option class="item-cuatrimestre" value="4" <?php if( isset( $data->periodo ) and $data->periodo == 4 ) echo 'selected="selected"'; ?>>CUATRIMESTRAL</option>
 
                  <option value="12" <?php if( isset( $data->periodo ) and $data->periodo == 12 ) echo 'selected="selected"'; ?>>ANUAL</option>
 
@@ -366,7 +370,7 @@
        
      </table>
 	
-     <input type="button" value="Guardar Meta" class="pull-right btn-save-meta" style="margin-top:40px;" onclick="save();"/>
+     
     
         
  </div>    

@@ -115,6 +115,10 @@ class Simulator extends CI_Controller {
 		
 		$product_group_id = 1;
 		
+		$trimestre = $this->simulators->trimestre( date('m') );
+		
+		$cuatrimestre = $this->simulators->cuatrimestre( date('m') );
+
 		$SolicitudesLogradas = array(
 			'01' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '01', date( 'Y' ) ),
 			'02' => $this->simulators-> getSolicitudLograda( $agentid, $product_group_id, '02', date( 'Y' ) ),
@@ -195,7 +199,9 @@ class Simulator extends CI_Controller {
 		  
 		  'SolicitudesLogradas' => $SolicitudesLogradas,
 		  'NegociosLogrados' => $NegociosLogrados,	
-		  'PrimasLogradas' => $PrimasLogradas	  	  	
+		  'PrimasLogradas' => $PrimasLogradas,
+		  'trimestre' => $trimestre,
+		  'cuatrimestre' => $cuatrimestre	
 		);
 	
 		

@@ -17,7 +17,7 @@
   $field = 'vida';
   
   if( isset( $ramo ) ) $field = $ramo;
-  	  
+  	
 ?>
 
 
@@ -75,8 +75,96 @@
 			
 			 ?> 
               
-             <?php  if( !empty( $config ) ): foreach( $config as $configs ): $total += (int)$configs[$field]; ?> 
-              
+             <?php  if( !empty( $config ) ): foreach( $config as $configs ):?> 
+             
+             
+             <?php 
+			 			 
+			 if( $field == 'vida' ): 
+			 			 	
+			 	if( isset( $trimestre ) ):
+			 	
+					if( $trimestre == 1 ):
+						
+						if( $configs['id'] >= 1 and $configs['id'] <= 3 );
+						
+						$total += (int)$configs[$field]; 
+						
+					endif;	
+				
+					if( $trimestre == 2 ):
+						
+						if( $configs['id'] >= 4 and $configs['id'] <= 6 );
+						
+						$total += (int)$configs[$field]; 
+					
+					endif;	
+					
+					if( $trimestre == 3 ):
+						
+						if( $configs['id'] >= 7 and $configs['id'] <= 9 );
+						
+						$total += (int)$configs[$field]; 
+					
+					endif;	
+					
+					if( $trimestre == 4 ):
+						
+						if( $configs['id'] >= 10 and $configs['id'] <= 12 );
+						
+						$total += (int)$configs[$field]; 
+					
+					endif;	
+				
+				
+				else:
+					
+					$total += (int)$configs[$field]; 
+				
+				
+			 	endif;
+				
+											 
+			 endif;
+			 
+			 if( $field == 'gmm' or $field == 'autos' ): 
+				
+				 if( isset( $cuatrimestre ) ):
+					
+					
+						if( $cuatrimestre == 1 ):
+						
+							if( $configs['id'] >= 1 and $configs['id'] <= 4 );
+							
+							$total += (int)$configs[$field]; 
+						
+						endif;	
+					
+						if( $cuatrimestre == 2 ):
+							
+							if( $configs['id'] >= 5 and $configs['id'] <= 8 );
+							
+							$total += (int)$configs[$field]; 
+						
+						endif;	
+						
+						if( $cuatrimestre == 3 ):
+							
+							if( $configs['id'] >= 9 and $configs['id'] <= 12 );
+							
+							$total += (int)$configs[$field]; 
+							
+						endif;	
+					
+					else:
+						
+						$total += (int)$configs[$field]; 
+								 
+					endif;
+				
+				endif;	
+			 
+			 ?> 
              
               <tr>
             	<td><?php echo $configs['month']; ?></td>

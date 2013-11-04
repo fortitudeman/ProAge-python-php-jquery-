@@ -114,7 +114,7 @@
 				  $this->load->view( 'simulador', $dataview ) ?>
             
          </div>
-          <div class="span12 metas" >
+          <div class="span12 metass" >
                     
             <?php if( isset( $config ) )
 					 $dataview = array( 'config' => $config );
