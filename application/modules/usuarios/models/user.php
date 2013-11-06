@@ -2079,7 +2079,6 @@ class User extends CI_Model{
 			
                         'aceptadas' => $this->getAceptadas($row->agent_id,$filter),
                     
-                    
 			'iniciales' => $this->getIniciales( $row->agent_id, $filter ),
 			'renovacion' => $this->getRenovacion( $row->agent_id, $filter ),
 			'generacion' => $generacion			

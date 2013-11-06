@@ -734,11 +734,19 @@ color: white;
 
 #register_but
 {
-    background-image: url('register_button.png');
+    
     background-position:  0px 0px;
     background-repeat: no-repeat;
     width: 135px;
     height: 76px;
     border: 0px;   
     float: left;
+}
+.loading{ 
+    
+    background-image:url(fancybox_loading.gif);
+    height: 30px;
+    width: 30px;
+    margin-left: 465px;
+   
 }

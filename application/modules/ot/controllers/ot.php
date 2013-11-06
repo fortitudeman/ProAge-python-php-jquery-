@@ -2272,10 +2272,27 @@ class Ot extends CI_Controller {
  **/	
 	public function reporte_popup()
         {
-            $work_order_ids = $this->input->post('wrk_ord_ids');             
+           
+            $work_order_ids = $this->input->post('wrk_ord_ids');  
+            $data['is_poliza'] = $this->input->post('is_poliza');
             $this->load->model('work_order');   
             $results = array();  
             foreach($work_order_ids as $work_order_id)
+            {
+                $results[] = $this->work_order->pop_up_data($work_order_id);                
+            }
+            $data['values'] = $results;
+            $this->load->view('popup_report',$data);	
+	}
+        public function reporte_popupa()
+        {
+           
+            $work_order_ids = $this->input->post('wrk_ord_ids'); 
+            $data['is_poliza'] = $this->input->post('is_poliza');
+            $work_ids = explode(',',$work_order_ids);
+            $this->load->model('work_order');   
+            $results = array();  
+            foreach($work_ids as $work_order_id)
             {
                 $results[] = $this->work_order->pop_up_data($work_order_id);                
             }
@@ -2303,8 +2320,11 @@ class Ot extends CI_Controller {
  **/	
 	public function email_popup()
         {
-            //$data['email_address'] = $this->uri->segment(3);            
-            $this->load->view('popup_email');	
+            //$data['email_address'] = $this->uri->segment(3);  
+            $tata = $this->input->post("work_ids");
+            $data['Id'] = substr($tata,9, -1);
+            $data['username'] = $this->sessions['username'];
+            $this->load->view('popup_email',$data);	
 	}        
         
         

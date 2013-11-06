@@ -94,36 +94,31 @@ $( document ).ready(function() {
 			$( '.set_periodo' ).html( 'Cuatrimestre' );
 		}
 		
-		if( this.id == 'autos' ){
-			
-			$( '#ramo' ).val(3);
-			
-			$( '#autos' ).css( 'color', '#06F' );
-			
-			$( '.set_periodo' ).html( 'Cuatrimestre' );
-		}
-			
-		
-		$( '#form' ).attr( "action", '' );	
-		
-		$( '#form' ).submit();
-		
+		if( this.id == 'autos' )
+                {
+                    $( '#ramo' ).val(3);			
+                    $( '#autos' ).css( 'color', '#06F' );			
+                    $( '.set_periodo' ).html( 'Cuatrimestre' );
+		}		
+		$( '#form' ).attr( "action", '' );		
+		$( '#form' ).submit();		
 	});
+        
+        
 			
 	$( '.filter' ).bind( 'click', function(){
 		$( '#form' ).attr( "action", '' );
 	});
 	
-	$( '.download' ).bind( 'click', function(){
-		
-		$( '#form' ).attr( "action", Config.base_url() + 'ot/report_export.html' );
-		
-		$( '#form' ).submit();
-		
-		$( '#form' ).attr( "action", '' );
-		
+        
+	$('.download').bind( 'click', function()
+        {
+            $('#form').attr( "action", Config.base_url() + 'ot/report_export.html' );		
+            $('#form').submit();		
+            $('#form').attr( "action",'');		
 	});
 	
+        
 	
 	$('.info').hide();
 	
@@ -143,49 +138,7 @@ $( document ).ready(function() {
 	
        
        
-//       $(".fancybox").fancybox(
-//       {
-//           type: 'ajax',
-//           width :1000,
-//           scrolling   : 'no',
-//           openEffect : 'elastic',
-//           openSpeed  : 150,
-//           closeEffect : 'elastic',
-//           closeSpeed  : 150,
-//           autoDimensions: true,
-//           height: 'auto',
-//           afterShow: function() 
-//           {
-//                $("tr.tr_pop_class").click(function() 
-//                {
-//                    var content = '<a href="javascript:" class="btn btn-link btn-hide"><i class="icon-arrow-up" id="'+this.id+'"></i></a><a href="email_popup" class="btn btn-link send_message">Enviar mensaje al cordinador</a>|<a href="email_popup" class="btn btn-link send_message">Enviar mensaje al Agenta</a>|<a href="email_popup" class="btn btn-link send_message">Enviar mensaje al Director</a>';
-//                    var added_content = $('#tr_pop_afer'+this.id).length;                
-//                    if(added_content == 0)
-//                    {
-//                        $('#'+this.id).after('<tr class="tr_pop_class" id ="tr_pop_afer'+this.id+'"><td></td><td colspan="11">'+content+'</td></tr>').slideDown(1000);            
-//                    
-//                        $('.btn-hide i.icon-arrow-up').bind('click',function()
-//                        { 
-//                            $('#tr_pop_afer'+this.id).remove();
-//                        });                        
-//
-//                        
-//                        $('.send_message').bind('click',function()
-//                        {
-//                           // var value = $(this).text();  
-//                            $('.send_message').fancybox(
-//                            {
-//                                type: 'ajax',
-//                                width :800,
-//                                height:400,
-//                                scrolling:'no'                                
-//                            });                         
-//                        });                         
-//                    }      
-//                });
-//            }
-//       });  
-       
+ 
        
        
        
@@ -194,7 +147,7 @@ $( document ).ready(function() {
            email_body = $('#email_form').val();
            email_address = $('#email_address').val();
            wrk_ids = $('#work_ord_array').val();           
-           
+          
            var wrk_ord_ids = new Array();
            wrk_ord_ids = wrk_ids.split(",");  
            
@@ -217,26 +170,34 @@ $( document ).ready(function() {
             return false;        
        });
        
-       
-    
-       
         $('.send_message').bind('click',function()
         {
            emaill_address = this.id;
            poliza_number = $('#poliza_number').html();
            ot_number = $('#ot_number').html();  
            
-           var work_ids;
-           //var arr = new Array();
            
+           var work_ids
            $('.wrk_ord_ids').each(function()
            {
               work_ids += this.id+',';
-           });           
+           });  
+           var poliza = $('.poliza').html();
+          // alert(poliza);
            
-           var result = work_ids.replace("undefined","");        
+           var file_data = {
+            work_ids:work_ids
+        };
+        
+        var send_url = "<?php echo base_url('ot/email_popup/'); ?>"
+       // alert(send_url);
+        $.post(send_url, file_data, function(msg){      
+            }, "text");
+           //alert(work_ids);
            
-           
+           var result = work_ids.replace("undefined","");    
+          var user_id= result.slice(0,-1);
+          
            $('.send_message').fancybox(
             {
                 type: 'ajax',
@@ -249,6 +210,8 @@ $( document ).ready(function() {
                     $('#ot_numero').html(ot_number);
                     $('#poliza_numero').html(poliza_number);
                     $('#work_ord_array').val(result);
+                    $('#user_id').val(user_id);
+                    $('#poliza').val(poliza);
                 }
              }); 
         });

@@ -3,6 +3,14 @@
 <script src="<?php echo base_url();?>ot/assets/scripts/report.js"></script>
 <script type="text/javascript" src="<?php echo base_url();?>ot/assets/scripts/jquery.tablesorter.js"></script>
 
+<style type="text/css">
+    .bullet_red{background-color: #FF3300; border-radius: 50% 50% 50% 50%; float: left;height: 10px; margin-left: 20px; margin-top: -13px;position: absolute;width: 10px;}
+    .bullet_yellow{background-color: yellow; border-radius: 50% 50% 50% 50%; float: left;height: 10px; margin-left: 20px; margin-top: -13px;position: absolute;width: 10px;}
+    .bullet_green{background-color: green; border-radius: 50% 50% 50% 50%; float: left;height: 10px; margin-left: 20px; margin-top: -13px;position: absolute;width: 10px;}
+    .bullet_black{background-color: black; border-radius: 50% 50% 50% 50%; float: left;height: 10px; margin-left: 20px; margin-top: -13px;position: absolute;width: 10px;}
+    
+</style>
+
 <table border="0" cellspacing="0" cellpadding="0" class="sortable altrowstable tablesorter" id="popup_table">
     <thead>
         <tr id="popup_tr">
@@ -10,7 +18,9 @@
             <th style="width:100px;"><div>OT</div></th>
             <th style="width:110px;"><div>Fecha de ingreso</div></th>
             <th style="width:90px;"><div>Estatus</div></th>
+            <?php if($is_poliza == 'yes'){ ?>
             <th style="width:90px;"><div>Poliza</div></th>
+            <?php } ?>
             <th style="width:90px;"><div>Asegurado</div></th>
             <th style="width:90px;"><div>Producto</div></th>
             <th style="width:90px;"><div>Plazo</div></th>
@@ -43,12 +53,12 @@
 
                                         if($date_diff>$value['general'][0]->duration)
                                         {
-                                            echo '<img src="'.base_url().'ot/assets/images/bullet-red.png" width="32" height="32"/>';
+                                            echo '<div class="bullet_red"></div>';
                                         }  
 
                                         if($date_diff>($value['general'][0]->duration)/2 && $date_diff <= $value['general'][0]->duration)
                                         {
-                                            echo '<img src="'.base_url().'ot/assets/images/bullet-yellow.png" width="32" height="32"/>';
+                                             echo '<div class="bullet_yellow"></div>'; 
                                         }
 
                                         if($date_diff <= ($value['general'][0]->duration)/2)
@@ -70,7 +80,9 @@
                         <td style="width:110px;"><div><?php echo $value['general'][0]->creation_date;?></div></td>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->work_order_status_name;?></div></td>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->policies_uid;?></div></td>
+                        <?php if($is_poliza == 'yes'){ ?>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->policies_name;?></div></td>
+                        <?php }?>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->products_name;?></div></td>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->policies_period;?></div></td>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->payment_intervals_name;?></div></td>
@@ -85,13 +97,14 @@
                                 <span id="poliza_number"><?php echo $value['general'][0]->policies_uid;?></span>
                                 <span id="ot_number"><?php echo $value['general'][0]->work_order_uid;?></span>
                                 <span class="wrk_ord_ids" id="<?php echo $value['general'][0]->work_order_id;?>"></span>
+                                <span class="poliza"><?php echo $is_poliza;?></span>
                             </div>
                             
                             <a href="javascript:" class="btn btn-link btn-hide">
                                 <i class="icon-arrow-up" id="<?php echo $value['general'][0]->work_order_uid;?>"></i>
                             </a>
                             <?php if($value['general'][0]->user != 0){?><a id="<?php echo $value['general'][0]->email; ?>" href="email_popup" class="btn btn-link send_message">Enviar mensaje al cordinador</a>|<?php }?>
-                            <a id="<?php echo $value['general'][0]->agent_user_email; ?>" href="email_popup" class="btn btn-link send_message">Enviar mensaje al Agenta</a>|                            
+                            <a id="<?php echo $value['general'][0]->agent_user_email; ?>" href="email_popup" class="btn btn-link send_message">Enviar mensaje al Agente</a>|                            
                             <a id ="<?php foreach($value['director'] as $demals){echo $demals->email.',';};?>" href="email_popup" class="btn btn-link send_message">Enviar mensaje al Director</a>                            
                         </td>
                     </tr>
