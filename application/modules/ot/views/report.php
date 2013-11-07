@@ -142,11 +142,21 @@
                                     </thead>
                                 </table>
                             </form>                    		
-                            <?php if (empty($_POST) or isset($_POST['query']['ramo']) and $_POST['query']['ramo'] != 3): ?>
-                                <?php $this->load->view('report1', array('data' => $data)) ?>
-                            <?php else: ?>
-                                <?php $this->load->view('report2', array('data' => $data)) ?>                                
-<?php endif; ?>
+                            <?php if (empty($_POST) or isset($_POST['query']['ramo']) and $_POST['query']['ramo'] != 3){ 
+                                if(!empty($_POST)){
+                                 $this->load->view('report1', array('data' => $data, 'tata'=>$tata['query']['ramo']));
+                                }
+                                 else
+                                 {
+                                   $this->load->view('report1', array('data' => $data)) ; 
+                                     
+                                 }
+                                 }
+                               else
+                                 $this->load->view('report2', array('data' => $data));
+                               ?>
+                                                          
+
                         </div> <!-- #main -->
                     </div> <!-- #main-container -->
                 </div>                                                                                                 	

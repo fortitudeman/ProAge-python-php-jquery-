@@ -1,11 +1,11 @@
 <script type="text/javascript">
 
-    function report_popup(wrk_ord_ids,poliza)
+    function report_popup(wrk_ord_ids,poliza,gmm)
     {
-       
+       //alert(gmm);
        $.fancybox.showLoading();
         
-        $.post("ot/reporte_popup",{wrk_ord_ids:wrk_ord_ids,is_poliza:poliza},function(data)
+        $.post("ot/reporte_popup",{wrk_ord_ids:wrk_ord_ids,is_poliza:poliza,gmm:gmm},function(data)
         { 
             if(data)
             {
@@ -30,6 +30,7 @@
     $total_primas_pendientes=0;
     $total_negocios_proyectados=0;
     $total_primas_proyectados=0;
+    $tata;
 ?>
 
 
@@ -102,22 +103,22 @@
                 <td class="celda_gris"><div class="numeros" style="text-align:center;"><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?></div></td>
                 <td class="celda_gris"><div class="numeros" style="text-align:right">$<?php echo $value['prima'] ?></div></td>
                 <td class="celda_roja">
-                    <a class="numeros fancybox"   style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no")' <?php }?>>                    
+                    <a class="numeros fancybox"   style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>                    
                         <?php if(isset($value['tramite']['count'])) echo $value['tramite']['count']; else echo 0; ?>
                     </a>
                 </td>
                 <td class="celda_roja">
-                    <a class="numeros fancybox"  style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no")' <?php }?>>
+                    <a class="numeros fancybox"  style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>
                         $<?php if( isset( $value['tramite']['prima'] ) ) echo $value['tramite']['prima']; else echo 0; ?>
                     </a>
                 </td>
                 <td class="celda_amarilla">
-                    <a class="numeros fancybox"  style="text-align:center;" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes")' <?php }?>>
+                    <a class="numeros fancybox"  style="text-align:center;" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo  $tata; ?>")' <?php }?>>
                         <?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?>
                     </a>
                 </td>
                 <td class="celda_amarilla">
-                    <a class="numeros fancybox"  style="text-align:right" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes")' <?php }?>>
+                    <a class="numeros fancybox"  style="text-align:right" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $tata; ?>"')' <?php }?>>
                         $<?php if( isset( $value['aceptadas']['prima'] ) ) echo  $value['aceptadas']['prima']; else  echo $value['aceptadas'] ?>
                     </a>
                 </td>

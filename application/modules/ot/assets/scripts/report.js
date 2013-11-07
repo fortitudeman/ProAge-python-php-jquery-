@@ -183,7 +183,8 @@ $( document ).ready(function() {
               work_ids += this.id+',';
            });  
            var poliza = $('.poliza').html();
-          // alert(poliza);
+           var gmm = $('.gmm').html();
+          // alert(gmm);
            
            var file_data = {
             work_ids:work_ids
@@ -212,6 +213,7 @@ $( document ).ready(function() {
                     $('#work_ord_array').val(result);
                     $('#user_id').val(user_id);
                     $('#poliza').val(poliza);
+                    $('#gmm').val(gmm);
                 }
              }); 
         });

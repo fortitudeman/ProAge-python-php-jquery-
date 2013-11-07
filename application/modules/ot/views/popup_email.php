@@ -5,10 +5,13 @@
 
     function report_popupa()
     {
-        //alert(wrk_ord_ids); 
+        
         var id = $('#user_id').val();
-        var poliza = $('#poliza').val();    
-        $.post("ot/reporte_popupa",{wrk_ord_ids:id,is_poliza:poliza},function(data)
+        var poliza = $('#poliza').val();  
+        
+        var gmm = $('#gmm').val(); 
+       
+        $.post("ot/reporte_popupa",{wrk_ord_ids:id,is_poliza:poliza,gmm:gmm},function(data)
         { 
             //alert(data);
             if(data)
@@ -40,6 +43,7 @@
         <div id="register_but">
             <input type="hidden" name="user_id" id="user_id"/>
             <input type="hidden" name="poliza" id="poliza"/>
+            <input type="hidden" name="gmm" id="gmm"/>
             
             <a class="numeros fancybox" onclick='report_popupa()' href="javascript:void" style="text-align:center;"> <?php echo '<img src="'.base_url().'ot/assets/style/register_button.png"/>';?></a>
         </div>

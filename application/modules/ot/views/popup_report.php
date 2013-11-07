@@ -10,7 +10,6 @@
     .bullet_black{background-color: black; border-radius: 50% 50% 50% 50%; float: left;height: 10px; margin-left: 20px; margin-top: -13px;position: absolute;width: 10px;}
     
 </style>
-
 <table border="0" cellspacing="0" cellpadding="0" class="sortable altrowstable tablesorter" id="popup_table">
     <thead>
         <tr id="popup_tr">
@@ -23,7 +22,9 @@
             <?php } ?>
             <th style="width:90px;"><div>Asegurado</div></th>
             <th style="width:90px;"><div>Producto</div></th>
+    <?php if($gmm !== '2') { ?>
             <th style="width:90px;"><div>Plazo</div></th>
+    <?php } ?>
             <th style="width:90px;"><div>Forma de pago</div></th>
             <th style="width:90px;"><div>Conducto</div></th>
             <th style="width:90px;"><div>Moneda</div></th>
@@ -85,7 +86,9 @@
                         <?php }?>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->products_name;?></div></td>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->policies_period;?></div></td>
+                         <?php if($gmm !== '2') { ?>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->payment_intervals_name;?></div></td>
+                        <?php } ?>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->payment_methods_name;?></div></td>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->currencies_name;?></div></td>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->prima;?></div></td>
@@ -98,6 +101,7 @@
                                 <span id="ot_number"><?php echo $value['general'][0]->work_order_uid;?></span>
                                 <span class="wrk_ord_ids" id="<?php echo $value['general'][0]->work_order_id;?>"></span>
                                 <span class="poliza"><?php echo $is_poliza;?></span>
+                                <span class="gmm"><?php echo $gmm;?></span>
                             </div>
                             
                             <a href="javascript:" class="btn btn-link btn-hide">

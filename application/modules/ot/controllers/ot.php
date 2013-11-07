@@ -2199,6 +2199,7 @@ class Ot extends CI_Controller {
  **/	
 	public function reporte()
          {	
+            
 		// Check access for report
 		if( $this->access_report == false )
                 {	
@@ -2213,6 +2214,7 @@ class Ot extends CI_Controller {
 		
 		if( !empty( $_POST ) )
 		{	
+                   
                     $data = $this->user->getReport($_POST );
                 }
 		else
@@ -2258,6 +2260,8 @@ class Ot extends CI_Controller {
 		  'manager' => $this->user->getSelectsGerentes2(),
 		  'content' => 'ot/report', // View to load
 		  'data' => $data,
+                  'tata' => $_POST,
+                    
 		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
 		  	
 		);
@@ -2275,7 +2279,9 @@ class Ot extends CI_Controller {
            
             $work_order_ids = $this->input->post('wrk_ord_ids');  
             $data['is_poliza'] = $this->input->post('is_poliza');
+            $data['gmm'] = $this->input->post('gmm');
             $this->load->model('work_order');   
+           
             $results = array();  
             foreach($work_order_ids as $work_order_id)
             {
@@ -2289,6 +2295,7 @@ class Ot extends CI_Controller {
            
             $work_order_ids = $this->input->post('wrk_ord_ids'); 
             $data['is_poliza'] = $this->input->post('is_poliza');
+            $data['gmm'] = $this->input->post('gmm');
             $work_ids = explode(',',$work_order_ids);
             $this->load->model('work_order');   
             $results = array();  
