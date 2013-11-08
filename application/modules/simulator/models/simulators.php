@@ -199,6 +199,70 @@ class Simulators extends CI_Model{
 	}		
 	
 	
+	public function getConfigMetas( $year = false, $trimestre = null, $cuatrimestre = null ){
+				
+		//SELECT * FROM simulator_default_estacionalidad ORDER BY id DESC;
+		$this->db->select();
+		$this->db->from( 'simulator_default_estacionalidad' );
+		
+		
+		
+		if( $year == false ){
+			
+			// Where
+			if( !empty( $trimestre ) and $cuatrimestre == null ){
+				
+				if( $trimestre == 1 ) $this->db->where( 'id = 1 or id = 2 or id = 3' );
+				if( $trimestre == 2 ) $this->db->where( 'id = 4 or id = 5 or id = 6' );
+				if( $trimestre == 3 ) $this->db->where( 'id = 7 or id = 8 or id = 9' );
+				if( $trimestre == 4 ) $this->db->where( 'id = 10 or id = 11 or id = 12' );
+					
+				
+			}
+			
+			
+			if( !empty( $cuatrimestre ) and $trimestre == null ){
+				
+				if( $cuatrimestre == 1 ) $this->db->where( 'id = 1 or id = 2 or id = 3 or id = 4' );
+				if( $cuatrimestre == 2 ) $this->db->where( 'id = 5 or id = 6 or id = 7 or id = 8' );
+				if( $cuatrimestre == 3 ) $this->db->where( 'id = 9 or id = 10 or id = 11 or id = 12' );
+			
+			}
+			
+			
+			
+			
+		}
+				
+		
+		$this->db->order_by( 'id', 'asc' );
+		
+		$query = $this->db->get();
+		
+		if ($query->num_rows() == 0) return false;
+		
+		$data = array();
+		
+		// Getting data
+		foreach ($query->result() as $row)
+			
+			$data[]  = array(
+			
+				'id' => $row->id,
+				'month' => $row->month,
+				'vida' => $row->vida,
+				'gmm' => $row->gmm,
+				'autos' => $row->autos
+				
+				
+			);
+			
+				
+		return $data;
+		
+	}
+	
+	
 	/*Solicitudes logradas*/
 	public function getSolicitudLograda( $agent = null, $product_group_id = null, $month = null, $year = null ){
 		

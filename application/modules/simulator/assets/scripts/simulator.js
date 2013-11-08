@@ -46,7 +46,7 @@ $( document ).ready(function() {
 	
 	// % Bono Productividad
 	
-	$( "#noNegocios" ).bind( 'keypress', function(){ 
+	$( "#noNegocios" ).bind( 'keyup', function(){ 
 		
 		var primaAfectadas = parseFloat( $( '#primasAfectasInicialesUbicar' ).val() );
 			
@@ -146,7 +146,7 @@ $( document ).ready(function() {
 	});
 	
 	
-	$( "#primasAfectasInicialesUbicar" ).bind( 'keypress', function(){ 
+	$( "#primasAfectasInicialesUbicar" ).bind( 'keyup', function(){ 
 		
 		var primaAfectadas = parseFloat( $( '#primasAfectasInicialesUbicar' ).val() );
 			
@@ -243,338 +243,21 @@ $( document ).ready(function() {
 		
 		ingresoTotal(); ingresoPromedio();
 		
-		
-		
-		
-		
-		// Metas
-		var totaltrimestre = 0;
-		
-		var totalprimameta = 0;
-		
-		var totalnegociometa = 0; 	
-		
-		var totalesnegociometa = 0;
-		
-		var totalsolicitudmeta= 0;	 	
-		
-		var totalessolicitudmeta = 0;	 
-		 
-		for(  var i = 1; i<=12; i++ ){
-			
-			var total = parseFloat( this.value ) /  parseInt( $( '#mes-'+i ) .val() );
-			
-			var meta =  Math.round( total* 100 )/100;
-			
-			var primapromedio = parseFloat( $( '#primas_promedio' ).val() );
-				
-				primapromedio =  Math.round( ( meta / primapromedio )*100 );
-				
-				primapromedio =  primapromedio/100;
-				
-				
-				$( "#metas-prima-promedio" ).val( $( '#primas_promedio' ).val() )
-			
-						
-			var solicitud = primapromedio / parseInt( $( '#mes-'+i ) .val() );
-				
-			// Show Values
-			$( '#primas-meta-'+i ).val( meta );
-			$( '#primas-meta-text-'+i ).html( '$ '+ meta );
-			
-			// Negocios Meta
-			$( '#primas-negocios-meta-'+i ).val( primapromedio );
-			$( '#primas-negocios-meta-text-'+i ).html( '$ '+ primapromedio.toFixed(2) );
-			
-			// Solicitud Meta
-			$( '#primas-solicitud-meta-'+i ).val( solicitud );
-			$( '#primas-solicitud-meta-text-'+i ).html( '$ '+ solicitud.toFixed(2) );
-			
-			
-			totaltrimestre+=meta;
-			
-			totalprimameta+=totaltrimestre;
-			
-			
-			totalnegociometa += primapromedio;
-			
-			totalesnegociometa += totalnegociometa;
-			
-			
-			totalsolicitudmeta += solicitud; 
-			
-			totalessolicitudmeta += totalsolicitudmeta;
-			
-			// Totales
-			if( i == 3 ){
-				
-				$( '#primas-meta-primer' ).val( totaltrimestre );
-				$( '#primas-meta-primer-text' ).html( '$ '+totaltrimestre.toFixed(2) );
-				
-				$( '#primas-negocio-meta-primer' ).val( totalnegociometa );
-				$( '#primas-negocio-meta-primer-text' ).html( '$ '+totalnegociometa.toFixed(2) );
-				
-				$( '#primas-solicitud-meta-primer' ).val( totalsolicitudmeta );
-				$( '#primas-solicitud-meta-primer-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
-				
-				totaltrimestre = 0;
-				
-				totalnegociometa= 0;
-				
-				totalsolicitudmeta= 0;
-				
-			} 
-			
-			if( i == 6 ){
-				
-				$( '#primas-meta-segund' ).val( totaltrimestre );
-				$( '#primas-meta-segund-text' ).html( '$ '+totaltrimestre.toFixed(2) );
-				
-				$( '#primas-negocio-meta-segund' ).val( totalnegociometa );
-				$( '#primas-negocio-meta-segund-text' ).html( '$ '+totalnegociometa.toFixed(2) );
-				
-				$( '#primas-solicitud-meta-segund' ).val( totalsolicitudmeta );
-				$( '#primas-solicitud-meta-segund-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
-				
-				totaltrimestre = 0;
-				
-				totalnegociometa= 0;
-				
-				totalsolicitudmeta= 0;
-				
-			} 
-			
-			if( i == 9 ){
-				
-				$( '#primas-meta-tercer' ).val( totaltrimestre );
-				$( '#primas-meta-tercer-text' ).html( '$ '+totaltrimestre.toFixed(2) );
-				
-				$( '#primas-negocio-meta-tercer' ).val( totalnegociometa );
-				$( '#primas-negocio-meta-tercer-text' ).html( '$ '+totalnegociometa.toFixed(2) );
-				
-				$( '#primas-solicitud-meta-tercer' ).val( totalsolicitudmeta );
-				$( '#primas-solicitud-meta-tercer-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
-				
-				totaltrimestre = 0;
-				
-				totalnegociometa= 0;
-				
-				totalsolicitudmeta= 0;
-				
-			} 
-			
-			if( i == 12 ){
-				
-				$( '#primas-meta-cuarto' ).val( totaltrimestre );
-				$( '#primas-meta-cuarto-text' ).html( '$ '+totaltrimestre.toFixed(2) );
-				
-				$( '#primas-negocio-meta-cuarto' ).val( totalnegociometa );
-				$( '#primas-negocio-meta-cuarto-text' ).html( '$ '+totalnegociometa.toFixed(2) );
-				
-				$( '#primas-solicitud-meta-cuarto' ).val( totalsolicitudmeta );
-				$( '#primas-solicitud-meta-cuarto-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
-				
-				totaltrimestre = 0;
-				
-				totalnegociometa= 0;
-				
-				totalsolicitudmeta= 0;
-				
-			} 
-			
-			$( '#primas-meta-total' ).val( totalprimameta );
-			$( '#primas-meta-total-text' ).html( '$ '+totalprimameta.toFixed(2) );
-			
-			$( '#primas-negocios-meta-total' ).val( totalesnegociometa );
-			$( '#primas-negocios-meta-total-text' ).html( '$ '+totalessolicitudmeta.toFixed(2) );
-			
-			$( '#primas-solicitud-meta-total' ).val( totalesnegociometa );
-			$( '#primas-solicitud-meta-total-text' ).html( '$ '+totalessolicitudmeta.toFixed(2) );
-			
-			
-						
-		}
-		
-					
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		getMetas();
 	});
+	
+	
+	$( '#primas_promedio' ).bind( 'keyup', function(){ 		
+		$( '#metas-prima-promedio' ).val(this.value);
+		getMetas();
+	});
+	
 	
 	// Prima Promedio Meas
-	$( "#metas-prima-promedio" ).bind( 'keypress', function(){ 
-		
-		
-		$( "#primas_promedio" ).val( $( '#metas-prima-promedio' ).val() )
-		
-		// Metas
-		var totaltrimestre = 0;
-		
-		var totalprimameta = 0;
-		
-		var totalnegociometa = 0; 	
-		
-		var totalesnegociometa = 0;
-		
-		var totalsolicitudmeta= 0;	 	
-		
-		var totalessolicitudmeta = 0;	 
-		 
-		for(  var i = 1; i<=12; i++ ){
-			
-			var total = parseFloat( this.value ) /  parseInt( $( '#mes-'+i ) .val() );
-			
-			var meta =  Math.round( total* 100 )/100;
-			
-			var primapromedio = parseFloat( $( '#metas-prima-promedio' ).val() );
-								
-				primapromedio =  Math.round( ( meta / primapromedio )*100 );
-				
-				primapromedio =  primapromedio/100;
-			
-			
-						
-			var solicitud = primapromedio / parseInt( $( '#mes-'+i ) .val() );
-				
-			// Show Values
-			$( '#primas-meta-'+i ).val( meta );
-			$( '#primas-meta-text-'+i ).html( '$ '+ meta );
-			
-			// Negocios Meta
-			$( '#primas-negocios-meta-'+i ).val( primapromedio );
-			$( '#primas-negocios-meta-text-'+i ).html( '$ '+ primapromedio.toFixed(2) );
-			
-			// Solicitud Meta
-			$( '#primas-solicitud-meta-'+i ).val( solicitud );
-			$( '#primas-solicitud-meta-text-'+i ).html( '$ '+ solicitud.toFixed(2) );
-			
-			
-			totaltrimestre+=meta;
-			
-			totalprimameta+=totaltrimestre;
-			
-			
-			totalnegociometa += primapromedio;
-			
-			totalesnegociometa += totalnegociometa;
-			
-			
-			totalsolicitudmeta += solicitud; 
-			
-			totalessolicitudmeta += totalsolicitudmeta;
-			
-			// Totales
-			if( i == 3 ){
-				
-				$( '#primas-meta-primer' ).val( totaltrimestre );
-				$( '#primas-meta-primer-text' ).html( '$ '+totaltrimestre.toFixed(2) );
-				
-				$( '#primas-negocio-meta-primer' ).val( totalnegociometa );
-				$( '#primas-negocio-meta-primer-text' ).html( '$ '+totalnegociometa.toFixed(2) );
-				
-				$( '#primas-solicitud-meta-primer' ).val( totalsolicitudmeta );
-				$( '#primas-solicitud-meta-primer-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
-				
-				totaltrimestre = 0;
-				
-				totalnegociometa= 0;
-				
-				totalsolicitudmeta= 0;
-				
-			} 
-			
-			if( i == 6 ){
-				
-				$( '#primas-meta-segund' ).val( totaltrimestre );
-				$( '#primas-meta-segund-text' ).html( '$ '+totaltrimestre.toFixed(2) );
-				
-				$( '#primas-negocio-meta-segund' ).val( totalnegociometa );
-				$( '#primas-negocio-meta-segund-text' ).html( '$ '+totalnegociometa.toFixed(2) );
-				
-				$( '#primas-solicitud-meta-segund' ).val( totalsolicitudmeta );
-				$( '#primas-solicitud-meta-segund-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
-				
-				totaltrimestre = 0;
-				
-				totalnegociometa= 0;
-				
-				totalsolicitudmeta= 0;
-				
-			} 
-			
-			if( i == 9 ){
-				
-				$( '#primas-meta-tercer' ).val( totaltrimestre );
-				$( '#primas-meta-tercer-text' ).html( '$ '+totaltrimestre.toFixed(2) );
-				
-				$( '#primas-negocio-meta-tercer' ).val( totalnegociometa );
-				$( '#primas-negocio-meta-tercer-text' ).html( '$ '+totalnegociometa.toFixed(2) );
-				
-				$( '#primas-solicitud-meta-tercer' ).val( totalsolicitudmeta );
-				$( '#primas-solicitud-meta-tercer-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
-				
-				totaltrimestre = 0;
-				
-				totalnegociometa= 0;
-				
-				totalsolicitudmeta= 0;
-				
-			} 
-			
-			if( i == 12 ){
-				
-				$( '#primas-meta-cuarto' ).val( totaltrimestre );
-				$( '#primas-meta-cuarto-text' ).html( '$ '+totaltrimestre.toFixed(2) );
-				
-				$( '#primas-negocio-meta-cuarto' ).val( totalnegociometa );
-				$( '#primas-negocio-meta-cuarto-text' ).html( '$ '+totalnegociometa.toFixed(2) );
-				
-				$( '#primas-solicitud-meta-cuarto' ).val( totalsolicitudmeta );
-				$( '#primas-solicitud-meta-cuarto-text' ).html( '$ '+totalsolicitudmeta.toFixed(2) );
-				
-				totaltrimestre = 0;
-				
-				totalnegociometa= 0;
-				
-				totalsolicitudmeta= 0;
-				
-			} 
-			
-			$( '#primas-meta-total' ).val( totalprimameta );
-			$( '#primas-meta-total-text' ).html( '$ '+totalprimameta.toFixed(2) );
-			
-			$( '#primas-negocios-meta-total' ).val( totalesnegociometa );
-			$( '#primas-negocios-meta-total-text' ).html( '$ '+totalessolicitudmeta.toFixed(2) );
-			
-			$( '#primas-solicitud-meta-total' ).val( totalesnegociometa );
-			$( '#primas-solicitud-meta-total-text' ).html( '$ '+totalessolicitudmeta.toFixed(2) );
-			
-			
-						
-		}
-		
-		
-		
+	$( "#metas-prima-promedio" ).bind( 'keyup', function(){ 		
+		$( '#primas_promedio' ).val(this.value);	
+		getMetas();
 	});
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -710,6 +393,8 @@ $( document ).ready(function() {
 		
 		ingresoTotal(); ingresoPromedio();
 		
+		getMetas();
+		
 	});
 	
 	
@@ -822,27 +507,54 @@ $( document ).ready(function() {
 		}
 		
 		
-		 $.ajax({
-
-			url:  Config.base_url()+'simulator/getConfigMeta.html',
-			type: "POST",
-			data: { ramo: this.id },
-			cache: false,
-			async: false,
-			success: function(data){
-				$( '.metas' ).html(data);
-			}						
-	
-		});
-		
-		
-		//$( '#form' ).submit();
+		 getMetasPeriod( this.id );
 					
 	});
 				
+	$( '#periodo' ).bind( 'change', function(){
 		
+		if( $( '#ramo' ).val() == 1 ) getMetasPeriod( 'vida' );
+		if( $( '#ramo' ).val() == 2 ) getMetasPeriod( 'gmm' );
+		if( $( '#ramo' ).val() == 3 ) getMetasPeriod( 'autos' );
+		
+	});	
 	
 });
+
+
+function getMetasPeriod( ramo ){
+	
+	
+	$.ajax({
+
+			url:  Config.base_url()+'simulator/getConfigMeta.html',
+			type: "POST",
+			data: { ramo: ramo, periodo: $( '#periodo' ).val() },
+			cache: false,
+			async: false,
+			success: function(data){
+				//alert( data );
+				$( '.metas' ).html(data);
+				
+				$( '#metas-prima-promedio' ).val($( "#primas_promedio" ).val());	
+				
+				$( document ).ready( function(){
+				
+					$( "#metas-prima-promedio" ).bind( 'keyup', function(){ 		
+						$( '#primas_promedio' ).val(this.value);	
+						getMetas();
+					});
+				
+				});
+				
+				getMetas();
+			}						
+	
+		});
+	
+	
+}
+
 
 function ingresoTotal(){
 	
@@ -918,7 +630,220 @@ function save(){
 	
 }
 
+function getMetas(){
+		
+		if( $( '#primasAfectasInicialesUbicar' ).val() == 0 ) return false;
+				
+		// Metas
+		var totalprimameta = 0;
+		
+		var totalnegociometa = 0; 	
+		
+		var totalesnegociometa = 0;
+		
+		var totalsolicitudmeta= 0;	 	
+		
+		var totalessolicitudmeta = 0;	 
+		
+		var totaltrimestre = 0;
+		
+		for(  var i = 1; i<=12; i++ ){
+						
+			//var total = parseFloat( $( '#metas-prima-promedio' ).val() ) /  parseInt( $( '#mes-'+i ) .val() );
+			
+			var total = parseFloat( $( '#primasAfectasInicialesUbicar' ).val() ) * ( parseFloat( $( '#mes-'+i ) .val() ) /100 );
+																					
+			var meta =  Math.round( total* 100 )/100;
+			
+			var primapromedio = parseFloat( $( '#metas-prima-promedio' ).val() );
+								
+				primapromedio =  Math.round( ( meta / primapromedio )*100 );
+				
+				primapromedio =  primapromedio/100;
+						
+			var solicitud = primapromedio / parseInt( $( '#mes-'+i ) .val() );
+				
+			// Show Values
+			$( '#primas-meta-'+i ).val( Math.round(total) );
+			$( '#primas-meta-text-'+i ).html( Math.round(total) );
+			
+			// Negocios Meta
+			$( '#primas-negocios-meta-'+i ).val( Math.round(primapromedio) );
+			$( '#primas-negocios-meta-text-'+i ).html( Math.round(primapromedio) );
+			
+			// Solicitud Meta
+			$( '#primas-solicitud-meta-'+i ).val( Math.round(solicitud) );
+			$( '#primas-solicitud-meta-text-'+i ).html( Math.round(solicitud) );
+			
+			
+			if( !isNaN( meta ) )  totaltrimestre+=meta;
+			
+			if( !isNaN( totaltrimestre ) ) totalprimameta+=totaltrimestre;
+						
+			if( !isNaN( primapromedio ) )  totalnegociometa += primapromedio;
+			
+			if( !isNaN( totalnegociometa ) )  totalesnegociometa += totalnegociometa;
+			
+			if( !isNaN( solicitud ) ) totalsolicitudmeta += solicitud; 
+			
+			if( !isNaN( totalsolicitudmeta ) ) totalessolicitudmeta += totalsolicitudmeta;
+																							
+			// Totales
+			// $( '#ramo' ).val() == 1			
+			if( i == 3 && $( '#ramo' ).val() == 1 ){
+														
+				$( '#primas-meta-primer' ).val( Math.round(totaltrimestre) );
+				$( '#primas-meta-primer-text' ).html( Math.round(totaltrimestre));
+				
+				$( '#primas-negocio-meta-primer' ).val( Math.round(totalnegociometa) );
+				$( '#primas-negocio-meta-primer-text' ).html( Math.round(totalnegociometa) );
+				
+				$( '#primas-solicitud-meta-primer' ).val( Math.round(totalsolicitudmeta) );
+				$( '#primas-solicitud-meta-primer-text' ).html( Math.round(totalsolicitudmeta) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			if( i == 6 && $( '#ramo' ).val() == 1 ){
+													
+				$( '#primas-meta-segund' ).val( Math.round(totaltrimestre) );
+				$( '#primas-meta-segund-text' ).html( Math.round(totaltrimestre) );
+				
+				$( '#primas-negocio-meta-segund' ).val( Math.round(totalnegociometa) );
+				$( '#primas-negocio-meta-segund-text' ).html( Math.round(totalnegociometa) );
+				
+				$( '#primas-solicitud-meta-segund' ).val( Math.round(totalsolicitudmeta) );
+				$( '#primas-solicitud-meta-segund-text' ).html( Math.round(totalsolicitudmeta) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			if( i == 9 && $( '#ramo' ).val() == 1 ){
+				
+				$( '#primas-meta-tercer' ).val( Math.round(totaltrimestre) );
+				$( '#primas-meta-tercer-text' ).html( Math.round(totaltrimestre) );
+				
+				$( '#primas-negocio-meta-tercer' ).val( Math.round(totalnegociometa) );
+				$( '#primas-negocio-meta-tercer-text' ).html( Math.round(totalnegociometa) );
+				
+				$( '#primas-solicitud-meta-tercer' ).val( Math.round(totalsolicitudmeta) );
+				$( '#primas-solicitud-meta-tercer-text' ).html( Math.round(totalsolicitudmeta) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			
+			
+			if( i == 12 && $( '#ramo' ).val() == 1 ){
+				
+				
+				$( '#primas-meta-cuarto' ).val( Math.round(totaltrimestre) );
+				$( '#primas-meta-cuarto-text' ).html( Math.round(totaltrimestre) );
+				
+				$( '#primas-negocio-meta-cuarto' ).val( Math.round(totalnegociometa) );
+				$( '#primas-negocio-meta-cuarto-text' ).html( Math.round(totalnegociometa) );
+				
+				$( '#primas-solicitud-meta-cuarto' ).val( Math.round(totalsolicitudmeta) );
+				$( '#primas-solicitud-meta-cuarto-text' ).html( Math.round(totalsolicitudmeta) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			
+			// $( '#ramo' ).val() == 1
+			if( i == 4 && ( $( '#ramo' ).val() == 2 || $( '#ramo' ).val() == 3 ) ){
+														
+				$( '#primas-meta-primer' ).val( Math.round(totaltrimestre) );
+				$( '#primas-meta-primer-text' ).html( Math.round(totaltrimestre) );
+				
+				$( '#primas-negocio-meta-primer' ).val( Math.round(totalnegociometa) );
+				$( '#primas-negocio-meta-primer-text' ).html( Math.round(totalnegociometa) );
+				
+				$( '#primas-solicitud-meta-primer' ).val( totalsolicitudmeta );
+				$( '#primas-solicitud-meta-primer-text' ).html( Math.round(totalsolicitudmeta) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			if( i == 8 && ( $( '#ramo' ).val() == 2 || $( '#ramo' ).val() == 3 ) ){
+														
+				$( '#primas-meta-second' ).val( Math.round(totaltrimestre) );
+				$( '#primas-meta-second-text' ).html( Math.round(totaltrimestre) );
+				
+				$( '#primas-negocio-meta-second' ).val( Math.round(totalnegociometa) );
+				$( '#primas-negocio-meta-second-text' ).html( Math.round(totalnegociometa) );
+				
+				$( '#primas-solicitud-meta-second' ).val( totalsolicitudmeta );
+				$( '#primas-solicitud-meta-second-text' ).html( Math.round(totalsolicitudmeta) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			if( i == 12 && ( $( '#ramo' ).val() == 2 || $( '#ramo' ).val() == 3 ) ){
+														
+				$( '#primas-meta-tercer' ).val( Math.round(totaltrimestre) );
+				$( '#primas-meta-tercer-text' ).html( Math.round(totaltrimestre) );
+				
+				$( '#primas-negocio-meta-tercer' ).val( Math.round(totalnegociometa) );
+				$( '#primas-negocio-meta-tercer-text' ).html( Math.round(totalnegociometa) );
+				
+				$( '#primas-solicitud-meta-tercer' ).val( totalsolicitudmeta );
+				$( '#primas-solicitud-meta-tercer-text' ).html( Math.round(totalsolicitudmeta) );
+				
+				totaltrimestre = 0;
+				
+				totalnegociometa= 0;
+				
+				totalsolicitudmeta= 0;
+				
+			} 
+			
+			
+			$( '#primas-meta-total' ).val( Math.round(totalprimameta) );
+			$( '#primas-meta-total-text' ).html( Math.round(totalprimameta) );
+			
+			$( '#primas-negocios-meta-total' ).val( Math.round(totalesnegociometa) );
+			$( '#primas-negocios-meta-total-text' ).html( Math.round(totalessolicitudmeta) );
+			
+			$( '#primas-solicitud-meta-total' ).val( Math.round(totalesnegociometa) );
+			$( '#primas-solicitud-meta-total-text' ).html( Math.round(totalessolicitudmeta) );
+			
+		}
+}
+
 function moneyFormat( n ){
+	
+	if( isNaN( n ) ) return 0;
 	
 	return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");	
 }
