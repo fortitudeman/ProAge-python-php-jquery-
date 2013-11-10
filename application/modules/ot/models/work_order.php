@@ -1702,7 +1702,6 @@ class Work_order extends CI_Model{
         $this->db->join('work_order_types','work_order.work_order_type_id = work_order_types.id','left');        
         //$query = $this->db->get_where('work_order',array('work_order.id'=>$work_order_id));
         $query = $this->db->get();
-        
         $result['general'] = $query->result();
         
         $this->db->select('email');
@@ -1710,10 +1709,7 @@ class Work_order extends CI_Model{
         $this->db->where('users_vs_user_roles.user_role_id',4); 
         $this->db->join('users','users_vs_user_roles.user_id = users.id');        
         $query_later = $this->db->get();
-        
         $result['director'] = $query_later->result();
-        
-        
         return $result;
     }
   

@@ -146,14 +146,13 @@ $( document ).ready(function() {
        {
            email_body = $('#email_form').val();
            email_address = $('#email_address').val();
-           wrk_ids = $('#work_ord_array').val();           
-          
+           wrk_ids = $('#work_ord_array').val(); 
            var wrk_ord_ids = new Array();
            wrk_ord_ids = wrk_ids.split(",");  
-           
+           var send_url = "<?php echo base_url('ot/send_email/'); ?>";
            wrk_ord_ids = wrk_ord_ids.slice(0,-1);
-           
-           $.post("ot/send_email",{'email_body':email_body,'email_address':email_address},function(dataa)
+           var file_data = {email_body:email_body,email_address:email_address};
+           $.post(send_url,file_data,function(dataa)
             {       
                 if(dataa)
                 {    

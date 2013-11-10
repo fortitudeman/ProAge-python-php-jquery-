@@ -25,11 +25,11 @@
 </script>
 
 <div>
-    <div style="float: left" class ="emal_popup_head">Mensaje al Director,Coordinador o Agente</div>
+    <div style="float: left" class ="emal_popup_head">Mensaje a <?php echo $username ?></div>
     <div style="float: left" class ="emal_popup_head">OT Numero  <span id="ot_numero"></span></div>
     <div style="float: left" class ="emal_popup_head">Poliza Numero  <span id="poliza_numero"></span></div>
-    <br/>
-    <div style="float: left" class ="emal_popup_head"><?php echo $username ?> <span id="poliza_numero"></span></div>
+<!--    <br/>
+    <div style="float: left" class ="emal_popup_head"><?php echo $username ?> <span id="poliza_numero"></span></div>-->
 </div>
        
 

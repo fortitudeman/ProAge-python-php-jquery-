@@ -64,15 +64,15 @@
 
                                         if($date_diff <= ($value['general'][0]->duration)/2)
                                         {
-                                            echo '<img src="'.base_url().'ot/assets/images/bullet-green.png" width="32" height="32"/>';
+                                            echo '<div class="bullet_green"></div>';
                                         } 
                                     } 
 
                                     if($value['general'][0]->work_order_status_id == 6)
                                     {
-                                    ?>
-                                            <img src="<?php echo base_url();?>ot/assets/images/bullet-black.png" width="32" height="32"/>                                
-                                    <?php  
+                                    
+                                             echo '<div class="bullet_black"></div>';                                
+                                     
                                     }                                                     
                                 ?>
                             </div>
@@ -85,10 +85,11 @@
                         <td style="width:90px;"><div><?php echo $value['general'][0]->policies_name;?></div></td>
                         <?php }?>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->products_name;?></div></td>
+                        <?php if($gmm !== '2') { ?>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->policies_period;?></div></td>
-                         <?php if($gmm !== '2') { ?>
+                         <?php } ?>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->payment_intervals_name;?></div></td>
-                        <?php } ?>
+                        
                         <td style="width:90px;"><div><?php echo $value['general'][0]->payment_methods_name;?></div></td>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->currencies_name;?></div></td>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->prima;?></div></td>
