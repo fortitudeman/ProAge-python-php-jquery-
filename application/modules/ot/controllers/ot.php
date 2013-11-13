@@ -2391,10 +2391,12 @@ class Ot extends CI_Controller {
             $email_address = $this->input->post('email_address');            
             $email_body = $this->input->post('email_body');            
             $this->load->library('email');
+            $this->email->set_mailtype("html");
             $this->email->from('proAges@example.com','proAges');
             $this->email->to($email_address);
             $this->email->subject('Email from proAges');
             $this->email->message($email_body);
+         
             $result = $this->email->send(); 
             echo json_encode($result); 
 	}         

@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="<?php echo base_url(); ?>ot/assets/style/main.css">
 <script src="<?php echo base_url(); ?>ot/assets/scripts/report.js"></script>
+
 <script type="text/javascript">
 
     function report_popupa()
@@ -34,7 +35,16 @@
     <!--    <br/>
         <div style="float: left" class ="emal_popup_head"><?php echo $username ?> <span id="poliza_numero"></span></div>-->
 </div>
-
+<div style="display: none;">
+    
+    <span id="policies_name"></span>
+    <span id="prima"></span>
+    <span id="currencies"></span>
+    <span id="payment_method"></span>
+    <span id="pament_interval"></span>
+    <span id="policies"></span>
+    <span id="product"></span>
+</div>
 
 <form id="popup_email">
     <input type="hidden" name="email_address" id="email_address"/>

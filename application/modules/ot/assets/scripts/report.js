@@ -144,7 +144,34 @@ $( document ).ready(function() {
        
        $('#popup_email').submit(function()
        {
-           email_body = $('#email_form').val();
+            
+           email_bodyy = $('#email_form').val();
+          status = $('#status').html();
+          datee = $('#date').html();
+          ot = $('#ot_numero').html();
+          policies_name =$('#policies_name').html();
+          product =$('#product').html();
+          policies =$('#policies').html();
+          pament_interval =$('#pament_interval').html();
+          poliza = $('#poliza_numero').html();
+          payment_method = $('#payment_method').html();
+          currencies = $('#currencies').html();
+          prima = $('#prima').html();
+         
+          var email_body = '';
+          email_body +="<br> Estatus:"+status+"<br>";
+          email_body +="Date:"+datee+"<br>";
+          email_body +="OT:"+ot+"<br>";
+          email_body +="Asegurado:"+policies_name+"<br>";
+          email_body +="Producto:"+product+"<br>";
+          email_body +="Plazo:"+policies+"<br>";
+          email_body +="Poliza:"+poliza+"<br>";
+          email_body +="Forma de pago:"+pament_interval+"<br>";
+          email_body +="Conducto:"+payment_method+"<br>";
+          email_body +="Moneda:"+currencies+"<br>";
+          email_body +="Prima:"+prima+"<br><br>";
+          email_body +="Message:"+email_bodyy;
+          
            email_address = $('#email_address').val();
            wrk_ids = $('#work_ord_array').val(); 
            var wrk_ord_ids = new Array();
@@ -198,7 +225,14 @@ $( document ).ready(function() {
            
            var result = work_ids.replace("undefined","");    
           var user_id= result.slice(0,-1);
-          
+          var policies_name =$('.policies_name').html();
+           var product =$('#product').html();
+            policies =$('.policies').html();
+            pament_interval =$('.pament_interval').html();
+            payment_method =$('.payment_method').html();
+            currencies =$('.currencies').html();
+            prima =$('.prima').html();
+            product =$('.product').html();
            $('.send_message').fancybox(
            
             {
@@ -220,6 +254,13 @@ $( document ).ready(function() {
                     $('#date').html(date);
                     $('#status').html(status);
                     $('#director_name').html(director_name);
+                    $('#policies_name').html(policies_name);
+                    $('#product').html(product);
+                    $('#policies').html(policies);
+                    $('#pament_interval').html(pament_interval);
+                    $('#payment_method').html(payment_method);
+                    $('#currencies').html(currencies);
+                    $('#prima').html(prima);
                 }
              }); 
              
