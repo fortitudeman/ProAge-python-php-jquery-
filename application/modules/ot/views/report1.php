@@ -2,7 +2,6 @@
 
     function report_popup(wrk_ord_ids,poliza,gmm)
     {
-       //alert(gmm);
        $.fancybox.showLoading();
         
         $.post("ot/reporte_popup",{wrk_ord_ids:wrk_ord_ids,is_poliza:poliza,gmm:gmm},function(data)

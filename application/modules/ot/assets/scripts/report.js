@@ -171,11 +171,15 @@ $( document ).ready(function() {
        
         $('.send_message').bind('click',function()
         {
-           emaill_address = this.id;
-           poliza_number = $('#poliza_number').html();
-           ot_number = $('#ot_number').html();  
-           
-           
+          var emaill_address = this.id;
+           var poliza_number = $('#poliza_number').html();
+           var dir_name = this.rel;
+           var director_name = dir_name.slice(0,-1);
+          // alert(director_name);
+           var ot_number = $('#ot_number').html();  
+          var date = $('.date').html();
+          var  status = $('.status').html();
+          var agent_name = $('.agent_name').html();
            var work_ids
            $('.wrk_ord_ids').each(function()
            {
@@ -183,23 +187,23 @@ $( document ).ready(function() {
            });  
            var poliza = $('.poliza').html();
            var gmm = $('.gmm').html();
-          // alert(gmm);
-           
-           var file_data = {
-            work_ids:work_ids
-        };
-        
-        var send_url = "<?php echo base_url('ot/email_popup/'); ?>"
-       // alert(send_url);
-        $.post(send_url, file_data, function(msg){      
-            }, "text");
+//           var href = this.href;
+//           var file_data = {
+//            work_ids:work_ids,email:emaill_address
+//        };
+//       
+//        $.post(href, file_data, function(msg){      
+//            }, "text");
            //alert(work_ids);
            
            var result = work_ids.replace("undefined","");    
           var user_id= result.slice(0,-1);
           
            $('.send_message').fancybox(
+           
             {
+                showNavArrows: false,
+                arrows: false,
                 type: 'ajax',
                 width :800,
                 height:400,
@@ -213,8 +217,12 @@ $( document ).ready(function() {
                     $('#user_id').val(user_id);
                     $('#poliza').val(poliza);
                     $('#gmm').val(gmm);
+                    $('#date').html(date);
+                    $('#status').html(status);
+                    $('#director_name').html(director_name);
                 }
              }); 
+             
         });
                
                

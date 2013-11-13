@@ -2249,7 +2249,7 @@ class Ot extends CI_Controller {
 			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
 			//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',			
 			'<script src="'. base_url() .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
-			'<script>window.jQuery || document.write("<script src="'. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js"><\/script>")</script>',
+			'<script>window.jQuery || document.write ("<script src='. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js><\/script>");</script>',
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.ddslick.js"></script>',
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>',
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',			
@@ -2282,6 +2282,30 @@ class Ot extends CI_Controller {
             $data['gmm'] = $this->input->post('gmm');
             $this->load->model('work_order');   
            
+            $this->view = array(
+                'css' => array(
+			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',			
+			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
+                        <link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
+                        '<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
+			
+		  ),
+                'scripts' =>  array(
+		  	'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+			//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',			
+			'<script src="'. base_url() .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
+			'<script>window.jQuery || document.write ("<script src='. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js><\/script>");</script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.ddslick.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',			
+			'<script src="'.base_url().'scripts/config.js"></script>'	,	
+			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
+                      '<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
+		  ));
+            
+            
             $results = array();  
             foreach($work_order_ids as $work_order_id)
             {
@@ -2298,6 +2322,30 @@ class Ot extends CI_Controller {
             $data['gmm'] = $this->input->post('gmm');
             $work_ids = explode(',',$work_order_ids);
             $this->load->model('work_order');   
+            
+            $this->view = array(
+                'css' => array(
+			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',			
+			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
+                        <link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
+                        '<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
+			
+		  ),
+                'scripts' =>  array(
+		  	'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+			//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',			
+			'<script src="'. base_url() .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
+			'<script>window.jQuery || document.write ("<script src='. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js><\/script>");</script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.ddslick.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',			
+			'<script src="'.base_url().'scripts/config.js"></script>'	,	
+			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
+                      '<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
+		  ));
+            
             $results = array();  
             foreach($work_ids as $work_order_id)
             {
@@ -2306,8 +2354,6 @@ class Ot extends CI_Controller {
             $data['values'] = $results;
             $this->load->view('popup_report',$data);	
 	}
-        
-        
         
  /**
  *	Reports Popup
@@ -2329,13 +2375,14 @@ class Ot extends CI_Controller {
         {
             //$data['email_address'] = $this->uri->segment(3);  
             $tata = $this->input->post("work_ids");
+            $email = $this->input->post("email");
             $data['Id'] = substr($tata,9, -1);
             $data['username'] = $this->sessions['username'];
+            
             $this->load->view('popup_email',$data);	
-	}        
+	}  
         
-        
- 
+       
  /**
  *	Send Email 
  **/	

@@ -1704,7 +1704,7 @@ class Work_order extends CI_Model{
         $query = $this->db->get();
         $result['general'] = $query->result();
         
-        $this->db->select('email');
+        $this->db->select('email,name');
         $this->db->from('users_vs_user_roles');
         $this->db->where('users_vs_user_roles.user_role_id',4); 
         $this->db->join('users','users_vs_user_roles.user_id = users.id');        

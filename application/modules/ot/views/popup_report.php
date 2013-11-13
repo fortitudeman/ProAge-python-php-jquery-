@@ -1,8 +1,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>ot/assets/style/main.css">
 <link href="<?php echo base_url();?>ot/assets/style/report.css" rel="stylesheet">
 <script src="<?php echo base_url();?>ot/assets/scripts/report.js"></script>
-<script type="text/javascript" src="<?php echo base_url();?>ot/assets/scripts/jquery.tablesorter.js"></script>
-
+<!--<script src="<?php echo base_url();?>ot/assets/scripts/vendor/jquery-1.10.1.min.js"></script>-->
 <style type="text/css">
     .bullet_red{background-color: #FF3300; border-radius: 50% 50% 50% 50%; float: left;height: 10px; margin-left: 20px; margin-top: -13px;position: absolute;width: 10px;}
     .bullet_yellow{background-color: yellow; border-radius: 50% 50% 50% 50%; float: left;height: 10px; margin-left: 20px; margin-top: -13px;position: absolute;width: 10px;}
@@ -10,6 +9,8 @@
     .bullet_black{background-color: black; border-radius: 50% 50% 50% 50%; float: left;height: 10px; margin-left: 20px; margin-top: -13px;position: absolute;width: 10px;}
     
 </style>
+
+
 <table border="0" cellspacing="0" cellpadding="0" class="sortable altrowstable tablesorter" id="popup_table">
     <thead>
         <tr id="popup_tr">
@@ -80,10 +81,11 @@
                         <td style="width:100px;"><div><?php echo $value['general'][0]->work_order_uid;?></div></td>
                         <td style="width:110px;"><div><?php echo $value['general'][0]->creation_date;?></div></td>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->work_order_status_name;?></div></td>
-                        <td style="width:90px;"><div><?php echo $value['general'][0]->policies_uid;?></div></td>
                         <?php if($is_poliza == 'yes'){ ?>
-                        <td style="width:90px;"><div><?php echo $value['general'][0]->policies_name;?></div></td>
+                        <td style="width:90px;"><div><?php echo $value['general'][0]->policies_uid;?></div></td>
                         <?php }?>
+                        <td style="width:90px;"><div><?php echo $value['general'][0]->policies_name;?></div></td>
+                        
                         <td style="width:90px;"><div><?php echo $value['general'][0]->products_name;?></div></td>
                         <?php if($gmm !== '2') { ?>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->policies_period;?></div></td>
@@ -92,7 +94,7 @@
                         
                         <td style="width:90px;"><div><?php echo $value['general'][0]->payment_methods_name;?></div></td>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->currencies_name;?></div></td>
-                        <td style="width:90px;"><div><?php echo $value['general'][0]->prima;?></div></td>
+                        <td style="width:90px;"><div>$<?php echo number_format($value['general'][0]->prima);?></div></td>
                     </tr>
                     <tr style="display: none;" id="hide_<?php echo $value['general'][0]->work_order_uid;?>">
                         <td></td>
@@ -103,14 +105,18 @@
                                 <span class="wrk_ord_ids" id="<?php echo $value['general'][0]->work_order_id;?>"></span>
                                 <span class="poliza"><?php echo $is_poliza;?></span>
                                 <span class="gmm"><?php echo $gmm;?></span>
+                                <span class="date"><?php echo $value['general'][0]->creation_date;?></span>
+                                <span class="status"><?php echo $value['general'][0]->work_order_status_name;?></span>
+                                <span class="director_name" id="<?php foreach($value['director'] as $demals){echo $demals->name.',';};?>"></span>
+                                 <span class="agent_name"><?php echo $value['general'][0]->name; ?></span>
                             </div>
                             
                             <a href="javascript:" class="btn btn-link btn-hide">
                                 <i class="icon-arrow-up" id="<?php echo $value['general'][0]->work_order_uid;?>"></i>
                             </a>
-                            <?php if($value['general'][0]->user != 0){?><a id="<?php echo $value['general'][0]->email; ?>" href="email_popup" class="btn btn-link send_message">Enviar mensaje al cordinador</a>|<?php }?>
-                            <a id="<?php echo $value['general'][0]->agent_user_email; ?>" href="email_popup" class="btn btn-link send_message">Enviar mensaje al Agente</a>|                            
-                            <a id ="<?php foreach($value['director'] as $demals){echo $demals->email.',';};?>" href="email_popup" class="btn btn-link send_message">Enviar mensaje al Director</a>                            
+                            <?php if($value['general'][0]->user != 0){?><a id="<?php echo $value['general'][0]->email; ?>" rel="<?php echo $value['general'][0]->name; ?>"  href="<?php echo base_url().'ot/email_popup/'?>" class="btn btn-link send_message">Enviar mensaje al cordinador</a>|<?php }?>
+                            <a id="<?php echo $value['general'][0]->agent_user_email; ?>" rel="<?php echo $value['general'][0]->name; ?>" href="<?php echo base_url().'/ot/email_popup/'?>" class="btn btn-link send_message">Enviar mensaje al Agente</a>|                            
+                            <a id ="<?php foreach($value['director'] as $demals){echo $demals->email.',';};?>" rel="<?php foreach($value['director'] as $demals){echo $demals->name.',';};?>" href="<?php echo base_url().'/ot/email_popup/'?>" class="btn btn-link send_message">Enviar mensaje al Director</a>                            
                         </td>
                     </tr>
                 <?php     
