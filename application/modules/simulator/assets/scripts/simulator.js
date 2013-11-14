@@ -562,13 +562,12 @@ $( document ).ready(function() {
 
 
 function getMetasPeriod( ramo ){
-	
-	
+		
 	$.ajax({
 
 			url:  Config.base_url()+'simulator/getConfigMeta.html',
 			type: "POST",
-			data: { ramo: ramo, periodo: $( '#periodo' ).val() },
+			data: { ramo: ramo, periodo: $( '#periodo' ).val(), userid: $( '#userid' ).val() },
 			cache: false,
 			async: false,
 			success: function(data){
@@ -577,12 +576,15 @@ function getMetasPeriod( ramo ){
 				
 				$( '#metas-prima-promedio' ).val($( "#primas_promedio" ).val());	
 				
+				$( '.primas-meta-field' ).hide();
+				
 				$( document ).ready( function(){
 				
 					$( "#metas-prima-promedio" ).bind( 'keyup', function(){ 		
 						$( '#primas_promedio' ).val(this.value);	
 						getMetas();
 					});
+					
 				
 				});
 				

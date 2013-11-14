@@ -88,7 +88,7 @@ class Simulator extends CI_Controller {
 	
 
 // Show all records	
-	public function index( $agentid = null ){
+	public function index( $userid = null, $setmeta = null ){
 		
 		
 		
@@ -111,7 +111,7 @@ class Simulator extends CI_Controller {
 			
 		$this->load->model( array( 'user', 'simulators' ) );
 		
-		$agent = $this->user->getAgentsById( $agentid );
+		$agentid = $this->user->getAgentIdByUser( $userid );
 		
 		$product_group_id = 1;
 		
@@ -121,7 +121,7 @@ class Simulator extends CI_Controller {
 		
 		//$cuatrimestre = $this->simulators->cuatrimestre( date('m') );
 				
-		$userid = $this->user->getUserIdByAgentId( $agentid );
+		//$userid = $this->user->getUserIdByAgentId( $userid );
 		
 		if( $trimestre == 1 ){
 			
@@ -218,6 +218,13 @@ class Simulator extends CI_Controller {
 			
 		} 		
 		
+		$settingmeta = '';
+		
+		if( !empty( $setmeta ) ){
+			
+			$settingmeta = '<script type="text/javascript">$(document).ready( function(){   $( ".simulator" ).hide(); $( ".metas" ).show(); });</script>';
+			
+		};	
 						 
 		// Config view
 		$this->view = array(
@@ -236,13 +243,14 @@ class Simulator extends CI_Controller {
 		  'scripts' =>  array(
 		  	
 			'<script type="text/javascript" src="'.base_url().'scripts/config.js"></script>',
-			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator.js"></script>'
+			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator.js"></script>',
+			$settingmeta
 			
 		  ),
 		  'content' => 'simulator/overview', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  'no_visible_elements_2' => true,
-		  'agent' =>  $agent,
+		  'userid' =>  $userid,
 		  'agentid' =>  $agentid,
 		  'data' => $this->simulators->getByAgent( $agentid ),		  	  
 		  'config' => $this->simulators->getConfigMetas( false, $trimestre, null ),		  
@@ -252,7 +260,7 @@ class Simulator extends CI_Controller {
 		  'trimestre' => $trimestre,
 		  'cuatrimestre' => $cuatrimestre	,
 		  'periodo' => 3,
-		  'ramo' => 'vida'
+		  'ramo' => 'vida',
 		);
 	
 		
@@ -270,12 +278,14 @@ class Simulator extends CI_Controller {
 		if( !$this->input->is_ajax_request() ) exit;
 		
 		$this->load->model( array( 'user', 'simulators' ) );
+		
+		$userid = $_POST['userid'];		
 				
-		$agentid = 0;
+		$agentid = $this->user->getAgentIdByUser( $userid );
 		
-		$agent = $this->user->getAgentsById( $agentid );
+		//$agent = $this->user->getAgentsById( $agentid );
 		
-		$userid = $this->user->getUserIdByAgentId( $agentid );
+		//$userid = $this->user->getUserIdByAgentId( $agentid );
 				
 		$trimestre = null;
 				

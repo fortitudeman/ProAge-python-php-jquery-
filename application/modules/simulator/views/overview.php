@@ -96,6 +96,8 @@
           
           <input type="hidden" id="ramo" name="ramo" value="<?php if( isset( $data[0]['product_group_id'] ) ) echo $data[0]['product_group_id']; else echo 1; ?>" />    
           
+          <input type="hidden" id="userid" name="userid" value="<?php echo $userid ?>" />    
+          
           <input type="hidden" id="agent_id" name="agent_id" value="<?php echo $agentid ?>" />    
           
           <input type="hidden" id="id" name="id" value="<?php if( isset( $data[0]['id'] ) ) echo $data[0]['id']; else echo 0; ?>" />    
