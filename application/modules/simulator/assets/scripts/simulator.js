@@ -29,6 +29,45 @@ $( document ).ready(function() {
 	
 	$( '.metas' ).hide();
 	
+	
+	// Change the value for prima on the event click
+	$( '.primas-meta' ).hide();
+	
+	$( '.primas-meta-selector' ).bind( 'click', function(){
+		
+		$( '#'+this.id ).hide();
+		
+		$( '#'+this.id+'-field' ).show();
+		
+	});
+	
+	
+	$( '.primas-meta-field' ).bind( 'blur', function(){
+		
+		var total=0;
+		
+		for( var i=1; i<=12; i++ ){
+			
+			if(  !isNaN( $( '#primas-meta-'+i ).val() ) )
+				total += parseFloat( $( '#primas-meta-'+i ).val());
+			
+		}
+			
+		$( '#primasAfectasInicialesUbicar' ).val( total );
+		
+		$( '.primas-meta-selector' ).show();
+		
+		$( '.primas-meta' ).hide();
+		
+		getMetas();
+		
+		save();
+		
+	});
+	
+	
+	
+	
 	stickyFooter(); 
 	
 	$(window).resize(function() {

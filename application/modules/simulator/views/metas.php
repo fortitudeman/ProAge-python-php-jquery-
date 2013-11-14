@@ -141,9 +141,11 @@
                 <td class="bggreenlight">
                 	
                     
-                    <div id="primas-meta-text-<?php echo $i ?>" style="text-align: right !important"></div>  
-                    <input type="hidden" name="primas-meta-<?php echo $i ?>" id="primas-meta-<?php echo $i ?>" value="0" />
-                
+                    <div id="primas-meta-text-<?php echo $i ?>" style="text-align: right !important" class="primas-meta-selector"></div> 
+                    
+                    <div id="primas-meta-text-<?php echo $i ?>-field" class="primas-meta"> 
+                    	<input type="text" name="primas-meta-<?php echo $i ?>" id="primas-meta-<?php echo $i ?>" value="0" class="primas-meta-field"  />
+                	</div>
                     
                 </td>
                 <td class="bggreenlight">
