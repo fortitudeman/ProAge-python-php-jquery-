@@ -27,8 +27,8 @@
 	
      <div class="row">     	
         <div class="span1 offset1"><h6>Efectividad</h6></div>
-        <div class="span2"><input type="text" style="width:30px;" value="75%" /></div>
-        <div class="span2"><h6>Primas promedio</h6></div>
+        <div class="span2"><input id="efectividad" type="text" style="width:30px;" value="75%" /></div>
+        <div class="span2"><h6>Prima promedio</h6></div>
         <div class="span2"><input type="text" id="metas-prima-promedio" value="0" /></div> 
         
         <div class="span2"><input type="button"  id="open_simulator"value="Abrir simulador" class="pull-right btn-save-meta"  /></div>
@@ -612,7 +612,7 @@
                 <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
                 <td class="bgyelowbold">
                 	
-                    <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
+                    <div id="primas-solicitud-meta-tercer-text" style="text-align: right !important"></div>  
                     <input type="hidden" name="primas-solicitud-meta-tercer" id="primas-solicitud-meta-tercer" value="0" />
                     
                 </td>
@@ -627,7 +627,7 @@
                 </td>
                 <td class="bgorangebold">
                 	
-                    <div id="primas-negocio-meta-tercer-text" style="text-align: center !important"></div>  
+                    <div id="primas-negocio-meta-tercer-text" style="text-align: right !important"></div>  
                     <input type="hidden" name="primas-negocio-meta-tercer" id="primas-negocio-meta-tercer" value="0" />
                     
                 </td>
@@ -642,7 +642,7 @@
                 </td>
                 <td class="bggreenbold">
                 	
-                    <div id="primas-meta-tercer-text" style="text-align: center !important"></div>  
+                    <div id="primas-meta-tercer-text" style="text-align: right !important"></div>  
                     <input type="hidden" name="primas-tercer-primer" id="primas-tercer-primer" value="0" />
                     
                 </td>
@@ -666,7 +666,7 @@
                 <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
                 <td class="bgyelowbold">
                 	
-                    <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
+                    <div id="primas-solicitud-meta-tercer-text" style="text-align: right !important"></div>  
                     <input type="hidden" name="primas-solicitud-meta-tercer" id="primas-solicitud-meta-tercer" value="0" />
                     
                 </td>
@@ -681,7 +681,7 @@
                 </td>
                 <td class="bgorangebold">
                 	
-                    <div id="primas-negocio-meta-tercer-text" style="text-align: center !important"></div>  
+                    <div id="primas-negocio-meta-tercer-text" style="text-align: right !important"></div>  
                     <input type="hidden" name="primas-negocio-meta-tercer" id="primas-negocio-meta-tercer" value="0" />
                     
                 </td>
@@ -696,7 +696,7 @@
                 </td>
                 <td class="bggreenbold">
                 	
-                    <div id="primas-meta-tercer-text" style="text-align: center !important"></div>  
+                    <div id="primas-meta-tercer-text" style="text-align: right !important"></div>  
                     <input type="hidden" name="primas-tercer-primer" id="primas-tercer-primer" value="0" />
                     
                 </td>
@@ -977,7 +977,7 @@
                 <td class="bgestacionalidadbold" style="font-size:18px;"><?php echo $totalgeneral; ?> %</td>
                 <td class="bgyelowbold">
                 	
-                    <div id="primas-solicitud-meta-total-text" style="text-align: center !important"></div>  
+                    <div id="primas-solicitud-meta-total-text" style="text-align: center !important; font-size:18px;"></div>  
                     <input type="hidden" name="primas-solicitud-meta-total" id="primas-solicitud-meta-total" value="0" />
                     
                 </td>
@@ -986,7 +986,7 @@
                 </td>
                 <td class="bgorangebold">
                 	
-                    <div id="primas-negocios-meta-total-text" style="text-align: center !important"></div>  
+                    <div id="primas-negocios-meta-total-text" style="text-align: center !important; font-size:18px;"></div>  
                     <input type="hidden" name="primas-negocios-meta-total" id="primas-negocios-meta-total" value="0" />
                     
                 </td>
@@ -995,7 +995,7 @@
                 </td>
                 <td class="bggreenbold">
                 	
-                    <div id="primas-meta-total-text" style="text-align: right !important"></div>  
+                    <div id="primas-meta-total-text" style="text-align: right !important; font-size:18px;"></div>  
                     <input type="hidden" name="primas-meta-total" id="primas-meta-total" value="0" />
                     
                 </td>

@@ -16,23 +16,6 @@
 ?>
 
 
-<div>
-    <ul class="breadcrumb">
-       
-		
-        <li>
-            <a href="<?php echo base_url() ?>">Admin</a> <span class="divider">/</span>
-        </li>
-        <li>
-           <a href="<?php echo base_url() ?>simulator.html">Simulador</a> <span class="divider">/</span>
-        </li>
-               
-        <li>
-            Overview
-        </li>
-    </ul>
-</div>
-
 <div class="row-fluid sortable">		
     <div class="box span12">
         <div class="box-header well" data-original-title>

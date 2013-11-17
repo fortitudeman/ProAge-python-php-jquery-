@@ -225,6 +225,17 @@ class Simulator extends CI_Controller {
 			$settingmeta = '<script type="text/javascript">$(document).ready( function(){   $( ".simulator" ).hide(); $( ".metas" ).show(); });</script>';
 			
 		};	
+		
+		$data = $this->simulators->getByAgent( $agentid );
+				
+		$requestPromedio = '';
+		
+		if( !empty( $data ) )
+			
+			if( $data[0]['data']->ramo == 1 )$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "vida" ); }); </script>'; 
+			else if( $data[0]['data']->ramo == 2 )	$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "gmm" ); }); </script>'; 
+			else if( $data[0]['data']->ramo == 3 )	$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "vida" ); }); </script>'; 
+				
 						 
 		// Config view
 		$this->view = array(
@@ -244,7 +255,8 @@ class Simulator extends CI_Controller {
 		  	
 			'<script type="text/javascript" src="'.base_url().'scripts/config.js"></script>',
 			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator.js"></script>',
-			$settingmeta
+			$settingmeta,
+			$requestPromedio
 			
 		  ),
 		  'content' => 'simulator/overview', // View to load
@@ -252,7 +264,7 @@ class Simulator extends CI_Controller {
 		  'no_visible_elements_2' => true,
 		  'userid' =>  $userid,
 		  'agentid' =>  $agentid,
-		  'data' => $this->simulators->getByAgent( $agentid ),		  	  
+		  'data' =>  $this->simulators->getByAgent( $agentid ),		  	  
 		  'config' => $this->simulators->getConfigMetas( false, $trimestre, null ),		  
 		  'SolicitudesLogradas' => $SolicitudesLogradas,
 		  'NegociosLogrados' => $NegociosLogrados,	
@@ -291,6 +303,7 @@ class Simulator extends CI_Controller {
 				
 		$cuatrimestre = null;
 		
+		$product_group_id = null;
 		
 	    if( isset( $_POST['ramo'] ) and  $_POST['ramo'] == 'vida' ){ 
 			$trimestre = $this->simulators->trimestre( date('m') ); 

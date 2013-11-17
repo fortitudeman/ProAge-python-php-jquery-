@@ -93,7 +93,7 @@
         
         <tr>
 
-           <td><label for="primas_promedio">Primas promedio:</label></td>
+           <td><label for="primas_promedio">Prima promedio:</label></td>
 
            <td>
 
