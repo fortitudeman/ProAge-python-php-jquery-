@@ -19,11 +19,11 @@
  <div class="box-content">
 	
     <!--style="margin-top:400px; position:fixed; z-index:1000; background:#F9F9F9; color:#fff; width:38%;"-->
-    <table class="table-totals" style="background:#F9F9F9; color:#fff; width:32%;position:fixed !important;
+    <table class="table-totals" style="background:#F9F9F9; color:#fff; width:73%;position:fixed !important;
 	bottom:0px;">
     
      <tr>
-           <td class="totales" style="width:250px;"><b style="color:#547EBD !important">INGRESO TOTAL:</b></td>
+           <td class="totales" style="width:750px;"><b style="color:#547EBD !important">INGRESO TOTAL:</b></td>
 
            <td style="text-align:right">
               <p style="color:#547EBD !important; float:right" id="ingresoTotal_text">$ <?php if( isset( $data->ingresoTotal ) ) echo $data->ingresoTotal; else echo 0; ?></p>	
@@ -53,9 +53,9 @@
 
         <tr>
 
-           <td width="60%"><label for="periodo">Periodo:</label></td>
+           <td><label for="periodo">Periodo:</label></td>
 
-           <td width="40%" >
+           <td>
 
               <select name="periodo" id="periodo" onchange="ingresoPromedio(); ">
 
@@ -68,19 +68,7 @@
               </select>
 
            </td>
-
-        </tr>
-
-        <tr>
-
-           <td><br></td>
-
-           <td><br></td>
-
-        </tr>
-
-        <tr>
-
+		   
            <td><label for="primasAfectasInicialesUbicar">Primas afectas iniciales(venta inicial):</label></td>
 
            <td>
@@ -88,9 +76,21 @@
               <input type="text" name="primasAfectasInicialesUbicar" id="primasAfectasInicialesUbicar" value="<?php if( isset( $data->primasAfectasInicialesUbicar ) ) echo $data->primasAfectasInicialesUbicar; else echo 0; ?>">
 
            </td>
+           
+        </tr>
+
+        <tr>
+
+           <td><br></td>
+
+           <td><br></td>
+           
+           <td><br></td>
+
+           <td><br></td>
 
         </tr>
-        
+       
         <tr>
 
            <td><label for="primas_promedio">Prima promedio:</label></td>
@@ -100,11 +100,7 @@
               <input type="text" name="primas_promedio" id="primas_promedio" value="<?php if( isset( $data->primas_promedio ) ) echo $data->primas_promedio; else echo 0; ?>">
 
            </td>
-
-        </tr>
-
-        <tr>
-
+           
            <td><label for="porAcotamiento">% de acotamiento:</label></td>
 
            <td>
@@ -112,6 +108,7 @@
               <input type="text" name="porAcotamiento" id="porAcotamiento" value="<?php if( isset( $data->porAcotamiento ) ) echo $data->porAcotamiento; else echo 0; ?>">
 
            </td>
+
 
         </tr>
 
@@ -126,31 +123,32 @@
               
 
            </td>
+		                         
+        </tr>
+
+      
+        <tr>
+
+           <td><br></td>
+
+           <td><br></td>
+           
+           <td><br></td>
+
+           <td><br></td>
 
         </tr>
 
         <tr>
-
-           <td><label for="noNegocios">No. de Negocios PAI:</label></td>
+		   
+            <td><label for="noNegocios">No. de Negocios PAI:</label></td>
 
            <td>
 
               <input type="text" name="noNegocios" id="noNegocios" value="<?php if( isset( $data->noNegocios ) ) echo $data->noNegocios; else echo 0; ?>">
 
            </td>
-
-        </tr>
-
-        <tr>
-
-           <td><br></td>
-
-           <td><br></td>
-
-        </tr>
-
-        <tr>
-
+           
            <td><label for="primasRenovacion">Primas de renovación:</label></td>
 
            <td>
@@ -160,7 +158,11 @@
            </td>
 
         </tr>
-
+		
+        
+        
+        
+        
         <tr>
 
            <td><label for="XAcotamiento">% de acotamiento:</label></td>
@@ -172,7 +174,19 @@
            </td>
 
         </tr>
+		
+        <tr>
 
+           <td><br></td>
+
+           <td><br></td>
+           
+           <td><br></td>
+
+           <td><br></td>
+
+        </tr>
+        
         <tr>
 
            <td><label for="primasRenovacionPagar" style="color:#547EBD !important">Primas de renovación para pagar:</label></td>
@@ -186,7 +200,20 @@
            </td>
 
         </tr>
+		
+        <tr>
 
+           <td><br></td>
+
+           <td><br></td>
+           
+           <td><br></td>
+
+           <td><br></td>
+
+        </tr>
+        
+        
         <tr>
 
            <td><label for="porcentajeConservacion">Porcentaje de conservación</label></td>
@@ -220,9 +247,8 @@
         </tr>
 
         <tr>
-
            <td colspan="2" align="left"><b style="color:#547EBD !important">COMISIONES</b></td>
-
+		   <td colspan="2" align="left"><b style="color:#547EBD !important">BONO DE PRODUCTIVIDAD</b></td>
         </tr>
 
         <tr>
@@ -234,9 +260,29 @@
               <input type="text" name="comisionVentaInicial" id="comisionVentaInicial" value="<?php if( isset( $data->comisionVentaInicial ) ) echo $data->comisionVentaInicial; else echo 0; ?>" onblur="ingresoTotal(); ">
 
            </td>
+		   
+           <td><label for="bonoAplicado">% de bono aplicado:</label></td>
+
+           <td>
+
+              <input type="text" name="bonoAplicado" id="bonoAplicado" class="camposSoloLectura" value="<?php if( isset( $data->bonoAplicado ) ) echo $data->bonoAplicado; else echo 0; ?>" readonly="readonly">
+
+           </td>
+          
+        </tr>
+		
+        <tr>
+
+           <td><br></td>
+
+           <td><br></td>
+           
+           <td><br></td>
+
+           <td><br></td>
 
         </tr>
-
+        
         <tr>
 
            <td><label for="ingresoComisionesVentaInicial" style="color:#547EBD !important">Ingreso por comisiones de venta inicial:</label></td>
@@ -247,11 +293,23 @@
               <input type="hidden" name="ingresoComisionesVentaInicial" id="ingresoComisionesVentaInicial" value="<?php if( isset( $data->ingresoComisionesVentaInicial ) ) echo $data->ingresoComisionesVentaInicial; else echo 0; ?>">
            
            </td>
+           
+           <td><label for="ingresoBonoProductividad" style="color:#547EBD !important">Ingreso por bono de productividad:</label></td>
+
+           <td>
+			  
+              <p style="color:#547EBD !important; float:right" id="ingresoBonoProductividad_text">$ <?php if( isset( $data->ingresoBonoProductividad ) ) echo $data->ingresoBonoProductividad; else echo 0; ?></p>	
+              <input type="hidden" name="ingresoBonoProductividad" id="ingresoBonoProductividad" value="<?php if( isset( $data->ingresoBonoProductividad ) ) echo $data->ingresoBonoProductividad; else echo 0; ?>">
+                         </td>
 
         </tr>
 
         <tr>
 
+           <td><br></td>
+
+           <td><br></td>
+           
            <td><br></td>
 
            <td><br></td>
@@ -269,7 +327,7 @@
            </td>
 
         </tr>
-
+		
         <tr>
 
            <td><label for="ingresoComisionRenovacion" style="color:#547EBD !important">Ingreso por comisiones de renovación</label></td>
@@ -288,38 +346,32 @@
            <td><br></td>
 
            <td><br></td>
+           
+           <td><br></td>
+
+           <td><br></td>
 
         </tr>
 
-        <tr>
 
-           <td colspan="2" align="left"><b style="color:#547EBD !important">BONO DE PRODUCTIVIDAD</b></td>
 
-        </tr>
 
-        <tr>
 
-           <td><label for="bonoAplicado">% de bono aplicado:</label></td>
 
-           <td>
 
-              <input type="text" name="bonoAplicado" id="bonoAplicado" class="camposSoloLectura" value="<?php if( isset( $data->bonoAplicado ) ) echo $data->bonoAplicado; else echo 0; ?>" readonly="readonly">
 
-           </td>
 
-        </tr>
 
-        <tr>
 
-           <td><label for="ingresoBonoProductividad" style="color:#547EBD !important">Ingreso por bono de productividad:</label></td>
 
-           <td>
-			  
-              <p style="color:#547EBD !important; float:right" id="ingresoBonoProductividad_text">$ <?php if( isset( $data->ingresoBonoProductividad ) ) echo $data->ingresoBonoProductividad; else echo 0; ?></p>	
-              <input type="hidden" name="ingresoBonoProductividad" id="ingresoBonoProductividad" value="<?php if( isset( $data->ingresoBonoProductividad ) ) echo $data->ingresoBonoProductividad; else echo 0; ?>">
-                         </td>
 
-        </tr>
+
+
+
+
+
+
+
 
         <tr>
 
