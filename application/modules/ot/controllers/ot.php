@@ -1883,10 +1883,10 @@ class Ot extends CI_Controller {
 		  
 		  $file_array = $this->work_order->getImportPaymentsTmp();
 		  
-		  echo '<pre>';
-		   print_r( json_decode( $file_array[0]['data'] ) );
-		  echo '</pre>';
-		  exit;	
+		  //echo '<pre>';
+		  // print_r( json_decode( $file_array[0]['data'] ) );
+		  //echo '</pre>';
+		  //exit;	
 		  
 		  $file_array = json_decode( $file_array[0]['data'] );
 		  
