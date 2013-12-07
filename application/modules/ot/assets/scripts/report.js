@@ -94,36 +94,31 @@ $( document ).ready(function() {
 			$( '.set_periodo' ).html( 'Cuatrimestre' );
 		}
 		
-		if( this.id == 'autos' ){
-			
-			$( '#ramo' ).val(3);
-			
-			$( '#autos' ).css( 'color', '#06F' );
-			
-			$( '.set_periodo' ).html( 'Cuatrimestre' );
-		}
-			
-		
-		$( '#form' ).attr( "action", '' );	
-		
-		$( '#form' ).submit();
-		
+		if( this.id == 'autos' )
+                {
+                    $( '#ramo' ).val(3);			
+                    $( '#autos' ).css( 'color', '#06F' );			
+                    $( '.set_periodo' ).html( 'Cuatrimestre' );
+		}		
+		$( '#form' ).attr( "action", '' );		
+		$( '#form' ).submit();		
 	});
+        
+        
 			
 	$( '.filter' ).bind( 'click', function(){
 		$( '#form' ).attr( "action", '' );
 	});
 	
-	$( '.download' ).bind( 'click', function(){
-		
-		$( '#form' ).attr( "action", Config.base_url() + 'ot/report_export.html' );
-		
-		$( '#form' ).submit();
-		
-		$( '#form' ).attr( "action", '' );
-		
+        
+	$('.download').bind( 'click', function()
+        {
+            $('#form').attr( "action", Config.base_url() + 'ot/report_export.html' );		
+            $('#form').submit();		
+            $('#form').attr( "action",'');		
 	});
 	
+        
 	
 	$('.info').hide();
 	
@@ -143,69 +138,152 @@ $( document ).ready(function() {
 	
        
        
-       $(".fancybox").fancybox(
-       {
-           type: 'ajax',
-           width :1000,
-           scrolling   : 'no',
-           openEffect : 'elastic',
-           openSpeed  : 150,
-           closeEffect : 'elastic',
-           closeSpeed  : 150,
-           autoDimensions: true,
-           height: 'auto',
-           afterShow: function() 
-           {
-                $("tr.tr_pop_class").click(function() 
-                {
-                    var content = '<a href="javascript:" class="btn btn-link btn-hide"><i class="icon-arrow-up" id="'+this.id+'"></i></a><a href="email_popup" class="btn btn-link send_message">Enviar mensaje al cordinador</a>|<a href="email_popup" class="btn btn-link send_message">Enviar mensaje al Agenta</a>|<a href="email_popup" class="btn btn-link send_message">Enviar mensaje al Director</a>';
-                    var added_content = $('#tr_pop_afer'+this.id).length;                
-                    if(added_content == 0)
-                    {
-                        $('#'+this.id).after('<tr class="tr_pop_class" id ="tr_pop_afer'+this.id+'"><td></td><td colspan="11">'+content+'</td></tr>').slideDown(1000);            
-                    
-                        $('.btn-hide i.icon-arrow-up').bind('click',function()
-                        { 
-                            $('#tr_pop_afer'+this.id).remove();
-                        });                        
-
-                        
-                        $('.send_message').bind('click',function()
-                        {
-                           // var value = $(this).text();  
-                            $('.send_message').fancybox(
-                            {
-                                type: 'ajax',
-                                width :800,
-                                height:400,
-                                scrolling:'no'                                
-                            });                         
-                        });                         
-                    }      
-                });
-            }
-       });  
-       
+ 
        
        
        
        $('#popup_email').submit(function()
        {
-           //alert('Yes');
-           email_body = $('#email_form').val();           
-           $.post("/ot/send_email",{'email_body':email_body},function(dataa)
+            
+           email_bodyy = $('#email_form').val();
+          status = $('#status').html();
+          datee = $('#date').html();
+          ot = $('#ot_numero').html();
+          policies_name =$('#policies_name').html();
+          product =$('#product').html();
+          policies =$('#policies').html();
+          pament_interval =$('#pament_interval').html();
+          poliza = $('#poliza_numero').html();
+          payment_method = $('#payment_method').html();
+          currencies = $('#currencies').html();
+          prima = $('#prima').html();
+         
+          var email_body = '';
+          email_body +="<br> Estatus:"+status+"<br>";
+          email_body +="Date:"+datee+"<br>";
+          email_body +="OT:"+ot+"<br>";
+          email_body +="Asegurado:"+policies_name+"<br>";
+          email_body +="Producto:"+product+"<br>";
+          email_body +="Plazo:"+policies+"<br>";
+          email_body +="Poliza:"+poliza+"<br>";
+          email_body +="Forma de pago:"+pament_interval+"<br>";
+          email_body +="Conducto:"+payment_method+"<br>";
+          email_body +="Moneda:"+currencies+"<br>";
+          email_body +="Prima:"+prima+"<br><br>";
+          email_body +="Message:"+email_bodyy;
+          
+           email_address = $('#email_address').val();
+           wrk_ids = $('#work_ord_array').val(); 
+           var wrk_ord_ids = new Array();
+           wrk_ord_ids = wrk_ids.split(",");  
+           var send_url = "<?php echo base_url('ot/send_email/'); ?>";
+           wrk_ord_ids = wrk_ord_ids.slice(0,-1);
+           var file_data = {email_body:email_body,email_address:email_address};
+           $.post(send_url,file_data,function(dataa)
             {       
-//                if(dataa)
-//                {         
-//                       
-//                }
+                if(dataa)
+                {    
+                    $.post("ot/reporte_popup",{wrk_ord_ids:wrk_ord_ids},function(data)
+                    { 
+                        if(data)
+                        {
+                            $.fancybox(data);
+                            return false;
+                        }
+                    });
+                }
             }, "json");
             return false;        
        });
        
+        $('.send_message').bind('click',function()
+        {
+          var emaill_address = this.id;
+           var poliza_number = $('#poliza_number').html();
+           var dir_name = this.rel;
+           var director_name = dir_name.slice(0,-1);
+          // alert(director_name);
+           var ot_number = $('#ot_number').html();  
+          var date = $('.date').html();
+          var  status = $('.status').html();
+          var agent_name = $('.agent_name').html();
+           var work_ids
+           $('.wrk_ord_ids').each(function()
+           {
+              work_ids += this.id+',';
+           });  
+           var poliza = $('.poliza').html();
+           var gmm = $('.gmm').html();
+//           var href = this.href;
+//           var file_data = {
+//            work_ids:work_ids,email:emaill_address
+//        };
+//       
+//        $.post(href, file_data, function(msg){      
+//            }, "text");
+           //alert(work_ids);
+           
+           var result = work_ids.replace("undefined","");    
+          var user_id= result.slice(0,-1);
+          var policies_name =$('.policies_name').html();
+           var product =$('#product').html();
+            policies =$('.policies').html();
+            pament_interval =$('.pament_interval').html();
+            payment_method =$('.payment_method').html();
+            currencies =$('.currencies').html();
+            prima =$('.prima').html();
+            product =$('.product').html();
+           $('.send_message').fancybox(
+           
+            {
+                showNavArrows: false,
+                arrows: false,
+                type: 'ajax',
+                width :800,
+                height:400,
+                scrolling:'no',
+                afterShow: function()
+                {
+                    $("#email_address").val(emaill_address);
+                    $('#ot_numero').html(ot_number);
+                    $('#poliza_numero').html(poliza_number);
+                    $('#work_ord_array').val(result);
+                    $('#user_id').val(user_id);
+                    $('#poliza').val(poliza);
+                    $('#gmm').val(gmm);
+                    $('#date').html(date);
+                    $('#status').html(status);
+                    $('#director_name').html(director_name);
+                    $('#policies_name').html(policies_name);
+                    $('#product').html(product);
+                    $('#policies').html(policies);
+                    $('#pament_interval').html(pament_interval);
+                    $('#payment_method').html(payment_method);
+                    $('#currencies').html(currencies);
+                    $('#prima').html(prima);
+                }
+             }); 
+             
+        });
+               
+               
+               
+        $("tr.tr_pop_class").click(function() 
+        {            
+            var hide_id = this.id.replace('tr_','');  
+            $('#hide_'+hide_id).slideDown(1000);    
+        });
        
        
-       
-       
+        $('.btn-hide i.icon-arrow-up').bind('click',function()
+        { 
+            $('#hide_'+this.id).slideUp();
+        }); 
+        
+        
+        $("#popup_table").tablesorter(); 
+        
+        
+        
        
 });

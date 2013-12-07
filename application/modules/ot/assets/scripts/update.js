@@ -187,20 +187,7 @@ $( document ).ready(function() {
 			}						
 	
 		});
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
