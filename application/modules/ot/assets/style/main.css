@@ -640,6 +640,7 @@ table.altrowstable thead tr th {
 	padding:5px;
 	font:Verdana, Geneva, sans-serif;
 	font-size:14px;
+        height: 38px;
 }
 
 .fixed #table_agents{
@@ -685,6 +686,7 @@ color: white;
 {
     background: #DDD;
     font-weight: normal;
+    height: 30px;
 }
 #popup_table
 {
@@ -694,4 +696,57 @@ color: white;
 .fancybox-wrap
 {
     width: 900px;
+}
+
+#email_form
+{
+    height: 400px;
+    width: 700px;    
+}
+
+.emal_popup_head
+{
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+#ot_numero
+{
+    font-weight: normal;
+}
+
+#poliza_numero
+{
+    font-weight: normal;
+}
+
+
+#mail_send_button
+{
+    background-image: url('send_email.png');
+    background-position:  0px 0px;
+    background-repeat: no-repeat;
+    width: 172px;
+    height: 52px;
+    border: 0px;   
+}
+
+
+#register_but
+{
+    
+    background-position:  0px 0px;
+    background-repeat: no-repeat;
+    width: 135px;
+    height: 76px;
+    border: 0px;   
+    float: left;
+}
+.loading{ 
+    
+    background-image:url(fancybox_loading.gif);
+    height: 30px;
+    width: 30px;
+    margin-left: 465px;
+   
 }
