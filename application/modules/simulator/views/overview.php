@@ -96,7 +96,7 @@
 				   else $dataview = array();  
 				  
 				  
-				  $this->load->view( 'simulador', $dataview ) ?>
+				  $this->load->view( 'simulator_'.$ramo, $dataview ) ?>
             
          </div>
           <div class="span12 metas" >

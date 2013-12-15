@@ -108,20 +108,27 @@ class Simulator extends CI_Controller {
 		
 		}
 			
-			
 		$this->load->model( array( 'user', 'simulators' ) );
 		
 		$agentid = $this->user->getAgentIdByUser( $userid );
 		
+		$data = $this->simulators->getByAgent( $agentid );	
+		
 		$product_group_id = 1;
 		
-		$trimestre = $this->simulators->trimestre( date('m') );
+		if( !empty( $data[0] ) )
+			$product_group_id =  $data[0]['data']->ramo;
+		
+		$trimestre = null;	
 		
 		$cuatrimestre = null;
 		
-		//$cuatrimestre = $this->simulators->cuatrimestre( date('m') );
+		if( $product_group_id == 1 )
+			$trimestre = $this->simulators->trimestre( date('m') );
+		else					
+			$cuatrimestre = $this->simulators->cuatrimestre( date('m') );
 				
-		//$userid = $this->user->getUserIdByAgentId( $userid );
+		$userid = $this->user->getUserIdByAgentId( $userid );
 		
 		if( $trimestre == 1 ){
 			
@@ -217,25 +224,25 @@ class Simulator extends CI_Controller {
 			);
 			
 		} 		
-		
-		$settingmeta = '';
-		
+		$settingmeta = '';		
+		/*	
 		if( !empty( $setmeta ) ){
 			
 			$settingmeta = '<script type="text/javascript">$(document).ready( function(){   $( ".simulator" ).hide(); $( ".metas" ).show(); });</script>';
 			
-		};	
-		
-		$data = $this->simulators->getByAgent( $agentid );
-				
+		};*/	
+								
 		$requestPromedio = '';
+		$simulator = 'vida';
 		
-		if( !empty( $data ) )
-			
-			if( $data[0]['data']->ramo == 1 )$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "vida" ); }); </script>'; 
-			else if( $data[0]['data']->ramo == 2 )	$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "gmm" ); }); </script>'; 
-			else if( $data[0]['data']->ramo == 3 )	$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "vida" ); }); </script>'; 
-				
+		if( !empty( $data ) )			
+			if( $data[0]['data']->ramo == 1 ){ $simulator = 'vida';
+				$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "vida" ); }); </script>'; 
+			}else if( $data[0]['data']->ramo == 2 ){	$simulator = 'gmm';
+				$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "gmm" ); }); </script>'; 
+			}else if( $data[0]['data']->ramo == 3 ){	$simulator = 'autos';
+				$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "autos" ); }); </script>'; 
+			}
 						 
 		// Config view
 		$this->view = array(
@@ -249,12 +256,13 @@ class Simulator extends CI_Controller {
 		  'access_update' => $this->access_update,
 		  'access_delete' => $this->access_delete,
 		  'css' => array(
-		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet">',
+		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet" media="screen">',
 		  ),
 		  'scripts' =>  array(
 		  	
 			'<script type="text/javascript" src="'.base_url().'scripts/config.js"></script>',
-			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator.js"></script>',
+			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas.js"></script>',
+			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_'.$simulator.'.js"></script>',
 			$settingmeta,
 			$requestPromedio
 			
@@ -272,13 +280,27 @@ class Simulator extends CI_Controller {
 		  'trimestre' => $trimestre,
 		  'cuatrimestre' => $cuatrimestre	,
 		  'periodo' => 3,
-		  'ramo' => 'vida',
+		  'ramo' => $simulator,
 		);
 	
 		
 		// Render view 
 		$this->load->view( 'index', $this->view );	
 	}
+	
+	public function getSimulator(){
+		
+		if( !$this->input->is_ajax_request() ) exit;
+		
+		$this->load->view( 'simulator_'.$_POST['ramo'] );
+		
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 	
