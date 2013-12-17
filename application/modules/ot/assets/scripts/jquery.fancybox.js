@@ -12,6 +12,7 @@
 
 (function (window, document, $, undefined) {
 	"use strict";
+
 	var H = $("html"),
 		W = $(window),
 		D = $(document),
