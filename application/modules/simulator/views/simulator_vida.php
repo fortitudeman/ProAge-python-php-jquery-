@@ -48,41 +48,39 @@
     </table>    
     
     
+    
+    
+    
+    
+    
+    
+    
     <table class="table table-bordered">
 
-        <tr>
-
+		<tr>
            <td><label>Periodo:</label></td>
-
            <td>
-
               <select name="periodo" id="periodo" onchange="ingresoPromedio(); "class="input-small">
                  <option value="3" <?php if( isset( $data->periodo ) and $data->periodo == 3 ) echo 'selected="selected"'; ?>>TRIMESTRAL</option>
                  <option value="12" <?php if( isset( $data->periodo ) and $data->periodo == 12 ) echo 'selected="selected"'; ?>>ANUAL</option>
 			  </select>
-
            </td>
-		   
-           <td><label>Primas afectas iniciales(venta inicial):</label></td>
-
-           <td>
-
-              <input type="text" class="input-small" name="primasAfectasInicialesUbicar" id="primasAfectasInicialesUbicar" value="<?php if( isset( $data->primasAfectasInicialesUbicar ) ) echo $data->primasAfectasInicialesUbicar; else echo 0; ?>">
-
-           </td>
-           
+           <td></td>
+           <td></td>
         </tr>
-
+        
         <tr>
-
            <td><br></td>
-
            <td><br></td>
-           
            <td><br></td>
-
            <td><br></td>
-
+        </tr>
+        
+        <tr>
+           <td><label>Primas afectas iniciales(venta inicial):</label></td>
+           <td><input type="text" class="input-small" name="primasAfectasInicialesUbicar" id="primasAfectasInicialesUbicar" value="<?php if( isset( $data->primasAfectasInicialesUbicar ) ) echo $data->primasAfectasInicialesUbicar; else echo 0; ?>"></td>		   
+           <td><label>% de acotamiento:</label></td>
+           <td><input type="text" class="input-small" name="porAcotamiento" id="porAcotamiento" value="<?php if( isset( $data->porAcotamiento ) ) echo $data->porAcotamiento; else echo 0; ?>"></td>
         </tr>
        
         <tr>
@@ -95,135 +93,45 @@
 
            </td>
            
-           <td><label>% de acotamiento:</label></td>
+           <td><label>No. de Negocios PAI:</label></td>
 
-           <td>
-
-              <input type="text" class="input-small" name="porAcotamiento" id="porAcotamiento" value="<?php if( isset( $data->porAcotamiento ) ) echo $data->porAcotamiento; else echo 0; ?>">
-
-           </td>
+           <td> <input type="text" class="input-small" name="noNegocios" id="noNegocios" value="<?php if( isset( $data->noNegocios ) ) echo $data->noNegocios; else echo 0; ?>">
+</td>
           
         </tr>
 
         <tr>
-
-           <td><label style="color:#547EBD !important">Primas afectas iniciales para bonos</label></td>
-		
-           <td>
-			  
+           <td colspan="3"><label style="color:#547EBD !important">Primas afectas iniciales para bonos</label></td>		
+           <td class="2">			  
               <p style="color:#547EBD !important; float:right" id="primasAfectasInicialesPagar_text">$ <?php if( isset( $data->primasAfectasInicialesPagar ) ) echo $data->primasAfectasInicialesPagar; else echo 0; ?></p>	
               <input type="hidden" name="primasAfectasInicialesPagar" id="primasAfectasInicialesPagar" value="<?php if( isset( $data->primasAfectasInicialesPagar ) ) echo $data->primasAfectasInicialesPagar; else echo 0; ?>">
-              
-
-           </td>
-		   
-           <td><br></td>
-
-           <td><br></td> 
-                                 
+           </td>		                         
         </tr>
 
       
         <tr>
-
            <td><br></td>
-
            <td><br></td>
-           
            <td><br></td>
-
            <td><br></td>
-
         </tr>
 
-        <tr>
-		   
-            <td><label>No. de Negocios PAI:</label></td>
-
-           <td>
-
-              <input type="text" class="input-small" name="noNegocios" id="noNegocios" value="<?php if( isset( $data->noNegocios ) ) echo $data->noNegocios; else echo 0; ?>">
-
-           </td>
-           
+        <tr>		   
            <td><label>Primas de renovación:</label></td>
-
-           <td>
-
-              <input type="text" class="input-small" name="primasRenovacion" id="primasRenovacion" value="<?php if( isset( $data->primasRenovacion ) ) echo $data->primasRenovacion; else echo 0; ?>">
-
-           </td>
-
-        </tr>
-		
-        
-        
-        
-        
-        <tr>
-
+           <td><input type="text" class="input-small" name="primasRenovacion" id="primasRenovacion" value="<?php if( isset( $data->primasRenovacion ) ) echo $data->primasRenovacion; else echo 0; ?>"></td>           
            <td><label>% de acotamiento:</label></td>
-
-           <td>
-
-              <input type="text" class="input-small" name="XAcotamiento" id="XAcotamiento" value="<?php if( isset( $data->XAcotamiento ) ) echo $data->XAcotamiento; else echo 0; ?>">
-
-           </td>
-		   
-           <td><br></td>
-
-           <td><br></td>
-        </tr>
-		
-        <tr>
-
-           <td><br></td>
-
-           <td><br></td>
-           
-           <td><br></td>
-
-           <td><br></td>
-
-        </tr>
+           <td><input type="text" class="input-small" name="XAcotamiento" id="XAcotamiento" value="<?php if( isset( $data->XAcotamiento ) ) echo $data->XAcotamiento; else echo 0; ?>"></td>
+        </tr>		
         
+                
         <tr>
-
            <td><label style="color:#547EBD !important">Primas de renovación para pagar:</label></td>
-
-           <td>
-			  
+           <td>			  
               <p style="color:#547EBD !important; float:right" id="primasRenovacionPagar_text">$ <?php if( isset( $data->primasRenovacionPagar ) ) echo $data->primasRenovacionPagar; else echo 0; ?></p>	
               <input type="hidden" name="primasRenovacionPagar" id="primasRenovacionPagar" value="<?php if( isset( $data->primasRenovacionPagar ) ) echo $data->primasRenovacionPagar; else echo 0; ?>">
-              
-
            </td>
-           <td><br></td>
-
-           <td><br></td>
-
-        </tr>
-		
-        <tr>
-
-           <td><br></td>
-
-           <td><br></td>
-           
-           <td><br></td>
-
-           <td><br></td>
-
-        </tr>
-        
-        
-        <tr>
-
            <td><label>Porcentaje de conservación</label></td>
-
-           <td>
-
-              <select name="porcentajeConservacion" id="porcentajeConservacion" class="input-small">
+           <td><select name="porcentajeConservacion" id="porcentajeConservacion" class="input-small">
 
                  <option value="0" <?php if( isset( $data->porcentajeConservacion ) and $data->porcentajeConservacion == 0 ) echo 'selected="selected"'; ?>>Sin base</option>
 
@@ -235,51 +143,7 @@
 
                  <option value="95" <?php if( isset( $data->porcentajeConservacion ) and $data->porcentajeConservacion == 95 ) echo 'selected="selected"'; ?>>95%</option>
 
-              </select>
-
-           </td>
-           
-           <td><br></td>
-
-           <td><br></td>
-
-        </tr>
-
-        <tr>
-
-           <td><br></td>
-
-           <td><br></td>
-          
-           <td><br></td>
-
-           <td><br></td> 
-
-        </tr>
-
-        <tr>
-           <td colspan="2" align="left"><b style="color:#547EBD !important">COMISIONES</b></td>
-		   <td colspan="2" align="left"><b style="color:#547EBD !important">BONO DE PRODUCTIVIDAD</b></td>
-        </tr>
-
-        <tr>
-
-           <td><label>% de comisión venta inicial:</label></td>
-
-           <td>
-
-              <input type="text" class="input-small" name="comisionVentaInicial" id="comisionVentaInicial" value="<?php if( isset( $data->comisionVentaInicial ) ) echo $data->comisionVentaInicial; else echo 0; ?>">
-
-           </td>
-		   
-           <td><label>% de bono aplicado:</label></td>
-
-           <td>
-
-              <input type="text" class="input-small" name="bonoAplicado" id="bonoAplicado" class="camposSoloLectura" value="<?php if( isset( $data->bonoAplicado ) ) echo $data->bonoAplicado; else echo 0; ?>" readonly="readonly">
-
-           </td>
-          
+              </select></td>
         </tr>
 		
         <tr>
@@ -294,86 +158,74 @@
 
         </tr>
         
+        
         <tr>
 
-           <td><label style="color:#547EBD !important">Ingreso por comisiones de venta inicial:</label></td>
-
-           <td>
-			  
-              <p style="color:#547EBD !important; float:right" id="ingresoComisionesVentaInicial_text">$ <?php if( isset( $data->ingresoComisionesVentaInicial ) ) echo $data->ingresoComisionesVentaInicial; else echo 0; ?></p>	
-              <input type="hidden" name="ingresoComisionesVentaInicial" id="ingresoComisionesVentaInicial" value="<?php if( isset( $data->ingresoComisionesVentaInicial ) ) echo $data->ingresoComisionesVentaInicial; else echo 0; ?>">
-           
-           </td>
-           
-           <td><label style="color:#547EBD !important">Ingreso por bono de productividad:</label></td>
-
-           <td>
-			  
-              <p style="color:#547EBD !important; float:right" id="ingresoBonoProductividad_text">$ <?php if( isset( $data->ingresoBonoProductividad ) ) echo $data->ingresoBonoProductividad; else echo 0; ?></p>	
-              <input type="hidden" name="ingresoBonoProductividad" id="ingresoBonoProductividad" value="<?php if( isset( $data->ingresoBonoProductividad ) ) echo $data->ingresoBonoProductividad; else echo 0; ?>">
-                         </td>
-
-        </tr>
-
-        <tr>
-
+           <td colspan="2" align="left"><b style="color:#547EBD !important">COMISIONES</b></td>
+          
            <td><br></td>
 
-           <td><br></td>
-           
-           <td><br></td>
-
-           <td><br></td>
-
-        </tr>
-
-        <tr>
-
-           <td><label>% de comisión venta de renovación:</label></td>
-
-           <td>
-
-              <input type="text" class="input-small" name="comisionVentaRenovacion" id="comisionVentaRenovacion" value="<?php if( isset( $data->comisionVentaRenovacion ) ) echo $data->comisionVentaRenovacion; else echo 0; ?>">
-
-           </td>
-           
-           <td><br></td>
-
-           <td><br></td>
+           <td><br></td> 
 
         </tr>
 		
+        
         <tr>
-
+           <td><label>% de comisión venta inicial:</label></td>
+           <td>
+              <input type="text" class="input-small" name="comisionVentaInicial" id="comisionVentaInicial" value="<?php if( isset( $data->comisionVentaInicial ) ) echo $data->comisionVentaInicial; else echo 0; ?>">
+           </td>
+           <td><label style="color:#547EBD !important">Ingreso por comisiones de venta inicial:</label></td>
+           <td>
+              <p style="color:#547EBD !important; float:right" id="ingresoComisionesVentaInicial_text">$ <?php if( isset( $data->ingresoComisionesVentaInicial ) ) echo $data->ingresoComisionesVentaInicial; else echo 0; ?></p>	
+              <input type="hidden" name="ingresoComisionesVentaInicial" id="ingresoComisionesVentaInicial" value="<?php if( isset( $data->ingresoComisionesVentaInicial ) ) echo $data->ingresoComisionesVentaInicial; else echo 0; ?>">
+           </td>          
+        </tr>
+        
+        <tr>
+           <td><label>% de comisión venta de renovación:</label></td>
+           <td>
+              <input type="text" class="input-small" name="comisionVentaRenovacion" id="comisionVentaRenovacion" value="<?php if( isset( $data->comisionVentaRenovacion ) ) echo $data->comisionVentaRenovacion; else echo 0; ?>">
+           </td>           
            <td><label style="color:#547EBD !important">Ingreso por comisiones de renovación</label></td>
 
+           <td> <p style="color:#547EBD !important; float:right" id="ingresoComisionRenovacion_text">$ <?php if( isset( $data->ingresoComisionRenovacion ) ) echo $data->ingresoComisionRenovacion; else echo 0; ?></p>	
+              <input type="hidden" name="ingresoComisionRenovacion" id="ingresoComisionRenovacion" value="<?php if( isset( $data->ingresoComisionRenovacion ) ) echo $data->ingresoComisionRenovacion; else echo 0; ?>"></td>
+
+        </tr>
+        
+        <tr>
+           <td><br></td>
+           <td><br></td>           
+           <td><br></td>
+           <td><br></td>
+        </tr>
+        
+        <tr>
+           <td colspan="2" align="left"><b style="color:#547EBD !important">BONO DE PRODUCTIVIDAD</b></td>
+           <td colspan="3" align="left"></td>
+        </tr>
+        
+        <tr>           
+           <td><label>% de bono aplicado:</label></td>
            <td>
-			  
-              <p style="color:#547EBD !important; float:right" id="ingresoComisionRenovacion_text">$ <?php if( isset( $data->ingresoComisionRenovacion ) ) echo $data->ingresoComisionRenovacion; else echo 0; ?></p>	
-              <input type="hidden" name="ingresoComisionRenovacion" id="ingresoComisionRenovacion" value="<?php if( isset( $data->ingresoComisionRenovacion ) ) echo $data->ingresoComisionRenovacion; else echo 0; ?>">
-              
-           </td>
-           
-           <td><br></td>
-
-           <td><br></td>
-
+              <input type="text" class="input-small" name="bonoAplicado" id="bonoAplicado" value="<?php if( isset( $data->bonoAplicado ) ) echo $data->bonoAplicado; else echo 0; ?>" readonly="readonly">
+           </td>           
+           <td><label style="color:#547EBD !important">Ingreso por bono de productividad:</label></td>
+           <td>
+              <p style="color:#547EBD !important; float:right" id="ingresoBonoProductividad_text">$ <?php if( isset( $data->ingresoBonoProductividad ) ) echo $data->ingresoBonoProductividad; else echo 0; ?></p>	
+              <input type="hidden" name="ingresoBonoProductividad" id="ingresoBonoProductividad" value="<?php if( isset( $data->ingresoBonoProductividad ) ) echo $data->ingresoBonoProductividad; else echo 0; ?>">
+                         </td>
         </tr>
-
+		
         <tr>
-
            <td><br></td>
-
+           <td><br></td>           
            <td><br></td>
-           
            <td><br></td>
-
-           <td><br></td>
-
         </tr>
-
+        
         <tr>
-
            <td colspan="2" align="left"><b style="color:#547EBD !important">BONO DE RENOVACION</b></td>
 		   <td><br></td>
            <td><br></td>
@@ -389,32 +241,13 @@
 
            </td>
            
-           <td><br></td>
-
-           <td><br></td>
-
-        </tr>
-
-        <tr>
-
            <td><label style="color:#547EBD !important">Ingreso por bono de renovación:</label></td>
 
-           <td>
-			  
-              <p style="color:#547EBD !important; float:right" id="ingresoBonoRenovacion_text">$ <?php if( isset( $data->ingresoBonoRenovacion ) ) echo $data->ingresoBonoRenovacion; else echo 0; ?></p>	
-              <input type="hidden" name="ingresoBonoRenovacion" id="ingresoBonoRenovacion" value="<?php if( isset( $data->ingresoBonoRenovacion ) ) echo $data->ingresoBonoRenovacion; else echo 0; ?>" >
-
-           </td>
-           
-           <td><br></td>
-
-           <td><br></td>
+           <td><p style="color:#547EBD !important; float:right" id="ingresoBonoRenovacion_text">$ <?php if( isset( $data->ingresoBonoRenovacion ) ) echo $data->ingresoBonoRenovacion; else echo 0; ?></p>	
+              <input type="hidden" name="ingresoBonoRenovacion" id="ingresoBonoRenovacion" value="<?php if( isset( $data->ingresoBonoRenovacion ) ) echo $data->ingresoBonoRenovacion; else echo 0; ?>" ></td>
 
         </tr>
        
      </table>
-	
-     
-    
         
  </div>    

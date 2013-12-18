@@ -48,179 +48,107 @@
     </table>    
     
     
+    
+    
+    
     <table class="table table-bordered">
 
+		
         <tr>
-
            <td><label>Periodo:</label></td>
-
-           <td>
-
-              <select name="periodo" id="periodo" class="input-small">
+           <td><select name="periodo" id="periodo" class="input-small">
 
                  <option value="4" <?php if( isset( $data->periodo ) and $data->periodo == 4 ) echo 'selected="selected"'; ?>>CUATRIMESTRAL</option>
 
                  <option value="12" <?php if( isset( $data->periodo ) and $data->periodo == 12 ) echo 'selected="selected"'; ?>>ANUAL</option>
 
-              </select>
+              </select></td>           
+           <td><br></td>
+           <td><br></td>
+        </tr>
+        
+        
+        <tr>
+           <td><br></td>
+           <td><br></td>           
+           <td><br></td>
+           <td><br></td>
+        </tr>
+        
 
-           </td>
-		   
+        <tr>           		   
            <td><label>Primas netas iniciales:</label></td>
-
            <td>
-
               <input type="text" class="input-small" name="primasnetasiniciales" id="primasnetasiniciales" value="<?php if( isset( $data->primasnetasiniciales ) ) echo $data->primasnetasiniciales; else echo 0; ?>">
-
-           </td>
-           
-        </tr>
-
-        <tr>
-
-           <td><br></td>
-
-           <td><br></td>
-           
-           <td><br></td>
-
-           <td><br></td>
-
-        </tr>
-       
-        <tr>
-		  
+           </td>       
            <td><label>Primas de carteras:</label></td>
-
-           <td>
-
-              <input type="text" class="input-small" name="primasdecarteras" id="primasdecarteras" value="<?php if( isset( $data->primasdecarteras ) ) echo $data->primasdecarteras; else echo 0; ?>">
-
-           </td>          
-          
-           <td><label>No Negocios:</label></td>
-
-           <td><input type="text" class="input-small" name="nonegocios" id="nonegocios" value="<?php if( isset( $data->nonegocios ) ) echo $data->nonegocios; else echo 0; ?>"></td>
-          
+           <td><input type="text" class="input-small" name="primasdecarteras" id="primasdecarteras" value="<?php if( isset( $data->primasdecarteras ) ) echo $data->primasdecarteras; else echo 0; ?>"></td>    
         </tr>
 
         <tr>
+           <td><label>Primas promedio</label></td>
+           <td><input type="text" class="input-small" name="primaspromedio" id="primaspromedio" value="<?php if( isset( $data->primaspromedio ) ) echo $data->primaspromedio; else echo 0; ?>"></td> 
+           <td><label>No Negocios:</label></td>
+           <td><input type="text" class="input-small" name="nonegocios" id="nonegocios" value="<?php if( isset( $data->nonegocios ) ) echo $data->nonegocios; else echo 0; ?>"></td>
+        </tr>
 
-           <td><label style="color:#547EBD !important">Primas totales:</label></td>
-		
-           <td>
-			  
+        <tr>
+           <td colspan="3"><label style="color:#547EBD !important">Primas totales:</label></td>		
+           <td>			  
               <p style="color:#547EBD !important; float:right" id="primastotales_text">$ <?php if( isset( $data->primastotales ) ) echo $data->primastotales; else echo 0; ?></p>	
               <input type="hidden" name="primastotales" id="primastotales" value="<?php if( isset( $data->primastotales ) ) echo $data->primastotales; else echo 0; ?>">
-              
-
-           </td>
-		   
-           <td><label>Primas promedio</label></td>
-
-           <td><input type="text" class="input-small" name="primaspromedio" id="primaspromedio" value="<?php if( isset( $data->primaspromedio ) ) echo $data->primaspromedio; else echo 0; ?>"></td> 
-                                 
+           </td>                          
         </tr>
-
-      
+  		
         <tr>
-
            <td><br></td>
-
+           <td><br></td>           
            <td><br></td>
-           
            <td><br></td>
-
-           <td><br></td>
-
-        </tr>
-
-        		
-        <tr>
-
-           <td><br></td>
-
-           <td><br></td>
-           
-           <td><br></td>
-
-           <td><br></td>
-
         </tr>
         
         
        
         <tr>
-           <td colspan="2" align="left"><b style="color:#547EBD !important">COMISIONES</b></td>
-		   <td colspan="2" align="left"><b style="color:#547EBD !important">BONO INICIAL</b></td>
+           <td colspan="4" align="left"><b style="color:#547EBD !important">COMISIONES</b></td>
+        </tr>
+        
+        <tr>
+           <td><label>% de comisión:</label></td>
+           <td>
+              <input type="text" class="input-small" name="comisionVentaInicial" id="comisionVentaInicial" value="<?php if( isset( $data->comisionVentaInicial ) ) echo $data->comisionVentaInicial; else echo 0; ?>">
+           </td>
+           <td><label style="color:#547EBD !important">Ingreso por comisiones:</label></td>
+           <td>			  
+              <p style="color:#547EBD !important; float:right" id="ingresoComisionesVentaInicial_text">$ <?php if( isset( $data->ingresoComisionesVentaInicial ) ) echo $data->ingresoComisionesVentaInicial; else echo 0; ?></p>	
+              <input type="hidden" name="ingresoComisionesVentaInicial" id="ingresoComisionesVentaInicial" value="<?php if( isset( $data->ingresoComisionesVentaInicial ) ) echo $data->ingresoComisionesVentaInicial; else echo 0; ?>">           
+           </td>
+        </tr>
+        
+        
+        <tr>
+		   <td colspan="4" align="left"><b style="color:#547EBD !important">BONO INICIAL</b></td>
         </tr>
 
         <tr>
-
-           <td><label>% de comisión:</label></td>
-
-           <td>
-
-              <input type="text" class="input-small" name="comisionVentaInicial" id="comisionVentaInicial" value="<?php if( isset( $data->comisionVentaInicial ) ) echo $data->comisionVentaInicial; else echo 0; ?>">
-
-           </td>
-		   
            <td><label>% de bono aplicado:</label></td>
-
            <td>
-
               <input type="text" class="input-small" name="bonoAplicado" id="bonoAplicado" value="<?php if( isset( $data->bonoAplicado ) ) echo $data->bonoAplicado; else echo 0; ?>" readonly="readonly">
-
            </td>
-          
+           <td><label style="color:#547EBD !important">Ingreso por inicial:</label></td>
+           <td>			  
+              <p style="color:#547EBD !important; float:right" id="ingresoBonoInicial_text">$ <?php if( isset( $data->ingresoBonoInicial ) ) echo $data->ingresoBonoInicial; else echo 0; ?></p>	
+              <input type="hidden" name="ingresoBonoInicial" id="ingresoBonoInicial" value="<?php if( isset( $data->ingresoBonoInicial ) ) echo $data->ingresoBonoInicial; else echo 0; ?>">
+                         </td>     
         </tr>
 		
         <tr>
-
            <td><br></td>
-
+           <td><br></td>           
            <td><br></td>
-           
            <td><br></td>
-
-           <td><br></td>
-
         </tr>
-        
-        <tr>
-
-           <td><label style="color:#547EBD !important">Ingreso por comisiones:</label></td>
-
-           <td>
-			  
-              <p style="color:#547EBD !important; float:right" id="ingresoComisionesVentaInicial_text">$ <?php if( isset( $data->ingresoComisionesVentaInicial ) ) echo $data->ingresoComisionesVentaInicial; else echo 0; ?></p>	
-              <input type="hidden" name="ingresoComisionesVentaInicial" id="ingresoComisionesVentaInicial" value="<?php if( isset( $data->ingresoComisionesVentaInicial ) ) echo $data->ingresoComisionesVentaInicial; else echo 0; ?>">
-           
-           </td>
-           
-           <td><label style="color:#547EBD !important">Ingreso por inicial:</label></td>
-
-           <td>
-			  
-              <p style="color:#547EBD !important; float:right" id="ingresoBonoInicial_text">$ <?php if( isset( $data->ingresoBonoInicial ) ) echo $data->ingresoBonoInicial; else echo 0; ?></p>	
-              <input type="hidden" name="ingresoBonoInicial" id="ingresoBonoInicial" value="<?php if( isset( $data->ingresoBonoInicial ) ) echo $data->ingresoBonoInicial; else echo 0; ?>">
-                         </td>
-
-        </tr>
-
-        <tr>
-
-           <td><br></td>
-
-           <td><br></td>
-           
-           <td><br></td>
-
-           <td><br></td>
-
-        </tr>
-
-        
+                
 
         <tr>
 
