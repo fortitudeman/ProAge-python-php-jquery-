@@ -101,11 +101,13 @@
         </tr>
 
         <tr>
-           <td colspan="3"><label style="color:#547EBD !important">Primas afectas iniciales para bonos</label></td>		
+           <td><label style="color:#547EBD !important">Primas afectas iniciales para bonos</label></td>		
            <td class="2">			  
               <p style="color:#547EBD !important; float:right" id="primasAfectasInicialesPagar_text">$ <?php if( isset( $data->primasAfectasInicialesPagar ) ) echo $data->primasAfectasInicialesPagar; else echo 0; ?></p>	
               <input type="hidden" name="primasAfectasInicialesPagar" id="primasAfectasInicialesPagar" value="<?php if( isset( $data->primasAfectasInicialesPagar ) ) echo $data->primasAfectasInicialesPagar; else echo 0; ?>">
-           </td>		                         
+           </td>	
+           <td><br></td>
+           <td><br></td>	                         
         </tr>
 
       

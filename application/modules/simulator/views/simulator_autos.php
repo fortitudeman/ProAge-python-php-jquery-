@@ -93,11 +93,13 @@
         </tr>
 
         <tr>
-           <td colspan="3"><label style="color:#547EBD !important">Primas totales:</label></td>		
+           <td><label style="color:#547EBD !important">Primas totales:</label></td>		
            <td>			  
               <p style="color:#547EBD !important; float:right" id="primastotales_text">$ <?php if( isset( $data->primastotales ) ) echo $data->primastotales; else echo 0; ?></p>	
               <input type="hidden" name="primastotales" id="primastotales" value="<?php if( isset( $data->primastotales ) ) echo $data->primastotales; else echo 0; ?>">
-           </td>                          
+           </td>
+           <td><br></td>
+           <td><br></td>                          
         </tr>
   		
         <tr>
