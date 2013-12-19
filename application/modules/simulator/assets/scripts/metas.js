@@ -222,7 +222,7 @@ function getMetasPeriod( ramo ){
 						$( '.primas-meta-selector' ).show();						
 						$( '.primas-meta' ).hide();						
 						getMetas();						
-						//save();			
+						save();			
 					});
 					$( '#periodo' ).bind( 'change', function(){		
 						if( $( '#ramo' ).val() == 1 ) getMetasPeriod( 'vida' );
@@ -278,7 +278,7 @@ function getMetas(){
 		var totalessolicitudmeta = 0;
 		var totaltrimestre = 0;
 		for(  var i = 1; i<=12; i++ ){						
-			var total = parseFloat( $( '#metas-prima-promedio' ).val() ) * ( parseFloat( $( '#mes-'+i ) .val() ) * 100 /100 );
+			var total = parseFloat( $( '#metas-prima-promedio' ).val() ) * (parseFloat( $( '#mes-'+i ) .val() ) * 100 /100);
 			var meta =  total;//;Math.round( total* 100 )/100;			
 			var primapromedio =  Math.round( ( total /  parseFloat( $( '#metas-prima-promedio' ).val() ) ) );
 			var efectividad = $( '#efectividad' ) .val();	
