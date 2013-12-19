@@ -79,7 +79,7 @@
 
            <td><label>Primas netas iniciales:</label></td>
 
-           <td><input type="text" class="input-small" name="primasnetasiniciales" id="primasnetasiniciales" value="<?php if( isset( $data->primasnetasiniciales ) ) echo $data->primasnetasiniciales; else echo 0; ?>"></td>
+           <td><input type="text" class="input-small" name="primasnetasiniciales" id="primasnetasiniciales" value="<?php if( isset( $data->primasnetasiniciales ) ) echo $data->primasnetasiniciales; else if( isset( $data->primasAfectasInicialesUbicar ) ) echo $data->primasAfectasInicialesUbicar; echo 0; ?>"></td>
 		   
            <td><label>% de acotamiento:</label></td>
 

@@ -56,20 +56,20 @@
           
           <?php endif; ?>
           
-          <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 1 or isset( $_POST['ramo'] ) and $_POST['ramo'] == 1 ): ?>  
+          <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 1 or isset( $ramo ) and $ramo == 'vida' ): ?>  
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#06F">Vida</a>
           <?php else: ?>   
-              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#06F">Vida</a>
+              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#000">Vida</a>
           <?php endif; ?>              
                               
-          <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 2 or isset( $_POST['ramo'] ) and $_POST['ramo'] == 2 ): ?> 
+          <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 2 or isset( $ramo ) and $ramo == 'gmm' ): ?> 
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" style="color:#06F">GMM</a>
           <?php else: ?>   
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" style="color:#000">GMM</a>
           <?php endif; ?>     
           
           
-          <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 3 or isset( $_POST['ramo'] ) and $_POST['ramo'] == 3 ): ?> 
+          <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 3 or isset( $ramo ) and $ramo == 'autos' ): ?> 
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" style="color:#06F">Autos</a>
           <?php else: ?>   
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" style="color:#000">Autos</a>
