@@ -53,7 +53,7 @@ $( document ).ready(function() {
 	$( '.link-ramo' ).bind( 'click', function(){
 		$( '#vida' ).css({ 'color': '#000' });
 		$( '#gmm' ).css({ 'color': '#000' });
-		$( '#autos' ).css({ 'color': '#000' });								
+		$( '#autos' ).css({ 'color': '#000' });	
 		if( this.id == 'vida' ){							
 			$( '#ramo' ).val(1);			
 			$( '#vida' ).css( 'color', '#06F' );			
@@ -157,7 +157,6 @@ $( document ).ready(function() {
 			});		
 		}
 		 getMetasPeriod( this.id );
-					
 	});				
 	$( '#periodo' ).bind( 'change', function(){		
 		if( $( '#ramo' ).val() == 1 ) getMetasPeriod( 'vida' );
@@ -170,7 +169,9 @@ $( document ).ready(function() {
 	$( '#primasnetasiniciales' ).bind( 'keyup', function(){
 		getMetas();
 	});	
+		
 	$( '.primas-meta-field' ).hide();
+	
 });
 
 
@@ -184,7 +185,13 @@ function getMetasPeriod( ramo ){
 			success: function(data){
 				//alert( data );
 				$( '.metas' ).html(data);				
-				$( '.primas-meta-field' ).hide();			
+				$( '.primas-meta-field' ).hide();					
+				var i = $( '#primas_promedio' ).val();
+					if( i == 0 || i > 0 )
+						$( "#metas-prima-promedio" ).val( $( '#primas_promedio' ).val() ); 
+					else 
+						$( "#metas-prima-promedio" ).val( $( '#primaspromedio' ).val() ); 
+				getMetas();						
 				$( document ).ready( function(){			
 					$( "#metas-prima-promedio" ).bind( 'keyup', function(){ 		
 						$( '#primas_promedio' ).val(this.value);	
@@ -211,18 +218,20 @@ function getMetasPeriod( ramo ){
 						$( '#'+this.id ).hide();						
 						$( '#'+this.id+'-field' ).show();												
 					});					
-					$( '.primas-meta-field' ).bind( 'blur', function(){						
+					$( '.primas-meta-field' ).bind( 'blur', function(){			
 						var total=0;						
 						for( var i=1; i<=12; i++ ){							
-							if(  !isNaN( $( '#primas-meta-'+i ).val() ) )
-								total += parseFloat( $( '#primas-meta-'+i ).val());							
+							if(  !isNaN( $( '#primas-meta-'+i ).val() ) ){
+								$( '#primas-meta-text-'+i ).html( '$ '+moneyFormat(parseFloat($( '#primas-meta-'+i ).val())));
+								total += parseFloat( $( '#primas-meta-'+i ).val());
+							}
 						}							
-						$( '#primasAfectasInicialesUbicar' ).val( total );	
-						$( '#primasnetasiniciales' ).val( total );						
+						$( '#primas_promedio' ).val( total );	
+						$( '#metas-prima-promedio' ).val( total );	
 						$( '.primas-meta-selector' ).show();						
 						$( '.primas-meta' ).hide();						
-						getMetas();						
-						save();			
+						save();		
+						getMetas();	
 					});
 					$( '#periodo' ).bind( 'change', function(){		
 						if( $( '#ramo' ).val() == 1 ) getMetasPeriod( 'vida' );

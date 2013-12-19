@@ -612,7 +612,7 @@
                 <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
                 <td class="bgyelowbold">
                 	
-                    <div id="primas-solicitud-meta-tercer-text" style="text-align: right !important"></div>  
+                    <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
                     <input type="hidden" name="primas-solicitud-meta-tercer" id="primas-solicitud-meta-tercer" value="0" />
                     
                 </td>
@@ -627,7 +627,7 @@
                 </td>
                 <td class="bgorangebold">
                 	
-                    <div id="primas-negocio-meta-tercer-text" style="text-align: right !important"></div>  
+                    <div id="primas-negocio-meta-tercer-text" style="text-align: center !important"></div>  
                     <input type="hidden" name="primas-negocio-meta-tercer" id="primas-negocio-meta-tercer" value="0" />
                     
                 </td>
@@ -642,7 +642,7 @@
                 </td>
                 <td class="bggreenbold">
                 	
-                    <div id="primas-meta-tercer-text" style="text-align: right !important"></div>  
+                    <div id="primas-meta-tercer-text" style="text-align: center !important"></div>  
                     <input type="hidden" name="primas-tercer-primer" id="primas-tercer-primer" value="0" />
                     
                 </td>
@@ -712,21 +712,7 @@
             </tr> 
                 
            <?php endif; ?> 
-           
-           
-           
-           
-           
-           
-           
-           
-           
-           
-           
-           
-           
-           
-           
+                      
            
            
            <?php // Space four Trimestre and three Cuatimestre ?>

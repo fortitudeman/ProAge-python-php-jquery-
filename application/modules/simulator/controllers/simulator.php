@@ -214,14 +214,13 @@ class Simulator extends CI_Controller {
 						
 		$requestPromedio = '';
 		//$simulator = 'vida';
-		
 		if( !empty( $data ) )			
 			if( $data[0]['data']->ramo == 1 ){ $simulator = 'vida';
-				$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "vida" ); }); </script>'; 
+				$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "vida" ); $( "#metas-prima-promedio" ).val( '.$data[0]['data']->primas_promedio.' ); getMetas(); }); </script>'; 
 			}else if( $data[0]['data']->ramo == 2 ){	$simulator = 'gmm';
-				$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "gmm" ); }); </script>'; 
+				$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "gmm" ); $( "#metas-prima-promedio" ).val( '.$data[0]['data']->primas_promedio.' ); getMetas(); }); </script>'; 
 			}else if( $data[0]['data']->ramo == 3 ){	$simulator = 'autos';
-				$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "autos" ); }); </script>'; 
+				$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "autos" ); $( "#metas-prima-promedio" ).val( '.$data[0]['data']->primas_promedio.' ); getMetas(); }); </script>'; 
 			}
 			
 		// Config view
@@ -277,7 +276,7 @@ class Simulator extends CI_Controller {
 		$data = $this->simulators->getByAgent( $agentid );
 		if( isset( $data[0]['data'] ) )
 		 $dataview = array( 'data' => $data[0]['data'] );
-	    else $dataview = array();  
+	    else $dataview = array(); 
 		$this->load->view( 'simulator_'.$_POST['ramo'], $dataview );
 		
 	}

@@ -89,7 +89,7 @@
 
            <td>
 
-              <input type="text" class="input-small" name="primas_promedio" id="primas_promedio" value="<?php if( isset( $data->primas_promedio ) ) echo $data->primas_promedio; else echo 0; ?>">
+              <input type="text" class="input-small" name="primas_promedio" id="primas_promedio" value="<?php if( isset( $data->primaspromedio ) ) echo $data->primaspromedio; elseif( isset( $data->primas_promedio ) ) echo $data->primas_promedio; else echo 0; ?>">
 
            </td>
            
