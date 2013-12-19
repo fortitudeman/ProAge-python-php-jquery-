@@ -156,9 +156,15 @@
             - Ver desempeño en campo (es la liga a las actividades de ese agente)
             - Ver perfil (esta página aún no está creada, es el siguiente punto)
         */
+		$simulator_url = base_url().'simulator/index/'.$value['id'];
+			if( isset( $_POST['query']['ramo'] ) )
+				$simulator_url .= '/'.$_POST['query']['ramo'];
+			else
+				$simulator_url .= '/1';
+		$simulator_url .= '.html';		
 		?>
 
-            |<a href="<?php echo base_url() ?>simulator/index/<?php echo $value['id'] ?>.html" class="btn btn-link">Definir meta</a>|<a href="<?php echo base_url() ?>simulator/index/<?php echo $value['id'] ?>.html" class="btn btn-link">Simular resultado</a>|
+            |<a href="<?php echo $simulator_url ?>" class="btn btn-link">Definir meta</a>|<a href="<?php echo $simulator_url ?>" class="btn btn-link">Simular resultado</a>|
            <a href="#" class="btn btn-link">Desempeño en campo</a>|<a href="#" class="btn btn-link">Perfil</a><br />            
     </div>
         
