@@ -105,7 +105,7 @@ class Simulator extends CI_Controller {
 			redirect( 'home', 'refresh' );
 		
 		}
-		
+		$simulator = 'vida';
 		if( $ramo == 1 ) $simulator = 'vida';
 		if( $ramo == 2 ) $simulator = 'gmm';
 		if( $ramo == 3 ) $simulator = 'autos';
