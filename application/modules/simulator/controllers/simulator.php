@@ -88,9 +88,7 @@ class Simulator extends CI_Controller {
 	
 
 // Show all records	
-	public function index( $userid = null, $setmeta = null ){
-		
-		
+	public function index( $userid = null, $ramo = null ){
 		
 		// Check access teh user for create
 		if( $this->access == false ){
@@ -107,6 +105,10 @@ class Simulator extends CI_Controller {
 			redirect( 'home', 'refresh' );
 		
 		}
+		
+		if( $ramo == 1 ) $simulator = 'vida';
+		if( $ramo == 2 ) $simulator = 'gmm';
+		if( $ramo == 3 ) $simulator = 'autos';
 			
 		$this->load->model( array( 'user', 'simulators' ) );
 		
@@ -211,7 +213,7 @@ class Simulator extends CI_Controller {
 		};*/	
 						
 		$requestPromedio = '';
-		$simulator = 'vida';
+		//$simulator = 'vida';
 		
 		if( !empty( $data ) )			
 			if( $data[0]['data']->ramo == 1 ){ $simulator = 'vida';
