@@ -328,7 +328,7 @@ function getMetas(){
 			$( '#primas-negocios-meta-text-'+i ).html( Math.round(primapromedio) );			
 			// Solicitud Meta
 			$( '#primas-solicitud-meta-'+i ).val( Math.round(solicitud) );
-			$( '#primas-solicitud-meta-text-'+i ).html( '$ ' + moneyFormat(Math.round(solicitud)));	
+			$( '#primas-solicitud-meta-text-'+i ).html( '$ ' + moneyFormat(Math.round(parseFloat(solicitud))));	
 			if( !isNaN( meta ) )  totaltrimestre+=meta;
 			if( !isNaN( meta ) ) totalprimameta+=meta;
 			if( !isNaN( primapromedio ) )  totalnegociometa += primapromedio;
