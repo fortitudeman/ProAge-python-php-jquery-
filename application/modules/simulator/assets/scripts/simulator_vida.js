@@ -125,7 +125,7 @@ $( document ).ready(function() {
 	$( '#primas_promedio' ).bind( 'keyup', function(){ 		
 		var negocios = parseFloat( $( '#primasAfectasInicialesUbicar' ).val() ) / parseFloat( $( '#primas_promedio' ).val() );		
 		if( isNaN( negocios ) ) negocios = 0;		
-		$( '#noNegocios' ).val(negocios);
+		$( '#noNegocios' ).val(round(negocios)+1);
 		$( '#metas-prima-promedio' ).val(this.value);
 		vida_ingresoTotal(); vida_ingresoPromedio(); getMetas();
 	});	

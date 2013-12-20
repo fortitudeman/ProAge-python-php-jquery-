@@ -20,7 +20,7 @@ $( document ).ready(function() {
 		$( '#primasAfectasInicialesPagar_text' ).html( '$ '+moneyFormat(total) );
 		$( '#primasAfectasInicialesPagar' ).val( total );
 		var total = parseFloat( $( '#primasnetasiniciales' ).val() ) / parseFloat($( '#primaspromedio' ).val().replace( '%', '' ));	
-		$( '#nonegocios' ).val( total );
+		$( '#nonegocios' ).val( round(total)+1 );
 		var total = parseFloat( $( '#primasnetasiniciales' ).val() ) / parseFloat($( '#nonegocios' ).val().replace( '%', '' ));	
 		$( '#primaspromedio' ).val( total );
 		//porAcotamiento
@@ -182,7 +182,7 @@ $( document ).ready(function() {
 	
 	$( '#primaspromedio' ).bind( 'keyup', function(){
 		var total = parseFloat( $( '#primasnetasiniciales' ).val() ) / parseFloat($( '#primaspromedio' ).val().replace( '%', '' ));	
-		$( '#nonegocios' ).val( total );
+		$( '#nonegocios' ).val( round(total)+1 );
 		gmm_ingresototal(); gmm_ingresopromedio();	getMetas();
 	});
 	
