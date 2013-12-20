@@ -65,7 +65,7 @@ $( document ).ready(function() {
 		// Primas Promedio
 		var primas_promedio = parseFloat( $( '#primasAfectasInicialesUbicar' ).val() ) / parseFloat( $( '#noNegocios' ).val() );		
 		if( isNaN( primas_promedio ) ) primas_promedio = 0;		
-		$( '#primas_promedio' ).val(primas_promedio)
+		$( '#primas_promedio' ).val(moneyFormat(parseFloat(primas_promedio)))
 		vida_ingresoTotal(); vida_ingresoPromedio(); getMetas();
 		
 	});
@@ -131,7 +131,7 @@ $( document ).ready(function() {
 	});	
 	// Prima Promedio Meas
 	$( "#metas-prima-promedio" ).bind( 'keyup', function(){ 		
-		$( '#primas_promedio' ).val(this.value);	
+		$( '#primas_promedio' ).val(moneyFormat(parseFloat(this.value)));	
 		vida_ingresoTotal(); vida_ingresoPromedio(); getMetas();
 	});
 	// % Bono Renovacion

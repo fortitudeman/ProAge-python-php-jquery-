@@ -22,7 +22,7 @@ $( document ).ready(function() {
 		var total = parseFloat( $( '#primasnetasiniciales' ).val() ) / parseFloat($( '#primaspromedio' ).val().replace( '%', '' ));	
 		$( '#nonegocios' ).val( Math.ceil(total) );
 		var total = parseFloat( $( '#primasnetasiniciales' ).val() ) / parseFloat($( '#nonegocios' ).val().replace( '%', '' ));	
-		$( '#primaspromedio' ).val( total );
+		$( '#primaspromedio' ).val( moneyFormat(parseFloat(total)) );
 		//primastotales
 		var total = parseFloat( $( '#primastotales' ).val() ) * parseFloat($( '#comisionVentaInicial' ).val().replace( '%', '' )/100);	
 		$( '#ingresoComisionesVentaInicial_text' ).html( '$ '+moneyFormat(total) );
@@ -158,7 +158,7 @@ $( document ).ready(function() {
 	});	
 	$( '#nonegocios' ).bind( 'keyup', function(){
 		var total = parseFloat( $( '#primasnetasiniciales' ).val() ) / parseFloat($( '#nonegocios' ).val().replace( '%', '' ));	
-		$( '#primaspromedio' ).val( total );
+		$( '#primaspromedio' ).val( moneyFormat(parseFloat(total)) );
 		autos_ingresototal(); autos_ingresopromedio(); getMetas();
 	});	
 	$( '#primaspromedio' ).bind( 'keyup', function(){
