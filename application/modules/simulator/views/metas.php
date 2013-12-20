@@ -116,7 +116,7 @@
                 <td class="bgestacionalidadlight">
 					                    
                     <span id="mes-text-<?php echo $i ?>"><?php if( isset( $porcentajes['mes-'.$i] ) ) echo $porcentajes['mes-'.$i]; else echo $configs[$field] ?></span> %
-                	<input type="hidden" id="mes-<?php echo $i ?>" name="mes-<?php echo $i ?>" value="<?php echo $configs[$field] ?>" />
+                	<input type="hidden" id="mes-<?php echo $i ?>" name="mes-<?php echo $i ?>" value="<?php if( isset( $porcentajes['mes-'.$i] ) ) echo $porcentajes['mes-'.$i]; else echo $configs[$field] ?>" />
                 </td>
                 <td class="bgyelowlight">
                 	
