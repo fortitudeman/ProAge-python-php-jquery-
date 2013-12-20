@@ -278,7 +278,11 @@ function save(){
 	}
 }
 function getMetas(){		
-		if( $( '#metas-prima-promedio' ).val() == 0 ) return false;	
+		//if( $( '#primasAfectasInicialesUbicar' ).val() == 0 ) return false;	
+						
+		var primas = $( '#primasAfectasInicialesUbicar' ).val();
+			if( !$( '#primasAfectasInicialesUbicar' ).val() ) primas = $( '#primasnetasiniciales' ).val();
+		
 		// Metas
 		var totalprimameta = 0;		
 		var totalnegociometa = 0; 			
@@ -287,7 +291,7 @@ function getMetas(){
 		var totalessolicitudmeta = 0;
 		var totaltrimestre = 0;
 		for(  var i = 1; i<=12; i++ ){						
-			var total = parseFloat( $( '#metas-prima-promedio' ).val() ) * (parseFloat( $( '#mes-'+i ) .val() ) * 100 /100);
+			var total = parseFloat( primas ) * (parseFloat( $( '#mes-'+i ) .val() ) * 100 /100);
 			var meta =  total;//;Math.round( total* 100 )/100;			
 			var primapromedio =  Math.round( ( total /  parseFloat( $( '#metas-prima-promedio' ).val() ) ) );
 			var efectividad = $( '#efectividad' ) .val();	
