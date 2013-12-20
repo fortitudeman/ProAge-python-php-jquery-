@@ -79,7 +79,7 @@
         <tr>           		   
            <td><label>Primas netas iniciales:</label></td>
            <td>
-              <input type="text" class="input-small" name="primasnetasiniciales" id="primasnetasiniciales" value="<?php if( isset( $data->primasnetasiniciales ) ) echo $data->primasnetasiniciales; else if( isset( $data->primasAfectasInicialesUbicar ) ) echo $data->primasAfectasInicialesUbicar; echo 0; ?>">
+              <input type="text" class="input-small" name="primasnetasiniciales" id="primasnetasiniciales" value="<?php if( isset( $data->primasnetasiniciales ) ) echo $data->primasnetasiniciales; else if( isset( $data->primasAfectasInicialesUbicar ) ) echo $data->primasAfectasInicialesUbicar; else echo 0; ?>">
            </td>       
            <td><label>Primas de carteras:</label></td>
            <td><input type="text" class="input-small" name="primasdecarteras" id="primasdecarteras" value="<?php if( isset( $data->primasdecarteras ) ) echo $data->primasdecarteras; else echo 0; ?>"></td>    

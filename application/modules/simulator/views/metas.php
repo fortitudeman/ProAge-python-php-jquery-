@@ -32,7 +32,7 @@
         <div class="span2"><input type="text" id="metas-prima-promedio" value="0" /></div> 
         
         <div class="span2"><input type="button"  id="open_simulator"value="Abrir simulador" class="pull-right btn-save-meta"  /></div>
-        <div class="span2"><input type="button" value="Guardar Meta" class="pull-right btn-save-meta"  /></div>        
+        <div class="span2"><input type="button" id="save_meta" value="Guardar Meta" class="pull-right btn-save-meta"  /></div>        
      </div>
     
      <table class="table table-bordered" style="width:1200px; padding:0px;">
