@@ -167,10 +167,10 @@
                 <td class="bggreenlight">
                 	
                     <?php if( $i < 10 ){ 
-						  	echo $PrimasLogradas['0'.$i]; 
+						  	echo money_format('%.2n', $PrimasLogradas['0'.$i]); 
 						  	 $PrimasLogradosTotalTrimestre+=$PrimasLogradas['0'.$i]; 
 						  }else{ 
-						  	echo $PrimasLogradas[$i]; 
+						  	echo money_format('%.2n', $PrimasLogradas[$i]); 
 						  	 $PrimasLogradosTotalTrimestre+=$PrimasLogradas[$i]; 
 						  }?> 
                     
