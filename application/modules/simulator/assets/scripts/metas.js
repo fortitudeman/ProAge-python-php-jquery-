@@ -218,19 +218,33 @@ function getMetasPeriod( ramo ){
 						$( '#'+this.id ).hide();						
 						$( '#'+this.id+'-field' ).show();												
 					});					
-					$( '.primas-meta-field' ).bind( 'blur', function(){			
+					$( '.primas-meta-field' ).bind( 'blur', function(){	
 						var total=0;						
 						for( var i=1; i<=12; i++ ){							
 							if(  !isNaN( $( '#primas-meta-'+i ).val() ) ){
+								
 								$( '#primas-meta-text-'+i ).html( '$ '+moneyFormat(parseFloat($( '#primas-meta-'+i ).val())));
+								
+								
 								total += parseFloat( $( '#primas-meta-'+i ).val());
+								
 							}
 						}							
-						$( '#primas_promedio' ).val( total );	
-						$( '#metas-prima-promedio' ).val( total );	
+						$( '#primasAfectasInicialesUbicar' ).val( total );	
+						$( '#primasnetasinicialeso' ).val( total );	
 						$( '.primas-meta-selector' ).show();						
 						$( '.primas-meta' ).hide();						
-						save();		
+						
+						for( var i=1; i<=12; i++ ){				
+								var primas = $( '#primasAfectasInicialesUbicar' ).val();
+									if( !$( '#primasAfectasInicialesUbicar' ).val() ) primas = $( '#primasnetasiniciales' ).val();
+																		  
+								var porcentaje =  Math.round(parseInt($( '#primas-meta-'+i ).val()) / parseFloat(primas)*100);								
+									$( '#mes-'+i ).val(porcentaje);
+									$( '#mes-text-'+i ).html(porcentaje);
+						}	
+						
+						//save();		
 						getMetas();	
 					});
 					$( '#periodo' ).bind( 'change', function(){		
@@ -291,7 +305,7 @@ function getMetas(){
 		var totalessolicitudmeta = 0;
 		var totaltrimestre = 0;
 		for(  var i = 1; i<=12; i++ ){						
-			var total = parseFloat( primas ) * (parseFloat( $( '#mes-'+i ) .val() ) * 100 /100);
+			var total = parseFloat( primas ) * (parseFloat( $( '#mes-'+i ) .val() ) /100);
 			var meta =  total;//;Math.round( total* 100 )/100;			
 			var primapromedio =  Math.round( ( total /  parseFloat( $( '#metas-prima-promedio' ).val() ) ) );
 			var efectividad = $( '#efectividad' ) .val();	

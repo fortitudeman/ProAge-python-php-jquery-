@@ -578,6 +578,9 @@ class Simulator extends CI_Controller {
 		   $dataview = array( 'config' => $config );
 		 else $dataview = array();  
 		
+		$data = $this->simulators->getByAgent( $agentid );	;
+		
+		$dataview['data'] = $data[0]['data'];
 		$dataview['ramo'] = $_POST['ramo'];
 		$dataview['SolicitudesLogradas'] = $SolicitudesLogradas;
 		$dataview['NegociosLogrados'] = $NegociosLogrados;

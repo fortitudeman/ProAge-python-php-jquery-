@@ -90,7 +90,7 @@
          <div class="row">
          
          <div class="span11 simulator" style="margin-left:40px;">
-         	
+         	<?php $data[0]['data'] ?>
             <?php if( isset( $data[0]['data'] ) )
 					 $dataview = array( 'data' => $data[0]['data'] );
 				   else $dataview = array();  
@@ -101,12 +101,11 @@
          </div>
           <div class="span12 metas" >
                     
-            <?php if( isset( $config ) )
+            <?php if( isset( $config ) ){
 					 $dataview = array( 'config' => $config );
-				   else $dataview = array();  
-				  
-				  
-				  $this->load->view( 'metas', $dataview ) ?>
+				  }else $dataview = array();  
+				  				  
+				  $this->load->view( 'metas', array( $dataview ) ) ?>
             
          </div>
            

@@ -35,22 +35,28 @@
 }
 .bgyelowlight{
 	background-color:#FDFBBE;
+	text-align:center !important;
 }
 .bgyelowbold{
 	background-color:#FCF979;
+	text-align:center !important;
 }
 
 .bgorangelight{
 	background-color:#FEE3AB;
+	text-align:center !important;
 }
 .bgorangebold{
 	background-color:#FCC731;
+	text-align:center !important;
 }
 .bggreenlight{
 	background-color:#CBE8B3;
+	text-align:right !important;
 }
 .bggreenbold{
 	background-color:#659E3F;
+	text-align:right !important;
 }
 
 .bggreenbold div{

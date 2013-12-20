@@ -91,15 +91,31 @@
 				$PrimasLogradosTotalTrimestre=0;
 			
 				$PrimasLogradosTotal=0;
-			
+				
+				$porcentajes = array();
+				
+				function object2array($object) {
+					if (is_object($object)) {
+						foreach ($object as $key => $value) {
+							$array[$key] = $value;
+						}
+					}
+					else {
+						$array = $object;
+					}
+					return $array;
+				}	
+				$porcentajes = object2array($data);
+				
 			 ?> 
               
-             <?php  if( !empty( $config ) ): foreach( $config as $configs ):?> 
+             <?php if( !empty( $config ) ): foreach( $config as $configs ):?> 
              
               <tr>
             	<td><?php echo $configs['month']; ?></td>
                 <td class="bgestacionalidadlight">
-					<?php echo $configs[$field] ?> %
+					                    
+                    <span id="mes-text-<?php echo $i ?>"><?php if( isset( $porcentajes['mes-'.$i] ) ) echo $porcentajes['mes-'.$i]; else echo $configs[$field] ?></span> %
                 	<input type="hidden" id="mes-<?php echo $i ?>" name="mes-<?php echo $i ?>" value="<?php echo $configs[$field] ?>" />
                 </td>
                 <td class="bgyelowlight">
@@ -666,7 +682,7 @@
                 <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
                 <td class="bgyelowbold">
                 	
-                    <div id="primas-solicitud-meta-tercer-text" style="text-align: right !important"></div>  
+                    <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
                     <input type="hidden" name="primas-solicitud-meta-tercer" id="primas-solicitud-meta-tercer" value="0" />
                     
                 </td>
@@ -681,7 +697,7 @@
                 </td>
                 <td class="bgorangebold">
                 	
-                    <div id="primas-negocio-meta-tercer-text" style="text-align: right !important"></div>  
+                    <div id="primas-negocio-meta-tercer-text" style="text-align: center !important"></div>  
                     <input type="hidden" name="primas-negocio-meta-tercer" id="primas-negocio-meta-tercer" value="0" />
                     
                 </td>
