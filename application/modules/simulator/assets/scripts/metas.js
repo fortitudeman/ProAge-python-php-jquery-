@@ -219,7 +219,7 @@ function getMetasPeriod( ramo ){
 						$( '#'+this.id+'-field' ).show();												
 					});		
 					$( '.primas-meta-field' ).bind( 'keypress', function(e){	
-													
+						var code = e.keyCode || e.which;							
 						if(code == 13) { //Enter keycode
 						  	
 							var total=0;						
