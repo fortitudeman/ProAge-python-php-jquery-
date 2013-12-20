@@ -194,8 +194,8 @@ function getMetasPeriod( ramo ){
 				getMetas();						
 				$( document ).ready( function(){			
 					$( "#metas-prima-promedio" ).bind( 'keyup', function(){ 		
-						$( '#primas_promedio' ).val(this.value);	
-						$( '#primaspromedio' ).val(this.value);							
+						$( '#primas_promedio' ).val(Math.ceil(this.value));	
+						$( '#primaspromedio' ).val(Math.ceil(this.value));							
 						getMetas();
 					});	
 					$( "#primas_promedio" ).bind( 'keyup', function(){ 		
