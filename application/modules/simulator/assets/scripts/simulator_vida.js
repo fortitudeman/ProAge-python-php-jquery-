@@ -252,6 +252,7 @@ $( document ).ready(function() {
 		$( '#ingresoBonoRenovacion' ).val( total );
 		vida_ingresoTotal(); vida_ingresoPromedio(); getMetas();
 	});	
+	vida_ingresoTotal(); vida_ingresoPromedio(); 
 		
 });
 function vida_ingresoTotal(){	

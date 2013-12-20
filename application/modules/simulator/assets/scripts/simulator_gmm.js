@@ -431,7 +431,7 @@ $( document ).ready(function() {
 		}		
 		gmm_ingresototal(); gmm_ingresopromedio();	getMetas();
 	});
-		
+		gmm_ingresototal(); gmm_ingresopromedio();	
 });
 function gmm_ingresototal(){
 	var ingresoComisionesVentaInicial = parseFloat( $( '#ingresoComisionesVentaInicial' ).val() );

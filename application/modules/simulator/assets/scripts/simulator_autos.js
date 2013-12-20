@@ -257,7 +257,7 @@ $( document ).ready(function() {
 		}
 		autos_ingresototal(); autos_ingresopromedio(); getMetas();
 	});
-				
+		autos_ingresototal(); autos_ingresopromedio(); 
 });
 
 function autos_ingresototal(){
