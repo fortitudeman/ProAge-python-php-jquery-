@@ -261,6 +261,10 @@ function getMetasPeriod( ramo ){
 					$( '#primasnetasiniciales' ).bind( 'keyup', function(){
 						getMetas();
 					});	
+					$( '#save_meta' ).bind( 'click', function(){
+						save();	
+						alert( "La meta se ha guardado correctamente" );
+					});
 				});
 				getMetas();
 			}						
@@ -280,7 +284,7 @@ function save(){
 			async: false,
 			success: function(data){
 				$( '#id' ).val(data);
-				alert( "La meta se ha guardado correctamente" );
+				//alert( "La meta se ha guardado correctamente" );
 			}			
 		});
 	}else{
@@ -291,7 +295,7 @@ function save(){
 			cache: false,
 			async: false,
 			success: function(data){				
-				alert( "La meta se ha actualizado correctamente" );
+				//alert( "La meta se ha actualizado correctamente" );
 			}		
 		});
 	}
