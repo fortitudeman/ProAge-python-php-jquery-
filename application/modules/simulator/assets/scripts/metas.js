@@ -280,6 +280,7 @@ function save(){
 			async: false,
 			success: function(data){
 				$( '#id' ).val(data);
+				alert( "La meta se ha guardado correctamente" );
 			}			
 		});
 	}else{
@@ -290,6 +291,7 @@ function save(){
 			cache: false,
 			async: false,
 			success: function(data){				
+				alert( "La meta se ha actualizado correctamente" );
 			}		
 		});
 	}
