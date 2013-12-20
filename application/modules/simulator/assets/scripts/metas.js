@@ -328,7 +328,7 @@ function getMetas(){
 			$( '#primas-negocios-meta-text-'+i ).html( Math.round(primapromedio) );			
 			// Solicitud Meta
 			$( '#primas-solicitud-meta-'+i ).val( Math.round(solicitud) );
-			$( '#primas-solicitud-meta-text-'+i ).html( '$ ' + moneyFormat(Math.round(parseFloat(solicitud))));	
+			$( '#primas-solicitud-meta-text-'+i ).html( Math.round(solicitud));	
 			if( !isNaN( meta ) )  totaltrimestre+=meta;
 			if( !isNaN( meta ) ) totalprimameta+=meta;
 			if( !isNaN( primapromedio ) )  totalnegociometa += primapromedio;
@@ -343,7 +343,7 @@ function getMetas(){
 				$( '#primas-negocio-meta-primer' ).val( Math.round(totalnegociometa) );
 				$( '#primas-negocio-meta-primer-text' ).html( Math.round(totalnegociometa) );				
 				$( '#primas-solicitud-meta-primer' ).val( Math.round(totalsolicitudmeta) );
-				$( '#primas-solicitud-meta-primer-text' ).html( '$ ' + moneyFormat(Math.round(totalsolicitudmeta)) );				
+				$( '#primas-solicitud-meta-primer-text' ).html( Math.round(totalsolicitudmeta) );				
 				totaltrimestre = 0;				
 				totalnegociometa= 0;				
 				totalsolicitudmeta= 0;				
@@ -354,7 +354,7 @@ function getMetas(){
 				$( '#primas-negocio-meta-segund' ).val( Math.round(totalnegociometa) );
 				$( '#primas-negocio-meta-segund-text' ).html( Math.round(totalnegociometa) );				
 				$( '#primas-solicitud-meta-segund' ).val( Math.round(totalsolicitudmeta) );
-				$( '#primas-solicitud-meta-segund-text' ).html( '$ ' + moneyFormat(Math.round(totalsolicitudmeta)) );				
+				$( '#primas-solicitud-meta-segund-text' ).html( Math.round(totalsolicitudmeta) );				
 				totaltrimestre = 0;				
 				totalnegociometa= 0;				
 				totalsolicitudmeta= 0;				
@@ -365,7 +365,7 @@ function getMetas(){
 				$( '#primas-negocio-meta-tercer' ).val( Math.round(totalnegociometa) );
 				$( '#primas-negocio-meta-tercer-text' ).html( Math.round(totalnegociometa) );				
 				$( '#primas-solicitud-meta-tercer' ).val( Math.round(totalsolicitudmeta) );
-				$( '#primas-solicitud-meta-tercer-text' ).html( '$ ' + moneyFormat(Math.round(totalsolicitudmeta)) );				
+				$( '#primas-solicitud-meta-tercer-text' ).html( Math.round(totalsolicitudmeta) );				
 				totaltrimestre = 0;				
 				totalnegociometa= 0;				
 				totalsolicitudmeta= 0;
@@ -376,7 +376,7 @@ function getMetas(){
 				$( '#primas-negocio-meta-cuarto' ).val( Math.round(totalnegociometa) );
 				$( '#primas-negocio-meta-cuarto-text' ).html( Math.round(totalnegociometa) );				
 				$( '#primas-solicitud-meta-cuarto' ).val( Math.round(totalsolicitudmeta) );
-				$( '#primas-solicitud-meta-cuarto-text' ).html( '$ ' + moneyFormat(Math.round(totalsolicitudmeta)) );				
+				$( '#primas-solicitud-meta-cuarto-text' ).html( (Math.round(totalsolicitudmeta)) );				
 				totaltrimestre = 0;				
 				totalnegociometa= 0;				
 				totalsolicitudmeta= 0;				
@@ -388,7 +388,7 @@ function getMetas(){
 				$( '#primas-negocio-meta-primer' ).val( Math.round(totalnegociometa) );
 				$( '#primas-negocio-meta-primer-text' ).html( Math.round(totalnegociometa) );				
 				$( '#primas-solicitud-meta-primer' ).val( totalsolicitudmeta );
-				$( '#primas-solicitud-meta-primer-text' ).html( '$ ' + moneyFormat(Math.round(totalsolicitudmeta)) );				
+				$( '#primas-solicitud-meta-primer-text' ).html( (Math.round(totalsolicitudmeta)) );				
 				totaltrimestre = 0;				
 				totalnegociometa= 0;				
 				totalsolicitudmeta= 0;				
@@ -399,7 +399,7 @@ function getMetas(){
 				$( '#primas-negocio-meta-second' ).val( Math.round(totalnegociometa) );
 				$( '#primas-negocio-meta-second-text' ).html( Math.round(totalnegociometa) );				
 				$( '#primas-solicitud-meta-second' ).val( totalsolicitudmeta );
-				$( '#primas-solicitud-meta-second-text' ).html( '$ ' + moneyFormat(Math.round(totalsolicitudmeta)) );				
+				$( '#primas-solicitud-meta-second-text' ).html( (Math.round(totalsolicitudmeta)) );				
 				totaltrimestre = 0;				
 				totalnegociometa= 0;				
 				totalsolicitudmeta= 0;				
@@ -410,7 +410,7 @@ function getMetas(){
 				$( '#primas-negocio-meta-tercer' ).val( Math.round(totalnegociometa) );
 				$( '#primas-negocio-meta-tercer-text' ).html( Math.round(totalnegociometa) );				
 				$( '#primas-solicitud-meta-tercer' ).val( totalsolicitudmeta );
-				$( '#primas-solicitud-meta-tercer-text' ).html( '$ ' + moneyFormat(Math.round(totalsolicitudmeta)) );				
+				$( '#primas-solicitud-meta-tercer-text' ).html( (Math.round(totalsolicitudmeta)) );				
 				totaltrimestre = 0;				
 				totalnegociometa= 0;				
 				totalsolicitudmeta= 0;				
@@ -423,7 +423,7 @@ function getMetas(){
 		$( '#primas-negocios-meta-total-text' ).html( Math.round(totalesnegociometa) );
 		
 		$( '#primas-solicitud-meta-total' ).val( Math.round(totalessolicitudmeta) );
-		$( '#primas-solicitud-meta-total-text' ).html( '$ ' + moneyFormat(Math.round(totalessolicitudmeta)) );
+		$( '#primas-solicitud-meta-total-text' ).html( (Math.round(totalessolicitudmeta)) );
 		
 }
 function moneyFormat( n ){	
