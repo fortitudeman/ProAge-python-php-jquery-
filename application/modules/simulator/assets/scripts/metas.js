@@ -217,35 +217,38 @@ function getMetasPeriod( ramo ){
 					$( '.primas-meta-selector' ).bind( 'click', function(){						
 						$( '#'+this.id ).hide();						
 						$( '#'+this.id+'-field' ).show();												
-					});					
-					$( '.primas-meta-field' ).bind( 'blur', function(){	
-						var total=0;						
-						for( var i=1; i<=12; i++ ){							
-							if(  !isNaN( $( '#primas-meta-'+i ).val() ) ){
-								
-								$( '#primas-meta-text-'+i ).html( '$ '+moneyFormat(parseFloat($( '#primas-meta-'+i ).val())));
-								
-								
-								total += parseFloat( $( '#primas-meta-'+i ).val());
-								
-							}
-						}							
-						$( '#primasAfectasInicialesUbicar' ).val( total );	
-						$( '#primasnetasinicialeso' ).val( total );	
-						$( '.primas-meta-selector' ).show();						
-						$( '.primas-meta' ).hide();						
-						
-						for( var i=1; i<=12; i++ ){				
-								var primas = $( '#primasAfectasInicialesUbicar' ).val();
-									if( !$( '#primasAfectasInicialesUbicar' ).val() ) primas = $( '#primasnetasiniciales' ).val();
-																		  
-								var porcentaje =  Math.round(parseInt($( '#primas-meta-'+i ).val()) / parseFloat(primas)*100);								
-									$( '#mes-'+i ).val(porcentaje);
-									$( '#mes-text-'+i ).html(porcentaje);
-						}	
-						
-						//save();		
-						getMetas();	
+					});		
+					$( '.primas-meta-field' ).bind( 'keypress', function(e){	
+													
+						if(code == 13) { //Enter keycode
+						  	
+							var total=0;						
+							for( var i=1; i<=12; i++ ){							
+								if(  !isNaN( $( '#primas-meta-'+i ).val() ) ){
+									
+									$( '#primas-meta-text-'+i ).html( '$ '+moneyFormat(parseFloat($( '#primas-meta-'+i ).val())));
+									
+									
+									total += parseFloat( $( '#primas-meta-'+i ).val());
+									
+								}
+							}							
+							$( '#primasAfectasInicialesUbicar' ).val( total );	
+							$( '#primasnetasinicialeso' ).val( total );	
+							$( '.primas-meta-selector' ).show();						
+							$( '.primas-meta' ).hide();						
+							
+							for( var i=1; i<=12; i++ ){				
+									var primas = $( '#primasAfectasInicialesUbicar' ).val();
+										if( !$( '#primasAfectasInicialesUbicar' ).val() ) primas = $( '#primasnetasiniciales' ).val();
+																			  
+									var porcentaje =  Math.round(parseInt($( '#primas-meta-'+i ).val()) / parseFloat(primas)*100);								
+										$( '#mes-'+i ).val(porcentaje);
+										$( '#mes-text-'+i ).html(porcentaje);
+							}	
+							getMetas();	
+							save();									
+						}
 					});
 					$( '#periodo' ).bind( 'change', function(){		
 						if( $( '#ramo' ).val() == 1 ) getMetasPeriod( 'vida' );
