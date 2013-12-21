@@ -38,7 +38,7 @@
         <tr>
             <th id="table_agents" class="header_manager" style="width:auto;">Agentes</th>
             <th id="total_negocio" class="header_manager" style="width:70px;">Negocios Pagados</th>
-            <th id="total_negocio_pai" class="header_manager" style="width:70px;">Negocios <br> Pal</th>
+            <th id="total_negocio_pai" class="header_manager" style="width:70px;">Negocios <br></th>
             <th id="total_primas_pagadas" class="header_manager" style="width:100px;">Primas Pagadas</th>
             <th id="total_negocios_tramite" class="header_manager" style="width:70px;">Negocios <br> en  Tramite</th>
             <th id="total_primas_tramite" class="header_manager" style="width:100px;">Primas <br> en Tramite</th>
@@ -219,7 +219,7 @@
             <tr>
                 <td><div class="text_total">Agentes</div></td>
                 <td style="width:70px;"><div class="numeros"></div>Negocios Pagados</td>
-                <td style="width:70px;"><div class="numeros"></div>Negocios Pal</td>
+                <td style="width:70px;"><div class="numeros"></div>Negocios</td>
                 <td style="width:100px;"><div class="numeros"></div>Primas Pagadas</td>
                 <td style="width:70px;" class="celda_gris_roja"><div class="numeros"></div> Negocios en <br>  Tramite</td>
                 <td style="width:100px;" class="celda_gris_roja"><div class="numeros"></div> En Tramite</td>
@@ -238,7 +238,8 @@
         <tr>
             <td ><div class="text_total">Totales</div></td>
             <td style="width:70px; text-align:center;"><div class="numeros"><?php echo $total_negocio?></div>Negocios Pagados</td>
-            <td style="width:70px; text-align:center;"><div class="numeros"><?php echo $total_negocio_pai?></div> Negocios Pal</td>
+            <td style="width:70px; text-align:center;"><div class="numeros"><?php echo $total_negocio_pai?></div>             
+               Negocios</td>
             <td style="width:100px;text-align:right"><div class="numeros">$<?php echo $total_primas_pagadas ?></div> Pagados</td>
             <td style="width:70px; text-align:left;" class="celda_gris_roja"><div class="numeros"><?php echo $total_negocios_tramite ?></div> Negocios en <br>  Tramite</td>
             <td style="width:100px;text-align:left" class="celda_gris_roja"><div class="numeros">$<?php echo $total_primas_tramite ?></div> En Tramite</td>
