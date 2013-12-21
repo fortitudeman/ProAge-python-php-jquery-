@@ -162,10 +162,20 @@
 			else
 				$simulator_url .= '/1';
 		$simulator_url .= '.html';		
+		
+		
+		$perfil_url = base_url().'agent/index/'.$value['id'];
+			if( isset( $_POST['query']['ramo'] ) )
+				$perfil_url .= '/'.$_POST['query']['ramo'];
+			else
+				$perfil_url .= '/1';
+		$perfil_url .= '.html';	
+		
+		
 		?>
 
             |<a href="<?php echo $simulator_url ?>" class="btn btn-link">Definir meta</a>|<a href="<?php echo $simulator_url ?>" class="btn btn-link">Simular resultado</a>|
-           <a href="#" class="btn btn-link">Desempeño en campo</a>|<a href="#" class="btn btn-link">Perfil</a><br />            
+           <a href="#" class="btn btn-link">Desempeño en campo</a>|<a href="<?php echo $perfil_url ?>" class="btn btn-link">Perfil</a><br />            
     </div>
         
             <div id="info_<?php echo $value['id'] ?>" style="display: none;">

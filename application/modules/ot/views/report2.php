@@ -42,12 +42,27 @@
                         - Simular resultado
                         - Ver desempeño en campo (es la liga a las actividades de ese agente)
                         - Ver perfil (esta página aún no está creada, es el siguiente punto)
-                    */?>
+                    */
+						$simulator_url = base_url().'simulator/index/'.$value['id'];
+							if( isset( $_POST['query']['ramo'] ) )
+								$simulator_url .= '/'.$_POST['query']['ramo'];
+							else
+								$simulator_url .= '/1';
+						$simulator_url .= '.html';		
+						
+						
+						$perfil_url = base_url().'agent/index/'.$value['id'];
+							if( isset( $_POST['query']['ramo'] ) )
+								$perfil_url .= '/'.$_POST['query']['ramo'];
+							else
+								$perfil_url .= '/1';
+						$perfil_url .= '.html';	
+					?>
                     <br />
-                    <a href="#" class="btn btn-link">Definir meta</a><br />
-                    <a href="#" class="btn btn-link">Simular resultado</a><br />
+                    <a href="<?php echo $simulator_url ?>" class="btn btn-link">Definir meta</a><br />
+                    <a href="<?php echo $simulator_url ?>" class="btn btn-link">Simular resultado</a><br />
                     <a href="#" class="btn btn-link">Desempeño en campo</a><br />
-                    <a href="#" class="btn btn-link">Perfil</a><br />
+                    <a href="<?php echo $perfil_url ?>" class="btn btn-link">Perfil</a><br />
                     <a href="javascript:void(0)" class="btn btn-link btn-hide">
                         <i class="icon-arrow-up"></i>
                     </a>
