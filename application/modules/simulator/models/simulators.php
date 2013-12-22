@@ -278,11 +278,10 @@ class Simulators extends CI_Model{
 		$this->db->select( 'COUNT(work_order.id) AS count ' );
 		$this->db->from( 'work_order' );
 		$this->db->join( 'policies_vs_users', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->join( 'work_order_types', ' work_order_types.id=work_order.work_order_type_id' );
 		$this->db->where( 'YEAR(creation_date) = '. $year );
 		$this->db->where( 'MONTH(creation_date) = '. $month );
-		$this->db->where( 'agents.user_id', $agent );
+		$this->db->where( 'policies_vs_users.user_id', $agent );
 		$this->db->where( '( work_order_types.patent_id=90 OR work_order_types.patent_id=47 )' );
 		$this->db->where( 'product_group_id', $product_group_id );
 				
@@ -323,10 +322,9 @@ class Simulators extends CI_Model{
 		$this->db->select( 'COUNT(work_order.id) AS count ' );
 		$this->db->from( 'work_order' );
 		$this->db->join( 'policies_vs_users', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->where( 'YEAR(creation_date) = '. $year );
 		$this->db->where( 'MONTH(creation_date) = '. $month );
-		$this->db->where( 'agents.user_id', $user );
+		$this->db->where( 'policies_vs_users.user_id', $agent );
 		$this->db->where( 'work_order_status_id', 7 );
 		$this->db->where( 'product_group_id', $product_group_id );
 		
@@ -369,10 +367,9 @@ class Simulators extends CI_Model{
 		$this->db->select( 'work_order.policy_id' );
 		$this->db->from( 'work_order' );
 		$this->db->join( 'policies_vs_users', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->where( 'YEAR(creation_date) = '. $year );
 		$this->db->where( 'MONTH(creation_date) = '. $month );
-		$this->db->where( 'agents.user_id', $user );
+		$this->db->where( 'policies_vs_users.user_id', $agent );
 		$this->db->where( 'work_order_status_id', 7 );
 		$this->db->where( 'product_group_id', $product_group_id );
 		
