@@ -179,7 +179,8 @@ function getMetasPeriod( ramo ){
 	$.ajax({
 			url:  Config.base_url()+'simulator/getConfigMeta.html',
 			type: "POST",
-			data: { ramo: ramo, periodo: $( '#periodo' ).val(), userid: $( '#userid' ).val() },
+			//data: { ramo: ramo, periodo: $( '#periodo' ).val(), userid: $( '#userid' ).val() },
+			data: { ramo: ramo, periodo: 12, userid: $( '#userid' ).val() },
 			cache: false,
 			async: false,
 			success: function(data){
