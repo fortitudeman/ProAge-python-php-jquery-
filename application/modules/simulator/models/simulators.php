@@ -135,7 +135,7 @@ class Simulators extends CI_Model{
 		if( empty( $agent ) ) return false;
 		
 		//SELECT * FROM simulator WHERE agent_id = '' ORDER BY id DESC LIMIT 1;
-		$this->db->select();
+		$this->db->select( 'simulator.*, users.name, users.lastnames' );
 		$this->db->from( 'simulator' );
 		$this->db->join( 'agents', 'simulator.agent_id=agents.id' );
 		$this->db->join( 'users', 'agents.user_id=users.id' );

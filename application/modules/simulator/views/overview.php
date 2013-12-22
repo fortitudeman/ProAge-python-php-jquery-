@@ -55,7 +55,7 @@
           
           
           <?php endif; ?>
-          <h3>Simulador de metas para <?php echo $data[0]['name'] . " " . $data[0]['lastnames']?></h3>
+          <h3>Simulador de metas para <?php echo $users[0]['name'] . " " . $users[0]['lastnames']?></h3>
           <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 1 or isset( $ramo ) and $ramo == 'vida' ): ?>  
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#06F">Vida</a>
           <?php else: ?>   

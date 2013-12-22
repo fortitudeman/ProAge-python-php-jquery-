@@ -114,6 +114,8 @@ class Simulator extends CI_Controller {
 		
 		$agentid = $this->user->getAgentIdByUser( $userid );
 		
+		$users = $this->user->getForUpdateOrDelete( $userid );
+		
 		$data = $this->simulators->getByAgent( $agentid, $ramo );	
 		
 		$product_group_id = 1;
@@ -261,6 +263,7 @@ class Simulator extends CI_Controller {
 		  'periodo' => 3,
 		  'ramo' => $simulator,
 		  'product_group_id' => $product_group_id,
+		  'users' => $users
 		);
 	
 		
