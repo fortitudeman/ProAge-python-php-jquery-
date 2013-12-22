@@ -114,7 +114,7 @@ class Simulator extends CI_Controller {
 		
 		$agentid = $this->user->getAgentIdByUser( $userid );
 		
-		$data = $this->simulators->getByAgent( $agentid );	
+		$data = $this->simulators->getByAgent( $agentid, $ramo );	
 		
 		$product_group_id = 1;
 		
@@ -148,9 +148,9 @@ class Simulator extends CI_Controller {
 				'03' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '03', date( 'Y' ) )
 			);			
 			$PrimasLogradas = array(
-				'01' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '01', date( 'Y' ) ),
-				'02' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '02', date( 'Y' ) ),
-				'03' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '03', date( 'Y' ) )
+				'01' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '01', date( 'Y' ) ),
+				'02' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '02', date( 'Y' ) ),
+				'03' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '03', date( 'Y' ) )
 			);			
 		} 	
 		if( $trimestre == 2 ){			
@@ -165,9 +165,9 @@ class Simulator extends CI_Controller {
 				'06' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '06', date( 'Y' ) ),
 			);
 			$PrimasLogradas = array(
-				'04' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '04', date( 'Y' ) ),
-				'05' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '05', date( 'Y' ) ),
-				'06' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '06', date( 'Y' ) ),
+				'04' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '04', date( 'Y' ) ),
+				'05' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '05', date( 'Y' ) ),
+				'06' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '06', date( 'Y' ) ),
 			);			
 		} 
 		if( $trimestre == 3 ){			
@@ -182,9 +182,9 @@ class Simulator extends CI_Controller {
 				'09' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '09', date( 'Y' ) ),
 			);			
 			$PrimasLogradas = array(
-				'07' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '07', date( 'Y' ) ),
-				'08' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '08', date( 'Y' ) ),
-				'09' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '09', date( 'Y' ) ),
+				'07' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '07', date( 'Y' ) ),
+				'08' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '08', date( 'Y' ) ),
+				'09' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '09', date( 'Y' ) ),
 			);
 		} 		
 		if( $trimestre == 4 ){			
@@ -199,9 +199,9 @@ class Simulator extends CI_Controller {
 				'12' => $this->simulators-> getNegociosLograda( $agentid, $product_group_id, '12', date( 'Y' ) )
 			);			
 			$PrimasLogradas = array(
-				'10' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '10', date( 'Y' ) ),
-				'11' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '11', date( 'Y' ) ),
-				'12' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '12', date( 'Y' ) )
+				'10' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '10', date( 'Y' ) ),
+				'11' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '11', date( 'Y' ) ),
+				'12' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '12', date( 'Y' ) )
 			);
 		} 		
 		$settingmeta = '';		
@@ -251,7 +251,7 @@ class Simulator extends CI_Controller {
 		  'no_visible_elements_2' => true,
 		  'userid' =>  $userid,
 		  'agentid' =>  $agentid,
-		  'data' =>  $this->simulators->getByAgent( $agentid ),		  	  
+		  'data' =>  $this->simulators->getByAgent( $agentid, $simulator ),		  	  
 		  'config' => $this->simulators->getConfigMetas( false, $trimestre, null ),		  
 		  'SolicitudesLogradas' => $SolicitudesLogradas,
 		  'NegociosLogrados' => $NegociosLogrados,	
@@ -273,7 +273,7 @@ class Simulator extends CI_Controller {
 		$this->load->model( array( 'user', 'simulators' ) );
 		$userid = $_POST['userid']; 
 		$agentid = $this->user->getAgentIdByUser( $userid );		
-		$data = $this->simulators->getByAgent( $agentid );
+		$data = $this->simulators->getByAgent( $agentid, $_POST['ramo'] );
 		if( isset( $data[0]['data'] ) )
 		 $dataview = array( 'data' => $data[0]['data'] );
 	    else $dataview = array(); 
@@ -350,9 +350,9 @@ class Simulator extends CI_Controller {
 				);
 				
 				$PrimasLogradas = array(
-					'01' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '01', date( 'Y' ) ),
-					'02' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '02', date( 'Y' ) ),
-					'03' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '03', date( 'Y' ) )
+					'01' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '01', date( 'Y' ) ),
+					'02' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '02', date( 'Y' ) ),
+					'03' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '03', date( 'Y' ) )
 				);
 				
 			} 	
@@ -375,9 +375,9 @@ class Simulator extends CI_Controller {
 				
 				
 				$PrimasLogradas = array(
-					'04' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '04', date( 'Y' ) ),
-					'05' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '05', date( 'Y' ) ),
-					'06' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '06', date( 'Y' ) ),
+					'04' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '04', date( 'Y' ) ),
+					'05' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '05', date( 'Y' ) ),
+					'06' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '06', date( 'Y' ) ),
 				);
 				
 			} 	
@@ -399,9 +399,9 @@ class Simulator extends CI_Controller {
 				);
 				
 				$PrimasLogradas = array(
-					'07' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '07', date( 'Y' ) ),
-					'08' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '08', date( 'Y' ) ),
-					'09' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '09', date( 'Y' ) ),
+					'07' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '07', date( 'Y' ) ),
+					'08' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '08', date( 'Y' ) ),
+					'09' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '09', date( 'Y' ) ),
 				);
 				
 			} 	
@@ -424,9 +424,9 @@ class Simulator extends CI_Controller {
 				);
 				
 				$PrimasLogradas = array(
-					'10' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '10', date( 'Y' ) ),
-					'11' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '11', date( 'Y' ) ),
-					'12' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '12', date( 'Y' ) )
+					'10' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '10', date( 'Y' ) ),
+					'11' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '11', date( 'Y' ) ),
+					'12' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '12', date( 'Y' ) )
 				);
 				
 			} 
@@ -456,10 +456,10 @@ class Simulator extends CI_Controller {
 				);
 				
 				$PrimasLogradas = array(
-					'01' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '01', date( 'Y' ) ),
-					'02' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '02', date( 'Y' ) ),
-					'03' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '03', date( 'Y' ) ),
-					'04' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '04', date( 'Y' ) )
+					'01' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '01', date( 'Y' ) ),
+					'02' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '02', date( 'Y' ) ),
+					'03' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '03', date( 'Y' ) ),
+					'04' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '04', date( 'Y' ) )
 				);
 				
 			} 	
@@ -482,10 +482,10 @@ class Simulator extends CI_Controller {
 				);
 				
 				$PrimasLogradas = array(
-					'05' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '05', date( 'Y' ) ),
-					'06' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '06', date( 'Y' ) ),
-					'07' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '07', date( 'Y' ) ),
-					'08' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '08', date( 'Y' ) )
+					'05' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '05', date( 'Y' ) ),
+					'06' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '06', date( 'Y' ) ),
+					'07' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '07', date( 'Y' ) ),
+					'08' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '08', date( 'Y' ) )
 				);
 				
 			}
@@ -508,10 +508,10 @@ class Simulator extends CI_Controller {
 				);
 				
 				$PrimasLogradas = array(
-					'09' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '09', date( 'Y' ) ),
-					'10' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '10', date( 'Y' ) ),
-					'11' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '11', date( 'Y' ) ),
-					'12' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '12', date( 'Y' ) )
+					'09' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '09', date( 'Y' ) ),
+					'10' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '10', date( 'Y' ) ),
+					'11' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '11', date( 'Y' ) ),
+					'12' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '12', date( 'Y' ) )
 				);
 			}
 			
@@ -555,18 +555,18 @@ class Simulator extends CI_Controller {
 			
 			
 			$PrimasLogradas = array(
-				'01' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '01', date( 'Y' ) ),
-				'02' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '02', date( 'Y' ) ),
-				'03' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '03', date( 'Y' ) ),
-				'04' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '04', date( 'Y' ) ),
-				'05' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '05', date( 'Y' ) ),
-				'06' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '06', date( 'Y' ) ),
-				'07' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '07', date( 'Y' ) ),
-				'08' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '08', date( 'Y' ) ),
-				'09' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '09', date( 'Y' ) ),
-				'10' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '10', date( 'Y' ) ),
-				'11' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '11', date( 'Y' ) ),
-				'12' => $this->simulators-> getPrimasLograda( $userid, $product_group_id, '12', date( 'Y' ) )
+				'01' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '01', date( 'Y' ) ),
+				'02' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '02', date( 'Y' ) ),
+				'03' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '03', date( 'Y' ) ),
+				'04' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '04', date( 'Y' ) ),
+				'05' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '05', date( 'Y' ) ),
+				'06' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '06', date( 'Y' ) ),
+				'07' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '07', date( 'Y' ) ),
+				'08' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '08', date( 'Y' ) ),
+				'09' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '09', date( 'Y' ) ),
+				'10' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '10', date( 'Y' ) ),
+				'11' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '11', date( 'Y' ) ),
+				'12' => $this->simulators-> getPrimasLograda( $agentid, $product_group_id, '12', date( 'Y' ) )
 			);
 			
 			$config = $this->simulators->getConfigMetas( true, null, null );
@@ -578,7 +578,7 @@ class Simulator extends CI_Controller {
 		   $dataview = array( 'config' => $config );
 		 else $dataview = array();  
 		
-		$data = $this->simulators->getByAgent( $agentid );	;
+		$data = $this->simulators->getByAgent( $agentid, $_POST['ramo'] );	;
 		
 		$dataview['data'] = $data[0]['data'];
 		$dataview['ramo'] = $_POST['ramo'];
@@ -649,7 +649,7 @@ class Simulator extends CI_Controller {
 		if( $this->simulators->create( 'simulator', $simulator ) == true ){
 			
 			
-			$id = $this->simulators->getByAgent( $_POST['agent_id'] );
+			$id = $this->simulators->getByAgent( $_POST['agent_id'], $_POST['ramo'] );
 							
 			echo $id[0]['id'];
 			

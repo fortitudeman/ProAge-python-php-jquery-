@@ -14,7 +14,6 @@
   	
 */
 ?>
-
  <div class="box-content">
 	
     <!--style="margin-top:400px; position:fixed; z-index:1000; background:#F9F9F9; color:#fff; width:38%;"-->
@@ -61,8 +60,8 @@
            <td><label>Periodo:</label></td>
            <td>
               <select name="periodo" id="periodo" class="input-small">
-                 <option value="3" <?php if( isset( $data->periodo ) and $data->periodo == 3 ) echo 'selected="selected"'; ?>>TRIMESTRAL</option>
-                 <option value="12" <?php if( isset( $data->periodo ) and $data->periodo == 12 ) echo 'selected="selected"'; ?>>ANUAL</option>
+                 <!--<option value="3" <?php if( isset( $data->periodo ) and $data->periodo == 3 ) echo 'selected="selected"'; ?>>TRIMESTRAL</option>-->
+                 <option value="12" <?php if( isset( $data->periodo ) and $data->periodo == 12 ) echo 'selected="selected"'; ?> selected="selected">ANUAL</option>
 			  </select>
            </td>
            <td></td>

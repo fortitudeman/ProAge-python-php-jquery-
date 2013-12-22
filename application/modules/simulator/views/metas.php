@@ -16,6 +16,8 @@
 	
   $field = 'vida';
 
+  //setlocale(LC_MONETARY, 'en_US'); 
+  
   if( isset( $ramo ) ) $field = $ramo;
   	
 ?>
@@ -26,8 +28,8 @@
  <div class="box-content">
 	
      <div class="row">     	
-        <div class="span1 offset1"><h6>Efectividad</h6></div>
-        <div class="span2"><input id="efectividad" name="efectividad" type="text" style="width:30px;" value="<?php if( isset( $data->efectividad ) ) echo $data->efectividad.'%'; else echo '75%' ?>" /></div>
+        <div class="span1 offset1"><h6>Efectividad(%)</h6></div>
+        <div class="span2"><input id="efectividad" name="efectividad" type="text" style="width:30px;" value="<?php if( isset( $data->efectividad ) ) echo $data->efectividad; else echo '75' ?>" /></div>
         <div class="span2"><h6>Prima promedio</h6></div>
         <div class="span2"><input type="text" id="metas-prima-promedio" value="0" /></div> 
         
@@ -35,7 +37,7 @@
         <div class="span2"><input type="button" id="save_meta" value="Guardar Meta" class="pull-right btn-save-meta"  /></div>        
      </div>
     
-     <table class="table table-bordered" style="width:1200px; padding:0px;">
+     <table class="table table-bordered" style="width:100%; padding:0px;">
 		
         <thead>
         	
@@ -167,10 +169,10 @@
                 <td class="bggreenlight">
                 	
                     <?php if( $i < 10 ){ 
-						  	echo money_format('%.2n', $PrimasLogradas['0'.$i]); 
+						  	echo money_format('$ %.2n', $PrimasLogradas['0'.$i]); 
 						  	 $PrimasLogradosTotalTrimestre+=$PrimasLogradas['0'.$i]; 
 						  }else{ 
-						  	echo money_format('%.2n', $PrimasLogradas[$i]); 
+						  	echo money_format('$ %.2n', $PrimasLogradas[$i]); 
 						  	 $PrimasLogradosTotalTrimestre+=$PrimasLogradas[$i]; 
 						  }?> 
                     
@@ -188,35 +190,39 @@
                 
                 <tr>
                     <td><b>TOTAL 1er <br />trimestre</b></td>
-                    <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-primer-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-solicitud-meta-primer" id="primas-solicitud-meta-primer" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgyelowbold">
+                        <strong>
                         <?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
                         ?>
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
                         <div id="primas-negocio-meta-primer-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-negocio-meta-primer" id="primas-negocio-meta-primer" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
+                        <strong>
                         <?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
                         ?>
                         
-                    </td>
+                  </strong></td>
                     <td class="bggreenbold">
                         
                         <div id="primas-meta-primer-text" style="text-align: right !important"></div>  
@@ -226,7 +232,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -240,35 +246,39 @@
            
                 <tr>
                     <td><b>TOTAL 1er <br />trimestre</b></td>
-                    <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-primer-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-solicitud-meta-primer" id="primas-solicitud-meta-primer" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgyelowbold">
+                        <strong>
                         <?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
                         ?>
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
                         <div id="primas-negocio-meta-primer-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-negocio-meta-primer" id="primas-negocio-meta-primer" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
+                        <strong>
                         <?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
                         ?>
                         
-                    </td>
+                  </strong></td>
                     <td class="bggreenbold">
                         
                         <div id="primas-meta-primer-text" style="text-align: right !important"></div>  
@@ -278,7 +288,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo  money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -292,35 +302,39 @@
                 
                 <tr>
                     <td><b>TOTAL 1er <br />cuatrimestre</b></td>
-                    <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-primer-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-solicitud-meta-primer" id="primas-solicitud-meta-primer" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgyelowbold">
+                        <strong>
                         <?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
                         ?>
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
                         <div id="primas-negocio-meta-primer-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-negocio-meta-primer" id="primas-negocio-meta-primer" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
+                        <strong>
                         <?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
                         ?>
                         
-                    </td>
+                  </strong></td>
                     <td class="bggreenbold">
                         
                         <div id="primas-meta-primer-text" style="text-align: right !important"></div>  
@@ -330,7 +344,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo  money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -344,35 +358,39 @@
            
                 <tr>
                     <td><b>TOTAL 1er <br />cuatrimestre</b></td>
-                    <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-primer-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-solicitud-meta-primer" id="primas-solicitud-meta-primer" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgyelowbold">
+                        <strong>
                         <?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
                         ?>
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
                         <div id="primas-negocio-meta-primer-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-negocio-meta-primer" id="primas-negocio-meta-primer" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
+                        <strong>
                         <?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
                         ?>
                         
-                    </td>
+                  </strong></td>
                     <td class="bggreenbold">
                         
                         <div id="primas-meta-primer-text" style="text-align: right !important"></div>  
@@ -382,7 +400,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo  money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -404,37 +422,41 @@
            		
                 <tr>
             	<td><b>TOTAL 2do <br />trimestre</b></td>
-                <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                 <td class="bgyelowbold">
                 	
                     <div id="primas-solicitud-meta-segund-text" style="text-align: center !important"></div>  
+                    <strong>
                     <input type="hidden" name="primas-solicitud-meta-segund" id="primas-solicitud-meta-segund" value="0" />
                     
-                </td>
+                  </strong></td>
                 <td class="bgyelowbold">
                 	
+                    <strong>
                     <?php 
 						echo $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotalTrimestre=0; 
 					?>
                     
-                </td>
+                  </strong></td>
                 <td class="bgorangebold">
                 	
                     <div id="primas-negocio-meta-segund-text" style="text-align: center !important"></div>  
+                    <strong>
                     <input type="hidden" name="primas-negocio-meta-segund" id="primas-negocio-meta-segund" value="0" />
                     
-                </td>
+                  </strong></td>
                 <td class="bgorangebold">
                 	
+                    <strong>
                     <?php 
 						echo $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotalTrimestre=0; 
 					?>
                     
-                </td>
+                  </strong></td>
                 <td class="bggreenbold">
                 	
                     <div id="primas-meta-segund-text" style="text-align: right !important"></div>  
@@ -444,7 +466,7 @@
                 <td class="bggreenbold">
                 	
                     <?php 
-						echo $PrimasLogradosTotalTrimestre; 
+						echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -459,37 +481,41 @@
            
                <tr>
             	<td><b>TOTAL 2do <br />trimestre</b></td>
-                <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                 <td class="bgyelowbold">
                 	
                     <div id="primas-solicitud-meta-segund-text" style="text-align: center !important"></div>  
+                    <strong>
                     <input type="hidden" name="primas-solicitud-meta-segund" id="primas-solicitud-meta-segund" value="0" />
                     
-                </td>
+                 </strong></td>
                 <td class="bgyelowbold">
                 	
+                    <strong>
                     <?php 
 						echo $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotalTrimestre=0; 
 					?>
                     
-                </td>
+                 </strong></td>
                 <td class="bgorangebold">
                 	
                     <div id="primas-negocio-meta-segund-text" style="text-align: center !important"></div>  
+                    <strong>
                     <input type="hidden" name="primas-negocio-meta-segund" id="primas-negocio-meta-segund" value="0" />
                     
-                </td>
+                 </strong></td>
                 <td class="bgorangebold">
                 	
+                    <strong>
                     <?php 
 						echo $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotalTrimestre=0; 
 					?>
                     
-                </td>
+                 </strong></td>
                 <td class="bggreenbold">
                 	
                     <div id="primas-meta-segund-text" style="text-align: right !important"></div>  
@@ -499,7 +525,7 @@
                 <td class="bggreenbold">
                 	
                     <?php 
-						echo $PrimasLogradosTotalTrimestre; 
+						echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -513,35 +539,39 @@
                 
                 <tr>
                     <td><b>TOTAL 2do <br />cuatrimestre</b></td>
-                    <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-second-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-solicitud-meta-second" id="primas-solicitud-meta-second" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgyelowbold">
+                        <strong>
                         <?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
                         ?>
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
                         <div id="primas-negocio-meta-second-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-negocio-meta-second" id="primas-negocio-meta-second" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
+                        <strong>
                         <?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
                         ?>
                         
-                    </td>
+                  </strong></td>
                     <td class="bggreenbold">
                         
                         <div id="primas-meta-second-text" style="text-align: right !important"></div>  
@@ -551,7 +581,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -565,35 +595,39 @@
            
                 <tr>
                     <td><b>TOTAL 2do <br />cuatrimestre</b></td>
-                    <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-second-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-solicitud-meta-second" id="primas-solicitud-meta-second" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgyelowbold">
+                        <strong>
                         <?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
                         ?>
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
                         <div id="primas-negocio-meta-second-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-negocio-meta-second" id="primas-negocio-meta-second" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
+                        <strong>
                         <?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
                         ?>
                         
-                    </td>
+                  </strong></td>
                     <td class="bggreenbold">
                         
                         <div id="primas-meta-second-text" style="text-align: right !important"></div>  
@@ -603,7 +637,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -625,37 +659,41 @@
                 
               <tr>
             	<td><b>TOTAL 3er <br />trimestre</b></td>
-                <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                 <td class="bgyelowbold">
                 	
                     <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
+                    <strong>
                     <input type="hidden" name="primas-solicitud-meta-tercer" id="primas-solicitud-meta-tercer" value="0" />
                     
-                </td>
+                </strong></td>
                 <td class="bgyelowbold">
                 	
+                    <strong>
                     <?php 
 						echo $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotalTrimestre=0; 
 					?>
                     
-                </td>
+                </strong></td>
                 <td class="bgorangebold">
                 	
                     <div id="primas-negocio-meta-tercer-text" style="text-align: center !important"></div>  
+                    <strong>
                     <input type="hidden" name="primas-negocio-meta-tercer" id="primas-negocio-meta-tercer" value="0" />
                     
-                </td>
+                </strong></td>
                 <td class="bgorangebold">
                 	
+                    <strong>
                     <?php 
 						echo $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotalTrimestre=0; 
 					?>
                     
-                </td>
+                </strong></td>
                 <td class="bggreenbold">
                 	
                     <div id="primas-meta-tercer-text" style="text-align: center !important"></div>  
@@ -665,7 +703,7 @@
                 <td class="bggreenbold">
                 	
                     <?php 
-						echo $PrimasLogradosTotalTrimestre; 
+						echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -679,37 +717,41 @@
                 
               <tr>
             	<td><b>TOTAL 3er <br />trimestre</b></td>
-                <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                 <td class="bgyelowbold">
                 	
                     <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
+                    <strong>
                     <input type="hidden" name="primas-solicitud-meta-tercer" id="primas-solicitud-meta-tercer" value="0" />
                     
-                </td>
+                </strong></td>
                 <td class="bgyelowbold">
                 	
+                    <strong>
                     <?php 
 						echo $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotalTrimestre=0; 
 					?>
                     
-                </td>
+                </strong></td>
                 <td class="bgorangebold">
                 	
                     <div id="primas-negocio-meta-tercer-text" style="text-align: center !important"></div>  
+                    <strong>
                     <input type="hidden" name="primas-negocio-meta-tercer" id="primas-negocio-meta-tercer" value="0" />
                     
-                </td>
+                </strong></td>
                 <td class="bgorangebold">
                 	
+                    <strong>
                     <?php 
 						echo $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotalTrimestre=0; 
 					?>
                     
-                </td>
+                </strong></td>
                 <td class="bggreenbold">
                 	
                     <div id="primas-meta-tercer-text" style="text-align: right !important"></div>  
@@ -719,7 +761,7 @@
                 <td class="bggreenbold">
                 	
                     <?php 
-						echo $PrimasLogradosTotalTrimestre; 
+						echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -738,37 +780,41 @@
                                 
                <tr>
             	<td><b>TOTAL 4to <br />trimestre</b></td>
-                <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                 <td class="bgyelowbold">
                 	
                     <div id="primas-solicitud-meta-cuarto-text" style="text-align: center !important"></div>  
+                    <strong>
                     <input type="hidden" name="primas-solicitud-meta-cuarto" id="primas-solicitud-meta-cuarto" value="0" />
                     
-                </td>
+                 </strong></td>
                 <td class="bgyelowbold">
                 	
+                    <strong>
                     <?php 
 						echo $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotalTrimestre=0; 
 					?>
                     
-                </td>
+                 </strong></td>
                 <td class="bgorangebold">
                 	
                     <div id="primas-negocio-meta-cuarto-text" style="text-align: center !important"></div>  
+                    <strong>
                     <input type="hidden" name="primas-negocio-meta-cuarto" id="primas-negocio-meta-cuarto" value="0" />
                     
-                </td>
+                 </strong></td>
                 <td class="bgorangebold">
                 	
+                    <strong>
                     <?php 
 						echo $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotalTrimestre=0; 
 					?>
                     
-                </td>
+                 </strong></td>
                 <td class="bggreenbold">
                 	
                     <div id="primas-meta-cuarto-text" style="text-align: right !important"></div>  
@@ -778,7 +824,7 @@
                 <td class="bggreenbold">
                 	
                     <?php 
-						echo $PrimasLogradosTotalTrimestre; 
+						echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -793,37 +839,41 @@
            
                <tr>
             	<td><b>TOTAL 4to <br />trimestre</b></td>
-                <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                 <td class="bgyelowbold">
                 	
                     <div id="primas-solicitud-meta-cuarto-text" style="text-align: center !important"></div>  
+                    <strong>
                     <input type="hidden" name="primas-solicitud-meta-cuarto" id="primas-solicitud-meta-cuarto" value="0" />
                     
-                </td>
+                 </strong></td>
                 <td class="bgyelowbold">
                 	
+                    <strong>
                     <?php 
 						echo $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotalTrimestre=0; 
 					?>
                     
-                </td>
+                 </strong></td>
                 <td class="bgorangebold">
                 	
                     <div id="primas-negocio-meta-cuarto-text" style="text-align: center !important"></div>  
+                    <strong>
                     <input type="hidden" name="primas-negocio-meta-cuarto" id="primas-negocio-meta-cuarto" value="0" />
                     
-                </td>
+                 </strong></td>
                 <td class="bgorangebold">
                 	
+                    <strong>
                     <?php 
 						echo $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotalTrimestre=0; 
 					?>
                     
-                </td>
+                 </strong></td>
                 <td class="bggreenbold">
                 	
                     <div id="primas-meta-cuarto-text" style="text-align: right !important"></div>  
@@ -833,7 +883,7 @@
                 <td class="bggreenbold">
                 	
                     <?php 
-						echo $PrimasLogradosTotalTrimestre; 
+						echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -848,35 +898,39 @@
                 
                 <tr>
                     <td><b>TOTAL 4to <br />cuatrimestre</b></td>
-                    <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-solicitud-meta-tercer" id="primas-solicitud-meta-tercer" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgyelowbold">
+                        <strong>
                         <?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
                         ?>
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
                         <div id="primas-negocio-meta-tercer-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-negocio-meta-tercer" id="primas-negocio-meta-tercer" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
+                        <strong>
                         <?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
                         ?>
                         
-                    </td>
+                  </strong></td>
                     <td class="bggreenbold">
                         
                         <div id="primas-meta-tercer-text" style="text-align: right !important"></div>  
@@ -886,7 +940,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -900,35 +954,39 @@
            
                 <tr>
                     <td><b>TOTAL 4to <br />cuatrimestre</b></td>
-                    <td class="bgestacionalidadbold"><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</td>
+                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-solicitud-meta-tercer" id="primas-solicitud-meta-tercer" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgyelowbold">
+                        <strong>
                         <?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
                         ?>
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
                         <div id="primas-negocio-meta-tercer-text" style="text-align: center !important"></div>  
+                        <strong>
                         <input type="hidden" name="primas-negocio-meta-tercer" id="primas-negocio-meta-tercer" value="0" />
                         
-                    </td>
+                  </strong></td>
                     <td class="bgorangebold">
                         
+                        <strong>
                         <?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
                         ?>
                         
-                    </td>
+                  </strong></td>
                     <td class="bggreenbold">
                         
                         <div id="primas-meta-tercer-text" style="text-align: right !important"></div>  
@@ -938,7 +996,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -975,7 +1033,7 @@
             </tr>   
         
           <tr>
-            	<td><b>TOTAL</b></td>
+            	<td style="font-size:18px"><b>TOTAL</b></td>
                 <td class="bgestacionalidadbold" style="font-size:18px;"><?php echo $totalgeneral; ?> %</td>
                 <td class="bgyelowbold">
                 	
@@ -983,7 +1041,7 @@
                     <input type="hidden" name="primas-solicitud-meta-total" id="primas-solicitud-meta-total" value="0" />
                     
                 </td>
-                <td class="bgyelowbold">
+                <td class="bgyelowbold" style="font-size:18px">
                 	<?php echo $SolicitudesLogradasTotal ?>
                 </td>
                 <td class="bgorangebold">
@@ -992,7 +1050,7 @@
                     <input type="hidden" name="primas-negocios-meta-total" id="primas-negocios-meta-total" value="0" />
                     
                 </td>
-                <td class="bgorangebold">
+                <td class="bgorangebold" style="font-size:18px">
                 	<?php echo $NegociosLogradosTotal ?>
                 </td>
                 <td class="bggreenbold">
@@ -1001,8 +1059,8 @@
                     <input type="hidden" name="primas-meta-total" id="primas-meta-total" value="0" />
                     
                 </td>
-                <td class="bggreenbold">
-                	<?php echo $PrimasLogradosTotal ?>
+                <td class="bggreenbold" style="font-size:18px">
+                	<?php echo money_format('$ %.2n', $PrimasLogradosTotal); ?>
                 </td>                               
             </tr> 
         

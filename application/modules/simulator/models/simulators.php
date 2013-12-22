@@ -130,7 +130,7 @@ class Simulators extends CI_Model{
 
 
 // Getting by Agent
-	public function getByAgent( $agent = null ){
+	public function getByAgent( $agent = null, $ramo = null ){
 		
 		if( empty( $agent ) ) return false;
 		
@@ -138,6 +138,7 @@ class Simulators extends CI_Model{
 		$this->db->select();
 		$this->db->from( 'simulator' );
 		$this->db->where( 'agent_id', $agent );
+		$this->db->where( 'product_group_id', $ramo );
 		$this->db->order_by( 'id', 'desc' );
 		$this->db->limit(1);
 		
@@ -275,11 +276,15 @@ class Simulators extends CI_Model{
 		AND `agent_id` =1
 		*/
 				
-		$this->db->select( 'COUNT(id) AS count ' );
-		$this->db->from( 'agents_activity' );
-		$this->db->where( 'YEAR(end) = '. $year );
-		$this->db->where( 'MONTH(end) = '. $month );
-		$this->db->where( 'agent_id', $agent );
+		$this->db->select( 'COUNT(work_order.id) AS count ' );
+		$this->db->from( 'work_order' );
+		$this->db->join( 'policies_vs_users', 'work_order.policy_id=policies_vs_users.policy_id' );
+		$this->db->join( 'work_order_types', ' work_order_types.id=work_order.work_order_type_id' );
+		$this->db->where( 'YEAR(creation_date) = '. $year );
+		$this->db->where( 'MONTH(creation_date) = '. $month );
+		$this->db->where( 'policies_vs_users.user_id', $agent );
+		$this->db->where( '( work_order_types.patent_id=90 OR work_order_types.patent_id=47 )' );
+		$this->db->where( 'product_group_id', $product_group_id );
 				
 		$query = $this->db->get();
 		
@@ -302,7 +307,7 @@ class Simulators extends CI_Model{
 	
 	
 	/* Negocios logrados */
-	public function getNegociosLograda( $user = null, $product_group_id = null, $month = null, $year = null ){
+	public function getNegociosLograda( $agent = null, $product_group_id = null, $month = null, $year = null ){
 		
 		if( empty( $user ) or empty( $product_group_id ) or empty( $month ) or empty( $year ) ) return 0;		
 		/*
@@ -315,11 +320,12 @@ class Simulators extends CI_Model{
 		AND product_group_id=1;
 		*/
 				
-		$this->db->select( 'COUNT(id) AS count ' );
+		$this->db->select( 'COUNT(work_order.id) AS count ' );
 		$this->db->from( 'work_order' );
+		$this->db->join( 'policies_vs_users', 'work_order.policy_id=policies_vs_users.policy_id' );
 		$this->db->where( 'YEAR(creation_date) = '. $year );
 		$this->db->where( 'MONTH(creation_date) = '. $month );
-		$this->db->where( 'user', $user );
+		$this->db->where( 'policies_vs_users.user_id', $agent );
 		$this->db->where( 'work_order_status_id', 7 );
 		$this->db->where( 'product_group_id', $product_group_id );
 		
@@ -346,7 +352,7 @@ class Simulators extends CI_Model{
 	
 	
 	/*Primas logradas*/
-	public function getPrimasLograda( $user = null, $product_group_id = null, $month = null, $year = null ){
+	public function getPrimasLograda( $agent = null, $product_group_id = null, $month = null, $year = null ){
 		
 		if( empty( $user ) or empty( $product_group_id ) or empty( $month ) or empty( $year ) ) return 0;		
 		/*
@@ -359,11 +365,12 @@ class Simulators extends CI_Model{
 		AND product_group_id=1;
 		*/
 				
-		$this->db->select( 'policy_id' );
+		$this->db->select( 'work_order.policy_id' );
 		$this->db->from( 'work_order' );
+		$this->db->join( 'policies_vs_users', 'work_order.policy_id=policies_vs_users.policy_id' );
 		$this->db->where( 'YEAR(creation_date) = '. $year );
 		$this->db->where( 'MONTH(creation_date) = '. $month );
-		$this->db->where( 'user', $user );
+		$this->db->where( 'policies_vs_users.user_id', $agent );
 		$this->db->where( 'work_order_status_id', 7 );
 		$this->db->where( 'product_group_id', $product_group_id );
 		
