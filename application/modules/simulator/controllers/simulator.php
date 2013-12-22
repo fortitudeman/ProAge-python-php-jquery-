@@ -251,7 +251,7 @@ class Simulator extends CI_Controller {
 		  'no_visible_elements_2' => true,
 		  'userid' =>  $userid,
 		  'agentid' =>  $agentid,
-		  'data' =>  $this->simulators->getByAgent( $agentid ),		  	  
+		  'data' =>  $this->simulators->getByAgent( $agentid, $simulator ),		  	  
 		  'config' => $this->simulators->getConfigMetas( false, $trimestre, null ),		  
 		  'SolicitudesLogradas' => $SolicitudesLogradas,
 		  'NegociosLogrados' => $NegociosLogrados,	
@@ -273,7 +273,7 @@ class Simulator extends CI_Controller {
 		$this->load->model( array( 'user', 'simulators' ) );
 		$userid = $_POST['userid']; 
 		$agentid = $this->user->getAgentIdByUser( $userid );		
-		$data = $this->simulators->getByAgent( $agentid );
+		$data = $this->simulators->getByAgent( $agentid, $_POST['ramo'] );
 		if( isset( $data[0]['data'] ) )
 		 $dataview = array( 'data' => $data[0]['data'] );
 	    else $dataview = array(); 
@@ -578,7 +578,7 @@ class Simulator extends CI_Controller {
 		   $dataview = array( 'config' => $config );
 		 else $dataview = array();  
 		
-		$data = $this->simulators->getByAgent( $agentid );	;
+		$data = $this->simulators->getByAgent( $agentid, $_POST['ramo'] );	;
 		
 		$dataview['data'] = $data[0]['data'];
 		$dataview['ramo'] = $_POST['ramo'];
@@ -649,7 +649,7 @@ class Simulator extends CI_Controller {
 		if( $this->simulators->create( 'simulator', $simulator ) == true ){
 			
 			
-			$id = $this->simulators->getByAgent( $_POST['agent_id'] );
+			$id = $this->simulators->getByAgent( $_POST['agent_id'], $_POST['ramo'] );
 							
 			echo $id[0]['id'];
 			
