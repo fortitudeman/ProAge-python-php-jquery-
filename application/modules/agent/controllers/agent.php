@@ -139,7 +139,7 @@ class Agent extends CI_Controller {
 			
 			if( $_POST['query']['ramo'] == 2 ){
 				$ramo = 'gmm';
-				$report = 2;
+				$report = 1;
 			}
 			
 			if( $_POST['query']['ramo'] == 3 ){
@@ -155,14 +155,8 @@ class Agent extends CI_Controller {
 		$simulator = $this->simulators->getByAgent( $agentid );		
 		
 		$simulator = $simulator[0]['data'];
-		/*
-		echo '<pre>';
-		print_r( $activities );
-		echo '</pre>';
-		echo '<pre>';
-		print_r( $data );
-		echo '</pre>';
-		*/	
+		
+		
 		// Config view
 		$this->view = array(
 				
