@@ -114,7 +114,7 @@ class Simulator extends CI_Controller {
 		
 		$agentid = $this->user->getAgentIdByUser( $userid );
 		
-		$data = $this->simulators->getByAgent( $agentid );	
+		$data = $this->simulators->getByAgent( $agentid, $ramo );	
 		
 		$product_group_id = 1;
 		
