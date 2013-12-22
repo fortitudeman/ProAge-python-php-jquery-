@@ -194,7 +194,39 @@ class Activity extends CI_Model{
 		
    }
 
-	
+	public function getByAgentId( $agent_id = null ){
+		
+		if( empty( $agent_id ) ) return false;
+		/*
+		 SELECT SUM( cita ) AS cita, SUM( prospectus ) AS prospectus, SUM( interview ) AS interview
+		 FROM `agents_activity` 
+		 WHERE agent_id=27
+		 ORDER BY id DESC		
+		*/ 
+		$this->db->select( 'SUM( cita ) AS cita, SUM( prospectus ) AS prospectus, SUM( interview ) AS interview' );
+		$this->db->from( 'agents_activity' );
+		$this->db->where( 'agent_id', $agent_id );
+		$this->db->order_by( 'id', 'desc' );
+		
+		$query = $this->db->get();	
+		
+		if ($query->num_rows() == 0) return false;
+ 	
+		$data = array();
+													
+		foreach ($query->result() as $row) {
+			
+			$data[] = array(
+				 'cita' => $row->cita,
+				 'prospectus' => $row->prospectus,
+				 'interview' => $row->interview,
+			);
+			
+		}
+		
+		return $data;
+		
+	}
 
 
 // Count records for pagination
