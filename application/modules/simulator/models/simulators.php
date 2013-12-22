@@ -141,9 +141,9 @@ class Simulators extends CI_Model{
 		$this->db->where( 'product_group_id', $ramo );
 		$this->db->order_by( 'id', 'desc' );
 		$this->db->limit(1);
-		
+
 		$query = $this->db->get();
-		
+
 		if ($query->num_rows() == 0) return false;
 		
 		$data = array();
