@@ -2087,6 +2087,86 @@ class User extends CI_Model{
 	return $report;
  }
  
+ public function getReportAgent( $userid = null, $filter = array() ){
+ 	
+	/**
+	 *	SELECT users.*, agents.id as agent_id
+		FROM `agents`
+	 **/
+	
+	if( empty( $userid ) ) return false;
+	
+	$this->db->select( 'users.*, agents.connection_date, agents.id as agent_id' );
+	$this->db->from( 'agents' );
+	$this->db->join( 'users', 'users.id=agents.user_id' );
+	$this->db->where( 'users.id', $userid );
+		
+	$generacion = '';
+		
+	$query = $this->db->get(); 
+  	
+	if ($query->num_rows() == 0) return false;		
+	
+	$report = array();
+	
+	foreach ($query->result() as $row){
+		
+		$name = null;
+		
+		if( empty(  $row->company_name ) )
+			
+			$name =  $row->name. ' ' . $row->lastnames;
+		
+		else
+			
+			$name =  $row->company_name;
+		
+		
+		if( $row->connection_date != '0000-00-00' and $row->connection_date != '' ){
+			
+			$resultado =  date( 'Y', strtotime( $row->connection_date ) );
+			
+			//Consolidado: < 3 años < hoy
+			if( $resultado < ( date( 'Y' )-3 ))
+				$generacion = 'Consolidado';	
+						
+			//Generación 1: Fecha de conexión > 1 año < hoy
+			if( $resultado > ( date( 'Y' )-1 )  )
+				$generacion = 'Generación 1';
+						
+			//Generación 2: fecha de conexión > 1  año y < 2 años
+			if( $resultado >= ( date( 'Y' )-2 ) and $resultado <= ( date( 'Y' )-1 ) )
+				$generacion = 'Generación 2';
+			
+			//Generación 3: fecha de conexión > 2 años y < 3 años <option value="5">Generación 3</option>
+			if( $resultado >= ( date( 'Y' )-3 ) and $resultado <= ( date( 'Y' )-2 ) ) 
+				$generacion = 'Generación 3';
+																			
+			
+		}else{
+			$generacion = 'Generación 1';
+		}
+												
+		$report[] = array(
+			
+			'id' => $row->id,
+			'name' => $name,
+			'picture' => $row->picture,
+			'uids' => $this->getAgentsUids( $row->agent_id ),
+			'connection_date' => $row->connection_date,
+            'disabled' => $row->disabled,
+			'negocio' => $this->getCountNegocio( $row->agent_id, $filter ),
+			'negociopai' => $this->getCountNegocioPai( $row->agent_id, $filter ),
+			'prima' => $this->getPrima( $row->agent_id, $filter ),
+			'tramite'=>$this->getTramite($row->agent_id,$filter),
+			'aceptadas' => $this->getAceptadas($row->agent_id,$filter),
+            'iniciales' => $this->getIniciales( $row->agent_id, $filter ),
+			'renovacion' => $this->getRenovacion( $row->agent_id, $filter ),
+			'generacion' => $generacion			
+		);
+	}	
+	return $report;
+ }	
  
  
  
