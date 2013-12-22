@@ -16,6 +16,8 @@
 	
   $field = 'vida';
 
+  setlocale(LC_MONETARY, 'en_US'); 
+  
   if( isset( $ramo ) ) $field = $ramo;
   	
 ?>
@@ -226,7 +228,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo money_format('%.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -278,7 +280,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo  money_format('%.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -330,7 +332,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo  money_format('%.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -382,7 +384,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo  money_format('%.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -444,7 +446,7 @@
                 <td class="bggreenbold">
                 	
                     <?php 
-						echo $PrimasLogradosTotalTrimestre; 
+						echo money_format('%.2n', $PrimasLogradosTotalTrimestre); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -499,7 +501,7 @@
                 <td class="bggreenbold">
                 	
                     <?php 
-						echo $PrimasLogradosTotalTrimestre; 
+						echo money_format('%.2n', $PrimasLogradosTotalTrimestre); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -551,7 +553,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo money_format('%.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -603,7 +605,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo money_format('%.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -665,7 +667,7 @@
                 <td class="bggreenbold">
                 	
                     <?php 
-						echo $PrimasLogradosTotalTrimestre; 
+						echo money_format('%.2n', $PrimasLogradosTotalTrimestre); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -719,7 +721,7 @@
                 <td class="bggreenbold">
                 	
                     <?php 
-						echo $PrimasLogradosTotalTrimestre; 
+						echo money_format('%.2n', $PrimasLogradosTotalTrimestre); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -778,7 +780,7 @@
                 <td class="bggreenbold">
                 	
                     <?php 
-						echo $PrimasLogradosTotalTrimestre; 
+						echo money_format('%.2n', $PrimasLogradosTotalTrimestre); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -833,7 +835,7 @@
                 <td class="bggreenbold">
                 	
                     <?php 
-						echo $PrimasLogradosTotalTrimestre; 
+						echo money_format('%.2n', $PrimasLogradosTotalTrimestre); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -886,7 +888,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo money_format('%.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -938,7 +940,7 @@
                     <td class="bggreenbold">
                         
                         <?php 
-                            echo $PrimasLogradosTotalTrimestre; 
+                            echo money_format('%.2n', $PrimasLogradosTotalTrimestre); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -1001,8 +1003,8 @@
                     <input type="hidden" name="primas-meta-total" id="primas-meta-total" value="0" />
                     
                 </td>
-                <td class="bggreenbold">
-                	<?php echo $PrimasLogradosTotal ?>
+                <td class="bggreenbold" style="font-size:18px">
+                	<?php echo money_format('%.2n', $PrimasLogradosTotal); ?>
                 </td>                               
             </tr> 
         
