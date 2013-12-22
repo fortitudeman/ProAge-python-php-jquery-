@@ -130,7 +130,7 @@ class Simulators extends CI_Model{
 
 
 // Getting by Agent
-	public function getByAgent( $agent = null ){
+	public function getByAgent( $agent = null, $ramo = null ){
 		
 		if( empty( $agent ) ) return false;
 		
@@ -138,6 +138,7 @@ class Simulators extends CI_Model{
 		$this->db->select();
 		$this->db->from( 'simulator' );
 		$this->db->where( 'agent_id', $agent );
+		$this->db->where( 'product_group_id', $ramo );
 		$this->db->order_by( 'id', 'desc' );
 		$this->db->limit(1);
 		
