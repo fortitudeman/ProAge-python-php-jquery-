@@ -137,9 +137,11 @@ class Simulators extends CI_Model{
 		//SELECT * FROM simulator WHERE agent_id = '' ORDER BY id DESC LIMIT 1;
 		$this->db->select();
 		$this->db->from( 'simulator' );
+		$this->db->join( 'agents', 'simulator.agent_id=agents.id' );
+		$this->db->join( 'users', 'agents.user_id=users.id' );
 		$this->db->where( 'agent_id', $agent );
 		$this->db->where( 'product_group_id', $ramo );
-		$this->db->order_by( 'id', 'desc' );
+		$this->db->order_by( 'simulator.id', 'desc' );
 		$this->db->limit(1);
 
 		$query = $this->db->get();
@@ -154,10 +156,13 @@ class Simulators extends CI_Model{
 			$data[]  = array(
 			
 				'id' => $row->id,
+				'name' => $row->name,
+				'lastnames' => $row->lastnames,
 				'data' => json_decode( $row->data )
 				
 			);
 			
+		//echo "<pre>". print_r($data). "</pre>";		
 				
 		return $data;
 		

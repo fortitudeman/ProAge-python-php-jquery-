@@ -251,7 +251,7 @@ class Simulator extends CI_Controller {
 		  'no_visible_elements_2' => true,
 		  'userid' =>  $userid,
 		  'agentid' =>  $agentid,
-		  'data' =>  $this->simulators->getByAgent( $agentid, $simulator ),		  	  
+		  'data' =>  $this->simulators->getByAgent( $agentid, $product_group_id ),		  	  
 		  'config' => $this->simulators->getConfigMetas( false, $trimestre, null ),		  
 		  'SolicitudesLogradas' => $SolicitudesLogradas,
 		  'NegociosLogrados' => $NegociosLogrados,	
@@ -260,6 +260,7 @@ class Simulator extends CI_Controller {
 		  'cuatrimestre' => $cuatrimestre	,
 		  'periodo' => 3,
 		  'ramo' => $simulator,
+		  'product_group_id' => $product_group_id,
 		);
 	
 		
@@ -272,8 +273,11 @@ class Simulator extends CI_Controller {
 		if( !$this->input->is_ajax_request() ) exit;
 		$this->load->model( array( 'user', 'simulators' ) );
 		$userid = $_POST['userid']; 
-		$agentid = $this->user->getAgentIdByUser( $userid );		
-		$data = $this->simulators->getByAgent( $agentid, $_POST['ramo'] );
+		$agentid = $this->user->getAgentIdByUser( $userid );
+		if ($_POST['ramo']=="vida") $product_group_id = 1;
+		elseif ($_POST['ramo']=="gmm") $product_group_id = 2;
+		elseif ($_POST['ramo']=="autos") $product_group_id = 3;
+		$data = $this->simulators->getByAgent( $agentid, $product_group_id );
 		if( isset( $data[0]['data'] ) )
 		 $dataview = array( 'data' => $data[0]['data'] );
 	    else $dataview = array(); 
@@ -578,7 +582,7 @@ class Simulator extends CI_Controller {
 		   $dataview = array( 'config' => $config );
 		 else $dataview = array();  
 		
-		$data = $this->simulators->getByAgent( $agentid, $_POST['ramo'] );	;
+		$data = $this->simulators->getByAgent( $agentid, $product_group_id );	;
 		
 		$dataview['data'] = $data[0]['data'];
 		$dataview['ramo'] = $_POST['ramo'];
@@ -649,7 +653,7 @@ class Simulator extends CI_Controller {
 		if( $this->simulators->create( 'simulator', $simulator ) == true ){
 			
 			
-			$id = $this->simulators->getByAgent( $_POST['agent_id'], $_POST['ramo'] );
+			$id = $this->simulators->getByAgent( $_POST['agent_id'], $product_group_id );
 							
 			echo $id[0]['id'];
 			
