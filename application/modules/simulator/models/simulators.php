@@ -306,7 +306,7 @@ class Simulators extends CI_Model{
 	
 	
 	/* Negocios logrados */
-	public function getNegociosLograda( $user = null, $product_group_id = null, $month = null, $year = null ){
+	public function getNegociosLograda( $agent = null, $product_group_id = null, $month = null, $year = null ){
 		
 		if( empty( $user ) or empty( $product_group_id ) or empty( $month ) or empty( $year ) ) return 0;		
 		/*
@@ -351,7 +351,7 @@ class Simulators extends CI_Model{
 	
 	
 	/*Primas logradas*/
-	public function getPrimasLograda( $user = null, $product_group_id = null, $month = null, $year = null ){
+	public function getPrimasLograda( $agent = null, $product_group_id = null, $month = null, $year = null ){
 		
 		if( empty( $user ) or empty( $product_group_id ) or empty( $month ) or empty( $year ) ) return 0;		
 		/*
