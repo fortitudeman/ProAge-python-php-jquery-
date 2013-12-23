@@ -36,16 +36,16 @@
 <table  class="sortable altrowstable tablesorter" id="sorter"  style="width:100%;">
     <thead class="head">
         <tr>
-            <th id="table_agents" class="header_manager" style="width:auto;">Agentes</th>
-            <th id="total_negocio" class="header_manager" style="width:70px;">Negocios Pagados</th>
-            <th id="total_negocio_pai" class="header_manager" style="width:70px;">Negocios <br></th>
-            <th id="total_primas_pagadas" class="header_manager" style="width:100px;">Primas Pagadas</th>
-            <th id="total_negocios_tramite" class="header_manager" style="width:70px;">Negocios <br> en  Tramite</th>
-            <th id="total_primas_tramite" class="header_manager" style="width:100px;">Primas <br> en Tramite</th>
-            <th id="total_negocio_pendiente" class="header_manager" style="width:70px;">Negocios Pendientes</th>
-            <th id="total_primas_pendientes" class="header_manager" style="width:100px;">Primas <br> Pendientes</th>
-            <th id="total_negocios_proyectados" class="header_manager" style="width:70px;">Negocios Proyectados</th>
-            <th id="total_primas_proyectados" class="header_manager" style="width:100px;">Primas <br> Proyectadas</th>
+            <th id="table_agents" class="header_manager" style="width:auto; text-align:center; ">Agentes</th>
+            <th id="total_negocio" class="header_manager" style="width:70px; text-align:center; ">Negocios Pagados</th>
+            <th id="total_negocio_pai" class="header_manager" style="width:70px; text-align:center; ">Negocios<br>PAI</th>
+            <th id="total_primas_pagadas" class="header_manager" style="width:100px; text-align:center; ">Primas<br>Pagadas</th>
+            <th id="total_negocios_tramite" class="header_manager" style="width:70px; text-align:center; ">Negocios <br> en  Tramite</th>
+            <th id="total_primas_tramite" class="header_manager" style="width:100px; text-align:center; ">Primas <br> en Tramite</th>
+            <th id="total_negocio_pendiente" class="header_manager" style="width:70px; text-align:center; ">Negocios Pendientes</th>
+            <th id="total_primas_pendientes" class="header_manager" style="width:100px; text-align:center; ">Primas <br> Pendientes</th>
+            <th id="total_negocios_proyectados" class="header_manager" style="width:70px; text-align:center; ">Negocios Proyectados</th>
+            <th id="total_primas_proyectados" class="header_manager" style="width:100px; text-align:center; ">Primas <br> Proyectadas</th>
         </tr>
     </thead>
     
@@ -98,16 +98,16 @@
                         <?php echo $value['name'] ?>
                     </div> 
                 </td>            
-                <td class="celda_gris"><div class="numeros" style="text-align:center;">$<?php echo $value['negocio'] ; ?></div></td>
+                <td class="celda_gris"><div class="numeros" style="text-align:center;"><?php echo $value['negocio'] ; ?></div></td>
                 <td class="celda_gris"><div class="numeros" style="text-align:center;"><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?></div></td>
-                <td class="celda_gris"><div class="numeros" style="text-align:right">$<?php echo $value['prima'] ; ?></div></td>
+                <td class="celda_gris"><div class="numeros" style="text-align:right">$<?php echo number_format($value['prima'],2) ; ?></div></td>
                 <td class="celda_roja" style="text-align:center;">
                     <a class="numeros fancybox"   style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>                    
                         <?php if(isset($value['tramite']['count'])) echo $value['tramite']['count']; else echo 0; ?>
                     </a>
                 </td>
-                <td class="celda_roja">
-                    <a class="numeros fancybox"  style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>
+                <td class="celda_roja" style="text-align:right;" >
+                    <a class="numeros fancybox" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>
                         $<?php if( isset( $value['tramite']['prima'] ) ) echo number_format($value['tramite']['prima'],2); else echo number_format ('0',2); ?>
                     </a>
                 </td>
@@ -116,8 +116,8 @@
                         <?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?>
                     </a>
                 </td>
-                <td class="celda_amarilla">
-                    <a class="numeros fancybox"  style="text-align:right" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $tata; ?>")' <?php }?>>
+                <td class="celda_amarilla" style="text-align:right;">
+                    <a class="numeros fancybox"  <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $tata; ?>")' <?php }?>>
                         $<?php if( isset( $value['aceptadas']['prima'] ) ) echo number_format($value['aceptadas']['prima'],2); else  echo number_format($value['aceptadas'],2); ?>
                     </a>
                 </td>
@@ -174,8 +174,8 @@
 		
 		?>
 
-            |<a href="<?php echo $simulator_url ?>" class="btn btn-link">Definir meta</a>|<a href="<?php echo $simulator_url ?>" class="btn btn-link">Simular resultado</a>|
-           <a href="#" class="btn btn-link">Desempeño en campo</a>|<a href="<?php echo $perfil_url ?>" class="btn btn-link">Perfil</a><br />            
+            |<a href="<?php echo $simulator_url ?>" class="btn btn-link">Simular resultado y definir meta</a>|
+           <!--<a href="#" class="btn btn-link">Desempeño en campo</a>|--><a href="<?php echo $perfil_url ?>" class="btn btn-link">Perfil</a><br />            
     </div>
         
             <div id="info_<?php echo $value['id'] ?>" style="display: none;">
@@ -213,34 +213,14 @@
 </table>
 
 
-<div id="contentFoot" style="height: 38px; width:77% !important;" class="theader">
-    <table  class="sortable altrowstable tablesorter" id="Tfoot" style="min-width:100% !important;" >
-        <thead>
-            <tr>
-                <td><div class="text_total">Agentes</div></td>
-                <td style="width:70px;"><div class="numeros"></div>Negocios Pagados</td>
-                <td style="width:70px;"><div class="numeros"></div>Negocios</td>
-                <td style="width:100px;"><div class="numeros"></div>Primas Pagadas</td>
-                <td style="width:70px;" class="celda_gris_roja"><div class="numeros"></div> Negocios en <br>  Tramite</td>
-                <td style="width:100px;" class="celda_gris_roja"><div class="numeros"></div> Primas en Tramite</td>
-                <td style="width:70px;" class="celda_gris_amarilla"><div class="numeros"></div> Negocios Pendientes</td>
-                <td style="width:100px;" class="celda_gris_amarilla"><div class="numeros"></div> Pendientes</td>
-                <td  style="width:70px;"class="celda_gris_verde"><div class="numeros"></div> Negocios Proyectados</td>
-                <td  style="width:100px;"class="celda_gris_verde"><div class="numeros"></div> Proyectadas</td>
-            </tr>
-        </thead>
-    </table>
-</div>  
-
-
 <div id="contentFoot" style="width:77% !important;">
     <table  class="sortable altrowstable tablesorter" id="Tfoot" style="min-width:100% !important;" >
         <tr>
             <td ><div class="text_total">Totales</div></td>
             <td style="width:70px; text-align:center;"><div class="numeros"><?php echo $total_negocio?></div>Negocios Pagados</td>
             <td style="width:70px; text-align:center;"><div class="numeros"><?php echo $total_negocio_pai?></div>             
-               Negocios</td>
-            <td style="width:100px;text-align:right"><div class="numeros">$<?php echo $total_primas_pagadas ?></div> Pagados</td>
+               Negocios PAI</td>
+            <td style="width:100px;text-align:right"><div class="numeros">$<?php echo number_format($total_primas_pagadas,2) ?></div> Pagados</td>
             <td style="width:70px; text-align:center;" class="celda_gris_roja"><div class="numeros"><?php echo $total_negocios_tramite ?></div> Negocios en <br>  Tramite</td>
             <td style="width:100px;text-align:right" class="celda_gris_roja"><div class="numeros">$<?php echo number_format($total_primas_tramite) ?></div> En Tramite</td>
             <td style="width:70px; text-align:center;" class="celda_gris_amarilla"><div class="numeros"><?php echo $total_negocio_pendiente ?></div> Negocios Pendientes</td>

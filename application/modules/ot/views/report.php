@@ -142,19 +142,25 @@
                                     </thead>
                                 </table>
                             </form>                    		
-                            <?php if (empty($_POST) or isset($_POST['query']['ramo']) and $_POST['query']['ramo'] != 3){ 
-                                if(!empty($_POST)){
-                                 $this->load->view('report1', array('data' => $data, 'tata'=>$tata['query']['ramo']));
+                            <?php
+                            if (empty($_POST) or isset($_POST['query']['ramo']) and $_POST['query']['ramo'] != 3) { 
+                                
+                                if(!empty($_POST) and $_POST['query']['ramo']==1) {
+                                
+                                 	$this->load->view('report1', array('data' => $data, 'tata'=>$tata['query']['ramo']));
+                                
                                 }
-                                 else
-                                 {
-                                   $this->load->view('report1', array('data' => $data)) ; 
+                                elseif(!empty($_POST) and $_POST['query']['ramo']==2) {
+
+                                 	$this->load->view('report2', array('data' => $data, 'tata'=>$tata['query']['ramo']));
                                      
-                                 }
-                                 }
-                               else
-                                 $this->load->view('report2', array('data' => $data));
-                               ?>
+                                }
+                                else
+                                   	$this->load->view('report1', array('data' => $data)) ; 
+                             }
+                             else
+                                 	$this->load->view('report3', array('data' => $data));
+                             ?>
                                                           
 
                         </div> <!-- #main -->
