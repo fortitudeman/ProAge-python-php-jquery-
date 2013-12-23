@@ -277,10 +277,10 @@ function getMetasPeriod( ramo ){
 }
 function save(){			
 	var id = $( '#id' ).val();	
-	var saves = $( '#save' ).val();
+	var saves = parseInt( $( '#save' ).val() );		
 	$( '.metas' ).show();
 	$( '.simulator' ).hide();	
-	if( id == 0 && saves == 0 ){	 	 	
+	if( saves == 0 ){	 	 	
 	  $.ajax({
 			url:  Config.base_url()+'simulator/save.html',
 			type: "POST",
@@ -298,7 +298,8 @@ function save(){
 			data: $( '#form' ).serialize(),
 			cache: false,
 			async: false,
-			success: function(data){				
+			success: function(data){
+				$( '#save' ).val(1);				
 			}		
 		});
 	}
