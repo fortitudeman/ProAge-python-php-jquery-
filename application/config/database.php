@@ -48,10 +48,10 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
+$db['default']['hostname'] = '127.0.0.1';
 $db['default']['username'] = 'root';
-$db['default']['username'] = 'root';
-$db['default']['password'] = 'tHoU50tHEre';
+$db['default']['password'] = '';
+$db['default']['database'] = 'pro-ages_2001';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
