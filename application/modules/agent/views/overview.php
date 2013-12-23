@@ -184,12 +184,12 @@
                             <td style="border:none !important;"><span class="value"><?php if( !empty( $activities[0]['interview'] ) ) echo $activities[0]['interview']; else 0; ?></span></td>
                             <td style="border:none !important;"><span class="value"><?php if( !empty( $activities[0]['prospectus'] ) ) echo $activities[0]['prospectus']; else 0; ?> </span></td>
                             
-                            <td style="border:none !important; <?php if( $report == 3 ) echo 'display:none' ?>">
+                            <td class="celda_amarilla" style="border:none !important; <?php if( $report == 3 ) echo 'display:none' ?>">
                             	<span class="value"><?php if( isset( $simulator['noNegocios'] ) ) echo $simulator['noNegocios']; else if( isset( $simulator['nonegocios'] ) ) echo $simulator['nonegocios']; else echo 0; ?></span>
                             </td>     
-                            <td style="border:none !important;"><div id="total_negocio_pai_text" class="value">0</div></td>
-                            <td style="border:none !important;"><span class="value">$ <?php if( isset( $simulator['primasnetasiniciales'] ) ) echo number_format( $simulator['primasnetasiniciales'],2); else if( isset( $simulator['primasAfectasInicialesUbicar'] ) ) echo number_format($simulator['primasAfectasInicialesUbicar'],2); else echo 0; ?></span></td>   
-                            <td style="border:none !important;"><div id="total_primas_pagadas_text" class="value">$ 0</div></td>    
+                            <td class="celda_amarilla" style="border:none !important;"><div id="total_negocio_pai_text" class="value">0</div></td>
+                            <td class="celda_verde" style="border:none !important;"><span class="value">$ <?php if( isset( $simulator['primasnetasiniciales'] ) ) echo number_format( $simulator['primasnetasiniciales'],2); else if( isset( $simulator['primasAfectasInicialesUbicar'] ) ) echo number_format($simulator['primasAfectasInicialesUbicar'],2); else echo 0; ?></span></td>   
+                            <td class="celda_verde" style="border:none !important;"><div id="total_primas_pagadas_text" class="value">$ 0</div></td>    
                             <td style="border:none !important;">
                             	<h3 id="indicador_txt" class="blue">$ 0.00</h3>
                             </td>       

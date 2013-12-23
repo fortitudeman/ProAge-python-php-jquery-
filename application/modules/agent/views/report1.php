@@ -33,10 +33,9 @@
 ?>
 
 
-<table  class="sortable altrowstable tablesorter" id="sorter"  style="width:100%;">
+<table  class="sortable altrowstable tablesorter" id="sorter"  style="width:100%">
     <thead class="head">
         <tr>
-            <th id="table_agents" class="header_manager" style="width:auto; display:none; text-align:center; ">Agentes</th>
             <th id="total_negocio" class="header_manager" style="width:70px; text-align:center; ">Negocios<br>Pagados</th>
             <th id="total_negocio_pai" class="header_manager" style="width:70px; text-align:center; ">Negocios<br>PAI</th>
             <th id="total_primas_pagadas" class="header_manager" style="width:100px; text-align:center; ">Primas<br>Pagadas</th>
@@ -93,11 +92,6 @@
 		$total_primas_proyectados +=$prima;          
             ?>															
             <tr id="tr_<?php echo $value['id'] ?>">
-                <td class="" style="display:none">                
-                    <div class="text_azulado" id="<?php echo $value['id'] ?>">
-                        <?php echo $value['name'] ?>
-                    </div> 
-                </td>            
                 <td class="celda_gris"><div class="numeros" style="text-align:center;"><?php echo $value['negocio'] ; ?></div></td>
                 <td class="celda_gris"><div class="numeros" style="text-align:center;"><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?></div></td>
                 <td class="celda_gris"><div class="numeros" style="text-align:right">$<?php echo number_format($value['prima'],2) ; ?></div></td>

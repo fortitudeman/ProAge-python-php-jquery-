@@ -33,10 +33,9 @@
 ?>
 
 
-<table  class="sortable altrowstable tablesorter" id="sorter"  style="width:100%;">
+<table  class="sortable altrowstable tablesorter" id="sorter"  style="width:100%">
     <thead class="head">
         <tr>
-            <th id="table_agents" class="header_manager" style="width:auto; display:none; text-align:center; ">Agentes</th>
             <th id="total_negocio" class="header_manager" style="width:70px; text-align:center; ">Negocios<br>Pagados</th>
             <th id="total_primas_pagadas" class="header_manager" style="width:100px; text-align:center; ">Primas<br>Pagadas</th>
             <th id="total_negocios_tramite" class="header_manager" style="width:70px; text-align:center; ">Negocios <br> en  Tramite</th>
@@ -92,15 +91,10 @@
 		$total_primas_proyectados +=$prima;          
             ?>															
             <tr id="tr_<?php echo $value['id'] ?>">
-                <td class="" style="display:none">                
-                    <div class="text_azulado" id="<?php echo $value['id'] ?>">
-                        <?php echo $value['name'] ?>
-                    </div> 
-                </td>            
                 <td class="celda_gris"><div class="numeros" style="text-align:center;"><?php echo $value['negocio'] ; ?></div></td>
                 <td class="celda_gris"><div class="numeros" style="text-align:right">$<?php echo number_format($value['prima'],2) ; ?></div></td>
                 <td class="celda_roja" style="text-align:center" >
-                    <a class="numeros fancybox"   style="text-align:center" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>                    
+                    <a class="numeros fancybox"  <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>                    
                         <?php if(isset($value['tramite']['count'])) echo $value['tramite']['count']; else echo 0; ?>
                     </a>
                 </td>
@@ -114,7 +108,7 @@
                         <?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?>
                     </a>
                 </td>
-                <td class="celda_amarilla" style="text-align:right" >
+                <td class="celda_amarilla">
                     <a class="numeros fancybox"  style="text-align:right" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $tata; ?>")' <?php }?>>
                         $ <?php if( isset( $value['aceptadas']['prima'] ) ) echo number_format($value['aceptadas']['prima'],2); else  echo number_format($value['aceptadas'],2); ?>
                     </a>

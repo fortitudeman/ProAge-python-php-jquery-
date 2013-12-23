@@ -71,7 +71,7 @@ $( document ).ready(function() {
 		//Ingreso por bono de renovación:
 		var primasnetasiniciales = parseFloat( $( '#primasnetasiniciales' ).val() );
 		var siniestridad = $( '#porsiniestridad' ).val();
-		if( primasnetasiniciales > 350000 && primasnetasiniciales <= 450000 ){
+		if( primasnetasiniciales >= 450000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado' ).val( 3+'%' );
 				var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * (3/100);	
@@ -91,7 +91,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoRenovacion' ).val( total );	
 			}
 		}
-		if( primasnetasiniciales > 250000 && primasnetasiniciales <= 350000 ){
+		if( primasnetasiniciales >= 350000 && primasnetasiniciales < 450000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado' ).val( 2+'%' );
 				var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * (2/100);	
@@ -111,7 +111,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoRenovacion' ).val( total );	
 			}
 		}		
-		if( primasnetasiniciales > 180000 && primasnetasiniciales <= 250000 ){
+		if( primasnetasiniciales >= 250000 && primasnetasiniciales < 350000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado' ).val( 1.5+'%' );
 				var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * (1.5/100);	
@@ -131,7 +131,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoRenovacion' ).val( total );	
 			}
 		}
-		if( primasnetasiniciales > 130000 && primasnetasiniciales <= 180000 ){
+		if( primasnetasiniciales >= 180000 && primasnetasiniciales < 250000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado' ).val( 1+'%' );
 				var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * (1/100);	
@@ -151,7 +151,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoRenovacion' ).val( total );	
 			}
 		}
-		if( primasnetasiniciales == 130000 ){
+		if( primasnetasiniciales >= 130000 && primasnetasiniciales < 180000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado' ).val( .5+'%' );
 				var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * (.5/100);	
@@ -192,7 +192,7 @@ $( document ).ready(function() {
 		$( '#primasAfectasInicialesPagar' ).val( total );
 		var primasnetasiniciales = parseFloat( $( '#primasnetasiniciales' ).val() );
 		var siniestridad = $( '#porsiniestridad' ).val();
-		if( primasnetasiniciales > 350000 && primasnetasiniciales <= 450000 ){
+		if( primasnetasiniciales >= 450000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado' ).val( 3+'%' );
 				var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * (3/100);	
@@ -212,7 +212,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoRenovacion' ).val( total );	
 			}
 		}
-		if( primasnetasiniciales > 250000 && primasnetasiniciales <= 350000 ){
+		if( primasnetasiniciales >= 350000 && primasnetasiniciales < 450000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado' ).val( 2+'%' );
 				var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * (2/100);	
@@ -232,7 +232,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoRenovacion' ).val( total );	
 			}
 		}		
-		if( primasnetasiniciales > 180000 && primasnetasiniciales <= 250000 ){
+		if( primasnetasiniciales >= 250000 && primasnetasiniciales < 350000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado' ).val( 1.5+'%' );
 				var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * (1.5/100);	
@@ -252,7 +252,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoRenovacion' ).val( total );	
 			}
 		}
-		if( primasnetasiniciales > 130000 && primasnetasiniciales <= 180000 ){
+		if( primasnetasiniciales >= 180000 && primasnetasiniciales < 250000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado' ).val( 1+'%' );
 				var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * (1/100);	
@@ -272,7 +272,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoRenovacion' ).val( total );	
 			}
 		}
-		if( primasnetasiniciales == 130000 ){
+		if( primasnetasiniciales >= 130000 && primasnetasiniciales < 180000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado' ).val( .5+'%' );
 				var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * (.5/100);	
