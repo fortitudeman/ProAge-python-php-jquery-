@@ -280,7 +280,7 @@ function save(){
 	var saves = parseInt( $( '#save' ).val() );		
 	$( '.metas' ).show();
 	$( '.simulator' ).hide();	
-	if( saves == 0 ){	 	 	
+	if( id == 0 ){	 	 	
 	  $.ajax({
 			url:  Config.base_url()+'simulator/save.html',
 			type: "POST",
