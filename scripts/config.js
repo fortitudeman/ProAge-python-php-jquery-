@@ -8,7 +8,7 @@
 var Config = {
 	
 	// Setting Url base path
-	url : 'http://proages-test.serviciosisinet.com/aevum/',
+	url : 'http://proages-dev.serviciosisinet.com/2001/',
 	
 	
 	// Return base url path
