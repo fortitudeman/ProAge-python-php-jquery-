@@ -214,7 +214,7 @@ class Simulator extends CI_Controller {
 			
 		};*/	
 						
-		$requestPromedio = '';
+		$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "vida" ); getMetas(); }); </script>';
 		//$simulator = 'vida';
 		if( !empty( $data ) )			
 			if( $data[0]['data']->ramo == 1 ){ $simulator = 'vida';
@@ -339,6 +339,7 @@ class Simulator extends CI_Controller {
 			$cuatrimestre = null; 
 			
 		}
+		
 		
 		if( $trimestre != null and $cuatrimestre == null ){
 						
