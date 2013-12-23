@@ -24,6 +24,6 @@ $( document ).ready(function() {
   
    var total_negocios = parseFloat( total_negocio() );	
    
-   $( '#efectividad' ).html( Math.round(total_negocios/citas) + '%' );
+   $( '#efectividad' ).html( Math.round((total_negocios/citas)*100) + '%' );
   
 });

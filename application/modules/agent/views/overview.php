@@ -67,7 +67,7 @@
 								?>
 						
 								<?php 
-									echo $data[0]['disabled'] .' - '. $data[0]['generacion']. ' - '; 
+									$data[0]['generacion']. ' - '; 
 								?>
 								<?php 
 									if( $data[0]['connection_date'] != '0000-00-00' and $data[0]['connection_date'] != ''): 
@@ -85,12 +85,12 @@
                         <div class="efectividad">
                             <?php if( $report == 1 ): ?>
                             <h4>Efectividad</h4>
-                            <h3 id="efectividad">6%</h3>
+                            <h3 id="efectividad">0%</h3>
                             <?php endif; ?>
                         </div>
                         <?php $activities_url = base_url().'activities/index/'.$data[0]['id'].'.html';?>
 						<?php $activities_url = base_url().'activities.html';?>
-                        <a href="<?php echo $activities_url ?>" class="btn btn-primary" style="margin-top:12px;"/>Ver/Editar Actividad</a>
+                        <!--<a href="<?php echo $activities_url ?>" class="btn btn-primary" style="margin-top:12px;"/>Ver/Editar Actividad</a>-->
                     </td>
                 </tr>	
                 
@@ -166,13 +166,13 @@
                         <tr>
                         	<td style="border:none !important;"><span class="title">Citas</span></td>                            
                             <td style="border:none !important;"><span class="title">Entrevistas</span></td>
-                            <td style="border:none !important;"><span class="title">Nuevos <br /> Prospectos</span></td>
+                            <td style="border:none !important;"><span class="title">Prospectos</span></td>
                             <td style="border:none !important;"><span class="title">Meta de<br /> Negocios</span></td>     
-                            <td style="border:none !important;"><span class="title">Meta de<br /> Primas</span></td>   
                             <td style="border:none !important; <?php if( $report == 3 ) echo 'display:none' ?>"><span class="title">Negocios</span></td>
+                            <td style="border:none !important;"><span class="title">Meta de<br /> Primas</span></td>   
                             <td style="border:none !important;"><span class="title">Primas</span></td>    
                             <td style="border:none !important;">
-                            	<h4 class="blue">Indicador <br /> $ por cita</h4>
+                            	<h4 class="blue">Valor $ por cita</h4>
                             </td>       
                         </tr>
                         <?php $simulator = object2array($simulator);// echo '<pre>'; print_r( $simulator  ); echo '</pre>';?>
@@ -187,11 +187,11 @@
                             <td style="border:none !important; <?php if( $report == 3 ) echo 'display:none' ?>">
                             	<span class="value"><?php if( isset( $simulator['noNegocios'] ) ) echo $simulator['noNegocios']; else if( isset( $simulator['nonegocios'] ) ) echo $simulator['nonegocios']; else echo 0; ?></span>
                             </td>     
-                            <td style="border:none !important;"><span class="value">$ <?php if( isset( $simulator['primasnetasiniciales'] ) ) echo $simulator['primasnetasiniciales']; else if( isset( $simulator['primasAfectasInicialesUbicar'] ) ) echo $simulator['primasAfectasInicialesUbicar']; else echo 0; ?></span></td>   
                             <td style="border:none !important;"><div id="total_negocio_pai_text" class="value">0</div></td>
+                            <td style="border:none !important;"><span class="value">$ <?php if( isset( $simulator['primasnetasiniciales'] ) ) echo number_format( $simulator['primasnetasiniciales'],2); else if( isset( $simulator['primasAfectasInicialesUbicar'] ) ) echo number_format($simulator['primasAfectasInicialesUbicar'],2); else echo 0; ?></span></td>   
                             <td style="border:none !important;"><div id="total_primas_pagadas_text" class="value">$ 0</div></td>    
                             <td style="border:none !important;">
-                            	<h3 id="indicador_txt" class="blue">$ 10000,000</h3>
+                            	<h3 id="indicador_txt" class="blue">$ 0.00</h3>
                             </td>       
                         </tr>
                         

@@ -141,13 +141,13 @@ class Agent extends CI_Controller {
 			
 			if( $_POST['query']['ramo'] == 2 ){
 				$ramo = 'gmm';
-				$report = 1;
+				$report = 2;
 				$ramos = 2;
 			}
 			
 			if( $_POST['query']['ramo'] == 3 ){
 				$ramo = 'autos';
-				$report = 2;
+				$report = 3;
 				$ramos = 3;
 			}
 				

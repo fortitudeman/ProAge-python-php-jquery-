@@ -23,6 +23,6 @@ $( document ).ready(function() {
  
    var total_negocios = parseFloat( total_primas_pagadas() );	
    
-   $( '#efectividad' ).html( Math.round(total_negocios/citas) + '%' );
+   $( '#efectividad' ).html( Math.round((total_negocios/citas)*100) + '%' );
   
 });
