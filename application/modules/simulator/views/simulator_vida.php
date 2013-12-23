@@ -13,7 +13,7 @@
 
   	
 */
-?>
+?>  <input type="hidden" id="save" name="save" value="<?php if( !empty( $data ) ) echo 1; else echo 0; ?>" />    
  <div class="box-content">
 	
     <!--style="margin-top:400px; position:fixed; z-index:1000; background:#F9F9F9; color:#fff; width:38%;"-->
