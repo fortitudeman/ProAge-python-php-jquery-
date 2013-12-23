@@ -81,8 +81,8 @@
           
           <input type="hidden" id="userid" name="userid" value="<?php echo $userid ?>" />    
           
-          <input type="hidden" id="agent_id" name="agent_id" value="<?php echo $agentid ?>" />    
-          
+          <input type="hidden" id="agent_id" name="agent_id" value="<?php echo $agentid ?>" />  
+                   
           <input type="hidden" id="id" name="id" value="<?php if( isset( $data[0]['id'] ) ) echo $data[0]['id']; else echo 0; ?>" />    
          
         <!-- <img src="<?php echo base_url() ?>images/distribucion.png" /> -->

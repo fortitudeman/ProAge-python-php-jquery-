@@ -233,7 +233,7 @@
 </div>  
 
 
-<div id="contentFoot" style="width:77% !important;">
+<div id="contentFoot" style="width:77% !important; display:none;">
     <table  class="sortable altrowstable tablesorter" id="Tfoot" style="min-width:100% !important;" >
         <tr>
             <td style="display:none"><div class="text_total">Totales</div></td>

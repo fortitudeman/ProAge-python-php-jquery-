@@ -51,8 +51,8 @@
                             	<h3><?php if( !empty( $data[0]['name'] ) ) echo $data[0]['name']?></h3>                                
                              </div>
                              <?php if( isset( $access_update_profile ) and $access_update_profile == true ): ?>
-                                <br /><br />
-                                <a href="<?php echo base_url() ?>usuarios/editar_perfil/<?php if( !empty( $userid ) ) echo $userid ?>.html" class="btn btn-inverse pull-right"/>Editar Pefil</a>
+                                <br /><br /><br />
+                                <a href="<?php echo base_url() ?>usuarios/editar_perfil/<?php if( !empty( $userid ) ) echo $userid ?>.html" class="btn btn-inverse pull-right" style="display:none;"/>Editar Pefil</a>
                              <?php endif; ?>
                                                           
                         </div>
@@ -137,7 +137,7 @@
 						$simulator_url .= '.html';		
 					  ?>
                       
-                      <a href="<?php echo $simulator_url ?>" class="btn btn-primary pull-right" style="margin-top:15px;" />  Simulador/Meta</a>
+                      <a href="<?php echo $simulator_url ?>" class="btn btn-primary pull-right" style="margin-top:20px;" />  Simulador/Meta</a>
                      
                     
                                                             

@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://proages-test.serviciosisinet.com/aevum/';
+$config['base_url']	= 'http://proages-dev.serviciosisinet.com/2001/';
 
 /*
 |--------------------------------------------------------------------------
