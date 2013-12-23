@@ -168,7 +168,7 @@
                             <td style="border:none !important;"><span class="title">Nuevos <br /> Prospectos</span></td>
                             <td style="border:none !important;"><span class="title">Meta de<br /> Negocios</span></td>     
                             <td style="border:none !important;"><span class="title">Meta de<br /> Primas</span></td>   
-                            <td style="border:none !important; <?php if( $report != 1 ) echo 'display:none' ?>"><span class="title">Negocios</span></td>
+                            <td style="border:none !important; <?php if( $report == 3 ) echo 'display:none' ?>"><span class="title">Negocios</span></td>
                             <td style="border:none !important;"><span class="title">Primas</span></td>    
                             <td style="border:none !important;">
                             	<h4 class="blue">Indicador <br /> $ por cita</h4>
@@ -183,7 +183,9 @@
                             <td style="border:none !important;"><span class="value"><?php if( !empty( $activities[0]['interview'] ) ) echo $activities[0]['interview']; else 0; ?></span></td>
                             <td style="border:none !important;"><span class="value"><?php if( !empty( $activities[0]['prospectus'] ) ) echo $activities[0]['prospectus']; else 0; ?> </span></td>
                             
-                            <td style="border:none !important; <?php if( $report != 1 ) echo 'display:none' ?>"><span class="value"><?php if( isset( $simulator['noNegocios'] ) ) echo $simulator['noNegocios']; else if( isset( $simulator['nonegocios'] ) ) echo $simulator['nonegocios']; else echo 0; ?>></span></td>     
+                            <td style="border:none !important; <?php if( $report == 3 ) echo 'display:none' ?>">
+                            	<span class="value"><?php if( isset( $simulator['noNegocios'] ) ) echo $simulator['noNegocios']; else if( isset( $simulator['nonegocios'] ) ) echo $simulator['nonegocios']; else echo 0; ?></span>
+                            </td>     
                             <td style="border:none !important;"><span class="value">$ <?php if( isset( $simulator['primasnetasiniciales'] ) ) echo $simulator['primasnetasiniciales']; else if( isset( $simulator['primasAfectasInicialesUbicar'] ) ) echo $simulator['primasAfectasInicialesUbicar']; else echo 0; ?></span></td>   
                             <td style="border:none !important;"><div id="total_negocio_pai_text" class="value">0</div></td>
                             <td style="border:none !important;"><div id="total_primas_pagadas_text" class="value">$ 0</div></td>    
