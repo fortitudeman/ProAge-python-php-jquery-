@@ -277,10 +277,10 @@ function getMetasPeriod( ramo ){
 }
 function save(){			
 	var id = $( '#id' ).val();	
-	var save = $( '#save' ).val();
+	var saves = $( '#save' ).val();
 	$( '.metas' ).show();
 	$( '.simulator' ).hide();	
-	if( id == 0 && save == 0 ){	 	 	
+	if( id == 0 && saves == 0 ){	 	 	
 	  $.ajax({
 			url:  Config.base_url()+'simulator/save.html',
 			type: "POST",
@@ -289,7 +289,6 @@ function save(){
 			async: false,
 			success: function(data){
 				$( '#id' ).val(data);
-				//alert( "La meta se ha guardado correctamente" );
 			}			
 		});
 	}else{
@@ -300,7 +299,6 @@ function save(){
 			cache: false,
 			async: false,
 			success: function(data){				
-				//alert( "La meta se ha actualizado correctamente" );
 			}		
 		});
 	}
