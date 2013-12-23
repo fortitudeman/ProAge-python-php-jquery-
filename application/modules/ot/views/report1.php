@@ -101,7 +101,7 @@
                 <td class="celda_gris"><div class="numeros" style="text-align:center;">$<?php echo $value['negocio'] ; ?></div></td>
                 <td class="celda_gris"><div class="numeros" style="text-align:center;"><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?></div></td>
                 <td class="celda_gris"><div class="numeros" style="text-align:right">$<?php echo $value['prima'] ; ?></div></td>
-                <td class="celda_roja">
+                <td class="celda_roja" style="text-align:center;">
                     <a class="numeros fancybox"   style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>                    
                         <?php if(isset($value['tramite']['count'])) echo $value['tramite']['count']; else echo 0; ?>
                     </a>
@@ -111,7 +111,7 @@
                         $<?php if( isset( $value['tramite']['prima'] ) ) echo number_format($value['tramite']['prima'],2); else echo number_format ('0',2); ?>
                     </a>
                 </td>
-                <td class="celda_amarilla">
+                <td class="celda_amarilla" style="text-align:center;">
                     <a class="numeros fancybox"  style="text-align:center;" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo  $tata; ?>")' <?php }?>>
                         <?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?>
                     </a>
@@ -222,7 +222,7 @@
                 <td style="width:70px;"><div class="numeros"></div>Negocios</td>
                 <td style="width:100px;"><div class="numeros"></div>Primas Pagadas</td>
                 <td style="width:70px;" class="celda_gris_roja"><div class="numeros"></div> Negocios en <br>  Tramite</td>
-                <td style="width:100px;" class="celda_gris_roja"><div class="numeros"></div> En Tramite</td>
+                <td style="width:100px;" class="celda_gris_roja"><div class="numeros"></div> Primas en Tramite</td>
                 <td style="width:70px;" class="celda_gris_amarilla"><div class="numeros"></div> Negocios Pendientes</td>
                 <td style="width:100px;" class="celda_gris_amarilla"><div class="numeros"></div> Pendientes</td>
                 <td  style="width:70px;"class="celda_gris_verde"><div class="numeros"></div> Negocios Proyectados</td>
@@ -241,12 +241,12 @@
             <td style="width:70px; text-align:center;"><div class="numeros"><?php echo $total_negocio_pai?></div>             
                Negocios</td>
             <td style="width:100px;text-align:right"><div class="numeros">$<?php echo $total_primas_pagadas ?></div> Pagados</td>
-            <td style="width:70px; text-align:left;" class="celda_gris_roja"><div class="numeros"><?php echo $total_negocios_tramite ?></div> Negocios en <br>  Tramite</td>
-            <td style="width:100px;text-align:left" class="celda_gris_roja"><div class="numeros">$<?php echo $total_primas_tramite ?></div> En Tramite</td>
-            <td style="width:70px; text-align:left;" class="celda_gris_amarilla"><div class="numeros"><?php echo $total_negocio_pendiente ?></div> Negocios Pendientes</td>
-            <td style="width:100px;text-align:left" class="celda_gris_amarilla"><div class="numeros">$<?php echo $total_primas_pendientes?></div> Pendientes</td>
+            <td style="width:70px; text-align:center;" class="celda_gris_roja"><div class="numeros"><?php echo $total_negocios_tramite ?></div> Negocios en <br>  Tramite</td>
+            <td style="width:100px;text-align:right" class="celda_gris_roja"><div class="numeros">$<?php echo number_format($total_primas_tramite) ?></div> En Tramite</td>
+            <td style="width:70px; text-align:center;" class="celda_gris_amarilla"><div class="numeros"><?php echo $total_negocio_pendiente ?></div> Negocios Pendientes</td>
+            <td style="width:100px;text-align:right" class="celda_gris_amarilla"><div class="numeros">$<?php echo number_format($total_primas_pendientes)?></div> Pendientes</td>
             <td  style="width:70px; text-align:center;"class="celda_gris_verde"><div class="numeros"><?php echo $total_negocios_proyectados ?></div> Negocios Proyectados</td>
-            <td  style="width:100px;text-align:right"class="celda_gris_verde"><div class="numeros">$<?php echo $total_primas_proyectados ?></div> Proyectadas</td>
+            <td  style="width:100px;text-align:right"class="celda_gris_verde"><div class="numeros">$<?php echo number_format($total_primas_proyectados) ?></div> Proyectadas</td>
         </tr>
     </table>
 </div>  
