@@ -314,7 +314,7 @@ class Simulators extends CI_Model{
 	/* Negocios logrados */
 	public function getNegociosLograda( $agent = null, $product_group_id = null, $month = null, $year = null ){
 		
-		if( empty( $user ) or empty( $product_group_id ) or empty( $month ) or empty( $year ) ) return 0;		
+		if( empty( $agent ) or empty( $product_group_id ) or empty( $month ) or empty( $year ) ) return 0;		
 		/*
 		SELECT  COUNT(id) AS count  
 		FROM `work_order` 
@@ -331,12 +331,12 @@ class Simulators extends CI_Model{
 		$this->db->where( 'YEAR(creation_date) = '. $year );
 		$this->db->where( 'MONTH(creation_date) = '. $month );
 		$this->db->where( 'policies_vs_users.user_id', $agent );
-		$this->db->where( 'work_order_status_id', 7 );
+		$this->db->where( 'work_order_status_id', 4 );
 		$this->db->where( 'product_group_id', $product_group_id );
 		
 				
 		$query = $this->db->get();
-		
+
 		if ($query->num_rows() == 0) return false;
 		
 		$data = array();
@@ -358,8 +358,8 @@ class Simulators extends CI_Model{
 	
 	/*Primas logradas*/
 	public function getPrimasLograda( $agent = null, $product_group_id = null, $month = null, $year = null ){
-		
-		if( empty( $user ) or empty( $product_group_id ) or empty( $month ) or empty( $year ) ) return 0;		
+
+		if( empty( $agent ) or empty( $product_group_id ) or empty( $month ) or empty( $year ) ) return 0;		
 		/*
 		SELECT DISTINCT(policy_id) 
 		FROM `work_order` 
@@ -376,7 +376,7 @@ class Simulators extends CI_Model{
 		$this->db->where( 'YEAR(creation_date) = '. $year );
 		$this->db->where( 'MONTH(creation_date) = '. $month );
 		$this->db->where( 'policies_vs_users.user_id', $agent );
-		$this->db->where( 'work_order_status_id', 7 );
+		$this->db->where( 'work_order_status_id', 4 );
 		$this->db->where( 'product_group_id', $product_group_id );
 		
 				

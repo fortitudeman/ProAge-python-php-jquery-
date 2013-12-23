@@ -166,13 +166,13 @@
                 	</div>
                     
                 </td>
-                <td class="bggreenlight">
+                <td class="bggreenlight">$
                 	
                     <?php if( $i < 10 ){ 
-						  	echo money_format('$ %.2n', $PrimasLogradas['0'.$i]); 
+						  	echo number_format($PrimasLogradas['0'.$i],2); 
 						  	 $PrimasLogradosTotalTrimestre+=$PrimasLogradas['0'.$i]; 
 						  }else{ 
-						  	echo money_format('$ %.2n', $PrimasLogradas[$i]); 
+						  	echo number_format($PrimasLogradas[$i],2); 
 						  	 $PrimasLogradosTotalTrimestre+=$PrimasLogradas[$i]; 
 						  }?> 
                     
@@ -229,10 +229,10 @@
                         <input type="hidden" name="primas-meta-primer" id="primas-meta-primer" value="0" />
                     
                     </td>
-                    <td class="bggreenbold">
+                    <td class="bggreenbold">$
                         
                         <?php 
-                            echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+                            echo number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -285,10 +285,10 @@
                         <input type="hidden" name="primas-meta-primer" id="primas-meta-primer" value="0" />
                     
                     </td>
-                    <td class="bggreenbold">
+                    <td class="bggreenbold">$
                         
                         <?php 
-                            echo  money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+                            echo  number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -341,10 +341,10 @@
                         <input type="hidden" name="primas-meta-primer" id="primas-meta-primer" value="0" />
                     
                     </td>
-                    <td class="bggreenbold">
+                    <td class="bggreenbold">$
                         
                         <?php 
-                            echo  money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+                            echo  number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -397,10 +397,10 @@
                         <input type="hidden" name="primas-meta-primer" id="primas-meta-primer" value="0" />
                     
                     </td>
-                    <td class="bggreenbold">
+                    <td class="bggreenbold">$
                         
                         <?php 
-                            echo  money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+                            echo  number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -463,10 +463,10 @@
                     <input type="hidden" name="primas-segund-primer" id="primas-segund-primer" value="0" />
                 
                 </td>
-                <td class="bggreenbold">
+                <td class="bggreenbold">$
                 	
                     <?php 
-						echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+						echo number_format($PrimasLogradosTotalTrimestre,2); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -522,10 +522,10 @@
                     <input type="hidden" name="primas-segund-primer" id="primas-segund-primer" value="0" />
                 
                 </td>
-                <td class="bggreenbold">
+                <td class="bggreenbold">$
                 	
                     <?php 
-						echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+						echo number_format($PrimasLogradosTotalTrimestre,2); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -578,10 +578,10 @@
                         <input type="hidden" name="primas-meta-second" id="primas-meta-second" value="0" />
                     
                     </td>
-                    <td class="bggreenbold">
+                    <td class="bggreenbold">$
                         
                         <?php 
-                            echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+                            echo number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -634,10 +634,10 @@
                         <input type="hidden" name="primas-meta-second" id="primas-meta-second" value="0" />
                     
                     </td>
-                    <td class="bggreenbold">
+                    <td class="bggreenbold">$
                         
                         <?php 
-                            echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+                            echo number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -700,10 +700,10 @@
                     <input type="hidden" name="primas-tercer-primer" id="primas-tercer-primer" value="0" />
                     
                 </td>
-                <td class="bggreenbold">
+                <td class="bggreenbold">$
                 	
                     <?php 
-						echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+						echo number_format($PrimasLogradosTotalTrimestre,2); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -758,10 +758,10 @@
                     <input type="hidden" name="primas-tercer-primer" id="primas-tercer-primer" value="0" />
                     
                 </td>
-                <td class="bggreenbold">
+                <td class="bggreenbold">$
                 	
                     <?php 
-						echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+						echo number_format($PrimasLogradosTotalTrimestre,2); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -821,10 +821,10 @@
                     <input type="hidden" name="primas-cuarto-primer" id="primas-cuarto-primer" value="0" />
                     
                 </td>
-                <td class="bggreenbold">
+                <td class="bggreenbold">$
                 	
                     <?php 
-						echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+						echo number_format($PrimasLogradosTotalTrimestre,2); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -880,10 +880,10 @@
                     <input type="hidden" name="primas-cuarto-primer" id="primas-cuarto-primer" value="0" />
                     
                 </td>
-                <td class="bggreenbold">
+                <td class="bggreenbold">$
                 	
                     <?php 
-						echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+						echo number_format($PrimasLogradosTotalTrimestre,2); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
 					?>
@@ -937,10 +937,10 @@
                         <input type="hidden" name="primas-meta-tercer" id="primas-meta-tercer" value="0" />
                     
                     </td>
-                    <td class="bggreenbold">
+                    <td class="bggreenbold">$
                         
                         <?php 
-                            echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+                            echo number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -993,10 +993,10 @@
                         <input type="hidden" name="primas-meta-tercer" id="primas-meta-tercer" value="0" />
                     
                     </td>
-                    <td class="bggreenbold">
+                    <td class="bggreenbold">$
                         
                         <?php 
-                            echo money_format('$ %.2n', $PrimasLogradosTotalTrimestre); 
+                            echo number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
                         ?>
@@ -1059,8 +1059,8 @@
                     <input type="hidden" name="primas-meta-total" id="primas-meta-total" value="0" />
                     
                 </td>
-                <td class="bggreenbold" style="font-size:18px">
-                	<?php echo money_format('$ %.2n', $PrimasLogradosTotal); ?>
+                <td class="bggreenbold" style="font-size:18px">$
+                	<?php echo number_format($PrimasLogradosTotal,2); ?>
                 </td>                               
             </tr> 
         
