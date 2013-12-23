@@ -128,6 +128,7 @@ class Agent extends CI_Controller {
 		
 		$report = 1;
 		
+		$ramos = 1;
 				
 		if( !empty( $_POST ) ){            
 			$data = $this->user->getReportAgent( $userid, $_POST );
@@ -151,7 +152,7 @@ class Agent extends CI_Controller {
 			}
 				
 		}else            
-			$data = $this->user->getReportAgent( $userid, array('ramo' => 1,'periodo' => 1 ) );
+			$data = $this->user->getReportAgent( $userid, array('ramo' => 1,'periodo' => 3 ) );
 						
 		$activities = $this->activity->getByAgentId( $agentid );
 		

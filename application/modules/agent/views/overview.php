@@ -117,13 +117,14 @@
 					  
                                              
                       <select id="periodo" name="query[periodo]" class="input-small" onchange="this.form.submit();">
+                          <option value="3" <?php if (isset($_POST['query']['periodo']) and $_POST['query']['periodo'] == 3) echo 'selected="selected"' ?>>Año</option>
                           <option value="1" <?php if (isset($_POST['query']['periodo']) and $_POST['query']['periodo'] == 1) echo 'selected="selected"' ?>>Mes</option>
                           <?php if (!isset($_POST['query']['ramo']) or isset($_POST['query']['ramo']) and $_POST['query']['ramo'] == 1): ?> 
                               <option value="2" <?php if (isset($_POST['query']['periodo']) and $_POST['query']['periodo'] == 2) echo 'selected="selected"' ?> class="set_periodo">Trimestre</option>
                           <?php else: ?>
                               <option value="2" <?php if (isset($_POST['query']['periodo']) and $_POST['query']['periodo'] == 2) echo 'selected="selected"' ?> class="set_periodo">Cuatrimestre</option>
                           <?php endif; ?>
-                          <option value="3" <?php if (isset($_POST['query']['periodo']) and $_POST['query']['periodo'] == 3) echo 'selected="selected"' ?>>Año</option>
+                         
                       </select>  
                       
                       
