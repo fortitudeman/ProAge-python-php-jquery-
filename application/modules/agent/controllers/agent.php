@@ -135,16 +135,19 @@ class Agent extends CI_Controller {
 			if( $_POST['query']['ramo'] == 1 ){
 				$ramo = 'vida';
 				$report = 1;
+				$ramos = 1;
 			}
 			
 			if( $_POST['query']['ramo'] == 2 ){
 				$ramo = 'gmm';
 				$report = 1;
+				$ramos = 2;
 			}
 			
 			if( $_POST['query']['ramo'] == 3 ){
 				$ramo = 'autos';
 				$report = 2;
+				$ramos = 3;
 			}
 				
 		}else            
@@ -152,7 +155,7 @@ class Agent extends CI_Controller {
 						
 		$activities = $this->activity->getByAgentId( $agentid );
 		
-		$simulator = $this->simulators->getByAgent( $agentid );		
+		$simulator = $this->simulators->getByAgent( $agentid, $ramos );		
 		
 		$simulator = $simulator[0]['data'];
 		

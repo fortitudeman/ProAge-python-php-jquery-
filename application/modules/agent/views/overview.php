@@ -173,7 +173,7 @@
                             	<h4 class="blue">Indicador <br /> $ por cita</h4>
                             </td>       
                         </tr>
-                        <?php $simulator = object2array($simulator); ?>
+                        <?php $simulator = object2array($simulator); echo '<pre>'; print_r( $simulator  ); echo '</pre>';?>
                         
                         <input type="hidden" id="citas" value="<?php if( !empty( $activities[0]['cita'] ) ) echo $activities[0]['cita']; else 0; ?>" />
                         
