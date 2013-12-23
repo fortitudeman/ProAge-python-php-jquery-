@@ -89,6 +89,7 @@
                             <?php endif; ?>
                         </div>
                         <?php $activities_url = base_url().'activities/index/'.$data[0]['id'].'.html';?>
+						<?php $activities_url = base_url().'activities.html';?>
                         <a href="<?php echo $activities_url ?>" class="btn btn-primary" style="margin-top:12px;"/>Ver/Editar Actividad</a>
                     </td>
                 </tr>	
