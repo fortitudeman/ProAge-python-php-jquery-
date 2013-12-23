@@ -69,6 +69,14 @@ $( document ).ready(function() {
 					$( '.simulator' ).html(data);	
 				}					
 			});
+			$.getScript(Config.base_url()+'simulator/assets/scripts/simulator_vida.js' )
+			  .done(function( script, textStatus ) {
+				console.log( textStatus );
+			  })
+			  .fail(function( jqxhr, settings, exception ) {
+				alert( 'El script no se puede cargar' );
+			});
+			getMetasPeriod( 'vida' );			
 			$( '#periodo' ).bind( 'change', function(){		
 				if( $( '#ramo' ).val() == 1 ) getMetasPeriod( 'vida' );
 				if( $( '#ramo' ).val() == 2 ) getMetasPeriod( 'gmm' );
@@ -80,13 +88,6 @@ $( document ).ready(function() {
 			$( '#primasnetasiniciales' ).bind( 'keyup', function(){
 				getMetas();
 			});	
-			$.getScript(Config.base_url()+'simulator/assets/scripts/simulator_vida.js' )
-			  .done(function( script, textStatus ) {
-				console.log( textStatus );
-			  })
-			  .fail(function( jqxhr, settings, exception ) {
-				alert( 'El script no se puede cargar' );
-			});
 		}		
 		if( this.id == 'gmm' ){		
 			$( '#ramo' ).val(2);			
@@ -103,6 +104,13 @@ $( document ).ready(function() {
 					$( '.simulator' ).html(data);	
 				}					
 			});
+			$.getScript(Config.base_url()+'simulator/assets/scripts/simulator_gmm.js' )
+			  .done(function( script, textStatus ) {
+				console.log( textStatus );
+			  })
+			  .fail(function( jqxhr, settings, exception ) {
+				alert( 'El script no se puede cargar' );
+			});	
 			$( '#periodo' ).bind( 'change', function(){		
 				if( $( '#ramo' ).val() == 1 ) getMetasPeriod( 'vida' );
 				if( $( '#ramo' ).val() == 2 ) getMetasPeriod( 'gmm' );
@@ -113,14 +121,8 @@ $( document ).ready(function() {
 			});
 			$( '#primasnetasiniciales' ).bind( 'keyup', function(){
 				getMetas();
-			});	
-			$.getScript(Config.base_url()+'simulator/assets/scripts/simulator_gmm.js' )
-			  .done(function( script, textStatus ) {
-				console.log( textStatus );
-			  })
-			  .fail(function( jqxhr, settings, exception ) {
-				alert( 'El script no se puede cargar' );
-			});			
+			});		
+			getMetasPeriod( 'gmm' );	
 		}		
 		if( this.id == 'autos' ){			
 			$( '#ramo' ).val(3);			
@@ -144,6 +146,7 @@ $( document ).ready(function() {
 			  .fail(function( jqxhr, settings, exception ) {
 				alert( 'El script no se puede cargar' );
 			});
+			getMetasPeriod( 'autos' );
 			$( '#periodo' ).bind( 'change', function(){		
 				if( $( '#ramo' ).val() == 1 ) getMetasPeriod( 'vida' );
 				if( $( '#ramo' ).val() == 2 ) getMetasPeriod( 'gmm' );
@@ -156,7 +159,7 @@ $( document ).ready(function() {
 				getMetas();
 			});		
 		}
-		 getMetasPeriod( this.id );
+		//getMetasPeriod( this.id );
 	});				
 	$( '#periodo' ).bind( 'change', function(){		
 		if( $( '#ramo' ).val() == 1 ) getMetasPeriod( 'vida' );
