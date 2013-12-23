@@ -1070,7 +1070,7 @@
 </div>
 
 <?php 
-
+if( !function_exists( 'money_format' ) ){
 function money_format($format, $number) { 
 
     $regex  = '/%((?:[\^!\-]|\+|\(|\=.)*)([0-9]+)?'. 
@@ -1240,5 +1240,5 @@ function money_format($format, $number) {
     return $format; 
 
 } 
-
+}
 ?>
