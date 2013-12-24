@@ -58,7 +58,7 @@
            <td><label>Periodo:</label></td>
            <td><select name="periodo" id="periodo" class="input-small">
 
-                 <!--<option value="4" <?php if( isset( $data->periodo ) and $data->periodo == 4 ) echo 'selected="selected"'; ?>>CUATRIMESTRAL</option>-->
+                 <option value="4" <?php if( isset( $data->periodo ) and $data->periodo == 4 ) echo 'selected="selected"'; ?>>CUATRIMESTRAL</option>
 
                  <option value="12" <?php if( isset( $data->periodo ) and $data->periodo == 12 ) echo 'selected="selected"'; ?> selected="selected">ANUAL</option>
 

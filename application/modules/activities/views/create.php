@@ -71,28 +71,24 @@
                   	
                    
                     <div class="span2">
-                    	<div class="control-group" style="width:120px;">
-                          <label class="control-label text-error" for="inputError">Citas</label>
-                          <div class="controls">
-                            <input style="width:20px" class="focused required number" id="cita" name="cita" type="text" value="<?php echo set_value('cita')  ?>" maxlength="3">
-                          </div>
-                        </div>
-                    </div>
-                    
-                     <div class="span2">
-                    	<div class="control-group" style="width:120px;">
-                          <label class="control-label text-error" for="inputError">Entrevistas</label>
-                          <div class="controls">
-                            <input style="width:20px"  maxlength="3" class="focused required number" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
-                          </div>
-                        </div>
-                    </div>
-                    
-                    <div class="span2">
-                    	<div class="control-group" style="width:50px;">
-                          <label class="control-label text-error" for="inputError">Prospectos</label>
-                          <div class="controls">
-                            <input style="width:20px"  maxlength="3" class="focused required number" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
+                     	<div class="control-group" style="width:350px;">
+                          	<div class="controls">
+          	                   	<div id="container">
+								    <div id="left">
+								        <label class="text-error" for="inputError">Citas</label>
+								        <input style="width:20px" class="focused required number" id="cita" name="cita" type="text" value="<?php echo set_value('cita')  ?>" maxlength="3">
+								    </div>
+								
+								    <div id="middle">
+								        <label class="text-error" for="inputError">Entrevistas</label>
+								        <input style="width:20px"  maxlength="3" class="focused required number" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
+								    </div>
+								
+								    <div id="right">
+								        <label class="text-error" for="inputError">Prospectos</label>
+								        <input style="width:20px"  maxlength="3" class="focused required number" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
+								    </div>
+								</div>
                           </div>
                         </div>
                     </div>

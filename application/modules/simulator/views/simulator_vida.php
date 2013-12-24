@@ -60,7 +60,7 @@
            <td><label>Periodo:</label></td>
            <td>
               <select name="periodo" id="periodo" class="input-small">
-                 <!--<option value="3" <?php if( isset( $data->periodo ) and $data->periodo == 3 ) echo 'selected="selected"'; ?>>TRIMESTRAL</option>-->
+                 <option value="3" <?php if( isset( $data->periodo ) and $data->periodo == 3 ) echo 'selected="selected"'; ?>>TRIMESTRAL</option>
                  <option value="12" <?php if( isset( $data->periodo ) and $data->periodo == 12 ) echo 'selected="selected"'; ?> selected="selected">ANUAL</option>
 			  </select>
            </td>
