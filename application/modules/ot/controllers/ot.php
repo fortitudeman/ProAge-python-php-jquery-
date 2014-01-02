@@ -1243,7 +1243,7 @@ class Ot extends CI_Controller {
 				'last_updated' => date( 'd-m-Y H:i:s' )
 			);
 			
-			if( !empty( $pago ) and $pago == 1 ) $work_order['work_order_status_id']=4;
+			if( $pago == "true" ) $work_order['work_order_status_id']=4;
 			
 			
 			$this->work_order->setPolicy( $ot, $poliza );

@@ -21,14 +21,14 @@
 	bottom:0px;">
     
      <tr>
-           <td class="totales" style="width:650px;"><b style="color:#547EBD !important">INGRESO TOTAL:</b></td>
+           <td class="totales" style="width:33%"><b style="color:#547EBD !important">INGRESO TOTAL:</b></td>
 
-           <td style="text-align:right">
+           <td style="text-align:right; width:34%">
               <p style="color:#547EBD !important; float:right" id="ingresoTotal_text">$ <?php if( isset( $data->ingresoTotal ) ) echo $data->ingresoTotal; else echo 0; ?></p>	
               <input type="hidden" name="ingresoBonoRenovacion" id="ingresoTotal" value="<?php if( isset( $data->ingresoTotal ) ) echo $data->ingresoTotal; else echo 0; ?>">
            </td>
            
-           <td rowspan="2" style="vertical-align:middle"><input type="button" value="Guardar Meta" class="pull-right btn-save-meta" style="margin-top:10px;" onclick="save();"/></td>
+           <td style="vertical-align:middle"><input type="button" id="open_meta" value="Ver distribución anual" class="pull-right btn-save-meta" style="margin-top:10px;" /></td>
 
         </tr>
 
@@ -41,6 +41,7 @@
               <input type="hidden" name="ingresoBonoRenovacion" id="inresoPromedioMensual" value="<?php if( isset( $data->ingresoBonoRenovacion ) ) echo $data->ingresoBonoRenovacion; else echo 0; ?>">
 
            </td>
+           <td style="vertical-align:middle"><input type="button" value="Guardar Meta" class="pull-right btn-save-meta" style="margin-top:10px;" onclick="save();"/></td>
 
         </tr>
         
@@ -56,12 +57,12 @@
     
     <table class="table table-bordered">
 
-		<tr>
+		<!--<tr>
            <td><label>Periodo:</label></td>
            <td>
               <select name="periodo" id="periodo" class="input-small">
                  <option value="3" <?php if( isset( $data->periodo ) and $data->periodo == 3 ) echo 'selected="selected"'; ?>>TRIMESTRAL</option>
-                 <option value="12" <?php if( isset( $data->periodo ) and $data->periodo == 12 ) echo 'selected="selected"'; ?> selected="selected">ANUAL</option>
+                 <option value="12" <?php if( isset( $data->periodo ) and $data->periodo == 12 ) echo 'selected="selected"'; ?>>ANUAL</option>
 			  </select>
            </td>
            <td></td>
@@ -73,10 +74,12 @@
            <td><br></td>
            <td><br></td>
            <td><br></td>
-        </tr>
+        </tr>-->
         
         <tr>
-           <td><label>Primas afectas iniciales(venta inicial):</label></td>
+           <td>
+           <input type="hidden" name="periodo" id="periodo" value="12">
+           <label>Primas afectas iniciales anuales (venta inicial):</label></td>
            <td><input type="text" class="input-small" name="primasAfectasInicialesUbicar" id="primasAfectasInicialesUbicar" value="<?php if( isset( $data->primasnetasiniciales ) ) echo $data->primasnetasiniciales; else if( isset( $data->primasAfectasInicialesUbicar ) ) echo $data->primasAfectasInicialesUbicar; else echo 0; ?>"></td>		   
            <td><label>% de acotamiento:</label></td>
            <td><input type="text" class="input-small" name="porAcotamiento" id="porAcotamiento" value="<?php if( isset( $data->porAcotamiento ) ) echo $data->porAcotamiento; else echo 0; ?>"></td>

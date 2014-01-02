@@ -22,44 +22,44 @@ $( document ).ready(function() {
 		var total = parseFloat( $( '#primasnetasiniciales' ).val() ) / parseFloat($( '#primaspromedio' ).val().replace( '%', '' ));	
 		$( '#nonegocios' ).val( Math.ceil(total) );
 		var total = parseFloat( $( '#primasnetasiniciales' ).val() ) / parseFloat($( '#nonegocios' ).val().replace( '%', '' ));	
-		$( '#primaspromedio' ).val( Math.ceil(total) );
+		//$( '#primaspromedio' ).val( Math.ceil(total) );
 		//primastotales
 		var total = parseFloat( $( '#primastotales' ).val() ) * parseFloat($( '#comisionVentaInicial' ).val().replace( '%', '' )/100);	
 		$( '#ingresoComisionesVentaInicial_text' ).html( '$ '+moneyFormat(total) );
 		$( '#ingresoComisionesVentaInicial' ).val( total );	
 		//BONO INICIAL
 		var primasnetasiniciales = parseFloat( $( '#primasnetasiniciales' ).val() );
-		if( primasnetasiniciales > 250000 && primasnetasiniciales <= 300000 ){
+		if( primasnetasiniciales/3 > 250000 && primasnetasiniciales/3 <= 300000 ){
 			$( '#bonoAplicado' ).val( 10.0+'%' );
 			var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat( 10/100 );	
 			$( '#ingresoBonoInicial_text' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoInicial' ).val( total );
 		}
-		if( primasnetasiniciales > 200000 && primasnetasiniciales <= 250000 ){
+		if( primasnetasiniciales/3 > 200000 && primasnetasiniciales/3 <= 250000 ){
 			$( '#bonoAplicado' ).val( 9.0+'%' );
 			var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat( 9/100 );	
 			$( '#ingresoBonoInicial_text' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoInicial' ).val( total );
 		}
-		if( primasnetasiniciales > 160000 && primasnetasiniciales <= 200000 ){
+		if( primasnetasiniciales/3 > 160000 && primasnetasiniciales/3 <= 200000 ){
 			$( '#bonoAplicado' ).val( 8.0+'%' );
 			var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat( 8/100 );	
 			$( '#ingresoBonoInicial_text' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoInicial' ).val( total );
 		}
-		if( primasnetasiniciales > 120000 && primasnetasiniciales <= 160000 ){
+		if( primasnetasiniciales/3 > 120000 && primasnetasiniciales/3 <= 160000 ){
 			$( '#bonoAplicado' ).val( 7.0+'%' );
 			var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat( 7/100 );	
 			$( '#ingresoBonoInicial_text' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoInicial' ).val( total );
 		}		
-		if( primasnetasiniciales > 80000 && primasnetasiniciales <= 120000 ){
+		if( primasnetasiniciales/3 > 80000 && primasnetasiniciales/3 <= 120000 ){
 			$( '#bonoAplicado' ).val( 6.0+'%' );
 			var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat( 6/100 );	
 			$( '#ingresoBonoInicial_text' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoInicial' ).val( total );
 		}
-		if( primasnetasiniciales == 80000 ){
+		if( primasnetasiniciales/3 == 80000 ){
 			$( '#bonoAplicado' ).val( 5.0+'%' );
 			var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat( 5/100 );	
 			$( '#ingresoBonoInicial_text' ).html( '$ '+moneyFormat(total) );
@@ -68,7 +68,7 @@ $( document ).ready(function() {
 		//BONO DE CARTERA
 		var primastotales = parseFloat( $( '#primastotales' ).val() );
 		var porincrementoenprimas = $( '#porincrementoenprimas' ).val();
-		if( primastotales > 500000 && primastotales <= 650000 ){
+		if( primastotales/3 > 500000 && primastotales/3 <= 650000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 5+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (5/100);	
@@ -88,7 +88,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoCartera' ).val( total );	
 			}
 		}
-		if( primastotales > 350000 && primastotales <= 500000 ){
+		if( primastotales/3 > 350000 && primastotales/3 <= 500000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 4+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (4/100);	
@@ -108,7 +108,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoCartera' ).val( total );	
 			}
 		}
-		if( primastotales > 200000 && primastotales <= 350000 ){
+		if( primastotales/3 > 200000 && primastotales/3 <= 350000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 3+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (3/100);	
@@ -128,7 +128,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoCartera' ).val( total );	
 			}
 		}
-		if( primastotales == 200000 ){
+		if( primastotales/3 == 200000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 2+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (2/100);	
@@ -158,7 +158,7 @@ $( document ).ready(function() {
 	});	
 	$( '#nonegocios' ).bind( 'keyup', function(){
 		var total = parseFloat( $( '#primasnetasiniciales' ).val() ) / parseFloat($( '#nonegocios' ).val().replace( '%', '' ));	
-		$( '#primaspromedio' ).val(Math.ceil(total) );
+		//$( '#primaspromedio' ).val(Math.ceil(total) );
 		autos_ingresototal(); autos_ingresopromedio(); getMetas();
 	});	
 	$( '#primaspromedio' ).bind( 'keyup', function(){
@@ -175,7 +175,7 @@ $( document ).ready(function() {
 	$( '#porincrementoenprimas' ).bind( 'change', function(){
 		var primastotales = parseFloat( $( '#primastotales' ).val() );
 		var porincrementoenprimas = $( '#porincrementoenprimas' ).val();
-		if( primastotales > 500000 && primastotales <= 650000 ){
+		if( primastotales/3 > 500000 && primastotales/3 <= 650000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 5+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (5/100);	
@@ -195,7 +195,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoCartera' ).val( total );	
 			}
 		}
-		if( primastotales > 350000 && primastotales <= 500000 ){
+		if( primastotales/3 > 350000 && primastotales/3 <= 500000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 4+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (4/100);	
@@ -215,7 +215,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoCartera' ).val( total );	
 			}
 		}
-		if( primastotales > 200000 && primastotales <= 350000 ){
+		if( primastotales/3 > 200000 && primastotales/3 <= 350000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 3+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (3/100);	
@@ -235,7 +235,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoCartera' ).val( total );	
 			}
 		}
-		if( primastotales == 200000 ){
+		if( primastotales/3 == 200000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 2+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (2/100);	

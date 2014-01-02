@@ -35,7 +35,7 @@
         <div class="span1 offset1"><h6>Prima promedio</h6></div>
         <div class="span1"><input type="text" id="metas-prima-promedio" value="0" class="input-small" /></div> 
         
-        <div class="span2"><input type="button"  id="open_simulator"value="Abrir simulador" class="pull-right btn-save-meta"  /></div>
+        <div class="span2"><input type="button"  id="open_simulator"value="Ver simulador" class="pull-right btn-save-meta"  /></div>
         <div class="span2"><input type="button" id="save_meta" value="Guardar Meta" class="pull-right btn-save-meta"  /></div>        
      </div>
     
@@ -161,10 +161,10 @@
                 <td class="bggreenlight">
                 	
                     
-                    <div id="primas-meta-text-<?php echo $i ?>" style="text-align: right !important" class="primas-meta-selector"></div> 
+                    <div id="primas-meta-text-<?php echo $i ?>" style="text-align: right !important" class="primas-meta-selector"><?php echo $porcentajes['primas-meta-'.$i];?></div> 
                     
                     <div id="primas-meta-text-<?php echo $i ?>-field" class="primas-meta"> 
-                    	<input type="text" name="primas-meta-<?php echo $i ?>" id="primas-meta-<?php echo $i ?>" value="0" class="primas-meta-field"  />
+                    	<input type="text" name="primas-meta-<?php echo $i ?>" id="primas-meta-<?php echo $i ?>" value="<?php echo $porcentajes['primas-meta-'.$i];?>" class="primas-meta-field"  />
                 	</div>
                     
                 </td>

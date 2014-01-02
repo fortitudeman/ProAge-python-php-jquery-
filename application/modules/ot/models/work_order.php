@@ -1610,14 +1610,14 @@ class Work_order extends CI_Model{
 		if ($query->num_rows() == 0){  
 			
 			
-			$options .= '<option value="noasignar">No asignar a OT</option></select>';
+			$options .= '<option value="noasignar" selected>No asignar a OT</option></select>';
 			
 				
 			return $options; 
 		
 		}
 		
-		$options .= '<option value="noasignar">No asignar a OT</option>';
+		$options .= '<option value="noasignar" selected>No asignar a OT</option>';
 		
 		foreach ($query->result() as $row)			
 			

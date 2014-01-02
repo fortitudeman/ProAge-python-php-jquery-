@@ -1,4 +1,4 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
+	<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <?php
 /*
 
@@ -30,7 +30,7 @@
             Overview <span class="divider">/</span>
         </li>       
         <li>
-            <?php ;if( !empty( $usersupdate['company_name'] ) ) echo $usersupdate['company_name']; else echo $userupdate['name'].' '.$userupdate['lastnames']; ?>
+            <?php if( !empty( $usersupdate['company_name'] ) ) echo $usersupdate['company_name']; else echo $usersupdate['name'].' '.$usersupdate['lastnames']; ?>
         </li>
     </ul>
 </div>

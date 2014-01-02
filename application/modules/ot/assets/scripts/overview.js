@@ -276,7 +276,7 @@ function chooseOption( choose, is_new ){
 				
 				if( is_new == true ){
 					var poliza=prompt("Ingresa un número de poliza","");	
-					var pago=prompt("¿Pendiente de pago o Pagada? \n 1.- Si, \n 2.-No","Confirmar estatus para Pendiente de pago o pagada");	
+					var pago=confirm("¿Quiere marcar la Póliza como pagada?");	
 					if( poliza!=null )
 						window.location=Config.base_url()+"ot/aceptar/"+choose[1]+"/"+poliza+"/"+pago+".html";	
 					

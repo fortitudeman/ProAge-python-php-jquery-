@@ -28,8 +28,8 @@
               <p style="color:#547EBD !important; float:right" id="ingresoTotal_text">$ <?php if( isset( $data->ingresoTotal ) ) echo $data->ingresoTotal; else echo 0; ?></p>	
               <input type="hidden" name="ingresoBonoRenovacion" id="ingresoTotal" value="<?php if( isset( $data->ingresoTotal ) ) echo $data->ingresoTotal; else echo 0; ?>">
            </td>
-           
-           <td rowspan="2" style="vertical-align:middle"><input type="button" value="Guardar Meta" class="pull-right btn-save-meta" style="margin-top:10px;" onclick="save();"/></td>
+            <td style="vertical-align:middle"><input type="button" id="open_meta" value="Ver distribución anual" class="pull-right btn-save-meta" style="margin-top:10px;" /></td>
+          
 
         </tr>
 
@@ -42,6 +42,7 @@
               <input type="hidden" name="ingresoBonoRenovacion" id="inresoPromedioMensual" value="<?php if( isset( $data->ingresoBonoRenovacion ) ) echo $data->ingresoBonoRenovacion; else echo 0; ?>">
 
            </td>
+           <td style="vertical-align:middle"><input type="button" value="Guardar Meta" class="pull-right btn-save-meta" style="margin-top:10px;" onclick="save();"/></td>
 
         </tr>
         
@@ -55,13 +56,13 @@
     <table class="table table-bordered">
 		
         
-        <tr>
+        <!--<tr>
            <td><label>Periodo:</label></td>
            <td><select name="periodo" id="periodo" class="input-small">
 
                  <option value="4" <?php if( isset( $data->periodo ) and $data->periodo == 4 ) echo 'selected="selected"'; ?>>CUATRIMESTRAL</option>
 
-                 <!--<option value="12" <?php if( isset( $data->periodo ) and $data->periodo == 12 ) echo 'selected="selected"'; ?> selected="selected">ANUAL</option>-->
+                 <option value="12" <?php if( isset( $data->periodo ) and $data->periodo == 12 ) echo 'selected="selected"'; ?>>ANUAL</option>
 
               </select></td>           
            <td><br></td>
@@ -73,11 +74,13 @@
            <td><br></td>           
            <td><br></td>
            <td><br></td>
-        </tr>
+        </tr>-->
         
         <tr>
 
-           <td><label>Primas netas iniciales:</label></td>
+           <td>
+           <input type="hidden" name="periodo" id="periodo" value="12">
+           <label>Primas netas iniciales anuales:</label></td>
 
            <td><input type="text" class="input-small" name="primasnetasiniciales" id="primasnetasiniciales" value="<?php if( isset( $data->primasnetasiniciales ) ) echo $data->primasnetasiniciales; else if( isset( $data->primasAfectasInicialesUbicar ) ) echo $data->primasAfectasInicialesUbicar; else echo 0; ?>"></td>
 		   

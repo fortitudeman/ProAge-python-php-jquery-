@@ -36,6 +36,7 @@ $( document ).ready(function() {
 		}			
 		$( '#primasAfectasInicialesUbicar' ).val( total );	
 		$( '#primasnetasiniciales' ).val( total );		
+		$( '#prima-total-anual' ).val( total );		
 		$( '.primas-meta-selector' ).show();		
 		$( '.primas-meta' ).hide();		
 		getMetas();
@@ -196,7 +197,29 @@ function getMetasPeriod( ramo ){
 					else 
 						$( "#metas-prima-promedio" ).val( $( '#primaspromedio' ).val() ); 
 				getMetas();						
+				var i = $( '#primasAfectasInicialesUbicar' ).val();
+					if( i == 0 || i > 0 )
+						$( "#prima-total-anual" ).val( $( '#primasAfectasInicialesUbicar' ).val() ); 
+					else 
+						$( "#prima-total-anual" ).val( $( '#primasnetasiniciales' ).val() ); 
+				getMetas();						
 				$( document ).ready( function(){			
+					$( "#prima-total-anual" ).bind( 'keyup', function(){	
+						$( '#primasAfectasInicialesUbicar' ).val(Math.ceil(this.value));	
+						$( '#primasnetasiniciales' ).val(Math.ceil(this.value));
+						updatePrimasMes();					
+						getMetas();
+					});	
+					$( "#primasAfectasInicialesUbicar" ).bind( 'keyup', function(){	
+						$( '#prima-total-anual' ).val(Math.ceil(this.value));	
+						updatePrimasMes();					
+						getMetas();
+					});	
+					$( "#primasnetasiniciales" ).bind( 'keyup', function(){	
+						$( '#prima-total-anual' ).val(Math.ceil(this.value));	
+						updatePrimasMes();					
+						getMetas();
+					});	
 					$( "#metas-prima-promedio" ).bind( 'keyup', function(){ 		
 						$( '#primas_promedio' ).val(Math.ceil(this.value));	
 						$( '#primaspromedio' ).val(Math.ceil(this.value));							
@@ -210,9 +233,17 @@ function getMetasPeriod( ramo ){
 						$( '#metas-prima-promedio' ).val(this.value);	
 						getMetas();
 					});	
+					$( "#efectividad" ).bind( 'keyup', function(){ 		
+						getMetas();
+					});	
 					$( '#open_simulator' ).bind( 'click', function(){		
 						$( '.metas' ).hide();
 						$( '.simulator' ).show();	
+						//save();					
+					});
+					$( '#open_meta' ).bind( 'click', function(){		
+						$( '.metas' ).show();
+						$( '.simulator' ).hide();	
 						//save();					
 					});
 					// Change the value for prima on the event click
@@ -239,6 +270,7 @@ function getMetasPeriod( ramo ){
 							}							
 							$( '#primasAfectasInicialesUbicar' ).val( total );	
 							$( '#primasnetasinicialeso' ).val( total );	
+							$( '#prima-total-anual' ).val( total );		
 							$( '.primas-meta-selector' ).show();						
 							$( '.primas-meta' ).hide();						
 							
@@ -246,7 +278,7 @@ function getMetasPeriod( ramo ){
 									var primas = $( '#primasAfectasInicialesUbicar' ).val();
 										if( !$( '#primasAfectasInicialesUbicar' ).val() ) primas = $( '#primasnetasiniciales' ).val();
 																			  
-									var porcentaje =  Math.round(parseInt($( '#primas-meta-'+i ).val()) / parseFloat(primas)*100);								
+									var porcentaje =  Math.round((parseInt($( '#primas-meta-'+i ).val()) / parseFloat(primas)*100)*100)/100;								
 										$( '#mes-'+i ).val(porcentaje);
 										$( '#mes-text-'+i ).html(porcentaje);
 							}	
@@ -304,6 +336,14 @@ function save(){
 		});
 	}
 }
+
+function updatePrimasMes() {
+		for(  var i = 1; i<=12; i++ ){
+				$( '#primas-meta-'+i ).val(parseFloat( $( "#prima-total-anual" ).val() ) * (parseFloat( $( '#mes-'+i ) .val() ) /100));
+				$( '#primas-meta-text-'+i ).val(parseFloat( $( "#prima-total-anual" ).val() ) * (parseFloat( $( '#mes-'+i ) .val() ) /100));
+		}
+}
+
 function getMetas(){		
 		//if( $( '#primasAfectasInicialesUbicar' ).val() == 0 ) return false;	
 						
@@ -318,7 +358,8 @@ function getMetas(){
 		var totalessolicitudmeta = 0;
 		var totaltrimestre = 0;
 		for(  var i = 1; i<=12; i++ ){						
-			var total = parseFloat( primas ) * (parseFloat( $( '#mes-'+i ) .val() ) /100);
+			if ($( '#primas-meta-'+i ) .val() == "NaN" ) var total = parseFloat( primas ) * (parseFloat( $( '#mes-'+i ) .val() ) /100);
+			else var total = parseFloat( $( '#primas-meta-'+i ) .val() );
 			var meta =  total;//;Math.round( total* 100 )/100;			
 			var primapromedio =  Math.round( ( total /  parseFloat( $( '#metas-prima-promedio' ).val() ) ) );
 			var efectividad = $( '#efectividad' ) .val();	
@@ -420,7 +461,7 @@ function getMetas(){
 				totalsolicitudmeta= 0;				
 			} 
 		}		
-		$( '#prima-total-anual' ).val(Math.round(totalprimameta) );
+		//$( '#prima-total-anual' ).val(Math.round(totalprimameta) );
 		$( '#primas-meta-total' ).val(Math.round(totalprimameta) );
 		$( '#primas-meta-total-text' ).html( '$ ' + moneyFormat( Math.round(totalprimameta)) );
 		
