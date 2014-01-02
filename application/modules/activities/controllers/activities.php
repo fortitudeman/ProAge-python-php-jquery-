@@ -88,7 +88,7 @@ class Activities extends CI_Controller {
 	
 
 // Show all records	
-	public function index( $filter = null ){
+	public function index( $userid = null, $filter = null ){
 		
 		
 		
@@ -110,18 +110,27 @@ class Activities extends CI_Controller {
 						
 		
 		// Load Model
-		$this->load->model( array( 'activity' ) );
+		$this->load->model( array( 'activity', 'user' ) );
 		
 		
 		
 		// Pagination config	
 		$this->load->library('pagination');
 		
-		$begin = $this->uri->segment(3);
+		$begin = $this->uri->segment(4);
 		
 		if( empty( $begin ) ) $begin = 0;
 		
-					
+		if( !empty( $userid ) ){	
+			$agentid = $this->user->getAgentIdByUser( $userid );
+			$url = base_url().'activities/index/'.$userid.'/';
+			$user = $this->user->getForUpdateOrDelete($userid);
+		}else{
+			$agentid = $this->user->getAgentIdByUser( $this->sessions['id'] );
+			$url = base_url().'activities/index/';
+			$user = $this->user->getForUpdateOrDelete($this->sessions['id']);
+		}
+		
 		$config['full_tag_open'] = '<div class="pagination pagination-right"><ul>'; 
 		$config['full_tag_close'] = '</ul></div>';
 		$config['first_link'] = false;
@@ -140,12 +149,11 @@ class Activities extends CI_Controller {
 		$config['cur_tag_close'] = '</a></li>';
 		$config['num_tag_open'] = '<li>';
 		$config['num_tag_close'] = '</li>';					
-		$config['base_url'] = base_url().'activities/index/';
-		$config['total_rows'] = $this->activity->record_count( $this->user->getAgentIdByUser( $this->sessions['id'] ), $filter );
-		//$config['total_rows'] = $this->activity->record_count( 1, $filter );
+		$config['base_url'] = $url;
+		$config['total_rows'] = $this->activity->record_count( $agentid, $filter );
 		$config['per_page'] = 150;
 		$config['num_links'] = 5;
-		$config['uri_segment'] = 3;
+		$config['uri_segment'] = 4;
 		$config['use_page_numbers'] = TRUE;
 		
 		$this->pagination->initialize($config); 
@@ -164,8 +172,9 @@ class Activities extends CI_Controller {
 		  'access_delete' => $this->access_delete,
 		  'content' => 'activities/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'data' => $this->activity->overview( $begin, $this->user->getAgentIdByUser( $this->sessions['id'] ), $filter )		  	  
-		  //'data' => $this->activity->overview( $begin, 1, $filter )		  	  		
+		  'data' => $this->activity->overview( $begin, $agentid, $filter ),
+		  'userid' => $userid,
+		  'usersupdate' => $user[0]		  	   	  		
 		);
 	
 		
@@ -186,7 +195,9 @@ class Activities extends CI_Controller {
 	
 
 // Create new user
-	public function create(){
+	public function create( $userid = null ){
+		
+				
 		
 		// Check access teh user for create
 		if( $this->access_create == false ){
@@ -200,7 +211,11 @@ class Activities extends CI_Controller {
 			));	
 			
 			
-			redirect( 'activities', 'refresh' );
+			if( !empty( $userid ) )				
+				redirect( 'activities/index/'.$userid, 'refresh' );
+			else
+				redirect( 'activities', 'refresh' );
+			
 		
 		}
 			
@@ -220,8 +235,11 @@ class Activities extends CI_Controller {
 				//Load Model
 				$this->load->model( array( 'activity', 'user' ) );
 			
-				$_POST['agent_id'] =  $this->user->getAgentIdByUser( $this->sessions['id'] );
-				
+				if( !empty( $userid ) )	
+					$_POST['agent_id'] =  $this->user->getAgentIdByUser( $userid );
+				else					
+					$_POST['agent_id'] = $this->user->getAgentIdByUser( $this->sessions['id'] );
+			
 				
 				if( $this->activity->exist( 'agents_activity', $_POST ) == true )
 								
@@ -236,7 +254,10 @@ class Activities extends CI_Controller {
 						));	
 						
 						
-						redirect( 'activities', 'refresh' );
+						if( !empty( $userid ) )				
+							redirect( 'activities/index/'.$userid, 'refresh' );
+						else
+							redirect( 'activities', 'refresh' );
 						
 					}else{
 						
@@ -249,7 +270,10 @@ class Activities extends CI_Controller {
 						));	
 						
 						
-						redirect( 'activities', 'refresh' );
+						if( !empty( $userid ) )				
+							redirect( 'activities/index/'.$userid, 'refresh' );
+						else
+							redirect( 'activities', 'refresh' );
 						
 					}
 				
@@ -263,13 +287,25 @@ class Activities extends CI_Controller {
 					));	
 					
 					
-					redirect( 'activities/create', 'refresh' );	
+					if( !empty( $userid ) )				
+						redirect( 'activities/index/'.$userid, 'refresh' );
+					else
+						redirect( 'activities', 'refresh' );
 				}
 			}	
 			
 						
 		}
-						
+		
+		
+		if( !empty( $userid ) )	
+			$user = $this->user->getForUpdateOrDelete($userid);
+		else
+			$user = $this->user->getForUpdateOrDelete($this->sessions['id']);
+		
+		
+		
+		
 		// Config view
 		$this->view = array(
 				
@@ -294,6 +330,8 @@ class Activities extends CI_Controller {
 		  ),
 		  'content' => 'activities/create', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+		  'userid' => $userid,
+		  'usersupdate' => $user[0]
 		);
 		
 		

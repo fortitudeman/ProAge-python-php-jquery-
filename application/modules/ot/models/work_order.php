@@ -150,6 +150,7 @@ class Work_order extends CI_Model{
 		$this->db->where( 'work_order.work_order_status_id', 9 );
 		$this->db->or_where( 'work_order.work_order_status_id', 5  );
 		$this->db->or_where( 'work_order.work_order_status_id', 6  );
+		$this->db->or_where( 'work_order.work_order_status_id', 7  );
 		
 		
 		if( !empty( $user ) )

@@ -876,8 +876,27 @@ class Ot extends CI_Controller {
 		exit;
 	}
 	
+	/**
+	 *	set Pay
+	 **/
 	
-	
+	public function setPay(){
+		
+		if( !$this->input->is_ajax_request() ){ echo 'Access denied'; exit; }
+		
+		// Load Model 
+		$this->load->model( 'work_order' );
+		
+		$work_order = array(				
+				'work_order_status_id' => 4
+		);
+		
+		$this->work_order->update( 'work_order', $this->input->post( 'id' ), $work_order );
+		
+		echo 'Ot Marcada como pagada correctamente';
+		
+		exit;
+	}
 	
 	
 	
@@ -1213,17 +1232,18 @@ class Ot extends CI_Controller {
 	/**
 	 *	Aceptar y rechazar
 	 **/
-	public function aceptar( $ot = null, $poliza = null ){
+	public function aceptar( $ot = null, $poliza = null, $pago = null ){
 		
 		
 		// Load Model
 			$this->load->model( 'work_order' );
 		
-			$work_order = array(
-				
+			$work_order = array(				
 				'work_order_status_id' => 7,
 				'last_updated' => date( 'd-m-Y H:i:s' )
 			);
+			
+			if( !empty( $pago ) and $pago == 1 ) $work_order['work_order_status_id']=4;
 			
 			
 			$this->work_order->setPolicy( $ot, $poliza );
@@ -1854,13 +1874,7 @@ class Ot extends CI_Controller {
 					
 			// Load Model
 			$this->load->model( 'work_order' );
-			
-			 //echo '<pre>';
-			 //print_r( $file_array );
-			 //echo '</pre>';
-			 //exit;	
-			
-			
+						
 			$this->work_order->importPaymentsTmp( $file_array );
 			
 			for( $i=0; $i<=count( $file_array ); $i++ )
@@ -1882,17 +1896,10 @@ class Ot extends CI_Controller {
 		  $this->load->model( array( 'work_order', 'usuarios/user' ) );
 		  
 		  $file_array = $this->work_order->getImportPaymentsTmp();
-		  
-		  //echo '<pre>';
-		  // print_r( json_decode( $file_array[0]['data'] ) );
-		  //echo '</pre>';
-		  //exit;	
-		  
+		  		  		  
 		  $file_array = json_decode( $file_array[0]['data'] );
 		  
-		 
-		  
-		  
+		 		 		  
 		  $tmp_file = $_POST['tmp_file'];
 		  
 		  $process = 'preview';
@@ -2068,9 +2075,7 @@ class Ot extends CI_Controller {
 			 	$this->work_order->create( 'policies_vs_users', $agents );
 														
 			  }
-			 
-			 			 
-			 
+			  			  
 			  $payment = array( 
 			  	
 				'policy_id' => $policy[0]['id'],
@@ -2078,6 +2083,8 @@ class Ot extends CI_Controller {
 				'amount' => $item->amount,
 				'payment_date' => $item->payment_date,
 				'last_updated' => date( 'Y-m-d H:i:s' ),
+				'business' => $item->is_new,
+				'policy_number' => $item->uid,
 				'date' => date( 'Y-m-d H:i:s' )
 				
 			  );		 

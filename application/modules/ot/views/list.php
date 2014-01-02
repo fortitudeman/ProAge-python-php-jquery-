@@ -175,7 +175,7 @@
               <tbody id="data">
                 <?php  if( !empty( $data ) ): ?>
                 <?php  foreach( $data as $value ):  ?>
-                <tr <?php if( $value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 7 and $value['work_order_status_id'] != 8 ): ?> onclick="menu('menu-<?php echo $value['id'] ?>');" <?php endif; ?>>
+                <tr <?php if( $value['work_order_status_id'] != 2 /*and $value['work_order_status_id'] != 7*/ and $value['work_order_status_id'] != 8 ): ?> onclick="menu('menu-<?php echo $value['id'] ?>');" <?php endif; ?>>
                 	<td class="center"><?php 
 										    
 											$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
@@ -245,13 +245,17 @@
 					else 
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
 												
-												
+											
 												
 												
 					if( $this->access_update == true ){
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')">Marcar como aceptada</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
 												
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
+						
+						if( $value['work_order_status_id'] ==  7 )
+								echo '<a href="javascript:void(0)" onclick="setPay(\''.$value['id'].'\')">Marcar como pagada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';	
+																		
 												}
 					if( $this->access_delete == true )
 												
@@ -260,6 +264,8 @@
 					
 					if( $value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 7 and $value['work_order_status_id'] != 8 )
 					echo $scrips;
+					
+					 
 												
 					?>
                     

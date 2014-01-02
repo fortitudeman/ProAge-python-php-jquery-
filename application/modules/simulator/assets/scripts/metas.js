@@ -23,7 +23,7 @@ function stickyFooter(){
 }
 $( document ).ready(function() {	
 	stickyFooter(); 	
-	$( '.metas' ).hide();
+	$( '.simulator' ).hide();
 	$( '.primas-meta-selector' ).bind( 'click', function(){		
 		$( '#'+this.id ).hide();		
 		$( '#'+this.id+'-field' ).show();		
@@ -420,6 +420,7 @@ function getMetas(){
 				totalsolicitudmeta= 0;				
 			} 
 		}		
+		$( '#prima-total-anual' ).val(Math.round(totalprimameta) );
 		$( '#primas-meta-total' ).val(Math.round(totalprimameta) );
 		$( '#primas-meta-total-text' ).html( '$ ' + moneyFormat( Math.round(totalprimameta)) );
 		

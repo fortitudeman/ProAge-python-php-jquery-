@@ -22,10 +22,13 @@
             <a href="<?php echo base_url() ?>">Admin</a> <span class="divider">/</span>
         </li>
         <li>
-            <a href="<?php echo base_url() ?>activities.html">Actividad</a> <span class="divider">/</span>
+            <a href="<?php echo base_url() ?>activities<?php if( !empty( $userid ) ) echo '/index/'.$userid  ?>.html">Actividad</a> <span class="divider">/</span>
         </li>
         <li>
-            Crear
+            Crear <span class="divider">/</span>
+        </li>
+        <li>
+            <?php ;if( !empty( $usersupdate['company_name'] ) ) echo $usersupdate['company_name']; else echo $usersupdate['name'].' '.$usersupdate['lastnames']; ?>
         </li>
     </ul>
 </div>
@@ -54,7 +57,7 @@
             
             
         
-            <form id="form" action="<?php echo base_url() ?>activities/create.html" class="form-horizontal" method="post">
+            <form id="form" action="<?php echo base_url() ?>activities/create<?php if( !empty( $userid ) ) echo '/'.$userid  ?>.html" class="form-horizontal" method="post">
                 <fieldset>
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Semana</label>
@@ -62,8 +65,8 @@
                       
                       <div id="week"></div>
                       <label></label> <span id="startDate"></span>  <span id="endDate"></span>
-                       <input id="begin" name="begin" type="hidden" readonly="readonly" value="<?php echo set_value('begin')  ?>">
-                       <input id="end" name="end" type="hidden" readonly="readonly" value="<?php echo set_value('end')  ?>">
+                       <input id="begin" name="begin" type="hidden" readonly value="<?php echo set_value('begin')  ?>">
+                       <input id="end" name="end" type="hidden" readonly value="<?php echo set_value('end')  ?>">
                     </div>
                   </div>
                   
@@ -71,24 +74,28 @@
                   	
                    
                     <div class="span2">
-                     	<div class="control-group" style="width:350px;">
-                          	<div class="controls">
-          	                   	<div id="container">
-								    <div id="left">
-								        <label class="text-error" for="inputError">Citas</label>
-								        <input style="width:20px" class="focused required number" id="cita" name="cita" type="text" value="<?php echo set_value('cita')  ?>" maxlength="3">
-								    </div>
-								
-								    <div id="middle">
-								        <label class="text-error" for="inputError">Entrevistas</label>
-								        <input style="width:20px"  maxlength="3" class="focused required number" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
-								    </div>
-								
-								    <div id="right">
-								        <label class="text-error" for="inputError">Prospectos</label>
-								        <input style="width:20px"  maxlength="3" class="focused required number" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
-								    </div>
-								</div>
+                    	<div class="control-group" style="width:120px;">
+                          <label class="control-label text-error" for="inputError">Citas</label>
+                          <div class="controls">
+                            <input style="width:20px" class="focused required number" id="cita" name="cita" type="text" value="<?php echo set_value('cita')  ?>" maxlength="3">
+                          </div>
+                        </div>
+                    </div>
+                    
+                     <div class="span2">
+                    	<div class="control-group" style="width:120px;">
+                          <label class="control-label text-error" for="inputError">Entrevistas</label>
+                          <div class="controls">
+                            <input style="width:20px"  maxlength="3" class="focused required number" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
+                          </div>
+                        </div>
+                    </div>
+                    
+                    <div class="span2">
+                    	<div class="control-group" style="width:50px;">
+                          <label class="control-label text-error" for="inputError">Prospectos</label>
+                          <div class="controls">
+                            <input style="width:20px"  maxlength="3" class="focused required number" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
                           </div>
                         </div>
                     </div>
@@ -118,5 +125,4 @@
         </div>
     </div><!--/span-->
 
-</div><!--/row-->
-			
+</div><!--/row-->			

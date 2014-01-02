@@ -94,7 +94,7 @@
            
            <td><label>No. de Negocios PAI:</label></td>
 
-           <td> <input type="text" class="input-small" name="noNegocios" id="noNegocios" value="<?php if( isset( $data->noNegocios ) ) echo $data->noNegocios; else echo 0; ?>">
+           <td> <input type="text" readonly="readonly" class="input-small" name="noNegocios" id="noNegocios" value="<?php if( isset( $data->noNegocios ) ) echo $data->noNegocios; else echo 0; ?>">
 </td>
           
         </tr>

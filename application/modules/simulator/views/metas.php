@@ -29,9 +29,11 @@
 	
      <div class="row">     	
         <div class="span1 offset1"><h6>Efectividad(%)</h6></div>
-        <div class="span2"><input id="efectividad" name="efectividad" type="text" style="width:30px;" value="<?php if( isset( $data->efectividad ) ) echo $data->efectividad; else echo '75' ?>" /></div>
-        <div class="span2"><h6>Prima promedio</h6></div>
-        <div class="span2"><input type="text" id="metas-prima-promedio" value="0" /></div> 
+        <div class="span1"><input id="efectividad" name="efectividad" type="text" style="width:30px;" value="<?php if( isset( $data->efectividad ) ) echo $data->efectividad; else echo '75' ?>" /></div>
+        <div class="span1"><h6>Prima total anual </h6></div>
+        <div class="span1"><input type="text" id="prima-total-anual" value="0" class="input-small" /></div>
+        <div class="span1 offset1"><h6>Prima promedio</h6></div>
+        <div class="span1"><input type="text" id="metas-prima-promedio" value="0" class="input-small" /></div> 
         
         <div class="span2"><input type="button"  id="open_simulator"value="Abrir simulador" class="pull-right btn-save-meta"  /></div>
         <div class="span2"><input type="button" id="save_meta" value="Guardar Meta" class="pull-right btn-save-meta"  /></div>        

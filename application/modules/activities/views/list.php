@@ -24,11 +24,13 @@
             <a href="<?php echo base_url() ?>">Admin</a> <span class="divider">/</span>
         </li>
         <li>
-           <a href="<?php echo base_url() ?>activities.html">Actividades</a> <span class="divider">/</span>
+           <a href="<?php echo base_url() ?>activities<?php if( !empty( $userid ) ) echo '/index/'.$userid  ?>.html">Actividades</a> <span class="divider">/</span>
         </li>
-               
         <li>
-            Overview
+            Overview <span class="divider">/</span>
+        </li>       
+        <li>
+            <?php ;if( !empty( $usersupdate['company_name'] ) ) echo $usersupdate['company_name']; else echo $userupdate['name'].' '.$userupdate['lastnames']; ?>
         </li>
     </ul>
 </div>
@@ -40,7 +42,7 @@
             <div class="box-icon">
                   
                    <?php if( $access_create == true ): ?>
-                   		<a href="<?php echo base_url() ?>activities/create.html" class="btn btn-link" title="Crear"><i class="icon-plus"></i></a>
+                   		<a href="<?php echo base_url() ?>activities/create<?php if( !empty( $userid ) ) echo '/'.$userid  ?>.html" class="btn btn-link" title="Crear"><i class="icon-plus"></i></a>
 				   <?php endif; ?>
                                                  
             </div>
@@ -112,7 +114,7 @@
 		  
 		  	<div class="alert alert-block">
                   <button type="button" class="close" data-dismiss="alert">×</button>
-                  <strong>Atención: </strong> No hay registro de actividades. . <a href="<?php echo base_url() ?>activities/create.html" class="btn btn-link">Haga click aquí para capturar un nuevo registro</a>
+                  <strong>Atención: </strong> No hay registro de actividades. . <a href="<?php echo base_url() ?>activities/create<?php if( !empty( $userid ) ) echo '/'.$userid  ?>.html" class="btn btn-link">Haga click aquí para capturar un nuevo registro</a>
             </div>
 		  <?php endif; ?>
                            

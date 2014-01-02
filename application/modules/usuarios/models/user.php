@@ -1896,7 +1896,7 @@ class User extends CI_Model{
 
 	
 	
-	public function getReport( $filter = array() ){
+  public function getReport( $filter = array() ){
  	
 	
 	/**
@@ -2070,16 +2070,13 @@ class User extends CI_Model{
 			'name' => $name,
 			'uids' => $this->getAgentsUids( $row->agent_id ),
 			'connection_date' => $row->connection_date,
-                        'disabled' => $row->disabled,
+            'disabled' => $row->disabled,
 			'negocio' => $this->getCountNegocio( $row->agent_id, $filter ),
 			'negociopai' => $this->getCountNegocioPai( $row->agent_id, $filter ),
 			'prima' => $this->getPrima( $row->agent_id, $filter ),
-			
-                        'tramite'=>$this->getTramite($row->agent_id,$filter),
-			
-                        'aceptadas' => $this->getAceptadas($row->agent_id,$filter),
-                    
-			'iniciales' => $this->getIniciales( $row->agent_id, $filter ),
+			'tramite'=>$this->getTramite($row->agent_id,$filter),
+			'aceptadas' => $this->getAceptadas($row->agent_id,$filter),
+            'iniciales' => $this->getIniciales( $row->agent_id, $filter ),
 			'renovacion' => $this->getRenovacion( $row->agent_id, $filter ),
 			'generacion' => $generacion			
 		);
@@ -2217,6 +2214,165 @@ class User extends CI_Model{
 		
 		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id' );
 		$this->db->from( 'policies_vs_users' );
+		//$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
+		$this->db->join( 'payments', 'payments.policy_id=policies_vs_users.policy_id' );
+		//$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
+		//$this->db->join( 'users', 'users.id=agents.user_id' );
+		$this->db->where( array( 'policies_vs_users.user_id' => $agent_id ) );
+  		
+		
+						
+		if( !empty( $filter ) ){
+			
+			/*
+			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
+						
+				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
+			}*/
+			
+			/*
+			<option value="1">Mes</option>
+			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+			<option value="3">Año</option>
+			*/	
+			
+			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
+			
+			
+			$trimestre = $this->trimestre();
+			
+			$cuatrimetre = $this->cuatrimestre();
+									
+			$anio = date( 'Y' ).'-01-01';
+						
+			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
+			
+			
+			if( $filter['query']['periodo'] == 1 )
+			
+				$this->db->where( 'payments.payment_date >= ', $mes); 
+			
+			
+			
+			if( $filter['query']['periodo'] == 2 )
+			
+				
+				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
+					
+					if( $cuatrimetre == 1 ){			
+						$begind = date( 'Y' ).'-01-01';	
+						$end = date( 'Y' ).'-04-'.date('d');	
+					}
+					
+					if( $cuatrimetre == 2 ){			
+						$begind = date( 'Y' ).'-04-01';	
+						$end = date( 'Y' ).'-08-'.date('d');	
+					}
+					
+					if( $cuatrimetre == 3 ){			
+						$begind = date( 'Y' ).'-08-01';	
+						$end = date( 'Y' ).'-12-'.date('d');	
+					}
+					
+					$this->db->where( array( 'payments.payment_date >= ' =>  $begind , 'payments.payment_date <=' =>  $end  ) ); 
+				
+				}else{
+					
+					
+					if( $trimestre == 1 ){			
+						$begind = date( 'Y' ).'-01-01';	
+						$end = date( 'Y' ).'-03-'.date('d');	
+					}
+					
+					if( $trimestre == 2 ){			
+						$begind = date( 'Y' ).'-03-01';	
+						$end = date( 'Y' ).'-06-'.date('d');	
+					}
+					
+					if( $trimestre == 3 ){			
+						$begind = date( 'Y' ).'-06-01';	
+						$end = date( 'Y' ).'-09-'.date('d');	
+					}
+					
+					if( $trimestre == 4 ){			
+						$begind = date( 'Y' ).'-09-01';	
+						$end = date( 'Y' ).'-12-'.date('d');	
+					}
+					
+						
+					$this->db->where( array( 'payments.payment_date >= ' => $begind, 'payments.payment_date <=' =>  $end ) ); 
+				}
+				
+				
+				
+				
+				
+				
+			if( $filter['query']['periodo'] == 3 )
+			
+				$this->db->where( array( 'payments.payment_date >= ' => $anio,  'payments.payment_date <=' => date( 'Y-m-d' ) ) ); 
+			
+			}
+							
+		}
+		
+		
+		return $this->db->count_all_results();
+		
+		/*
+		$query = $this->db->get(); 
+  		
+		if ($query->num_rows() == 0) return 0;		
+		
+		
+		$negocio = array();
+		
+		$negocio['count'] = 0;
+		
+		foreach ($query->result() as $row){
+			
+			*
+			SELECT *
+			FROM payments
+			WHERE policy_id=30;
+			*
+					
+			$this->db->select();
+			$this->db->from( 'payments' );
+			$this->db->where( 'policy_id', $row->policy_id );
+			
+						
+			$querypayemnt = $this->db->get(); 
+			
+			if ($querypayemnt->num_rows() > 0)		
+						
+				$negocio['count'] =(int)$negocio['count']+1;
+													
+			
+		}
+		
+		
+		
+		return $negocio['count'];*/
+		
+  }  
+  // getCountNegocio Old
+  /*
+  public function getCountNegocio( $agent_id = null, $filter = array() ){
+ 		
+						
+		if( empty( $agent_id ) ) return 0;
+		*
+		SELECT DISTINCT( policies_vs_users.policy_id ) as policy_id
+		FROM `policies_vs_users`
+		JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
+		JOIN  agents ON agents.id=policies_vs_users.user_id
+		JOIN  users ON users.id=agents.user_id
+		WHERE policies_vs_users.user_id=6
+		*
+		
+		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id' );
+		$this->db->from( 'policies_vs_users' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
 		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
@@ -2232,11 +2388,11 @@ class User extends CI_Model{
 				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
 			}
 			
-			/*
+			*
 			<option value="1">Mes</option>
 			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
 			<option value="3">Año</option>
-			*/	
+			*
 			
 			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
 			
@@ -2330,11 +2486,11 @@ class User extends CI_Model{
 		
 		foreach ($query->result() as $row){
 			
-			/*
+			*
 			SELECT *
 			FROM payments
 			WHERE policy_id=30;
-			*/
+			*
 					
 			$this->db->select();
 			$this->db->from( 'payments' );
@@ -2354,7 +2510,10 @@ class User extends CI_Model{
 		
 		return $negocio['count'];
 		
-  }
+  }*/
+  
+  
+  
   
   public function getCountNegocioPai( $agent_id = null, $filter = array() ){
  		

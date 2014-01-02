@@ -260,17 +260,8 @@ $( document ).ready( function(){
 		});
 				
 	}); 
-		 	  
+			 	  
 });
-
-/*
-var hideAllPopovers = function() {
-       $('tr[class="popup"]').each(function() {
-            $(this).popover('hide');
-        });  
-    };
-
-*/
 function chooseOption( choose, is_new ){
 	
 	var choose = choose.split('-');
@@ -285,10 +276,10 @@ function chooseOption( choose, is_new ){
 				
 				if( is_new == true ){
 					var poliza=prompt("Ingresa un número de poliza","");	
-					
+					var pago=prompt("¿Pendiente de pago o Pagada? \n 1.- Si, \n 2.-No","Confirmar estatus para Pendiente de pago o pagada");	
 					if( poliza!=null )
-						window.location=Config.base_url()+"ot/aceptar/"+choose[1]+"/"+poliza+".html";	
-		
+						window.location=Config.base_url()+"ot/aceptar/"+choose[1]+"/"+poliza+"/"+pago+".html";	
+					
 				}else{
 					window.location=Config.base_url()+"ot/aceptar/"+choose[1]+".html";	
 				}
@@ -302,4 +293,23 @@ function chooseOption( choose, is_new ){
 		if( choose[0] == 'cancelar' )
 			window.location=Config.base_url()+"ot/cancelar/"+choose[1]+".html";
 	
+}
+
+function setPay( id ){
+	if( confirm( "¿Está seguro que quiere marcar la OT como pagada?" ) ){		
+		var Data = { id: id };		
+		$.ajax({
+
+			url:  Config.base_url()+'ot/setPay.html',
+			type: "POST",
+			data: Data,
+			cache: true,
+			async: false,
+			success: function(data){
+				alert(data);
+				window.location=Config.base_url()+"ot.html";
+			}						
+	
+		});
+	}	
 }
