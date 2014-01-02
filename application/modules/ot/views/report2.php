@@ -174,7 +174,7 @@
 		?>
 
             |<a href="<?php echo $simulator_url ?>" class="btn btn-link">Simular resultado y definir meta</a>|
-           <a href="<?php echo $perfil_url ?>" class="btn btn-link">Actividades en campo</a> | <a href="<?php echo $perfil_url ?>" class="btn btn-link">Perfil</a><br />            
+           <a href="<?php echo $activities_url ?>" class="btn btn-link">Actividades en campo</a> | <a href="<?php echo $perfil_url ?>" class="btn btn-link">Perfil</a><br />            
     </div>
         
             <div id="info_<?php echo $value['id'] ?>" style="display: none;">
