@@ -67,3 +67,6 @@ INSERT INTO simulator_default_estacionalidad values
 ( null, 'Octubre', '3', '3', '3' ),
 ( null, 'Noviembre', '15', '5', '5' ),
 ( null, 'Diciembre', '20', '20', '20' );
+
+
+ALTER TABLE policies CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
