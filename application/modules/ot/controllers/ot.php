@@ -2075,13 +2075,15 @@ class Ot extends CI_Controller {
 			 	$this->work_order->create( 'policies_vs_users', $agents );
 														
 			  }
+			  
+			  $payment_date = strtotime( $item->payment_date );
 			  			  
 			  $payment = array( 
 			  	
 				'policy_id' => $policy[0]['id'],
 				'currency_id' => 1,
 				'amount' => $item->amount,
-				'payment_date' => $item->payment_date,
+				'payment_date' => date( 'Y-m-d', $payment_date ),
 				'last_updated' => date( 'Y-m-d H:i:s' ),
 				'business' => $item->is_new,
 				'policy_number' => $item->uid,
