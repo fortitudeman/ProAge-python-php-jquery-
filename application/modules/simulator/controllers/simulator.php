@@ -281,10 +281,16 @@ class Simulator extends CI_Controller {
 		elseif ($_POST['ramo']=="gmm") $product_group_id = 2;
 		elseif ($_POST['ramo']=="autos") $product_group_id = 3;
 		$data = $this->simulators->getByAgent( $agentid, $product_group_id );
-		if( isset( $data[0]['data'] ) )
-		 $dataview = array( 'data' => $data[0]['data'] );
-	    else $dataview = array(); 
-		$this->load->view( 'simulator_'.$_POST['ramo'], $dataview );
+		
+		if( !isset( $_POST['varx'] ) ){
+			if( isset( $data[0]['data'] ) )
+			 $dataview = array( 'data' => $data[0]['data'] );
+			else $dataview = array(); 
+			$this->load->view( 'simulator_'.$_POST['ramo'], $dataview );
+		}else{
+			if( isset( $data[0]['data'] ) )
+				echo $data[0]['data']->id;
+		}
 		
 	}
 	
