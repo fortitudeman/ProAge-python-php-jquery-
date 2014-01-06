@@ -15,10 +15,12 @@
 */ 
 $( document ).ready(function() {
 	
-	$( '#primasnetasiniciales' ).bind( 'keyup', function(){  
-		var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat($( '#porAcotamiento' ).val().replace( '%', '' )/100);	
-		$( '#primasAfectasInicialesPagar_text' ).html( '$ '+moneyFormat(total) );
-		$( '#primasAfectasInicialesPagar' ).val( total );
+	$( '#primasnetasiniciales' ).bind( 'keyup', function(){ 
+		for ($i=1;$i<=3;$i++) {
+			var total = parseFloat( $( '#simulatorPrimasPeriod[$i]' ).val() ) * parseFloat($( '#porAcotamiento' ).val().replace( '%', '' )/100);	
+			$( '#primasAfectasInicialesPagar_text[$i]' ).html( '$ '+moneyFormat(total) );
+			$( '#primasAfectasInicialesPagar[$i]' ).val( total );
+		} 
 		var total = parseFloat( $( '#primasnetasiniciales' ).val() ) / parseFloat($( '#primaspromedio' ).val().replace( '%', '' ));	
 		$( '#nonegocios' ).val( Math.ceil(total) );
 		var total = parseFloat( $( '#primasnetasiniciales' ).val() ) / parseFloat($( '#nonegocios' ).val().replace( '%', '' ));	
@@ -453,4 +455,15 @@ function gmm_ingresopromedio(){
 		$( '#inresoPromedioMensual_text' ).html( '$ '+moneyFormat(total) );
 		$( '#inresoPromedioMensual' ).val( total );
 	
+}
+function ShowHideRow($i) {
+	if(document.getElementById('row'+$i).style.display=='none') {
+		document.getElementById('row'+$i).style.display = '';
+		document.getElementById('showRow'+$i).innerHTML='Ocultar';
+		document.getElementById('Arrow'+$i).innerHTML='&uarr;';
+	} else {
+		document.getElementById('row'+$i).style.display = 'none';
+		document.getElementById('showRow'+$i).innerHTML='Mostrar';
+		document.getElementById('Arrow'+$i).innerHTML='&darr;';
+	}
 }

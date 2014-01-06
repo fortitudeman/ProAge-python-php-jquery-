@@ -94,10 +94,10 @@ $( document ).ready(function() {
 				if( $( '#ramo' ).val() == 3 ) getMetasPeriod( 'autos' );
 			});
 			$( '#primasAfectasInicialesUbicar' ).bind( 'keyup', function(){
-				getMetas();
+				getMetas(); updateIngreso();
 			});
 			$( '#primasnetasiniciales' ).bind( 'keyup', function(){
-				getMetas();
+				getMetas(); updateIngreso();
 			});	
 		}		
 		if( this.id == 'gmm' ){		
@@ -138,10 +138,10 @@ $( document ).ready(function() {
 				if( $( '#ramo' ).val() == 3 ) getMetasPeriod( 'autos' );
 			});
 			$( '#primasAfectasInicialesUbicar' ).bind( 'keyup', function(){
-				getMetas();
+				getMetas(); updateIngreso();
 			});
 			$( '#primasnetasiniciales' ).bind( 'keyup', function(){
-				getMetas();
+				getMetas(); updateIngreso();
 			});		
 			getMetasPeriod( 'gmm' );	
 		}		
@@ -184,10 +184,10 @@ $( document ).ready(function() {
 				if( $( '#ramo' ).val() == 3 ) getMetasPeriod( 'autos' );
 			});
 			$( '#primasAfectasInicialesUbicar' ).bind( 'keyup', function(){
-				getMetas();
+				getMetas(); updateIngreso();
 			});
 			$( '#primasnetasiniciales' ).bind( 'keyup', function(){
-				getMetas();
+				getMetas(); updateIngreso();
 			});		
 		}
 		//getMetasPeriod( this.id );
@@ -198,10 +198,10 @@ $( document ).ready(function() {
 		if( $( '#ramo' ).val() == 3 ) getMetasPeriod( 'autos' );
 	});		
 	$( '#primasAfectasInicialesUbicar' ).bind( 'keyup', function(){
-		getMetas();
+		getMetas(); updateIngreso();
 	});
 	$( '#primasnetasiniciales' ).bind( 'keyup', function(){
-		getMetas();
+		getMetas(); updateIngreso();
 	});	
 		
 	$( '.primas-meta-field' ).hide();
@@ -237,11 +237,6 @@ function getMetasPeriod( ramo ){
 					$( "#prima-total-anual" ).bind( 'keyup', function(){	
 						$( '#primasAfectasInicialesUbicar' ).val(Math.ceil(this.value));	
 						$( '#primasnetasiniciales' ).val(Math.ceil(this.value));
-						updatePrimasMes();					
-						getMetas();
-					});	
-					$( "#primasAfectasInicialesUbicar" ).bind( 'keyup', function(){	
-						$( '#prima-total-anual' ).val(Math.ceil(this.value));	
 						updatePrimasMes();					
 						getMetas();
 					});	
@@ -322,10 +317,10 @@ function getMetasPeriod( ramo ){
 						if( $( '#ramo' ).val() == 3 ) getMetasPeriod( 'autos' );
 					});
 					$( '#primasAfectasInicialesUbicar' ).bind( 'keyup', function(){
-						getMetas();
+						getMetas(); updateIngreso();
 					});
 					$( '#primasnetasiniciales' ).bind( 'keyup', function(){
-						getMetas();
+						getMetas(); updateIngreso();
 					});	
 					$( '#save_meta' ).bind( 'click', function(){
 						save();	
@@ -414,7 +409,9 @@ function getMetas(){
 			// $( '#ramo' ).val() == 1			
 			if( i == 3 && $( '#ramo' ).val() == 1 ){														
 				$( '#primas-meta-primer' ).val( Math.round(totaltrimestre) );
-				$( '#primas-meta-primer-text' ).html( '$ ' + moneyFormat(Math.round(totaltrimestre)));				
+				$( '#primas-meta-primer-text' ).html( '$ ' + moneyFormat(Math.round(totaltrimestre)));
+				$( '#simulatorprimasprimertrimestre' ).val( Math.round(totaltrimestre) );			
+				//alert($( '#simulatorprimasprimertrimestre' ).val() );
 				$( '#simulator-primas-primer-trimestre' ).html( '$ ' + moneyFormat(Math.round(totaltrimestre)));			
 				$( '#primas-negocio-meta-primer' ).val( Math.round(totalnegociometa) );
 				$( '#primas-negocio-meta-primer-text' ).html( Math.round(totalnegociometa) );				
@@ -427,6 +424,7 @@ function getMetas(){
 			if( i == 6 && $( '#ramo' ).val() == 1 ){													
 				$( '#primas-meta-segund' ).val( Math.round(totaltrimestre) );
 				$( '#primas-meta-segund-text' ).html( '$ ' + moneyFormat(Math.round(totaltrimestre)) );				
+				$( '#simulatorprimassegundotrimestre' ).val( Math.round(totaltrimestre) );			
 				$( '#simulator-primas-segundo-trimestre' ).html( '$ ' + moneyFormat(Math.round(totaltrimestre)));		
 				$( '#primas-negocio-meta-segund' ).val( Math.round(totalnegociometa) );
 				$( '#primas-negocio-meta-segund-text' ).html( Math.round(totalnegociometa) );				
@@ -439,6 +437,7 @@ function getMetas(){
 			if( i == 9 && $( '#ramo' ).val() == 1 ){				
 				$( '#primas-meta-tercer' ).val( Math.round(totaltrimestre) );
 				$( '#primas-meta-tercer-text' ).html( '$ ' + moneyFormat(Math.round(totaltrimestre)) );				
+				$( '#simulatorprimastercertrimestre' ).val( Math.round(totaltrimestre) );			
 				$( '#simulator-primas-tercer-trimestre' ).html( '$ ' + moneyFormat(Math.round(totaltrimestre)));		
 				$( '#primas-negocio-meta-tercer' ).val( Math.round(totalnegociometa) );
 				$( '#primas-negocio-meta-tercer-text' ).html( Math.round(totalnegociometa) );				
@@ -451,6 +450,7 @@ function getMetas(){
 			if( i == 12 && $( '#ramo' ).val() == 1 ){
 				$( '#primas-meta-cuarto' ).val( Math.round(totaltrimestre) );
 				$( '#primas-meta-cuarto-text' ).html('$ ' + moneyFormat( Math.round(totaltrimestre)) );				
+				$( '#simulatorprimascuartotrimestre' ).val( Math.round(totaltrimestre) );			
 				$( '#simulator-primas-cuarto-trimestre' ).html( '$ ' + moneyFormat(Math.round(totaltrimestre)));		
 				$( '#primas-negocio-meta-cuarto' ).val( Math.round(totalnegociometa) );
 				$( '#primas-negocio-meta-cuarto-text' ).html( Math.round(totalnegociometa) );				

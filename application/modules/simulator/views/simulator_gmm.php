@@ -48,19 +48,39 @@
         
     </table>    
     
-    
-    
+<table width="100%">
+        <tr>
+
+           <td>
+           <input type="hidden" name="periodo" id="periodo" value="12">
+           <label>Primas netas iniciales anuales:</label></td>
+
+           <td><input type="text" class="input-small" name="primasnetasiniciales" id="primasnetasiniciales" value="<?php if( isset( $data->primasnetasiniciales ) ) echo $data->primasnetasiniciales; else if( isset( $data->primasAfectasInicialesUbicar ) ) echo $data->primasAfectasInicialesUbicar; else echo 0; ?>"></td>
+		   
+           <td><label>% de acotamiento:</label></td>
+
+           <td><input type="text" class="input-small" name="porAcotamiento" id="porAcotamiento" value="<?php if( isset( $data->porAcotamiento ) ) echo $data->porAcotamiento; else echo 0; ?>"></td>
+           
+        </tr>
+       
+        <tr>
+           <td><label>Primas promedio</label></td>
+           <td><input type="text" class="input-small" name="primaspromedio" id="primaspromedio" value="<?php if( isset( $data->primaspromedio ) ) echo $data->primaspromedio; elseif( isset( $data->primas_promedio ) ) echo $data->primas_promedio; else echo 0; ?>"></td> 
+           <td><label>No Negocios:</label></td>
+           <td><input type="text" readonly="readonly" class="input-small" name="nonegocios" id="nonegocios" value="<?php if( isset( $data->nonegocios ) ) echo $data->nonegocios; else echo 0; ?>"></td>
+        </tr>
+</table>
     
     
     
     <table class="table table-bordered">
 		
         
-        <tr>
-        	<td colspan="4"><h6>Primer trimestre:</h6></td>
+        <tr onClick="ShowHideRow(1)" style="cursor: pointer;">
+        	<td colspan="4" style="background-color:#CCCCCC"><h6>Primer cuatrimestre: <span style="color:rgb(32,135,201)"><span id="showRow1" style="text-align:right;">Mostrar</span> simulador <span id="Arrow1">&darr;</span></span></h6></td>
         </tr>
         
-        <tr>
+        <tr onClick="ShowHideRow(1)" style="cursor: pointer;">
            <td><p>Primas del trimestre:</p>
            <input type="hidden" name="simulatorprimasprimertrimestre" id="simulatorprimasprimertrimestre" value="<?php if( isset( $data->simulatorprimasprimertrimestre ) ) echo $data->simulatorprimasprimertrimestre; else echo 0; ?>" />
            </td>
@@ -68,27 +88,42 @@
            <td><p>Ingresos del trimestre</p><input type="hidden" name="simulatoringresosprimertrimestre" id="simulatoringresosprimertrimestre" value="<?php if( isset( $data->simulatoringresosprimertrimestre ) ) echo $data->simulatoringresosprimertrimestre; else echo 0; ?>" /></td>
            <td><div id="simulator-ingresos-primer-trimestre">$ <?php if( isset( $data->simulatoringresosprimertrimestre ) ) echo $data->simulatoringresosprimertrimestre; else echo 0; ?></div></td>
         </tr>
-        
-        <tr>
-        	<td colspan="4"><h6>Segundo trimestre:</h6></td>
+        <tr id="row1" style="display:none">
+        <td colspan="4">
+        <?php showSimulator(1,$data); ?>
+        </td>
         </tr>
         
-        <tr>
+        <tr onClick="ShowHideRow(2)" style="cursor: pointer;">
+        	<td colspan="4" style="background-color:#CCCCCC"><h6>Segundo cuatrimestre: <span style="color:rgb(32,135,201)"><span id="showRow2" style="text-align:right;">Mostrar</span> simulador <span id="Arrow2">&darr;</span></span></h6></td>
+        </tr>
+        
+        <tr onClick="ShowHideRow(2)" style="cursor: pointer;">
            <td><p>Primas del trimestre:</p><input type="hidden" name="simulatorprimassegundotrimestre" id="simulatorprimassegundotrimestre" value="<?php if( isset( $data->simulatorprimassegundotrimestre ) ) echo $data->simulatorprimassegundotrimestre; else echo 0; ?>" /></td>
            <td><div id="simulator-primas-segundo-trimestre">$ <?php if( isset( $data->simulatorprimassegundotrimestre ) ) echo $data->simulatorprimassegundotrimestre; else echo 0; ?></div></td>		   
            <td><p>Ingresos del trimestre</p><input type="hidden" name="simulatoringresossegundotrimestre" id="simulatoringresossegundotrimestre" value="<?php if( isset( $data->simulatoringresossegundotrimestre ) ) echo $data->simulatoringresossegundotrimestre; else echo 0; ?>" /></td>
            <td><div id="simulator-ingresos-segundo-trimestre">$ <?php if( isset( $data->simulatoringresossegundotrimestre ) ) echo $data->simulatoringresossegundotrimestre; else echo 0; ?></div></td>
         </tr>
-        
-        <tr>
-        	<td colspan="4"><h6>Tercer trimestre:</h6></td>
+        <tr id="row2" style="display:none">
+        <td colspan="4">
+        <?php showSimulator(2,$data); ?>
+        </td>
         </tr>
         
-        <tr>
+        <tr onClick="ShowHideRow(3)" style="cursor: pointer;">
+        	<td colspan="4" style="background-color:#CCCCCC"><h6>Tercer cuatrimestre: <span style="color:rgb(32,135,201)"><span id="showRow3" style="text-align:right;">Mostrar</span> simulador <span id="Arrow3">&darr;</span></span></h6></td>
+        </tr>
+        
+        <tr onClick="ShowHideRow(1)" style="cursor: pointer;">
            <td><p>Primas del trimestre:</p><input type="hidden" name="simulatorprimastercertrimestre" id="simulatorprimastercertrimestre" value="<?php if( isset( $data->simulatorprimastercertrimestre ) ) echo $data->simulatorprimastercertrimestre; else echo 0; ?>" /></td>
            <td><div id="simulator-primas-tercer-trimestre">$ <?php if( isset( $data->simulatorprimastercertrimestre ) ) echo $data->simulatorprimastercertrimestre; else echo 0; ?></div></td>		   
            <td><p>Ingresos del trimestre</p><input type="hidden" name="simulatoringresostercertrimestre" id="simulatoringresostercertrimestre" value="<?php if( isset( $data->simulatoringresostercertrimestre ) ) echo $data->simulatoringresostercertrimestre; else echo 0; ?>" /></td>
            <td><div id="simulator-ingresos-tercer-trimestre">$ <?php if( isset( $data->simulatoringresostercertrimestre ) ) echo $data->simulatoringresostercertrimestre; else echo 0; ?></div></td>
+        </tr>
+        <tr id="row3" style="display:none">
+        <td colspan="4">
+        <?php showSimulator(3,$data); ?>
+        </td>
         </tr>
         
         <tr>
@@ -119,27 +154,18 @@
            <td><br></td>
         </tr>-->
         
-        <tr>
-
-           <td>
-           <input type="hidden" name="periodo" id="periodo" value="12">
-           <label>Primas netas iniciales anuales:</label></td>
-
-           <td><input type="text" class="input-small" name="primasnetasiniciales" id="primasnetasiniciales" value="<?php if( isset( $data->primasnetasiniciales ) ) echo $data->primasnetasiniciales; else if( isset( $data->primasAfectasInicialesUbicar ) ) echo $data->primasAfectasInicialesUbicar; else echo 0; ?>"></td>
-		   
-           <td><label>% de acotamiento:</label></td>
-
-           <td><input type="text" class="input-small" name="porAcotamiento" id="porAcotamiento" value="<?php if( isset( $data->porAcotamiento ) ) echo $data->porAcotamiento; else echo 0; ?>"></td>
-           
-        </tr>
        
-        <tr>
-           <td><label>Primas promedio</label></td>
-           <td><input type="text" class="input-small" name="primaspromedio" id="primaspromedio" value="<?php if( isset( $data->primaspromedio ) ) echo $data->primaspromedio; elseif( isset( $data->primas_promedio ) ) echo $data->primas_promedio; else echo 0; ?>"></td> 
-           <td><label>No Negocios:</label></td>
-           <td><input type="text" readonly="readonly" class="input-small" name="nonegocios" id="nonegocios" value="<?php if( isset( $data->nonegocios ) ) echo $data->nonegocios; else echo 0; ?>"></td>
-        </tr>
+     </table>
+	
+     
+    
+        
+ </div> 
 
+<?php 
+function showSimulator($period,$data) {
+?>
+<table width="100%">
         <tr>
            <td><label style="color:#547EBD !important">Primas afectas iniciales para pagos de bonos</label></td>		
            <td>			  
@@ -298,10 +324,7 @@
            <td><br></td>
 
         </tr>
-       
-     </table>
-	
-     
-    
-        
- </div>    
+</table>
+<?php	
+}
+?>
