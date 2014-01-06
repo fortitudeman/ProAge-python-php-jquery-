@@ -175,7 +175,7 @@ $( document ).ready(function() {
 		$( '#primasAfectasInicialesPagar_3' ).val( total );		
 		var total = parseFloat( $( '#simulatorprimastercertrimestre' ).val() ) * parseFloat($( '#comisionVentaInicial_3' ).val().replace( '%', '' )/100);	
 		$( '#ingresoComisionesVentaInicial_text_3' ).html( '$ '+moneyFormat(total) );
-		$( '#ingresoComisionesVentaInicial_3' ).val( total );		
+		$( '#ingresoComisionesVentaInicial_3' ).val( total );
 		var total = parseFloat( $( '#primasAfectasInicialesPagar_3' ).val() ) * parseFloat($( '#bonoAplicado_3' ).val().replace( '%', '' )/100);	
 		$( '#ingresoBonoProductividad_text_3' ).html( '$ '+moneyFormat(total) );
 		$( '#ingresoBonoProductividad_3' ).val( total );		
@@ -187,10 +187,10 @@ $( document ).ready(function() {
 		$( '#bonoAplicado_4' ).val( porcentaje_4 );	
 		var total = parseFloat( $( '#simulatorprimascuartotrimestre' ).val() ) * parseFloat($( '#porAcotamiento' ).val().replace( '%', '' )/100);	
 		$( '#primasAfectasInicialesPagar_text_4' ).html( '$ '+moneyFormat(total) );
-		$( '#primasAfectasInicialesPagar_3' ).val( total );		
+		$( '#primasAfectasInicialesPagar_4' ).val( total );		
 		var total = parseFloat( $( '#simulatorprimascuartotrimestre' ).val() ) * parseFloat($( '#comisionVentaInicial_4' ).val().replace( '%', '' )/100);	
 		$( '#ingresoComisionesVentaInicial_text_4' ).html( '$ '+moneyFormat(total) );
-		$( '#ingresoComisionesVentaInicial_3' ).val( total );		
+		$( '#ingresoComisionesVentaInicial_4' ).val( total );		
 		var total = parseFloat( $( '#primasAfectasInicialesPagar_4' ).val() ) * parseFloat($( '#bonoAplicado_4' ).val().replace( '%', '' )/100);	
 		$( '#ingresoBonoProductividad_text_4' ).html( '$ '+moneyFormat(total) );
 		$( '#ingresoBonoProductividad_4' ).val( total );		
