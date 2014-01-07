@@ -192,7 +192,7 @@
                 
                 <tr>
                     <td><b>TOTAL 1er <br />trimestre</b></td>
-                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                    <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-primer-text" style="text-align: center !important"></div>  
@@ -248,7 +248,7 @@
            
                 <tr>
                     <td><b>TOTAL 1er <br />trimestre</b></td>
-                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                    <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-primer-text" style="text-align: center !important"></div>  
@@ -304,7 +304,7 @@
                 
                 <tr>
                     <td><b>TOTAL 1er <br />cuatrimestre</b></td>
-                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                    <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-primer-text" style="text-align: center !important"></div>  
@@ -360,7 +360,7 @@
            
                 <tr>
                     <td><b>TOTAL 1er <br />cuatrimestre</b></td>
-                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                    <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-primer-text" style="text-align: center !important"></div>  
@@ -424,7 +424,7 @@
            		
                 <tr>
             	<td><b>TOTAL 2do <br />trimestre</b></td>
-                <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
                 	
                     <div id="primas-solicitud-meta-segund-text" style="text-align: center !important"></div>  
@@ -483,7 +483,7 @@
            
                <tr>
             	<td><b>TOTAL 2do <br />trimestre</b></td>
-                <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
                 	
                     <div id="primas-solicitud-meta-segund-text" style="text-align: center !important"></div>  
@@ -541,7 +541,7 @@
                 
                 <tr>
                     <td><b>TOTAL 2do <br />cuatrimestre</b></td>
-                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                    <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-second-text" style="text-align: center !important"></div>  
@@ -597,7 +597,7 @@
            
                 <tr>
                     <td><b>TOTAL 2do <br />cuatrimestre</b></td>
-                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                    <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-second-text" style="text-align: center !important"></div>  
@@ -661,7 +661,7 @@
                 
               <tr>
             	<td><b>TOTAL 3er <br />trimestre</b></td>
-                <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
                 	
                     <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
@@ -719,7 +719,7 @@
                 
               <tr>
             	<td><b>TOTAL 3er <br />trimestre</b></td>
-                <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
                 	
                     <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
@@ -782,7 +782,7 @@
                                 
                <tr>
             	<td><b>TOTAL 4to <br />trimestre</b></td>
-                <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
                 	
                     <div id="primas-solicitud-meta-cuarto-text" style="text-align: center !important"></div>  
@@ -841,7 +841,7 @@
            
                <tr>
             	<td><b>TOTAL 4to <br />trimestre</b></td>
-                <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
                 	
                     <div id="primas-solicitud-meta-cuarto-text" style="text-align: center !important"></div>  
@@ -900,7 +900,7 @@
                 
                 <tr>
                     <td><b>TOTAL 4to <br />cuatrimestre</b></td>
-                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                    <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
@@ -956,7 +956,7 @@
            
                 <tr>
                     <td><b>TOTAL 4to <br />cuatrimestre</b></td>
-                    <td class="bgestacionalidadbold"><strong><?php echo $total; $totalgeneral+=$total; $total=0; ?> %</strong></td>
+                    <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
                         
                         <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
@@ -1036,7 +1036,7 @@
         
           <tr>
             	<td style="font-size:18px"><b>TOTAL</b></td>
-                <td class="bgestacionalidadbold" style="font-size:18px;"><?php echo $totalgeneral; ?> %</td>
+                <td class="bgestacionalidadbold" style="font-size:18px;">100 %</td>
                 <td class="bgyelowbold">
                 	
                     <div id="primas-solicitud-meta-total-text" style="text-align: center !important; font-size:18px;"></div>  
