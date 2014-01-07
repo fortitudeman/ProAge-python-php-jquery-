@@ -303,7 +303,7 @@ function getMetasPeriod( ramo ){
 									var primas = $( '#primasAfectasInicialesUbicar' ).val();
 										if( !$( '#primasAfectasInicialesUbicar' ).val() ) primas = $( '#primasnetasiniciales' ).val();
 																			  
-									var porcentaje =  Math.round((parseInt($( '#primas-meta-'+i ).val()) / parseFloat(primas)*100)*100)/100;								
+									var porcentaje =  Math.round((parseInt($( '#primas-meta-'+i ).val()) / parseFloat(primas)*10000)*100)/10000;								
 										$( '#mes-'+i ).val(porcentaje);
 										$( '#mes-text-'+i ).html(porcentaje);
 							}	
