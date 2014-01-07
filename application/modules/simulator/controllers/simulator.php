@@ -213,8 +213,11 @@ class Simulator extends CI_Controller {
 			$settingmeta = '<script type="text/javascript">$(document).ready( function(){   $( ".simulator" ).hide(); $( ".metas" ).show(); });</script>';
 			
 		};*/	
-						
-		$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "vida" ); getMetas(); }); </script>';
+		if ($ramo==1) $ShowMeta = "vida";				
+		elseif ($ramo==2) $ShowMeta = "gmm";				
+		elseif ($ramo==3) $ShowMeta = "autos";	
+					
+		$requestPromedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "'.$ShowMeta.'" ); getMetas(); }); </script>';
 		//$simulator = 'vida';
 		if( !empty( $data ) )			
 			if( $data[0]['data']->ramo == 1 ){ $simulator = 'vida';

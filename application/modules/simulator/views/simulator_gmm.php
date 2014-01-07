@@ -13,6 +13,7 @@
 
   	
 */
+
 ?>  <input type="hidden" id="saves" name="saves" value="<?php if( !empty( $data ) ) echo 1; else echo 0; ?>" />    
 
  <div class="box-content">
@@ -38,8 +39,8 @@
             <td class="totales"><b style="color:#547EBD !important">INGRESO PROMEDIO MENSUAL:</b></td>
 
            <td style="text-align:right">
-			  <p style="color:#547EBD !important; float:right" id="inresoPromedioMensual_text">$ <?php if( isset( $data->ingresoBonoRenovacion ) ) echo $data->ingresoBonoRenovacion; else echo 0; ?></p>	
-              <input type="hidden" name="ingresoBonoRenovacion" id="inresoPromedioMensual" value="<?php if( isset( $data->ingresoBonoRenovacion ) ) echo $data->ingresoBonoRenovacion; else echo 0; ?>">
+			  <p style="color:#547EBD !important; float:right" id="ingresoPromedioMensual_text">$ <?php if( isset( $data->ingresoPromedioMensual ) ) echo $data->ingresoPromedioMensual; else echo 0; ?></p>	
+              <input type="hidden" name="ingresoBonoRenovacion" id="ingresoPromedioMensual" value="<?php if( isset( $data->ingresoPromedioMensual ) ) echo $data->ingresoPromedioMensual; else echo 0; ?>">
 
            </td>
            <td style="vertical-align:middle"><input type="button" value="Guardar Meta" class="pull-right btn-save-meta" style="margin-top:10px;" onclick="save();"/></td>
@@ -81,12 +82,12 @@
         </tr>
         
         <tr onClick="ShowHideRow(1)" style="cursor: pointer;">
-           <td><p>Primas del trimestre:</p>
-           <input type="hidden" name="simulatorprimasprimertrimestre" id="simulatorprimasprimertrimestre" value="<?php if( isset( $data->simulatorprimasprimertrimestre ) ) echo $data->simulatorprimasprimertrimestre; else echo 0; ?>" />
+           <td><p>Primas del período:</p>
+           <input type="hidden" name="simulatorPrimasPeriod[1]" id="simulatorPrimasPeriod[1]" value="<?php $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } else echo 0; ?>" />
            </td>
-           <td><div id="simulator-primas-primer-trimestre">$ <?php if( isset( $data->simulatorprimasprimertrimestre ) ) echo $data->simulatorprimasprimertrimestre; else echo 0; ?></div></td>		   
-           <td><p>Ingresos del trimestre</p><input type="hidden" name="simulatoringresosprimertrimestre" id="simulatoringresosprimertrimestre" value="<?php if( isset( $data->simulatoringresosprimertrimestre ) ) echo $data->simulatoringresosprimertrimestre; else echo 0; ?>" /></td>
-           <td><div id="simulator-ingresos-primer-trimestre">$ <?php if( isset( $data->simulatoringresosprimertrimestre ) ) echo $data->simulatoringresosprimertrimestre; else echo 0; ?></div></td>
+           <td><div id="simulatorPrimasPeriod_text[1]">$ <?php $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } else echo 0; ?></div></td>		   
+           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[1]" id="simulatorIngresosPeriod[1]" value="<?php $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } else echo 0; ?>" /></td>
+           <td><div id="simulatorIngresosPeriod_text[1]">$ <?php $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } else echo 0; ?></div></td>
         </tr>
         <tr id="row1" style="display:none">
         <td colspan="4">
@@ -99,10 +100,12 @@
         </tr>
         
         <tr onClick="ShowHideRow(2)" style="cursor: pointer;">
-           <td><p>Primas del trimestre:</p><input type="hidden" name="simulatorprimassegundotrimestre" id="simulatorprimassegundotrimestre" value="<?php if( isset( $data->simulatorprimassegundotrimestre ) ) echo $data->simulatorprimassegundotrimestre; else echo 0; ?>" /></td>
-           <td><div id="simulator-primas-segundo-trimestre">$ <?php if( isset( $data->simulatorprimassegundotrimestre ) ) echo $data->simulatorprimassegundotrimestre; else echo 0; ?></div></td>		   
-           <td><p>Ingresos del trimestre</p><input type="hidden" name="simulatoringresossegundotrimestre" id="simulatoringresossegundotrimestre" value="<?php if( isset( $data->simulatoringresossegundotrimestre ) ) echo $data->simulatoringresossegundotrimestre; else echo 0; ?>" /></td>
-           <td><div id="simulator-ingresos-segundo-trimestre">$ <?php if( isset( $data->simulatoringresossegundotrimestre ) ) echo $data->simulatoringresossegundotrimestre; else echo 0; ?></div></td>
+           <td><p>Primas del período:</p>
+           <input type="hidden" name="simulatorPrimasPeriod[2]" id="simulatorPrimasPeriod[2]" value="<?php $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } else echo 0; ?>" />
+           </td>
+           <td><div id="simulatorPrimasPeriod_text[2]">$ <?php $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } else echo 0; ?></div></td>		   
+           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[2]" id="simulatorIngresosPeriod[2]" value="<?php $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } else echo 0; ?>" /></td>
+           <td><div id="simulatorIngresosPeriod_text[2]">$ <?php $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } else echo 0; ?></div></td>
         </tr>
         <tr id="row2" style="display:none">
         <td colspan="4">
@@ -114,11 +117,13 @@
         	<td colspan="4" style="background-color:#CCCCCC"><h6>Tercer cuatrimestre: <span style="color:rgb(32,135,201)"><span id="showRow3" style="text-align:right;">Mostrar</span> simulador <span id="Arrow3">&darr;</span></span></h6></td>
         </tr>
         
-        <tr onClick="ShowHideRow(1)" style="cursor: pointer;">
-           <td><p>Primas del trimestre:</p><input type="hidden" name="simulatorprimastercertrimestre" id="simulatorprimastercertrimestre" value="<?php if( isset( $data->simulatorprimastercertrimestre ) ) echo $data->simulatorprimastercertrimestre; else echo 0; ?>" /></td>
-           <td><div id="simulator-primas-tercer-trimestre">$ <?php if( isset( $data->simulatorprimastercertrimestre ) ) echo $data->simulatorprimastercertrimestre; else echo 0; ?></div></td>		   
-           <td><p>Ingresos del trimestre</p><input type="hidden" name="simulatoringresostercertrimestre" id="simulatoringresostercertrimestre" value="<?php if( isset( $data->simulatoringresostercertrimestre ) ) echo $data->simulatoringresostercertrimestre; else echo 0; ?>" /></td>
-           <td><div id="simulator-ingresos-tercer-trimestre">$ <?php if( isset( $data->simulatoringresostercertrimestre ) ) echo $data->simulatoringresostercertrimestre; else echo 0; ?></div></td>
+        <tr onClick="ShowHideRow(3)" style="cursor: pointer;">
+           <td><p>Primas del período:</p>
+           <input type="hidden" name="simulatorPrimasPeriod[3]" id="simulatorPrimasPeriod[3]" value="<?php $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } else echo 0; ?>" />
+           </td>
+           <td><div id="simulatorPrimasPeriod_text[3]">$ <?php $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } else echo 0; ?></div></td>		   
+           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[3]" id="simulatorIngresosPeriod[3]" value="<?php $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } else echo 0; ?>" /></td>
+           <td><div id="simulatorIngresosPeriod_text[3]">$ <?php $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } else echo 0; ?></div></td>
         </tr>
         <tr id="row3" style="display:none">
         <td colspan="4">
@@ -163,14 +168,22 @@
  </div> 
 
 <?php 
-function showSimulator($period,$data) {
+function showSimulator($i,$data) {
 ?>
 <table width="100%">
         <tr>
+           
+           <td><label>No. de Negocios:</label></td>
+
+           <td colspan="3"> <input type="text" readonly="readonly" class="input-small" name="noNegocios[<?php echo $i ?>]" id="noNegocios[<?php echo $i ?>]" value="<?php $field = $data->noNegocios; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?>">
+</td>
+          
+        </tr>
+        <tr>
            <td><label style="color:#547EBD !important">Primas afectas iniciales para pagos de bonos</label></td>		
            <td>			  
-              <p style="color:#547EBD !important; float:right" id="primasAfectasInicialesPagar_text">$ <?php if( isset( $data->primasAfectasInicialesPagar ) ) echo $data->primasAfectasInicialesPagar; else echo 0; ?></p>	
-              <input type="hidden" name="primasAfectasInicialesPagar" id="primasAfectasInicialesPagar" value="<?php if( isset( $data->primasAfectasInicialesPagar ) ) echo $data->primasAfectasInicialesPagar; else echo 0; ?>">
+              <p style="color:#547EBD !important; float:right" id="primasAfectasInicialesPagar_text[<?php echo $i ?>]">$ <?php $field = $data->primasAfectasInicialesPagar; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?></p>	
+              <input type="hidden" name="primasAfectasInicialesPagar[<?php echo $i ?>]" id="primasAfectasInicialesPagar[<?php echo $i ?>]" value="<?php $field = $data->primasAfectasInicialesPagar; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?>">
            </td>
            <td><br></td>
            <td><br></td>	           
@@ -191,7 +204,7 @@ function showSimulator($period,$data) {
 
            <td>
 
-              <input type="text" class="input-small" name="primasRenovacion" id="primasRenovacion" value="<?php if( isset( $data->primasRenovacion ) ) echo $data->primasRenovacion; else echo 0; ?>">
+              <input type="text" class="input-small" name="primasRenovacion[<?php echo $i ?>]" id="primasRenovacion[<?php echo $i ?>]" value="<?php $field = $data->primasRenovacion; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?>">
 
            </td>
 		   
@@ -199,7 +212,7 @@ function showSimulator($period,$data) {
 
            <td>
 
-              <input type="text" class="input-small" name="XAcotamiento" id="XAcotamiento" value="<?php if( isset( $data->XAcotamiento ) ) echo $data->XAcotamiento; else echo 0; ?>">
+              <input type="text" class="input-small" name="XAcotamiento[<?php echo $i ?>]" id="XAcotamiento[<?php echo $i ?>]" value="<?php $field = $data->XAcotamiento; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?>">
 
            </td>
            
@@ -207,12 +220,14 @@ function showSimulator($period,$data) {
 		
         
         <tr>
-           <td colspan="3"><label style="color:#547EBD !important">Primas de renovación para pagar:</label></td>
+           <td><label style="color:#547EBD !important">Primas de renovación para pagar:</label></td>
            <td>			  
-              <p style="color:#547EBD !important; float:right" id="primasRenovacionPagar_text">$ <?php if( isset( $data->primasRenovacionPagar ) ) echo $data->primasRenovacionPagar; else echo 0; ?></p>	
-              <input type="hidden" name="primasRenovacionPagar" id="primasRenovacionPagar" value="<?php if( isset( $data->primasRenovacionPagar ) ) echo $data->primasRenovacionPagar; else echo 0; ?>">              
+              <p style="color:#547EBD !important; float:right" id="primasRenovacionPagar_text[<?php echo $i ?>]">$ <?php $field = $data->primasRenovacionPagar; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?></p>	
+              <input type="hidden" name="primasRenovacionPagar[<?php echo $i ?>]" id="primasRenovacionPagar[<?php echo $i ?>]" value="<?php $field = $data->primasRenovacionPagar; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?>">              
 
            </td>
+           <td><br></td>
+           <td><br></td>
         </tr>
 		
         <tr>
@@ -231,24 +246,24 @@ function showSimulator($period,$data) {
          <tr>
            <td><label>% de comisión venta inicial:</label></td>
            <td>
-              <input type="text" class="input-small" name="comisionVentaInicial" id="comisionVentaInicial" value="<?php if( isset( $data->comisionVentaInicial ) ) echo $data->comisionVentaInicial; else echo 0; ?>">
+              <input type="text" class="input-small" name="comisionVentaInicial[<?php echo $i ?>]" id="comisionVentaInicial[<?php echo $i ?>]" value="<?php $field = $data->comisionVentaInicial; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?>">
            </td>		   
            <td><label style="color:#547EBD !important">Ingreso por comisiones:</label></td>
            <td>			  
-              <p style="color:#547EBD !important; float:right" id="ingresoComisionesVentaInicial_text">$ <?php if( isset( $data->ingresoComisionesVentaInicial ) ) echo $data->ingresoComisionesVentaInicial; else echo 0; ?></p>	
-              <input type="hidden" name="ingresoComisionesVentaInicial" id="ingresoComisionesVentaInicial" value="<?php if( isset( $data->ingresoComisionesVentaInicial ) ) echo $data->ingresoComisionesVentaInicial; else echo 0; ?>">           
+              <p style="color:#547EBD !important; float:right" id="ingresoComisionesVentaInicial_text[<?php echo $i ?>]">$ <?php $field = $data->ingresoComisionesVentaInicial; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?></p>	
+              <input type="hidden" name="ingresoComisionesVentaInicial[<?php echo $i ?>]" id="ingresoComisionesVentaInicial[<?php echo $i ?>]" value="<?php $field = $data->ingresoComisionesVentaInicial; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?>">           
            </td>  
         </tr>
         
         <tr>        	
            <td><label>% de comisión venta de renovación:</label></td>
            <td>
-              <input type="text" class="input-small" name="comisionVentaRenovacion" id="comisionVentaRenovacion" value="<?php if( isset( $data->comisionVentaRenovacion ) ) echo $data->comisionVentaRenovacion; else echo 0; ?>" >
+              <input type="text" class="input-small" name="comisionVentaRenovacion[<?php echo $i ?>]" id="comisionVentaRenovacion[<?php echo $i ?>]" value="<?php $field = $data->comisionVentaRenovacion; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?>" >
            </td>   
            <td><label style="color:#547EBD !important">Ingreso por comisiones de renovación</label></td>
            <td>			  
-              <p style="color:#547EBD !important; float:right" id="ingresoComisionRenovacion_text">$ <?php if( isset( $data->ingresoComisionRenovacion ) ) echo $data->ingresoComisionRenovacion; else echo 0; ?></p>	
-              <input type="hidden" name="ingresoComisionRenovacion" id="ingresoComisionRenovacion" value="<?php if( isset( $data->ingresoComisionRenovacion ) ) echo $data->ingresoComisionRenovacion; else echo 0; ?>">              
+              <p style="color:#547EBD !important; float:right" id="ingresoComisionRenovacion_text[<?php echo $i ?>]">$ <?php $field = $data->ingresoComisionRenovacion; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?></p>	
+              <input type="hidden" name="ingresoComisionRenovacion[<?php echo $i ?>]" id="ingresoComisionRenovacion[<?php echo $i ?>]" value="<?php $field = $data->ingresoComisionRenovacion; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?>">              
            </td>
         </tr>        
         
@@ -268,12 +283,12 @@ function showSimulator($period,$data) {
         <tr>
            <td><label>% de bono aplicado:</label></td>
            <td>
-              <input type="text" class="input-small" name="bonoAplicado" id="bonoAplicado" value="<?php if( isset( $data->bonoAplicado ) ) echo $data->bonoAplicado; else echo 0; ?>" readonly="readonly">
+              <input type="text" class="input-small" name="bonoAplicado[<?php echo $i ?>]" id="bonoAplicado[<?php echo $i ?>]" value="<?php $field = $data->bonoAplicado; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?>" readonly="readonly">
            </td>              
            <td><label style="color:#547EBD !important">Ingreso por bono de productividad:</label></td>
            <td>			  
-              <p style="color:#547EBD !important; float:right" id="ingresoBonoProductividad_text">$ <?php if( isset( $data->ingresoBonoProductividad ) ) echo $data->ingresoBonoProductividad; else echo 0; ?></p>	
-              <input type="hidden" name="ingresoBonoProductividad" id="ingresoBonoProductividad" value="<?php if( isset( $data->ingresoBonoProductividad ) ) echo $data->ingresoBonoProductividad; else echo 0; ?>">
+              <p style="color:#547EBD !important; float:right" id="ingresoBonoProductividad_text[<?php echo $i ?>]">$ <?php $field = $data->ingresoBonoProductividad; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?></p>	
+              <input type="hidden" name="ingresoBonoProductividad[<?php echo $i ?>]" id="ingresoBonoProductividad[<?php echo $i ?>]" value="<?php $field = $data->ingresoBonoProductividad; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?>">
                          </td>
         </tr>
 
@@ -294,34 +309,33 @@ function showSimulator($period,$data) {
 
            <td><label>% de siniestridad:</label></td>
            <td>
-			  <select name="porsiniestridad" id="porsiniestridad" class="input-small">
+			  <select name="porsiniestridad[<?php echo $i ?>]" id="porsiniestridad[<?php echo $i ?>]" class="input-small">
               		<option value="">Seleccione</option>
-                    <option value="68" <?php if( isset( $data->porsiniestridad ) and $data->porsiniestridad == 68 ) echo 'selected="selected"'?>>68</option>
-                    <option value="64" <?php if( isset( $data->porsiniestridad ) and $data->porsiniestridad == 64 ) echo 'selected="selected"'?>>64</option>
-                    <option value="60" <?php if( isset( $data->porsiniestridad ) and $data->porsiniestridad == 60 ) echo 'selected="selected"'?>>60</option>
+                    <option value="68" <?php $field = $data->porsiniestridad; if( isset( $field->$i ) and $field->$i == 68 ) echo 'selected="selected"'; ?>>68</option>
+                    <option value="64" <?php $field = $data->porsiniestridad; if( isset( $field->$i ) and $field->$i == 64 ) echo 'selected="selected"'; ?>>64</option>
+                    <option value="60" <?php $field = $data->porsiniestridad; if( isset( $field->$i ) and $field->$i == 60 ) echo 'selected="selected"'; ?>>60</option>
               </select>
               
            </td>           
            <td><label>% de bono ganado:</label></td>
 
-           <td><input readonly="readonly" type="text" name="porbonoganado" id="porbonoganado" value="<?php if( isset( $data->porbonoganado ) ) echo $data->porbonoganado; else echo 0; ?>"></td>
+           <td><input readonly="readonly" type="text" name="porbonoganado[<?php echo $i ?>]" id="porbonoganado[<?php echo $i ?>]" value="<?php $field = $data->porbonoganado; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?>"></td>
 
         </tr>
 
         <tr>
 
+		   <td><br></td>
+           <td><br></td>
            <td><label style="color:#547EBD !important">Ingreso por bono de renovación:</label></td>
 
            <td>
 			  
-              <p style="color:#547EBD !important; float:right" id="ingresoBonoRenovacion_text">$ <?php if( isset( $data->ingresoBonoRenovacion ) ) echo $data->ingresoBonoRenovacion; else echo 0; ?></p>	
-              <input type="hidden" name="ingresoBonoRenovacion" id="ingresoBonoRenovacion" value="<?php if( isset( $data->ingresoBonoRenovacion ) ) echo $data->ingresoBonoRenovacion; else echo 0; ?>" >
+              <p style="color:#547EBD !important; float:right" id="ingresoBonoRenovacion_text[<?php echo $i ?>]">$ <?php $field = $data->ingresoBonoRenovacion; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?> </p>	
+              <input type="hidden" name="ingresoBonoRenovacion[<?php echo $i ?>]" id="ingresoBonoRenovacion[<?php echo $i ?>]" value="<?php $field = $data->ingresoBonoRenovacion; if( isset( $field->$i ) ) echo $field->$i; else echo 0; ?>" >
 
            </td>
            
-           <td><br></td>
-
-           <td><br></td>
 
         </tr>
 </table>

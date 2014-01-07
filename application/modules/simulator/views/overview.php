@@ -56,20 +56,20 @@
           
           <?php endif; ?>
           <h3>Simulador de metas para <?php echo $users[0]['name'] . " " . $users[0]['lastnames']?></h3>
-          <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 1 or isset( $ramo ) and $ramo == 'vida' ): ?>  
+          <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 1 or isset( $ramo ) and $ramo == 'vida' ): $ramoID = 1; ?>  
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#06F">Vida</a>
           <?php else: ?>   
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#000">Vida</a>
           <?php endif; ?>              
                               
-          <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 2 or isset( $ramo ) and $ramo == 'gmm' ): ?> 
+          <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 2 or isset( $ramo ) and $ramo == 'gmm' ): $ramoID = 2; ?> 
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" style="color:#06F">GMM</a>
           <?php else: ?>   
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" style="color:#000">GMM</a>
           <?php endif; ?>     
           
           
-          <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 3 or isset( $ramo ) and $ramo == 'autos' ): ?> 
+          <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 3 or isset( $ramo ) and $ramo == 'autos' ): $ramoID = 3; ?> 
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" style="color:#06F">Autos</a>
           <?php else: ?>   
               <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" style="color:#000">Autos</a>
@@ -77,7 +77,7 @@
           
           <form action="" method="post" id="form">
           
-          <input type="hidden" id="ramo" name="ramo" value="<?php if( isset( $data[0]['product_group_id'] ) ) echo $data[0]['product_group_id']; else echo 1; ?>" />    
+          <input type="hidden" id="ramo" name="ramo" value="<?php if( isset( $ramoID ) ) echo $ramoID; else echo 1; ?>" />    
           
           <input type="hidden" id="userid" name="userid" value="<?php echo $userid ?>" />    
           
@@ -103,7 +103,7 @@
                     
             <?php if( isset( $config ) ){
 					 $dataview = array( 'config' => $config );
-				  }else $dataview = array();  
+				  } else $dataview = array();  
 				  				  
 				  $this->load->view( 'metas', array( $dataview ) ) ?>
             
