@@ -83,11 +83,11 @@
         
         <tr onClick="ShowHideRow(1)" style="cursor: pointer;">
            <td><p>Primas del período:</p>
-           <input type="hidden" name="simulatorPrimasPeriod[1]" id="simulatorPrimasPeriod[1]" value="<?php $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } else echo 0; ?>" />
+           <input type="hidden" name="simulatorPrimasPeriod[1]" id="simulatorPrimasPeriod[1]" value="<?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } } else echo 0; ?>" />
            </td>
-           <td><div id="simulatorPrimasPeriod_text[1]">$ <?php $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } else echo 0; ?></div></td>		   
-           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[1]" id="simulatorIngresosPeriod[1]" value="<?php $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } else echo 0; ?>" /></td>
-           <td><div id="simulatorIngresosPeriod_text[1]">$ <?php $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } else echo 0; ?></div></td>
+           <td><div id="simulatorPrimasPeriod_text[1]">$ <?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } } else echo 0; ?></div></td>		   
+           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[1]" id="simulatorIngresosPeriod[1]" value="<?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } } else echo 0; ?>" /></td>
+           <td><div id="simulatorIngresosPeriod_text[1]">$ <?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } } else echo 0; ?></div></td>
         </tr>
         <tr id="row1" style="display:none">
         <td colspan="4">
@@ -101,11 +101,11 @@
         
         <tr onClick="ShowHideRow(2)" style="cursor: pointer;">
            <td><p>Primas del período:</p>
-           <input type="hidden" name="simulatorPrimasPeriod[2]" id="simulatorPrimasPeriod[2]" value="<?php $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } else echo 0; ?>" />
+           <input type="hidden" name="simulatorPrimasPeriod[2]" id="simulatorPrimasPeriod[2]" value="<?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } } else echo 0; ?>" />
            </td>
-           <td><div id="simulatorPrimasPeriod_text[2]">$ <?php $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } else echo 0; ?></div></td>		   
-           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[2]" id="simulatorIngresosPeriod[2]" value="<?php $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } else echo 0; ?>" /></td>
-           <td><div id="simulatorIngresosPeriod_text[2]">$ <?php $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } else echo 0; ?></div></td>
+           <td><div id="simulatorPrimasPeriod_text[2]">$ <?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } } else echo 0; ?></div></td>		   
+           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[2]" id="simulatorIngresosPeriod[2]" value="<?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } } else echo 0; ?>" /></td>
+           <td><div id="simulatorIngresosPeriod_text[2]">$ <?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } } else echo 0; ?></div></td>
         </tr>
         <tr id="row2" style="display:none">
         <td colspan="4">
@@ -119,11 +119,11 @@
         
         <tr onClick="ShowHideRow(3)" style="cursor: pointer;">
            <td><p>Primas del período:</p>
-           <input type="hidden" name="simulatorPrimasPeriod[3]" id="simulatorPrimasPeriod[3]" value="<?php $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } else echo 0; ?>" />
+           <input type="hidden" name="simulatorPrimasPeriod[3]" id="simulatorPrimasPeriod[3]" value="<?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } } else echo 0; ?>" />
            </td>
-           <td><div id="simulatorPrimasPeriod_text[3]">$ <?php $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } else echo 0; ?></div></td>		   
-           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[3]" id="simulatorIngresosPeriod[3]" value="<?php $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } else echo 0; ?>" /></td>
-           <td><div id="simulatorIngresosPeriod_text[3]">$ <?php $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } else echo 0; ?></div></td>
+           <td><div id="simulatorPrimasPeriod_text[3]">$ <?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } } else echo 0; ?></div></td>		   
+           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[3]" id="simulatorIngresosPeriod[3]" value="<?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } } else echo 0; ?>" /></td>
+           <td><div id="simulatorIngresosPeriod_text[3]">$ <?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } } else echo 0; ?></div></td>
         </tr>
         <tr id="row3" style="display:none">
         <td colspan="4">

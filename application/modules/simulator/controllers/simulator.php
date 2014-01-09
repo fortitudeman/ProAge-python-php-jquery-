@@ -643,7 +643,7 @@ class Simulator extends CI_Controller {
 			$this->session->set_flashdata( 'message', array( 
 				
 				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Simulador Crear", Informe a su administrador para que le otorge los permisos necesarios.'
+				'message' => 'No tiene permisos para ingresar en esta sección "Simulador Crear", Informe a su administrador para que le otorgue los permisos necesarios.'
 							
 			));	
 			
@@ -657,7 +657,6 @@ class Simulator extends CI_Controller {
 		$this->load->model( array( 'simulators' ) );
 		
 		$simulator = array(
-			'period' => $_POST['periodo'],
 			'agent_id' => $_POST['agent_id'],
 			'product_group_id' => $_POST['ramo'],
 			'data' => json_encode($_POST)

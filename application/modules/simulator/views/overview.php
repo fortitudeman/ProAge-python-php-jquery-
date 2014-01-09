@@ -57,22 +57,22 @@
           <?php endif; ?>
           <h3>Simulador de metas para <?php echo $users[0]['name'] . " " . $users[0]['lastnames']?></h3>
           <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 1 or isset( $ramo ) and $ramo == 'vida' ): $ramoID = 1; ?>  
-              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#06F">Vida</a>
+              <a href="../<?php echo $userid; ?>/1.html" class="links-menu btn btn-link" id="vida" style="color:#06F">Vida</a>
           <?php else: ?>   
-              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#000">Vida</a>
+              <a href="../<?php echo $userid; ?>/1.html" class="links-menu btn btn-link" id="vida" style="color:#000">Vida</a>
           <?php endif; ?>              
                               
           <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 2 or isset( $ramo ) and $ramo == 'gmm' ): $ramoID = 2; ?> 
-              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" style="color:#06F">GMM</a>
+              <a href="../<?php echo $userid; ?>/2.html" class="links-menu btn btn-link" id="gmm" style="color:#06F">GMM</a>
           <?php else: ?>   
-              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" style="color:#000">GMM</a>
+              <a href="../<?php echo $userid; ?>/2.html" class="links-menu btn btn-link" id="gmm" style="color:#000">GMM</a>
           <?php endif; ?>     
           
           
           <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 3 or isset( $ramo ) and $ramo == 'autos' ): $ramoID = 3; ?> 
-              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" style="color:#06F">Autos</a>
+              <a href="../<?php echo $userid; ?>/3.html" class="links-menu btn btn-link" id="autos" style="color:#06F">Autos</a>
           <?php else: ?>   
-              <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" style="color:#000">Autos</a>
+              <a href="../<?php echo $userid; ?>/3.html" class="links-menu btn btn-link" id="autos" style="color:#000">Autos</a>
           <?php endif; ?>        
           
           <form action="" method="post" id="form">
