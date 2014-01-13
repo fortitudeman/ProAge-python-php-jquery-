@@ -69,11 +69,11 @@
           <?php endif; ?>     
           
           
-          <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 3 or isset( $ramo ) and $ramo == 'autos' ): $ramoID = 3; ?> 
+          <?php /* if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 3 or isset( $ramo ) and $ramo == 'autos' ): $ramoID = 3; ?> 
               <a href="../<?php echo $userid; ?>/3.html" class="links-menu btn btn-link" id="autos" style="color:#06F">Autos</a>
           <?php else: ?>   
               <a href="../<?php echo $userid; ?>/3.html" class="links-menu btn btn-link" id="autos" style="color:#000">Autos</a>
-          <?php endif; ?>        
+          <?php endif; */ ?>        
           
           <form action="" method="post" id="form">
           

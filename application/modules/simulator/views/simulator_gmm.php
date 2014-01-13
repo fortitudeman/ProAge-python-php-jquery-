@@ -43,7 +43,7 @@
               <input type="hidden" name="ingresoBonoRenovacion" id="ingresoPromedioMensual" value="<?php if( isset( $data->ingresoPromedioMensual ) ) echo $data->ingresoPromedioMensual; else echo 0; ?>">
 
            </td>
-           <td style="vertical-align:middle"><input type="button" value="Guardar Meta" class="pull-right btn-save-meta" style="margin-top:10px;" onclick="save();"/></td>
+           <!--<td style="vertical-align:middle"><input type="button" value="Guardar Meta" class="pull-right btn-save-meta" style="margin-top:10px;" onclick="save();"/></td>-->
 
         </tr>
         
