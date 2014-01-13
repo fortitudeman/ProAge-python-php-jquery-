@@ -19,10 +19,10 @@
 <div>
     <ul class="breadcrumb">
         <li>
-            <a href="<?php echo base_url() ?>">Admin</a> <span class="divider">/</span>
+            <a href="<?php echo base_url() ?>">Inicio</a> <span class="divider">/</span>
         </li>
         <li>
-            <a href="<?php echo base_url() ?>activities<?php if( !empty( $userid ) ) echo '/index/'.$userid  ?>.html">Actividad</a> <span class="divider">/</span>
+           <a href="<?php echo base_url() ?>activities/activities.html">Actividades</a> <span class="divider">/</span>
         </li>
         <li>
             Crear <span class="divider">/</span>

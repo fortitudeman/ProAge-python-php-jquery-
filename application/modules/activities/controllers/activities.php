@@ -30,6 +30,11 @@ class Activities extends CI_Controller {
 	public $access_update = false;
 	
 	public $access_delete = false;
+
+	public $access_report = false;
+
+	public $access_viewall = false;
+
 	
 /** Construct Function **/
 /** Setting Load perms **/
@@ -76,7 +81,12 @@ class Activities extends CI_Controller {
 				
 			if( $value['action_name'] == 'Eliminar' )
 				$this->access_delete = true;	
+
+			if( $value['action_name'] == 'Ver reporte' )
+				$this->access_report = true;	
 			
+			if( $value['action_name'] == 'Ver todos los registros' )
+				$this->access_viewall = true;	
 			
 		endif; endforeach;
 							
@@ -99,7 +109,7 @@ class Activities extends CI_Controller {
 			$this->session->set_flashdata( 'message', array( 
 				
 				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Actividad", Informe a su administrador para que le otorge los permisos necesarios.'
+				'message' => 'No tiene permisos para ingresar en esta sección "Actividad", Informe a su administrador para que le otorgue los permisos necesarios.'
 							
 			));	
 			
@@ -170,6 +180,8 @@ class Activities extends CI_Controller {
 		  'access_create' => $this->access_create,
 		  'access_update' => $this->access_update,
 		  'access_delete' => $this->access_delete,
+		  'access_report' => $this->access_report,
+		  'access_viewall' => $this->access_viewall,
 		  'content' => 'activities/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  'data' => $this->activity->overview( $begin, $agentid, $filter ),
@@ -317,6 +329,8 @@ class Activities extends CI_Controller {
 		  'access_create' => $this->access_create,
 		  'access_update' => $this->access_update,
 		  'access_delete' => $this->access_delete,
+		  'access_report' => $this->access_report,
+		  'access_viewall' => $this->access_viewall,
 		  'css' => array(
 		  	'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet" media="screen">'
 		  ),

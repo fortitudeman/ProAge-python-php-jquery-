@@ -336,7 +336,7 @@ function save(){
 	var id = $( '#id' ).val();	
 	var saves = parseInt( $( '#save' ).val() );		
 	$( '.metas' ).show();
-	$( '.simulator' ).hide();	
+	$( '.simulator' ).hide();
 	if( id == 0 ){	 	 	
 	  $.ajax({
 			url:  Config.base_url()+'simulator/save.html',
@@ -356,7 +356,7 @@ function save(){
 			cache: false,
 			async: false,
 			success: function(data){
-				$( '#save' ).val(1);				
+				$( '#save' ).val(data);				
 			}		
 		});
 	}

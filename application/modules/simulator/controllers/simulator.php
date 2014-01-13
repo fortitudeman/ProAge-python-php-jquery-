@@ -719,7 +719,6 @@ class Simulator extends CI_Controller {
 		unset( $_POST['id'] );
 		
 		$simulator = array(
-			'period' => $_POST['periodo'],
 			'agent_id' => $_POST['agent_id'],
 			'product_group_id' => $_POST['ramo'],
 			'data' => json_encode($_POST)
