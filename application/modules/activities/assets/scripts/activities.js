@@ -27,6 +27,13 @@ $( document ).ready(function() {
 		
 	});
 	
+	$( '.header_manager' ).bind( 'click', function(){ 
+		
+		$( '.header_manager' ).css({'color': '#000', 'font-weight':'bold'} );
+		
+		$( '#'+this.id ).css({'color': '#06F', 'font-weight':'bold'});
+		
+	});
 	
 	var startDate;
     var endDate;
@@ -89,6 +96,9 @@ $( document ).ready(function() {
             selectCurrentWeek();
         }
     });
+
+    $("#sorter").tablesorter(); 
+    
     
     $('#week .ui-datepicker-calendar tr').live('mousemove', function() { $(this).find('td a').addClass('ui-state-hover'); });
     $('#week .ui-datepicker-calendar tr').live('mouseleave', function() { $(this).find('td a').removeClass('ui-state-hover'); });

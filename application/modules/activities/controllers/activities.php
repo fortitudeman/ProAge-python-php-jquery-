@@ -203,15 +203,13 @@ class Activities extends CI_Controller {
 	
 	
 	
-	
-	
 
 // Create new user
 	public function create( $userid = null ){
 		
 				
 		
-		// Check access teh user for create
+		// Check access the user for create
 		if( $this->access_create == false ){
 				
 			// Set false message		
@@ -353,6 +351,115 @@ class Activities extends CI_Controller {
 		$this->load->view( 'index', $this->view );	
 	
 	}
+	
+
+//Report of Activities
+	public function report( $userid = null ){
+
+		// Check access the user for create
+		if( $this->access_report == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Actividades: Reporte", Informe a su administrador para que le otorgue los permisos necesarios.'
+							
+			));	
+			
+			
+			if( !empty( $userid ) )				
+				redirect( 'activities/index/'.$userid, 'refresh' );
+			else
+				redirect( 'activities', 'refresh' );
+			
+		
+		}
+			
+			
+		
+		if( !empty( $_POST['begin'] ) ){
+										
+			// Generals validations
+			$this->form_validation->set_rules('begin', 'Semana', 'required');
+					
+			// Run Validation
+			if ( $this->form_validation->run() == TRUE ){
+				
+				//Load Model
+				$this->load->model( array( 'activity', 'user' ) );
+				
+			}	
+			
+			$this->view = array(
+					
+			  'title' => 'Reporte de Actividades',
+			    // Permisions
+			  'user' => $this->sessions,
+			  'user_vs_rol' => $this->user_vs_rol,
+			  'roles_vs_access' => $this->roles_vs_access,
+			  'access_create' => $this->access_create,
+			  'access_update' => $this->access_update,
+			  'access_delete' => $this->access_delete,
+			  'access_report' => $this->access_report,
+			  'access_viewall' => $this->access_viewall,
+			  'css' => array(
+			  	'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet" media="screen">'
+			  ),
+			  'scripts' =>  array(
+				  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+				  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+				  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+				  '<script src="'.base_url().'scripts/config.js"></script>',
+				  '<script src="'.base_url().'activities/assets/scripts/activities.js"></script>',
+				  '<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>'
+			  ),
+			  'content' => 'activities/report', // View to load
+			  'data' => $this->activity->report( 'agents_activity', $_POST ), // View to load
+			  'message' => $this->session->flashdata('message') // Return Message, true and false if have
+			);
+						
+		}				
+				
+		else {
+
+			$this->view = array(
+					
+			  'title' => 'Reporte de Actividades',
+			    // Permisions
+			  'user' => $this->sessions,
+			  'user_vs_rol' => $this->user_vs_rol,
+			  'roles_vs_access' => $this->roles_vs_access,
+			  'access_create' => $this->access_create,
+			  'access_update' => $this->access_update,
+			  'access_delete' => $this->access_delete,
+			  'access_report' => $this->access_report,
+			  'access_viewall' => $this->access_viewall,
+			  'css' => array(
+			  	'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet" media="screen">'
+			  ),
+			  'scripts' =>  array(
+				  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+				  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+				  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+				  '<script src="'.base_url().'scripts/config.js"></script>',
+				  '<script src="'.base_url().'activities/assets/scripts/activities.js"></script>'
+				  	
+			  ),
+			  'content' => 'activities/report', // View to load
+			  'message' => $this->session->flashdata('message') // Return Message, true and false if have
+			);
+
+		}				
+		
+		// Render view 
+		$this->load->view( 'index', $this->view );		
+	
+	}
+	
+	
+	
+	
 /* End of file activities.php */
 /* Location: ./application/controllers/activities.php */
 }

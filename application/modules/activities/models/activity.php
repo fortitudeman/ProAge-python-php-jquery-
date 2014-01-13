@@ -236,5 +236,48 @@ class Activity extends CI_Model{
 	    		
 		return $this->db->from( 'agents_activity' )->where( 'agent_id',$agent_id )->count_all_results();
     }
+
+
+//View Activities report
+	public function report( $table = 'agents_activity', $values = array() ){
+        
+		$data = array();
+		
+		if( empty( $table ) or empty( $values ) ) return false;
+		
+		$this->db->select();
+		$this->db->from( 'agents_activity' );
+		$this->db->join( 'agents', 'agents_activity.agent_id=agents.id');
+		$this->db->join( 'users', 'agents.user_id=users.id');
+		$this->db->where( 'begin', $values['begin'] );
+		$this->db->where( 'end', $values['end'] );
+		$this->db->order_by( 'interview', 'desc' );
+		
+		$query = $this->db->get();		
+		
+		if ($query->num_rows() == 0) return false;
+ 	
+		$data = array();
+													
+		foreach ($query->result() as $row) {
+			
+			$data[] = array(
+				 'name' => $row->name,
+				 'lastnames' => $row->lastnames,
+				 'begin' => $row->begin,
+				 'end' => $row->end,
+				 'cita' => $row->cita,
+				 'prospectus' => $row->prospectus,
+				 'interview' => $row->interview,
+				 'comments' => $row->comments,
+				 'last_updated' => $row->last_updated,
+				 'date' => $row->date       			
+			);
+			
+		}
+
+		return $data;
+			
+    }
 }
 ?>
