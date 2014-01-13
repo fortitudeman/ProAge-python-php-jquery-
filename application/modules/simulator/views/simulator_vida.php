@@ -140,6 +140,8 @@
 
                  <option value="0" <?php if( isset( $data->porcentajeConservacion_1 ) and $data->porcentajeConservacion_1 == 0 ) echo 'selected="selected"'; ?>>Sin base</option>
 
+                 <option value="m89" <?php if( isset( $data->porcentajeConservacion_1 ) and $data->porcentajeConservacion_1 == "m89" ) echo 'selected="selected"'; ?>>&lt;89%</option>
+
                  <option value="89" <?php if( isset( $data->porcentajeConservacion_1 ) and $data->porcentajeConservacion_1 == 89 ) echo 'selected="selected"'; ?>>89%</option>
 
                  <option value="91" <?php if( isset( $data->porcentajeConservacion_1 ) and $data->porcentajeConservacion_1 == 91 ) echo 'selected="selected"'; ?>>91%</option>
@@ -320,6 +322,8 @@
            <td><select name="porcentajeConservacion_2" id="porcentajeConservacion_2" class="input-small">
 
                  <option value="0" <?php if( isset( $data->porcentajeConservacion_2 ) and $data->porcentajeConservacion_2 == 0 ) echo 'selected="selected"'; ?>>Sin base</option>
+
+                 <option value="m89" <?php if( isset( $data->porcentajeConservacion_2 ) and $data->porcentajeConservacion_2 == "m89" ) echo 'selected="selected"'; ?>>&lt;89%</option>
 
                  <option value="89" <?php if( isset( $data->porcentajeConservacion_2 ) and $data->porcentajeConservacion_2 == 89 ) echo 'selected="selected"'; ?>>89%</option>
 
@@ -503,6 +507,8 @@
 
                  <option value="0" <?php if( isset( $data->porcentajeConservacion_3 ) and $data->porcentajeConservacion_3 == 0 ) echo 'selected="selected"'; ?>>Sin base</option>
 
+                 <option value="m89" <?php if( isset( $data->porcentajeConservacion_3 ) and $data->porcentajeConservacion_3 == "m89" ) echo 'selected="selected"'; ?>>&lt;89%</option>
+
                  <option value="89" <?php if( isset( $data->porcentajeConservacion_3 ) and $data->porcentajeConservacion_3 == 89 ) echo 'selected="selected"'; ?>>89%</option>
 
                  <option value="91" <?php if( isset( $data->porcentajeConservacion_3 ) and $data->porcentajeConservacion_3 == 91 ) echo 'selected="selected"'; ?>>91%</option>
@@ -683,6 +689,8 @@
            <td><select name="porcentajeConservacion_4" id="porcentajeConservacion_4" class="input-small">
 
                  <option value="0" <?php if( isset( $data->porcentajeConservacion_4 ) and $data->porcentajeConservacion_4 == 0 ) echo 'selected="selected"'; ?>>Sin base</option>
+
+                 <option value="m89" <?php if( isset( $data->porcentajeConservacion_4 ) and $data->porcentajeConservacion_4 == "m89" ) echo 'selected="selected"'; ?>>&lt;89%</option>
 
                  <option value="89" <?php if( isset( $data->porcentajeConservacion_4 ) and $data->porcentajeConservacion_4 == 89 ) echo 'selected="selected"'; ?>>89%</option>
 
