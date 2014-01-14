@@ -29,46 +29,52 @@ $( document ).ready(function() {
 		$( '#ingresoComisionesVentaInicial' ).val( total );	
 		//BONO INICIAL
 		var primasnetasiniciales = parseFloat( $( '#primasnetasiniciales' ).val() );
-		if( primasnetasiniciales/3 > 250000 && primasnetasiniciales/3 <= 300000 ){
+		if( primasnetasiniciales/3 >= 300000 ){
 			$( '#bonoAplicado' ).val( 10.0+'%' );
 			var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat( 10/100 );	
 			$( '#ingresoBonoInicial_text' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoInicial' ).val( total );
 		}
-		if( primasnetasiniciales/3 > 200000 && primasnetasiniciales/3 <= 250000 ){
+		if( primasnetasiniciales/3 >= 250000 && primasnetasiniciales/3 < 300000 ){
 			$( '#bonoAplicado' ).val( 9.0+'%' );
 			var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat( 9/100 );	
 			$( '#ingresoBonoInicial_text' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoInicial' ).val( total );
 		}
-		if( primasnetasiniciales/3 > 160000 && primasnetasiniciales/3 <= 200000 ){
+		if( primasnetasiniciales/3 >= 200000 && primasnetasiniciales/3 < 250000 ){
 			$( '#bonoAplicado' ).val( 8.0+'%' );
 			var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat( 8/100 );	
 			$( '#ingresoBonoInicial_text' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoInicial' ).val( total );
 		}
-		if( primasnetasiniciales/3 > 120000 && primasnetasiniciales/3 <= 160000 ){
+		if( primasnetasiniciales/3 >= 160000 && primasnetasiniciales/3 < 200000 ){
 			$( '#bonoAplicado' ).val( 7.0+'%' );
 			var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat( 7/100 );	
 			$( '#ingresoBonoInicial_text' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoInicial' ).val( total );
 		}		
-		if( primasnetasiniciales/3 > 80000 && primasnetasiniciales/3 <= 120000 ){
+		if( primasnetasiniciales/3 >= 120000 && primasnetasiniciales/3 < 160000 ){
 			$( '#bonoAplicado' ).val( 6.0+'%' );
 			var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat( 6/100 );	
 			$( '#ingresoBonoInicial_text' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoInicial' ).val( total );
 		}
-		if( primasnetasiniciales/3 == 80000 ){
+		if( primasnetasiniciales/3 >= 80000 && primasnetasiniciales/3 < 120000 ){
 			$( '#bonoAplicado' ).val( 5.0+'%' );
 			var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat( 5/100 );	
+			$( '#ingresoBonoInicial_text' ).html( '$ '+moneyFormat(total) );
+			$( '#ingresoBonoInicial' ).val( total );
+		}
+		if( primasnetasiniciales/3 < 80000 ){
+			$( '#bonoAplicado' ).val( 0+'%' );
+			var total = parseFloat( $( '#primasnetasiniciales' ).val() ) * parseFloat( 0/100 );	
 			$( '#ingresoBonoInicial_text' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoInicial' ).val( total );
 		}
 		//BONO DE CARTERA
 		var primastotales = parseFloat( $( '#primastotales' ).val() );
 		var porincrementoenprimas = $( '#porincrementoenprimas' ).val();
-		if( primastotales/3 > 500000 && primastotales/3 <= 650000 ){
+		if( primastotales/3 >= 650000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 5+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (5/100);	
@@ -88,7 +94,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoCartera' ).val( total );	
 			}
 		}
-		if( primastotales/3 > 350000 && primastotales/3 <= 500000 ){
+		if( primastotales/3 >= 500000 && primastotales/3 < 650000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 4+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (4/100);	
@@ -108,7 +114,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoCartera' ).val( total );	
 			}
 		}
-		if( primastotales/3 > 200000 && primastotales/3 <= 350000 ){
+		if( primastotales/3 >= 350000 && primastotales/3 < 500000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 3+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (3/100);	
@@ -128,7 +134,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoCartera' ).val( total );	
 			}
 		}
-		if( primastotales/3 == 200000 ){
+		if( primastotales/3 >= 200000 && primastotales/3 < 350000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 2+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (2/100);	
@@ -144,6 +150,26 @@ $( document ).ready(function() {
 			if( porincrementoenprimas == '10' ){
 				$( '#porbonoganado' ).val( 7+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (7/100);	
+				$( '#ingresoBonoCartera_text' ).html( '$ '+moneyFormat(total) );
+				$( '#ingresoBonoCartera' ).val( total );	
+			}
+		}		
+		if( primastotales/3 < 200000 ){
+			if( porincrementoenprimas == '0' ){
+				$( '#porbonoganado' ).val( 0+'%' );
+				var total = parseFloat( $( '#primastotales' ).val() ) * (0/100);	
+				$( '#ingresoBonoCartera_text' ).html( '$ '+moneyFormat(total) );
+				$( '#ingresoBonoCartera' ).val( total );	
+			}
+			if( porincrementoenprimas == '5' ){
+				$( '#porbonoganado' ).val( 0+'%' );
+				var total = parseFloat( $( '#primastotales' ).val() ) * (0/100);	
+				$( '#ingresoBonoCartera_text' ).html( '$ '+moneyFormat(total) );
+				$( '#ingresoBonoCartera' ).val( total );	
+			}
+			if( porincrementoenprimas == '10' ){
+				$( '#porbonoganado' ).val( 0+'%' );
+				var total = parseFloat( $( '#primastotales' ).val() ) * (0/100);	
 				$( '#ingresoBonoCartera_text' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoCartera' ).val( total );	
 			}
@@ -175,7 +201,7 @@ $( document ).ready(function() {
 	$( '#porincrementoenprimas' ).bind( 'change', function(){
 		var primastotales = parseFloat( $( '#primastotales' ).val() );
 		var porincrementoenprimas = $( '#porincrementoenprimas' ).val();
-		if( primastotales/3 > 500000 && primastotales/3 <= 650000 ){
+		if( primastotales/3 >= 650000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 5+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (5/100);	
@@ -195,7 +221,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoCartera' ).val( total );	
 			}
 		}
-		if( primastotales/3 > 350000 && primastotales/3 <= 500000 ){
+		if( primastotales/3 >= 500000 && primastotales/3 < 650000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 4+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (4/100);	
@@ -215,7 +241,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoCartera' ).val( total );	
 			}
 		}
-		if( primastotales/3 > 200000 && primastotales/3 <= 350000 ){
+		if( primastotales/3 >= 350000 && primastotales/3 < 500000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 3+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (3/100);	
@@ -235,7 +261,7 @@ $( document ).ready(function() {
 				$( '#ingresoBonoCartera' ).val( total );	
 			}
 		}
-		if( primastotales/3 == 200000 ){
+		if( primastotales/3 >= 200000 && primastotales/3 < 350000 ){
 			if( porincrementoenprimas == '0' ){
 				$( '#porbonoganado' ).val( 2+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (2/100);	
@@ -251,6 +277,26 @@ $( document ).ready(function() {
 			if( porincrementoenprimas == '10' ){
 				$( '#porbonoganado' ).val( 7+'%' );
 				var total = parseFloat( $( '#primastotales' ).val() ) * (7/100);	
+				$( '#ingresoBonoCartera_text' ).html( '$ '+moneyFormat(total) );
+				$( '#ingresoBonoCartera' ).val( total );	
+			}
+		}
+		if( primastotales/3 < 200000 ){
+			if( porincrementoenprimas == '0' ){
+				$( '#porbonoganado' ).val( 0+'%' );
+				var total = parseFloat( $( '#primastotales' ).val() ) * (0/100);	
+				$( '#ingresoBonoCartera_text' ).html( '$ '+moneyFormat(total) );
+				$( '#ingresoBonoCartera' ).val( total );	
+			}
+			if( porincrementoenprimas == '5' ){
+				$( '#porbonoganado' ).val( 0+'%' );
+				var total = parseFloat( $( '#primastotales' ).val() ) * (0/100);	
+				$( '#ingresoBonoCartera_text' ).html( '$ '+moneyFormat(total) );
+				$( '#ingresoBonoCartera' ).val( total );	
+			}
+			if( porincrementoenprimas == '10' ){
+				$( '#porbonoganado' ).val( 0+'%' );
+				var total = parseFloat( $( '#primastotales' ).val() ) * (0/100);	
 				$( '#ingresoBonoCartera_text' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoCartera' ).val( total );	
 			}

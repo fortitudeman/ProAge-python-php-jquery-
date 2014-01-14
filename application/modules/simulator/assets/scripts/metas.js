@@ -401,9 +401,10 @@ function getMetas(){
 			if( !isNaN( meta ) )  totaltrimestre+=meta;
 			if( !isNaN( meta ) ) totalprimameta+=meta;
 			if( !isNaN( primapromedio ) )  totalnegociometa += primapromedio;
-			if( !isNaN( totalnegociometa ) )  totalesnegociometa += totalnegociometa;
+			if( !isNaN( totalnegociometa ) )  totalesnegociometa += primapromedio;
+			console.log(totalesnegociometa);
 			if( !isNaN( solicitud ) ) totalsolicitudmeta += solicitud; 
-			if( !isNaN( totalsolicitudmeta ) ) totalessolicitudmeta += totalsolicitudmeta;
+			if( !isNaN( totalsolicitudmeta ) ) totalessolicitudmeta += solicitud;
 			// Totales
 			// $( '#ramo' ).val() == 1			
 			if( i == 3 && $( '#ramo' ).val() == 1 ){														
