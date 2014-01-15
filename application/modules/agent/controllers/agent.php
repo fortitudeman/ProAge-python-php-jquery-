@@ -108,7 +108,7 @@ class Agent extends CI_Controller {
 			$this->session->set_flashdata( 'message', array( 
 				
 				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Perfil Agente", Informe a su administrador para que le otorge los permisos necesarios.'
+				'message' => 'No tiene permisos para ingresar en esta sección "Perfil Agente", Informe a su administrador para que le otorgue los permisos necesarios.'
 							
 			));	
 			
@@ -213,6 +213,8 @@ class Agent extends CI_Controller {
 		// Render view 
 		$this->load->view( 'index', $this->view );	
 	}	
+
+
 /* End of file agent.php */
 /* Location: ./application/controllers/agent.php */
 }
