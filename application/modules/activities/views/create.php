@@ -97,7 +97,73 @@
                     </div>
                     
                   </div>
+
+                  <div class="row">
+                    <div class="span2">
+                     	<div class="control-group" style="width:350px;">
+                          	<div class="controls">
+          	                   	<div id="container">
+								    <div id="left">
+								        <label class="text-error" for="inputError">Solicitudes Vida</label>
+								        <input style="width:20px" class="focused required number" id="vida_requests" name="vida_requests" type="text" value="<?php echo set_value('vida_requests')  ?>" maxlength="3">
+								    </div>
+								
+								    <div id="middle">
+								    </div>
+								
+								    <div id="right">
+								        <label class="text-error" for="inputError">Negocios Vida</label>
+								        <input style="width:20px"  maxlength="3" class="focused required number" id="vida_businesses" name="vida_businesses" type="text" value="<?php echo set_value('vida_businesses')  ?>">
+								    </div>
+								</div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="span2">
+                     	<div class="control-group" style="width:350px;">
+                          	<div class="controls">
+          	                   	<div id="container">
+								    <div id="left">
+								        <label class="text-error" for="inputError">Solicitudes GMM</label>
+								        <input style="width:20px" class="focused required number" id="gmm_requests" name="gmm_requests" type="text" value="<?php echo set_value('gmm_requests')  ?>" maxlength="3">
+								    </div>
+								
+								    <div id="middle">
+								    </div>
+								
+								    <div id="right">
+								        <label class="text-error" for="inputError">Negocios GMM</label>
+								        <input style="width:20px"  maxlength="3" class="focused required number" id="gmm_businesses" name="gmm_businesses" type="text" value="<?php echo set_value('gmm_businesses')  ?>">
+								    </div>
+								</div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
                   
+                  <div class="row">
+                    <div class="span2">
+                     	<div class="control-group" style="width:350px;">
+                          	<div class="controls">
+          	                   	<div id="container">
+								    <div id="left">
+								    </div>
+								
+								    <div id="middle">
+								        <label class="text-error" for="inputError">Negocios Autos</label>
+								        <input style="width:20px"  maxlength="3" class="focused required number" id="autos_businesses" name="autos_businesses" type="text" value="<?php echo set_value('autos_businesses')  ?>">
+								    </div>
+								
+								    <div id="right">
+								    </div>
+								</div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
                   
                   
                   <?php if( isset( $access_update ) and $access_update == true ): ?>

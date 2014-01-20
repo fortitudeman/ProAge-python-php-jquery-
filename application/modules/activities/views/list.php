@@ -80,12 +80,17 @@
         	<?php if( !empty( $data ) ): ?>
             <table class="table table-striped table-bordered bootstrap-datatable datatable">
               <thead>
-                  <tr>
+                  <tr style="font-size:11px">
                       <th>Inicio</th>
                       <th>Fin</th> 
                       <th>Citas</th>
                       <th>Entrevistas</th>
                       <th>Prospectos</th>
+                      <th>Solicitudes Vida</th>
+                      <th>Negocios Vida</th>
+                      <th>Solicitudes GMM</th>
+                      <th>Negocios GMM</th>
+                      <th>Negocios Autos</th>
                       <th>Comentarios</th>
                       <th>Creado</th>
                       <th>Última modificación</th>
@@ -93,12 +98,17 @@
               </thead>   
               <tbody id="data">
                 <?php  foreach( $data as $value ): ?>
-               <tr>
-                	<td class="center"><?php echo $value['begin'] ?></td>
-                    <td class="center"><?php echo $value['end'] ?></td>
+               <tr style="font-size:11px">
+                	<td class="center" nowrap><?php echo $value['begin'] ?></td>
+                    <td class="center" nowrap><?php echo $value['end'] ?></td>
                     <td class="center"><?php echo $value['cita'] ?></td>
                     <td class="center"><?php echo $value['interview'] ?></td>
                     <td class="center"><?php echo $value['prospectus'] ?></td>
+                    <td class="center"><?php echo $value['vida_requests'] ?></td>
+                    <td class="center"><?php echo $value['vida_businesses'] ?></td>
+                    <td class="center"><?php echo $value['gmm_requests'] ?></td>
+                    <td class="center"><?php echo $value['gmm_businesses'] ?></td>
+                    <td class="center"><?php echo $value['autos_businesses'] ?></td>
                     <td class="center"><?php echo $value['comments'] ?></td>
                     <td class="center"><?php echo $value['date'] ?></td>
                     <td class="center"><?php echo $value['last_updated'] ?></td>                                            

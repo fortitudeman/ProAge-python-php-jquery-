@@ -92,6 +92,11 @@
                       <th id="cita" class="header_manager">Citas</th>
                       <th id="entrevista" class="header_manager">Entrevistas</th>
                       <th id="prospecto" class="header_manager">Prospectos</th>
+                      <th id="vida_requests" class="header_manager">Solicitudes Vida</th>
+                      <th id="vida_businesses" class="header_manager">Negocios Vida</th>
+                      <th id="gmm_requests" class="header_manager">Solicitudes GMM</th>
+                      <th id="gmm_businesses" class="header_manager">Negocios GMM</th>
+                      <th id="autos_businesses" class="header_manager">Negocios Autos</th>
                       <th id="comentario" class="header_manager">Comentarios</th>
                   </tr>
               </thead>   
@@ -102,6 +107,11 @@
                     <td class="center"><?php echo $value['cita'] ?></td>
                     <td class="center"><?php echo $value['interview'] ?></td>
                     <td class="center"><?php echo $value['prospectus'] ?></td>
+                    <td class="center"><?php echo $value['vida_requests'] ?></td>
+                    <td class="center"><?php echo $value['vida_businesses'] ?></td>
+                    <td class="center"><?php echo $value['gmm_requests'] ?></td>
+                    <td class="center"><?php echo $value['gmm_businesses'] ?></td>
+                    <td class="center"><?php echo $value['autos_businesses'] ?></td>
                     <td class="center"><?php echo $value['comments'] ?></td>
                 </tr>
                 <?php endforeach;  ?>                

@@ -70,3 +70,5 @@ INSERT INTO simulator_default_estacionalidad values
 
 
 ALTER TABLE policies CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+ALTER TABLE `agents_activity`  ADD `vida_requests` INT NULL AFTER `interview`,  ADD `vida_businesses` INT NULL AFTER `vida_requests`,  ADD `gmm_requests` INT NULL AFTER `vida_businesses`,  ADD `gmm_businesses` INT NULL AFTER `gmm_requests`,  ADD `autos_businesses` INT NULL AFTER `gmm_businesses`;
