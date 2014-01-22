@@ -82,7 +82,7 @@ $( document ).ready(function() {
 	});
 	$( '#primasAfectasInicialesUbicar' ).bind( 'keyup', function(){				
 		//PRIMER TRIMESTRE
-		var primaAfectadas_1 = parseFloat( $( '#primasAfectasInicialesPagar_1' ).val() );			
+		var primaAfectadas_1 = parseFloat( $( '#simulatorprimasprimertrimestre' ).val() );			
 		var	negocios_1 = primaAfectadas_1 / parseFloat( $( '#primas_promedio' ).val() );		
 		var porcentaje_1 = CalcPercBonoAplicado(primaAfectadas_1,negocios_1);
 		$( '#bonoAplicado_1' ).val( porcentaje_1 );
@@ -97,7 +97,7 @@ $( document ).ready(function() {
 		$( '#ingresoBonoProductividad_1' ).val( total );		
 
 		//SEGUNDO TRIMESTRE
-		var primaAfectadas_2 = parseFloat( $( '#primasAfectasInicialesPagar_2' ).val() );			
+		var primaAfectadas_2 = parseFloat( $( '#simulatorprimassegundotrimestre' ).val() );			
 		var	negocios_2 = primaAfectadas_2 / parseFloat( $( '#primas_promedio' ).val() );		
 		var porcentaje_2 = CalcPercBonoAplicado(primaAfectadas_2,negocios_2);
 		$( '#bonoAplicado_2' ).val( porcentaje_2 );	
@@ -112,7 +112,7 @@ $( document ).ready(function() {
 		$( '#ingresoBonoProductividad_2' ).val( total );		
 
 		//TERCER TRIMESTRE
-		var primaAfectadas_3 = parseFloat( $( '#primasAfectasInicialesPagar_3' ).val() );			
+		var primaAfectadas_3 = parseFloat( $( '#simulatorprimastercertrimestre' ).val() );			
 		var	negocios_3 = primaAfectadas_3 / parseFloat( $( '#primas_promedio' ).val() );		
 		var porcentaje_3 = CalcPercBonoAplicado(primaAfectadas_3,negocios_3);
 		$( '#bonoAplicado_3' ).val( porcentaje_3 );	
@@ -127,7 +127,7 @@ $( document ).ready(function() {
 		$( '#ingresoBonoProductividad_3' ).val( total );		
 
 		//CUARTO TRIMESTRE
-		var primaAfectadas_4 = parseFloat( $( '#primasAfectasInicialesPagar_4' ).val() );			
+		var primaAfectadas_4 = parseFloat( $( '#simulatorprimascuartotrimestre' ).val() );			
 		var	negocios_4 = primaAfectadas_4 / parseFloat( $( '#primas_promedio' ).val() );		
 		var porcentaje_4 = CalcPercBonoAplicado(primaAfectadas_4,negocios_4);
 		$( '#bonoAplicado_4' ).val( porcentaje_4 );	
@@ -296,7 +296,7 @@ $( document ).ready(function() {
 function updateIngreso() {	
 	//PRIMER TRIMESTRE
 	//alert($( '#primasAfectasInicialesPagar_1' ).val());
-	var primaAfectadas_1 = parseFloat( $( '#primasAfectasInicialesPagar_1' ).val() );			
+	var primaAfectadas_1 = parseFloat( $( '#simulatorprimasprimertrimestre' ).val() );			
 	var	negocios_1 = primaAfectadas_1 / parseFloat( $( '#primas_promedio' ).val() );		
 	var porcentaje_1 = CalcPercBonoAplicado(primaAfectadas_1,negocios_1);
 	$( '#bonoAplicado_1' ).val( porcentaje_1 );
@@ -314,7 +314,7 @@ function updateIngreso() {
 	$( '#ingresoBonoRenovacion_1' ).val( total );
 
 	//SEGUNDO TRIMESTRE
-	var primaAfectadas_2 = parseFloat( $( '#primasAfectasInicialesPagar_2' ).val() );			
+	var primaAfectadas_2 = parseFloat( $( '#simulatorprimassegundotrimestre' ).val() );			
 	var	negocios_2 = primaAfectadas_2 / parseFloat( $( '#primas_promedio' ).val() );		
 	var porcentaje_2 = CalcPercBonoAplicado(primaAfectadas_2,negocios_2);
 	$( '#bonoAplicado_2' ).val( porcentaje_2 );
@@ -332,7 +332,7 @@ function updateIngreso() {
 	$( '#ingresoBonoRenovacion_2' ).val( total );
 
 	//TERCER TRIMESTRE
-	var primaAfectadas_3 = parseFloat( $( '#primasAfectasInicialesPagar_3' ).val() );			
+	var primaAfectadas_3 = parseFloat( $( '#simulatorprimastercertrimestre' ).val() );			
 	var	negocios_3 = primaAfectadas_3 / parseFloat( $( '#primas_promedio' ).val() );		
 	var porcentaje_3 = CalcPercBonoAplicado(primaAfectadas_3,negocios_3);
 	$( '#bonoAplicado_3' ).val( porcentaje_3 );	
@@ -350,7 +350,7 @@ function updateIngreso() {
 	$( '#ingresoBonoRenovacion_3' ).val( total );
 
 	//CUARTO TRIMESTRE
-	var primaAfectadas_4 = parseFloat( $( '#primasAfectasInicialesPagar_4' ).val() );			
+	var primaAfectadas_4 = parseFloat( $( '#simulatorprimascuartotrimestre' ).val() );			
 	var	negocios_4 = primaAfectadas_4 / parseFloat( $( '#primas_promedio' ).val() );		
 	var porcentaje_4 = CalcPercBonoAplicado(primaAfectadas_4,negocios_4);
 	$( '#bonoAplicado_4' ).val( porcentaje_4 );	
