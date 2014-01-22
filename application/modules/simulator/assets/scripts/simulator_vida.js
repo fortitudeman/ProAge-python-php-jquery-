@@ -445,37 +445,37 @@ function CalcPercBonoAplicado(primaAfectadas,negocios) {
 		if( negocios >= 6 && negocios < 9 )	porcentaje = 35;				
 		if( negocios >= 9 )	porcentaje = 40;
 	}		
-	if( primaAfectadas >= 400000 && primaAfectadas < 500000 ){		
+	if( primaAfectadas >= 420000 && primaAfectadas < 530000 ){		
 		if( negocios >= 2 && negocios < 4 )	porcentaje = 13;			
 		if( negocios >= 4 && negocios < 6 )	porcentage = 28;				
 		if( negocios >= 6 && negocios < 9 )	porcentaje = 32.5;				
 		if( negocios >= 9 )	porcentaje = 36;			
 	}		
-	if( primaAfectadas >= 300000 && primaAfectadas < 400000 ){		
+	if( primaAfectadas >= 320000 && primaAfectadas < 420000 ){		
 		if( negocios >= 2 && negocios < 4 )	porcentaje = 11;			
 		if( negocios >= 4 && negocios < 6 )	porcentaje = 26;			
 		if( negocios >= 6 && negocios < 9 )	porcentaje = 30;		
 		if( negocios >= 9 )	porcentaje = 32.5;			
 	}		
-	if( primaAfectadas >= 230000 && primaAfectadas < 300000 ){		
+	if( primaAfectadas >= 240000 && primaAfectadas < 320000 ){		
 		if( negocios >= 2 && negocios < 4 )	porcentaje = 8;			
 		if( negocios >= 4 && negocios < 6 )	porcentaje = 19;			
 		if( negocios >= 6 && negocios < 9 )	porcentaje = 22.5;				
 		if( negocios >= 9 )	porcentaje = 25;			
 	}		
-	if( primaAfectadas >= 180000 && primaAfectadas < 230000 ){		
+	if( primaAfectadas >= 190000 && primaAfectadas < 240000 ){		
 		if( negocios >= 2 && negocios < 4 )	porcentaje = 7;			
 		if( negocios >= 4 && negocios < 6 )	porcentaje = 16;				
 		if( negocios >= 6 && negocios < 9 )	porcentaje = 20;			
 		if( negocios >= 9 )	porcentaje = 22.5;			
 	}		
-	if( primaAfectadas >= 130000 && primaAfectadas < 180000 ){		
+	if( primaAfectadas >= 140000 && primaAfectadas < 190000 ){		
 		if( negocios >= 2 && negocios < 4 )	porcentaje = 6;			
 		if( negocios >= 4 && negocios < 6 )	porcentaje = 13;			
 		if( negocios >= 6 && negocios < 9 )	porcentaje = 17.5;				
 		if( negocios >= 9 )	porcentaje = 20;		
 	}		
-	if( primaAfectadas >= 100000 && primaAfectadas < 130000 ){		
+	if( primaAfectadas >= 100000 && primaAfectadas < 140000 ){		
 		if( negocios >= 2 && negocios < 4 )	porcentaje = 5;			
 		if( negocios >= 4 && negocios < 6 )	porcentaje = 10;			
 		if( negocios >= 6 && negocios < 9 )	porcentaje = 15;			
