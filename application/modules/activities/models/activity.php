@@ -262,11 +262,18 @@ class Activity extends CI_Model{
 		
 		if ($query->num_rows() == 0) return false;
  	
-		$data = array();
+		$data = array(
+			'totals' => array(
+				'cita' => 0, 'prospectus' => 0, 'interview' => 0, 
+				'vida_requests' => 0, 'vida_businesses' => 0, 'gmm_requests' => 0,
+				'gmm_businesses' => 0, 'autos_businesses' => 0),
+			'rows' => array()
+		);
 													
 		foreach ($query->result() as $row) {
-			
-			$data[] = array(
+			foreach ($data['totals'] as $key => $value)
+				$data['totals'][$key] += $row->$key;
+			$data['rows'][] = array(
 				 'name' => $row->name,
 				 'lastnames' => $row->lastnames,
 				 'begin' => $row->begin,

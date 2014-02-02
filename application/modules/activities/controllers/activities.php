@@ -87,7 +87,10 @@ class Activities extends CI_Controller {
 			
 			if( $value['action_name'] == 'Ver todos los registros' )
 				$this->access_viewall = true;	
-			
+
+			if( $value['action_name'] == 'Export xls' )
+				$this->access_export = true;
+				
 		endif; endforeach;
 							
 								
@@ -403,6 +406,7 @@ class Activities extends CI_Controller {
 			  'access_delete' => $this->access_delete,
 			  'access_report' => $this->access_report,
 			  'access_viewall' => $this->access_viewall,
+			  'access_export' => $this->access_export,
 			  'css' => array(
 			  	'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet" media="screen">'
 			  ),
@@ -435,6 +439,7 @@ class Activities extends CI_Controller {
 			  'access_delete' => $this->access_delete,
 			  'access_report' => $this->access_report,
 			  'access_viewall' => $this->access_viewall,
+			  'access_export' => $this->access_export,
 			  'css' => array(
 			  	'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet" media="screen">'
 			  ),
@@ -456,9 +461,86 @@ class Activities extends CI_Controller {
 		$this->load->view( 'index', $this->view );		
 	
 	}
-	
-	
-	
+
+// Export	
+	public function exportar( $userid = null ){
+
+		// Check access for export
+		if( $this->access_export == false ){
+
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Report Exportar", Informe a su administrador para que le otorge los permisos necesarios.'
+			));
+
+			if( !empty( $userid ) )				
+				redirect( 'activities/index/'.$userid, 'refresh' );
+			else
+				redirect( 'activities', 'refresh' );
+		}
+
+		// Check begin and end dates
+		$this->load->helper('activities/date_report');
+		if ( !isset($_POST['begin']) || !isset($_POST['end']) || 
+			!checkdate_from_to( $_POST['begin'], $_POST['end'] ) ) {
+
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				'type' => false,	
+				'message' => 'Fecha no válida.'
+			));
+
+			if( !empty( $userid ) )				
+				redirect( 'activities/index/'.$userid, 'refresh' );
+			else
+				redirect( 'activities', 'refresh' );
+		}
+
+		$filename = "proages_actividades_report_" . $_POST['begin'] . ".csv";
+		header('Content-Type: application/csv');
+        header('Content-Disposition: attachement; filename="$filename"');
+		
+		// Load Model and csv helper
+		$this->load->model( 'activity' );
+		$this->load->helper('usuarios/csv');
+
+		// Generate report and output it
+		$data = $this->activity->report( 'agents_activity', $_POST );
+		$report_data = array(
+			array(
+				'Agente', 'Citas', 'Entrevistas', 'Prospectos', 'Solicitudes Vida', 
+				'Negocios Vida', 'Solicitudes GMM', 'Negocios GMM', 'Negocios Autos', 'Comentarios'
+			)
+		);
+		foreach ($data['rows'] as $value) {
+			$report_data[] = array(
+				$value['name'] . ' ' . $value['lastnames'],
+				$value['cita'], $value['interview'],
+				$value['prospectus'], $value['vida_requests'],
+				$value['vida_businesses'], $value['gmm_requests'], $value['gmm_businesses'],
+				$value['autos_businesses'], $value['comments']
+			);
+		}
+
+		$report_data[] = array(
+			'TOTALS', $data['totals']['cita'], $data['totals']['interview'],
+			$data['totals']['prospectus'], $data['totals']['vida_requests'],
+			$data['totals']['vida_businesses'], $data['totals']['gmm_requests'],
+			$data['totals']['gmm_businesses'], $data['totals']['autos_businesses']
+		);
+
+	 	array_to_csv($report_data, $filename);
+		
+		if( is_file( $filename ) )
+			echo file_get_contents( $filename );
+		
+		if( is_file( $filename ) )
+			unlink( $filename );
+				
+		exit;
+		
+	}
 	
 /* End of file activities.php */
 /* Location: ./application/controllers/activities.php */
