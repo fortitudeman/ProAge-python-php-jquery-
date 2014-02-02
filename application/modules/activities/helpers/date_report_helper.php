@@ -1,7 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * Functions to check the dates inputted for querying reports
+ * Function to check the dates inputted for querying reports
  *
  */
 

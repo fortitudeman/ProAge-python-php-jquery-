@@ -264,7 +264,7 @@ class Activity extends CI_Model{
  	
 		$data = array(
 			'totals' => array(
-				'cita' => 0, 'prospectus' => 0, 'interview' => 0, 
+				'cita' => 0, 'prospectus' => 0, 'interview' => 0,
 				'vida_requests' => 0, 'vida_businesses' => 0, 'gmm_requests' => 0,
 				'gmm_businesses' => 0, 'autos_businesses' => 0),
 			'rows' => array()

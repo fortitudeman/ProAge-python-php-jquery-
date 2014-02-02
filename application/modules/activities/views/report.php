@@ -94,7 +94,7 @@
 				   <form id="form" action="<?php echo base_url() ?>activities/exportar.html" class="form-horizontal" method="post">
 				      <button id="create-export" class="btn pull-right">Exportar</button>
 					  <input id="begin-export" name="begin" type="hidden" readonly="readonly" value="<?php echo $_POST['begin'] ?>" />
-					  <input id="end-export" name="end" type="hidden" readonly="readonly" value="<?php echo $_POST['end'] ?>" />					  
+					  <input id="end-export" name="end" type="hidden" readonly="readonly" value="<?php echo $_POST['end'] ?>" />				  
 				   </form>
 				   <?php endif; ?>
                 </div>

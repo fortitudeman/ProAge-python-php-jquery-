@@ -539,7 +539,7 @@ class Activities extends CI_Controller {
 			unlink( $filename );
 				
 		exit;
-		
+
 	}
 	
 /* End of file activities.php */
