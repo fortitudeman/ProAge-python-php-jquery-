@@ -12,16 +12,8 @@ if ( ! function_exists('checkdate_from_to'))
 		$result = FALSE;
 		if ($from && $to)
 		{
-			$from_len = strlen($from);
-			$to_len = strlen($to);
-			if (($from_len < 10) || ($to_len < 10))
-				return $result;
-			if ($from_len == 10)
-				$from .= ' 00:01';
-			if ($to_len == 10)
-				$to .= ' 23:59';
 			$from_to_time = strtotime($from);
-			$to_to_time =  strtotime($to);
+			$to_to_time = strtotime($to);
 			if (($from_to_time !== -1) && ($to_to_time !== -1) && ($from_to_time <= $to_to_time))
 				$result = TRUE;
 		}
