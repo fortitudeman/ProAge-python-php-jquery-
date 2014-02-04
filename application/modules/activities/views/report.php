@@ -108,25 +108,25 @@
                       <th id="cita" class="header_manager">Citas</th>
                       <th id="entrevista" class="header_manager">Entrevistas</th>
                       <th id="prospecto" class="header_manager">Prospectos</th>
-                      <th id="vida_requests" class="header_manager">Solicitudes Vida</th>
-                      <th id="vida_businesses" class="header_manager">Negocios Vida</th>
-                      <th id="gmm_requests" class="header_manager">Solicitudes GMM</th>
-                      <th id="gmm_businesses" class="header_manager">Negocios GMM</th>
-                      <th id="autos_businesses" class="header_manager">Negocios Autos</th>
+                      <th id="vida_requests" class="header_manager" style="background-color: rgb(179, 252, 212);">Solicitudes Vida</th>
+                      <th id="vida_businesses" class="header_manager" style="background-color: rgb(179, 252, 212);">Negocios Vida</th>
+                      <th id="gmm_requests" class="header_manager" style="background-color: rgb(179, 212, 252);">Solicitudes GMM</th>
+                      <th id="gmm_businesses" class="header_manager" style="background-color: rgb(179, 212, 252);">Negocios GMM</th>
+                      <th id="autos_businesses" class="header_manager" style="background-color: rgb(252, 221, 176);">Negocios Autos</th>
                       <th id="comentario" class="header_manager">Comentarios</th>
                   </tr>
               </thead> 
               <tfoot>
-                  <tr>
+                  <tr style="font-weight:bold">
                       <td>TOTALS</td>
                       <td><?php echo $data['totals']['cita'] ?></td>
                       <td><?php echo $data['totals']['interview'] ?></td>
                       <td><?php echo $data['totals']['prospectus'] ?></td>
-                      <td><?php echo $data['totals']['vida_requests'] ?></td>
-                      <td><?php echo $data['totals']['vida_businesses'] ?></td>
-                      <td><?php echo $data['totals']['gmm_requests'] ?></td>
-                      <td><?php echo $data['totals']['gmm_businesses'] ?></td>
-                      <td><?php echo $data['totals']['autos_businesses'] ?></td>
+                      <td style="background-color: rgb(179, 252, 212);"><?php echo $data['totals']['vida_requests'] ?></td>
+                      <td style="background-color: rgb(179, 252, 212);"><?php echo $data['totals']['vida_businesses'] ?></td>
+                      <td style="background-color: rgb(179, 212, 252);"><?php echo $data['totals']['gmm_requests'] ?></td>
+                      <td style="background-color: rgb(179, 212, 252);"><?php echo $data['totals']['gmm_businesses'] ?></td>
+                      <td style="background-color: rgb(252, 221, 176);"><?php echo $data['totals']['autos_businesses'] ?></td>
                       <td></td>
                   </tr>
               </tfoot> 			  
@@ -137,11 +137,11 @@
                     <td class="center"><?php echo $value['cita'] ?></td>
                     <td class="center"><?php echo $value['interview'] ?></td>
                     <td class="center"><?php echo $value['prospectus'] ?></td>
-                    <td class="center"><?php echo $value['vida_requests'] ?></td>
-                    <td class="center"><?php echo $value['vida_businesses'] ?></td>
-                    <td class="center"><?php echo $value['gmm_requests'] ?></td>
-                    <td class="center"><?php echo $value['gmm_businesses'] ?></td>
-                    <td class="center"><?php echo $value['autos_businesses'] ?></td>
+                    <td class="center" style="background-color: rgb(179, 252, 212);"><?php echo $value['vida_requests'] ?></td>
+                    <td class="center" style="background-color: rgb(179, 252, 212);"><?php echo $value['vida_businesses'] ?></td>
+                    <td class="center" style="background-color: rgb(179, 212, 252);"><?php echo $value['gmm_requests'] ?></td>
+                    <td class="center" style="background-color: rgb(179, 212, 252);"><?php echo $value['gmm_businesses'] ?></td>
+                    <td class="center" style="background-color: rgb(252, 221, 176);"><?php echo $value['autos_businesses'] ?></td>
                     <td class="center"><?php echo $value['comments'] ?></td>
                 </tr>
                 <?php endforeach;  ?>                

@@ -392,11 +392,13 @@ class Activities extends CI_Controller {
 				//Load Model
 				$this->load->model( array( 'activity', 'user' ) );
 				
-			}	
+			}
+			if (isset($_POST['begin'])) $report_period = " desde ".$_POST['begin']." hasta ".$_POST['end'];
+			else $report_period = "";
 			
 			$this->view = array(
 					
-			  'title' => 'Reporte de Actividades',
+			  'title' => 'Reporte de Actividades ' . $report_period,
 			    // Permisions
 			  'user' => $this->sessions,
 			  'user_vs_rol' => $this->user_vs_rol,
