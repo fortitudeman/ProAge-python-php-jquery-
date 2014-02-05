@@ -15,7 +15,7 @@
 */
 ?>
 
-
+<?php if (!$for_print): ?>
 <div class="row-fluid sortable">		
     <div class="box span12">
         <div class="box-header well" data-original-title>
@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="box-content">
-        
+<?php endif; ?>
 		  <?php // Show Messages ?>
           
           <?php if( isset( $message['type'] ) ): ?>
@@ -62,12 +62,12 @@
 			$link_attributes = 'class="btn btn-primary" id="print-button"';
 			if (!$for_print) {
 				$link_attributes .= ' target="_blank"';
-				$link_text = 'Ver previa de impresión';
+				$link_text = 'Vista previa de impresión';
 			}
 			else
 				$link_text = 'Imprimir';
 		  ?> 
-          <p><?php echo anchor(implode('/', $uri_segments), $link_text, $link_attributes); ?></p>
+          <p style="float: right; padding-top: 10px"><?php echo anchor(implode('/', $uri_segments), $link_text, $link_attributes); ?></p>
           <h3>Simulador de metas para <?php echo $users[0]['name'] . " " . $users[0]['lastnames']?></h3>
 
           <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 1 or isset( $ramo ) and $ramo == 'vida' ): $ramoID = 1; ?>  
@@ -126,8 +126,9 @@
          </div>  
            
            </form>                                 
-        	                           
-        </div>
+ <?php if (!$for_print): ?>        	                           
+        </div><!-- /.box-content -->
     </div><!--/span-->
 
 </div><!--/row-->
+<?php endif; ?>

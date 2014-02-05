@@ -245,7 +245,20 @@ class Simulator extends CI_Controller {
 		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet">',
 		  	'<link href="'. base_url() .'simulator/assets/style/simulator_print.css" rel="stylesheet">',
 		  );
-		  $add_js = '<script type="text/javascript">$( document ).ready( function(){ $("#print-button").bind( "click", function(){$(this).hide(); window.print(); window.close(); return false;});}); </script>'; 
+		  $add_js = '
+<script type="text/javascript">
+$( document ).ready( function(){
+/*	$("#print-button").bind( "click", function(){
+		$(this).hide(); window.print(); window.close(); return false;}
+	);*/
+	$(".main-menu-span").removeClass("span2");
+	$("#content").removeClass("span10").addClass("span12");
+	$("#print-button").hide();
+	window.print();
+	window.close();
+});
+</script>
+'; 
 		} else {
 			$css = array(
 		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet" media="screen">'
