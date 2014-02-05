@@ -55,7 +55,21 @@
           
           
           <?php endif; ?>
+
+          <?php
+			$uri_segments = $this->uri->rsegment_array();
+			$uri_segments[2] = 'print_index';
+			$link_attributes = 'class="btn btn-primary" id="print-button"';
+			if (!$for_print) {
+				$link_attributes .= ' target="_blank"';
+				$link_text = 'Ver previa de impresión';
+			}
+			else
+				$link_text = 'Imprimir';
+		  ?> 
+          <p><?php echo anchor(implode('/', $uri_segments), $link_text, $link_attributes); ?></p>
           <h3>Simulador de metas para <?php echo $users[0]['name'] . " " . $users[0]['lastnames']?></h3>
+
           <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 1 or isset( $ramo ) and $ramo == 'vida' ): $ramoID = 1; ?>  
               <a href="../<?php echo $userid; ?>/1.html" class="links-menu btn btn-link" id="vida" style="color:#06F">Vida</a>
           <?php else: ?>   

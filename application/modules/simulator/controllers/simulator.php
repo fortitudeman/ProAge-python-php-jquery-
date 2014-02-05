@@ -31,6 +31,8 @@ class Simulator extends CI_Controller {
 	
 	public $access_delete = false;
 	
+	private $for_print = false;
+	
 /** Construct Function **/
 /** Setting Load perms **/
 	
@@ -84,11 +86,20 @@ class Simulator extends CI_Controller {
 		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
 			
 	}
-	
-	
 
-// Show all records	
-	public function index( $userid = null, $ramo = null ){
+	public function index( $userid = null, $ramo = null ) {
+
+		$this->_index_common( $userid, $ramo);
+	}
+
+	public function print_index( $userid = null, $ramo = null ) {
+
+		$this->for_print = true;
+		$this->_index_common( $userid, $ramo);
+	}
+
+	// Show all records	
+	private function _index_common( $userid = null, $ramo = null ){
 		
 		// Check access teh user for create
 		if( $this->access == false ){
@@ -229,6 +240,18 @@ class Simulator extends CI_Controller {
 			}
 			
 		// Config view
+		if ($this->for_print) {
+			$css = array(
+		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet">',
+		  	'<link href="'. base_url() .'simulator/assets/style/simulator_print.css" rel="stylesheet">',
+		  );
+		  $add_js = '<script type="text/javascript">$( document ).ready( function(){ $("#print-button").bind( "click", function(){$(this).hide(); window.print(); window.close(); return false;});}); </script>'; 
+		} else {
+			$css = array(
+		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet" media="screen">'
+		  );
+		  $add_js = '';
+		}
 		$this->view = array(
 				
 		  'title' => 'Simulador',
@@ -239,16 +262,15 @@ class Simulator extends CI_Controller {
 		  'access_create' => $this->access_create,
 		  'access_update' => $this->access_update,
 		  'access_delete' => $this->access_delete,
-		  'css' => array(
-		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet" media="screen">',
-		  ),
+		  'css' => $css,
 		  'scripts' =>  array(
 		  	
 			'<script type="text/javascript" src="'.base_url().'scripts/config.js"></script>',
 			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas.js"></script>',
 			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_'.$simulator.'.js"></script>',
 			$settingmeta,
-			$requestPromedio
+			$requestPromedio,
+			$add_js
 			
 		  ),
 		  'content' => 'simulator/overview', // View to load
@@ -268,7 +290,7 @@ class Simulator extends CI_Controller {
 		  'product_group_id' => $product_group_id,
 		  'users' => $users
 		);
-	
+		$this->load->vars( array( 'for_print' => $this->for_print ) );
 		
 		// Render view 
 		$this->load->view( 'index', $this->view );	
