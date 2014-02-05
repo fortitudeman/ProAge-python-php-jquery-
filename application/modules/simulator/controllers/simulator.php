@@ -248,14 +248,11 @@ class Simulator extends CI_Controller {
 		  $add_js = '
 <script type="text/javascript">
 $( document ).ready( function(){
-/*	$("#print-button").bind( "click", function(){
+	$("#print-button").bind( "click", function(){
 		$(this).hide(); window.print(); window.close(); return false;}
-	);*/
+	);
 	$(".main-menu-span").removeClass("span2");
 	$("#content").removeClass("span10").addClass("span12");
-	$("#print-button").hide();
-	window.print();
-	window.close();
 });
 </script>
 '; 
@@ -301,9 +298,9 @@ $( document ).ready( function(){
 		  'periodo' => 3,
 		  'ramo' => $simulator,
 		  'product_group_id' => $product_group_id,
-		  'users' => $users
+		  'users' => $users,
+		  'for_print' => $this->for_print
 		);
-		$this->load->vars( array( 'for_print' => $this->for_print ) );
 		
 		// Render view 
 		$this->load->view( 'index', $this->view );	

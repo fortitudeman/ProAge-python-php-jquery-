@@ -116,8 +116,8 @@
           <div class="span12 metas" >
                     
             <?php if( isset( $config ) ){
-					 $dataview = array( 'config' => $config );
-				  } else $dataview = array();  
+					 $dataview = array( 'config' => $config, 'for_print' => $for_print );
+				  } else $dataview = array( 'for_print' => $for_print );  
 				  				  
 				  $this->load->view( 'metas', array( $dataview ) ) ?>
             
