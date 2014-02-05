@@ -37,14 +37,23 @@ $( document ).ready(function() {
 	
 	var startDate;
     var endDate;
-    
+    var defaultDate = '';
+    var beginField = $('#begin').val();
+    if ( beginField.length > 0 ) {
+        var beginParts = beginField.split('-', 3);
+        if (beginParts.length == 3) {
+            defaultDate = beginParts[1].substr(0, 2) + '/' + beginParts[2].substr(0, 2) + '/' + beginParts[0].substr(2, 2);
+        }
+    }
+	
     var selectCurrentWeek = function() {
         window.setTimeout(function () {
             $('#week').find('.ui-datepicker-current-day a').addClass('ui-state-active')
         }, 1);
     }
-    
+
     $('#week').datepicker( {
+        defaultDate: defaultDate,
         showOtherMonths: true,
         selectOtherMonths: true,
 		firstDay:1,

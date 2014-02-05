@@ -94,6 +94,7 @@
                       <th>Comentarios</th>
                       <th>Creado</th>
                       <th>Última modificación</th>
+                      <th>Acciones</th>
                   </tr>
               </thead>   
               <tbody id="data">
@@ -111,7 +112,19 @@
                     <td class="center"><?php echo $value['autos_businesses'] ?></td>
                     <td class="center"><?php echo $value['comments'] ?></td>
                     <td class="center"><?php echo $value['date'] ?></td>
-                    <td class="center"><?php echo $value['last_updated'] ?></td>                                            
+                    <td class="center"><?php echo $value['last_updated'] ?></td>
+                    <td>
+                         <?php if( $access_update == true ): ?>
+                        <a class="btn btn-info" href="<?php echo base_url() ?>activities/update/<?php echo $value['activity_id'] ?>.html" title="Editar Actividad">
+                            <i class="icon-edit icon-white"></i>            
+                        </a>
+                        <?php endif; ?>
+                        <?php if( $access_delete == true ): ?>
+                        <a class="btn btn-danger" href="<?php echo base_url() ?>activities/delete/<?php echo $value['activity_id'] ?>.html" title="Eliminar Actividad">
+                            <i class="icon-trash icon-white"></i> 
+                        </a>
+                        <?php endif; ?>
+                    </td>
                 </tr>
                 <?php endforeach;  ?>                
               </tbody>

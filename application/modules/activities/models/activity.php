@@ -117,10 +117,23 @@ class Activity extends CI_Model{
 			
 				
     }
+// Read a row
+    public function getForUpdateOrDelete( $table = 'agents_activity', $id = 0, $agent_id = 0 ){
 
+		if	( empty( $table ) or empty( $agent_id ) or empty( $id ) )
+			return false;
 
+		$where = array( 'id' => (int) $id );
+		if ($agent_id)
+			$where['agent_id'] = (int) $agent_id;
+		$this->db->where( $where );
+	
+		$query = $this->db->get($table);
+		if ($query->num_rows() == 0)
+			return false;
 
-
+		return $query->row();
+    }
 
 // Return insert id
 	public function insert_id(){   return $this->insertId;  }
@@ -178,6 +191,7 @@ class Activity extends CI_Model{
 		foreach ($query->result() as $row) {
 			
 			$data[] = array(
+				 'activity_id' => $row->id,			
 				 'begin' => $row->begin,
 				 'end' => $row->end,
 				 'cita' => $row->cita,

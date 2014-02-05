@@ -543,7 +543,192 @@ class Activities extends CI_Controller {
 		exit;
 
 	}
-	
+
+// Update activity	
+	public function update( $activity_id = null, $userid = null ){
+
+		$redirect_page = !empty( $userid ) ? 'activities/index/' . $userid : 'activities/index';
+
+		// Check access for update
+		if( $this->access_update == false ){
+
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Actividad Editar", Informe a su administrador para que le otorge los permisos necesarios.'
+			));
+			redirect( $redirect_page, 'refresh' );
+		}
+
+		$this->load->model( array( 'activity', 'user' ) );
+		if( !empty( $userid ) ) {	
+			$agentid = $this->user->getAgentIdByUser( $userid );
+		} else {
+			$agentid = $this->user->getAgentIdByUser( $this->sessions['id'] );
+		}
+
+		$data = $this->activity->getForUpdateOrDelete( 'agents_activity', $activity_id, $agentid );
+		$activity_id = (int) $activity_id;
+		$userid = (int) $userid;
+		// Check Record if exist
+		if( empty( $data ) ){
+			
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+
+				'type' => false,	
+				'message' => 'No existe el registro. No puede editar este registro.'
+			));	
+			redirect( $redirect_page, 'refresh' );
+		}
+
+		if( !empty( $_POST ) ){
+
+			// Generals validations
+			$this->form_validation->set_rules('begin', 'Semana', 'trim|required');
+			$this->form_validation->set_rules('end', 'Semana', 'trim|required');
+			$this->form_validation->set_rules('cita', 'Cita', 'trim|required|numeric');
+			$this->form_validation->set_rules('prospectus', 'Prospecto', 'trim|required|numeric');
+			$this->form_validation->set_rules('interview', 'Entrevista', 'trim|required|numeric');
+			$this->form_validation->set_rules('vida_requests', 'Solicitudes Vida', 'trim|required|numeric');			
+			$this->form_validation->set_rules('vida_businesses', 'Negocios Vida', 'trim|required|numeric');			
+			$this->form_validation->set_rules('gmm_requests', 'Solicitudes GMM', 'trim|required|numeric');			
+			$this->form_validation->set_rules('gmm_businesses', 'Negocios GMM', 'trim|required|numeric');			
+			$this->form_validation->set_rules('autos_businesses', 'Negocios Autos', 'trim|required|numeric');			
+			$this->form_validation->set_rules('comments', 'Comentarios', 'trim');
+
+			// Run Validation
+			if ( $this->form_validation->run() == TRUE ){
+
+				$field_values = array();
+				foreach ( $_POST as $key => $value ) {
+
+					$field_values[$key] = $this->input->post( $key );
+				}
+				if ( $this->activity->update( 'agents_activity', $activity_id, $field_values) )
+					$this->session->set_flashdata( 'message', array( 
+
+						'type' => true,  
+						'message' => 'Se guardo la actividad correctamente.'
+					));
+				else
+					$this->session->set_flashdata( 'message', array( 
+
+						'type' => false,  
+						'message' => 'No se pudo guardar el registro, Actividad, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
+					));				
+				redirect( $redirect_page, 'refresh' );
+			}
+		}
+
+		// Config view
+		$this->view = array(
+				
+		  'title' => 'Editar Actividad',
+		    // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'css' => array(
+			  '<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet" media="screen">'
+		  ),
+		  'scripts' =>  array(
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+//			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+			  '<script src="'.base_url().'activities/assets/scripts/activities.js"></script>'
+		  ),
+		  'content' => 'activities/update', // View to load
+		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+		  'userid' => $userid,
+		  'data' => $data		  
+		); 
+
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+	}
+
+	// Delete Activity
+	public function delete( $activity_id = null, $userid = null ){
+
+		$redirect_page = !empty( $userid ) ? 'activities/index/' . $userid : 'activities/index';
+		// Check access for delete
+		if( $this->access_delete == false ){
+
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Actividad  Eliminar", Informe a su administrador para que le otorge los permisos necesarios.'
+			));	
+			redirect( $redirect_page, 'refresh' );
+		}
+
+		// Load Model
+		$this->load->model( array( 'activity', 'user' ) );
+		if( !empty( $userid ) ) {  
+			$agentid = $this->user->getAgentIdByUser( $userid );
+		} else {
+			$agentid = $this->user->getAgentIdByUser( $this->sessions['id'] );
+		}
+		$data = $this->activity->getForUpdateOrDelete( 'agents_activity', $activity_id, $agentid );
+		$activity_id = (int) $activity_id;
+
+		// Check Record if exist
+		if( empty( $data ) ){
+			
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+
+				'type' => false,	
+				'message' => 'No existe el registro. No puede eliminar este registro.'
+			));	
+			redirect( $redirect_page, 'refresh' );
+		}
+
+		if( !empty( $_POST ) and isset( $_POST['delete'] ) and $_POST['delete'] == true ) {
+
+			// Delete from DB
+			if ( $this->activity->delete( 'agents_activity', 'id',  $activity_id ) == false )
+				// Set false message		
+				$this->session->set_flashdata( 'message', array(
+					'type' => false,
+					'message' => 'No se puede borrar el registro. Actividad, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador.'		
+				));	
+			else
+				// Set ok message		
+				$this->session->set_flashdata( 'message', array( 
+					'type' => true,	
+					'message' => 'La actividad se elimino correctamente.'
+				));
+
+			redirect( $redirect_page, 'refresh' );
+		}
+
+		// Config view
+		$this->view = array(
+
+		  'title' => 'Eliminar actividad',
+		    // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'css' => array(),
+		  'scripts' =>  array(
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			  '<script src="'.base_url().'activities/assets/scripts/delete.js"></script>',		
+			  	
+		  ),
+		  'content' => 'activities/delete', // View to load
+		  'message' => $this->session->flashdata('message') ,// Return Message, true and false if have
+		  'userid' => $userid,
+		  'data' => $data
+		);
+
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+	}
 /* End of file activities.php */
 /* Location: ./application/controllers/activities.php */
 }
