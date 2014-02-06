@@ -65,10 +65,13 @@
 				$link_text = 'Vista previa de impresión';
 			}
 			else
-				$link_text = 'Imprimir';
+				$link_text = 'Imprimir';	
+			
+			if ($ramo == "vida") $name_ramo = "Vida";
+			if ($ramo == "gmm") $name_ramo = "GMM";
 		  ?> 
           <p style="float: right; padding-top: 10px; margin-right: 3em"><?php echo anchor(implode('/', $uri_segments), $link_text, $link_attributes); ?></p>
-          <h3>Simulador de metas para <?php echo $users[0]['name'] . " " . $users[0]['lastnames']?></h3>
+          <h3>Simulador de metas de <?php echo $name_ramo;?> para <?php echo $users[0]['name'] . " " . $users[0]['lastnames']?></h3>
 
           <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 1 or isset( $ramo ) and $ramo == 'vida' ): $ramoID = 1; ?>  
               <a href="../<?php echo $userid; ?>/1.html" class="links-menu btn btn-link" id="vida" style="color:#06F">Vida</a>
