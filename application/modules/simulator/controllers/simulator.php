@@ -253,6 +253,7 @@ $( document ).ready( function(){
 	);
 	$(".main-menu-span").removeClass("span2");
 	$("#content").removeClass("span10").addClass("span12");
+	$("#meta-footer td").css("font-size", "10px");
 });
 </script>
 '; 
@@ -260,7 +261,13 @@ $( document ).ready( function(){
 			$css = array(
 		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet" media="screen">'
 		  );
-		  $add_js = '';
+		  $add_js = '
+<script type="text/javascript">
+$( document ).ready( function(){
+	$("#meta-footer td").css("font-size", "18px");
+});
+</script>
+'; 
 		}
 		$this->view = array(
 				

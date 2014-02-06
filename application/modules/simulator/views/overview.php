@@ -67,7 +67,7 @@
 			else
 				$link_text = 'Imprimir';
 		  ?> 
-          <p style="float: right; padding-top: 10px"><?php echo anchor(implode('/', $uri_segments), $link_text, $link_attributes); ?></p>
+          <p style="float: right; padding-top: 10px; margin-right: 3em"><?php echo anchor(implode('/', $uri_segments), $link_text, $link_attributes); ?></p>
           <h3>Simulador de metas para <?php echo $users[0]['name'] . " " . $users[0]['lastnames']?></h3>
 
           <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 1 or isset( $ramo ) and $ramo == 'vida' ): $ramoID = 1; ?>  
@@ -101,7 +101,7 @@
          
         <!-- <img src="<?php echo base_url() ?>images/distribucion.png" /> -->
          
-         <div class="row">
+         <div class="row" style="margin-right: 3em">
          
          <div class="span11 simulator" style="margin-left:40px;">
          	<?php $data[0]['data'] ?>
@@ -116,8 +116,8 @@
           <div class="span12 metas" >
                     
             <?php if( isset( $config ) ){
-					 $dataview = array( 'config' => $config, 'for_print' => $for_print );
-				  } else $dataview = array( 'for_print' => $for_print );  
+					 $dataview = array( 'config' => $config );
+				  } else $dataview = array();  
 				  				  
 				  $this->load->view( 'metas', array( $dataview ) ) ?>
             

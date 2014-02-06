@@ -1022,10 +1022,9 @@
               
           </tbody>
           
-<?php $font_size_style = $for_print ? '' : 'font-size:18px;'; ?>
            <tr>
             	<td>&nbsp;</td>
-                <td class="" style="<?php echo $font_size_style ?>">&nbsp;</td>
+                <td class="">&nbsp;</td>
                 <td class=""></td>
                 <td class=""></td>
                 <td class=""></td>
@@ -1034,34 +1033,34 @@
                 <td class=""></td>                               
             </tr>   
         
-          <tr>
-            	<td style="<?php echo $font_size_style ?>"><b>TOTAL</b></td>
-                <td class="bgestacionalidadbold" style="<?php echo $font_size_style ?>">100 %</td>
+          <tr id="meta-footer">
+            	<td><b>TOTAL</b></td>
+                <td class="bgestacionalidadbold">100 %</td>
                 <td class="bgyelowbold">
                 	
-                    <div id="primas-solicitud-meta-total-text" style="text-align: center !important; <?php echo $font_size_style ?>"></div>  
+                    <div id="primas-solicitud-meta-total-text" style="text-align: center !important;"></div>  
                     <input type="hidden" name="primas-solicitud-meta-total" id="primas-solicitud-meta-total" value="0" />
                     
                 </td>
-                <td class="bgyelowbold" style="<?php echo $font_size_style ?>">
+                <td class="bgyelowbold">
                 	<?php echo $SolicitudesLogradasTotal ?>
                 </td>
                 <td class="bgorangebold">
                 	
-                    <div id="primas-negocios-meta-total-text" style="text-align: center !important; <?php echo $font_size_style ?>"></div>  
+                    <div id="primas-negocios-meta-total-text" style="text-align: center !important;"></div>  
                     <input type="hidden" name="primas-negocios-meta-total" id="primas-negocios-meta-total" value="0" />
                     
                 </td>
-                <td class="bgorangebold" style="<?php echo $font_size_style ?>">
+                <td class="bgorangebold">
                 	<?php echo $NegociosLogradosTotal ?>
                 </td>
                 <td class="bggreenbold">
                 	
-                    <div id="primas-meta-total-text" style="text-align: right !important; <?php echo $font_size_style ?>"></div>  
+                    <div id="primas-meta-total-text" style="text-align: right !important;"></div>  
                     <input type="hidden" name="primas-meta-total" id="primas-meta-total" value="0" />
                     
                 </td>
-                <td class="bggreenbold" style="<?php echo $font_size_style ?>">$
+                <td class="bggreenbold">$
                 	<?php echo number_format($PrimasLogradosTotal,2); ?>
                 </td>                               
             </tr> 
