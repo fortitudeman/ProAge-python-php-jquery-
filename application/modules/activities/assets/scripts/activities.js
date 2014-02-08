@@ -39,10 +39,14 @@ $( document ).ready(function() {
     var endDate;
     var defaultDate = '';
     var beginField = $('#begin').val();
-    if ( beginField.length > 0 ) {
+    var endField = $('#end').val();
+    if ( ( beginField.length > 0 ) && ( endField.length > 0 ) ) {
         var beginParts = beginField.split('-', 3);
-        if (beginParts.length == 3) {
+        var endParts = endField.split('-', 3);		
+        if ( ( beginParts.length == 3 ) && ( endParts.length == 3) ) {
             defaultDate = beginParts[1].substr(0, 2) + '/' + beginParts[2].substr(0, 2) + '/' + beginParts[0].substr(2, 2);
+            startDate = new Date(beginParts[0] + '/' + beginParts[1] + '/' +  beginParts[2]);
+            endDate = new Date(endParts[0] + '/' + endParts[1] + '/' + endParts[2]);
         }
     }
 	
@@ -105,7 +109,7 @@ $( document ).ready(function() {
             selectCurrentWeek();
         }
     });
-
+    selectCurrentWeek();
     $("#sorter").tablesorter(); 
     
     
