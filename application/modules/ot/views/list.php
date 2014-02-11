@@ -175,7 +175,7 @@
               <tbody id="data">
                 <?php  if( !empty( $data ) ): ?>
                 <?php  foreach( $data as $value ):  ?>
-                <tr <?php if( $value['work_order_status_id'] != 2 /*and $value['work_order_status_id'] != 7*/ and $value['work_order_status_id'] != 8 ): ?> onclick="menu('menu-<?php echo $value['id'] ?>');" <?php endif; ?>>
+                <tr <?php if( $value['work_order_status_id'] != 2 /*and $value['work_order_status_id'] != 7*/ and $value['work_order_status_id'] != 8 and $value['work_order_status_id'] != 4 ): ?> onclick="menu('menu-<?php echo $value['id'] ?>');" <?php endif; ?>>
                 	<td class="center"><?php 
 										    
 											$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
