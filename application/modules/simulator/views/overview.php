@@ -69,6 +69,7 @@
 			
 			if ($ramo == "vida") $name_ramo = "Vida";
 			if ($ramo == "gmm") $name_ramo = "GMM";
+			if (!$users[0]['name']) $users[0]['name'] = $users[0]['company_name'];
 		  ?> 
           <p style="float: right; padding-top: 10px; margin-right: 3em"><?php echo anchor(implode('/', $uri_segments), $link_text, $link_attributes); ?></p>
           <h3>Simulador de metas de <?php echo $name_ramo;?> para <?php echo $users[0]['name'] . " " . $users[0]['lastnames']?></h3>
