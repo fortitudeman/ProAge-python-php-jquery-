@@ -153,10 +153,14 @@ class Usuarios extends CI_Controller {
 					
 					// Save Session
 					$this->session->set_userdata( array( 'system' => $user[0] ) );
-					
-					redirect( 'home', 'refresh' );
-					
-					
+					// Get user home page depending on role
+					$home_page = $this->rol->get_user_home_page( $user[0]['id'] );
+					if ( ! $home_page )
+						$redirect_to = 'home';
+					else
+						$redirect_to = $home_page['uri_segments'];
+					redirect( $redirect_to, 'refresh' );
+
 				}else{
 					
 					
@@ -1923,51 +1927,97 @@ class Usuarios extends CI_Controller {
 		
 	}
 	
+	private function _check_user( $id = null) {
 	
+		if( empty( $id ) or $this->sessions['id'] != $id )
+			return FALSE;
+
+		return $this->user->getByIdToUpdate( $id );
+	}
+
+	private function _handle_profile_picture( $user, &$usernew ) {
+
+		// Uploaded a picture
+		if( !empty( $_FILES['imagen']['name'] ) ){
+
+			// Drop Last Image
+			if( is_file( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] ) and $user['picture'] != 'default.png' )
+				unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] );
+
+			$file = $_FILES['imagen']['name'];  
+			$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
+					
+			// replace characters other than letters, numbers and . by _
+			$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
+
+			if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) ){
+				$usernew['picture'] = $file;
+			}
+		}				
+
+		if( $this->input->post( 'deleteimage' ) == 'true' ){
+
+			// Drop Last Image
+			if( is_file( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] ) and $user['picture'] != 'default.png' )
+				unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] );
+
+			$usernew['picture'] = 'default.png';
+		}
+	}
+
+	private function _update_user( $id, $usernew, $update_session = FALSE ) {
 	
+		if( $this->user->update( 'users', $id, $usernew ) == true ){
+
+			// Set true message		
+			$this->session->set_flashdata( 'message', array( 
+							
+				'type' => true,	
+				'message' => 'Se guardo el registro correctamente'
+			));
+			if ($update_session)
+				$this->session->set_userdata('system', array_merge($this->sessions, $usernew));
+		
+		}else{
+
+			// Set true message		
+			$this->session->set_flashdata( 'message', array( 
+
+				'type' => false,	
+				'message' => 'No se puede guardar los datos nuevos de tu perfil.'
+			));
+		}
+		redirect( 'home', 'refresh' );
+	}
+
 // Update profile for user
 	public function editar_perfil( $id = null ){
-		
-		
-		if( empty( $id ) or $this->sessions['id'] != $id ){
-			
-							
-		  // Set false message		
-		  $this->session->set_flashdata( 'message', array( 
+
+		$user = $this->_check_user( $id );
+		if( ! $user ) {
+
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
 			  
-			  'type' => false,	
-			  'message' => 'No puedes editar tu perfil, Informe a su administrador para que le otorge los permisos necesarios.'
-						  
-		  ));	
-		  
-		  
-		  redirect( 'home', 'refresh' );
-			
-						
-		}	
-		
-		// Load Model
-			$user = $this->user->getByIdToUpdate( $id );		
-					
-			
-		
+				'type' => false,	
+				'message' => 'No puedes editar tu perfil, Informe a su administrador para que le otorge los permisos necesarios.'
+			));	
+			redirect( 'home', 'refresh' );
+		}
+
 		if( !empty( $_POST ) ){
-			
-						
+
 			// Generals for user what does not agent
 			if( $user['username'] != $this->input->post( 'username' ) )
 				$this->form_validation->set_rules('username', 'Usuario', 'is_unique[users.username]');
-				
-			
+
 			if( !empty( $_POST['password'] ) ){
 				$this->form_validation->set_rules('password', 'Nuevo Password', 'required|matches[passwordnew]');
 				$this->form_validation->set_rules('passwordnew', 'Nuevo Password Repetir', 'required');
 			}
 			if( $user['email'] != $this->input->post( 'email' ) )
 				$this->form_validation->set_rules('email', 'Correo', 'valid_email|is_unique[users.email]');
-			
-			
-			
+
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
 				
@@ -1981,89 +2031,18 @@ class Usuarios extends CI_Controller {
 				
 				if( !empty( $_POST['email'] ) )
 					$usernew['email'] = $this->input->post('email');						
-				
-				// Uploaded a picture
-				if( !empty( $_FILES['imagen']['name'] ) ){
-						
-						// Drop Last Image
-						if( is_file( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] ) and $user['picture'] != 'default.png' )
-								unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] );
-							
-							
-							
-						$file = $_FILES['imagen']['name'];  
-		 
-						$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-					
-						// replace characters other than letters, numbers and . by _
-						$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
-						
-						  
-					 
-						if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) ){
-							$usernew['picture'] = $file;
-						}
-				}				
-				
-				
-				if( $this->input->post( 'deleteimage' ) == 'true' ){
-				
-					// Drop Last Image
-					if( is_file( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] ) and $user['picture'] != 'default.png' )
-							unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] );
-					
-					$usernew['picture'] = 'default.png';
-				
-				}
-			
-			
-				if( $this->user->update( 'users', $id, $usernew ) == true ){
-						
-						// Set true message		
-						$this->session->set_flashdata( 'message', array( 
-							
-							'type' => true,	
-							'message' => 'Se guardo el registro correctamente'
-										
-						));												
-						
-						
-						redirect( 'home', 'refresh' );
-						
-						
-				}else{
-					
-					// Set true message		
-						$this->session->set_flashdata( 'message', array( 
-							
-							'type' => false,	
-							'message' => 'No se puede guardar los datos nuevos de tu perfil.'
-										
-						));												
-						
-						
-						redirect( 'home', 'refresh' );
-					
-				} 
-				
-				
-				
+
+				$this->_handle_profile_picture( $user, $usernew );
+				$this->_update_user( $id, $usernew, TRUE );
+
+			} elseif (!validation_errors()) {
+
+				$usernew = array();
+				$this->_handle_profile_picture( $user, $usernew );
+				$this->_update_user( $id, $usernew, TRUE );
 			}
-			
-			// Set true message		
-						$this->session->set_flashdata( 'message', array( 
-							
-							'type' => true,	
-							'message' => 'Se guardo el registro correctamente'
-										
-						));												
-						
-						
-						redirect( 'home', 'refresh' );
-									
 		}
-		
-		
+
 		
 		// Config view
 		$this->view = array(

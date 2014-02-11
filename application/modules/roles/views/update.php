@@ -62,17 +62,25 @@
                   <div class="control-group error">
                     <label class="control-label" for="inputError">Nombre</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="name" name="name" type="text" placeholder="El nombre del rol" value="<?php echo $data['name'] ?>">
+                      <input class="input-xlarge focused required" id="name" name="name" type="text" placeholder="El nombre del rol" value="<?php echo set_value('name', $data['name']); ?>">
                     </div>
                   </div>
                   
                   <div class="control-group">
                     <label class="control-label" for="inputError">Label</label>
                     <div class="controls">
-                      <input class="input-xlarge focused" id="label" name="label" type="text" value="<?php echo $data['label'] ?>">
+                      <input class="input-xlarge focused" id="label" name="label" type="text" value="<?php echo set_value('label', $data['label']); ?>">
                     </div>
                   </div>
-                 
+
+                  <div class="control-group">
+                    <label class="control-label" for="inputError">Seleccione una página de inicio para este rol</label>
+                    <div class="controls">
+                      <?php echo form_dropdown('x_home_page', $data['all_home_pages'], $data['x_home_page'], ' class="input-xlarge focused" id="x_home_page"' ); ?>
+
+				  </div>
+                  </div>
+
                   <div id="actions-buttons-forms" class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>
                     <button class="btn" onclick="history.back()">Cancelar</button>

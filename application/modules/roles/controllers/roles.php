@@ -340,17 +340,17 @@ class Roles extends CI_Controller {
 			redirect( 'roles', 'refresh' );
 			
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
+		$home_pages = $this->rol->get_home_pages();
+		$data['all_home_pages'] = array();
+		foreach ($home_pages as $home_page) {
+
+			$data['all_home_pages'][$home_page['page_id']] = $home_page['page_name'];
+		}
+		if ( !isset( $home_pages[$data['x_home_page']] ) )
+			$data['x_home_page'] = 1;
+        $this->config->set_item('x_home_page', $data['all_home_pages']);
+
 		if( !empty( $_POST ) ){
 			
 			
@@ -360,8 +360,8 @@ class Roles extends CI_Controller {
 			
 			// Validations
 			$this->form_validation->set_rules('name', 'Nombre de Rol', 'required');
-			
-			
+			$this->form_validation->set_rules('x_home_page', 'Home Page', 'required|is_natural_no_zero|src_is_array_index[x_home_page]');
+
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
 					
@@ -399,9 +399,8 @@ class Roles extends CI_Controller {
 						
 				}						
 					
-			}	
-			
-						
+			} elseif (! form_error('x_home_page') )
+				$data['x_home_page'] = $this->input->post('x_home_page');
 		}
 		
 		

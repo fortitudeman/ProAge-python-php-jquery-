@@ -502,7 +502,8 @@ class Rol extends CI_Model{
 				  
 				  'id' => $row->id,
 				  'name' => $row->name,
-				  'label' => $row->label
+				  'label' => $row->label,
+				  'x_home_page' => $row->x_home_page
 				  
 			);
 				
@@ -593,5 +594,35 @@ class Rol extends CI_Model{
 		
    }
 
+// Get all home pages
+	public function get_home_pages( $order_by = 'page_id asc' ) {
+
+		$result = array();
+		$this->db->order_by( $order_by );
+		$query = $this->db->get( 'user_role_home_pages' );
+		foreach ($query->result_array() as $row) {
+
+			$result[$row['page_id']] = $row;
+		}
+		return $result;
+   }
+
+ 	public function get_user_home_page( $user_id = null) {
+
+		$result = array();
+		if ( $user_id ) {
+
+			$query = $this->db->select('user_role_home_pages.*')
+				->from('user_role_home_pages')
+				->join('user_roles', 'user_roles.x_home_page = user_role_home_pages.page_id')
+				->join('users_vs_user_roles', 'users_vs_user_roles.user_role_id = user_roles.id')			
+				->where('users_vs_user_roles.user_id', $user_id)
+				->get();
+			if ( $query->num_rows() > 0 ) {
+				$result = $query->row_array();
+			}
+		}
+		return $result;
+   }  
 }
 ?>
