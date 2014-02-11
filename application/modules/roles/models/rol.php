@@ -612,12 +612,14 @@ class Rol extends CI_Model{
 		$result = array();
 		if ( $user_id ) {
 
-			$query = $this->db->select('user_role_home_pages.*')
+			$query = $this->db->select('user_role_home_pages.*, user_roles.home_page_priority')
 				->from('user_role_home_pages')
 				->join('user_roles', 'user_roles.x_home_page = user_role_home_pages.page_id')
 				->join('users_vs_user_roles', 'users_vs_user_roles.user_role_id = user_roles.id')			
 				->where('users_vs_user_roles.user_id', $user_id)
+				->order_by('user_roles.home_page_priority', 'asc')				
 				->get();
+
 			if ( $query->num_rows() > 0 ) {
 				$result = $query->row_array();
 			}
