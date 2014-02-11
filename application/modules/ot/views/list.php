@@ -253,7 +253,7 @@
 												
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
 						
-						if( $value['work_order_status_id'] ==  7 )
+						if( $value['work_order_status_id'] ==  7 and $new == true)
 								echo '<a href="javascript:void(0)" onclick="setPay(\''.$value['id'].'\')">Marcar como pagada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';	
 																		
 												}
