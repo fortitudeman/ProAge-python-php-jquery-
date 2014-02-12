@@ -1937,13 +1937,11 @@ class Usuarios extends CI_Controller {
 
 	private function _handle_profile_picture( $user, &$usernew ) {
 
+		$delete_previous = FALSE;
 		// Uploaded a picture
 		if( !empty( $_FILES['imagen']['name'] ) ){
 
-			// Drop Last Image
-			if( is_file( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] ) and $user['picture'] != 'default.png' )
-				unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] );
-
+			$delete_previous = TRUE;
 			$file = $_FILES['imagen']['name'];  
 			$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
 					
@@ -1957,14 +1955,14 @@ class Usuarios extends CI_Controller {
 
 		if( $this->input->post( 'deleteimage' ) == 'true' ){
 
-			// Drop Last Image
-			if( is_file( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] ) and $user['picture'] != 'default.png' )
-				unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] );
-
+			$delete_previous = TRUE;
 			$usernew['picture'] = 'default.png';
 		}
-	}
+		// Drop Last Image
+		if ( $delete_previous && ( $user['picture'] != 'default.png' ) && is_file( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] ) )
+			unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] );
 
+	}
 	private function _update_user( $id, $usernew, $update_session = FALSE ) {
 	
 		if( $this->user->update( 'users', $id, $usernew ) == true ){

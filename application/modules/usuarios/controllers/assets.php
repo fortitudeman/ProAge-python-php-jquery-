@@ -48,11 +48,13 @@ class assets extends CI_Controller {
                     break;
                 
                 case 'jpg' || 'jpeg' || 'png' || 'gif':
+					@ob_start();
                     header('Content-type: image/'.$file_type);
+					exit(file_get_contents($file));					
                     break;
             }
- 
-            include $file;
+
+           include $file;
         } else {
             show_404();
         }
