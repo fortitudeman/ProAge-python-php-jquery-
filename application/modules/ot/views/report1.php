@@ -57,19 +57,10 @@
         
             <?php            
                 $negocio = 0;
-		$prima = 0;		
-		$negocio += (int)$value['negocio'];		
-		/*$negocio += (int)$value['tramite']['count'];		
-		if( isset( $value['aceptadas']['count'] ) ) 
-                    $negocio += (int)$value['aceptadas']['count'];	
-		else 
-                    $negocio += (int)$value['aceptadas'];*/	
-		$prima += (float)$value['prima'];
-		/*$prima += (float)$value['tramite']['prima'];		
-		if(isset($value['aceptadas']['prima'])) 			
-                    $prima += (float)$value['aceptadas']['prima']; 		
-		else			
-                    $prima += (float)$value['aceptadas'];	*/	
+		$prima = 0;	
+		$negocios_pendientes_pago = 0;
+		$primas_pendientes_pago = 0;
+
 		if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente'; else $value['disabled'] = 'Cancelado';		
 		$total_negocio += $value['negocio'];		
 		if( $value['negociopai']  != 0 ) 			
@@ -81,14 +72,19 @@
 		$total_primas_tramite +=  $value['tramite']['prima'];		
 		
 		if(isset($value['aceptadas']['count']))			
-			$total_negocio_pendiente +=  $value['aceptadas']['count']; 		
+			$negocios_pendientes_pago +=  $value['aceptadas']['count']; 		
 		else 			
-			$total_negocio_pendiente += $value['aceptadas'];
+			$negocios_pendientes_pago += $value['aceptadas'];
+		$total_negocio_pendiente = $negocios_pendientes_pago;
 		
 		if( isset( $value['aceptadas']['prima'] ) ) 			
-			$total_primas_pendientes +=  $value['aceptadas']['prima'];		
+			$primas_pendientes_pago +=  $value['aceptadas']['prima'];		
 		else			
-			$total_primas_pendientes += $value['aceptadas'];	
+			$primas_pendientes_pago += $value['aceptadas'];
+		
+		$negocio += (int)($value['negocio']+$value['tramite']['count']+$negocios_pendientes_pago);		
+		$prima += (float)($value['prima']+$value['tramite']['prima']+$primas_pendientes_pago);
+
 		$total_negocios_proyectados +=$negocio;
 		$total_primas_proyectados +=$prima;          
             ?>															
