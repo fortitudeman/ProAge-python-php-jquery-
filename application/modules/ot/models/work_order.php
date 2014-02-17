@@ -50,6 +50,23 @@ class Work_order extends CI_Model{
        
     }
 	
+	public function replace( $table = '', $values = array() ){
+        
+		
+		if( empty( $table ) or empty( $values ) ) return false;
+		
+			
+		if( $this->db->replace( $table, $values ) ){
+			
+			$this->insertId = $this->db->insert_id();
+			
+			return true;
+		
+		}else
+		
+			return false;
+       
+    }
 	
 	public function create_banch( $table = '', $values = array() ){
         
@@ -1558,10 +1575,8 @@ class Work_order extends CI_Model{
 	*/
 	
 	$this->db->select();
-	$this->db->from( 'policies' );
-	$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
-	$this->db->join( 'payments', 'payments.policy_id=policies.id' );
-	$this->db->where( array( 'policies.uid' => $uid, 'policies.prima >=' => $prima, 'payments.payment_date' => $payment_date, 'policies_vs_users.user_id' => $user_id ) );
+	$this->db->from( 'payments' );
+	$this->db->where( array( 'policy_number' => $uid, 'amount >=' => $prima, 'payment_date' => $payment_date, 'agent_id' => $user_id ) );
 	
 	
 	$query = $this->db->get();	
@@ -1572,7 +1587,7 @@ class Work_order extends CI_Model{
 	
   }
   
-  public function getWathdo( $i = 0 ){
+	  public function getWathdo( $i = 0 ){
 	
 		/*
 		SELECT work_order.id, work_order.uid,  policies.name

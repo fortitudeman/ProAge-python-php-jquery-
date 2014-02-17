@@ -59,17 +59,17 @@
                 $negocio = 0;
 		$prima = 0;		
 		$negocio += (int)$value['negocio'];		
-		$negocio += (int)$value['tramite']['count'];		
+		/*$negocio += (int)$value['tramite']['count'];		
 		if( isset( $value['aceptadas']['count'] ) ) 
                     $negocio += (int)$value['aceptadas']['count'];	
 		else 
-                    $negocio += (int)$value['aceptadas'];	
+                    $negocio += (int)$value['aceptadas'];*/	
 		$prima += (float)$value['prima'];
-		$prima += (float)$value['tramite']['prima'];		
+		/*$prima += (float)$value['tramite']['prima'];		
 		if(isset($value['aceptadas']['prima'])) 			
                     $prima += (float)$value['aceptadas']['prima']; 		
 		else			
-                    $prima += (float)$value['aceptadas'];		
+                    $prima += (float)$value['aceptadas'];	*/	
 		if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente'; else $value['disabled'] = 'Cancelado';		
 		$total_negocio += $value['negocio'];		
 		if( $value['negociopai']  != 0 ) 			

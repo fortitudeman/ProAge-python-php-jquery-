@@ -157,9 +157,7 @@
             
             
             <div id="loading"></div>
-            
-        
-        	
+                    	
             <table class="table table-striped table-bordered bootstrap-datatable datatable">
               <thead>
                   <tr>
@@ -175,7 +173,16 @@
               <tbody id="data">
                 <?php  if( !empty( $data ) ): ?>
                 <?php  foreach( $data as $value ):  ?>
-                <tr <?php if( $value['work_order_status_id'] != 2 /*and $value['work_order_status_id'] != 7*/ and $value['work_order_status_id'] != 8 and $value['work_order_status_id'] != 4 ): ?> onclick="menu('menu-<?php echo $value['id'] ?>');" <?php endif; ?>>
+	            <?php 
+				
+				$new = false;
+											
+				if( $value['parent_type_name']['name'] == 'NUEVO NEGOCIO' )
+				
+					$new = true;
+					
+				?>
+                <tr <?php if( ($value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 8 and $value['work_order_status_id'] != 4 and $value['work_order_status_id'] != 7) or ($value['work_order_status_id'] == 7 and $new == true) ): ?> onclick="menu('menu-<?php echo $value['id'] ?>');" <?php endif; ?>>
                 	<td class="center"><?php 
 										    
 											$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
@@ -226,13 +233,7 @@
                     <a href="javascript:void(0)" class="btn btn-link btn-hide"><i class="icon-arrow-up"></i></a>
                    
                     <?php 
-					
-					$new = false;
-												
-					if( $value['parent_type_name']['name'] == 'NUEVO NEGOCIO' )
-					
-						$new = true;
-					
+										
 					$scrips='';
 					
 					if( $this->access_activate == true and $value['work_order_status_id'] ==  9 )

@@ -1874,7 +1874,7 @@ class Ot extends CI_Controller {
 					
 			// Load Model
 			$this->load->model( 'work_order' );
-						
+			
 			$this->work_order->importPaymentsTmp( $file_array );
 			
 			for( $i=0; $i<=count( $file_array ); $i++ )
@@ -2018,13 +2018,15 @@ class Ot extends CI_Controller {
 		 
 		  // Load Model
 		  $this->load->model( array( 'work_order', 'usuarios/user' ) );
-		  		  		  
+		  
 		  $file_array = $this->work_order->getImportPaymentsTmp();
 		    
 		  
 		  $file_array = json_decode( $file_array[0]['data'] );
-		  
+ 
 		 
+  		  $product = $_POST['product'];
+		  
 		  $controlSaved = true;
 		  
 		  $i = 1;
@@ -2035,7 +2037,7 @@ class Ot extends CI_Controller {
 		  foreach( $file_array as $item ){
 			 		  
 			  // Verify policy
-			  $policy = $this->work_order->getPolicyByUid( $item->uid );
+			  //$policy = $this->work_order->getPolicyByUid( $item->uid );
 			 
 			  if( empty( $policy ) ){
 			  	
@@ -2080,13 +2082,15 @@ class Ot extends CI_Controller {
 			  			  
 			  $payment = array( 
 			  	
-				'policy_id' => $policy[0]['id'],
+				'product_group' => $product,
+				'agent_id' => $item->agent_id,
+				'year_prime' => $item->year_prime,
 				'currency_id' => 1,
 				'amount' => $item->amount,
 				'payment_date' => date( 'Y-m-d', $payment_date ),
-				'last_updated' => date( 'Y-m-d H:i:s' ),
 				'business' => $item->is_new,
 				'policy_number' => $item->uid,
+				'last_updated' => date( 'Y-m-d H:i:s' ),
 				'date' => date( 'Y-m-d H:i:s' )
 				
 			  );		 
@@ -2096,7 +2100,7 @@ class Ot extends CI_Controller {
 			 			 
 			  if( $this->work_order->checkPayment( $item->uid, $item->amount, $item->payment_date, $user_id ) == true ){
 					  
-					  if( $this->work_order->create( 'payments', $payment ) == false )	$controlSaved = false;
+					  if( $this->work_order->replace( 'payments', $payment ) == false )	$controlSaved = false;
 					  					  			  		
 					  
 					  if( (float)$policy[0]['prima'] >= (float)$item->amount ){
