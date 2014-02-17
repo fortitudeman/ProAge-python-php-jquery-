@@ -1825,6 +1825,7 @@ class User extends CI_Model{
 			FROM agent_uids
 			WHERE agent_uids.uid='';
 		*/
+
 		$uidorigin = $uid;
 
 		$this->db->select( ' agent_id' );
