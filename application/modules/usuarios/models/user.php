@@ -3144,9 +3144,11 @@ class User extends CI_Model{
 		$this->db->from( 'policies' );
 		$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
+		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id' );
 		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
 		$this->db->where( array( 'work_order.work_order_status_id' => 7 ) );
+		$this->db->where("( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )");
 		$this->db->where( 'policies_vs_users.user_id', $user_id );
   		
 		if(!empty($filter))

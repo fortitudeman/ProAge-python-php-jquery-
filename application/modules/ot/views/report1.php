@@ -75,12 +75,14 @@
 			$negocios_pendientes_pago +=  $value['aceptadas']['count']; 		
 		else 			
 			$negocios_pendientes_pago += $value['aceptadas'];
-		$total_negocio_pendiente = $negocios_pendientes_pago;
+			
+		$total_negocio_pendiente += $negocios_pendientes_pago;
 		
 		if( isset( $value['aceptadas']['prima'] ) ) 			
 			$primas_pendientes_pago +=  $value['aceptadas']['prima'];		
 		else			
 			$primas_pendientes_pago += $value['aceptadas'];
+		$total_primas_pendientes += $primas_pendientes_pago;
 		
 		$negocio += (int)($value['negocio']+$value['tramite']['count']+$negocios_pendientes_pago);		
 		$prima += (float)($value['prima']+$value['tramite']['prima']+$primas_pendientes_pago);
