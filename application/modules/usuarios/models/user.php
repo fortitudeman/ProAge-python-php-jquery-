@@ -1816,7 +1816,7 @@ class User extends CI_Model{
 	
 	
 	
-	public function getIdAgentByFolio( $uid = null ){
+	public function getIdAgentByFolio( $uid = null, $type = null ){
 		
 		if( empty( $uid ) ) return false;
 		
@@ -1825,10 +1825,43 @@ class User extends CI_Model{
 			FROM agent_uids
 			WHERE agent_uids.uid='';
 		*/
+		$uidorigin = $uid;
+
 		$this->db->select( ' agent_id' );
 		$this->db->from( 'agent_uids' );
-		$this->db->where( 'agent_uids.uid', $uid );
+		$this->db->where( array( 'agent_uids.type' => $type ) );
 		
+		if( !empty( $type ) and $type == 'national' ){
+			
+			$uid = str_replace( "N000000", '', $uid );
+			$uid = str_replace( "N00000", '', $uid );
+			$uid = str_replace( "N0000", '', $uid );
+			$uid = str_replace( "N000", '', $uid );
+			$uid = str_replace( "N00", '', $uid );
+			$uid = str_replace( "N0", '', $uid );			
+			$uid = ltrim( $uid, '0');
+			
+			//$this->db->where( 'agent_uids.type', 'national' );
+			
+			$this->db->where( '(agent_uids.uid=\''.$uidorigin.'\' OR agent_uids.uid=\''.$uid.'\')' );
+			
+			
+		}
+		if( !empty( $type ) and $type == 'provincial' ) {
+			
+			$uid = str_replace( "P000000", '', $uid );
+			$uid = str_replace( "P00000", '', $uid );
+			$uid = str_replace( "P0000", '', $uid );
+			$uid = str_replace( "P000", '', $uid );
+			$uid = str_replace( "P00", '', $uid );
+			$uid = str_replace( "P0", '', $uid );
+			$uid = ltrim( $uid, '0');
+			
+			//$this->db->where( 'agent_uids.type', 'provincial' );
+			
+			$this->db->where( '(agent_uids.uid=\''.$uidorigin.'\' OR agent_uids.uid=\''.$uid.'\')' );
+		}
+
 		$query = $this->db->get();
 		
 		if ($query->num_rows() == 0) return null;

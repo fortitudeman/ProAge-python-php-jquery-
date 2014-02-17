@@ -1810,7 +1810,7 @@ class Ot extends CI_Controller {
 														
 							$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], 'clave', $i  );
 							
-							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]] );
+							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]], 'clave' );
 															
 						}		
 								
@@ -1819,7 +1819,7 @@ class Ot extends CI_Controller {
 																					
 							$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], 'national', $i  );
 							
-							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]] );
+							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]], 'national' );
 															
 						}						
 						
@@ -1827,7 +1827,7 @@ class Ot extends CI_Controller {
 														
 							$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], 'provincial', $i  );
 							
-							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]] );
+							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]], 'national' );
 															
 						}
 						
@@ -1925,7 +1925,7 @@ class Ot extends CI_Controller {
 				
 				if( isset( $file_array[$i]->agent_uidsnational ) ){
 						
-					  $exist = $this->user->getIdAgentByFolio( $file_array[$i]->agent_uidsnational );
+					  $exist = $this->user->getIdAgentByFolio( $file_array[$i]->agent_uidsnational, 'national'  );
 						
 					  $uids_agens = array(
 						  'agent_id' => $file_array[$i]->agent_id,
@@ -1945,7 +1945,7 @@ class Ot extends CI_Controller {
 				
 				if(  isset( $file_array[$i]->agent_uidsprovincial ) ){
 					
-					 $exist = $this->user->getIdAgentByFolio( $file_array[$i]->agent_uidsprovincial );
+					 $exist = $this->user->getIdAgentByFolio( $file_array[$i]->agent_uidsprovincial, 'provincial' );
 					
 					 $uids_agens = array(
 						  'agent_id' => $file_array[$i]->agent_id,
