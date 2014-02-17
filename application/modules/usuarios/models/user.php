@@ -2220,11 +2220,10 @@ class User extends CI_Model{
 						
 		if( !empty( $filter ) ){
 			
-			/*
 			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
 						
-				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
-			}*/
+				$this->db->where( 'product_group', $filter['query']['ramo'] ); 
+			}
 			
 			/*
 			<option value="1">Mes</option>
@@ -2500,10 +2499,10 @@ class User extends CI_Model{
 		
 		if( !empty( $filter ) ){
 			
-			/*
+			
 			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
 						
-				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
+				$this->db->where( 'product_group', $filter['query']['ramo'] ); 
 			}
 			
 			/*
