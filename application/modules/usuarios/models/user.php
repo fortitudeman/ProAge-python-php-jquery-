@@ -2839,7 +2839,7 @@ class User extends CI_Model{
 		*/		
 		$this->db->select( 'SUM( amount ) as primas' );
 		$this->db->from( 'payments' );
-		$this->db->where( array( 'agent_id' => $agent_id ) );
+		$this->db->where( array( 'agent_id' => $agent_id, 'year_prime' => 1 ) );
 		
 		
 		if( !empty( $filter ) ){
