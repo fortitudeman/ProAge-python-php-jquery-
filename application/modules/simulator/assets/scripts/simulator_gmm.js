@@ -89,37 +89,37 @@ function calculoBonoPrimerAnio () {
 		var primasnetasinicialesParaBono = parseFloat( $( '#primasAfectasInicialesPagar\\['+$i+'\\]' ).val() );
 		if( primasnetasinicialesParaBono >= 420000 ){
 			$( '#bonoAplicado\\['+$i+'\\]' ).val( 15.0+'%' );
-			var total = parseFloat( $( '#primasAfectasInicialesPagar\\['+$i+'\\]' ).val() ) * parseFloat( 15/100 );	
+			var total = parseFloat( $( '#simulatorPrimasPeriod\\['+$i+'\\]' ).val() ) * parseFloat( 15/100 );	
 			$( '#ingresoBonoProductividad_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoProductividad\\['+$i+'\\]' ).val( total );
 		}
 		if( primasnetasinicialesParaBono >= 310000 && primasnetasinicialesParaBono < 420000 ){
 			$( '#bonoAplicado\\['+$i+'\\]' ).val( 12.0+'%' );
-			var total = parseFloat( $( '#primasAfectasInicialesPagar\\['+$i+'\\]' ).val() ) * parseFloat( 12/100 );	
+			var total = parseFloat( $( '#simulatorPrimasPeriod\\['+$i+'\\]' ).val() ) * parseFloat( 12/100 );	
 			$( '#ingresoBonoProductividad_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoProductividad\\['+$i+'\\]' ).val( total );
 		}
 		if( primasnetasinicialesParaBono >= 210000 && primasnetasinicialesParaBono < 310000 ){
 			$( '#bonoAplicado\\['+$i+'\\]' ).val( 10.0+'%' );
-			var total = parseFloat( $( '#primasAfectasInicialesPagar\\['+$i+'\\]' ).val() ) * parseFloat( 10/100 );	
+			var total = parseFloat( $( '#simulatorPrimasPeriod\\['+$i+'\\]' ).val() ) * parseFloat( 10/100 );	
 			$( '#ingresoBonoProductividad_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoProductividad\\['+$i+'\\]' ).val( total );
 		}
 		if( primasnetasinicialesParaBono >= 150000 && primasnetasinicialesParaBono < 210000 ){
 			$( '#bonoAplicado\\['+$i+'\\]' ).val( 7.5+'%' );
-			var total = parseFloat( $( '#primasAfectasInicialesPagar\\['+$i+'\\]' ).val() ) * parseFloat( 7.5/100 );	
+			var total = parseFloat( $( '#simulatorPrimasPeriod\\['+$i+'\\]' ).val() ) * parseFloat( 7.5/100 );	
 			$( '#ingresoBonoProductividad_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoProductividad\\['+$i+'\\]' ).val( total );
 		}	
 		if( primasnetasinicialesParaBono >= 90000 && primasnetasinicialesParaBono < 150000 ){
 			$( '#bonoAplicado\\['+$i+'\\]' ).val( 5+'%' );
-			var total = parseFloat( $( '#primasAfectasInicialesPagar\\['+$i+'\\]' ).val() ) * parseFloat( 5/100 );	
+			var total = parseFloat( $( '#simulatorPrimasPeriod\\['+$i+'\\]' ).val() ) * parseFloat( 5/100 );	
 			$( '#ingresoBonoProductividad_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoProductividad\\['+$i+'\\]' ).val( total );
 		}
 		if( primasnetasinicialesParaBono < 90000 ){
 			$( '#bonoAplicado\\['+$i+'\\]' ).val( 0+'%' );
-			var total = parseFloat( $( '#primasAfectasInicialesPagar\\['+$i+'\\]' ).val() ) * parseFloat( 0/100 );	
+			var total = parseFloat( $( '#simulatorPrimasPeriod\\['+$i+'\\]' ).val() ) * parseFloat( 0/100 );	
 			$( '#ingresoBonoProductividad_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 			$( '#ingresoBonoProductividad\\['+$i+'\\]' ).val( total );
 		}
@@ -164,19 +164,19 @@ function clickPorSiniestridad () {
 		if( primasRenovacionPagar > 470000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 3+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (3/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (3/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
 			if( siniestridad == '64' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 5+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (5/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (5/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
 			if( siniestridad == '60' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 8+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (8/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (8/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
@@ -184,19 +184,19 @@ function clickPorSiniestridad () {
 		if( primasRenovacionPagar >= 370000 && primasRenovacionPagar < 470000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 2+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (2/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (2/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
 			if( siniestridad == '64' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 4+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (4/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (4/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
 			if( siniestridad == '60' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 6+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (6/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (6/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
@@ -204,19 +204,19 @@ function clickPorSiniestridad () {
 		if( primasRenovacionPagar >= 260000 && primasRenovacionPagar < 370000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 1.5+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (1.5/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (1.5/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
 			if( siniestridad == '64' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 3+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (3/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (3/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
 			if( siniestridad == '60' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 4.5+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (4.5/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (4.5/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
@@ -224,19 +224,19 @@ function clickPorSiniestridad () {
 		if( primasRenovacionPagar >= 190000 && primasRenovacionPagar < 260000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 1+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (1/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (1/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
 			if( siniestridad == '64' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 2+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (2/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (2/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
 			if( siniestridad == '60' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 3+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (3/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (3/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
@@ -244,19 +244,19 @@ function clickPorSiniestridad () {
 		if( primasRenovacionPagar >= 140000 && primasRenovacionPagar < 190000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( .5+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (.5/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (.5/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
 			if( siniestridad == '64' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 1+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (1/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (1/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
 			if( siniestridad == '60' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 2+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (2/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (2/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
@@ -264,19 +264,19 @@ function clickPorSiniestridad () {
 		if( primasRenovacionPagar < 140000 ){
 			if( siniestridad == '68' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 0+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (0/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (0/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
 			if( siniestridad == '64' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 1+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (0/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (0/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
 			if( siniestridad == '60' ){
 				$( '#porbonoganado\\['+$i+'\\]' ).val( 2+'%' );
-				var total = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() ) * (0/100);	
+				var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * (0/100);	
 				$( '#ingresoBonoRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
 				$( '#ingresoBonoRenovacion\\['+$i+'\\]' ).val( total );	
 			}
