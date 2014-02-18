@@ -51,6 +51,8 @@
                   <strong>Error: </strong> 
 				  <?php  // Show Dinamical message error 
 				  		
+						echo "MESSAGE:".$message['message'];
+						
 						foreach( $message['message'] as $raiz ):
 														
 							if( empty( $raiz ) ) break;
