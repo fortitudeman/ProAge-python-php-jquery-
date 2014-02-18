@@ -1816,7 +1816,7 @@ class User extends CI_Model{
 	
 	
 	
-	public function getIdAgentByFolio( $uid = null ){
+	public function getIdAgentByFolio( $uid = null, $type = null ){
 		
 		if( empty( $uid ) ) return false;
 		
@@ -1825,17 +1825,51 @@ class User extends CI_Model{
 			FROM agent_uids
 			WHERE agent_uids.uid='';
 		*/
-		$this->db->select( ' id' );
+
+		$uidorigin = $uid;
+
+		$this->db->select( ' agent_id' );
 		$this->db->from( 'agent_uids' );
-		$this->db->where( 'agent_uids.uid', $uid );
+		$this->db->where( array( 'agent_uids.type' => $type ) );
 		
+		if( !empty( $type ) and $type == 'national' ){
+			
+			$uid = str_replace( "N000000", '', $uid );
+			$uid = str_replace( "N00000", '', $uid );
+			$uid = str_replace( "N0000", '', $uid );
+			$uid = str_replace( "N000", '', $uid );
+			$uid = str_replace( "N00", '', $uid );
+			$uid = str_replace( "N0", '', $uid );			
+			$uid = ltrim( $uid, '0');
+			
+			//$this->db->where( 'agent_uids.type', 'national' );
+			
+			$this->db->where( '(agent_uids.uid=\''.$uidorigin.'\' OR agent_uids.uid=\''.$uid.'\')' );
+			
+			
+		}
+		if( !empty( $type ) and $type == 'provincial' ) {
+			
+			$uid = str_replace( "P000000", '', $uid );
+			$uid = str_replace( "P00000", '', $uid );
+			$uid = str_replace( "P0000", '', $uid );
+			$uid = str_replace( "P000", '', $uid );
+			$uid = str_replace( "P00", '', $uid );
+			$uid = str_replace( "P0", '', $uid );
+			$uid = ltrim( $uid, '0');
+			
+			//$this->db->where( 'agent_uids.type', 'provincial' );
+			
+			$this->db->where( '(agent_uids.uid=\''.$uidorigin.'\' OR agent_uids.uid=\''.$uid.'\')' );
+		}
+
 		$query = $this->db->get();
 		
 		if ($query->num_rows() == 0) return null;
 				
 		foreach ($query->result() as $row)
 						
-			return $row->id;
+			return $row->agent_id;
 			
 			
 		
@@ -2212,23 +2246,18 @@ class User extends CI_Model{
 		WHERE policies_vs_users.user_id=6
 		*/
 		
-		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id' );
-		$this->db->from( 'policies_vs_users' );
-		//$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->join( 'payments', 'payments.policy_id=policies_vs_users.policy_id' );
-		//$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
-		//$this->db->join( 'users', 'users.id=agents.user_id' );
-		$this->db->where( array( 'policies_vs_users.user_id' => $agent_id ) );
+		$this->db->select( 'DISTINCT( policy_number ) as policy_number' );
+		$this->db->from( 'payments' );
+		$this->db->where( array( 'agent_id' => $agent_id , 'business' => 1) );
   		
 		
 						
 		if( !empty( $filter ) ){
 			
-			/*
 			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
 						
-				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
-			}*/
+				$this->db->where( 'product_group', $filter['query']['ramo'] ); 
+			}
 			
 			/*
 			<option value="1">Mes</option>
@@ -2495,21 +2524,19 @@ class User extends CI_Model{
     	AND policies.prima>10000
 		*/
 		
-		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id' );
-		$this->db->from( 'policies_vs_users' );		
-		$this->db->join( 'policies', 'policies.id = policies_vs_users.policy_id' );
-		$this->db->join( 'payments', 'payments.policy_number = policies.uid' );		
+		$this->db->select( 'DISTINCT( policy_number ) as policy_number' );
+		$this->db->from( 'payments' );		
 		//$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		//$this->db->join( 'users', 'users.id=agents.user_id' );
-		$this->db->where( array( 'policies_vs_users.user_id' => $agent_id, 'policies.prima >' => 10000 ) );
+		$this->db->where( array( 'agent_id' => $agent_id, 'business' => 1 ) );
   		
 		
 		if( !empty( $filter ) ){
 			
-			/*
+			
 			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
 						
-				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
+				$this->db->where( 'product_group', $filter['query']['ramo'] ); 
 			}
 			
 			/*
@@ -2615,7 +2642,7 @@ class User extends CI_Model{
 			
 			$this->db->select_sum( 'amount' );
 			$this->db->from( 'payments' );
-			$this->db->where( array( 'policy_id' => $row->policy_id ) );
+			$this->db->where( array( 'policy_number' => $row->policy_number ) );
 						
 			$querypai = $this->db->get(); 
 			
@@ -2810,13 +2837,9 @@ class User extends CI_Model{
 		JOIN  users ON users.id=agents.user_id
 		WHERE policies_vs_users.user_id=6
 		*/		
-		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id, policies.prima' );
-		$this->db->from( 'policies_vs_users' );
-		$this->db->join( 'policies', 'policies.id=policies_vs_users.policy_id' );
-		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
-		$this->db->join( 'users', 'users.id=agents.user_id' );
-		$this->db->where( 'policies_vs_users.user_id', $agent_id  );
+		$this->db->select( 'SUM( amount ) as primas' );
+		$this->db->from( 'payments' );
+		$this->db->where( array( 'agent_id' => $agent_id ) );
 		
 		
 		if( !empty( $filter ) ){
@@ -2824,7 +2847,7 @@ class User extends CI_Model{
 			
 			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
 						
-				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
+				$this->db->where( 'product_group', $filter['query']['ramo'] ); 
 			}
 			
 			/*
@@ -2847,7 +2870,7 @@ class User extends CI_Model{
 			
 			if( $filter['query']['periodo'] == 1 )
 			
-				$this->db->where( 'work_order.creation_date >= ', $mes); 
+				$this->db->where( 'payment_date >= ', $mes); 
 			
 			
 			
@@ -2871,7 +2894,7 @@ class User extends CI_Model{
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
 					
-					$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
+					$this->db->where( array( 'payment_date >= ' =>  $begind , 'payment_date <=' =>  $end  ) ); 
 				
 				}else{
 					
@@ -2897,7 +2920,7 @@ class User extends CI_Model{
 					}
 					
 						
-					$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
+					$this->db->where( array( 'payment_date >= ' => $begind, 'payment_date <=' =>  $end ) ); 
 				}
 				
 				
@@ -2907,7 +2930,7 @@ class User extends CI_Model{
 				
 			if( $filter['query']['periodo'] == 3 )
 			
-				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
+				$this->db->where( array( 'payment_date >= ' => $anio,  'payment_date <=' => date( 'Y-m-d' ) ) ); 
 			
 			}				
 		}
@@ -2915,30 +2938,13 @@ class User extends CI_Model{
 		
 		
 		$query = $this->db->get(); 
-  	
+		  	
 		if ($query->num_rows() == 0) return 0;		
-		
-		$prima = 0;
-		
+				
 		foreach ($query->result() as $row){
-			
-			/*
-			SELECT policy_id
-			FROM payments
-			WHERE policy_id=30;
-			*/
-					
-			$this->db->select();
-			$this->db->from( 'payments' );
-			$this->db->where( 'policy_id', $row->policy_id );			
-						
-			$querypayemnt = $this->db->get(); 
-			
-			if ($querypayemnt->num_rows() > 0)
-                        {
-                            $prima = (float)$prima + $row->prima;
-			}		
-		}		
+								
+              $prima = (float)$row->primas;	
+		}	
 		return $prima;
   }
   
@@ -3138,9 +3144,11 @@ class User extends CI_Model{
 		$this->db->from( 'policies' );
 		$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
+		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id' );
 		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
 		$this->db->where( array( 'work_order.work_order_status_id' => 7 ) );
+		$this->db->where("( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )");
 		$this->db->where( 'policies_vs_users.user_id', $user_id );
   		
 		if(!empty($filter))
@@ -3247,35 +3255,19 @@ class User extends CI_Model{
 		foreach ($query->result() as $row)
                 {
                     /*
-                    SELECT *
-                    FROM payments
-                    WHERE `policy_id`=1
-                    */			
-
-                    $this->db->select();
-                    $this->db->from( 'payments' );
-                    $this->db->where( array( 'policy_id' => $row->policy_id ) );
-
-                    $querypayments = $this->db->get(); 
-
-
-                    if ($querypayments->num_rows() == 0)
-                    {	
-                        /*
-                        SELECT SUM( prima )
-                        FROM policies
-                        WHERE id=1*/
-                        $this->db->select_sum( 'prima' );
-                        $this->db->from( 'policies' );
-                        $this->db->where( array( 'id' => $row->policy_id ) );
-                        $querypolicies = $this->db->get(); 
-                        if ($querypolicies->num_rows() > 0)
+                    SELECT SUM( prima )
+                    FROM policies
+                    WHERE id=1*/
+                    $this->db->select_sum( 'prima' );
+                    $this->db->from( 'policies' );
+                    $this->db->where( array( 'id' => $row->policy_id ) );
+                    $querypolicies = $this->db->get(); 
+                    if ($querypolicies->num_rows() > 0)
+                    {
+                        foreach ($querypolicies->result() as $rowprima)
                         {
-                            foreach ($querypolicies->result() as $rowprima)
-                            {
-                                $aceptadas['count'] = (int)$aceptadas['count']+1;					
-                                if( !empty( $rowprima->prima ) ) $aceptadas['prima'] = (float)$aceptadas['prima'] + (float)$rowprima->prima;					
-                            }
+                            $aceptadas['count'] = (int)$aceptadas['count']+1;					
+                            if( !empty( $rowprima->prima ) ) $aceptadas['prima'] = (float)$aceptadas['prima'] + (float)$rowprima->prima;					
                         }
                     }
                     $work_order_ids[] = $row->work_order_id;       
@@ -3419,7 +3411,7 @@ class User extends CI_Model{
 		
 		$this->db->select( 'SUM(amount) as count' );
 		$this->db->from( 'payments' );
-		$this->db->where( array( 'policy_id' => $row->policy_id, 'year_prime' => 1 ) );
+		$this->db->where( array( 'year_prime' => 1 ) );
 				
 		$querypayments = $this->db->get(); 
 		
@@ -3428,7 +3420,7 @@ class User extends CI_Model{
 			
 			foreach ( $querypolicies->result() as $rowpayment )	
 				
-				$count += (int) $rowpayment->count;
+				$count += $rowpayment->count;
 						
 			
 		}	
@@ -3570,7 +3562,7 @@ class User extends CI_Model{
 				
 		$this->db->select( 'SUM(amount) as count' );
 		$this->db->from( 'payments' );
-		$this->db->where( array( 'policy_id' => $row->policy_id, 'year_prime >' => 1 ) );
+		$this->db->where( array( 'year_prime >' => 1 ) );
 				
 		$querypayments = $this->db->get(); 
 		
@@ -3579,7 +3571,7 @@ class User extends CI_Model{
 			
 			foreach ( $querypolicies->result() as $rowpayment )	
 				
-				$count += (int) $rowpayment->count;
+				$count += $rowpayment->count;
 						
 			
 		}	
