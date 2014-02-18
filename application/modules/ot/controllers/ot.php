@@ -165,25 +165,27 @@ class Ot extends CI_Controller {
 		else
 			$config['total_rows'] = $this->work_order->record_count();
 		
-		$config['per_page'] = 50;
+//		$config['per_page'] = 50;
+		$config['per_page'] = 25;
 		$config['num_links'] = 5;
 		$config['uri_segment'] = 3;
 		$config['use_page_numbers'] = TRUE;
 		
 		$this->pagination->initialize($config); 
-		
-		
+
+		$begin = $begin ? ($begin - 1) * $config['per_page'] : 0;
+
 		if( $this->access_all == false )
 		
-			$data = $this->work_order->overview( $begin, $this->sessions['id'] );
+			$data = $this->work_order->overview( $begin, $config['per_page'], $this->sessions['id'] );
 		
 		else
 			
-			$data = $this->work_order->overview( $begin );
+			$data = $this->work_order->overview( $begin, $config['per_page']);
 		
 		
 		
-		$scrips = '';
+//		$scrips = '';
 								 
 		// Config view
 		$this->view = array(
@@ -197,11 +199,15 @@ class Ot extends CI_Controller {
 		  'access_update' => $this->access_update,
 		  'access_delete' => $this->access_delete,
 		  'access_all' => $this->access_all,
+		  'css' => array(
+			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',      
+			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
+		  ),
 		  'scripts' => array(
-		  	
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>',
+			'<script src="'.base_url().'ot/assets/scripts/list_js.js"></script>',
 			'<script src="'.base_url().'scripts/config.js"></script>',
-			'<script src="'.base_url().'ot/assets/scripts/overview.js"></script>',		
-			$scrips
+			'<script src="'.base_url().'ot/assets/scripts/overview.js"></script>',    
 		  ),
 		  'content' => 'ot/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have

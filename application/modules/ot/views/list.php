@@ -129,7 +129,7 @@
                                 </tr>
                                 <tr>
                                   <td><input type="checkbox" name="advanced[]" class="checkboxadvance"  value="ramo" /> Ramo</td>
-                                  <td><select id="ramo" class="hide input-small findfilters" ><option value="">Seleccione</option><option value="1">Vida</option><<option value="2">GMM</option><<option value="3">Autos</option></select></td>
+                                  <td><select id="ramo" class="hide input-small findfilters" ><option value="">Seleccione</option><option value="1">Vida</option><option value="2">GMM</option><option value="3">Autos</option></select></td>
                                 </tr>
                                 <tr>
                                   <td><input type="checkbox" name="advanced[]" class="checkboxadvance"  value="gerente" /> Gerente</td>
@@ -157,20 +157,20 @@
             
             
             <div id="loading"></div>
-                    	
-            <table class="table table-striped table-bordered bootstrap-datatable datatable">
-              <thead>
-                  <tr>
-                      <th>Número de OT</th>
-                      <th>Fecha de alta de la OT</th> 
-                      <th>Agente - %</th>
-                      <th>Ramo</th>
-                      <th>Tipo de trámite</th>
-                      <th>Nombre del asegurado</th>
-                      <th>Estado</th>
+
+            <table class="sortable altrowstable tablesorter" id="sorter" style="width:100%;">
+              <thead class="head">
+				<tr>
+                      <th style="width: 5%">Número de OT&nbsp;</th>
+                      <th style="width: 20%">Fecha de alta de la OT&nbsp;</th> 
+                      <th style="width: 15%">Agente - %&nbsp;</th>
+                      <th style="width: 10%">Ramo&nbsp;</th>
+                      <th style="width: 20%">Tipo de trámite&nbsp;</th>
+                      <th style="width: 15%">Nombre del asegurado&nbsp;</th>
+                      <th style="width: 15%;">Estado&nbsp;</th>
                   </tr>
               </thead>   
-              <tbody id="data">
+              <tbody class="tbody">  			  
                 <?php  if( !empty( $data ) ): ?>
                 <?php  foreach( $data as $value ):  ?>
 	            <?php 
@@ -182,30 +182,24 @@
 					$new = true;
 					
 				?>
-                <tr <?php if( ($value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 8 and $value['work_order_status_id'] != 4 and $value['work_order_status_id'] != 7) or ($value['work_order_status_id'] == 7 and $new == true) ): ?> onclick="menu('menu-<?php echo $value['id'] ?>');" <?php endif; ?>>
+                <tr class="data-row-class" id="data-row-<?php echo $value['id'] ?>" <?php if( ($value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 8 and $value['work_order_status_id'] != 4 and $value['work_order_status_id'] != 7) or ($value['work_order_status_id'] == 7 and $new == true) ): ?> onclick="menu('menu-<?php echo $value['id'] ?>');" <?php endif; ?>>				
                 	<td class="center"><?php 
 										    
-											$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
-						
-											if( $value['work_order_status_id'] == 5 or $value['work_order_status_id'] == 9 ) {
-												if( (float)$color <= 5 ) 
-													echo '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
-												else if( (float)$color > 5 and (float)$color <= 10 )	
-													echo '<div style="background-color:#FF0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';									
-												else if( (float)$color > 10 )	
-													echo '<div style="background-color:#F30; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
-											}
+					$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
+					if( $value['work_order_status_id'] == 5 or $value['work_order_status_id'] == 9 ) {
+						if( (float)$color <= 5 ) 
+							echo '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
+						else if( (float)$color > 5 and (float)$color <= 10 )	
+							echo '<div style="background-color:#FF0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';									
+						else if( (float)$color > 10 )	
+							echo '<div style="background-color:#F30; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
+					}
 											
-											if( $value['work_order_status_id'] == 6 )
-												echo '<div style="background-color:#000; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
-											 
-											 echo $value['uid'];
-											
-										?>
-                                             
-                                             
-                                             
-                                             </td>
+					if( $value['work_order_status_id'] == 6 )
+						echo '<div style="background-color:#000; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
+					echo $value['uid'];
+					?>
+                    </td>
                     <td class="center"><?php if( $value['creation_date'] != '0000-00-00 00:00:00' ) echo $value['creation_date'] ?></td>
                     <td class="center">
 						<?php 
@@ -224,61 +218,7 @@
                                        
                     <td class="center" ><?php echo ucwords(str_replace( 'desactivada', 'en trámite', $value['status_name'])); ?></td>
                 </tr>
-                
-                
-                
-                <tr id="menu-<?php echo $value['id'] ?>" class="popup">
-                	<td colspan="8">
-                    
-                    <a href="javascript:void(0)" class="btn btn-link btn-hide"><i class="icon-arrow-up"></i></a>
-                   
-                    <?php 
-										
-					$scrips='';
-					
-					if( $this->access_activate == true and $value['work_order_status_id'] ==  9 )
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp; |&nbsp;&nbsp;';
-												
-									
-					else if( $this->access_activate == true and $value['work_order_status_id'] ==  6 )
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')">Desactivar</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
-					
-					else 
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
-												
-											
-												
-												
-					if( $this->access_update == true ){
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')">Marcar como aceptada</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
-												
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
-						
-						if( $value['work_order_status_id'] ==  7 and $new == true)
-								echo '<a href="javascript:void(0)" onclick="setPay(\''.$value['id'].'\')">Marcar como pagada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';	
-																		
-												}
-					if( $this->access_delete == true )
-												
-						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')">Cancelar</a>&nbsp;&nbsp;';
-					
-					
-					if( $value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 7 and $value['work_order_status_id'] != 8 )
-					echo $scrips;
-					
-					 
-												
-					?>
-                    
-                    </td>
-                </tr>
-                
-                
-                
-                
-                
-                
-                
+
                 <?php endforeach;  ?> 
                 <?php else: ?>
 		        <tr>
@@ -293,12 +233,41 @@
               <?php endif; ?>               
               </tbody>
           </table>    
-          
-          
-          
-          
-          
-                           
+<?php  if( !empty( $data ) ): ?>
+          <table class="sortable altrowstable tablesorter" style="width:100%;">
+              <tbody class="tbody">  			  
+                <?php  foreach( $data as $value ):  ?>
+                <tr id="menu-<?php echo $value['id'] ?>" class="popup">
+                	<td colspan="8">
+                    <a href="javascript:void(0)" id="my-btn-hide-<?php echo $value['id'] ?>" class="btn btn-link my-btn-hide"><i class="icon-arrow-up"></i></a>
+
+                    <?php
+					$scrips='';
+					if( $this->access_activate == true and $value['work_order_status_id'] ==  9 )
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp; |&nbsp;&nbsp;';
+					else if( $this->access_activate == true and $value['work_order_status_id'] ==  6 )
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')">Desactivar</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
+					else 
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
+					if( $this->access_update == true ){
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')">Marcar como aceptada</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
+						if( $value['work_order_status_id'] ==  7 and $new == true)
+								echo '<a href="javascript:void(0)" onclick="setPay(\''.$value['id'].'\')">Marcar como pagada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';	
+					}
+					if( $this->access_delete == true )
+						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')">Cancelar</a>&nbsp;&nbsp;';
+					if( $value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 7 and $value['work_order_status_id'] != 8 )
+					echo $scrips;
+					?>
+                    
+                    </td>
+                </tr>
+                
+                <?php endforeach;  ?>
+              </tbody>
+          </table>
+<?php endif; ?>
         </div>
     </div><!--/span-->
 

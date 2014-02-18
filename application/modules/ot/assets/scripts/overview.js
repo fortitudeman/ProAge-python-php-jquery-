@@ -13,14 +13,13 @@
   	
 */
 function menu( item ){
-  $( '.popup' ).hide();
   $( '#'+item ).show();
+  proagesOt.menuRowShown[item] = item;
 }
 
 
 $( document ).ready( function(){
 		
-	
 	$( '.popup' ).hide();	
 	  
 	$( '.btn-hide' ).bind( 'click', function(){ $( '.popup' ).hide(); });  

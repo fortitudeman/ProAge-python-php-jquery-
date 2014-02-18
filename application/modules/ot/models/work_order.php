@@ -147,7 +147,7 @@ class Work_order extends CI_Model{
  |	Getting for overview
  **/ 
 	
-	public function overview( $start = 0, $user = null ) {
+	public function overview( $start = 0, $limit, $user = null ) {
 		
 		/*
 			
@@ -173,12 +173,12 @@ class Work_order extends CI_Model{
 		if( !empty( $user ) )
 			$this->db->where( 'work_order.user', $user );
 		
-		$this->db->limit( 50, $start );
+		$this->db->limit( $limit, $start );
 		$query = $this->db->get();
 		
 		
 		if ($query->num_rows() == 0) return false;
-		
+
 		$ot = array();
 		
 		foreach ($query->result() as $row) {
@@ -203,7 +203,7 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-				
+			
 		return $ot;
 		
 		
@@ -214,11 +214,11 @@ class Work_order extends CI_Model{
 
 // Count records for pagination
 	public function record_count( $user = null ) {
-       
-	    if( empty( $user ) )
-	    	 return $this->db->from( 'work_order' )->where( array( 'work_order_status_id !=' => 2 ) )->count_all_results();
-    	else
-		  return $this->db->from( 'work_order' )->where( array( 'work_order_status_id !=' => 2, 'work_order.user' => $user ) )->count_all_results();
+
+		$this->db->where_in('work_order_status_id', array('9', '5', '6', '7'));
+		if( !empty( $user ) )
+			$this->db->where('work_order.user', $user);
+		return $this->db->from( 'work_order' )->count_all_results();
 	}
 
 	
