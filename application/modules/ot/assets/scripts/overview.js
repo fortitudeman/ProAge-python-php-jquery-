@@ -12,14 +12,39 @@
 
   	
 */
+/*
 function menu( item ){
   $( '#'+item ).show();
   proagesOt.menuRowShown[item] = item;
-}
+}*/
 
 
 $( document ).ready( function(){
-		
+
+    var proagesOverview = {};
+
+	proagesOverview.getOts = function(Data) {
+
+		$.ajax({
+			url:  Config.base_url()+'ot/find.html',
+			type: "POST",
+			data: Data,
+			cache: false,
+			async: false,
+			//dataType: 'json',
+			beforeSend: function(){
+				$( '#loading' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-1.gif">   Cargando...' );
+			},
+			success: function(data){
+				$( '#loading' ).html( '' );	
+				$( '#data' ).html( data );
+				var resort = true;
+				$("#sorter").trigger("update", [resort]);
+				$(".tablesorter-childRow td").hide();	
+			}
+		});
+	}				
+	
 	$( '.popup' ).hide();	
 	  
 	$( '.btn-hide' ).bind( 'click', function(){ $( '.popup' ).hide(); });  
@@ -69,60 +94,8 @@ $( document ).ready( function(){
 		var Data = { user: $( '#findvalue' ).val(), work_order_status_id: this.id, advanced: checked };
 				
 		$( '#findsubvalue' ).val( this.id );
-		
-		$.ajax({
+		proagesOverview.getOts(Data);
 
-			url:  Config.base_url()+'ot/find.html',
-			type: "POST",
-			data: Data,
-			cache: false,
-			async: false,
-			//dataType: 'json',
-			beforeSend: function(){
-	
-				
-				$( '#loading' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-1.gif">   Cargando...' );
-								
-			},
-			success: function(data){
-				
-				$( '#loading' ).html( '' );	
-				$( '#data' ).html( data );
-					
-				
-			}						
-	
-		});
-		
-		
-		$.ajax({
-
-			url:  Config.base_url()+'ot/find_scripts.html',
-			type: "POST",
-			data: Data,
-			cache: true,
-			async: false,
-			dataType: "script",
-			beforeSend: function(){
-	
-				
-				$( '#loading' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-1.gif">   Cargando...' );
-				
-								
-			},
-			success: function(data){
-				
-				if( data != "" )
-					console.log( data );
-				$( '#loading' ).html( '' );	
-				
-				
-			}						
-	
-		});
-		
-		
-		
 	});
 	
 	
@@ -209,55 +182,9 @@ $( document ).ready( function(){
 		
 		
 		var Data = { user: $( '#findvalue' ).val(), work_order_status_id: $('#findsubvalue').val(), advanced: checked };
-				
-		$.ajax({
 
-			url:  Config.base_url()+'ot/find.html',
-			type: "POST",
-			data: Data,
-			cache: false,
-			async: false,
-			beforeSend: function(){
-	
-				
-				$( '#loading' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-1.gif">   Cargando...' );
-				
-			},
-			success: function(data){
-				$( '#loading' ).html( '' );	
-				$( '#data' ).html( data );
-												
-				
-			}						
-	
-		});
-		
-		$.ajax({
-
-			url:  Config.base_url()+'ot/find_scripts.html',
-			type: "POST",
-			data: Data,
-			cache: true,
-			async: false,
-			dataType: "script",
-			beforeSend: function(){
-	
-				
-				$( '#loading' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-1.gif">   Cargando...' );
-				
-								
-			},
-			success: function(data){
-				
-				if( data != "" )
-					console.log( data );
-				$( '#loading' ).html( '' );	
-				
-				
-			}						
-	
-		});
-				
+		proagesOverview.getOts(Data);		
+			
 	}); 
 			 	  
 });

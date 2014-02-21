@@ -165,8 +165,8 @@ class Ot extends CI_Controller {
 		else
 			$config['total_rows'] = $this->work_order->record_count();
 		
-//		$config['per_page'] = 50;
-		$config['per_page'] = 25;
+		$config['per_page'] = 50;
+//		$config['per_page'] = 25;
 		$config['num_links'] = 5;
 		$config['uri_segment'] = 3;
 		$config['use_page_numbers'] = TRUE;
@@ -182,10 +182,8 @@ class Ot extends CI_Controller {
 		else
 			
 			$data = $this->work_order->overview( $begin, $config['per_page']);
-		
-		
-		
-//		$scrips = '';
+
+		$view_data = array('data' => $data);
 								 
 		// Config view
 		$this->view = array(
@@ -200,18 +198,19 @@ class Ot extends CI_Controller {
 		  'access_delete' => $this->access_delete,
 		  'access_all' => $this->access_all,
 		  'css' => array(
-			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',      
+			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">', 		  
+			'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',      
 			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
 		  ),
 		  'scripts' => array(
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
 			'<script src="'.base_url().'ot/assets/scripts/list_js.js"></script>',
 			'<script src="'.base_url().'scripts/config.js"></script>',
 			'<script src="'.base_url().'ot/assets/scripts/overview.js"></script>',    
 		  ),
 		  'content' => 'ot/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'data' => $data,
+		  'render_rows' => $this->load->view('ot/list_render', $view_data, TRUE),
 		  'agents' => $this->user->getAgents(),
 		  'gerentes' => $this->user->getSelectsGerentes()			 
 		  		
@@ -241,9 +240,9 @@ class Ot extends CI_Controller {
 		
 		else
 			$data = $this->work_order->find( $this->input->post() );
-				
-		echo renderTable( $data, $this->access_activate, $this->access_update, $this->access_delete );	
-		
+
+		$view_data = array('data' => $data);
+		$this->load->view('ot/list_render', $view_data);
 	}	
 	
 	
