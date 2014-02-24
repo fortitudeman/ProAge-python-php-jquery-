@@ -32,6 +32,7 @@ class Simulator extends CI_Controller {
 	public $access_delete = false;
 	
 	private $for_print = false;
+	private $print_meta = true;
 	
 /** Construct Function **/
 /** Setting Load perms **/
@@ -95,6 +96,14 @@ class Simulator extends CI_Controller {
 	public function print_index( $userid = null, $ramo = null ) {
 
 		$this->for_print = true;
+		$this->print_meta = true;
+		$this->_index_common( $userid, $ramo);
+	}
+
+	public function print_index_simulator( $userid = null, $ramo = null ) {
+
+		$this->for_print = true;
+		$this->print_meta = false;
 		$this->_index_common( $userid, $ramo);
 	}
 
@@ -240,6 +249,12 @@ class Simulator extends CI_Controller {
 			}
 			
 		// Config view
+		$js_assets = array(
+		  	
+			'<script type="text/javascript" src="'.base_url().'scripts/config.js"></script>',
+			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas_simulator.js"></script>',			
+		);
+
 		if ($this->for_print) {
 			$css = array(
 		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet">',
@@ -248,6 +263,7 @@ class Simulator extends CI_Controller {
 		  $add_js = '
 <script type="text/javascript">
 $( document ).ready( function(){
+	$("#open_meta").hide();
 	$("#print-button").bind( "click", function(){
 		$(this).hide(); window.print(); window.close(); return false;}
 	);
@@ -256,19 +272,41 @@ $( document ).ready( function(){
 	$("#meta-footer td").css("font-size", "10px");
 });
 </script>
-'; 
+';
+			if ($this->print_meta)
+				$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas.js"></script>';
+			else {
+				$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_'.$simulator.'.js"></script>';
+				$requestPromedio = '';
+			}
 		} else {
 			$css = array(
 		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet" media="screen">'
 		  );
+		  $uri_segments_meta = $this->uri->rsegment_array();
+		  $uri_segments_simulator = $uri_segments_meta;
+		  $uri_segments_meta[2] = 'print_index';
+		  $uri_segments_simulator[2] = 'print_index_simulator';
 		  $add_js = '
 <script type="text/javascript">
 $( document ).ready( function(){
 	$("#meta-footer td").css("font-size", "18px");
+	$("#print-button").bind( "click", function(){
+		if ($(".simulator:visible").length > 0) {
+			$(this).attr("href", "' . site_url($uri_segments_simulator) . '");
+		} else {
+			$(this).attr("href", "' . site_url($uri_segments_meta) . '");
+		}
+	});
 });
 </script>
-'; 
+';
+			$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas.js"></script>';
+			$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_'.$simulator.'.js"></script>';
 		}
+		$js_assets[] = $settingmeta;
+		$js_assets[] = $requestPromedio;
+		$js_assets[] = $add_js;
 		$this->view = array(
 				
 		  'title' => 'Simulador',
@@ -280,16 +318,7 @@ $( document ).ready( function(){
 		  'access_update' => $this->access_update,
 		  'access_delete' => $this->access_delete,
 		  'css' => $css,
-		  'scripts' =>  array(
-		  	
-			'<script type="text/javascript" src="'.base_url().'scripts/config.js"></script>',
-			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas.js"></script>',
-			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_'.$simulator.'.js"></script>',
-			$settingmeta,
-			$requestPromedio,
-			$add_js
-			
-		  ),
+		  'scripts' => $js_assets,		  
 		  'content' => 'simulator/overview', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  'no_visible_elements_2' => true,
@@ -306,7 +335,8 @@ $( document ).ready( function(){
 		  'ramo' => $simulator,
 		  'product_group_id' => $product_group_id,
 		  'users' => $users,
-		  'for_print' => $this->for_print
+		  'for_print' => $this->for_print,
+		  'print_meta' => $this->print_meta
 		);
 		
 		// Render view 

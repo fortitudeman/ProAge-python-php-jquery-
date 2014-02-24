@@ -64,8 +64,11 @@
 				$link_attributes .= ' target="_blank"';
 				$link_text = 'Vista previa de impresión';
 			}
-			else
-				$link_text = 'Imprimir';	
+			else {
+				$link_text = 'Imprimir';
+				if (!$print_meta)
+					$uri_segments[2] = 'print_index_simulator';
+			}
 			
 			if ($ramo == "vida") $name_ramo = "Vida";
 			if ($ramo == "gmm") $name_ramo = "GMM";
@@ -106,7 +109,7 @@
         <!-- <img src="<?php echo base_url() ?>images/distribucion.png" /> -->
          
          <div class="row" style="margin-right: 3em">
-         
+<?php if (!$for_print || !$print_meta) :?>
          <div class="span11 simulator" style="margin-left:40px;">
          	<?php $data[0]['data'] ?>
             <?php if( isset( $data[0]['data'] ) )
@@ -117,6 +120,8 @@
 				  $this->load->view( 'simulator_'.$ramo, $dataview ) ?>
             
          </div>
+<?php endif; ?>
+<?php if (!$for_print || $print_meta) :?>
           <div class="span12 metas" >
                     
             <?php if( isset( $config ) ){
@@ -126,7 +131,7 @@
 				  $this->load->view( 'metas', array( $dataview ) ) ?>
             
          </div>
-           
+<?php endif; ?>
          </div>  
            
            </form>                                 

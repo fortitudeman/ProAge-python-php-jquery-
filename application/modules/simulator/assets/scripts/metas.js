@@ -515,7 +515,3 @@ function getMetas(){
 			clickPrimasPromedio(); clickPrimasIniciales(); clickPorSiniestridad(); clickPrimasRenovacion(); clickXAcotamiento(); calculoBonoPrimerAnio(); clickComisionVentaInicial(); clickComisionVentaRenovacion(); gmm_ingresototal(); gmm_ingresopromedio(); 
 		}		
 }
-function moneyFormat( n ){	
-	if( isNaN( n ) ) return 0;	
-	return n.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");	
-}
