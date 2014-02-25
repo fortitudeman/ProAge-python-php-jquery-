@@ -131,57 +131,14 @@ class Ot extends CI_Controller {
 		
 		// Load Helpers
 		$this->load->helper( 'date' );
-		
-		// Pagination config	
-		$this->load->library('pagination');
-		
-		$begin = $this->uri->segment(3);
-		
-		if( empty( $begin ) ) $begin = 0;
-		
-					
-		$config['full_tag_open'] = '<div class="pagination pagination-right"><ul>'; 
-		$config['full_tag_close'] = '</ul></div>';
-		$config['first_link'] = false;
-		$config['last_link'] = false;
-		$config['first_tag_open'] = '<li>';
-		$config['first_tag_close'] = '</li>';
-		$config['prev_link'] = '&larr; Anterior';
-		$config['prev_tag_open'] = '<li class="prev">';
-		$config['prev_tag_close'] = '</li>';
-		$config['next_link'] = 'Siguiente &rarr;';
-		$config['next_tag_open'] = '<li>';
-		$config['next_tag_close'] = '</li>';
-		$config['last_tag_open'] = '<li>';
-		$config['last_tag_close'] = '</li>';
-		$config['cur_tag_open'] =  '<li class="active"><a href="#">';
-		$config['cur_tag_close'] = '</a></li>';
-		$config['num_tag_open'] = '<li>';
-		$config['num_tag_close'] = '</li>';					
-		$config['base_url'] = base_url().'ot/index/';
-		
-		if( $this->access_all == false )
-			$config['total_rows'] = $this->work_order->record_count( $this->access_all );
-		else
-			$config['total_rows'] = $this->work_order->record_count();
-		
-		$config['per_page'] = 50;
-//		$config['per_page'] = 25;
-		$config['num_links'] = 5;
-		$config['uri_segment'] = 3;
-		$config['use_page_numbers'] = TRUE;
-		
-		$this->pagination->initialize($config); 
-
-		$begin = $begin ? ($begin - 1) * $config['per_page'] : 0;
 
 		if( $this->access_all == false )
 		
-			$data = $this->work_order->overview( $begin, $config['per_page'], $this->sessions['id'] );
+			$data = $this->work_order->overview( $this->sessions['id'] );
 		
 		else
 			
-			$data = $this->work_order->overview( $begin, $config['per_page']);
+			$data = $this->work_order->overview();
 
 		$view_data = array('data' => $data);
 								 

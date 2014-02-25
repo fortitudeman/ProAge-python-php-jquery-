@@ -190,21 +190,3 @@
     </div><!--/span-->
 
 </div><!--/row-->
-
-<?php $pagination = $this->pagination->create_links(); // Set Pag ?>
-
-<?php if( !empty( $pagination ) ): ?>
-    
-    <div class="row-fluid sortable">		
-        <div class="box span12">
-            <div class="box-content">
-            
-              <?php echo $pagination?>
-                      
-            </div>
-        </div><!--/span-->
-    
-    </div><!--/row-->
-
-<?php endif; ?>
-

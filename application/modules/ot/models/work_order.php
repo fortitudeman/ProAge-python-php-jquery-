@@ -147,7 +147,7 @@ class Work_order extends CI_Model{
  |	Getting for overview
  **/ 
 	
-	public function overview( $start = 0, $limit, $user = null ) {
+	public function overview( $user = null, $start = 0, $limit = null ) {
 		
 		/*
 			
@@ -173,7 +173,8 @@ class Work_order extends CI_Model{
 		if( !empty( $user ) )
 			$this->db->where( 'work_order.user', $user );
 		
-		$this->db->limit( $limit, $start );
+		if ( $start && !empty( $limit ) )
+			$this->db->limit( $limit, $start );
 		$query = $this->db->get();
 		
 		
