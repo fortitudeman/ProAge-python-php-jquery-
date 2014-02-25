@@ -40,9 +40,10 @@
 											
 					if( $value['work_order_status_id'] == 6 )
 						echo '<div style="background-color:#000; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
-					echo $value['uid'];
 					if ($show_menu)
-						echo '<a href="javascript:void(0)" class="btn btn-link btn-hide toggle" title="Mostrar / occultar menu"><i class="icon-arrow-up"></i></a>';
+						echo '<a href="#" class="toggle" title="Mostrar / occultar menu">' . $value['uid']. '</a>';
+					else
+						echo $value['uid'];
 					?>
                     </td>
                     <td class="center"><?php if( $value['creation_date'] != '0000-00-00 00:00:00' ) echo $value['creation_date'] ?></td>
