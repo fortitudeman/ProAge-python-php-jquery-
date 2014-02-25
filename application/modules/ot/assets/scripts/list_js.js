@@ -15,10 +15,6 @@
 
 $( document ).ready(function() {
 
-	$("#toggle-menus").on( "click", function(){
-		$(".tablesorter-childRow td").toggle();
-	});
-
 	$(".tablesorter-childRow td").hide();	
 	$("#sorter")
 		.tablesorter({ 

@@ -40,10 +40,9 @@
 											
 					if( $value['work_order_status_id'] == 6 )
 						echo '<div style="background-color:#000; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
+					echo $value['uid'];
 					if ($show_menu)
-						echo '<a href="#" class="toggle">' . $value['uid']. '</a>';
-					else
-						echo $value['uid'];
+						echo '<a href="javascript:void(0)" class="btn btn-link btn-hide toggle" title="Mostrar / occultar menu"><i class="icon-arrow-up"></i></a>';
 					?>
                     </td>
                     <td class="center"><?php if( $value['creation_date'] != '0000-00-00 00:00:00' ) echo $value['creation_date'] ?></td>
@@ -65,7 +64,7 @@
                     <td class="center" ><?php echo ucwords(str_replace( 'desactivada', 'en trámite', $value['status_name'])); ?></td>
                 </tr>
                 <tr id="menu-<?php echo $value['id'] ?>" <?php if ( $show_menu ) echo 'class="tablesorter-childRow"'; else echo 'style="display: none"'; ?>>
-                	<td colspan="8"><?php echo $value['uid'] ?>
+                	<td colspan="8" style="background-color: #E0E0E0; padding-left: 1.5em">
 
                     <?php
 					$scrips='';

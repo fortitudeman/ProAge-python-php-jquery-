@@ -157,7 +157,7 @@
             
             
             <div id="loading"></div>
-<a href="javascript:void(0);" class="btn find btn-primary" id="toggle-menus">Mostrar/Ocultar menus</a>
+
 <div id="ot-list">
             <table class="sortable altrowstable tablesorter" id="sorter" style="width:100%;">
               <colgroup>
