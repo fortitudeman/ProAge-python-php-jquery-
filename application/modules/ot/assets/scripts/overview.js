@@ -44,149 +44,51 @@ $( document ).ready( function(){
 			}
 		});
 	}				
-	
-	$( '.popup' ).hide();	
-	  
-	$( '.btn-hide' ).bind( 'click', function(){ $( '.popup' ).hide(); });  
-	  
-	$( '.find' ).bind( 'click', function(){
-			
-		// Reset Color
-		$( '.find' ).removeClass( 'btn btn-primary' );
-		$(this).addClass( 'btn btn-link' );
-		$( '.find' ).css( 'margin-left', 15 ) ;
-		// Set Color
-		$(this).addClass( 'btn-primary' );
-		$(this).removeClass( 'btn-link' );	
-			
-		$( '#findvalue' ).val( this.id );
-			
-	});
-	
-	  
-	// Filter alls or my
-	$( '.findsub' ).bind( 'click', function(){
-	  	
-		// Reset Color
-		$( '.findsub' ).removeClass( 'btn btn-primary' );
-		$(this).addClass( 'btn btn-link' );
-		$( '.findsub' ).css( 'margin-left', 15 ) ;
-		// Set Color
-		$(this).addClass( 'btn-primary' );
-		$(this).removeClass( 'btn-link' );
-		
-		
-		var checked = [];
-		$("input[name='advanced[]']:checked").each(function ()
-		{
-			var element = $(this).val();
-			
-			if(  element == 'creation_date' ) 
-				
-				checked.push( [$(this).val(), $( '#'+element ).val()+ '00:00:00', $( '#creation_date1' ).val()+'23:59:59'  ] );
-			
-			else							
-				checked.push( [$(this).val(), $( '#'+element ).val() ] );
-		});
-		
-		
-		
-		var Data = { user: $( '#findvalue' ).val(), work_order_status_id: this.id, advanced: checked };
-				
-		$( '#findsubvalue' ).val( this.id );
-		proagesOverview.getOts(Data);
 
-	});
-	
-	
-	
-	
-	
-	
-	
-	 
-	
-	// Filters
-	$( '.advanced' ).hide();
-	$( '.hide' ).hide();
-	$( '.link-advanced' ).bind( 'click', function(){
-
-		if( this.id == 'showadvanced' ){
-			
-			$( '.link-advanced' ).attr( 'id', 'hideadvanced' );
-			$( '.advanced' ).show();
-			
-			
-			var x=$('.link-advanced'); 
-				x.text("Ocultar Filtros");
-						
-			
-		}else{
-			
-			$( '.link-advanced' ).attr( 'id', 'showadvanced' );
-			$( '.advanced' ).hide();
-			
-			var x=$('.link-advanced'); 
-				x.text("Mostrar Filtros");
-			
-		}
-			
-			
-	});
-	$( '.checkboxadvance' ).bind( 'click', function(){
-		
-		if( this.checked == true ){
-			
-			$( '#'+this.value ).show();
-			
-			if( this.value == 'creation_date' )
-				$( '#creation_date1' ).show();
-				
-		}
-		else{
-			$( '#'+this.value ).hide();
-			$( '#'+this.value ).val('');
-			
-			if( this.value == 'creation_date' ){
-				$( '#creation_date1' ).hide();
-				$( '#creation_date1' ).val('');
+	$( '.filter-field').bind( 'change', function(){
+		if ( this.id == 'ramo' ) {
+			switch ($(this).val()) {
+				case '1': // Vida
+					$( '.set_periodo' ).html( 'Trimestre' );
+					break;
+				case '2': // GMM
+				case '3': // Autos
+					$( '.set_periodo' ).html( 'Cuatrimestre' );
+					break;
+				default:
+					$( '.set_periodo' ).html( 'Trimestre' );
+					break;
 			}
-			
+		
 		}
-		
-	}); 
-	 
-	 
-	 var toDay = new Date();
-		toDay = toDay.getFullYear();	
-	
-	$( '#creation_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true, yearRange: "1788:"+toDay });		
-	$( '#creation_date1' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true , yearRange: "1788:"+toDay});		
-	
-	
-	$( '.filtros' ).bind( 'click', function(){ 
-		
-		var checked = [];
-		$("input[name='advanced[]']:checked").each(function ()
-		{
-			var element = $(this).val();
-			
-			if(  element == 'creation_date' ) 
-				
-				checked.push( [$(this).val(), $( '#'+element ).val()+ '00:00:00', $( '#creation_date1' ).val()+'23:59:59'  ] );
-			
-			else							
-				checked.push( [$(this).val(), $( '#'+element ).val() ] );
-		});
-		
-		
-		
-		var Data = { user: $( '#findvalue' ).val(), work_order_status_id: $('#findsubvalue').val(), advanced: checked };
+		var Data = $( "#ot-form").serialize();
+		proagesOverview.getOts(Data);
+	});
+  
+	$( '.find' ).bind( 'click', function(){
 
-		proagesOverview.getOts(Data);		
-			
-	}); 
-			 	  
+		var currentUser = $( '#todas-mias').val();
+		if ( currentUser != (this.id) ) {
+			// Reset Color
+			$( '.find' ).removeClass( 'btn btn-primary' );
+			$(this).addClass( 'btn btn-link' );
+			$( '.find' ).css( 'margin-left', 15 ) ;
+			// Set Color
+			$(this).addClass( 'btn-primary' );
+			$(this).removeClass( 'btn-link' );
+
+			$( '#todas-mias').val( this.id );
+
+			var Data = $( "#ot-form").serialize();
+			proagesOverview.getOts(Data);
+		}
+	});
+
+	// Filters
+	$( '.hide' ).hide();
+
+	proagesOverview.getOts($( "#ot-form").serialize());
+	
 });
 function chooseOption( choose, is_new ){
 	

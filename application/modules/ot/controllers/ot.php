@@ -131,16 +131,6 @@ class Ot extends CI_Controller {
 		
 		// Load Helpers
 		$this->load->helper( 'date' );
-
-		if( $this->access_all == false )
-		
-			$data = $this->work_order->overview( $this->sessions['id'] );
-		
-		else
-			
-			$data = $this->work_order->overview();
-
-		$view_data = array('data' => $data);
 								 
 		// Config view
 		$this->view = array(
@@ -167,7 +157,6 @@ class Ot extends CI_Controller {
 		  ),
 		  'content' => 'ot/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'render_rows' => $this->load->view('ot/list_render', $view_data, TRUE),
 		  'agents' => $this->user->getAgents(),
 		  'gerentes' => $this->user->getSelectsGerentes()			 
 		  		
@@ -193,10 +182,10 @@ class Ot extends CI_Controller {
 		
 									
 		if( $this->access_all == false )
-			$data = $this->work_order->find( $this->input->post(), $this->sessions['id'] );
+			$data = $this->work_order->find($this->sessions['id'] );
 		
 		else
-			$data = $this->work_order->find( $this->input->post() );
+			$data = $this->work_order->find();
 
 		$view_data = array('data' => $data);
 		$this->load->view('ot/list_render', $view_data);

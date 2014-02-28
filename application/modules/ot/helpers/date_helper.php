@@ -98,4 +98,25 @@ function diferenciaEntreFechas($fecha_principal, $fecha_secundaria, $obtener = '
    if($redondear) $resultado = round($resultado);
    return $resultado;
 }
+
+if ( ! function_exists('trimestre'))
+{
+	function trimestre($mes=null)
+	{	  
+		$mes = is_null($mes) ? date('m') : $mes;
+		$trim=floor(($mes-1) / 3)+1;
+		return $trim;
+	}
+} 
+
+if ( ! function_exists('cuatrimestre'))
+{
+	function cuatrimestre($mes=null)
+	{	  
+		$mes = is_null($mes) ? date('m') : $mes;
+		$trim=floor(($mes-1) / 4)+1;
+		return $trim;
+	}
+}
+
 ?>

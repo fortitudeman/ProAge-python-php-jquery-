@@ -78,84 +78,71 @@
                 	<?php if( $access_all == true ): ?>
                     <a href="javascript:void(0);" class="btn btn-link find" id="todas">Todas</a>
                     <?php endif; ?>
-                    <a href="javascript:void(0);" class="btn find btn-primary" id="mios">Mias</a>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="javascript:void(0)" id="showadvanced" class="btn- btn-link link-advanced">Mostrar Filtros</a> 
+                    <a href="javascript:void(0);" class="btn find btn-primary" id="mios">Mias</a>
                 </div>
-                
+
                 <div class="span2"></div>
                 <div class="span1"></div>
-                
-            </div>
-            
-            
-            <div class="row">
-            
-            	
-                <div class="span1"></div>
-                <div class="span7" id="ot-filter">
-                	<br /><br />
-                    
 
-                    <input type="hidden" id="findvalue" value="mios" />
-                    <input type="hidden" id="findsubvalue" value="todas" />
-                    
-                    <br /><br />  
-                      <div class="row advanced">
-                      		
-                            <a href="javascript:void(0);" class="btn btn-link findsub" id="activadas">Activadas</a>
-                            <a href="javascript:void(0);" class="btn btn-primary findsub" id="tramite">En trámite</a>
-                            <a href="javascript:void(0);" class="btn btn-link findsub" id="terminada"> Terminadas</a>
-                            <a href="javascript:void(0);" class="btn btn-link findsub" id="canceladas">Canceladas</a>
-                          <!--  <a href="javascript:void(0);" class="btn btn-link findsub" id="pagadas">Pagadas</a>
-                            <a href="javascript:void(0);" class="btn btn-link findsub" id="excedido">Excedido</a>-->
-                            <a href="javascript:void(0);" class="btn btn-link findsub" id="todas">Todas</a>
-                            <br /><br />
-                             <table class="table table-bordered bootstrap-datatable datatable">           	
-                             	<tr>
-                                  <td><input type="checkbox" name="advanced[]" class="checkboxadvance"  value="id" /> Número</td>
-                                  <td><input type="text" id="id" class="hide input findfilters" /></td>
-                                </tr>
-                                
-                                <tr>
-                                  <td><input type="checkbox" name="advanced[]" class="checkboxadvance"  value="creation_date" /> Fecha. </td>
-                                  <td>
-                                  	  <input type="text" id="creation_date" class="hide input-small" readonly="readonly" placeholder="De"/><br />
-                                  	  <input type="text" id="creation_date1" class="hide input-small findfilters" readonly="readonly" placeholder="A"/>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td><input type="checkbox" name="advanced[]" class="checkboxadvance"  value="agent" /> Agente</td>
-                                  <td><select id="agent" class="hide input-small findfilters" ><?php echo $agents ?></select></td>
-                                </tr>
-                                <tr>
-                                  <td><input type="checkbox" name="advanced[]" class="checkboxadvance"  value="ramo" /> Ramo</td>
-                                  <td><select id="ramo" class="hide input-small findfilters" ><option value="">Seleccione</option><option value="1">Vida</option><option value="2">GMM</option><option value="3">Autos</option></select></td>
-                                </tr>
-                                <tr>
-                                  <td><input type="checkbox" name="advanced[]" class="checkboxadvance"  value="gerente" /> Gerente</td>
-                                  <td><select id="gerente" class="hide input-small findfilters" ><option value="">Seleccione</option><?php echo $gerentes ?></select></td>
-                                </tr>                                  
-                                <tr>
-                                  <td></td>
-                                  <td><input type="button" value="Filtrar" class="btn btn-inverse filtros" /></td>
-                                </tr>                                
-                             </table>
-                             
-                      </div>
-                                            
-                                    	
-                </div>
-                
             </div>
             
-            
-            
-            
-            
-            
-            
-            
-            
+            <div class="row"><br />
+                <form id="ot-form" method="post">                      	
+                  <input class="filter-field" type="hidden" name="user" id="todas-mias" value="mios" />
+
+                  <table class="filterstable" style="width:92%;">
+                    <thead>
+                      <tr>
+					    <th colspan="6">Número :
+  					      <input class="filter-field" type="text" id="id" name="id" />
+					    </th>
+                      </tr>
+                      <tr>					  
+					    <th>Estado :<br />
+                          <select class="filter-field" id="work_order_status_id" name="work_order_status_id">
+                            <option value="activadas">Activadas</option>
+                            <option value="tramite">En trámite</option>
+                            <option value="terminada">Terminadas</option>
+                            <option value="canceladas">Canceladas</option>
+                            <option value="todas" selected="selected">Todas</option>
+                          </select>
+					    </th>
+					    <th>Ramo :<br />
+						  <select class="filter-field" id="ramo" name="ramo">
+						    <option value="" selected="selected">Seleccione</option>
+						    <option value="1">Vida</option>
+						    <option value="2">GMM</option>
+						    <option value="3">Autos</option>
+						  </select>
+					    </th>
+					    <th>Periodo :<br />
+                          <select class="filter-field" id="periodo" name="periodo">
+                            <option value="1">Mes</option>
+                            <option value="2" class="set_periodo">Trimestre</option>
+                            <option value="3">Año</option>
+                          </select>
+					    </th>
+					    <th>Agente :<br />
+						  <select class="filter-field" id="agent" name="agent" style="width:140px;">
+						  <?php echo $agents ?>
+
+						  </select>
+					    </th>
+					    <th>Gerente :<br />
+						  <select class="filter-field" id="gerente" name="gerente" style="width:145px;">
+						  <option value="">Seleccione</option>
+						  <?php echo $gerentes ?>
+
+						  </select>
+					    </th>
+                        <th>&nbsp; </th>
+                      </tr>
+                    </thead>
+
+                  </table>
+                </form>
+            </div>				
+
             <div id="loading"></div>
 
 <div id="ot-list">
@@ -181,7 +168,7 @@
                   </tr>
               </thead>   
               <tbody class="tbody" id="data">
-<?php echo $render_rows ?>
+
               </tbody>
           </table>
 
