@@ -148,6 +148,11 @@ class Ot extends CI_Controller {
 			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">', 		  
 			'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',      
 			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
+			'
+<style>
+.filterstable {margin-left: 2em; width:80%;}
+.filterstable th {text-align: left;}
+</style>',
 		  ),
 		  'scripts' => array(
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
@@ -179,13 +184,8 @@ class Ot extends CI_Controller {
 		
 		// Load Helper
 		$this->load->helper( array( 'ot', 'date' ) );
-		
-									
-		if( $this->access_all == false )
-			$data = $this->work_order->find($this->sessions['id'] );
-		
-		else
-			$data = $this->work_order->find();
+
+		$data = $this->work_order->find( $this->access_all );
 
 		$view_data = array('data' => $data);
 		$this->load->view('ot/list_render', $view_data);

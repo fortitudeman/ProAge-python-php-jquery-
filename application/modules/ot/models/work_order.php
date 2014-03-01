@@ -423,7 +423,7 @@ class Work_order extends CI_Model{
 	
 	
 // Getting for filters	
-	public function find( $user = null ) {
+	public function find( $access_all = false ) {
 
 		$agentes_gerentes = array();
 		// Gerentes (prepare the agents who have selected gerente)
@@ -464,9 +464,8 @@ class Work_order extends CI_Model{
 				break;
 		}
 
-		if( ( $this->input->post('user') == 'mios' ) && !empty( $user ) ) {
-			$this->db->where( array( 'work_order.user' => $user ) );
-		}
+		if ( !$access_all || ( $this->input->post('user') == 'mios' ) )
+			$this->db->where( array( 'work_order.user' => $this->sessions['id'] ) );
 
 		// OT id
 		if ( ( ( $id = $this->input->post('id') ) !== FALSE ) &&
@@ -482,7 +481,7 @@ class Work_order extends CI_Model{
 		if ( ( ( $periodo = $this->input->post('periodo') ) !== FALSE ) && 
 			( ( $periodo == 1 ) || (  $periodo == 2 ) || ( $periodo == 3 ) ) )
 		{
-			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
+			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01 00:00:00';
 			$trimestre = trimestre();
 			$cuatrimetre = cuatrimestre();
 			$anio = date( 'Y' ).'-01-01';
@@ -506,7 +505,9 @@ class Work_order extends CI_Model{
 						$begind = date( 'Y' ).'-08-01';	
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
-					$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
+					$this->db->where( array(
+						'work_order.creation_date >= ' =>  $begind . ' 00:00:00',
+						'work_order.creation_date <=' =>  $end . ' 23:59:59') ); 
 				} else
 				{
 					if( $trimestre == 1 )
@@ -529,11 +530,15 @@ class Work_order extends CI_Model{
 						$begind = date( 'Y' ).'-09-01';	
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
-					$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
+					$this->db->where( array(
+						'work_order.creation_date >= ' => $begind . ' 00:00:00',
+						'work_order.creation_date <=' =>  $end . ' 23:59:59' ) ); 
 				}
 
 				if(  $periodo == 3 ) // Year
-					$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
+					$this->db->where( array(
+						'work_order.creation_date >= ' => $anio . ' 00:00:00', 
+						'work_order.creation_date <=' => date( 'Y-m-d' ) .  ' 23:59:59') ); 
 		}	
 
 		// Agent

@@ -84,6 +84,10 @@ $( document ).ready( function(){
 		}
 	});
 
+	$( '#ot-form').submit( function () {
+		return false;
+	});
+
 	// Filters
 	$( '.hide' ).hide();
 

@@ -90,21 +90,19 @@
                 <form id="ot-form" method="post">                      	
                   <input class="filter-field" type="hidden" name="user" id="todas-mias" value="mios" />
 
-                  <table class="filterstable" style="width:92%;">
+                  <table class="filterstable">
                     <thead>
                       <tr>
-					    <th colspan="6">Número :
-  					      <input class="filter-field" type="text" id="id" name="id" />
+					    <th colspan="5">Número :
+  					      <input class="filter-field" type="text" id="id" name="id" title="Pulse la tecla Tab para validar un número a buscar" />
 					    </th>
                       </tr>
                       <tr>					  
-					    <th>Estado :<br />
-                          <select class="filter-field" id="work_order_status_id" name="work_order_status_id">
-                            <option value="activadas">Activadas</option>
-                            <option value="tramite">En trámite</option>
-                            <option value="terminada">Terminadas</option>
-                            <option value="canceladas">Canceladas</option>
-                            <option value="todas" selected="selected">Todas</option>
+					    <th>Período :<br />
+                          <select class="filter-field" id="periodo" name="periodo">
+                            <option value="1">Mes</option>
+                            <option value="2" class="set_periodo">Trimestre</option>
+                            <option value="3">Año</option>
                           </select>
 					    </th>
 					    <th>Ramo :<br />
@@ -115,27 +113,33 @@
 						    <option value="3">Autos</option>
 						  </select>
 					    </th>
-					    <th>Periodo :<br />
-                          <select class="filter-field" id="periodo" name="periodo">
-                            <option value="1">Mes</option>
-                            <option value="2" class="set_periodo">Trimestre</option>
-                            <option value="3">Año</option>
-                          </select>
-					    </th>
-					    <th>Agente :<br />
-						  <select class="filter-field" id="agent" name="agent" style="width:140px;">
-						  <?php echo $agents ?>
-
-						  </select>
-					    </th>
 					    <th>Gerente :<br />
-						  <select class="filter-field" id="gerente" name="gerente" style="width:145px;">
+						  <select class="filter-field" id="gerente" name="gerente">
 						  <option value="">Seleccione</option>
 						  <?php echo $gerentes ?>
 
 						  </select>
 					    </th>
-                        <th>&nbsp; </th>
+					    <th>Agente :<br />
+						  <select class="filter-field" id="agent" name="agent">
+						  <?php echo $agents ?>
+
+						  </select>
+					    </th>
+					    <th>Tipo de trámite :<br />
+						  <select class="filter-field" id="parent-type" name="parent_type" style="width: 10em">
+						    <option value="" selected="selected">Todos</option>
+						  </select>
+					    </th>
+					    <th>Estado :<br />
+                          <select class="filter-field" id="work_order_status_id" name="work_order_status_id">
+                            <option value="activadas">Activadas</option>
+                            <option value="tramite">En trámite</option>
+                            <option value="terminada">Terminadas</option>
+                            <option value="canceladas">Canceladas</option>
+                            <option value="todas" selected="selected">Todas</option>
+                          </select>
+					    </th>
                       </tr>
                     </thead>
 
