@@ -131,7 +131,31 @@ class Ot extends CI_Controller {
 		
 		// Load Helpers
 		$this->load->helper( 'date' );
-								 
+
+		// Tramite types per ramo
+		
+		$ramo_tramite_types = array(
+			'0' => '<option value="">Todos</option>', //default
+			'1' => $this->work_order->getTypeTramite(1), // ramo
+			'2' => $this->work_order->getTypeTramite(2), // gmm
+			'3' => $this->work_order->getTypeTramite(3)  // autos
+			);
+		foreach ($ramo_tramite_types as $key => $value)
+		{
+			$ramo_tramite_types[$key] = str_replace('<option value="">Seleccione</option>',
+				'<option value="">Todos</option>', $value);
+			$ramo_tramite_types[$key] = sprintf("\n$key : '%s'", $ramo_tramite_types[$key]);
+		}
+$add_js = '
+<script type="text/javascript">
+$( document ).ready( function(){ 
+proagesOverview.tramiteTypes = {' . 
+implode(', ', $ramo_tramite_types)
+. '}
+});
+</script>
+';
+		
 		// Config view
 		$this->view = array(
 				
@@ -158,13 +182,13 @@ class Ot extends CI_Controller {
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
 			'<script src="'.base_url().'ot/assets/scripts/list_js.js"></script>',
 			'<script src="'.base_url().'scripts/config.js"></script>',
-			'<script src="'.base_url().'ot/assets/scripts/overview.js"></script>',    
+			'<script src="'.base_url().'ot/assets/scripts/overview.js"></script>',
+			$add_js,
 		  ),
 		  'content' => 'ot/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  'agents' => $this->user->getAgents(),
-		  'gerentes' => $this->user->getSelectsGerentes()			 
-		  		
+		  'gerentes' => $this->user->getSelectsGerentes(),
 		);
 		
 		

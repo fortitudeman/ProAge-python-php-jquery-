@@ -439,7 +439,19 @@ class Work_order extends CI_Model{
 			foreach ($query->result() as $row)
 				$agentes_gerentes[] = $row->id;
 		}
-	
+
+		// Prepare work order type for filter on patent id (this should be validated against ramo filter field)
+		$patent_work_order_types = array();
+		if  ( ( ( $patent_type = $this->input->post('patent_type') ) !== FALSE ) &&
+			strlen($patent_type) ){
+			$this->db->select( 'work_order_types.id' );
+			$this->db->from( 'work_order_types' );
+			$this->db->where( 'patent_id', (int)$patent_type );
+			$query = $this->db->get();
+			foreach ($query->result() as $row)
+				$patent_work_order_types[] = $row->id;
+		}
+
 		$this->db->select( 'product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
 		$this->db->from( 'work_order' );
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
@@ -476,6 +488,11 @@ class Work_order extends CI_Model{
 		if ( ( ( $ramo = $this->input->post('ramo') ) !== FALSE ) &&
 			( ( $ramo == 1 ) || (  $ramo == 2 ) || ( $ramo == 3 ) ) )
 			$this->db->where( array( 'work_order.product_group_id' => $ramo ) );
+
+		// Complete handling filter on patent id (tipo  de tramite)
+		if ( count($patent_work_order_types) ) {
+			$this->db->where_in('work_order.work_order_type_id', $patent_work_order_types);
+		}
 
 		// Periodo
 		if ( ( ( $periodo = $this->input->post('periodo') ) !== FALSE ) && 

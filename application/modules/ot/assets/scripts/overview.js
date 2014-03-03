@@ -17,11 +17,9 @@ function menu( item ){
   $( '#'+item ).show();
   proagesOt.menuRowShown[item] = item;
 }*/
-
+var proagesOverview = {};
 
 $( document ).ready( function(){
-
-    var proagesOverview = {};
 
 	proagesOverview.getOts = function(Data) {
 
@@ -50,16 +48,19 @@ $( document ).ready( function(){
 			switch ($(this).val()) {
 				case '1': // Vida
 					$( '.set_periodo' ).html( 'Trimestre' );
+					$( '#patent-type').html(proagesOverview.tramiteTypes[$(this).val()]);					
 					break;
 				case '2': // GMM
 				case '3': // Autos
 					$( '.set_periodo' ).html( 'Cuatrimestre' );
+					$( '#patent-type').html(proagesOverview.tramiteTypes[$(this).val()]);
 					break;
 				default:
 					$( '.set_periodo' ).html( 'Trimestre' );
+					$( '#patent-type').html(proagesOverview.tramiteTypes[0]);
 					break;
 			}
-		
+
 		}
 		var Data = $( "#ot-form").serialize();
 		proagesOverview.getOts(Data);

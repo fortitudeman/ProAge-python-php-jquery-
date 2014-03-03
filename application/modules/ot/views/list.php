@@ -127,7 +127,7 @@
 						  </select>
 					    </th>
 					    <th>Tipo de trámite :<br />
-						  <select class="filter-field" id="parent-type" name="parent_type" style="width: 10em">
+						  <select class="filter-field" id="patent-type" name="patent_type" style="width: 10em">
 						    <option value="" selected="selected">Todos</option>
 						  </select>
 					    </th>
