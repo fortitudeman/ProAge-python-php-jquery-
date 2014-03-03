@@ -85,6 +85,7 @@ $( document ).ready( function(){
 	});
 
 	$( '#ot-form').submit( function () {
+		proagesOverview.getOts($( "#ot-form").serialize());
 		return false;
 	});
 
