@@ -21,7 +21,7 @@ var proagesOverview = {};
 
 $( document ).ready( function(){
 
-	proagesOverview.getOts = function(Data, showAlert) {
+	proagesOverview.getOts = function(Data) {
 
 		$.ajax({
 			url:  Config.base_url()+'ot/find.html',
@@ -32,13 +32,8 @@ $( document ).ready( function(){
 			//dataType: 'json',
 			beforeSend: function(){
 				$( '#loading' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-1.gif">   Cargando...' );
-				if ( showAlert )
-					alert('Cargando!');
 			},
 			success: function(data){
-				var ms = 125;
-				ms += new Date().getTime();
-				while (new Date() < ms){}
 				$( '#loading' ).html( '' );	
 				$( '#data' ).html( data );
 				var resort = true;
@@ -68,7 +63,7 @@ $( document ).ready( function(){
 
 		}
 		var Data = $( "#ot-form").serialize();
-		proagesOverview.getOts(Data, true);
+		proagesOverview.getOts(Data);
 	});
   
 	$( '.find' ).bind( 'click', function(){
@@ -86,19 +81,19 @@ $( document ).ready( function(){
 			$( '#todas-mias').val( this.id );
 
 			var Data = $( "#ot-form").serialize();
-			proagesOverview.getOts(Data, true);
+			proagesOverview.getOts(Data);
 		}
 	});
 
 	$( '#ot-form').submit( function () {
-		proagesOverview.getOts($( "#ot-form").serialize(), true);
+		proagesOverview.getOts($( "#ot-form").serialize());
 		return false;
 	});
 
 	// Filters
 	$( '.hide' ).hide();
 
-	proagesOverview.getOts($( "#ot-form").serialize(), false);
+	proagesOverview.getOts($( "#ot-form").serialize());
 	
 });
 function chooseOption( choose, is_new ){

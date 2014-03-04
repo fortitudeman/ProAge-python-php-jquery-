@@ -13,6 +13,7 @@
 
   	
 */
+$agents = str_replace('<option value="">Seleccione</option>', '<option value="">Todos</option>', $agents);
 ?>
 
 
@@ -107,7 +108,7 @@
 					    </th>
 					    <th>Ramo :<br />
 						  <select class="filter-field" id="ramo" name="ramo">
-						    <option value="" selected="selected">Seleccione</option>
+						    <option value="" selected="selected">Todos</option>
 						    <option value="1">Vida</option>
 						    <option value="2">GMM</option>
 						    <option value="3">Autos</option>
@@ -115,7 +116,7 @@
 					    </th>
 					    <th>Gerente :<br />
 						  <select class="filter-field" id="gerente" name="gerente">
-						  <option value="">Seleccione</option>
+						  <option value="">Todos</option>
 						  <?php echo $gerentes ?>
 
 						  </select>
