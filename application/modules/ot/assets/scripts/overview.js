@@ -45,22 +45,34 @@ $( document ).ready( function(){
 
 	$( '.filter-field').bind( 'change', function(){
 		if ( this.id == 'ramo' ) {
-			switch ($(this).val()) {
+			var selectedRamo = $(this).val();
+			var currentTramiteType = '';
+			$( '#patent-type option:selected' ).each(function () {
+				currentTramiteType = $(this).val();
+				return false;
+			});
+
+			switch ( selectedRamo ) {
 				case '1': // Vida
 					$( '.set_periodo' ).html( 'Trimestre' );
-					$( '#patent-type').html(proagesOverview.tramiteTypes[$(this).val()]);					
 					break;
 				case '2': // GMM
 				case '3': // Autos
 					$( '.set_periodo' ).html( 'Cuatrimestre' );
-					$( '#patent-type').html(proagesOverview.tramiteTypes[$(this).val()]);
 					break;
 				default:
 					$( '.set_periodo' ).html( 'Trimestre' );
-					$( '#patent-type').html(proagesOverview.tramiteTypes[0]);
+					selectedRamo = 0;
 					break;
 			}
+			$( '#patent-type').html(proagesOverview.tramiteTypes[selectedRamo]);
 
+			$( '#patent-type option' ).each(function () {
+				if ( $(this).val() == currentTramiteType ) {
+					$(this).prop('selected', true);
+					return false;
+				}
+			});
 		}
 		var Data = $( "#ot-form").serialize();
 		proagesOverview.getOts(Data);
@@ -94,7 +106,7 @@ $( document ).ready( function(){
 	$( '.hide' ).hide();
 
 	proagesOverview.getOts($( "#ot-form").serialize());
-	
+
 });
 function chooseOption( choose, is_new ){
 	

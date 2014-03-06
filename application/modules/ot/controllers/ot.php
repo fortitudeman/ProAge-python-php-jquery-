@@ -135,27 +135,35 @@ class Ot extends CI_Controller {
 		// Tramite types per ramo
 		
 		$ramo_tramite_types = array(
-			'0' => '<option value="">Todos</option>', //default
 			'1' => $this->work_order->getTypeTramite(1), // ramo
 			'2' => $this->work_order->getTypeTramite(2), // gmm
 			'3' => $this->work_order->getTypeTramite(3)  // autos
 			);
+
+		$all_tramite_types = '';
 		foreach ($ramo_tramite_types as $key => $value)
 		{
+			$all_tramite_types .= str_replace('<option value="">Seleccione</option>',
+				'<optgroup label="Ramo = %s">', $value) . '</optgroup>';
 			$ramo_tramite_types[$key] = str_replace('<option value="">Seleccione</option>',
 				'<option value="">Todos</option>', $value);
 			$ramo_tramite_types[$key] = sprintf("\n$key : '%s'", $ramo_tramite_types[$key]);
+
 		}
-$add_js = '
+		$all_tramite_types = sprintf($all_tramite_types, 'Vida', 'GMM', 'Autos');
+		$ramo_tramite_types[0] = "\n0 : '" . '<option value="">Todos</option>' . $all_tramite_types . "'";
+
+		$add_js = '
 <script type="text/javascript">
-$( document ).ready( function(){ 
-proagesOverview.tramiteTypes = {' . 
-implode(', ', $ramo_tramite_types)
-. '}
-});
+	$( document ).ready( function(){ 
+		proagesOverview.tramiteTypes = {' . 
+implode(', ', $ramo_tramite_types) . '
+		};
+		$( "#patent-type").html(proagesOverview.tramiteTypes[0]);
+	});
 </script>
 ';
-		
+
 		// Config view
 		$this->view = array(
 				
