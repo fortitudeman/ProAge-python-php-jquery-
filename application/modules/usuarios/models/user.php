@@ -2112,7 +2112,8 @@ class User extends CI_Model{
 			'aceptadas' => $this->getAceptadas($row->agent_id,$filter),
             'iniciales' => $this->getIniciales( $row->agent_id, $filter ),
 			'renovacion' => $this->getRenovacion( $row->agent_id, $filter ),
-			'generacion' => $generacion			
+			'generacion' => $generacion,
+			'agent_id' => $row->agent_id
 		);
 	}	
 	return $report;
@@ -2232,10 +2233,20 @@ class User extends CI_Model{
 	return $uids;
 	
  }
- 
-  public function getCountNegocio( $agent_id = null, $filter = array() ){
+
+	public function getCountNegocio( $agent_id = null, $filter = array() ){
  		
-						
+		return $this->_getNegocios( TRUE, $agent_id, $filter);
+	}
+
+	public function getNegocioDetails( $agent_id = null, $filter = array() ){
+ 		
+		return $this->_getNegocios( FALSE, $agent_id, $filter);
+	}
+
+	// Common method for getting count of negocios (first param = TRUE) and details of negocios (first param = FALSE) 
+	private function _getNegocios( $count_requested = TRUE, $agent_id = null, $filter = array()) {
+
 		if( empty( $agent_id ) ) return 0;
 		/*
 		SELECT DISTINCT( policies_vs_users.policy_id ) as policy_id
@@ -2245,13 +2256,17 @@ class User extends CI_Model{
 		JOIN  users ON users.id=agents.user_id
 		WHERE policies_vs_users.user_id=6
 		*/
-		
-		$this->db->select( 'DISTINCT( policy_number ) as policy_number' );
+		if ($count_requested)		
+			$this->db->select( 'DISTINCT( policy_number ) as policy_number' );
+		else
+			$this->db->select( 'payments.*' );		
 		$this->db->from( 'payments' );
-		$this->db->where( array( 'agent_id' => $agent_id , 'business' => 1) );
-  		
-		
-						
+		$this->db->where( array( 'agent_id' => $agent_id));
+		if ($count_requested)
+			$this->db->where( array( 'business' => 1) );
+		else
+			$this->db->where( "((business = '1') OR (business = '-1'))" );		
+
 		if( !empty( $filter ) ){
 			
 			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
@@ -2266,88 +2281,85 @@ class User extends CI_Model{
 			*/	
 			
 			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
-			
-			
+
 			$trimestre = $this->trimestre();
-			
+
 			$cuatrimetre = $this->cuatrimestre();
-									
+
 			$anio = date( 'Y' ).'-01-01';
-						
+
 			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
-			
-			
+
 			if( $filter['query']['periodo'] == 1 )
-			
+
 				$this->db->where( 'payments.payment_date >= ', $mes); 
-			
-			
-			
+
 			if( $filter['query']['periodo'] == 2 )
-			
-				
+
 				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
-					
+
 					if( $cuatrimetre == 1 ){			
 						$begind = date( 'Y' ).'-01-01';	
 						$end = date( 'Y' ).'-04-'.date('d');	
 					}
-					
+
 					if( $cuatrimetre == 2 ){			
 						$begind = date( 'Y' ).'-04-01';	
 						$end = date( 'Y' ).'-08-'.date('d');	
 					}
-					
+
 					if( $cuatrimetre == 3 ){			
 						$begind = date( 'Y' ).'-08-01';	
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
-					
+
 					$this->db->where( array( 'payments.payment_date >= ' =>  $begind , 'payments.payment_date <=' =>  $end  ) ); 
-				
+
 				}else{
-					
-					
+
 					if( $trimestre == 1 ){			
 						$begind = date( 'Y' ).'-01-01';	
 						$end = date( 'Y' ).'-03-'.date('d');	
 					}
-					
+
 					if( $trimestre == 2 ){			
 						$begind = date( 'Y' ).'-03-01';	
 						$end = date( 'Y' ).'-06-'.date('d');	
 					}
-					
+
 					if( $trimestre == 3 ){			
 						$begind = date( 'Y' ).'-06-01';	
 						$end = date( 'Y' ).'-09-'.date('d');	
 					}
-					
+
 					if( $trimestre == 4 ){			
 						$begind = date( 'Y' ).'-09-01';	
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
-					
-						
+
 					$this->db->where( array( 'payments.payment_date >= ' => $begind, 'payments.payment_date <=' =>  $end ) ); 
 				}
-				
-				
-				
-				
-				
-				
+
 			if( $filter['query']['periodo'] == 3 )
-			
+
 				$this->db->where( array( 'payments.payment_date >= ' => $anio,  'payments.payment_date <=' => date( 'Y-m-d' ) ) ); 
-			
+
 			}
-							
+
 		}
-		
-		
-		return $this->db->count_all_results();
-				
+		if ($count_requested)
+			return $this->db->count_all_results();
+		else {
+			$query = $this->db->get();
+			$result = array();
+			if ($query->num_rows() > 0) {
+				foreach ($query->result() as $row) {
+					$result[] = $row;
+				}
+			}
+
+			return $result;
+		}
   }  
   // getCountNegocio Old
   /*
@@ -2820,14 +2832,22 @@ class User extends CI_Model{
 			
 		return $pai;
   }*/
-  
-    
-  
-  
-  public function getPrima( $agent_id = null, $filter = array() ){
- 		
+
+	public function getPrima( $agent_id = null, $filter = array() ){
+
+		return $this->_getPrima( TRUE, $agent_id, $filter);
+	}
+
+	public function getPrimaDetails( $agent_id = null, $filter = array() ){
+
+		return $this->_getPrima( FALSE, $agent_id, $filter);
+	}
+
+// Common method for getting sum of prima (first param = TRUE) and details of prima (first param = FALSE) 
+	private function _getPrima( $sum_requested = TRUE, $agent_id = null, $filter = array()) {
+
 		if( empty( $agent_id ) ) return 0;
-		
+
 		/*
 		SELECT DISTINCT( policies_vs_users.policy_id ) as policy_id, policies.prima
 		FROM `policies_vs_users`
@@ -2836,121 +2856,112 @@ class User extends CI_Model{
 		JOIN  agents ON agents.id=policies_vs_users.user_id
 		JOIN  users ON users.id=agents.user_id
 		WHERE policies_vs_users.user_id=6
-		*/		
-		$this->db->select( 'SUM( amount ) as primas' );
+		*/
+		if ($sum_requested)
+			$this->db->select( 'SUM( amount ) as primas' );
+		else
+			$this->db->select( 'payments.*' );
 		$this->db->from( 'payments' );
 		$this->db->where( array( 'agent_id' => $agent_id, 'year_prime' => 1 ) );
-		
-		
+
 		if( !empty( $filter ) ){
-			
-			
+
 			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
-						
+
 				$this->db->where( 'product_group', $filter['query']['ramo'] ); 
 			}
-			
+
 			/*
 			<option value="1">Mes</option>
 			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
 			<option value="3">Año</option>
 			*/	
-			
+
 			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
-			
-			
+
 			$trimestre = $this->trimestre();
-			
+
 			$cuatrimetre = $this->cuatrimestre();
-									
+
 			$anio = date( 'Y' ).'-01-01';
-						
+
 			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
-			
-			
+
 			if( $filter['query']['periodo'] == 1 )
-			
+
 				$this->db->where( 'payment_date >= ', $mes); 
-			
-			
-			
+
 			if( $filter['query']['periodo'] == 2 )
-			
-				
+
 				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
-					
+
 					if( $cuatrimetre == 1 ){			
 						$begind = date( 'Y' ).'-01-01';	
 						$end = date( 'Y' ).'-04-'.date('d');	
 					}
-					
+
 					if( $cuatrimetre == 2 ){			
 						$begind = date( 'Y' ).'-04-01';	
 						$end = date( 'Y' ).'-08-'.date('d');	
 					}
-					
+
 					if( $cuatrimetre == 3 ){			
 						$begind = date( 'Y' ).'-08-01';	
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
-					
+
 					$this->db->where( array( 'payment_date >= ' =>  $begind , 'payment_date <=' =>  $end  ) ); 
-				
+
 				}else{
-					
-					
+
 					if( $trimestre == 1 ){			
 						$begind = date( 'Y' ).'-01-01';	
 						$end = date( 'Y' ).'-03-'.date('d');	
 					}
-					
+
 					if( $trimestre == 2 ){			
 						$begind = date( 'Y' ).'-03-01';	
 						$end = date( 'Y' ).'-06-'.date('d');	
 					}
-					
+
 					if( $trimestre == 3 ){			
 						$begind = date( 'Y' ).'-06-01';	
 						$end = date( 'Y' ).'-09-'.date('d');	
 					}
-					
+
 					if( $trimestre == 4 ){			
 						$begind = date( 'Y' ).'-09-01';	
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
-					
-						
+
 					$this->db->where( array( 'payment_date >= ' => $begind, 'payment_date <=' =>  $end ) ); 
 				}
-				
-				
-				
-				
-				
-				
+
 			if( $filter['query']['periodo'] == 3 )
-			
+
 				$this->db->where( array( 'payment_date >= ' => $anio,  'payment_date <=' => date( 'Y-m-d' ) ) ); 
-			
-			}				
+
+			}
 		}
-		
-		
-		
-		$query = $this->db->get(); 
-		  	
-		if ($query->num_rows() == 0) return 0;		
-				
-		foreach ($query->result() as $row){
-								
-              $prima = (float)$row->primas;	
-		}	
-		return $prima;
-  }
-  
-  
-  
-  
+
+		$query = $this->db->get();
+
+		if ($sum_requested) {
+			if ($query->num_rows() == 0) return 0;		
+			foreach ($query->result() as $row){
+				$prima = (float)$row->primas;	
+			}
+			return $prima;
+		} else {
+			$result = array();
+			if ($query->num_rows() > 0) {
+				foreach ($query->result() as $row)
+					$result[] = $row;
+			}
+			return $result;
+		}
+	}
+
         public function getTramite($user_id = null, $filter = array())
         {
 		if( empty( $user_id ) ) return 0;

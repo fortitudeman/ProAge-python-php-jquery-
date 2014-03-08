@@ -32,9 +32,7 @@ function stickyFooter(){
                $(".tablescroll_foot tfoot").css("width", ($(window).width())+'px');
 
                 $("#sorter").css("height", percent+'px');
-
-              
-
+			$(".payment_table").css("height", percent+'px');
         });
 
              $("#sorter").tablesorter({ 

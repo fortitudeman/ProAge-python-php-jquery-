@@ -97,8 +97,16 @@
                         <?php echo $value['name'] ?>
                     </div> 
                 </td>            
-                <td class="celda_gris"><div class="numeros" style="text-align:center;"><?php echo $value['negocio'] ; ?></div></td>
-                <td class="celda_gris"><div class="numeros" style="text-align:right">$<?php echo number_format($value['prima'],2) ; ?></div></td>
+                <td class="celda_gris" style="text-align:center;">
+                    <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'negocio'})">
+                    <?php echo $value['negocio'] ; ?>
+				    </a>
+				</td>
+                <td class="celda_gris" style="text-align:right">
+                    <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'prima'})">
+                        $<?php echo number_format($value['prima'],2) ; ?>
+                    </a>
+				</td>
                 <td class="celda_roja" style="text-align:center;">
                     <a class="numeros fancybox"   style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>                    
                         <?php if(isset($value['tramite']['count'])) echo $value['tramite']['count']; else echo 0; ?>
@@ -119,14 +127,14 @@
                         $<?php if( isset( $value['aceptadas']['prima'] ) ) echo number_format($value['aceptadas']['prima'],2); else  echo number_format($value['aceptadas'],2); ?>
                     </a>
                 </td>
-                <td class="celda_verde"><div class="numeros"style="text-align:center;"><?php echo $negocio ?></div></td>
+                <td class="celda_verde"><div class="numeros" style="text-align:center;"><?php echo $negocio ?></div></td>
                 <td class="celda_verde"><div class="numeros" style="text-align:right">$<?php echo number_format($prima,2); ?></div></td>
             </tr>
         
         
     <div id="info_<?php echo $value['id'] ?>" style="display: none;">
         
-        <a href="javascript:" class="btn btn-link btn-hide">
+        <a href="javascript:void" class="btn btn-link btn-hide">
             <i class="icon-arrow-up" id="<?php echo $value['id'] ?>"></i>
         </a>
         <?php 
@@ -178,7 +186,7 @@
     </div>
         
             <div id="info_<?php echo $value['id'] ?>" style="display: none;">
-                <a href="javascript:" class="btn btn-link btn-hide">
+                <a href="javascript:void" class="btn btn-link btn-hide">
                     <i class="icon-arrow-up" id="<?php echo $value['id'] ?>"></i>
                 </a>
                 <?php 

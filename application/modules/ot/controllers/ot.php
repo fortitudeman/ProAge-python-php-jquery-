@@ -2245,16 +2245,16 @@ implode(', ', $ramo_tramite_types) . '
 		  'roles_vs_access' => $this->roles_vs_access,
 		  'export_xls' => $this->access_export_xls,
 		  'css' => array(
-			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',			
+//			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',			
 			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
-                        <link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
-                        '<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
-			
-		  ),
+			<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
+			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">',
+			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">'
+		),
 		  'scripts' =>  array(
 		  	'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+			//'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
 			//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',			
 			'<script src="'. base_url() .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
 			'<script>window.jQuery || document.write ("<script src='. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js><\/script>");</script>',
@@ -2263,8 +2263,22 @@ implode(', ', $ramo_tramite_types) . '
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',			
 			'<script src="'.base_url().'scripts/config.js"></script>'	,	
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
-                      '<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
-		  ),
+                      '<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>',
+'
+<script type="text/javascript">
+	function payment_popup(params) {
+		$.fancybox.showLoading();
+		$.post("ot/payment_popup", jQuery.param(params) + "&" + $("#form").serialize(), function(data) { 
+			if (data) {
+				$.fancybox({
+					content:data
+				});
+				return false;
+			}
+		});
+	}
+</script>
+'		  ),
 		  'manager' => $this->user->getSelectsGerentes2(),
 		  'content' => 'ot/report', // View to load
 		  'data' => $data,
@@ -2322,6 +2336,34 @@ implode(', ', $ramo_tramite_types) . '
             $data['values'] = $results;
             $this->load->view('popup_report',$data);	
 	}
+
+// Popup pertaining to payments
+	public function payment_popup()
+	{
+		$data = array('values' => FALSE);
+		$this->load->model('usuarios/user');
+		$filter = array();
+		$posted_filter_query = $this->input->post('query');
+		if ( ($posted_filter_query !== FALSE) )
+			$filter['query'] = $posted_filter_query;
+
+		$request_type = $this->input->post('type');
+		switch ( $request_type )
+		{
+			case 'negocio':
+			case 'negociopai':
+				$data['values'] = $this->user->getNegocioDetails( $this->input->post('for_agent_id'), $filter );
+				break;
+			case 'prima':
+				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );
+				break;				
+			default:
+				exit('Ocurrio un error. Consulte a su administrador.');
+				break;
+		}
+		$this->load->view('popup_payment', $data);	
+	}
+
         public function reporte_popupa()
         {
            

@@ -184,11 +184,26 @@ $( document ).ready(function() {
                     }      
                 });
             }
-       });  
-       
-       
-       
-       
+       });
+
+	$(".fancybox_gris").fancybox({
+		type: 'ajax',
+		width: 680,
+		scrolling: 'no',
+		openEffect: 'elastic',
+		openSpeed: 150,
+		closeEffect: 'elastic',
+		closeSpeed: 150,
+		autoDimensions: true,
+		height: 'auto',
+		afterShow: function() {
+		}
+	});
+	$(".payment_table").tablesorter({ 
+		// sort on the first column and third column, order asc 
+		//sortList: [[0,0],[2,0]] 
+    }); 
+
        $('#popup_email').submit(function()
        {
            //alert('Yes');
