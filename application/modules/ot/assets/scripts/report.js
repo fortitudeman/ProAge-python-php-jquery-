@@ -199,9 +199,28 @@ $( document ).ready(function() {
 		afterShow: function() {
 		}
 	});
+
+	// add parser through the tablesorter addParser method
+	$.tablesorter.addParser({
+		// set a unique id
+		id: 'mydigit',
+		is: function(s) {
+			// return false so this parser is not auto detected
+			return false;
+		},
+		format: function(s) {
+			// format your data for normalization
+			return s.replace(/,/g, '');
+		},
+		// set type, either numeric or text
+		type: 'numeric'
+	});	
+
 	$(".payment_table").tablesorter({ 
-		// sort on the first column and third column, order asc 
-		//sortList: [[0,0],[2,0]] 
+		// use custom parser 'mydigit' for column containing a number, formatted 
+		headers: {
+			2: { sorter: "mydigit" }
+		}
     }); 
 
        $('#popup_email').submit(function()
