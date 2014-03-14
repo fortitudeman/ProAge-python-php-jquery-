@@ -244,9 +244,7 @@ implode(', ', $ramo_tramite_types) . '
 
 // Create new role
 	public function create(){
-		
-		
-				
+	
 		// Check access teh user for create
 		if( $this->access_create == false ){
 				
@@ -481,10 +479,10 @@ implode(', ', $ramo_tramite_types) . '
 		//Get Currency
 		$currency = $this->work_order->getCurrencyOptions();
 		
-		// Get Payments
-		$payments_methods = $this->work_order->getPaymentMethodsOptions();		
+		// Get Payments intervals
+		$payment_intervals = $this->work_order->getPaymentIntervalOptions();		
 		
-		// Get Conduct
+		// Get Conduct (payment mode)
 		$payment_conduct = $this->work_order->getPaymentMethodsConductoOptions();
 		
 		// Get Agents
@@ -514,7 +512,7 @@ implode(', ', $ramo_tramite_types) . '
 		  
 		  'product' => $product,
 		  'currency' => $currency,
-		  'payments_methods' => $payments_methods,
+		  'payment_intervals' => $payment_intervals,
 		  'payment_conduct' => $payment_conduct,
 		  'agents' => $agents	
 	
@@ -630,25 +628,17 @@ implode(', ', $ramo_tramite_types) . '
 				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Crear Politica.", Informe a su administrador para que le otorge los permisos necesarios.'
 							
 			));	
-			
-			
+
 			redirect( 'ot', 'refresh' );
 		
 		}
-		
-		
-		
+
 		// Load model
 		$this->load->model( array( 'work_order', 'user' ) );
-		
-		
-		
+
 		// Save the record
 		if( !empty( $_POST ) ){
-			
-						
-			
-						
+		
 			// Validations
 			$this->form_validation->set_rules('ramo', 'Ramo', 'required|xxs_clean');
 			$this->form_validation->set_rules('product_id', 'Producto', 'required|xxs_clean');
@@ -661,12 +651,11 @@ implode(', ', $ramo_tramite_types) . '
 			//$this->form_validation->set_rules('agent[]', 'Agente', 'required|xxs_clean');
 			//$this->form_validation->set_rules('porcentaje[]', 'Porcentaje', 'required|xxs_clean');
 
-			
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
-				
+
 				  $controlSave = true;
-				
+
 				  $policy = array(
 				  	
 					'product_id' => $this->input->post( 'product_id' ),
@@ -681,24 +670,22 @@ implode(', ', $ramo_tramite_types) . '
 					'expired_date' => $this->input->post( 'expired_date' ),
 					'last_updated' => date( 'Y-m-d H:i:s' ),
 					'date' => date( 'Y-m-d H:i:s' )
-					
+
 				  );
-				  
+
 				  if( $this->work_order->create( 'policies', $policy ) == false )
-				  	 
+
 					 $controlSave = false;
-				  
-				  
-				  
+
 				  $policyId = $this->work_order->insert_id();
-				  
+
 				  // Agents Adds
 				  $agents = array();
-			
+
 				  for( $i=0; $i<=count( $this->input->post('agent') ); $i++ )
-					  
+
 					  if( !empty(  $_POST['agent'][$i] ) )
-					 
+
 						  $agents[] = array( 
 								
 								'user_id' => $_POST['agent'][$i], 
@@ -708,86 +695,57 @@ implode(', ', $ramo_tramite_types) . '
 							
 						  );
 
-				
 				 if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false );
-				  	
+
 					$controlSave = false;
-				  
-				
+
 				 if( $controlSave == true ){ 
-					 
+
 					  // Set true message		
 					  $this->session->set_flashdata( 'message', array( 
-						  
+
 						  'type' => true,	
-						  'message' => 'Se agrego la nueva politica.'
-									  
+						  'message' => 'Se agrego la nueva politica.'		  
 					  ));												
-					  
-					  
+
 					  redirect( 'ot/create', 'refresh' );
-				  
+
 				 }else{
-					
+
 					// Set true message		
 					  $this->session->set_flashdata( 'message', array( 
-						  
+
 						  'type' => false,	
 						  'message' => 'Ocurrio un error no se puede guardar la nueva politica, consulte a su administrador.'
-									  
+
 					  ));												
-					  
-					  
+
 					  redirect( 'ot/create', 'refresh' );
 				 }
-				 
+
 			}
-			
-			
-			
+
 			exit;
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 		// Get products
 		$product = $this->work_order->getProductsOptions();
-		
-		
+
 		//Get Currency
 		$currency = $this->work_order->getCurrencyOptions();
-		
-		// Get Payments
-		$payments_methods = $this->work_order->getPaymentMethodsOptions();		
-		
+
+		// Get Payment intervals
+		$payment_intervals = $this->work_order->getPaymentIntervalOptions();		
+
 		// Get Conduct
 		$payment_conduct = $this->work_order->getPaymentMethodsConductoOptions();
-		
+
 		// Get Agents
 		$agents = $this->user->getAgents();
-		
-		
+
 		// Config view
 		$this->view = array(
-				
+
 		  'title' => 'Crear Politica',
 		   // Permisions
 		  'user' => $this->sessions,
@@ -808,7 +766,7 @@ implode(', ', $ramo_tramite_types) . '
 		  
 		  'product' => $product,
 		  'currency' => $currency,
-		  'payments_methods' => $payments_methods,
+		  'payment_intervals' => $payment_intervals,
 		  'payment_conduct' => $payment_conduct,
 		  'agents' => $agents
 	

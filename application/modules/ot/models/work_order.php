@@ -1258,8 +1258,11 @@ class Work_order extends CI_Model{
 		return $payment;
 		
 	}
-	
-	public function getPaymentMethodsOptions(){
+
+/**
+ *	Payments Intervals
+ **/
+	public function getPaymentIntervalOptions(){
 				
 		$query = $this->db->get( 'payment_intervals' );	
 		
@@ -1277,10 +1280,8 @@ class Work_order extends CI_Model{
 		
 	}
 
-
-
 /**
- *	Payments Methods Conducto
+ *	Payments Methods Conducto (payment method)
  **/
 	public function getPaymentMethodsConducto(){
 				

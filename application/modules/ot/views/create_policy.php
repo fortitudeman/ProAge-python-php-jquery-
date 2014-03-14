@@ -45,9 +45,7 @@
         </div>
         
         <div class="box-content">
-        	
-            
-			
+
 			<?php // Return Message error ?>
             
             <?php $validation = validation_errors(); ?>
@@ -58,17 +56,10 @@
                   <strong>Error: </strong> <?php  echo $validation; // Show Dinamical message error ?>
             </div>
             <?php endif; ?>
-            
-            
-            
-        
+
             <form id="form" action="<?php echo base_url() ?>ot/create_policy.html" class="form-horizontal" method="post">
                 <fieldset>
-                     
-                  
-                  
-                                                                                                        
-                  
+
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Ramo</label>
                     <div class="controls">
@@ -77,9 +68,7 @@
                       <input type="radio" value="3" name="ramo" class="ramo"/>&nbsp;&nbsp;Auto
                     </div>
                   </div>
-                  
-                  
-                  
+
                   <div class="control-group typtramite">
                     <label class="control-label text-error" for="inputError">Producto<br /><div id="loadproduct"></div></label>
                     <div class="controls">
@@ -88,17 +77,14 @@
                       </select>
                     </div>
                   </div>
-                  
-                  
+
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Prima anual</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="id" name="id" type="text">
                     </div>
                   </div>
-                  
-                  
-                  
+
                    <div class="control-group typtramite">
                     <label class="control-label text-error" for="inputError">Moneda<br /><div id="loadcurrency"></div></label>
                     <div class="controls">
@@ -110,27 +96,24 @@
                   
                   
                   <div class="control-group typtramite">
-                    <label class="control-label text-error" for="inputError">Conducto<br /><div id="loadpaymentinterval"></div></label>
+                    <label class="control-label text-error" for="inputError">Conducto<br /><div id="loadpaymentmethod"></div></label>
                     <div class="controls">
-                      <select class="input-xlarge focused required" id="payment_interval_id" name="payment_interval_id">
+                      <select class="input-xlarge focused required" id="payment_method_id" name="payment_method_id">
                       	<?php echo $payment_conduct ?>
 						
                       </select>
                     </div>
                   </div>
-                  
-                  
+
                   <div class="control-group typtramite">
-                    <label class="control-label text-error" for="inputError">Forma de pago<br /><div id="loadpaymentmethod"></div></label>
+                    <label class="control-label text-error" for="inputError">Forma de pago<br /><div id="loadpaymentinterval"></div></label>
                     <div class="controls">
-                      <select class="input-xlarge focused required" id="payment_method_id" name="payment_method_id">
-                      	<?php echo $payments_methods ?>
+                      <select class="input-xlarge focused required" id="payment_interval_id" name="payment_interval_id">
+                      	<?php echo $payment_intervals ?>
                       </select>
                     </div>
                   </div>
-                  
-                  
-                  
+
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Nombre</label>
                     <div class="controls">
@@ -151,9 +134,7 @@
                       <input class="input-xlarge focused required" id="lastname_mother" name="lastname_mother" type="text" value="<?php echo set_value( 'lastname_mother' ) ?>">
                     </div>
                   </div>
-                  
-                  
-                  
+
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Agente</label>
                     <div class="controls">
@@ -168,10 +149,7 @@
                  
                                    
                   <div id="dinamicagent"></div>
-                                  
-                      
-                  
-                                    
+  
                   <div id="actions-buttons-forms" class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>
                     <button class="btn" onclick="javascript: history.back()">Cancelar</button>
