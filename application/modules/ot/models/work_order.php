@@ -597,7 +597,8 @@ class Work_order extends CI_Model{
 				'creation_date' =>  $row->creation_date,
 				'duration' =>  $row->duration,
 				'last_updated' =>  $row->last_updated,
-				'date' =>  $row->date
+				'date' =>  $row->date,
+				'is_editable' => $this->is_editable( $row->product_group_id, $type_tramite )
 		    );
 		}
 		return $ot;
@@ -639,9 +640,11 @@ class Work_order extends CI_Model{
 		    	'product_group_id' => $row->product_group_id,
 				'group_name' => $row->group_name,
 				'parent_type_name' => $this->getTypeTramiteId( $type_tramite ),
+				'type_id' => $row->work_order_type_id,
 				'type_name' => $row->type_name,				
 		    	'status_name' =>  $row->status_name,
 				'creation_date' =>  $row->creation_date,
+				'comments' => $row->comments,
 				'duration' =>  $row->duration,
 				'last_updated' =>  $row->last_updated,
 				'date' =>  $row->date
@@ -760,6 +763,7 @@ class Work_order extends CI_Model{
 				'lastname_father' =>  $row->lastname_father,
 				'lastname_mother' =>  $row->lastname_mother,
 				'year_premium' =>  $row->year_premium,
+				'period' => $row->period,
 				'expired_date' =>  $row->expired_date,
 				'products' => $this->getProductsByPolicy( $row->product_id ),
 				'last_updated' =>  $row->last_updated,
@@ -814,7 +818,7 @@ class Work_order extends CI_Model{
 		JOIN users ON users.id=agents.user_id
 		WHERE policy_id=1
 		*/
-		$this->db->select( ' policies_vs_users.percentage, users.name, users.lastnames, users.company_name, users.email ' );
+		$this->db->select( ' policies_vs_users.percentage, policies_vs_users.user_id AS agent_id, users.name, users.lastnames, users.company_name, users.email ' );
 		$this->db->from( 'policies_vs_users' );
 		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id ' );
@@ -827,7 +831,8 @@ class Work_order extends CI_Model{
 		
 		foreach ($query->result() as $row) {
 
-			$agents[] = array( 
+			$agents[] = array(
+				'agent_id' => $row->agent_id,
 		    	'percentage' => $row->percentage,
 				'name' => $row->name,
 				'lastnames' => $row->lastnames,
@@ -996,63 +1001,54 @@ class Work_order extends CI_Model{
 		
 	}
 	
-	public function getPeriod( $product = null ){
+	public function getPeriod( $product = null, $as_string = TRUE ){
 		
 		$this->db->select( 'period' );
-		
+
 		if( !empty( $product ) )
 			$this->db->where( array( 'id' => $product ) );
 		
 		$this->db->limit(1);
-		
-		
+
 		$query = $this->db->get( 'products' );
 		
 		$options = '<option value="">Seleccione</option>';	
-		
-		if ($query->num_rows() == 0) return $options;
-		
+		$result_array = array();
+
+		if ($query->num_rows() == 0) {
+			if ($as_string)
+				return $options;
+			return $result_array;
+		}
+
 		$period = array();
-		
 		foreach ($query->result() as $row)
-			
 			$period[] = $row->period;
-		
-		
-		if( empty( $period[0] ) )return $options;
-		
-		
+
+		if ( empty( $period[0] ) ) {
+			if ($as_string)
+				return $options;
+			return $result_array;
+		}
+
 		$explode = explode( '-', $period[0] );	
-				
-						
-		
 		if( is_array( $explode ) and isset( $explode[1] ) ){
-			
-			for( $i = (int)$explode[0]; $i <= (int) $explode[1]; $i++ )
-				$options .= '<option value="'.$i.'">'.$i.'</option>';	
-		
+			for( $i = (int)$explode[0]; $i <= (int) $explode[1]; $i++ ) {
+				$options .= '<option value="'.$i.'">'.$i.'</option>';
+				$result_array[$i] = $i;
+			}
 		}else{
-			
 			$explode = explode( ',', $period[0] );	
-				
-				foreach( $explode as $value )
-					$options .= '<option value="'.$value.'">'.$value.'</option>';	
+			foreach( $explode as $value ) {
+				$options .= '<option value="'.$value.'">'.$value.'</option>';
+				$result_array[$value] = $value;
+			}
 		}	
-		
-		
-		
-		
-		
-			
 		//print_r( $period );
-		//exit;	
-			
-		
-		return $options;
-		
-		
-		
-		
+		//exit;
+		if ($as_string)
+			return $options;
+		return $result_array;
 	}
 
 /**
@@ -1258,9 +1254,15 @@ class Work_order extends CI_Model{
 		return $payment;
 		
 	}
+/**
+ *	Payments Intervals as array
+ **/
+	public function getPaymentIntervals() {
+		return $this->getPaymentMethods();
+	}
 
 /**
- *	Payments Intervals
+ *	Payments Intervals as string
  **/
 	public function getPaymentIntervalOptions(){
 				
@@ -1281,7 +1283,7 @@ class Work_order extends CI_Model{
 	}
 
 /**
- *	Payments Methods Conducto (payment method)
+ *	Payments Methods Conducto (payment method) as array 
  **/
 	public function getPaymentMethodsConducto(){
 				
@@ -1306,7 +1308,9 @@ class Work_order extends CI_Model{
 		return $payment;
 		
 	}
-	
+/**
+ *	Payments Methods Conducto (payment method) as string 
+ **/	
 	public function getPaymentMethodsConductoOptions(){
 				
 		$query = $this->db->get( 'payment_methods' );	
@@ -1723,8 +1727,37 @@ class Work_order extends CI_Model{
         $result['director'] = $query_later->result();
         return $result;
     }
-  
-  
-  
+
+// Determine if an OT is editable
+
+	public function is_editable( $product_group_id, $tramite ) {
+
+		$result = FALSE;
+		return ((($product_group_id == 1) && ($tramite = 47)) // "Vida" and "NUEVO NEGOCIO"
+					||
+					(($product_group_id == 2) && ($tramite = 90))); // "GMM" and "NUEVO NEGOCIO"
+
+		return $result;
+	}
+
+// Generic row retrieval
+
+	public function generic_get( $table = null, $where = null, $limit = null, $offset = 0 ) {
+		if ( $table == null )
+			return FALSE;
+        $this->db->select('*')->from($table);
+
+		$where = is_array($where) ? $where : array();
+		foreach ($where as $key => $value)
+			$this->db->where($key, $value);
+
+		//limit
+		if ($limit)	    
+			$this->db->limit($limit, $offset);
+
+		$q = $this->db->get();
+
+		return ($q->num_rows() > 0) ? $q->result() : FALSE;		
+	}
 }
 ?>

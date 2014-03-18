@@ -1423,7 +1423,7 @@ implode(', ', $ramo_tramite_types) . '
 		
 		
 		// Set false message		
-			$this->session->set_flashdata( 'message', array( 
+/*			$this->session->set_flashdata( 'message', array( 
 				
 				'type' => false,	
 				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Editar", Informe a su administrador para que le otorge los permisos necesarios.'
@@ -1432,7 +1432,7 @@ implode(', ', $ramo_tramite_types) . '
 			
 			
 			redirect( 'ot', 'refresh' );
-		
+*/		
 		
 		
 		// Check access teh user for create
@@ -2652,14 +2652,157 @@ implode(', ', $ramo_tramite_types) . '
 		if( is_file( 'proages_report.csv' ) )
 			unlink( 'proages_report.csv' );		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
+// Update OT	
+	public function update_poliza( $id = null ){
+
+		$message = array();
+		// Check access to the function
+		if( $this->access_update == false ){
+
+			$message = array(
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Editar", Informe a su administrador para que le otorge los permisos necesarios.'
+			);
+		}
+		$this->load->model('work_order');   
+		$ot = $this->work_order->getWorkOrderById(  $id );
+
+		// Check if OT exists
+		if( $ot === FALSE ){
+			$message = array(
+				'type' => false,	
+				'message' => 'No existe esta orden de trabajo.'
+			);	
+		} else {
+		// Check if OT is editable
+			if (! $this->work_order->is_editable( $ot[0]['product_group_id'], $ot[0]['parent_type_name']['id'] ) )
+				$message = array(
+					'type' => false,	
+					'message' => 'No puede editar esta orden de trabajo.'
+				);
+		}
+
+		if( !isset($message['type']) && !empty( $_POST ) ){
+
+			$this->form_validation->set_rules('prima', ' Prima anual', 'trim|required|decimal');
+			$this->form_validation->set_rules('payment_interval_id', ' Forma de pago', 'trim|required|is_natural_no_zero|less_than[5]');
+ 
+			// Run Validation
+			if ( $this->form_validation->run() == TRUE ){
+
+				$field_values = array(
+					'prima' => $this->input->post( 'prima' ),
+					'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
+				);
+
+				if ( $this->work_order->update( 'policies', $ot[0]['policy_id'], $field_values) )
+					$message = array(
+						'type' => true,	
+						'message' => 'Se guardo el registro correctamente.'
+					);	
+				else
+					$message = array(
+						'type' => false,	
+						'message' => 'No se pudo guardar el registro (ocurrio un error en la base de datos). Pongase en contacto con el desarrollador.'
+					);
+			}
+		}
+
+		if ( !isset($message['type']) ) {
+		// Get Agents
+			$agents = $this->user->getAgents( FALSE );
+
+		// Tramite types
+		// (depends on ramo : see $this->work_order->getTypeTramite( $ramo ))
+			$tramite_types = $this->work_order->generic_get( 'work_order_types',
+				array( 'patent_id' => $ot[0]['product_group_id'], 'duration' => 0 ) );
+
+		// Subtypes
+			$sub_types = $this->work_order->generic_get( 'work_order_types',
+				array( 'patent_id' =>$ot[0]['parent_type_name']['id'], 'duration !=' => 0 ) );
+
+		// Products by Group
+			$products_by_group = $this->work_order->getProducts( $ot[0]['product_group_id'] );
+
+		// Plazo (period) (options are already in $products_array[]
+			$periods = $this->work_order->getPeriod( $ot[0]['policy'][0]['products'][0]['id'], FALSE );
+
+		// Get Currencies
+			$currency_array = array();
+			$currencies = $this->work_order->getCurrency();
+			if ($currencies) {
+				foreach ($currencies as $value)
+					$currency_array[ $value['id'] ] = $value['name'];
+			}
+
+		// Get Payment modes
+			$payment_conduct_array = array();
+			$payment_conducts = $this->work_order->getPaymentMethodsConducto();
+			if ($payment_conducts ) {
+				foreach ($payment_conducts as $value)
+					$payment_conduct_array[ $value['id'] ] = $value['name'];
+			}
+
+		// Get Payment intervals
+			$payment_interval_array = array();
+			$payment_intervals = $this->work_order->getPaymentIntervals();
+			if ($payment_intervals) {
+				foreach ($payment_intervals as $value)
+					$payment_interval_array[ $value['id'] ] = $value['name'];
+			}
+		}
+		$add_js = '
+<script type="text/javascript">
+	$("#prima").on("change keyup", function(event) {
+		if ( event.target.validity.valid ) {
+			$("#prima-error").hide();
+		} else {
+			$("#prima-error").show();
+		}
+	});
+	$(":input[readonly=\'readonly\']").parents(".control-group").hide();	
+	$("#view-details").bind( "click", function(){
+		$(":input[readonly=\'readonly\']").parents(".control-group").toggle();
+		return false;
+	});
+</script>
+';
+		// Config view
+		$this->view = array(
+				
+		  'title' => 'Editar OT',
+		    // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'css' => array(
+		  ),
+		  'scripts' =>  array(
+			  '<script src="'.base_url().'scripts/config.js"></script>',
+			  $add_js
+		  ),
+		  'content' => 'ot/update_poliza', // View to load
+		  'message' => $message,
+	 	  'data' => $ot[0]		  
+		);
+		if ( !isset($message['type'] ))
+			$this->view = array_merge($this->view, 
+				array(
+					'agents' => $agents,
+					'tramite_types' => $tramite_types,
+					'sub_types' => $sub_types,
+					'products_by_group' => $products_by_group,
+					'periods' => $periods,
+					'currencies' => $currency_array,
+					'payment_conducts' => $payment_conduct_array,
+					'payment_intervals' => $payment_interval_array
+				)
+			); 
+
+		// Render view 
+		$this->load->view( 'index', $this->view );
+	}
 	
 /* End of file ot.php */
 /* Location: ./application/controllers/ot.php */

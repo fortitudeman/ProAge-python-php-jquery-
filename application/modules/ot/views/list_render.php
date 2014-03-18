@@ -21,9 +21,13 @@
 				$new = false;
 											
 				if( $value['parent_type_name']['name'] == 'NUEVO NEGOCIO' )
-				
 					$new = true;
-				$show_menu = ( ($value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 8 and $value['work_order_status_id'] != 4 and $value['work_order_status_id'] != 7) or ($value['work_order_status_id'] == 7 and $new == true) );
+				$show_menu = ( ($value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 8 and $value['work_order_status_id'] != 4 and $value['work_order_status_id'] != 7)
+					or 
+					($value['work_order_status_id'] == 7 and $new == true)
+					or
+					($value['is_editable'])
+					);
 				?>
 				<tr class="data-row-class" id="data-row-<?php echo $value['id'] ?>">
                 	<td class="center"><?php 
@@ -79,10 +83,20 @@
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')">Marcar como aceptada</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
 						if( $value['work_order_status_id'] ==  7 and $new == true)
-								echo '<a href="javascript:void(0)" onclick="setPay(\''.$value['id'].'\')">Marcar como pagada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';	
+							echo '<a href="javascript:void(0)" onclick="setPay(\''.$value['id'].'\')">Marcar como pagada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
+						if ( $value['is_editable'] )
+							echo anchor_popup('ot/update_poliza/' . $value['id'], 'Editar', array(
+								'width'      => '800',
+								'height'     => '600',
+								'scrollbars' => 'yes',
+								'status'     => 'yes',
+								'resizable'  => 'yes',
+								'screenx'    => '0',
+								'screeny'    => '0')) . '&nbsp;&nbsp;|&nbsp;&nbsp;';
 					}
 					if( $this->access_delete == true )
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')">Cancelar</a>&nbsp;&nbsp;';
+
 					if( $value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 7 and $value['work_order_status_id'] != 8 )
 					echo $scrips;
 					?>

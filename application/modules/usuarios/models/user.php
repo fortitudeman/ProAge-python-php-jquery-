@@ -1572,7 +1572,7 @@ class User extends CI_Model{
 	
 
 // Get selects Agents 	
-	public function getAgents(){
+	public function getAgents( $as_string = TRUE ){
 		
 		/*
 			SELECT agents.id, users.name FROM agents
@@ -1584,9 +1584,12 @@ class User extends CI_Model{
 		//$this->db->order_by( 'users.company_name', 'asc' );
 		
 		$query = $this->db->get();
-		
-		$options = '<option value="">Seleccione</option>';
-		
+
+		if ($as_string)
+			$options = '<option value="">Seleccione</option>';
+		else
+			$options = array();
+
 		if ($query->num_rows() == 0) return $options;
 		
 		$agents = array();
@@ -1603,13 +1606,15 @@ class User extends CI_Model{
 			
 			
 		}
-				
-		 asort($agents);
-				 	
-		 foreach( $agents as $value )
-		
+
+		asort($agents);
+		if ( $as_string ) {
+			foreach( $agents as $value )
 				$options .= '<option value="'.$value['id'].'">'.$value['name'].'</option>';
-		
+		} else {
+			foreach( $agents as $value )
+				$options[$value['id']]= $value['name'];
+		}
 		return $options;
 		
 	}
