@@ -188,7 +188,7 @@ $display[ $data['product_group_id'] ] = '';
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Prima anual</label>
                     <div class="controls">
-                      <input style="height: 1.7em" type="number" pattern="[0-9]+([\.][0-9]+)?" value="<?php echo set_value('prima', $data['policy'][0]['prima']); ?>" class="input-xlarge focused required" id="prima" name="prima" />
+                      <input style="height: 1.7em" type="number" pattern="[0-9]+([\.][0-9]+)?" step="0.01" value="<?php echo set_value('prima', $data['policy'][0]['prima']); ?>" class="input-xlarge focused required" id="prima" name="prima" />
                       <span id="prima-error" style="display: none">Campo invalido</span>
                     </div>
                   </div>

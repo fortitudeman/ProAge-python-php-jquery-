@@ -90,4 +90,20 @@ class MY_Form_validation extends CI_Form_validation{
             $this->set_message('src_is_not_array_index', 'El campo %s no tiene tener un valor válido');
         return $result;
     }
+    // --------------------------------------------------------------------
+    /**
+     * Validates is decimal or integer
+     *
+     * @access   public
+     * @param    string
+     * @param    string
+     * @return   boolean
+     */
+	public function decimal_or_integer($str)
+	{
+        $result = $this->decimal($str) || $this->integer($str);
+        if (!$result)
+            $this->set_message('decimal_or_integer', 'El campo %s debe contener un número decimal o entero.');
+        return $result;
+	}
 }
