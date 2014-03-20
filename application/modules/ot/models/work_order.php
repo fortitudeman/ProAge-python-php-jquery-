@@ -598,7 +598,7 @@ class Work_order extends CI_Model{
 				'duration' =>  $row->duration,
 				'last_updated' =>  $row->last_updated,
 				'date' =>  $row->date,
-				'is_editable' => $this->is_editable( $row->product_group_id, $type_tramite )
+				'is_editable' => $this->is_editable( $row->product_group_id, $type_tramite, $row->work_order_status_id )
 		    );
 		}
 		return $ot;
@@ -641,7 +641,8 @@ class Work_order extends CI_Model{
 				'group_name' => $row->group_name,
 				'parent_type_name' => $this->getTypeTramiteId( $type_tramite ),
 				'type_id' => $row->work_order_type_id,
-				'type_name' => $row->type_name,				
+				'type_name' => $row->type_name,
+				'status_id' => $row->work_order_status_id,
 		    	'status_name' =>  $row->status_name,
 				'creation_date' =>  $row->creation_date,
 				'comments' => $row->comments,
@@ -1730,14 +1731,14 @@ class Work_order extends CI_Model{
 
 // Determine if an OT is editable
 
-	public function is_editable( $product_group_id, $tramite ) {
+	public function is_editable( $product_group_id, $tramite, $ot_status ) {
 
-		$result = FALSE;
-		return ((($product_group_id == 1) && ($tramite = 47)) // "Vida" and "NUEVO NEGOCIO"
-					||
-					(($product_group_id == 2) && ($tramite = 90))); // "GMM" and "NUEVO NEGOCIO"
-
-		return $result;
+		return ($ot_status != 4) &&						// OT is editable if not already paid
+			(												// AND:
+			(($product_group_id == 1) && ($tramite == 47)) 	// "Vida" and "NUEVO NEGOCIO" or ...
+				||
+			(($product_group_id == 2) && ($tramite == 90))  // "GMM" and "NUEVO NEGOCIO"
+			);
 	}
 
 // Generic row retrieval

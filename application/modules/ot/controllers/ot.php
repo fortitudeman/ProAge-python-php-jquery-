@@ -2678,7 +2678,8 @@ implode(', ', $ramo_tramite_types) . '
 		}
 
 		// Check if OT is editable
-		if (! $this->work_order->is_editable( $ot[0]['product_group_id'], $ot[0]['parent_type_name']['id'] ) ) {
+		if (! $this->work_order->is_editable( $ot[0]['product_group_id'],
+			$ot[0]['parent_type_name']['id'], $ot[0]['status_id'] ) ) {
 
 			$this->session->set_flashdata( 'message', array(
 				'type' => false,	
