@@ -2286,13 +2286,16 @@ implode(', ', $ramo_tramite_types) . '
 		  ));
             
             
-            $results = array();  
+            $results = array();
+			$row_result = array_merge($data, array('access_update' => $this->access_update));
+			$data['values'] = array();
             foreach($work_order_ids as $work_order_id)
             {
-                $results[] = $this->work_order->pop_up_data($work_order_id);                
+				$row_result['value'] = $this->work_order->pop_up_data($work_order_id);
+				$data['values'][$work_order_id]['main'] = $this->load->view('popup_report_main_row', $row_result, TRUE);
+				$data['values'][$work_order_id]['menu'] = $this->load->view('popup_report_menu_row', $row_result, TRUE);
             }
-            $data['values'] = $results;
-            $this->load->view('popup_report',$data);	
+            $this->load->view('popup_report', $data);	
 	}
 
 // Popup pertaining to payments
@@ -2806,7 +2809,45 @@ implode(', ', $ramo_tramite_types) . '
 		// Render view 
 		$this->load->view( 'index', $this->view );
 	}
-	
+
+// mark ntu
+	public function mark_ntu(){
+
+		if ( !$this->input->is_ajax_request() || 
+			!$this->access_update ){
+			echo json_encode('-1');
+			exit;
+		}
+		$result = json_encode(0);
+		$order_id = $this->input->post('order_id');
+		$gmm = $this->input->post('gmm');
+		$is_poliza = $this->input->post('is_poliza');
+		if (($order_id !== FALSE) && ($gmm !== FALSE) && ($is_poliza !== FALSE))
+		{
+			$order_id = (int)$order_id;
+
+			$this->load->model( 'work_order' );
+			$work_order = array(				
+				'work_order_status_id' => 10
+			);
+
+			if ( $this->work_order->update( 'work_order', $order_id, $work_order ) &&
+				($this->work_order->generic_get( 'work_order', array('id' => $order_id), 1) !== FALSE)) {
+
+				$row_result = array(
+					'is_poliza' => $is_poliza,
+					'gmm' => $gmm,
+					'access_update' => $this->access_update);
+				$row_result['value'] = $this->work_order->pop_up_data($order_id);
+				$data['main'] = $this->load->view('popup_report_main_row', $row_result, TRUE);
+				$data['menu'] = $this->load->view('popup_report_menu_row', $row_result, TRUE);
+				$result = json_encode($data);
+			}
+		}
+		echo $result;
+		exit;
+	}
+
 /* End of file ot.php */
 /* Location: ./application/controllers/ot.php */
 }

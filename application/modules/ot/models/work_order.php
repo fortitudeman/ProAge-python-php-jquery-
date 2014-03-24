@@ -472,6 +472,9 @@ class Work_order extends CI_Model{
 			case 'terminada':
 				$this->db->where_in('work_order.work_order_status_id', array('7', '6'));
 				break;
+			case 'NTU':
+				$this->db->where( 'work_order.work_order_status_id', 10 );
+				break;
 			default:
 				break;
 		}
@@ -1699,7 +1702,7 @@ class Work_order extends CI_Model{
   
   function pop_up_data($work_order_id)
     {
-        $this->db->select('*,work_order.id AS work_order_id,agent_user.email AS agent_user_email,policies.uid AS policies_uid,policies.name AS policies_name,products.name AS products_name,policies.period AS policies_period,work_order_status.name AS work_order_status_name,payment_methods.name AS payment_methods_name,currencies.name AS currencies_name,work_order.uid AS work_order_uid,payment_intervals.name AS payment_intervals_name');
+        $this->db->select('*,work_order.id AS work_order_id,agent_user.email AS agent_user_email,policies.uid AS policies_uid,policies.name AS policies_name,products.name AS products_name,policies.period AS policies_period,work_order_status.name AS work_order_status_name,payment_methods.name AS payment_methods_name,currencies.name AS currencies_name,work_order.uid AS work_order_uid,payment_intervals.name AS payment_intervals_name, work_order_types.patent_id AS patent_id');
         //$this->db->select('*');
         $this->db->from('work_order');
         $this->db->where('work_order.id',$work_order_id); 
@@ -1719,6 +1722,12 @@ class Work_order extends CI_Model{
         //$query = $this->db->get_where('work_order',array('work_order.id'=>$work_order_id));
         $query = $this->db->get();
         $result['general'] = $query->result();
+		foreach ($result['general'] as $key => $value) {
+			$result['general'][$key]->is_ntuable = $this->is_ntuable(
+				$value->product_group_id,
+				$value->patent_id,
+				$value->work_order_status_id);
+		}
         
         $this->db->select('email,name');
         $this->db->from('users_vs_user_roles');
@@ -1740,7 +1749,17 @@ class Work_order extends CI_Model{
 			(($product_group_id == 2) && ($tramite == 90))  // "GMM" and "NUEVO NEGOCIO"
 			);
 	}
+// Determine if an OT is "NTU-able"
 
+	public function is_ntuable( $product_group_id, $tramite, $ot_status ) {
+
+		return ($ot_status == 7) &&						// OT is editable if status "aceptado"
+			(												// AND:
+			(($product_group_id == 1) && ($tramite == 47)) 	// "Vida" and "NUEVO NEGOCIO" or ...
+				||
+			(($product_group_id == 2) && ($tramite == 90))  // "GMM" and "NUEVO NEGOCIO"
+			);
+	}
 // Generic row retrieval
 
 	public function generic_get( $table = null, $where = null, $limit = null, $offset = 0 ) {

@@ -28,6 +28,7 @@
 					or
 					($value['is_editable'])
 					);
+				$show_menu =  ($value['work_order_status_id'] == 10) ? FALSE : $show_menu;
 				?>
 				<tr class="data-row-class" id="data-row-<?php echo $value['id'] ?>">
                 	<td class="center"><?php 
@@ -73,6 +74,7 @@
 
                     <?php
 					$scrips='';
+
 					if( $this->access_activate == true and $value['work_order_status_id'] ==  9 )
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp; |&nbsp;&nbsp;';
 					else if( $this->access_activate == true and $value['work_order_status_id'] ==  6 )
