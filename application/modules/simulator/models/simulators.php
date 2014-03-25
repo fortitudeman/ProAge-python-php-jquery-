@@ -373,6 +373,7 @@ class Simulators extends CI_Model{
 		$this->db->where( 'YEAR(payment_date) = '. $year );
 		$this->db->where( 'MONTH(payment_date) = '. $month );
 		$this->db->where( 'agent_id', $agent );
+                $this->db->where( 'year_prime', 1 );
 		$this->db->where( 'product_group', $product_group_id );
 		
 				
@@ -385,7 +386,7 @@ class Simulators extends CI_Model{
 		$prima = 0;
 		
 		// Getting data
-		foreach ($query->result() as $row){
+		//foreach ($query->result() as $row){
 		
 			
 			/*
@@ -403,12 +404,12 @@ class Simulators extends CI_Model{
 			
 			foreach ($query->result() as $rowprima)
 				
-				$prima = (float)$rowprima->amount;
+				$prima = $prima + (float)$rowprima->amount;
 			
 			
 		
 		
-		}
+		//}
 				
 		return $prima;		
 	}	
