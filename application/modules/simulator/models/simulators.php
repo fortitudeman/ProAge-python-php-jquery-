@@ -324,16 +324,14 @@ class Simulators extends CI_Model{
 		AND work_order_status_id=7
 		AND product_group_id=1;
 		*/
-				
-		$this->db->select( 'COUNT(work_order.id) AS count ' );
-		$this->db->from( 'work_order' );
-		$this->db->join( 'policies_vs_users', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->where( 'YEAR(creation_date) = '. $year );
-		$this->db->where( 'MONTH(creation_date) = '. $month );
-		$this->db->where( 'policies_vs_users.user_id', $agent );
-		$this->db->where( 'work_order_status_id', 4 );
-		$this->db->where( 'product_group_id', $product_group_id );
-		
+						
+		$this->db->select( 'COUNT(payments.business) AS count ' );
+		$this->db->from( 'payments' );
+		$this->db->where( 'YEAR(payment_date) = '. $year );
+		$this->db->where( 'MONTH(payment_date) = '. $month );
+		$this->db->where( 'agent_id', $agent );
+		$this->db->where( 'business', 1 );
+		$this->db->where( 'product_group', $product_group_id );
 				
 		$query = $this->db->get();
 
@@ -370,14 +368,12 @@ class Simulators extends CI_Model{
 		AND product_group_id=1;
 		*/
 				
-		$this->db->select( 'work_order.policy_id' );
-		$this->db->from( 'work_order' );
-		$this->db->join( 'policies_vs_users', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->where( 'YEAR(creation_date) = '. $year );
-		$this->db->where( 'MONTH(creation_date) = '. $month );
-		$this->db->where( 'policies_vs_users.user_id', $agent );
-		$this->db->where( 'work_order_status_id', 4 );
-		$this->db->where( 'product_group_id', $product_group_id );
+		$this->db->select( );
+		$this->db->from( 'payments' );
+		$this->db->where( 'YEAR(payment_date) = '. $year );
+		$this->db->where( 'MONTH(payment_date) = '. $month );
+		$this->db->where( 'agent_id', $agent );
+		$this->db->where( 'product_group', $product_group_id );
 		
 				
 		$query = $this->db->get();
@@ -397,17 +393,17 @@ class Simulators extends CI_Model{
 			FROM `policies` 
 			WHERE `id` =policy_id
 			*/
-			$this->db->select( 'prima' );
+			/*$this->db->select( 'prima' );
 			$this->db->from( 'policies' );
 			$this->db->where( 'id', $row->policy_id );
 			
-			$queryprima = $this->db->get();
+			$queryprima = $this->db->get();*/
 			
-			if ($queryprima->num_rows() == 0) return 0;
+			if ($query->num_rows() == 0) return 0;
 			
-			foreach ($queryprima->result() as $rowprima)
+			foreach ($query->result() as $rowprima)
 				
-				$prima = (float)$rowprima->prima;
+				$prima = (float)$rowprima->amount;
 			
 			
 		
