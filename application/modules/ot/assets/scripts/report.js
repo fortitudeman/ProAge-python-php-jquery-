@@ -267,7 +267,9 @@ $( document ).ready(function() {
 							if ((response.main !== undefined) && (response.menu !== undefined)) {
 								$('#tr_' + allParams[1]).html(response.main);
 								$('#hide_' + allParams[1]).html(response.menu);
-									alert ('OT marcada como NTU correctamente.');
+								alert ('OT marcada como NTU correctamente. La página web debe ser actualizada para reflejar los cambios.');
+						//  refresh the whole page to reflect the change
+							    window.location.reload();
 							} else {
 								alert ('Hay un error en la respuesta del sitio web, consulte a su administrador.');
 							}
