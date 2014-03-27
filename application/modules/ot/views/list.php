@@ -102,7 +102,7 @@ $agents = str_replace('<option value="">Seleccione</option>', '<option value="">
 					    <th>Período :<br />
                           <select class="filter-field" id="periodo" name="periodo">
                             <option value="1">Mes</option>
-                            <option value="2" class="set_periodo">Trimestre</option>
+                            <option value="2" class="set_periodo" selected="selected">Trimestre</option>
                             <option value="3">Año</option>
                           </select>
 					    </th>
@@ -138,7 +138,7 @@ $agents = str_replace('<option value="">Seleccione</option>', '<option value="">
                             <option value="tramite">En trámite</option>
                             <option value="terminada">Terminadas</option>
                             <option value="canceladas">Canceladas</option>
-                            <option value="NTU">NTU</option>
+                            <option value="NTU">Póliza NTU</option>
                             <option value="todas" selected="selected">Todas</option>
                           </select>
 					    </th>

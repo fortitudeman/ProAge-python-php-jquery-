@@ -245,7 +245,7 @@ $( document ).ready(function() {
 			return false;
 		}
 // allParams[1] contains OT id, allParams[2] contains something called 'gmm', allParams[2] contains something called 'is_poliza'
-		if ( confirm( "¿Esta seguro que quiere marcar la OT como NTU?" ) ) {
+		if ( confirm( "¿Esta seguro que quiere marcar la póliza como NTU?" ) ) {
 			$.ajax({
 				url: '<?php echo site_url('ot/mark_ntu')?>',
 				type: 'POST',
@@ -257,17 +257,17 @@ $( document ).ready(function() {
 				success: function(response){
 					switch (response) {
 						case '-1':
-							alert ('La OT no puede ser marcada como NTU. Informe a su administrador.');
+							alert ('No se pudo marcar la póliza como NTU. Informe a su administrador.');
 							break;
 						case '0':
-							alert ('Ocurrio un error, la OT no puede ser guardada, consulte a su administrador.');
+							alert ('Ocurrio un error, no se pudo guardar la póliza, consulte a su administrador.');
 							break;
 						default:
 						//  refresh the view of the OT modified
 							if ((response.main !== undefined) && (response.menu !== undefined)) {
 								$('#tr_' + allParams[1]).html(response.main);
 								$('#hide_' + allParams[1]).html(response.menu);
-								alert ('OT marcada como NTU correctamente. La página web debe ser actualizada para reflejar los cambios.');
+								alert ('Se marco la póliza como NTU correctamente. La página web debe ser actualizada para reflejar los cambios.');
 						//  refresh the whole page to reflect the change
 							    window.location.reload();
 							} else {

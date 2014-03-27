@@ -2184,7 +2184,7 @@ implode(', ', $ramo_tramite_types) . '
                     $data = $this->user->getReport($_POST );
                 }
 		else
-                    $data = $this->user->getReport( array('query' => array('ramo' => 1,'periodo' => 1 ) ) );
+                    $data = $this->user->getReport( array('query' => array('ramo' => 1,'periodo' => 2 ) ) );
 		
 		$this->load->helper( 'ot' );
 		
