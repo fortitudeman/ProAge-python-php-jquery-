@@ -2966,9 +2966,81 @@ class User extends CI_Model{
 			return $result;
 		}
 	}
+/*
+ Get the prima for a given policy while taking into account
+* the extra payment that depends on payment interval and currency
+* the period selected in the filter:
+    1: 1 month prima
+	2: 3 month prima if ramo is Vida (1)
+	   4 month prima if ramo is not Vida
+	3: 12 months prima
+*/
+	public function get_adjusted_prima($policy_id, $ramo = 1, $period = 2)
+	{
+		$result = null;
 
-        public function getTramite($user_id = null, $filter = array())
-        {
+// Get the infos regarding the policy (anual prima, payment interval and the extra payment that depends on currency		
+		$this->db->select('`policies`.`prima`, `policies`.`payment_interval_id`, `extra_payment`.`extra_percentage`', FALSE);
+		$this->db->from(array('policies', 'products', 'extra_payment'));
+		$this->db->where("`policies`.`id` = '$policy_id'
+AND
+ `products`.`id`=`policies`.`product_id`
+AND
+`extra_payment`.`x_product_platform` = `products`.`platform_id`
+AND
+`extra_payment`.`x_currency` = `policies`.`currency_id`
+AND
+`extra_payment`.`x_payment_interval` = `policies`.`payment_interval_id`", NULL, FALSE);
+		$query_adjusted_prima = $this->db->get();
+		if ($query_adjusted_prima->num_rows() > 0)
+		{
+			$row = $query_adjusted_prima->row();
+			$adjusted_year_prima = $row->prima * (1 + $row->extra_percentage);
+			if (($period == 3) || ($row->payment_interval_id == 4))
+				// if the selected period is the year or the payment is anual,
+				// the result is the adjusted anual prima
+				return $adjusted_year_prima;
+
+// compute the number of months depending on ramo and period
+			switch ($period)
+			{
+				case 1: // for 1 month
+					$period_number_months = 1;
+					break;
+				case 2: // for 3 months if ramo is Vida, else, for 4 months
+					$period_number_months = ($ramo == 1) ? 3 : 4;
+					break;
+				default:
+					return $result;
+					break;
+			}
+
+			switch ($row->payment_interval_id)
+			{
+				// if the selected period is not the year and the payment is not anual,
+				// the result depends on the number of months of period selected
+
+				case 1: // mensual payment
+					$result = $period_number_months * $adjusted_year_prima / 12;
+					break;
+				case 2: // trimestrial payment
+					// if the period has more than 3 months, consider that payment for the period is that for 6 months
+					// otherwise, consider that payment for the period is that for 3 months
+					$result = ( $period_number_months > 3) ? ($adjusted_year_prima / 2) : ($adjusted_year_prima / 4);
+					break;
+				case 3: // semestrial payment
+					// consider that payment for the period is that for 6 months
+					$result = $adjusted_year_prima / 2;
+					break;
+				default:
+					break;
+			}
+		}
+		return $result;
+	}
+
+	public function getTramite($user_id = null, $filter = array())
+	{
 		if( empty( $user_id ) ) return 0;
 		
                 /*
@@ -2999,8 +3071,7 @@ class User extends CI_Model{
 		);
 		
 		*/
-         
-                
+
 		$this->db->select('DISTINCT( policies_vs_users.policy_id ) AS policy_id,work_order.id AS work_order_id');
 		$this->db->from('work_order_types' );
 		$this->db->join('work_order','work_order.work_order_type_id=work_order_types.id');
@@ -3008,104 +3079,88 @@ class User extends CI_Model{
 		$this->db->join('policies_vs_users', 'policies_vs_users.policy_id=policies.id');
 		$this->db->join( 'agents','agents.id=policies_vs_users.user_id');
 		$this->db->join( 'users','users.id=agents.user_id');
-                
+
 		$this->db->where("( work_order.work_order_status_id=5 OR  work_order.work_order_status_id=9)");
-                
 		$this->db->where("( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )");
-                
 		$this->db->where( 'policies_vs_users.user_id', $user_id );
-		
-                
+
+		$ramo = 1;
+		$period = 2;
 		if( !empty( $filter ) )
-                    {
+		{
 			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) )
-                        {			
-                            $this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
+			{			
+				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] );
+				$ramo = $filter['query']['ramo'];
 			}
-			
+
 			/*
 			<option value="1">Mes</option>
 			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
 			<option value="3">Año</option>
 			*/	
-			
+
 			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';		
 			$trimestre = $this->trimestre();			
 			$cuatrimetre = $this->cuatrimestre();									
 			$anio = date( 'Y' ).'-01-01';						
-			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo']))
-                        {
-                            if( $filter['query']['periodo'] == 1 )			
-				$this->db->where( 'work_order.creation_date >= ', $mes); 
-                            
-                            if( $filter['query']['periodo'] == 2 )
-			
-				
-				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
-					
+			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'])) {
+
+				$period = $filter['query']['periodo'];
+				if( $filter['query']['periodo'] == 1 )			
+					$this->db->where( 'work_order.creation_date >= ', $mes); 
+
+				if( $filter['query']['periodo'] == 2 )
+					if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
 					if( $cuatrimetre == 1 ){			
 						$begind = date( 'Y' ).'-01-01';	
 						$end = date( 'Y' ).'-04-'.date('d');	
 					}
-					
 					if( $cuatrimetre == 2 ){			
 						$begind = date( 'Y' ).'-04-01';	
 						$end = date( 'Y' ).'-08-'.date('d');	
 					}
-					
 					if( $cuatrimetre == 3 ){			
 						$begind = date( 'Y' ).'-08-01';	
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
-					
 					$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
-				
 				}else{
-					
-					
 					if( $trimestre == 1 ){			
 						$begind = date( 'Y' ).'-01-01';	
 						$end = date( 'Y' ).'-03-'.date('d');	
 					}
-					
 					if( $trimestre == 2 ){			
 						$begind = date( 'Y' ).'-03-01';	
 						$end = date( 'Y' ).'-06-'.date('d');	
 					}
-					
 					if( $trimestre == 3 ){			
 						$begind = date( 'Y' ).'-06-01';	
 						$end = date( 'Y' ).'-09-'.date('d');	
 					}
-					
 					if( $trimestre == 4 ){			
 						$begind = date( 'Y' ).'-09-01';	
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
-					
-						
 					$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
 				}
-			if( $filter['query']['periodo'] == 3 )			
-				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
+				if( $filter['query']['periodo'] == 3 )			
+					$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
 			}
-				
 		}
-		
-		
 		$query = $this->db->get();
-                
+
 		if ($query->num_rows() == 0) return 0;		
-		
-                
+
 		$tramite = array();			
-                $work_order_ids = array();            
+		$work_order_ids = array();            
 		$tramite['count'] = $query->num_rows();		
 		$tramite['prima'] = 0;
-                
-                
-                foreach ($query->result() as $row)
-                {	
+		$tramite['adjusted_prima'] = 0;
+		
+		foreach ($query->result() as $row)
+		{
+			$tramite['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period);
 			/*
 			SELECT SUM( prima )
 			FROM policies
@@ -3113,36 +3168,31 @@ class User extends CI_Model{
 			*/			
 			$this->db->select_sum( 'prima' );
 			$this->db->from( 'policies' );
-			$this->db->where( array( 'id' => $row->policy_id ) );					
-			$queryprima = $this->db->get(); 			
+			$this->db->where( array( 'id' => $row->policy_id ) );
+
+			$queryprima = $this->db->get();
 			$prima = 0;
 			
 			if ($queryprima->num_rows() == 0)
-                        {
-                            $prima = 0;											
+			{
+				$prima = 0;											
 			}
-                        else
-                        {	
-                            foreach ($queryprima->result() as $rowprima)
-                            {
-                                    if(!empty( $rowprima->prima)) 
-                                        $tramite['prima'] = (float)$tramite['prima'] + (float)$rowprima->prima;					
-                            }
+			else
+			{	
+				foreach ($queryprima->result() as $rowprima)
+				{
+					if(!empty( $rowprima->prima)) 
+						$tramite['prima'] = (float)$tramite['prima'] + (float)$rowprima->prima;					
+				}
 			}
-                        $work_order_ids[] = $row->work_order_id;
-                       
+			$work_order_ids[] = $row->work_order_id;
 		}	
-                
-                $tramite['work_order_ids'] = $work_order_ids; 
-                return $tramite;
-        }	
-  
-  
-  
-  
-  
-  public function getAceptadas(  $user_id = null, $filter = array() )
-            {
+		$tramite['work_order_ids'] = $work_order_ids;
+		return $tramite;
+	}	
+
+	public function getAceptadas(  $user_id = null, $filter = array() )
+	{
 		if( empty( $user_id ) ) return 0;
 		/*
 		SELECT DISTINCT( policies_vs_users.policy_id ) AS policy_id
@@ -3166,135 +3216,106 @@ class User extends CI_Model{
 		$this->db->where('work_order.work_order_status_id', '7' );
 		$this->db->where("( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )");
 		$this->db->where( 'policies_vs_users.user_id', $user_id );
-  		
+
+		$ramo = 1;
+		$period = 2;
 		if(!empty($filter))
-                {
+		{
 			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) )
-                        {
-						
-				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
+			{
+				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] );
+				$ramo = $filter['query']['ramo'];
 			}
-			
+
 			/*
 			<option value="1">Mes</option>
 			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
 			<option value="3">Año</option>
 			*/	
-			
 			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
-			
-			
 			$trimestre = $this->trimestre();
-			
 			$cuatrimetre = $this->cuatrimestre();
-									
 			$anio = date( 'Y' ).'-01-01';
-						
 			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
-			
-			
-			if( $filter['query']['periodo'] == 1 )
-			
-				$this->db->where( 'work_order.creation_date >= ', $mes); 
-			
-			
-			
-			if( $filter['query']['periodo'] == 2 )
-			
+
+				$period = $filter['query']['periodo'];
+				if( $filter['query']['periodo'] == 1 )
+					$this->db->where( 'work_order.creation_date >= ', $mes); 
+
+				if( $filter['query']['periodo'] == 2 )
+					if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
+						if( $cuatrimetre == 1 ){			
+							$begind = date( 'Y' ).'-01-01';	
+							$end = date( 'Y' ).'-04-'.date('d');	
+						}
+						if( $cuatrimetre == 2 ){			
+							$begind = date( 'Y' ).'-04-01';	
+							$end = date( 'Y' ).'-08-'.date('d');	
+						}
+						if( $cuatrimetre == 3 ){			
+							$begind = date( 'Y' ).'-08-01';	
+							$end = date( 'Y' ).'-12-'.date('d');	
+						}
+						$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
 				
-				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
-					
-					if( $cuatrimetre == 1 ){			
-						$begind = date( 'Y' ).'-01-01';	
-						$end = date( 'Y' ).'-04-'.date('d');	
+					}else{
+						if( $trimestre == 1 ){			
+							$begind = date( 'Y' ).'-01-01';	
+							$end = date( 'Y' ).'-03-'.date('d');	
+						}
+						if( $trimestre == 2 ){			
+							$begind = date( 'Y' ).'-03-01';	
+							$end = date( 'Y' ).'-06-'.date('d');	
+						}
+						if( $trimestre == 3 ){			
+							$begind = date( 'Y' ).'-06-01';	
+							$end = date( 'Y' ).'-09-'.date('d');	
+						}
+						if( $trimestre == 4 ){			
+							$begind = date( 'Y' ).'-09-01';	
+							$end = date( 'Y' ).'-12-'.date('d');	
+						}
+						$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
 					}
-					
-					if( $cuatrimetre == 2 ){			
-						$begind = date( 'Y' ).'-04-01';	
-						$end = date( 'Y' ).'-08-'.date('d');	
-					}
-					
-					if( $cuatrimetre == 3 ){			
-						$begind = date( 'Y' ).'-08-01';	
-						$end = date( 'Y' ).'-12-'.date('d');	
-					}
-					
-					$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
-				
-				}else{
-					
-					
-					if( $trimestre == 1 ){			
-						$begind = date( 'Y' ).'-01-01';	
-						$end = date( 'Y' ).'-03-'.date('d');	
-					}
-					
-					if( $trimestre == 2 ){			
-						$begind = date( 'Y' ).'-03-01';	
-						$end = date( 'Y' ).'-06-'.date('d');	
-					}
-					
-					if( $trimestre == 3 ){			
-						$begind = date( 'Y' ).'-06-01';	
-						$end = date( 'Y' ).'-09-'.date('d');	
-					}
-					
-					if( $trimestre == 4 ){			
-						$begind = date( 'Y' ).'-09-01';	
-						$end = date( 'Y' ).'-12-'.date('d');	
-					}
-					
-						
-					$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
-				}
-				
-				
-				
-				
-				
-				
-			if( $filter['query']['periodo'] == 3 )
-			
-				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
-			
+				if( $filter['query']['periodo'] == 3 )
+					$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
 			}				
 		}
-		
+
 		$query = $this->db->get(); 
-  		
-		
+
 		if ($query->num_rows() == 0) return 0;			
+
 		$aceptadas = array();	
-                $work_order_ids = array();
-		$aceptadas['prima'] = 0;		
+		$work_order_ids = array();
+		$aceptadas['prima'] = 0;
+		$aceptadas['adjusted_prima'] = 0;		
 		$aceptadas['count']=0;		
 		foreach ($query->result() as $row)
-                {
-                    /*
-                    SELECT SUM( prima )
-                    FROM policies
-                    WHERE id=1*/
-                    $this->db->select_sum( 'prima' );
-                    $this->db->from( 'policies' );
-                    $this->db->where( array( 'id' => $row->policy_id ) );
-                    $querypolicies = $this->db->get(); 
-                    if ($querypolicies->num_rows() > 0)
-                    {
-                        foreach ($querypolicies->result() as $rowprima)
-                        {
-                            $aceptadas['count'] = (int)$aceptadas['count']+1;					
-                            if( !empty( $rowprima->prima ) ) $aceptadas['prima'] = (float)$aceptadas['prima'] + (float)$rowprima->prima;					
-                        }
-                    }
-                    $work_order_ids[] = $row->work_order_id;       
+        {
+			$aceptadas['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period);
+		/*
+		SELECT SUM( prima )
+		FROM policies
+		WHERE id=1*/
+			$this->db->select_sum( 'prima' );
+			$this->db->from( 'policies' );
+			$this->db->where( array( 'id' => $row->policy_id ) );
+			$querypolicies = $this->db->get();
+			if ($querypolicies->num_rows() > 0)
+			{
+				foreach ($querypolicies->result() as $rowprima)
+				{
+					$aceptadas['count'] = (int)$aceptadas['count']+1;					
+					if( !empty( $rowprima->prima ) ) $aceptadas['prima'] = (float)$aceptadas['prima'] + (float)$rowprima->prima;					
+				}
+			}
+			$work_order_ids[] = $row->work_order_id;       
 		}
-                $aceptadas['work_order_ids'] = $work_order_ids; 
+		$aceptadas['work_order_ids'] = $work_order_ids;
 		return $aceptadas;		
-            }
-  
-            
-            
-  
+	}
+
   public function getIniciales( $user_id = null, $filter = array() ){
 	
 	if( empty( $user_id ) ) return 0; 

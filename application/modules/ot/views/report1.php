@@ -1,10 +1,14 @@
+<?php
+$post_data = isset($_POST['query']) ? ',prev_post:'. json_encode($_POST['query']) : '';
+?>
 <script type="text/javascript">
 
     function report_popup(wrk_ord_ids,poliza,gmm)
     {
-       $.fancybox.showLoading();
-        
-        $.post("ot/reporte_popup",{wrk_ord_ids:wrk_ord_ids,is_poliza:poliza,gmm:gmm},function(data)
+		$.fancybox.showLoading();
+
+		$.post("ot/reporte_popup",
+			{wrk_ord_ids:wrk_ord_ids,is_poliza:poliza,gmm:gmm<?php echo $post_data ?>},function(data)
         { 
             if(data)
             {
@@ -69,7 +73,8 @@
 			$total_negocio_pai += $value['negociopai'];		
 		$total_primas_pagadas +=$value['prima'];
 		$total_negocios_tramite +=$value['tramite']['count'];
-		$total_primas_tramite +=  $value['tramite']['prima'];		
+		if (isset($value['tramite']['adjusted_prima']))
+			$total_primas_tramite +=  $value['tramite']['adjusted_prima'];		
 		
 		if(isset($value['aceptadas']['count']))			
 			$negocios_pendientes_pago +=  $value['aceptadas']['count']; 		
@@ -78,14 +83,14 @@
 			
 		$total_negocio_pendiente += $negocios_pendientes_pago;
 		
-		if( isset( $value['aceptadas']['prima'] ) ) 			
-			$primas_pendientes_pago +=  $value['aceptadas']['prima'];		
+		if( isset( $value['aceptadas']['adjusted_prima'] ) ) 			
+			$primas_pendientes_pago +=  $value['aceptadas']['adjusted_prima'];		
 		else			
 			$primas_pendientes_pago += $value['aceptadas'];
 		$total_primas_pendientes += $primas_pendientes_pago;
 		
 		$negocio += (int)($value['negocio']+$value['tramite']['count']+$negocios_pendientes_pago);		
-		$prima += (float)($value['prima']+$value['tramite']['prima']+$primas_pendientes_pago);
+		$prima += (float)($value['prima']+$value['tramite']['adjusted_prima']+$primas_pendientes_pago);
 
 		$total_negocios_proyectados +=$negocio;
 		$total_primas_proyectados +=$prima;          
@@ -118,7 +123,7 @@
                 </td>
                 <td class="celda_roja" style="text-align:right;" >
                     <a class="numeros fancybox" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>
-                        $<?php if( isset( $value['tramite']['prima'] ) ) echo number_format($value['tramite']['prima'],2); else echo number_format ('0',2); ?>
+                        $<?php if( isset( $value['tramite']['adjusted_prima'] ) ) echo number_format($value['tramite']['adjusted_prima'],2); else echo number_format ('0',2); ?>
                     </a>
                 </td>
                 <td class="celda_amarilla" style="text-align:center;">
@@ -128,7 +133,7 @@
                 </td>
                 <td class="celda_amarilla" style="text-align:right;">
                     <a class="numeros fancybox"  <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $tata; ?>")' <?php }?>>
-                        $<?php if( isset( $value['aceptadas']['prima'] ) ) echo number_format($value['aceptadas']['prima'],2); else  echo number_format($value['aceptadas'],2); ?>
+                        $<?php if( isset( $value['aceptadas']['adjusted_prima'] ) ) echo number_format($value['aceptadas']['adjusted_prima'],2); else  echo number_format($value['aceptadas'],2); ?>
                     </a>
                 </td>
                 <td class="celda_verde"><div class="numeros" style="text-align:center;"><?php echo $negocio ?></div></td>

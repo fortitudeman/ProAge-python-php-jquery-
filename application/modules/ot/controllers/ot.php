@@ -882,7 +882,7 @@ implode(', ', $ramo_tramite_types) . '
 				'work_order_status_id' => 6,
 				'work_order_reason_id' => $this->input->post( 'work_order_reason_id' ),
 				'work_order_responsible_id' => $this->input->post( 'work_order_responsible_id' ),
-				'creation_date' => '0000-00-00 00:00:00', // Quitar el tiempo
+//				'creation_date' => '0000-00-00 00:00:00', // Quitar el tiempo
 				'comments' => $this->input->post( 'comments' ),
 				'last_updated' => date( 'd-m-Y H:i:s' )
 			);
@@ -2255,12 +2255,13 @@ implode(', ', $ramo_tramite_types) . '
  *	Reports Popup
  **/	
 	public function reporte_popup()
-        {
-           
+	{
+
             $work_order_ids = $this->input->post('wrk_ord_ids');  
             $data['is_poliza'] = $this->input->post('is_poliza');
             $data['gmm'] = $this->input->post('gmm');
-            $this->load->model('work_order');   
+
+            $this->load->model( array( 'work_order', 'usuarios/user' ) );
            
             $this->view = array(
                 'css' => array(
@@ -2284,18 +2285,38 @@ implode(', ', $ramo_tramite_types) . '
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
                       '<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
 		  ));
-            
-            
-            $results = array();
-			$row_result = array_merge($data, array('access_update' => $this->access_update));
-			$data['values'] = array();
-            foreach($work_order_ids as $work_order_id)
-            {
-				$row_result['value'] = $this->work_order->pop_up_data($work_order_id);
-				$data['values'][$work_order_id]['main'] = $this->load->view('popup_report_main_row', $row_result, TRUE);
-				$data['values'][$work_order_id]['menu'] = $this->load->view('popup_report_menu_row', $row_result, TRUE);
-            }
-            $this->load->view('popup_report', $data);	
+
+		$ramo = 1;
+		$period = 2;
+		$prev_post = $this->input->post('prev_post');
+		if (($prev_post !== FALSE) && is_array($prev_post))
+		{
+			if (isset($prev_post['ramo']))
+				$ramo = (int) $prev_post['ramo'];
+			if (isset($prev_post['periodo']))
+				$period = $prev_post['periodo'];
+		}
+		$results = array();
+		$row_result = array_merge($data, array('access_update' => $this->access_update));
+		$data['values'] = array();
+		foreach($work_order_ids as $work_order_id)
+		{
+			$row_result['value'] = $this->work_order->pop_up_data($work_order_id);
+			$row_result['value']['general'][0]->adjusted_prima = $row_result['value']['general'][0]->prima;
+
+			// For OTs en tramite and pendientes, adjust prima:
+			if (($row_result['value']['general'][0]->work_order_status_id == 5) ||
+				($row_result['value']['general'][0]->work_order_status_id == 9) ||
+				($row_result['value']['general'][0]->work_order_status_id == 7) )
+			{
+				$row_result['value']['general'][0]->adjusted_prima = 
+					$this->user->get_adjusted_prima($row_result['value']['general'][0]->policy_id,
+					$ramo, $period);
+			}
+			$data['values'][$work_order_id]['main'] = $this->load->view('popup_report_main_row', $row_result, TRUE);
+			$data['values'][$work_order_id]['menu'] = $this->load->view('popup_report_menu_row', $row_result, TRUE);
+		}
+		$this->load->view('popup_report', $data);	
 	}
 
 // Popup pertaining to payments

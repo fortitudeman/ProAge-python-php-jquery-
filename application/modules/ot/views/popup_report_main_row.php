@@ -52,7 +52,9 @@
                         
                         <td style="width:90px;"><div><?php echo $value['general'][0]->payment_methods_name;?></div></td>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->currencies_name;?></div></td>
-                        <td style="width:90px;"><div>$<?php echo number_format($value['general'][0]->prima);?></div></td>
+                        <td style="width:90px;">
+						<div>$<?php echo number_format($value['general'][0]->adjusted_prima, 2);?>
+						</div></td>
                         <td><?php if ( $access_update && ($value['general'][0]->is_ntuable) ) : ?>
                           <img class="mark-ntu" id="mark_ntu-<?php echo $value['general'][0]->work_order_id . '-' . $gmm . '-' . $is_poliza ?>" alt="Marcar como NTU" title="Marcar como NTU" src="<?php echo base_url()?>images/small-red-x.png" /><?php endif;?>
 						</td>
