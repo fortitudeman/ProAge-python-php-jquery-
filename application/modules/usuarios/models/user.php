@@ -3145,7 +3145,9 @@ AND
 					$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
 				}
 				if( $filter['query']['periodo'] == 3 )			
-					$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
+					$this->db->where( array(
+						'work_order.creation_date >= ' => $anio,
+						'work_order.creation_date <=' => date( 'Y-m-d' ) .  ' 23:59:59' ) ); 
 			}
 		}
 		$query = $this->db->get();
@@ -3278,8 +3280,9 @@ AND
 						$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
 					}
 				if( $filter['query']['periodo'] == 3 )
-					$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
-			}				
+					$this->db->where( array(
+						'work_order.creation_date >= ' => $anio, 
+						'work_order.creation_date <=' => date( 'Y-m-d' ) .  ' 23:59:59') ); 			}				
 		}
 
 		$query = $this->db->get(); 

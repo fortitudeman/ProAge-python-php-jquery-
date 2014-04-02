@@ -501,7 +501,7 @@ class Work_order extends CI_Model{
 		if ( ( ( $periodo = $this->input->post('periodo') ) !== FALSE ) && 
 			( ( $periodo == 1 ) || (  $periodo == 2 ) || ( $periodo == 3 ) ) )
 		{
-			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01 00:00:00';
+			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';	
 			$trimestre = trimestre();
 			$cuatrimetre = cuatrimestre();
 			$anio = date( 'Y' ).'-01-01';
@@ -526,8 +526,8 @@ class Work_order extends CI_Model{
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
 					$this->db->where( array(
-						'work_order.creation_date >= ' =>  $begind . ' 00:00:00',
-						'work_order.creation_date <=' =>  $end . ' 23:59:59') ); 
+						'work_order.creation_date >= ' =>  $begind,
+						'work_order.creation_date <=' =>  $end) ); 
 				} else
 				{
 					if( $trimestre == 1 )
@@ -551,13 +551,13 @@ class Work_order extends CI_Model{
 						$end = date( 'Y' ).'-12-'.date('d');	
 					}
 					$this->db->where( array(
-						'work_order.creation_date >= ' => $begind . ' 00:00:00',
-						'work_order.creation_date <=' =>  $end . ' 23:59:59' ) ); 
+						'work_order.creation_date >= ' => $begind,
+						'work_order.creation_date <=' =>  $end) ); 
 				}
 
 				if(  $periodo == 3 ) // Year
 					$this->db->where( array(
-						'work_order.creation_date >= ' => $anio . ' 00:00:00', 
+						'work_order.creation_date >= ' => $anio, 
 						'work_order.creation_date <=' => date( 'Y-m-d' ) .  ' 23:59:59') ); 
 		}	
 
