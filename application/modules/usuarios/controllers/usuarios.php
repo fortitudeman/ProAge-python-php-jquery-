@@ -2354,52 +2354,35 @@ class Usuarios extends CI_Controller {
 					}
 																
 				}
-				
-				
-				
-				
-				
-				
-					
-				
+
 				if( in_array( 1, $this->input->post('group') ) ){
-					
-					
-					$this->user->delete( 'agents', 'user_id',  $data[0]['id'] );
-					
-					$agent= array(
-						
-						'user_id'  => $id,
+/////////
+					$agent = array(
 						'connection_date'  => $this->input->post( 'connection_date' ),
-						'license_expired_date'  =>$this->input->post( 'license_expired_date' ),
-						
-					);
-					
-					
-					if( $this->user->create( 'agents', $agent ) == false) $controlSaved = false ;
-					
-					
-					
-					// Saved Agents
-					if( $controlSaved == false ){
-						
+						'license_expired_date'  => $this->input->post( 'license_expired_date' ));
+					if ( isset($data['agents']) && isset($data['agents'][0]) &&
+						isset($data['agents'][0]['id']) )
+					{  // Update existing agent if exists
+						$idAgentSaved = $data['agents'][0]['id'];
+						$controlSaved = $this->user->update('agents', $idAgentSaved, $agent);
+					}
+					else
+					{ // If agent does not exist, create it
+						$agent['user_id'] = $id;
+						$controlSaved = $this->user->create( 'agents', $agent );
+						if ($controlSaved) {
+							$idAgentSaved = $this->user->insert_id();
+						}
+					}
+					if ( $controlSaved == false ){
 						// Set false message		
 						$this->session->set_flashdata( 'message', array( 
-							
 							'type' => false,	
 							'message' => 'No se pudo guardar el registro, agentes ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
-										
 						));												
-						
-						
 						redirect( 'usuarios/update/'.$id, 'refresh' );
-						
 					}
-					
-					
-					$idAgentSaved = $this->user->insert_id();
-					
-																			
+/////////
 					$uids_agens = array();
 				
 					// Added Clave
@@ -2440,7 +2423,7 @@ class Usuarios extends CI_Controller {
 							);
 					
 					
-					$this->user->delete( 'agent_uids', 'agent_id',  $data['agents'][0]['id'] );
+					$this->user->delete( 'agent_uids', 'agent_id', $idAgentSaved );
 					
 					if( $this->user->create_banch( 'agent_uids', $uids_agens ) == false) $controlSaved = false ;
 					
