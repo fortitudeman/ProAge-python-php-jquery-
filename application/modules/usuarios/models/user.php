@@ -3078,53 +3078,28 @@ AND
 			<option value="3">Año</option>
 			*/	
 
-			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';		
-			$trimestre = $this->trimestre();			
-			$cuatrimetre = $this->cuatrimestre();									
-			$anio = date( 'Y' ).'-01-01';						
 			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'])) {
 
 				$period = $filter['query']['periodo'];
 				if( $filter['query']['periodo'] == 1 )			
-					$this->db->where( 'work_order.creation_date >= ', $mes); 
+					$this->db->where( 'work_order.creation_date >= ', date( 'Y' ).'-'.(date( 'm' )).'-01'); 
 
 				if( $filter['query']['periodo'] == 2 )
-					if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
-					if( $cuatrimetre == 1 ){			
-						$begind = date( 'Y' ).'-01-01';	
-						$end = date( 'Y' ).'-04-'.date('d');	
-					}
-					if( $cuatrimetre == 2 ){			
-						$begind = date( 'Y' ).'-04-01';	
-						$end = date( 'Y' ).'-08-'.date('d');	
-					}
-					if( $cuatrimetre == 3 ){			
-						$begind = date( 'Y' ).'-08-01';	
-						$end = date( 'Y' ).'-12-'.date('d');	
-					}
-					$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
-				}else{
-					if( $trimestre == 1 ){			
-						$begind = date( 'Y' ).'-01-01';	
-						$end = date( 'Y' ).'-03-'.date('d');	
-					}
-					if( $trimestre == 2 ){			
-						$begind = date( 'Y' ).'-03-01';	
-						$end = date( 'Y' ).'-06-'.date('d');	
-					}
-					if( $trimestre == 3 ){			
-						$begind = date( 'Y' ).'-06-01';	
-						$end = date( 'Y' ).'-09-'.date('d');	
-					}
-					if( $trimestre == 4 ){			
-						$begind = date( 'Y' ).'-09-01';	
-						$end = date( 'Y' ).'-12-'.date('d');	
-					}
-					$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
+				{
+					$this->load->helper('tri_cuatrimester');
+					if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 )
+						$begin_end = get_tri_cuatrimester( $this->cuatrimestre(), 'cuatrimestre' ) ;
+					else
+						$begin_end = get_tri_cuatrimester( $this->trimestre(), 'trimestre' );
+
+					if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
+						$this->db->where( array(
+							'work_order.creation_date >= ' => $begin_end['begind'],
+							'work_order.creation_date <=' =>  $begin_end['end']) );
 				}
 				if( $filter['query']['periodo'] == 3 )			
 					$this->db->where( array(
-						'work_order.creation_date >= ' => $anio,
+						'work_order.creation_date >= ' => date( 'Y' ).'-01-01',
 						'work_order.creation_date <=' => date( 'Y-m-d' ) .  ' 23:59:59' ) ); 
 			}
 		}
@@ -3212,55 +3187,30 @@ AND
 			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
 			<option value="3">Año</option>
 			*/	
-			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
-			$trimestre = $this->trimestre();
-			$cuatrimetre = $this->cuatrimestre();
-			$anio = date( 'Y' ).'-01-01';
-			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
+			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'])) {
 
 				$period = $filter['query']['periodo'];
-				if( $filter['query']['periodo'] == 1 )
-					$this->db->where( 'work_order.creation_date >= ', $mes); 
+				if( $filter['query']['periodo'] == 1 )			
+					$this->db->where( 'work_order.creation_date >= ', date( 'Y' ).'-'.(date( 'm' )).'-01'); 
 
 				if( $filter['query']['periodo'] == 2 )
-					if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
-						if( $cuatrimetre == 1 ){			
-							$begind = date( 'Y' ).'-01-01';	
-							$end = date( 'Y' ).'-04-'.date('d');	
-						}
-						if( $cuatrimetre == 2 ){			
-							$begind = date( 'Y' ).'-04-01';	
-							$end = date( 'Y' ).'-08-'.date('d');	
-						}
-						if( $cuatrimetre == 3 ){			
-							$begind = date( 'Y' ).'-08-01';	
-							$end = date( 'Y' ).'-12-'.date('d');	
-						}
-						$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
-				
-					}else{
-						if( $trimestre == 1 ){			
-							$begind = date( 'Y' ).'-01-01';	
-							$end = date( 'Y' ).'-03-'.date('d');	
-						}
-						if( $trimestre == 2 ){			
-							$begind = date( 'Y' ).'-03-01';	
-							$end = date( 'Y' ).'-06-'.date('d');	
-						}
-						if( $trimestre == 3 ){			
-							$begind = date( 'Y' ).'-06-01';	
-							$end = date( 'Y' ).'-09-'.date('d');	
-						}
-						if( $trimestre == 4 ){			
-							$begind = date( 'Y' ).'-09-01';	
-							$end = date( 'Y' ).'-12-'.date('d');	
-						}
-						$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
-					}
-				if( $filter['query']['periodo'] == 3 )
+				{
+					$this->load->helper('tri_cuatrimester');
+					if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 )
+						$begin_end = get_tri_cuatrimester( $this->cuatrimestre(), 'cuatrimestre' ) ;
+					else
+						$begin_end = get_tri_cuatrimester( $this->trimestre(), 'trimestre' );
+
+					if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
+						$this->db->where( array(
+							'work_order.creation_date >= ' => $begin_end['begind'],
+							'work_order.creation_date <=' =>  $begin_end['end']) );
+				}
+				if( $filter['query']['periodo'] == 3 )			
 					$this->db->where( array(
-						'work_order.creation_date >= ' => $anio, 
-						'work_order.creation_date <=' => date( 'Y-m-d' ) .  ' 23:59:59') ); 			}				
+						'work_order.creation_date >= ' => date( 'Y' ).'-01-01',
+						'work_order.creation_date <=' => date( 'Y-m-d' ) .  ' 23:59:59' ) ); 
+			}
 		}
 
 		$query = $this->db->get(); 

@@ -501,64 +501,25 @@ class Work_order extends CI_Model{
 		if ( ( ( $periodo = $this->input->post('periodo') ) !== FALSE ) && 
 			( ( $periodo == 1 ) || (  $periodo == 2 ) || ( $periodo == 3 ) ) )
 		{
-			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';	
-			$trimestre = trimestre();
-			$cuatrimetre = cuatrimestre();
-			$anio = date( 'Y' ).'-01-01';
 			if( $periodo == 1 ) // Month
-				$this->db->where( 'work_order.creation_date >= ', $mes); 
+				$this->db->where( 'work_order.creation_date >= ', date( 'Y' ) . '-' . (date( 'm' )) . '-01'); 
 			if( $periodo == 2 ) // Trimester or cuatrimester depending ramo
+			{
+				$this->load->helper('tri_cuatrimester');
 				if( ($ramo == 2 ) || ( $ramo == 3 ) )
-				{
-					if( $cuatrimetre == 1 )
-					{			
-						$begind = date( 'Y' ).'-01-01';	
-						$end = date( 'Y' ).'-04-'.date('d');	
-					}
-					if( $cuatrimetre == 2 )
-					{			
-						$begind = date( 'Y' ).'-04-01';	
-						$end = date( 'Y' ).'-08-'.date('d');	
-					}
-					if( $cuatrimetre == 3 )
-					{			
-						$begind = date( 'Y' ).'-08-01';	
-						$end = date( 'Y' ).'-12-'.date('d');	
-					}
-					$this->db->where( array(
-						'work_order.creation_date >= ' =>  $begind,
-						'work_order.creation_date <=' =>  $end) ); 
-				} else
-				{
-					if( $trimestre == 1 )
-					{			
-						$begind = date( 'Y' ).'-01-01';	
-						$end = date( 'Y' ).'-03-'.date('d');	
-					}
-					if( $trimestre == 2 )
-					{			
-						$begind = date( 'Y' ).'-03-01';	
-						$end = date( 'Y' ).'-06-'.date('d');	
-					}
-					if( $trimestre == 3 )
-					{			
-						$begind = date( 'Y' ).'-06-01';	
-						$end = date( 'Y' ).'-09-'.date('d');	
-					}
-					if( $trimestre == 4 )
-					{			
-						$begind = date( 'Y' ).'-09-01';	
-						$end = date( 'Y' ).'-12-'.date('d');	
-					}
-					$this->db->where( array(
-						'work_order.creation_date >= ' => $begind,
-						'work_order.creation_date <=' =>  $end) ); 
-				}
+					$begin_end = get_tri_cuatrimester( cuatrimestre(), 'cuatrimestre' ) ;
+				else
+					$begin_end = get_tri_cuatrimester( trimestre(), 'trimestre' );
 
-				if(  $periodo == 3 ) // Year
+				if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
 					$this->db->where( array(
-						'work_order.creation_date >= ' => $anio, 
-						'work_order.creation_date <=' => date( 'Y-m-d' ) .  ' 23:59:59') ); 
+						'work_order.creation_date >= ' => $begin_end['begind'],
+						'work_order.creation_date <=' =>  $begin_end['end']) );
+			}
+			if(  $periodo == 3 ) // Year
+				$this->db->where( array(
+					'work_order.creation_date >= ' => date( 'Y' ) .'-01-01', 
+					'work_order.creation_date <=' => date( 'Y-m-d' ) . ' 23:59:59') ); 
 		}	
 
 		// Agent
@@ -579,7 +540,6 @@ class Work_order extends CI_Model{
 		}
 
 		$query = $this->db->get();
-
 		if ($query->num_rows() == 0) return false;
 
 		$ot = array();
@@ -625,7 +585,7 @@ class Work_order extends CI_Model{
 		
 		
 		$query = $this->db->get();
-		
+	
 		if ($query->num_rows() == 0) return false;
 		
 		$ot = array();
