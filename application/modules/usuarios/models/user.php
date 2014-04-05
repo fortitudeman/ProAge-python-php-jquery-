@@ -2996,41 +2996,19 @@ AND
 		{
 			$row = $query_adjusted_prima->row();
 			$adjusted_year_prima = $row->prima * (1 + $row->extra_percentage);
-			if (($period == 3) || ($row->payment_interval_id == 4))
-				// if the selected period is the year or the payment is anual,
-				// the result is the adjusted anual prima
-				return $adjusted_year_prima;
-
-// compute the number of months depending on ramo and period
-			switch ($period)
-			{
-				case 1: // for 1 month
-					$period_number_months = 1;
-					break;
-				case 2: // for 3 months if ramo is Vida, else, for 4 months
-					$period_number_months = ($ramo == 1) ? 3 : 4;
-					break;
-				default:
-					return $result;
-					break;
-			}
-
 			switch ($row->payment_interval_id)
 			{
-				// if the selected period is not the year and the payment is not anual,
-				// the result depends on the number of months of period selected
-
 				case 1: // mensual payment
-					$result = $period_number_months * $adjusted_year_prima / 12;
+					$result = $adjusted_year_prima / 12;
 					break;
 				case 2: // trimestrial payment
-					// if the period has more than 3 months, consider that payment for the period is that for 6 months
-					// otherwise, consider that payment for the period is that for 3 months
-					$result = ( $period_number_months > 3) ? ($adjusted_year_prima / 2) : ($adjusted_year_prima / 4);
+					$result = $adjusted_year_prima / 4;
 					break;
 				case 3: // semestrial payment
-					// consider that payment for the period is that for 6 months
 					$result = $adjusted_year_prima / 2;
+					break;
+				case 4: // annual payment
+					$result = $adjusted_year_prima;
 					break;
 				default:
 					break;
