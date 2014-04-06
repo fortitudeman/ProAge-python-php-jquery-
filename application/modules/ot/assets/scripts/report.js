@@ -201,7 +201,8 @@ $( document ).ready(function() {
 	});
 
 	// add parser through the tablesorter addParser method
-	$.tablesorter.addParser({
+	// Note: not used with version 2.14.5 of the tablesorter plugin
+/*	$.tablesorter.addParser({
 		// set a unique id
 		id: 'mydigit',
 		is: function(s) {
@@ -214,14 +215,15 @@ $( document ).ready(function() {
 		},
 		// set type, either numeric or text
 		type: 'numeric'
-	});	
+	});	*/
 
 	$(".payment_table").tablesorter({ 
 		// use custom parser 'mydigit' for column containing a number, formatted 
-		headers: {
+/*		headers: {
 			2: { sorter: "mydigit" }
-		}
-    }); 
+		}*/
+    });
+	
 
        $('#popup_email').submit(function()
        {
