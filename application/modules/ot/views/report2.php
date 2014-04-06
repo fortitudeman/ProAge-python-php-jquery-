@@ -37,7 +37,7 @@ $post_data = isset($_POST['query']) ? ',prev_post:'. json_encode($_POST['query']
 ?>
 
 
-<table  class="sortable altrowstable tablesorter" id="sorter"  style="width:100%;">
+<table  class="sortable altrowstable tablesorter" id="sorter-report2"  style="width:100%;">
     <thead class="head">
         <tr>
             <th id="table_agents" class="header_manager" style="width:auto; text-align:center; ">Agentes</th>

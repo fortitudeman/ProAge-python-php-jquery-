@@ -2217,7 +2217,7 @@ implode(', ', $ramo_tramite_types) . '
 			'<script src="'. base_url() .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
 			'<script>window.jQuery || document.write ("<script src='. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js><\/script>");</script>',
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.ddslick.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',			
 			'<script src="'.base_url().'scripts/config.js"></script>'	,	
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',

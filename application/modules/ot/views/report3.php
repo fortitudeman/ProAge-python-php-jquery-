@@ -5,7 +5,7 @@
     $totalgeneral=0;
 ?>
 
-<table  class="sortable altrowstable tablesorter" id="sorter"  style="width:100%;">
+<table  class="sortable altrowstable tablesorter" id="sorter-report3"  style="width:100%;">
     <thead  class="head">
         <tr>
             <th id="table_agents" class="header_manager" style="width:100px">Agentes</th>

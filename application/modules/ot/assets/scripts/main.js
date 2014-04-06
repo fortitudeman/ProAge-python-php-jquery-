@@ -13,8 +13,8 @@ function stickyFooter(){
 }
 
 
-        jQuery(document).ready(function($)
-        {
+    jQuery(document).ready(function($)
+    {
             stickyFooter(); 
             
             var percent = ($("body").height() * 10)/100;
@@ -24,21 +24,32 @@ function stickyFooter(){
             stickyFooter();
             var percent = ($("body").height() * 10)/100;
             $(".tablescroll_wrapper").css("width", ($(window).width())+'px');
-             $(".tablescroll_wrapper2").css("width", ($(window).width())+'px');
-              $(".tablescroll_head").css("width", ($(window).width())+'px');
-               $(".tablescroll_body").css("width", ($(window).width())+'px');
-               $(".tablescroll_foot").css("width", ($(window).width())+'px');
-               $(".tablescroll_head thead").css("width", ($(window).width())+'px');
-               $(".tablescroll_foot tfoot").css("width", ($(window).width())+'px');
+            $(".tablescroll_wrapper2").css("width", ($(window).width())+'px');
+            $(".tablescroll_head").css("width", ($(window).width())+'px');
+            $(".tablescroll_body").css("width", ($(window).width())+'px');
+            $(".tablescroll_foot").css("width", ($(window).width())+'px');
+            $(".tablescroll_head thead").css("width", ($(window).width())+'px');
+            $(".tablescroll_foot tfoot").css("width", ($(window).width())+'px');
 
-                $("#sorter").css("height", percent+'px');
+            $("#sorter-report1").css("height", percent+'px');
+            $("#sorter-report2").css("height", percent+'px');
+            $("#sorter-report3").css("height", percent+'px');
 			$(".payment_table").css("height", percent+'px');
         });
 
-             $("#sorter").tablesorter({ 
+        $("#sorter-report1").tablesorter({  // Vida report
         // sort on the first column and third column, order asc 
-        sortList: [[0,0],[2,0]] 
-    }); 
+            sortList: [[0,0],[2,0]] 
+        });
+	    $("#sorter-report2").tablesorter({ // GMM report
+        // sort on the first column and third column, order asc 
+            sortList: [[0,0],[2,0]] 
+        }); 
+	    $("#sorter-report3").tablesorter({ // Autos report
+        // sort on the first column and third column, order asc 
+            sortList: [[0,0],[2,0]] 
+        }); 
+		
              $('.select1').ddslick({width:'120'});
 			 $('.select6').ddslick({width:'120'});
              $('#select2').ddslick({width:'120'});
@@ -46,6 +57,6 @@ function stickyFooter(){
              $('#select5').ddslick({width:'140'});
          
        
-        });
+    });
 
         /*]]>*/
