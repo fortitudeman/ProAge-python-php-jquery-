@@ -2316,6 +2316,19 @@ class User extends CI_Model{
 						'payments.payment_date <= ' => $year . '-12-31 23:59:59'
 						)); 
 				}
+				if( $filter['query']['periodo'] == 4 )
+				{
+					$from = $this->session->userdata('custom_period_from');
+					$to = $this->session->userdata('custom_period_to');
+					if ( ( $from === FALSE ) || ( $to === FALSE ) )
+					{
+						$from = date('Y-m-d');
+						$to = $from;
+					}
+					$this->db->where( array(
+						'payments.payment_date >= ' => $from . ' 00:00:00',
+						'payments.payment_date <=' => $to . ' 23:59:59') );
+				}
 			}
 		}
 
@@ -2559,6 +2572,19 @@ class User extends CI_Model{
 						'payments.payment_date >= ' => $year . '-01-01',
 						'payments.payment_date <= ' => $year . '-12-31 23:59:59'
 						)); 
+				}
+				if( $filter['query']['periodo'] == 4 )
+				{
+					$from = $this->session->userdata('custom_period_from');
+					$to = $this->session->userdata('custom_period_to');
+					if ( ( $from === FALSE ) || ( $to === FALSE ) )
+					{
+						$from = date('Y-m-d');
+						$to = $from;
+					}
+					$this->db->where( array(
+						'payments.payment_date >= ' => $from . ' 00:00:00',
+						'payments.payment_date <=' => $to . ' 23:59:59') );
 				}
 			}
 		}
@@ -2831,6 +2857,19 @@ class User extends CI_Model{
 						'payment_date <= ' => $year . '-12-31 23:59:59'
 						)); 
 				}
+				if( $filter['query']['periodo'] == 4 )
+				{
+					$from = $this->session->userdata('custom_period_from');
+					$to = $this->session->userdata('custom_period_to');
+					if ( ( $from === FALSE ) || ( $to === FALSE ) )
+					{
+						$from = date('Y-m-d');
+						$to = $from;
+					}
+					$this->db->where( array(
+						'payment_date >= ' => $from . ' 00:00:00',
+						'payment_date <=' => $to . ' 23:59:59') );
+				}
 			}
 		}
 
@@ -2981,10 +3020,25 @@ AND
 							'work_order.creation_date >= ' => $begin_end['begind'],
 							'work_order.creation_date <=' =>  $begin_end['end']) );
 				}
-				if( $filter['query']['periodo'] == 3 )			
+				if( $filter['query']['periodo'] == 3 )
+				{
 					$this->db->where( array(
 						'work_order.creation_date >= ' => date( 'Y' ).'-01-01',
 						'work_order.creation_date <=' => date( 'Y-m-d' ) .  ' 23:59:59' ) ); 
+				}
+				if( $filter['query']['periodo'] == 4 )
+				{
+					$from = $this->session->userdata('custom_period_from');
+					$to = $this->session->userdata('custom_period_to');
+					if ( ( $from === FALSE ) || ( $to === FALSE ) )
+					{
+						$from = date('Y-m-d');
+						$to = $from;
+					}
+					$this->db->where( array(
+						'work_order.creation_date >= ' => $from . ' 00:00:00',
+						'work_order.creation_date <=' => $to . ' 23:59:59') );
+				}
 			}
 		}
 		$query = $this->db->get();
@@ -3090,10 +3144,25 @@ AND
 							'work_order.creation_date >= ' => $begin_end['begind'],
 							'work_order.creation_date <=' =>  $begin_end['end']) );
 				}
-				if( $filter['query']['periodo'] == 3 )			
+				if( $filter['query']['periodo'] == 3 )
+				{
 					$this->db->where( array(
 						'work_order.creation_date >= ' => date( 'Y' ).'-01-01',
 						'work_order.creation_date <=' => date( 'Y-m-d' ) .  ' 23:59:59' ) ); 
+				}
+				if( $filter['query']['periodo'] == 4 )
+				{
+					$from = $this->session->userdata('custom_period_from');
+					$to = $this->session->userdata('custom_period_to');
+					if ( ( $from === FALSE ) || ( $to === FALSE ) )
+					{
+						$from = date('Y-m-d');
+						$to = $from;
+					}
+					$this->db->where( array(
+						'work_order.creation_date >= ' => $from . ' 00:00:00',
+						'work_order.creation_date <=' => $to . ' 23:59:59') );
+				}
 			}
 		}
 
@@ -3152,7 +3221,7 @@ AND
 	$this->db->join( 'users', 'users.id=agents.user_id' );
 	$this->db->where( 'policies_vs_users.user_id', $user_id );
 	
-	if( !empty( $filter ) ){
+if( !empty( $filter ) ){
 			
 			
 		if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
@@ -3175,7 +3244,7 @@ AND
 								
 		$anio = date( 'Y' ).'-01-01';
 					
-		if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
+	if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
 		
 		
 		if( $filter['query']['periodo'] == 1 )
@@ -3241,9 +3310,22 @@ AND
 		if( $filter['query']['periodo'] == 3 )
 		
 			$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
-		
-		}				
-	}
+
+		if( $filter['query']['periodo'] == 4 )
+		{
+			$from = $this->session->userdata('custom_period_from');
+			$to = $this->session->userdata('custom_period_to');
+			if ( ( $from === FALSE ) || ( $to === FALSE ) )
+			{
+				$from = date('Y-m-d');
+				$to = $from;
+			}
+			$this->db->where( array(
+				'work_order.creation_date >= ' => $from . ' 00:00:00',
+				'work_order.creation_date <=' => $to . ' 23:59:59') );
+		}
+	}				
+}
 	
 	
 	$query = $this->db->get(); 
@@ -3394,7 +3476,20 @@ AND
 	  if( $filter['query']['periodo'] == 3 )
 	  
 		  $this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
-	  
+
+		if( $filter['query']['periodo'] == 4 )
+		{
+			$from = $this->session->userdata('custom_period_from');
+			$to = $this->session->userdata('custom_period_to');
+			if ( ( $from === FALSE ) || ( $to === FALSE ) )
+			{
+				$from = date('Y-m-d');
+				$to = $from;
+			}
+			$this->db->where( array(
+				'work_order.creation_date >= ' => $from . ' 00:00:00',
+				'work_order.creation_date <=' => $to . ' 23:59:59') );
+		}
 	  }				
   }
 	

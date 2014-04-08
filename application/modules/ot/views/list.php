@@ -88,6 +88,9 @@ $agents = str_replace('<option value="">Seleccione</option>', '<option value="">
             </div>
             
             <div class="row"><br />
+
+<?php echo $period_form ?>
+
                 <form id="ot-form" method="post">                      	
                   <input class="filter-field" type="hidden" name="user" id="todas-mias" value="mios" />
 
@@ -96,14 +99,18 @@ $agents = str_replace('<option value="">Seleccione</option>', '<option value="">
                       <tr>
 					    <th colspan="5">Número :
   					      <input class="filter-field" type="text" id="id" name="id" title="Pulse la tecla Tab para validar un número a buscar" />
+                          <div>
+                            <span id="cust_update-period" class="btn btn-info" style="font-weight: normal">Editar el período personalizado</span>
+                          </div>
 					    </th>
                       </tr>
                       <tr>					  
 					    <th>Período :<br />
-                          <select class="filter-field" id="periodo" name="periodo">
+                          <select class="filter-field" id="periodo" name="periodo" style="width: 9.5em">
                             <option value="1">Mes</option>
-                            <option value="2" class="set_periodo" selected="selected">Trimestre</option>
+                            <option value="2">Trimestre</option>
                             <option value="3">Año</option>
+                            <option value="4" class="set_periodo" selected="selected">Período personalizado</option>
                           </select>
 					    </th>
 					    <th>Ramo :<br />
@@ -148,7 +155,6 @@ $agents = str_replace('<option value="">Seleccione</option>', '<option value="">
                   </table>
                 </form>
             </div>				
-
             <div id="loading"></div>
 
 <div id="ot-list">

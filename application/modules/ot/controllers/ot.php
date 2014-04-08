@@ -191,10 +191,12 @@ implode(', ', $ramo_tramite_types) . '
 			'<script src="'.base_url().'ot/assets/scripts/list_js.js"></script>',
 			'<script src="'.base_url().'scripts/config.js"></script>',
 			'<script src="'.base_url().'ot/assets/scripts/overview.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'scripts/custom-period.js"></script>',	
 			$add_js,
 		  ),
 		  'content' => 'ot/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+		  'period_form' => $this->show_custom_period(), // custom period, 
 		  'agents' => $this->user->getAgents(),
 		  'gerentes' => $this->user->getSelectsGerentes(),
 		);
@@ -2184,7 +2186,7 @@ implode(', ', $ramo_tramite_types) . '
                     $data = $this->user->getReport($_POST );
                 }
 		else
-                    $data = $this->user->getReport( array('query' => array('ramo' => 1,'periodo' => 2 ) ) );
+                    $data = $this->user->getReport( array('query' => array('ramo' => 1,'periodo' => 4 ) ) );
 		
 		$this->load->helper( 'ot' );
 		
@@ -2192,7 +2194,7 @@ implode(', ', $ramo_tramite_types) . '
 		$this->load->model( array( 'usuarios/user', 'work_order' ) );
 		
 		unset( $data[0] );
-										
+
 		// Config view
 		$this->view = array(
 				
@@ -2221,7 +2223,8 @@ implode(', ', $ramo_tramite_types) . '
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',			
 			'<script src="'.base_url().'scripts/config.js"></script>'	,	
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
-                      '<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>',
+			'<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'scripts/custom-period.js"></script>',	
 '
 <script type="text/javascript">
 	function payment_popup(params) {
@@ -2240,8 +2243,8 @@ implode(', ', $ramo_tramite_types) . '
 		  'manager' => $this->user->getSelectsGerentes2(),
 		  'content' => 'ot/report', // View to load
 		  'data' => $data,
-                  'tata' => $_POST,
-                    
+		  'tata' => $_POST,
+		  'period_form' => $this->show_custom_period(), // custom period,    
 		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
 		  	
 		);
@@ -2868,7 +2871,50 @@ implode(', ', $ramo_tramite_types) . '
 		echo $result;
 		exit;
 	}
-
+/*
+Display custom filter period
+*/
+	function show_custom_period()
+	{
+		$data = array(
+			'from' => $this->session->userdata('custom_period_from'),
+			'to' => $this->session->userdata('custom_period_to')
+		);
+		if ( ( $data['from'] === FALSE ) || ( $data['to'] === FALSE ) )
+		{
+			$data['from'] = date('Y-m-d');
+			$data['to'] = $data['from'];
+		}
+		return $this->load->view('custom_period', $data, TRUE);
+	}
+/*
+	Update custom filter period in session data
+*/
+	function update_custom_period()
+	{
+		$result = 0;
+		if ( $this->input->is_ajax_request() )
+		{
+			$from = $this->input->post('cust_period_from');
+			$to = $this->input->post('cust_period_to');
+			if (($from !== FALSE) && ($to !== FALSE))
+			{
+				$from_array = explode('-', $from);
+				$to_array = explode('-', $to);
+				if ( (count($from_array) == 3) && (count($to_array) == 3) &&
+					checkdate ( $from_array[1], $from_array[2], $from_array[0]) && 
+					checkdate ( $to_array[1], $to_array[2], $to_array[0]) )
+				{
+					$this->session->set_userdata( array(
+						'custom_period_from' => $from,
+						'custom_period_to' => $to
+					));
+					$result = 1;
+				}
+			}
+		}
+		echo $result;
+	}
 /* End of file ot.php */
 /* Location: ./application/controllers/ot.php */
 }

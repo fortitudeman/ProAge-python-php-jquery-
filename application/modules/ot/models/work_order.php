@@ -499,7 +499,7 @@ class Work_order extends CI_Model{
 
 		// Periodo
 		if ( ( ( $periodo = $this->input->post('periodo') ) !== FALSE ) && 
-			( ( $periodo == 1 ) || (  $periodo == 2 ) || ( $periodo == 3 ) ) )
+			( ( $periodo == 1 ) || (  $periodo == 2 ) || ( $periodo == 3 ) || ( $periodo == 4) ) )
 		{
 			if( $periodo == 1 ) // Month
 				$this->db->where( 'work_order.creation_date >= ', date( 'Y' ) . '-' . (date( 'm' )) . '-01'); 
@@ -519,7 +519,21 @@ class Work_order extends CI_Model{
 			if(  $periodo == 3 ) // Year
 				$this->db->where( array(
 					'work_order.creation_date >= ' => date( 'Y' ) .'-01-01', 
-					'work_order.creation_date <=' => date( 'Y-m-d' ) . ' 23:59:59') ); 
+					'work_order.creation_date <=' => date( 'Y-m-d' ) . ' 23:59:59') );
+
+			if( $periodo == 4 ) // Custom
+			{
+				$from = $this->session->userdata('custom_period_from');
+				$to = $this->session->userdata('custom_period_to');
+				if ( ( $from === FALSE ) || ( $to === FALSE ) )
+				{
+					$from = date('Y-m-d');
+					$to = $from;
+				}
+				$this->db->where( array(
+					'work_order.creation_date >= ' => $from . ' 00:00:00',
+					'work_order.creation_date <=' => $to . ' 23:59:59') );
+			}
 		}	
 
 		// Agent
