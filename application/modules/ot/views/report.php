@@ -104,9 +104,9 @@ else
                                                 <select id="periodo" name="query[periodo]" onchange="this.form.submit();">
                                                     <option value="1" <?php echo $selected_filter_period[1] ?>>Mes</option>
                                                     <?php if (!isset($_POST['query']['ramo']) or isset($_POST['query']['ramo']) and $_POST['query']['ramo'] == 1): ?> 
-                                                    <option value="2" <?php echo $selected_filter_period[2] ?>>Trimestre</option>
+                                                    <option value="2" <?php echo $selected_filter_period[2] ?> class="set_periodo">Trimestre</option>
                                                     <?php else: ?>
-                                                    <option value="2" <?php echo $selected_filter_period[2] ?>>Cuatrimestre</option>
+                                                    <option value="2" <?php echo $selected_filter_period[2] ?> class="set_periodo">Cuatrimestre</option>
                                                     <?php endif; ?>
                                                     <option value="3" <?php echo $selected_filter_period[3] ?>>Año</option>
                                                     <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
