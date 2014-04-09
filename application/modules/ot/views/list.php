@@ -14,9 +14,9 @@
   	
 */
 $agents = str_replace('<option value="">Seleccione</option>', '<option value="">Todos</option>', $agents);
+$this->load->helper('filter');
+$selected_filter_period = get_selected_filter_period();
 ?>
-
-
 <div>
     <ul class="breadcrumb">
        
@@ -99,18 +99,15 @@ $agents = str_replace('<option value="">Seleccione</option>', '<option value="">
                       <tr>
 					    <th colspan="5">Número :
   					      <input class="filter-field" type="text" id="id" name="id" title="Pulse la tecla Tab para validar un número a buscar" />
-                          <div>
-                            <span id="cust_update-period" class="btn btn-info" style="font-weight: normal">Editar el período personalizado</span>
-                          </div>
 					    </th>
                       </tr>
                       <tr>					  
 					    <th>Período :<br />
                           <select class="filter-field" id="periodo" name="periodo" style="width: 9.5em">
-                            <option value="1">Mes</option>
-                            <option value="2">Trimestre</option>
-                            <option value="3">Año</option>
-                            <option value="4" class="set_periodo" selected="selected">Período personalizado</option>
+                            <option value="1" <?php echo $selected_filter_period[1] ?>>Mes</option>
+                            <option value="2" <?php echo $selected_filter_period[2] ?>>Trimestre</option>
+                            <option value="3" <?php echo $selected_filter_period[3] ?>>Año</option>
+                            <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
                           </select>
 					    </th>
 					    <th>Ramo :<br />

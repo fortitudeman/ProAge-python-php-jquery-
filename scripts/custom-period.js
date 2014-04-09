@@ -1,3 +1,5 @@
+// Javascript to handle the filter custom período
+
 $(document).ready(function() {
 	var defFrom = $("#cust_period_from").val();
 
@@ -74,7 +76,7 @@ $(document).ready(function() {
 					dataType : 'json',
 					success: function(response){
 						if (response == '1') {
-							alert('Se ha guardado el periodo personalizado correctamente.');
+							alert('Se ha guardado el período personalizado correctamente.');
 							var customSelected = updatePeriodSelect("#periodo");
 							if (customSelected) // if the period currently selected is the custom one, refresh the page
 								window.location.reload();
@@ -103,9 +105,3 @@ $(document).ready(function() {
 		});
 	
 });
-
-function month( month ){
-	var monthNames = [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-		"Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" ];
-	return monthNames[month];
-}

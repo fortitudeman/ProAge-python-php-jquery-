@@ -13,6 +13,14 @@
 
 
  */
+if ( isset($_POST['query']['periodo']) &&
+	($_POST['query']['periodo'] >= 1) && ($_POST['query']['periodo'] <= 4) )
+{
+	$selected_filter_period = array(1 => '', 2 => '', 3 => '', 4 => '');
+	$selected_filter_period[$_POST['query']['periodo']] = ' selected="selected"';
+}
+else
+	$selected_filter_period = get_selected_filter_period();
 ?>
 
 
@@ -86,9 +94,6 @@
 
                             <?php echo $period_form ?>
 
-                            <div>
-                              <span id="cust_update-period" class="btn btn-info">Editar el período personalizado</span>
-                            </div>
                             <form id="form" method="post">                      	
                                 <input type="hidden" name="query[ramo]" id="ramo" value="<?php if (isset($_POST['query']['ramo'])) echo $_POST['query']['ramo']; else echo 1; ?>" />
 
@@ -97,14 +102,14 @@
                                         <tr>
                                             <th>
                                                 <select id="periodo" name="query[periodo]" onchange="this.form.submit();">
-                                                    <option value="1" <?php if (isset($_POST['query']['periodo']) and $_POST['query']['periodo'] == 1) echo 'selected="selected"' ?>>Mes</option>
+                                                    <option value="1" <?php echo $selected_filter_period[1] ?>>Mes</option>
                                                     <?php if (!isset($_POST['query']['ramo']) or isset($_POST['query']['ramo']) and $_POST['query']['ramo'] == 1): ?> 
-                                                        <option value="2" <?php if (isset($_POST['query']['periodo']) and $_POST['query']['periodo'] == 2) echo 'selected="selected"' ?> class="set_periodo">Trimestre</option>
+                                                    <option value="2" <?php echo $selected_filter_period[2] ?>>Trimestre</option>
                                                     <?php else: ?>
-                                                        <option value="2" <?php if (isset($_POST['query']['periodo']) and $_POST['query']['periodo'] == 2) echo 'selected="selected"' ?> class="set_periodo">Cuatrimestre</option>
+                                                    <option value="2" <?php echo $selected_filter_period[2] ?>>Cuatrimestre</option>
                                                     <?php endif; ?>
-                                                    <option value="3" <?php if (isset($_POST['query']['periodo']) and $_POST['query']['periodo'] == 3) echo 'selected="selected"' ?>>Año</option>
-                                                    <option value="4" <?php if (!count($_POST) || (isset($_POST['query']['periodo']) and $_POST['query']['periodo'] == 4)) echo 'selected="selected"' ?>>Período personalizado</option>
+                                                    <option value="3" <?php echo $selected_filter_period[3] ?>>Año</option>
+                                                    <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
                                                 </select>
                                             </th>
                                             <th>

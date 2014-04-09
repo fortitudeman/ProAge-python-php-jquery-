@@ -160,6 +160,10 @@ class Ot extends CI_Controller {
 implode(', ', $ramo_tramite_types) . '
 		};
 		$( "#patent-type").html(proagesOverview.tramiteTypes[0]);
+		$("#period_opt4").bind( "click", function(){
+			$( "#cust_period-form" ).dialog( "open" );
+			return false;
+		})
 	});
 </script>
 ';
@@ -196,7 +200,7 @@ implode(', ', $ramo_tramite_types) . '
 		  ),
 		  'content' => 'ot/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'period_form' => $this->show_custom_period(), // custom period, 
+		  'period_form' => $this->show_custom_period(), // custom period configuration form 
 		  'agents' => $this->user->getAgents(),
 		  'gerentes' => $this->user->getSelectsGerentes(),
 		);
@@ -2166,27 +2170,30 @@ implode(', ', $ramo_tramite_types) . '
  *	Reports
  **/	
 	public function reporte()
-         {	
-            
+	{	
+   
 		// Check access for report
 		if( $this->access_report == false )
-                {	
-                    // Set false message		
-                    $this->session->set_flashdata( 'message', array
-                    ( 
-                        'type' => false,	
-                        'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Ver Reporte", Informe a su administrador para que le otorge los permisos necesarios.'
-                    ));	
-                    redirect( '/', 'refresh' );
-		}
-		
-		if( !empty( $_POST ) )
 		{	
-                   
-                    $data = $this->user->getReport($_POST );
-                }
+			// Set false message		
+			$this->session->set_flashdata( 'message', array
+			( 
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Ver Reporte", Informe a su administrador para que le otorge los permisos necesarios.'
+			));	
+			redirect( '/', 'refresh' );
+		}
+		$this->load->helper('filter');
+		$default_filter = get_filter_period();
+		if( !empty( $_POST ) )
+		{
+			if ( isset($_POST['query']['periodo']) &&
+				($_POST['query']['periodo'] >= 1) && ($_POST['query']['periodo'] <= 4) )
+			set_filter_period($_POST['query']['periodo']);	
+			$data = $this->user->getReport($_POST );
+		}
 		else
-                    $data = $this->user->getReport( array('query' => array('ramo' => 1,'periodo' => 4 ) ) );
+			$data = $this->user->getReport( array('query' => array('ramo' => 1,'periodo' => $default_filter ) ) );
 		
 		$this->load->helper( 'ot' );
 		
@@ -2238,13 +2245,19 @@ implode(', ', $ramo_tramite_types) . '
 			}
 		});
 	}
+	$( document ).ready( function(){ 
+		$("#period_opt4").bind( "click", function(){
+			$( "#cust_period-form" ).dialog( "open" );
+			return false;
+		})
+	});
 </script>
 '		  ),
 		  'manager' => $this->user->getSelectsGerentes2(),
 		  'content' => 'ot/report', // View to load
 		  'data' => $data,
 		  'tata' => $_POST,
-		  'period_form' => $this->show_custom_period(), // custom period,    
+		  'period_form' => $this->show_custom_period(), // custom period configuration form
 		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
 		  	
 		);
@@ -2915,6 +2928,7 @@ Display custom filter period
 		}
 		echo $result;
 	}
+
 /* End of file ot.php */
 /* Location: ./application/controllers/ot.php */
 }

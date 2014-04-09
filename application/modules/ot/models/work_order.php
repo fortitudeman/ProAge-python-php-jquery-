@@ -501,6 +501,8 @@ class Work_order extends CI_Model{
 		if ( ( ( $periodo = $this->input->post('periodo') ) !== FALSE ) && 
 			( ( $periodo == 1 ) || (  $periodo == 2 ) || ( $periodo == 3 ) || ( $periodo == 4) ) )
 		{
+			$this->load->helper('filter');
+			set_filter_period($periodo);
 			if( $periodo == 1 ) // Month
 				$this->db->where( 'work_order.creation_date >= ', date( 'Y' ) . '-' . (date( 'm' )) . '-01'); 
 			if( $periodo == 2 ) // Trimester or cuatrimester depending ramo
