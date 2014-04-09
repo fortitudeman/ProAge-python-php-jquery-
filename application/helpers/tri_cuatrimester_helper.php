@@ -1,5 +1,8 @@
 <?php
 /*
+  Período Filter helper function
+*/
+/*
 	Get Begin and End date for given trimestre or cuatrimestre (in $rank)
 
 */

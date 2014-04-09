@@ -20,7 +20,7 @@ class MY_Form_validation extends CI_Form_validation{
     {
         $result = $this->_src_check_array_index($str, $allowed);
         if (!$result)
-            $this->set_message('src_is_array_index', 'El campo %s no tiene tener un valor válido.');
+            $this->set_message('src_is_array_index', 'El campo %s no tiene un valor vÃ¡lido.');
         return $result;
     }
 
@@ -37,7 +37,7 @@ class MY_Form_validation extends CI_Form_validation{
     {
         $result = $this->_src_check_array_index($str, $allowed, FALSE);
         if (!$result)
-            $this->set_message('src_is_array_value', 'El campo %s no tiene tener un valor válido.');
+            $this->set_message('src_is_array_value', 'El campo %s no tiene un valor vÃ¡lido.');
         return $result;
     }
 
@@ -87,7 +87,7 @@ class MY_Form_validation extends CI_Form_validation{
         else
             $result = !isset($allowed_array[$str]);
         if (!$result)
-            $this->set_message('src_is_not_array_index', 'El campo %s no tiene tener un valor válido');
+            $this->set_message('src_is_not_array_index', 'El campo %s no tiene un valor vÃ¡lido.');
         return $result;
     }
     // --------------------------------------------------------------------
@@ -103,7 +103,7 @@ class MY_Form_validation extends CI_Form_validation{
 	{
         $result = $this->decimal($str) || $this->integer($str);
         if (!$result)
-            $this->set_message('decimal_or_integer', 'El campo %s debe contener un número decimal o entero.');
+            $this->set_message('decimal_or_integer', 'El campo %s debe contener un nÃºmero decimal o entero.');
         return $result;
 	}
 }

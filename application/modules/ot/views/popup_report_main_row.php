@@ -1,4 +1,4 @@
-﻿                        <td style="width:80px;">
+                        <td style="width:80px;">
                             <div>
                                 <?php       
                                     if($value['general'][0]->comments)
@@ -58,4 +58,6 @@
                         <td><?php if ( $access_update && ($value['general'][0]->is_ntuable) ) : ?>
                           <img class="mark-ntu" id="mark_ntu-<?php echo $value['general'][0]->work_order_id . '-' . $gmm . '-' . $is_poliza ?>" alt="Marcar como NTU" title="Marcar como NTU" src="<?php echo base_url()?>images/small-red-x.png" /><?php endif;?>
 						</td>
-
+<?php
+// Make sure UTF-8 w/o BOM àù
+?>

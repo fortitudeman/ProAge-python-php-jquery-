@@ -31,4 +31,6 @@
 <?php else: ?>
 	No hay datos.
 <?php endif; ?>
-
+<?php
+// To make sure UTF8 w/o BOM ùà
+?>

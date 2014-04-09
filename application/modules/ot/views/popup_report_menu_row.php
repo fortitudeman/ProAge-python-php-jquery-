@@ -1,4 +1,4 @@
-﻿                        <td></td>
+                        <td></td>
                         <td colspan="11" >
                             <div style="display: none;">
                                 <span id="poliza_number"><?php echo $value['general'][0]->policies_uid;?></span>
@@ -27,3 +27,6 @@
                             <a id ="<?php foreach($value['director'] as $demals){echo $demals->email.',';};?>" rel="<?php foreach($value['director'] as $demals){echo $demals->name.',';};?>" href="<?php echo base_url().'/ot/email_popup/'?>" class="btn btn-link send_message">Enviar mensaje al Director</a>                            
                         </td>
                         <td>&nbsp;</td>
+<?php
+// Make sure UTF-8 w/o BOM àù
+?>
