@@ -102,7 +102,7 @@ $selected_filter_period = get_selected_filter_period();
 					    </th>
                       </tr>
                       <tr>					  
-					    <th>Período :<br />
+					    <th>Período :&nbsp;<i class="icon-calendar" id="cust_update-period" title="Click para editar el período personalizado"></i><br />
                           <select class="filter-field" id="periodo" name="periodo" style="width: 9.5em">
                             <option value="1" <?php echo $selected_filter_period[1] ?>>Mes</option>
                             <option value="2" <?php echo $selected_filter_period[2] ?>>Trimestre</option>

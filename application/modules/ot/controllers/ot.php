@@ -160,9 +160,12 @@ class Ot extends CI_Controller {
 implode(', ', $ramo_tramite_types) . '
 		};
 		$( "#patent-type").html(proagesOverview.tramiteTypes[0]);
-		$("#period_opt4").bind( "click", function(){
-			$( "#cust_period-form" ).dialog( "open" );
-			return false;
+		$("#periodo").bind( "click", function(){
+			$("#periodo option:selected").each(function () {
+				if ($(this).val() == 4) {
+					$( "#cust_period-form" ).dialog( "open" );
+				}
+			});
 		})
 	});
 </script>
@@ -2246,9 +2249,12 @@ implode(', ', $ramo_tramite_types) . '
 		});
 	}
 	$( document ).ready( function(){ 
-		$("#period_opt4").bind( "click", function(){
-			$( "#cust_period-form" ).dialog( "open" );
-			return false;
+		$("#periodo").bind( "click", function(){
+			$("#periodo option:selected").each(function () {
+				if ($(this).val() == 4) {
+					$( "#cust_period-form" ).dialog( "open" );
+				}
+			});
 		})
 	});
 </script>
