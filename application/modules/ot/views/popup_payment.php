@@ -12,6 +12,7 @@
         <tr id="popup_tr">
             <th>Fecha de pago</th>
             <th>Poliza</th>
+            <th>Asegurado</th>
             <th style="text-align: right; padding-right: 3em">Prima (en $)</th>
             <th style="text-align: right; padding-right: 3em">Negocio</th>
         </tr>
@@ -21,6 +22,7 @@
         <tr>
             <td><?php echo $value->payment_date ?></td>
             <td><?php echo $value->policy_number ?></td>
+            <td><?php echo $value->asegurado ? $value->asegurado : 'No disponible'?></td>
 			<td style="text-align: right; padding-right: 2.5em"><?php echo number_format($value->amount, 2);?></td>
 			<td style="text-align: right; padding-right: 2.5em"><?php echo $value->business;?></td>
         </tr>

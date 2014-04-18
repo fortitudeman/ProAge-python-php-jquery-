@@ -2339,10 +2339,16 @@ class User extends CI_Model{
 			$result = array();
 			if ($query->num_rows() > 0) {
 				foreach ($query->result() as $row) {
+					$row->asegurado = '';
+					if ($row->policy_number) {
+						$query_policy = $this->db->get_where('policies', array('uid' => $row->policy_number), 1, 0);
+						if ($query_policy->num_rows() > 0)
+							$row->asegurado = $query_policy->row()->name;
+						$query_policy->free_result();
+					}
 					$result[] = $row;
 				}
 			}
-
 			return $result;
 		}
   }  
@@ -2883,8 +2889,16 @@ class User extends CI_Model{
 		} else {
 			$result = array();
 			if ($query->num_rows() > 0) {
-				foreach ($query->result() as $row)
+				foreach ($query->result() as $row) {
+					$row->asegurado = '';
+					if ($row->policy_number) {
+						$query_policy = $this->db->get_where('policies', array('uid' => $row->policy_number), 1, 0);
+						if ($query_policy->num_rows() > 0)
+							$row->asegurado = $query_policy->row()->name;
+						$query_policy->free_result();
+					}
 					$result[] = $row;
+				}
 			}
 			return $result;
 		}
