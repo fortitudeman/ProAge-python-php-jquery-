@@ -21,7 +21,7 @@ if ( ! function_exists('get_filter_period'))
 		$CI =& get_instance();
 		$saved_period = $CI->session->userdata('default_period_filter');
 		if ($saved_period === FALSE)
-			$saved_period = 4;	// custom period by default
+			$saved_period = 2;	// custom period by default
 		return $saved_period;
 	}
 }
@@ -39,7 +39,7 @@ if ( ! function_exists('get_selected_filter_period'))
 		if ( isset($result[$option_selected]) )
 			$result[$option_selected] = ' selected="selected"';
 		else
-			$result[4] = ' selected="selected"';
+			$result[2] = ' selected="selected"';
 		return $result;
 	}
 }

@@ -88,9 +88,6 @@ $selected_filter_period = get_selected_filter_period();
             </div>
             
             <div class="row"><br />
-
-<?php echo $period_form ?>
-
                 <form id="ot-form" method="post">                      	
                   <input class="filter-field" type="hidden" name="user" id="todas-mias" value="mios" />
 
@@ -182,6 +179,9 @@ $selected_filter_period = get_selected_filter_period();
           </table>
 
 </div>
+
+<?php echo $period_form ?>
+
         </div>
     </div><!--/span-->
 

@@ -91,9 +91,6 @@ else
 
 
                             <p class="line">&nbsp; </p>
-
-                            <?php echo $period_form ?>
-
 							<div>&nbsp;&nbsp;<i class="icon-calendar" id="cust_update-period" title="Click para editar el período personalizado"></i></div>
                             <form id="form" method="post">                      	
                                 <input type="hidden" name="query[ramo]" id="ramo" value="<?php if (isset($_POST['query']['ramo'])) echo $_POST['query']['ramo']; else echo 1; ?>" />
@@ -178,6 +175,9 @@ else
                                                           
 
                         </div> <!-- #main -->
+
+<?php echo $period_form ?>
+
                     </div> <!-- #main-container -->
                 </div>                                                                                                 	
             </div>
