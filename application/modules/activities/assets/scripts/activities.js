@@ -97,7 +97,11 @@ $( document ).ready(function() {
 			if( Month < 10 ) Month = '0'+Month;
 													
 			$( '#end' ).val(  endDate.getFullYear() +'-'+ Month +'-'+ endDate.getDate() );
-			
+
+			var parentForm = $(this).parents("form");
+			if (parentForm.attr('id') == 'activity-report-form') {
+				parentForm.submit();
+			}
         },
         beforeShowDay: function(date) {
             var cssClass = '';
@@ -112,10 +116,31 @@ $( document ).ready(function() {
     selectCurrentWeek();
     $("#sorter").tablesorter(); 
     
-    
-    $('#week .ui-datepicker-calendar tr').live('mousemove', function() { $(this).find('td a').addClass('ui-state-hover'); });
-    $('#week .ui-datepicker-calendar tr').live('mouseleave', function() { $(this).find('td a').removeClass('ui-state-hover'); });
-		
+// The below is causing js error:
+//    $('#week .ui-datepicker-calendar tr').live('mousemove', function() { $(this).find('td a').addClass('ui-state-hover'); });
+//    $('#week .ui-datepicker-calendar tr').live('mouseleave', function() { $(this).find('td a').removeClass('ui-state-hover'); });
+	$("#period_opt4").on( "click", function( event ) {
+		$( "#cust_period-form" ).dialog( "open" );
+	});
+	
+	$("#periodo").on( "change", function( event ) {
+		var parentForm = $(this).parents("form");
+		var optionSelected = 0;
+		$("#periodo option:selected").each(function () {
+			optionSelected = $(this).val();
+			if (optionSelected == 2) {
+				$("#semana-container").show();
+			} else {
+				$("#semana-container").hide();
+				if ((optionSelected == 1) || (optionSelected == 3)) {
+					parentForm.submit();
+				} else if (optionSelected == 4) {
+					$( "#cust_period-form" ).dialog( "open" );
+				}
+			}
+			return false;
+		});
+	});
 });
 
 function month( month ){

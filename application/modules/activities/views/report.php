@@ -13,6 +13,14 @@
 
   	
 */
+if ( isset($_POST['periodo']) &&
+	($_POST['periodo'] >= 1) && ($_POST['periodo'] <= 4) )
+{
+	$selected_filter_period = array(1 => '', 2 => '', 3 => '', 4 => '');
+	$selected_filter_period[$_POST['periodo']] = ' selected="selected"';
+}
+else
+	$selected_filter_period = get_selected_filter_period();
 ?>
 
 
@@ -29,26 +37,45 @@
         <li>
             Reporte <span class="divider">/</span>
         </li>
-        <?php
-        if (isset($_POST['begin'])) echo "<li>Desde ".$_POST['begin']." hasta ".$_POST['end']."</li>";
-        ?>       
+        <li>		
+        <?php echo $report_period ?>
+        </li>
     </ul>
 </div>
-<form id="form" action="<?php echo base_url() ?>activities/report.html" class="form-horizontal" method="post">
+
+<form id="activity-report-form" action="<?php echo base_url() ?>activities/report.html" class="form-horizontal" method="post">
     <fieldset>
       <div class="control-group">
-        <label class="control-label text-error" for="inputError">Semana</label>
+        <label class="control-label text-error" for="inputError">Período</label>
         <div class="controls">
-          
+          <select style="float: left" id="periodo" name="periodo">
+            <option value="1" <?php echo $selected_filter_period[1] ?>>Mes actual</option>
+            <option value="2" <?php echo $selected_filter_period[2] ?>>Una Semana</option>	  
+            <option value="3" <?php echo $selected_filter_period[3] ?>>Año actual</option>
+            <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
+          </select>
+        </div>
+<span style="font-weight: bold; font-size: large">
+&nbsp;&nbsp;&nbsp;
+    <i class="icon-calendar" id="cust_update-period" title="Click para editar el período personalizado"></i>
+&nbsp;&nbsp;&nbsp;
+    <i style="color: #06be1d; display: none" class="icon-calendar" id="week_update-period" title="Click para seleccionar otra semana"></i>
+</span>
+      </div>		  
+      <div class="control-group" id="semana-container" <?php if (!$selected_filter_period[2]) echo 'style="display: none"' ?> >
+        <label class="control-label text-error" for="inputError">Selectionne una Semana</label>
+        <div class="controls">
           <div id="week"></div>
           <label></label> <span id="startDate"></span>  <span id="endDate"></span>
-           <input id="begin" name="begin" type="hidden" readonly="readonly" value="<?php echo set_value('begin')  ?>">
-           <input id="end" name="end" type="hidden" readonly="readonly" value="<?php echo set_value('end')  ?>">
+           <input id="begin" name="begin" type="hidden" readonly="readonly" value="<?php echo set_value('begin', isset($default_week['start']) ? $default_week['start'] : '')  ?>">
+           <input id="end" name="end" type="hidden" readonly="readonly" value="<?php echo set_value('end', isset($default_week['end']) ? $default_week['end'] : '')  ?>">
         </div>
       </div>
+<!--
       <div id="actions-buttons-forms" class="form-actions">
         <button type="submit" class="btn btn-primary">Ver reporte</button>
       </div>
+-->
     </fieldset>
 </form>
 
@@ -70,18 +97,17 @@
                           <strong>Listo: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
                     </div>
                 <?php endif; ?>
-               
-                
-                <?php if( $message['type'] == false ): ?>
+
+                <?php
+					$validation_errors = validation_errors();
+					if (( $message['type'] == false ) || $validation_errors) : ?>
                     <div class="alert alert-error">
                           <button type="button" class="close" data-dismiss="alert">×</button>
                           <img src="<?php echo base_url() ?>images/false.png" width="20" height="20" />
-                          <strong>Error: </strong> <?php  echo $message['message']; // Show Dinamical message error ?>
+                          <strong>Error: </strong> <?php  echo $message['message'] . $validation_errors; // Show Dinamical message error ?>
                     </div>
                 <?php endif; ?>
-            
-			
-			
+
 			<?php endif; ?>
                                             
         	<?php if( !empty( $data ) ): ?>
@@ -113,7 +139,9 @@
                       <th id="gmm_requests" class="header_manager" style="background-color: rgb(179, 212, 252);">Solicitudes GMM</th>
                       <th id="gmm_businesses" class="header_manager" style="background-color: rgb(179, 212, 252);">Negocios GMM</th>
                       <th id="autos_businesses" class="header_manager" style="background-color: rgb(252, 221, 176);">Negocios Autos</th>
+<?php if ($current_period == 2): ?>
                       <th id="comentario" class="header_manager">Comentarios</th>
+<?php endif; ?>
                   </tr>
               </thead> 
               <tfoot>
@@ -127,7 +155,9 @@
                       <td style="background-color: rgb(179, 212, 252);"><?php echo $data['totals']['gmm_requests'] ?></td>
                       <td style="background-color: rgb(179, 212, 252);"><?php echo $data['totals']['gmm_businesses'] ?></td>
                       <td style="background-color: rgb(252, 221, 176);"><?php echo $data['totals']['autos_businesses'] ?></td>
+<?php if ($current_period == 2): ?>
                       <td></td>
+<?php endif; ?>
                   </tr>
               </tfoot> 			  
               <tbody class="tbody">
@@ -142,15 +172,22 @@
                     <td class="center" style="background-color: rgb(179, 212, 252);"><?php echo $value['gmm_requests'] ?></td>
                     <td class="center" style="background-color: rgb(179, 212, 252);"><?php echo $value['gmm_businesses'] ?></td>
                     <td class="center" style="background-color: rgb(252, 221, 176);"><?php echo $value['autos_businesses'] ?></td>
+<?php if ($current_period == 2): ?>
                     <td class="center"><?php echo $value['comments'] ?></td>
+<?php endif; ?>
                 </tr>
                 <?php endforeach;  ?>                
               </tbody>
           </table>    
-          		  
+ 		  <?php else: ?>
+		  No hay datos.
 		  <?php endif; ?>
                            
         </div>
     </div><!--/span-->
 
 </div><!--/row-->
+
+<div style="display: none">
+<?php echo $period_form ?>
+</div>

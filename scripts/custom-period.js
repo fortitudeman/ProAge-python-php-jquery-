@@ -79,7 +79,8 @@ $(document).ready(function() {
 							alert('Se ha guardado el período personalizado correctamente.');
 							var customSelected = updatePeriodSelect("#periodo");
 							if (customSelected) // if the period currently selected is the custom one, refresh the page
-								window.location.reload();
+//								window.location.reload();
+								$("#periodo").parents("form").submit();
 						}
 					}
 				});

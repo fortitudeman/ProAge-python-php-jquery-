@@ -2915,23 +2915,10 @@ Display custom filter period
 		$result = 0;
 		if ( $this->input->is_ajax_request() )
 		{
-			$from = $this->input->post('cust_period_from');
-			$to = $this->input->post('cust_period_to');
-			if (($from !== FALSE) && ($to !== FALSE))
-			{
-				$from_array = explode('-', $from);
-				$to_array = explode('-', $to);
-				if ( (count($from_array) == 3) && (count($to_array) == 3) &&
-					checkdate ( $from_array[1], $from_array[2], $from_array[0]) && 
-					checkdate ( $to_array[1], $to_array[2], $to_array[0]) )
-				{
-					$this->session->set_userdata( array(
-						'custom_period_from' => $from,
-						'custom_period_to' => $to
-					));
-					$result = 1;
-				}
-			}
+			$this->load->helper('filter');
+			$result = update_custom_period(
+				$this->input->post('cust_period_from'), $this->input->post('cust_period_to')
+				);
 		}
 		echo $result;
 	}

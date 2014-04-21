@@ -263,17 +263,43 @@ class Activity extends CI_Model{
 		$data = array();
 		
 		if( empty( $table ) or empty( $values ) ) return false;
-		
-		$this->db->select();
+//		if ($values['periodo'] == 2)	// if Week is selected
+//		{
+//			$this->db->select();
+//		}
+//		else // Month, Year or Custom
+		if (TRUE)
+		{
+			$fields_selected = '`agents_activity`.`agent_id` ,
+`agents_activity`.`begin`,
+`agents_activity`.`end`,
+"" AS `comments`,
+`agents_activity`.`last_updated`,
+`agents_activity`.`date`,
+SUM( `agents_activity`.`cita` ) AS `cita` , 
+SUM( `agents_activity`.`prospectus` )  AS `prospectus`, 
+SUM( `agents_activity`.`interview` )  AS `interview`, 
+SUM( `agents_activity`.`vida_requests` )  AS `vida_requests`, 
+SUM( `agents_activity`.`vida_businesses` )  AS `vida_businesses`, 
+SUM( `agents_activity`.`gmm_requests` )  AS `gmm_requests`, 
+SUM( `agents_activity`.`gmm_businesses` )  AS `gmm_businesses`,
+SUM( `agents_activity`.`autos_businesses` )  AS `autos_businesses`,
+`users`.`name` ,
+`users`.`lastnames`';
+			$this->db->select($fields_selected, FALSE);
+			$this->db->group_by('agent_id');
+		}
 		$this->db->from( 'agents_activity' );
 		$this->db->join( 'agents', 'agents_activity.agent_id=agents.id');
 		$this->db->join( 'users', 'agents.user_id=users.id');
-		$this->db->where( 'begin', $values['begin'] );
-		$this->db->where( 'end', $values['end'] );
+//		$this->db->where( 'begin', $values['begin'] );
+//		$this->db->where( 'end', $values['end'] );
+		$this->db->where( array(
+			'begin >= ' => $values['begin'],
+			'end <= ' => $values['end']) );
 		$this->db->order_by( 'interview', 'desc' );
-		
 		$query = $this->db->get();		
-		
+
 		if ($query->num_rows() == 0) return false;
  	
 		$data = array(

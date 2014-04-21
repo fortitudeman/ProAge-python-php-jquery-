@@ -361,104 +361,104 @@ class Activities extends CI_Controller {
 
 		// Check access the user for create
 		if( $this->access_report == false ){
-				
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No tiene permisos para ingresar en esta sección "Actividades: Reporte", Informe a su administrador para que le otorgue los permisos necesarios.'
 							
 			));	
-			
-			
+
 			if( !empty( $userid ) )				
 				redirect( 'activities/index/'.$userid, 'refresh' );
 			else
 				redirect( 'activities', 'refresh' );
-			
-		
 		}
 			
-			
-		
+		$this->load->helper(array('filter', 'date_report'));
+		$default_filter = get_filter_period();
+		$default_week = get_calendar_week();
+		$params = array(
+			'periodo' => $default_filter,
+			'begin' => $default_week['start'],
+			'end' => $default_week['end'],
+		);
+		$data = array();
+		//Load Model
+		$this->load->model( array( 'activity', 'user' ) );
+
 		if( !empty( $_POST['begin'] ) ){
-										
+
 			// Generals validations
+			$this->form_validation->set_rules('periodo', 'Período', 'required|is_natural_no_zero|less_than[5]');
 			$this->form_validation->set_rules('begin', 'Semana', 'required');
-					
-			// Run Validation
-			if ( $this->form_validation->run() == TRUE ){
-				
-				//Load Model
-				$this->load->model( array( 'activity', 'user' ) );
-				
-			}
-			if (isset($_POST['begin'])) $report_period = " desde ".$_POST['begin']." hasta ".$_POST['end'];
-			else $report_period = "";
-			
-			$this->view = array(
-					
-			  'title' => 'Reporte de Actividades ' . $report_period,
-			    // Permisions
-			  'user' => $this->sessions,
-			  'user_vs_rol' => $this->user_vs_rol,
-			  'roles_vs_access' => $this->roles_vs_access,
-			  'access_create' => $this->access_create,
-			  'access_update' => $this->access_update,
-			  'access_delete' => $this->access_delete,
-			  'access_report' => $this->access_report,
-			  'access_viewall' => $this->access_viewall,
-			  'access_export' => $this->access_export,
-			  'css' => array(
-			  	'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet" media="screen">'
-			  ),
-			  'scripts' =>  array(
-				  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
-				  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-				  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-				  '<script src="'.base_url().'scripts/config.js"></script>',
-				  '<script src="'.base_url().'activities/assets/scripts/activities.js"></script>',
-				  '<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>'
-			  ),
-			  'content' => 'activities/report', // View to load
-			  'data' => $this->activity->report( 'agents_activity', $_POST ), // View to load
-			  'message' => $this->session->flashdata('message') // Return Message, true and false if have
-			);
-						
-		}				
-				
-		else {
-
-			$this->view = array(
-					
-			  'title' => 'Reporte de Actividades',
-			    // Permisions
-			  'user' => $this->sessions,
-			  'user_vs_rol' => $this->user_vs_rol,
-			  'roles_vs_access' => $this->roles_vs_access,
-			  'access_create' => $this->access_create,
-			  'access_update' => $this->access_update,
-			  'access_delete' => $this->access_delete,
-			  'access_report' => $this->access_report,
-			  'access_viewall' => $this->access_viewall,
-			  'access_export' => $this->access_export,
-			  'css' => array(
-			  	'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet" media="screen">'
-			  ),
-			  'scripts' =>  array(
-				  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
-				  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-				  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-				  '<script src="'.base_url().'scripts/config.js"></script>',
-				  '<script src="'.base_url().'activities/assets/scripts/activities.js"></script>'
-				  	
-			  ),
-			  'content' => 'activities/report', // View to load
-			  'message' => $this->session->flashdata('message') // Return Message, true and false if have
-			);
-
-		}				
+			$this->form_validation->set_rules('end', 'Semana', 'required');
 		
+			// Run Validation
+			if (( $this->form_validation->run() == TRUE ) &&
+				checkdate_from_to( $_POST['begin'], $_POST['end'] ))
+			{
+				$default_week = array('start' => $_POST['begin'], 'end' => $_POST['end']);
+				$default_filter = $_POST['periodo'];
+				set_filter_period($default_filter);
+				$params = array(
+					'periodo' => $_POST['periodo'],
+					'begin' => $_POST['begin'],
+					'end' => $_POST['end'],				
+				);
+				get_period_start_end($params);
+				$data = $this->activity->report( 'agents_activity', $params );
+			}
+		}
+		else {
+			get_period_start_end($params);
+			$data = $this->activity->report( 'agents_activity', $params );
+		}
+		switch ($default_filter)
+		{
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+				$report_period = ' desde ' . $params['begin'] . ' hasta ' . $params['end'];
+				break;
+			default:
+				$report_period = '';
+				break;
+		}
+		$this->view = array(
+		  'title' => 'Reporte de Actividades ' . $report_period,
+		    // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'access_create' => $this->access_create,
+		  'access_update' => $this->access_update,
+		  'access_delete' => $this->access_delete,
+		  'access_report' => $this->access_report,
+		  'access_viewall' => $this->access_viewall,
+		  'access_export' => $this->access_export,
+		  'css' => array(
+		  	'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet" media="screen">',
+			'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',
+		  ),
+		  'scripts' =>  array(
+			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+//			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+			'<script src="'.base_url().'scripts/config.js"></script>',
+			'<script src="'.base_url().'activities/assets/scripts/activities.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'scripts/custom-period.js"></script>',
+		  ),
+		  'content' => 'activities/report', // View to load
+		  'default_week' => $default_week,
+		  'data' => $data,
+		  'report_period' => $report_period,
+		  'period_form' => show_custom_period(), // custom period configuration form
+		  'current_period' => $default_filter,
+		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
+		);
+
 		// Render view 
 		$this->load->view( 'index', $this->view );		
 	
