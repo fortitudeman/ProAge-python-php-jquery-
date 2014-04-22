@@ -373,46 +373,11 @@ class Activities extends CI_Controller {
 			else
 				redirect( 'activities', 'refresh' );
 		}
-			
-		$this->load->helper(array('filter', 'date_report'));
-		$default_filter = get_filter_period();
-		$default_week = get_calendar_week();
-		$params = array(
-			'periodo' => $default_filter,
-			'begin' => $default_week['start'],
-			'end' => $default_week['end'],
-		);
-		$data = array();
-		//Load Model
-		$this->load->model( array( 'activity', 'user' ) );
+		$default_filter = 2;
+		$default_week = array();
+		$params = array();
+		$data = $this->_prepare_report($default_filter, $default_week, $params);	
 
-		if( !empty( $_POST['begin'] ) ){
-
-			// Generals validations
-			$this->form_validation->set_rules('periodo', 'Período', 'required|is_natural_no_zero|less_than[5]');
-			$this->form_validation->set_rules('begin', 'Semana', 'required');
-			$this->form_validation->set_rules('end', 'Semana', 'required');
-		
-			// Run Validation
-			if (( $this->form_validation->run() == TRUE ) &&
-				checkdate_from_to( $_POST['begin'], $_POST['end'] ))
-			{
-				$default_week = array('start' => $_POST['begin'], 'end' => $_POST['end']);
-				$default_filter = $_POST['periodo'];
-				set_filter_period($default_filter);
-				$params = array(
-					'periodo' => $_POST['periodo'],
-					'begin' => $_POST['begin'],
-					'end' => $_POST['end'],				
-				);
-				get_period_start_end($params);
-				$data = $this->activity->report( 'agents_activity', $params );
-			}
-		}
-		else {
-			get_period_start_end($params);
-			$data = $this->activity->report( 'agents_activity', $params );
-		}
 		switch ($default_filter)
 		{
 			case 1:
@@ -481,11 +446,12 @@ class Activities extends CI_Controller {
 			else
 				redirect( 'activities', 'refresh' );
 		}
+		$default_filter = 2;
+		$default_week = array();
+		$params = array();
+		$data = $this->_prepare_report($default_filter, $default_week, $params);
 
-		// Check begin and end dates
-		$this->load->helper('activities/date_report');
-		if ( !isset($_POST['begin']) || !isset($_POST['end']) || 
-			!checkdate_from_to( $_POST['begin'], $_POST['end'] ) ) {
+		if ( validation_errors() ) {
 
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
@@ -499,30 +465,26 @@ class Activities extends CI_Controller {
 				redirect( 'activities', 'refresh' );
 		}
 
-		$filename = "proages_actividades_report_" . $_POST['begin'] . ".csv";
-		header('Content-Type: application/csv');
-        header('Content-Disposition: attachement; filename="$filename"');
-		
-		// Load Model and csv helper
-		$this->load->model( 'activity' );
-		$this->load->helper('usuarios/csv');
-
-		// Generate report and output it
-		$data = $this->activity->report( 'agents_activity', $_POST );
-		$report_data = array(
-			array(
+		// Generate csv report and output it
+		$title_row = array(
 				'Agente', 'Citas', 'Entrevistas', 'Prospectos', 'Solicitudes Vida', 
-				'Negocios Vida', 'Solicitudes GMM', 'Negocios GMM', 'Negocios Autos', 'Comentarios'
-			)
-		);
+				'Negocios Vida', 'Solicitudes GMM', 'Negocios GMM', 'Negocios Autos',
+			);
+		if ($default_filter == 2)
+			$title_row[] = 'Comentarios';
+		$report_data = array(0 => $title_row);
+
 		foreach ($data['rows'] as $value) {
-			$report_data[] = array(
+			$data_row = array(
 				$value['name'] . ' ' . $value['lastnames'],
 				$value['cita'], $value['interview'],
 				$value['prospectus'], $value['vida_requests'],
 				$value['vida_businesses'], $value['gmm_requests'], $value['gmm_businesses'],
-				$value['autos_businesses'], $value['comments']
+				$value['autos_businesses'],
 			);
+			if ($default_filter == 2)
+				$data_row[] = $value['comments'];
+			$report_data[] = $data_row;
 		}
 
 		$report_data[] = array(
@@ -532,6 +494,11 @@ class Activities extends CI_Controller {
 			$data['totals']['gmm_businesses'], $data['totals']['autos_businesses']
 		);
 
+		// Load csv helper
+		$this->load->helper('usuarios/csv');
+		$filename = "proages_actividades_report_" . $params['begin'] . '_' . $params['end'] . ".csv";
+		header('Content-Type: application/csv');
+        header('Content-Disposition: attachement; filename="$filename"');
 	 	array_to_csv($report_data, $filename);
 		
 		if( is_file( $filename ) )
@@ -542,6 +509,49 @@ class Activities extends CI_Controller {
 				
 		exit;
 
+	}
+// Prepare report (common to page report and export
+	private function _prepare_report(&$default_filter, &$default_week, &$params)
+	{
+		$this->load->helper(array('filter', 'date_report'));
+		$default_filter = get_filter_period();
+		$default_week = get_calendar_week();
+		$params = array(
+			'periodo' => $default_filter,
+			'begin' => $default_week['start'],
+			'end' => $default_week['end'],
+		);
+		//Load Model
+		$this->load->model( array( 'activity', 'user' ) );
+
+		if( !empty( $_POST['begin'] ) ){
+
+			// Generals validations
+			$this->form_validation->set_rules('periodo', 'Período', 'required|is_natural_no_zero|less_than[5]');
+			$this->form_validation->set_rules('begin', 'Semana', 'required');
+			$this->form_validation->set_rules('end', 'Semana', 'required');
+		
+			// Run Validation
+			if (( $this->form_validation->run() == TRUE ) &&
+				checkdate_from_to( $_POST['begin'], $_POST['end'] ))
+			{
+				$default_week = array('start' => $_POST['begin'], 'end' => $_POST['end']);
+				$default_filter = $_POST['periodo'];
+				set_filter_period($default_filter);
+				$params = array(
+					'periodo' => $_POST['periodo'],
+					'begin' => $_POST['begin'],
+					'end' => $_POST['end'],				
+				);
+				get_period_start_end($params);
+				$data = $this->activity->report( 'agents_activity', $params );
+			}
+		}
+		else {
+			get_period_start_end($params);
+			$data = $this->activity->report( 'agents_activity', $params );
+		}
+		return $data;
 	}
 
 // Update activity	

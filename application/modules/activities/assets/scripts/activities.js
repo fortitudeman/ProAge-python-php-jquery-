@@ -116,9 +116,10 @@ $( document ).ready(function() {
     selectCurrentWeek();
     $("#sorter").tablesorter(); 
     
-// The below is causing js error:
+// The 2 lines below is causing js error:
 //    $('#week .ui-datepicker-calendar tr').live('mousemove', function() { $(this).find('td a').addClass('ui-state-hover'); });
 //    $('#week .ui-datepicker-calendar tr').live('mouseleave', function() { $(this).find('td a').removeClass('ui-state-hover'); });
+
 	$("#period_opt4").on( "click", function( event ) {
 		$( "#cust_period-form" ).dialog( "open" );
 	});
@@ -127,7 +128,9 @@ $( document ).ready(function() {
 		var parentForm = $(this).parents("form");
 		var optionSelected = 0;
 		$("#periodo option:selected").each(function () {
+			$(".activity_results").hide();
 			optionSelected = $(this).val();
+			$("#periodo-export").val(optionSelected);
 			if (optionSelected == 2) {
 				$("#semana-container").show();
 			} else {
@@ -141,6 +144,7 @@ $( document ).ready(function() {
 			return false;
 		});
 	});
+
 });
 
 function month( month ){

@@ -37,7 +37,7 @@ else
         <li>
             Reporte <span class="divider">/</span>
         </li>
-        <li>		
+        <li class="activity_results">		
         <?php echo $report_period ?>
         </li>
     </ul>
@@ -111,23 +111,25 @@ else
 			<?php endif; ?>
                                             
         	<?php if( !empty( $data ) ): ?>
-
-            <div class="row">
+            <div class="row activity_results">
                 <div class="span6"></div>
                 <div class="span4"></div>
                 <div class="span1">
-				   <?php if ( ( $access_export == true ) && isset($_POST['begin']) && isset($_POST['end'])) : ?>
-				   <form id="form" action="<?php echo base_url() ?>activities/exportar.html" class="form-horizontal" method="post">
+				   <?php if ( $access_export == true ) : ?>
+
+				   <form id="export-form" action="<?php echo base_url() ?>activities/exportar.html" class="form-horizontal" method="post">
 				      <button id="create-export" class="btn pull-right">Exportar</button>
-					  <input id="begin-export" name="begin" type="hidden" readonly="readonly" value="<?php echo $_POST['begin'] ?>" />
-					  <input id="end-export" name="end" type="hidden" readonly="readonly" value="<?php echo $_POST['end'] ?>" />				  
+					  <input id="begin-export" name="begin" type="hidden" readonly="readonly" value="<?php echo set_value('begin', isset($default_week['start']) ? $default_week['start'] : '')  ?>" />
+					  <input id="end-export" name="end" type="hidden" readonly="readonly" value="<?php echo set_value('end', isset($default_week['end']) ? $default_week['end'] : '')  ?>" />
+					  <input id="periodo-export" name="periodo" type="hidden" readonly="readonly" value="<?php echo $current_period ?>" />  
 				   </form>
 				   <?php endif; ?>
+
                 </div>
             </div>
             <br /><br />
 
-            <table class="table table-striped table-bordered bootstrap-datatable datatable tablesorter sortable altrowstable" id="sorter">
+            <table class="table table-striped table-bordered bootstrap-datatable datatable tablesorter sortable altrowstable activity_results" id="sorter">
               <thead class="head">
                   <tr>
                       <th id="agente" class="header_manager">Agente</th>
@@ -178,9 +180,9 @@ else
                 </tr>
                 <?php endforeach;  ?>                
               </tbody>
-          </table>    
+          </table>
  		  <?php else: ?>
-		  No hay datos.
+		  <span class="activity_results">No hay datos.</span>
 		  <?php endif; ?>
                            
         </div>

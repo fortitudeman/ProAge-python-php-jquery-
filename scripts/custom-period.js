@@ -90,6 +90,7 @@ $(document).ready(function() {
 			"Cancelar": function() {
 				$("#cust_period_from").val(defFrom);
 				$("#cust_period_to").val(defTo);
+				$(".activity_results").show();
 				$( this ).dialog( "close" );
 				return false;
 			}
