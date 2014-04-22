@@ -263,12 +263,12 @@ class Activity extends CI_Model{
 		$data = array();
 		
 		if( empty( $table ) or empty( $values ) ) return false;
-//		if ($values['periodo'] == 2)	// if Week is selected
-//		{
-//			$this->db->select();
-//		}
-//		else // Month, Year or Custom
-		if (TRUE)
+		if ($values['periodo'] == 2)	// if Week is selected
+		{
+			$this->db->select();
+		}
+		else // Month, Year or Custom
+//		if (TRUE)
 		{
 			$fields_selected = '`agents_activity`.`agent_id` ,
 `agents_activity`.`begin`,

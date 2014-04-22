@@ -133,6 +133,7 @@ $( document ).ready(function() {
 			$("#periodo-export").val(optionSelected);
 			if (optionSelected == 2) {
 				$("#semana-container").show();
+				parentForm.submit();
 			} else {
 				$("#semana-container").hide();
 				if ((optionSelected == 1) || (optionSelected == 3)) {

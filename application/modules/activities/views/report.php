@@ -49,8 +49,8 @@ else
         <label class="control-label text-error" for="inputError">Período</label>
         <div class="controls">
           <select style="float: left" id="periodo" name="periodo">
+            <option value="2" <?php echo $selected_filter_period[2] ?>>Una Semana</option>
             <option value="1" <?php echo $selected_filter_period[1] ?>>Mes actual</option>
-            <option value="2" <?php echo $selected_filter_period[2] ?>>Una Semana</option>	  
             <option value="3" <?php echo $selected_filter_period[3] ?>>Año actual</option>
             <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
           </select>
@@ -63,7 +63,7 @@ else
 </span>
       </div>		  
       <div class="control-group" id="semana-container" <?php if (!$selected_filter_period[2]) echo 'style="display: none"' ?> >
-        <label class="control-label text-error" for="inputError">Selectionne una Semana</label>
+        <label class="control-label text-error" for="inputError">Seleccione una Semana</label>
         <div class="controls">
           <div id="week"></div>
           <label></label> <span id="startDate"></span>  <span id="endDate"></span>
