@@ -2267,10 +2267,10 @@ class User extends CI_Model{
 			$this->db->select( 'payments.*' );		
 		$this->db->from( 'payments' );
 		$this->db->where( array( 'agent_id' => $agent_id));
-		if ($count_requested)
-			$this->db->where( array( 'business' => 1) );
-		else
-			$this->db->where( "((business = '1') OR (business = '-1'))" );		
+//		if ($count_requested)
+//			$this->db->where( array( 'business' => 1) );
+//		else
+			$this->db->where( "((business = '1') OR (business = '-1'))" );
 
 		if( !empty( $filter ) ){
 			
@@ -2531,9 +2531,10 @@ class User extends CI_Model{
 		$this->db->from( 'payments' );		
 		//$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		//$this->db->join( 'users', 'users.id=agents.user_id' );
-		$this->db->where( array( 'agent_id' => $agent_id, 'business' => 1 ) );
-  		
-		
+//		$this->db->where( array( 'agent_id' => $agent_id, 'business' => 1 ) );
+		$this->db->where( array( 'agent_id' => $agent_id));
+		$this->db->where( "((business = '1') OR (business = '-1'))" );
+
 		if( !empty( $filter ) ){
 			
 			
@@ -2594,7 +2595,7 @@ class User extends CI_Model{
 				}
 			}
 		}
-		$query = $this->db->get(); 
+		$query = $this->db->get();
 		if ($query->num_rows() == 0) return 0;		
 		
 		$pai = array();
