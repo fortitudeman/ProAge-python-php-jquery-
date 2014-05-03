@@ -2266,7 +2266,7 @@ class User extends CI_Model{
 		else
 			$this->db->select( 'payments.*' );		
 		$this->db->from( 'payments' );
-		$this->db->where( array( 'agent_id' => $agent_id));
+		$this->db->where( array( 'agent_id' => $agent_id, 'valid_for_report' => '1'));
 //		if ($count_requested)
 //			$this->db->where( array( 'business' => 1) );
 //		else
@@ -2532,7 +2532,7 @@ class User extends CI_Model{
 		//$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
 		//$this->db->join( 'users', 'users.id=agents.user_id' );
 //		$this->db->where( array( 'agent_id' => $agent_id, 'business' => 1 ) );
-		$this->db->where( array( 'agent_id' => $agent_id));
+		$this->db->where( array( 'agent_id' => $agent_id, 'valid_for_report' => '1'));
 		$this->db->where( "((business = '1') OR (business = '-1'))" );
 
 		if( !empty( $filter ) ){
@@ -2818,7 +2818,7 @@ class User extends CI_Model{
 		else
 			$this->db->select( 'payments.*' );
 		$this->db->from( 'payments' );
-		$this->db->where( array( 'agent_id' => $agent_id, 'year_prime' => 1 ) );
+		$this->db->where( array( 'agent_id' => $agent_id, 'year_prime' => 1, 'valid_for_report' => 1) );
 
 		if( !empty( $filter ) ){
 
@@ -3360,7 +3360,7 @@ if( !empty( $filter ) ){
 		
 		$this->db->select( 'SUM(amount) as count' );
 		$this->db->from( 'payments' );
-		$this->db->where( array( 'year_prime' => 1 ) );
+		$this->db->where( array( 'year_prime' => 1, 'valid_for_report' => 1 ) );
 				
 		$querypayments = $this->db->get(); 
 		
@@ -3524,7 +3524,7 @@ if( !empty( $filter ) ){
 				
 		$this->db->select( 'SUM(amount) as count' );
 		$this->db->from( 'payments' );
-		$this->db->where( array( 'year_prime >' => 1 ) );
+		$this->db->where( array( 'year_prime >' => 1, 'valid_for_report' => 1 ) );
 				
 		$querypayments = $this->db->get(); 
 		

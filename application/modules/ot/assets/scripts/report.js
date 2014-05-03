@@ -239,7 +239,7 @@ $( document ).ready(function() {
             return false;        
        });
        
-	$( '.mark-ntu' ).bind( 'click', function(){
+	$( '.mark-ntu' ).on( "click", function( event ) {
 		var current = $(this);
 		var allParams = current.attr('id').split('-');
 		if (allParams.length < 4) {
@@ -281,4 +281,60 @@ $( document ).ready(function() {
 			});
 		}
 	});  
+
+	$(".action_option").on( "click", function( event ) {
+		var current = $(this);
+		var paymentAction = '';
+		var confirmMessage = '';
+		var errorMessage_1 = '';
+		var errorMessage0 = '';
+		var errorMessageOK = '';		
+		if (current.hasClass('mark_ignored')) {
+			paymentAction = 'mark_ignored';
+			confirmMessage = '¿Esta seguro que desea ignorar el pago ?';
+			errorMessage_1 = 'No se pudo marcar el pago como ignorado. Informe a su administrador.';
+			errorMessage0 = 'Ocurrio un error, no se pudo guardar el pago, consulte a su administrador.';
+			errorMessageOK = 'Se marco el pago como ignorado correctamente. La página web debe ser actualizada para reflejar los cambios.';
+		} else if (current.hasClass('payment_delete')) {
+			paymentAction = 'payment_delete';
+			confirmMessage = '¿Esta seguro que desea borrar el pago ?';
+			errorMessage_1 = 'No se pudo borrar el pago. Informe a su administrador.';
+			errorMessage0 = 'Ocurrio un error, no se pudo borrar el pago, consulte a su administrador.';
+			errorMessageOK = 'Se pudo borrar el pago correctamente. La página web debe ser actualizada para reflejar los cambios.';
+		} else
+			return false;
+		if ( confirm( confirmMessage ) ) {
+			var form = $(this).siblings(".payment_detail_form");
+			form.children(".payment_action").val(paymentAction);
+			$.ajax({
+				url: '<?php echo site_url('ot/payment_actions')?>',
+				type: 'POST',
+				data: form.serialize(),
+				dataType : 'json',
+				beforeSend: function(){
+					$(".action_option").hide();
+				},
+				success: function(response){
+					switch (response) {
+						case '-1':
+							alert (errorMessage_1);
+							break;
+						case '0':
+							alert (errorMessage0);
+							break;
+						case '1':
+						//  refresh the whole page to reflect the change
+							alert (errorMessageOK);
+							window.location.reload();
+							break;
+						default:
+							alert ('Hay un error en la respuesta del sitio web, consulte a su administrador.');
+							break;
+					}
+				}
+			});
+		}
+		return false;
+	});
+
 });

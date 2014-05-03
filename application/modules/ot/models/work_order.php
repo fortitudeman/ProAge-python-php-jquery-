@@ -1755,5 +1755,38 @@ class Work_order extends CI_Model{
 
 		return ($q->num_rows() > 0) ? $q->result() : FALSE;		
 	}
+
+// Another generic update method
+	public function generic_update( $table = null, $values = null, $where = null, $limit = null, $offset = 0 ) {
+		if (( $table === null ) ||  !is_array($values) || !count($values)) 
+			return FALSE;
+
+		$where = is_array($where) ? $where : array();
+		foreach ($where as $key => $value)
+			$this->db->where($key, $value);
+		//limit
+		if ($limit)	    
+			$this->db->limit($limit, $offset);
+
+		$result = $this->db->update($table, $values) && ($this->db->affected_rows() > 0);
+		return $result;
+	}
+
+// Another generic delete method
+	public function generic_delete( $table = null, $where = null, $limit = null, $offset = 0 ) {
+		if ( $table === null )
+			return FALSE;
+
+		$where = is_array($where) ? $where : array();
+		foreach ($where as $key => $value)
+			$this->db->where($key, $value);
+		//limit
+		if ($limit)	    
+			$this->db->limit($limit, $offset);
+
+		$result = $this->db->delete($table) && ($this->db->affected_rows() > 0);
+		return $result;
+	}
+
 }
 ?>

@@ -2345,7 +2345,10 @@ implode(', ', $ramo_tramite_types) . '
 // Popup pertaining to payments
 	public function payment_popup()
 	{
-		$data = array('values' => FALSE);
+		$data = array('values' => FALSE,
+			'access_update' => $this->access_update,
+			'access_delete' => $this->access_delete,
+		);
 		$this->load->model('usuarios/user');
 		$filter = array();
 		$posted_filter_query = $this->input->post('query');
@@ -2854,7 +2857,7 @@ implode(', ', $ramo_tramite_types) . '
 		$this->load->view( 'index', $this->view );
 	}
 
-// mark ntu
+// mark OT as ntu
 	public function mark_ntu(){
 
 		if ( !$this->input->is_ajax_request() || 
@@ -2862,7 +2865,7 @@ implode(', ', $ramo_tramite_types) . '
 			echo json_encode('-1');
 			exit;
 		}
-		$result = json_encode(0);
+		$result = json_encode('0');
 		$order_id = $this->input->post('order_id');
 		$gmm = $this->input->post('gmm');
 		$is_poliza = $this->input->post('is_poliza');
@@ -2883,6 +2886,9 @@ implode(', ', $ramo_tramite_types) . '
 					'gmm' => $gmm,
 					'access_update' => $this->access_update);
 				$row_result['value'] = $this->work_order->pop_up_data($order_id);
+				$this->load->model( 'user' );
+				$row_result['value']['general'][0]->adjusted_prima = $this->user->get_adjusted_prima(
+					$row_result['value']['general'][0]->policy_id );
 				$data['main'] = $this->load->view('popup_report_main_row', $row_result, TRUE);
 				$data['menu'] = $this->load->view('popup_report_menu_row', $row_result, TRUE);
 				$result = json_encode($data);
@@ -2923,6 +2929,55 @@ Display custom filter period
 		echo $result;
 	}
 
+// actions on payment (ignore, delete)
+	public function payment_actions()
+	{
+
+		if ( !$this->input->is_ajax_request() || 
+			!$this->access_update ){
+			echo json_encode('-1');
+			exit;
+		}
+		$result = json_encode('0');
+		$agent_id = $this->input->post('for_agent_id');
+		$amount = $this->input->post('amount');
+		$payment_date = $this->input->post('payment_date');
+		$policy_number = $this->input->post('policy_number');
+		$action = $this->input->post('payment_action');
+		if (($agent_id !== FALSE) && strlen($agent_id = trim($agent_id)) &&
+			($amount !== FALSE) && strlen($amount = trim($amount)) && $this->form_validation->decimal_or_integer($amount) &&
+			($payment_date !== FALSE) && (strlen($payment_date = trim($payment_date)) == 10) &&
+			($policy_number !== FALSE) && (strlen($policy_number = trim($policy_number)) >=  0) &&
+			($action !== FALSE) && (($action == 'mark_ignored') || ($action == 'payment_delete'))
+			)
+		{
+			$this->load->model( 'work_order' );
+			$compare_amount = abs(floor($amount * 100));
+			$where = array(
+				'agent_id' => (int)$agent_id,
+				"ABS(ABS(amount * 100) - $compare_amount) <= " => 1,
+				'payment_date' => $payment_date,
+				'policy_number' => $policy_number
+			);
+			switch ($action) 
+			{
+				case 'mark_ignored':
+					$db_result = $this->work_order->generic_update('payments', array('valid_for_report' => 0), $where, 1, 0);
+					break;
+				case 'payment_delete':
+					$db_result = $this->work_order->generic_delete('payments', $where, 1, 0);
+					break;
+				break;
+				default:
+					$db_result = FALSE;
+					break;
+			}
+			if ( $db_result )
+				$result = json_encode('1');
+		}
+		echo $result;
+		exit;
+	}
 /* End of file ot.php */
 /* Location: ./application/controllers/ot.php */
 }

@@ -332,7 +332,8 @@ class Simulators extends CI_Model{
 		$this->db->where( 'agent_id', $agent );
 		$this->db->where( 'business', 1 );
 		$this->db->where( 'product_group', $product_group_id );
-				
+		$this->db->where( 'valid_for_report', 1 );
+		
 		$query = $this->db->get();
 
 		if ($query->num_rows() == 0) return false;
@@ -375,10 +376,10 @@ class Simulators extends CI_Model{
 		$this->db->where( 'agent_id', $agent );
                 $this->db->where( 'year_prime', 1 );
 		$this->db->where( 'product_group', $product_group_id );
-		
+		$this->db->where( 'valid_for_report', 1 );		
 				
 		$query = $this->db->get();
-		
+	
 		if ($query->num_rows() == 0) return 0;
 		
 		$data = array();
