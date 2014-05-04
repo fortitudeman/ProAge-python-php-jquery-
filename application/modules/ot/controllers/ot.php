@@ -2952,10 +2952,10 @@ Display custom filter period
 			)
 		{
 			$this->load->model( 'work_order' );
-			$compare_amount = abs(floor($amount * 100));
+			$compare_amount = floor($amount * 100);
 			$where = array(
 				'agent_id' => (int)$agent_id,
-				"ABS(ABS(amount * 100) - $compare_amount) <= " => 1,
+				"ABS((amount * 100) - ($compare_amount) ) <= " => 1,
 				'payment_date' => $payment_date,
 				'policy_number' => $policy_number
 			);
