@@ -26,10 +26,10 @@ $delete_image = '';
 if ( $access_delete )
 {
 	$delete_image = '
-&nbsp;&nbsp;<img class="payment_delete action_option" alt="Borrar" title="Borrar" src="' . $base_url . 'images/payment_delete.jpg" />';
+&nbsp;&nbsp;<img style="cursor: pointer" class="payment_delete action_option" alt="Borrar" title="Borrar" src="' . $base_url . 'images/payment_delete.jpg" />';
 }
 $ignore_image = '
-<img class="mark_ignored action_option" alt="Ignorar" title="Ignorar" src="' . $base_url . 'images/payment_ignore.jpg" />';
+<img style="cursor: pointer" class="mark_ignored action_option" alt="Ignorar" title="Ignorar" src="' . $base_url . 'images/payment_ignore.jpg" />';
 
 ?>
 <table class="altrowstable payment_table">
