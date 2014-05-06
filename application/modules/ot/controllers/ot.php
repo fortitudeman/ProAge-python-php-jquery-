@@ -2206,13 +2206,22 @@ implode(', ', $ramo_tramite_types) . '
 			if ( isset($_POST['query']['ramo']) && $this->form_validation->is_natural_no_zero($_POST['query']['ramo']) &&
 				($_POST['query']['ramo'] <= 3) )
 				$filters_to_save['ramo'] = $_POST['query']['ramo'];
-			if ( isset($_POST['query']['gerente']) && $this->form_validation->is_natural_no_zero($_POST['query']['gerente']))
+			if ( isset($_POST['query']['gerente']) && 
+				(($_POST['query']['gerente'] == '') || 
+				$this->form_validation->is_natural_no_zero($_POST['query']['gerente']))
+				)
 				$filters_to_save['gerente'] = $_POST['query']['gerente'];
-			if ( isset($_POST['query']['agent']) && $this->form_validation->is_natural($_POST['query']['agent']) &&
-				($_POST['query']['agent'] <= 3))
+			if ( isset($_POST['query']['agent']) &&
+				(  ($_POST['query']['agent'] == '') || 
+				( $this->form_validation->is_natural_no_zero($_POST['query']['agent']) &&
+				($_POST['query']['agent'] <= 3))   )
+				)
 				$filters_to_save['agent'] = $_POST['query']['agent'];
-			if ( isset($_POST['query']['generacion']) && $this->form_validation->is_natural($_POST['query']['generacion']) &&
-				($_POST['query']['generacion'] <= 5) )
+			if ( isset($_POST['query']['generacion']) &&
+				(  ($_POST['query']['generacion'] == '') || 
+				 ( $this->form_validation->is_natural_no_zero($_POST['query']['generacion']) &&
+				($_POST['query']['generacion'] <= 5)) )
+				)
 				$filters_to_save['generacion'] = $_POST['query']['generacion'];
 			set_ot_report_filter( $filters_to_save );
 //			$other_filters = array_merge($other_filters, $filters_to_save);
