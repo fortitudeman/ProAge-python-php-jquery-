@@ -39,15 +39,21 @@ function stickyFooter(){
 
         $("#sorter-report1").tablesorter({  // Vida report
         // sort on the first column and third column, order asc 
-            sortList: [[0,0],[2,0]] 
+            sortList: [[0,0],[2,0]],
+		// use save sort widget
+			widgets: ["saveSort"]
         });
 	    $("#sorter-report2").tablesorter({ // GMM report
         // sort on the first column and third column, order asc 
-            sortList: [[0,0],[2,0]] 
+            sortList: [[0,0],[2,0]],
+		// use save sort widget
+			widgets: ["saveSort"]
         }); 
 	    $("#sorter-report3").tablesorter({ // Autos report
         // sort on the first column and third column, order asc 
-            sortList: [[0,0],[2,0]] 
+            sortList: [[0,0],[2,0]],
+		// use save sort widget
+			widgets: ["saveSort"]
         }); 
 		
              $('.select1').ddslick({width:'120'});

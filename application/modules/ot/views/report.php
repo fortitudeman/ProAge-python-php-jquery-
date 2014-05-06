@@ -23,7 +23,6 @@ else
 	$selected_filter_period = get_selected_filter_period();
 ?>
 
-
 <div>
     <ul class="breadcrumb">
         <li>
@@ -67,33 +66,15 @@ else
             <div class="row">
                 <div class="span11" style="margin-left:40px; width:95%">
                     <div class="main-container">
-                        <div class="main  clearfix">                               
-                            <?php if (!isset($_POST['query']['ramo']) or isset($_POST['query']['ramo']) and $_POST['query']['ramo'] == 1): ?>  
-                                <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" style="color:#06F">Vida</a>
-                            <?php else: ?>   
-                                <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida">Vida</a>
-                            <?php endif; ?>              
-
-                            <?php if (isset($_POST['query']['ramo']) and $_POST['query']['ramo'] == 2): ?> 
-                                
-                                <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" style="color:#06F">GMM</a>
-
-                            <?php else: ?>   
-                                <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm">GMM</a>
-                            <?php endif; ?>     
-
-
-                            <?php if (isset($_POST['query']['ramo']) and $_POST['query']['ramo'] == 3): ?> 
-                                <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" style="color:#06F">Autos</a>
-                            <?php else: ?>   
-                                <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos">Autos</a>
-                            <?php endif; ?>     
-
+                        <div class="main clearfix">                               
+                            <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" <?php if ($other_filters['ramo'] == 1) echo 'style="color:#06F"' ?>>Vida</a>
+                            <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" <?php if ($other_filters['ramo'] == 2) echo 'style="color:#06F"' ?>>GMM</a>
+                            <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" <?php if ($other_filters['ramo'] == 3) echo 'style="color:#06F"' ?>>Autos</a>
 
                             <p class="line">&nbsp; </p>
 							<div>&nbsp;&nbsp;<i class="icon-calendar" id="cust_update-period" title="Click para editar el período personalizado"></i></div>
                             <form id="form" method="post">                      	
-                                <input type="hidden" name="query[ramo]" id="ramo" value="<?php if (isset($_POST['query']['ramo'])) echo $_POST['query']['ramo']; else echo 1; ?>" />
+                                <input type="hidden" name="query[ramo]" id="ramo" value="<?php echo $other_filters['ramo'] ?>" />
 
                                 <table  class="filterstable" style="width:99%;">
                                     <thead>
@@ -101,43 +82,40 @@ else
                                             <th>
                                                 <select id="periodo" name="query[periodo]" onchange="this.form.submit();">
                                                     <option value="1" <?php echo $selected_filter_period[1] ?>>Mes</option>
-                                                    <?php if (!isset($_POST['query']['ramo']) or isset($_POST['query']['ramo']) and $_POST['query']['ramo'] == 1): ?> 
+<?php if (!isset($_POST['query']['ramo']) or isset($_POST['query']['ramo']) and $_POST['query']['ramo'] == 1): ?> 
                                                     <option value="2" <?php echo $selected_filter_period[2] ?> class="set_periodo">Trimestre</option>
-                                                    <?php else: ?>
+<?php else: ?>
                                                     <option value="2" <?php echo $selected_filter_period[2] ?> class="set_periodo">Cuatrimestre</option>
-                                                    <?php endif; ?>
+<?php endif; ?>
                                                     <option value="3" <?php echo $selected_filter_period[3] ?>>Año</option>
                                                     <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
                                                 </select>
                                             </th>
                                             <th>
-                                                <input type="hidden" id="gerente_value" value="<?php if (isset($_POST['query']['gerente'])) echo $_POST['query']['gerente']; ?>" />
+                                                <input type="hidden" id="gerente_value" value="<?php echo $other_filters['gerente']; ?>" />
                                                 <select id="gerente" name="query[gerente]" class="select" style="width:145px;" onchange="this.form.submit();">
                                                     <option value="">Todos los gerentes</option>                                        
                                                     <?php if (!empty($manager)): foreach ($manager as $value): ?>
-                                                            <?php if (isset($_POST['query']['gerente']) and $_POST['query']['gerente'] == $value['id']): ?>
-                                                                <option selected="selected" value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></option>
-                                                            <?php else: ?>
-                                                                <option value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></option>
-                                                            <?php endif; ?>
-                                                        <?php endforeach;
+
+                                                    <option <?php if ($other_filters['gerente'] == $value['id']) echo 'selected="selected"' ?> value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></option>
+                                                    <?php endforeach;
                                                     endif; ?>
                                                 </select>
                                             </th>
                                             <th>
-                                                <select id="agent" name="query[agent]" class="select2"  style="width:140px;" onchange="this.form.submit();">
-                                                    <option value="" <?php if (isset($_POST['query']['agent']) and $_POST['query']['agent'] == 1) echo 'selected="selected"' ?>>Todos los agentes</option>
-                                                    <option value="2" <?php if (isset($_POST['query']['agent']) and $_POST['query']['agent'] == 2) echo 'selected="selected"' ?>>Cancelados</option>
-                                                    <option value="3" <?php if (isset($_POST['query']['agent']) and $_POST['query']['agent'] == 3) echo 'selected="selected"' ?>>Vigentes</option>
+                                                <select id="agent" name="query[agent]" class="select2" style="width:140px;" onchange="this.form.submit();">
+                                                    <option value="" <?php if (!$other_filters['agent'] || ($other_filters['agent'] == 1)) echo 'selected="selected"' ?>>Todos los agentes</option>
+                                                    <option value="2" <?php if ($other_filters['agent'] == 2) echo 'selected="selected"' ?>>Cancelados</option>
+                                                    <option value="3" <?php if ($other_filters['agent'] == 3) echo 'selected="selected"' ?>>Vigentes</option>
                                                 </select>
                                             </th>
                                             <th>
                                                 <select id="generarion" name="query[generacion]" class="select3" style="width:180px;" onchange="this.form.submit();">
-                                                    <option value="" <?php if (isset($_POST['query']['generacion']) and $_POST['query']['generacion'] == 1) echo 'selected="selected"' ?>>Todas las Generaciónes</option>
-                                                    <option value="3"<?php if (isset($_POST['query']['generacion']) and $_POST['query']['generacion'] == 3) echo 'selected="selected"' ?>>Generación 1</option>
-                                                    <option value="4"<?php if (isset($_POST['query']['generacion']) and $_POST['query']['generacion'] == 4) echo 'selected="selected"' ?>>Generación 2</option>
-                                                    <option value="5"<?php if (isset($_POST['query']['generacion']) and $_POST['query']['generacion'] == 5) echo 'selected="selected"' ?>>Generación 3</option>
-                                                    <option value="2"<?php if (isset($_POST['query']['generacion']) and $_POST['query']['generacion'] == 2) echo 'selected="selected"' ?>>Consolidado</option>
+                                                    <option value="" <?php if (!$other_filters['generacion'] || ($other_filters['generacion'] == 1)) echo 'selected="selected"' ?>>Todas las Generaciónes</option>
+                                                    <option value="3" <?php if ($other_filters['generacion'] == 3) echo 'selected="selected"' ?>>Generación 1</option>
+                                                    <option value="4" <?php if ($other_filters['generacion'] == 4) echo 'selected="selected"' ?>>Generación 2</option>
+                                                    <option value="5" <?php if ($other_filters['generacion'] == 5) echo 'selected="selected"' ?>>Generación 3</option>
+                                                    <option value="2" <?php if ($other_filters['generacion'] == 2) echo 'selected="selected"' ?>>Consolidado</option>
                                                 </select>
                                             </th>
                                             <th>&nbsp; </th>

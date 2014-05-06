@@ -2188,16 +2188,43 @@ implode(', ', $ramo_tramite_types) . '
 		}
 		$this->load->helper('filter');
 		$default_filter = get_filter_period();
+		$other_filters = array(
+			'ramo' => 1,
+			'gerente' => '',
+			'agent' => '',
+			'generacion' => '', // not sure if this should not be 1 instead
+		);
+		get_ot_report_filter($other_filters);
+
 		if( !empty( $_POST ) )
 		{
-			if ( isset($_POST['query']['periodo']) &&
-				($_POST['query']['periodo'] >= 1) && ($_POST['query']['periodo'] <= 4) )
-			set_filter_period($_POST['query']['periodo']);	
+			if ( isset($_POST['query']['periodo']) && $this->form_validation->is_natural_no_zero($_POST['query']['periodo']) &&
+				($_POST['query']['periodo'] <= 4) )
+			set_filter_period($_POST['query']['periodo']);
+
+			$filters_to_save = array();
+			if ( isset($_POST['query']['ramo']) && $this->form_validation->is_natural_no_zero($_POST['query']['ramo']) &&
+				($_POST['query']['ramo'] <= 3) )
+				$filters_to_save['ramo'] = $_POST['query']['ramo'];
+			if ( isset($_POST['query']['gerente']) && $this->form_validation->is_natural_no_zero($_POST['query']['gerente']))
+				$filters_to_save['gerente'] = $_POST['query']['gerente'];
+			if ( isset($_POST['query']['agent']) && $this->form_validation->is_natural($_POST['query']['agent']) &&
+				($_POST['query']['agent'] <= 3))
+				$filters_to_save['agent'] = $_POST['query']['agent'];
+			if ( isset($_POST['query']['generacion']) && $this->form_validation->is_natural($_POST['query']['generacion']) &&
+				($_POST['query']['generacion'] <= 5) )
+				$filters_to_save['generacion'] = $_POST['query']['generacion'];
+			set_ot_report_filter( $filters_to_save );
+//			$other_filters = array_merge($other_filters, $filters_to_save);
+			foreach ($filters_to_save as $key => $value)
+				$other_filters[$key] = $value;
 			$data = $this->user->getReport($_POST );
 		}
 		else
-			$data = $this->user->getReport( array('query' => array('ramo' => 1,'periodo' => $default_filter ) ) );
-		
+		{
+			$query = array_merge($other_filters, array('periodo' => $default_filter));
+			$data = $this->user->getReport( array('query' => $query ) );
+		}
 		$this->load->helper( 'ot' );
 		
 		// Load model
@@ -2231,6 +2258,7 @@ implode(', ', $ramo_tramite_types) . '
 			'<script>window.jQuery || document.write ("<script src='. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js><\/script>");</script>',
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.ddslick.js"></script>',
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',			
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',			
 			'<script src="'.base_url().'scripts/config.js"></script>'	,	
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
@@ -2265,6 +2293,7 @@ implode(', ', $ramo_tramite_types) . '
 		  'data' => $data,
 		  'tata' => $_POST,
 		  'period_form' => $this->show_custom_period(), // custom period configuration form
+		  'other_filters' => $other_filters,
 		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
 		  	
 		);

@@ -146,6 +146,36 @@ if ( ! function_exists('get_period_start_end'))
 		}
 	}
 }
+/*
+ Store ot/reporte/html filter fields other than the period in session
+*/
+if ( ! function_exists('set_ot_report_filter'))
+{
+	function set_ot_report_filter( $to_save )
+	{
+		if (!$to_save)
+			return;
+		$CI =& get_instance();
+		$CI->session->set_userdata('ot_r_misc_filter', $to_save);
+	}
+}
+
+/*
+ Get ot/reporte/html filter fields other than the period
+*/
+if ( ! function_exists('get_ot_report_filter'))
+{
+	function get_ot_report_filter(&$other_filters)
+	{
+		$CI =& get_instance();
+		if ( ($in_session = $CI->session->userdata('ot_r_misc_filter')) !== FALSE )
+		{
+			foreach ($in_session as $key => $value)
+				$other_filters[$key] = $value;
+//			$result = array_merge($other_filters, $in_session);
+		}
+	}
+}
 
 /* End of file ot.php */
 /* Location: ./application/helpers/filter_helper.php */
