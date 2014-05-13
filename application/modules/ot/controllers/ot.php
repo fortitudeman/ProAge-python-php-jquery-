@@ -43,8 +43,10 @@ class Ot extends CI_Controller {
 	
 	public $access_report = false; // View report
 	
-	
-	
+	public $default_period_filter = FALSE;
+	public $ot_r_misc_filter = FALSE;
+	public $custom_period_from = FALSE;
+	public $custom_period_to = FALSE;
 	
 /** Construct Function **/
 /** Setting Load perms **/
@@ -60,7 +62,6 @@ class Ot extends CI_Controller {
 		// Get Session
 		$this->sessions = $this->session->userdata('system');
 				
-		
 		// Get user rol		
 		$this->user_vs_rol = $this->rol->user_role( $this->sessions['id'] );
 		
@@ -110,16 +111,17 @@ class Ot extends CI_Controller {
 			
 						
 		endif; endforeach;
-					
-								
-		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
-					
+		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) 
+		{
+			redirect( 'usuarios/login', 'refresh' );
+		}
+
+		$this->default_period_filter = $this->session->userdata('default_period_filter');
+		$this->ot_r_misc_filter = $this->session->userdata('ot_r_misc_filter');
+		$this->custom_period_from = $this->session->userdata('custom_period_from');
+		$this->custom_period_to = $this->session->userdata('custom_period_to');
+
 	}
-	
-	
-	
-	
-	
 
 // Show all records	
 	public function index(){
@@ -224,7 +226,11 @@ implode(', ', $ramo_tramite_types) . '
 		$this->load->model( 'work_order' );
 		
 		// Load Helper
-		$this->load->helper( array( 'ot', 'date' ) );
+		$this->load->helper( array( 'ot', 'date', 'filter' ) );
+
+		if ( ( ( $periodo = $this->input->post('periodo') ) !== FALSE ) && 
+			( ( $periodo == 1 ) || (  $periodo == 2 ) || ( $periodo == 3 ) || ( $periodo == 4) ) )
+			set_filter_period($periodo);
 
 		$data = $this->work_order->find( $this->access_all );
 
@@ -2186,6 +2192,67 @@ implode(', ', $ramo_tramite_types) . '
 			));	
 			redirect( '/', 'refresh' );
 		}
+
+		$agent_array = $this->user->getAgents( FALSE );
+		$agent_multi = array();
+		foreach ( $agent_array as $key => $value )
+		{
+			$agent_multi[] = "\n'$value [ID: $key]'";
+		}
+		$inline_js = 
+'
+<script type="text/javascript">
+	$( document ).ready( function(){ 
+		var agentList = [' . implode(',', $agent_multi) . '
+		];
+
+		function split( val ) {
+			return val.split( /\n\s*/ );
+		}
+		function extractLast( term ) {
+			return split( term ).pop();
+		}
+		$( "#submit-form").bind("click", function( event ) {
+			$( "#form").submit();
+		})
+
+		$( "#agent-name" )
+		// don\'t navigate away from the field on tab when selecting an item
+			.bind( "keydown", function( event ) {
+				if ( event.keyCode === $.ui.keyCode.TAB &&
+					$( this ).data( "ui-autocomplete" ).menu.active ) {
+					event.preventDefault();
+				}
+			})
+/*			.bind( "change", function( event ) {
+alert("changed!");
+			})*/
+			.autocomplete({
+				minLength: 0,
+				source: function( request, response ) {
+					// delegate back to autocomplete, but extract the last term
+					response( $.ui.autocomplete.filter(
+						agentList, extractLast( request.term ) ) );
+				},			
+				focus: function() {
+					// prevent value inserted on focus
+					return false;
+				},
+				select: function( event, ui ) {
+					var terms = split( this.value );
+					// remove the current input
+					terms.pop();
+					// add the selected item
+					terms.push( ui.item.value );
+					// add placeholder to get the comma-and-space at the end
+					terms.push( "" );
+					this.value = terms.join( "\n" );
+					return false;
+				}
+			})
+	});
+</script>
+';
 		$this->load->helper('filter');
 		$default_filter = get_filter_period();
 		$other_filters = array(
@@ -2193,8 +2260,9 @@ implode(', ', $ramo_tramite_types) . '
 			'gerente' => '',
 			'agent' => '',
 			'generacion' => '', // not sure if this should not be 1 instead
+			'agent_name' => '',
 		);
-		get_ot_report_filter($other_filters);
+		get_ot_report_filter($other_filters, $agent_array);
 
 		if( !empty( $_POST ) )
 		{
@@ -2223,7 +2291,9 @@ implode(', ', $ramo_tramite_types) . '
 				($_POST['query']['generacion'] <= 5)) )
 				)
 				$filters_to_save['generacion'] = $_POST['query']['generacion'];
-			set_ot_report_filter( $filters_to_save );
+			if ( isset($_POST['query']['agent_name']))
+				$filters_to_save['agent_name'] = $_POST['query']['agent_name'];
+			set_ot_report_filter( $filters_to_save, $agent_array );
 //			$other_filters = array_merge($other_filters, $filters_to_save);
 			foreach ($filters_to_save as $key => $value)
 				$other_filters[$key] = $value;
@@ -2238,7 +2308,7 @@ implode(', ', $ramo_tramite_types) . '
 		
 		// Load model
 		$this->load->model( array( 'usuarios/user', 'work_order' ) );
-		
+
 		unset( $data[0] );
 
 		// Config view
@@ -2272,7 +2342,8 @@ implode(', ', $ramo_tramite_types) . '
 			'<script src="'.base_url().'scripts/config.js"></script>'	,	
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
 			'<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'scripts/custom-period.js"></script>',	
+			'<script type="text/javascript" src="'. base_url() .'scripts/custom-period.js"></script>',
+			$inline_js,
 '
 <script type="text/javascript">
 	function payment_popup(params) {
@@ -2303,8 +2374,7 @@ implode(', ', $ramo_tramite_types) . '
 		  'tata' => $_POST,
 		  'period_form' => $this->show_custom_period(), // custom period configuration form
 		  'other_filters' => $other_filters,
-		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
-		  	
+		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		);
 		// Render view 
 		$this->load->view( 'index', $this->view );	

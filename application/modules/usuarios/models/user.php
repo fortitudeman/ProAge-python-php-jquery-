@@ -17,7 +17,7 @@ class User extends CI_Model{
 	private $data = array();
 	
 	private $insertId;
-	
+	private $agent_name_where_in = null;
 		
 	public function __construct(){
 		
@@ -2038,9 +2038,15 @@ class User extends CI_Model{
 					
 					$this->db->where( 'users.disabled', 1 ); 	
 			}
-				
+
+			if ( isset( $filter['query']['agent_name'] ) and !empty( $filter['query']['agent_name'] ) )
+			{
+				$this->_get_agent_filter_where($filter['query']['agent_name']);
+				if ($this->agent_name_where_in)
+					$this->db->where_in('agents.id', $this->agent_name_where_in);
+			}
 		}
-	$query = $this->db->get(); 
+	$query = $this->db->get();
   	
 	if ($query->num_rows() == 0) return false;		
 	
@@ -2318,8 +2324,8 @@ class User extends CI_Model{
 				}
 				if( $filter['query']['periodo'] == 4 )
 				{
-					$from = $this->session->userdata('custom_period_from');
-					$to = $this->session->userdata('custom_period_to');
+					$from = $this->custom_period_from;
+					$to = $this->custom_period_to;
 					if ( ( $from === FALSE ) || ( $to === FALSE ) )
 					{
 						$from = date('Y-m-d');
@@ -2582,8 +2588,8 @@ class User extends CI_Model{
 				}
 				if( $filter['query']['periodo'] == 4 )
 				{
-					$from = $this->session->userdata('custom_period_from');
-					$to = $this->session->userdata('custom_period_to');
+					$from = $this->custom_period_from;
+					$to = $this->custom_period_to;
 					if ( ( $from === FALSE ) || ( $to === FALSE ) )
 					{
 						$from = date('Y-m-d');
@@ -2866,8 +2872,8 @@ class User extends CI_Model{
 				}
 				if( $filter['query']['periodo'] == 4 )
 				{
-					$from = $this->session->userdata('custom_period_from');
-					$to = $this->session->userdata('custom_period_to');
+					$from = $this->custom_period_from;
+					$to = $this->custom_period_to;
 					if ( ( $from === FALSE ) || ( $to === FALSE ) )
 					{
 						$from = date('Y-m-d');
@@ -3043,8 +3049,8 @@ AND
 				}
 				if( $filter['query']['periodo'] == 4 )
 				{
-					$from = $this->session->userdata('custom_period_from');
-					$to = $this->session->userdata('custom_period_to');
+					$from = $this->custom_period_from;
+					$to = $this->custom_period_to;
 					if ( ( $from === FALSE ) || ( $to === FALSE ) )
 					{
 						$from = date('Y-m-d');
@@ -3167,8 +3173,8 @@ AND
 				}
 				if( $filter['query']['periodo'] == 4 )
 				{
-					$from = $this->session->userdata('custom_period_from');
-					$to = $this->session->userdata('custom_period_to');
+					$from = $this->custom_period_from;
+					$to = $this->custom_period_to;
 					if ( ( $from === FALSE ) || ( $to === FALSE ) )
 					{
 						$from = date('Y-m-d');
@@ -3328,8 +3334,8 @@ if( !empty( $filter ) ){
 
 		if( $filter['query']['periodo'] == 4 )
 		{
-			$from = $this->session->userdata('custom_period_from');
-			$to = $this->session->userdata('custom_period_to');
+			$from = $this->custom_period_from;
+			$to = $this->custom_period_to;
 			if ( ( $from === FALSE ) || ( $to === FALSE ) )
 			{
 				$from = date('Y-m-d');
@@ -3494,8 +3500,8 @@ if( !empty( $filter ) ){
 
 		if( $filter['query']['periodo'] == 4 )
 		{
-			$from = $this->session->userdata('custom_period_from');
-			$to = $this->session->userdata('custom_period_to');
+			$from = $this->custom_period_from;
+			$to = $this->custom_period_to;
 			if ( ( $from === FALSE ) || ( $to === FALSE ) )
 			{
 				$from = date('Y-m-d');
@@ -3554,7 +3560,24 @@ if( !empty( $filter ) ){
 	$trim=floor(($mes-1) / 4)+1;
 	return $trim;
   }
-	
 
+	private function _get_agent_filter_where($agent_name)
+	{
+		if ($this->agent_name_where_in !== null)
+			return;
+		$this->agent_name_where_in = array();
+		$agent_name_array = explode("\n", $agent_name);
+		$to_replace = array(']', "\n", "\r");
+		foreach ($agent_name_array as $value)
+		{
+			$pieces = explode( ' [ID: ', $value);
+			if (isset($pieces[1]))
+			{
+				$pieces[1] = str_replace($to_replace, '', $pieces[1]);
+				if (!isset($this->agent_name_where_in[$pieces[1]]))
+					$this->agent_name_where_in[] = $pieces[1];
+			}
+		}
+	}
 }
 ?>

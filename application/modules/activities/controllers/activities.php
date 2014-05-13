@@ -35,7 +35,11 @@ class Activities extends CI_Controller {
 
 	public $access_viewall = false;
 
-	
+	public $default_period_filter = FALSE;
+	public $ot_r_misc_filter = FALSE;
+	public $custom_period_from = FALSE;
+	public $custom_period_to = FALSE;
+
 /** Construct Function **/
 /** Setting Load perms **/
 	
@@ -95,7 +99,11 @@ class Activities extends CI_Controller {
 							
 								
 		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
-			
+
+		$this->default_period_filter = $this->session->userdata('default_period_filter');
+		$this->ot_r_misc_filter = $this->session->userdata('ot_r_misc_filter');
+		$this->custom_period_from = $this->session->userdata('custom_period_from');
+		$this->custom_period_to = $this->session->userdata('custom_period_to');
 	}
 	
 	

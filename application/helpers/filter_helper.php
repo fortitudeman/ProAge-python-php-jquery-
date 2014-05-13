@@ -11,7 +11,7 @@
 */
 
 /*
- Get filter period stored in session if any
+ Get filter period stored in ( pseudo ) session if any
  Returns the value of the option in the dropdown used to select filter period
 */
 if ( ! function_exists('get_filter_period'))
@@ -19,7 +19,7 @@ if ( ! function_exists('get_filter_period'))
 	function get_filter_period()
 	{
 		$CI =& get_instance();
-		$saved_period = $CI->session->userdata('default_period_filter');
+		$saved_period = $CI->default_period_filter;
 		if ($saved_period === FALSE)
 			$saved_period = 2;	// custom period by default
 		return $saved_period;
@@ -53,7 +53,10 @@ if ( ! function_exists('set_filter_period'))
 	{
 		$CI =& get_instance();
 		if (( $to_save >= 1 ) && ( $to_save <= 4 ))
+		{
 			$CI->session->set_userdata('default_period_filter', $to_save);
+			$CI->default_period_filter = $to_save;
+		}
 	}
 }
 /*
@@ -65,8 +68,8 @@ if ( ! function_exists('show_custom_period'))
 	{
 		$CI =& get_instance();
 		$data = array(
-			'from' => $CI->session->userdata('custom_period_from'),
-			'to' => $CI->session->userdata('custom_period_to')
+			'from' => $CI->custom_period_from,
+			'to' => $CI->custom_period_to
 		);
 		if ( ( $data['from'] === FALSE ) || ( $data['to'] === FALSE ) )
 		{
@@ -98,6 +101,9 @@ if ( ! function_exists('update_custom_period'))
 					'custom_period_to' => $to,
 					'default_period_filter' => 4
 				));
+				$CI->custom_period_from = $from;
+				$CI->custom_period_to = $to;
+				$CI->default_period_filter = 4;
 				$result = 1;
 			}
 		}
@@ -130,8 +136,8 @@ if ( ! function_exists('get_period_start_end'))
 			case 4: // Custom
 				$CI =& get_instance();
 				$in_session = array(
-					'from' => $CI->session->userdata('custom_period_from'),
-					'to' => $CI->session->userdata('custom_period_to')
+					'from' => $CI->custom_period_from,
+					'to' => $CI->custom_period_to
 				);
 				if ( ( $in_session['from'] === FALSE ) || ( $in_session['to'] === FALSE ) )
 				{
@@ -151,12 +157,31 @@ if ( ! function_exists('get_period_start_end'))
 */
 if ( ! function_exists('set_ot_report_filter'))
 {
-	function set_ot_report_filter( $to_save )
+	function set_ot_report_filter( $to_save, $agents_in_db )
 	{
 		if (!$to_save)
 			return;
 		$CI =& get_instance();
+
+		$to_check_array2 = array();
+		if (isset($to_save['agent_name']))
+		{
+			$to_check_array1 = explode("\n", $to_save['agent_name']);
+			$to_replace = array(']', "\n", "\r");
+			foreach ($to_check_array1 as $value)
+			{
+				$pieces = explode( ' [ID: ', $value);
+				if (isset($pieces[1]))
+				{
+					$pieces[1] = str_replace($to_replace, '', $pieces[1]);
+					if (isset($agents_in_db[$pieces[1]]) && !isset($to_check_array2[$pieces[1]]))
+						$to_check_array2[] = $pieces[1];
+				}
+			}
+		}
+		$to_save['agent_name'] = implode('|', $to_check_array2);
 		$CI->session->set_userdata('ot_r_misc_filter', $to_save);
+		$CI->ot_r_misc_filter = $to_save;
 	}
 }
 
@@ -165,14 +190,28 @@ if ( ! function_exists('set_ot_report_filter'))
 */
 if ( ! function_exists('get_ot_report_filter'))
 {
-	function get_ot_report_filter(&$other_filters)
+	function get_ot_report_filter(&$other_filters, $agents_in_db)
 	{
 		$CI =& get_instance();
-		if ( ($in_session = $CI->session->userdata('ot_r_misc_filter')) !== FALSE )
+		if ( $CI->ot_r_misc_filter !== FALSE )
 		{
-			foreach ($in_session as $key => $value)
-				$other_filters[$key] = $value;
-//			$result = array_merge($other_filters, $in_session);
+			foreach ($CI->ot_r_misc_filter as $key => $value)
+			{
+				if ($key != 'agent_name')
+					$other_filters[$key] = $value;
+				else
+				{
+					$agent_names_in_session = explode('|', $value);
+					foreach ($agent_names_in_session as $agent_value)
+					{
+						if (isset($agents_in_db[$agent_value]))
+						{
+							$other_filters['agent_name'] .= $agents_in_db[$agent_value] . " [ID: $agent_value]\n";
+						}
+					}
+				}
+			}
+//			$result = array_merge($other_filters, $CI->ot_r_misc_filter);
 		}
 	}
 }
