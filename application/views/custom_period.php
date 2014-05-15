@@ -19,4 +19,5 @@
 	<input type="text" id="cust_period_from" name="cust_period_from" value="<?php echo $from ?>" />
 	<label for="cust_period_to">Hasta</label>
 	<input type="text" id="cust_period_to" name="cust_period_to" value="<?php echo $to ?>" />
+	<input type="hidden" id="filter_for" name="filter_for" value="<?php echo (string) $this->period_filter_for; ?>" />
 </form>

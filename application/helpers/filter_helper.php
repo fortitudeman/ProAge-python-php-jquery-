@@ -52,9 +52,10 @@ if ( ! function_exists('set_filter_period'))
 	function set_filter_period( $to_save )
 	{
 		$CI =& get_instance();
-		if (( $to_save >= 1 ) && ( $to_save <= 4 ))
+		if (( $to_save >= 1 ) && ( $to_save <= 4 ) && ($CI->period_filter_for !== FALSE))
 		{
-			$CI->session->set_userdata('default_period_filter', $to_save);
+//			$CI->session->set_userdata('default_period_filter', $to_save);
+			$CI->session->set_userdata('default_period_filter_' . $CI->period_filter_for, $to_save);
 			$CI->default_period_filter = $to_save;
 		}
 	}
@@ -89,17 +90,21 @@ if ( ! function_exists('update_custom_period'))
 		$result = 0;
 		if (($from !== FALSE) && ($to !== FALSE))
 		{
+			$CI =& get_instance();
 			$from_array = explode('-', $from);
 			$to_array = explode('-', $to);
 			if ( (count($from_array) == 3) && (count($to_array) == 3) &&
 				checkdate ( $from_array[1], $from_array[2], $from_array[0]) && 
-				checkdate ( $to_array[1], $to_array[2], $to_array[0]) )
+				checkdate ( $to_array[1], $to_array[2], $to_array[0]) &&
+				( $CI->period_filter_for !== FALSE ))
 			{
-				$CI =& get_instance();
 				$CI->session->set_userdata( array(
-					'custom_period_from' => $from,
-					'custom_period_to' => $to,
-					'default_period_filter' => 4
+//					'custom_period_from' => $from,
+//					'custom_period_to' => $to,
+//					'default_period_filter' => 4
+					'custom_period_from_' . $CI->period_filter_for => $from,
+					'custom_period_to_' . $CI->period_filter_for => $to,
+					'default_period_filter_' . $CI->period_filter_for => 4
 				));
 				$CI->custom_period_from = $from;
 				$CI->custom_period_to = $to;

@@ -47,6 +47,7 @@ class Ot extends CI_Controller {
 	public $ot_r_misc_filter = FALSE;
 	public $custom_period_from = FALSE;
 	public $custom_period_to = FALSE;
+	public $period_filter_for = FALSE;
 	
 /** Construct Function **/
 /** Setting Load perms **/
@@ -115,12 +116,27 @@ class Ot extends CI_Controller {
 		{
 			redirect( 'usuarios/login', 'refresh' );
 		}
-
-		$this->default_period_filter = $this->session->userdata('default_period_filter');
+		$uri_segments = $this->uri->rsegment_array();
+		if (count($uri_segments) == 1)
+			$uri_segments[2] = 'index';
+		if ((count($uri_segments) >= 2) && ($uri_segments[1] == 'ot'))
+		{
+			if (($uri_segments[2] == 'index') || ($uri_segments[2] == 'find'))
+			{
+				$this->period_filter_for = 'ot_index';
+				$this->default_period_filter = $this->session->userdata('default_period_filter_ot_index');
+				$this->custom_period_from = $this->session->userdata('custom_period_from_ot_index');
+				$this->custom_period_to = $this->session->userdata('custom_period_to_ot_index');
+			}
+			else
+			{
+				$this->period_filter_for = 'ot_reporte';
+				$this->default_period_filter = $this->session->userdata('default_period_filter_ot_reporte');
+				$this->custom_period_from = $this->session->userdata('custom_period_from_ot_reporte');
+				$this->custom_period_to = $this->session->userdata('custom_period_to_ot_reporte');
+			}
+		}
 		$this->ot_r_misc_filter = $this->session->userdata('ot_r_misc_filter');
-		$this->custom_period_from = $this->session->userdata('custom_period_from');
-		$this->custom_period_to = $this->session->userdata('custom_period_to');
-
 	}
 
 // Show all records	
@@ -3011,16 +3027,8 @@ Display custom filter period
 */
 	function show_custom_period()
 	{
-		$data = array(
-			'from' => $this->session->userdata('custom_period_from'),
-			'to' => $this->session->userdata('custom_period_to')
-		);
-		if ( ( $data['from'] === FALSE ) || ( $data['to'] === FALSE ) )
-		{
-			$data['from'] = date('Y-m-d');
-			$data['to'] = $data['from'];
-		}
-		return $this->load->view('custom_period', $data, TRUE);
+		$this->load->helper('filter');
+		return show_custom_period();
 	}
 /*
 	Update custom filter period in session data
@@ -3030,10 +3038,16 @@ Display custom filter period
 		$result = 0;
 		if ( $this->input->is_ajax_request() )
 		{
-			$this->load->helper('filter');
-			$result = update_custom_period(
-				$this->input->post('cust_period_from'), $this->input->post('cust_period_to')
-				);
+			$filter_for = $this->input->post('filter_for');
+			$valid_filter_for_s = array('ot_index', 'ot_reporte', 'activities_report');
+			if (in_array($filter_for, $valid_filter_for_s))
+			{
+				$this->period_filter_for = $filter_for;
+				$this->load->helper('filter');
+				$result = update_custom_period(
+					$this->input->post('cust_period_from'), $this->input->post('cust_period_to')
+					);
+			}
 		}
 		echo $result;
 	}
