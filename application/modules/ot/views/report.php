@@ -120,9 +120,11 @@ else
                                             </th>
                                             <th style="white-space:nowrap;" title="Escriba algo para ver sugerencias por el nombre del agente. Seleccione un agente. Luego, puede continuar a escribir para añadir otro nombre. Despues, click el icono 'filtrar' para actualizadar la página web.">
                                                 <textarea placeholder="ESCRIBA LOS NOMBRES DE LOS AGENTES" id="agent-name" name="query[agent_name]" rows="1" class="input-xlarge select4" style="min-width: 250px; height: 2.2em"><?php echo $other_filters['agent_name']; ?></textarea>
-                                                &nbsp;<i style="cursor: pointer; vertical-align: top" class="icon-filter" id="submit-form" title="Filtrar"></i>
                                             </th>
-                                            <th>&nbsp; </th>
+                                            <th>
+                                                <i style="cursor: pointer; vertical-align: top" class="icon-filter" id="submit-form" title="Filtrar"></i>
+                                                <br />
+                                                <i style="cursor: pointer;" class="icon-list-alt" id="clear-agent-filter" title="Mostrar todos los agentes"></i></th>
                                             <th>&nbsp; </th>
                                             <th>&nbsp; </th>
                                             <th>&nbsp; </th>

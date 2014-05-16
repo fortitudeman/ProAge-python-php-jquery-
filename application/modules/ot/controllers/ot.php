@@ -2231,7 +2231,10 @@ implode(', ', $ramo_tramite_types) . '
 		$( "#submit-form").bind("click", function( event ) {
 			$( "#form").submit();
 		})
-
+		$( "#clear-agent-filter").bind("click", function( event ) {
+			$( "#agent-name" ).val("");
+			$( "#form").submit();
+		})
 		$( "#agent-name" )
 		// don\'t navigate away from the field on tab when selecting an item
 			.bind( "keydown", function( event ) {
