@@ -89,6 +89,8 @@
 						if ( $value['is_editable'] )
 							echo anchor('ot/update_poliza/' . $value['id'], 'Editar', array('title' => 'Editar')) .
 							'&nbsp;&nbsp;|&nbsp;&nbsp;';
+						echo anchor('ot/ver_ot/' . $value['id'], 'Ver', array('target' => '_blank', 'title' => 'Ver')) .
+							'&nbsp;&nbsp;|&nbsp;&nbsp;';
 					}
 					if( $this->access_delete == true )
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')">Cancelar</a>&nbsp;&nbsp;';

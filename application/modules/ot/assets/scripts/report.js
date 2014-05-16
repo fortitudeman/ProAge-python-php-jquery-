@@ -238,18 +238,39 @@ $( document ).ready(function() {
             }, "json");
             return false;        
        });
-       
-	$( '.mark-ntu' ).on( "click", function( event ) {
+
+	$(".ot-action").on( "click", function( event ) {
 		var current = $(this);
 		var allParams = current.attr('id').split('-');
 		if (allParams.length < 4) {
 			alert ('Ocurrio un error con los parámetros. Consulte a su administrador.');
 			return false;
 		}
-// allParams[1] contains OT id, allParams[2] contains something called 'gmm', allParams[2] contains something called 'is_poliza'
-		if ( confirm( "¿Esta seguro que quiere marcar la póliza como NTU?" ) ) {
+		var otAction = '';
+		var confirmMessage = '';
+		var errorMessage_1 = '';
+		var errorMessage0 = 'Ocurrio un error, no se pudo guardar la OT, consulte a su administrador.';
+		var errorMessageOK = '';
+		var url = '';
+// allParams[1] contains OT id, allParams[2] contains something called 'gmm', allParams[2] contains something called 'is_poliza'		
+		if (current.hasClass('mark-ntu')) {
+			otAction = 'mark_ntu';
+			confirmMessage = '¿Esta seguro que quiere marcar la OT como NTU?';
+			errorMessage_1 = 'No se pudo marcar la OT como NTU. Informe a su administrador.';
+			errorMessageOK = 'Se marco la OT como NTU correctamente. La página web debe ser actualizada para reflejar los cambios.';
+			url = Config.base_url() + 'ot/mark_ntu.html';
+		} else if (current.hasClass('mark-pagada')) {
+			otAction = 'mark-pagada';
+			confirmMessage = '¿Esta seguro que quiere marcar la OT como pagada?';
+			errorMessage_1 = 'No se pudo marcar la OT como pagada. Informe a su administrador.';
+			errorMessageOK = 'Se marco la OT como pagada correctamente. La página web debe ser actualizada para reflejar los cambios.';
+			url = Config.base_url() + 'ot/mark_paid.html';			
+		} else
+			return false;
+
+		if ( confirm( confirmMessage ) ) {
 			$.ajax({
-				url: '<?php echo site_url('ot/mark_ntu')?>',
+				url: url,
 				type: 'POST',
 				data: ({order_id: allParams[1], gmm: allParams[2], is_poliza: allParams[3]}),
 				dataType : 'json',
@@ -259,17 +280,22 @@ $( document ).ready(function() {
 				success: function(response){
 					switch (response) {
 						case '-1':
-							alert ('No se pudo marcar la póliza como NTU. Informe a su administrador.');
+							alert (errorMessage_1);
 							break;
 						case '0':
-							alert ('Ocurrio un error, no se pudo guardar la póliza, consulte a su administrador.');
+							alert (errorMessage0);
+							break;
+//						case '1':
+						//  refresh the whole page to reflect the change
+//							alert (errorMessageOK);
+//							window.location.reload();
 							break;
 						default:
 						//  refresh the view of the OT modified
 							if ((response.main !== undefined) && (response.menu !== undefined)) {
 								$('#tr_' + allParams[1]).html(response.main);
 								$('#hide_' + allParams[1]).html(response.menu);
-								alert ('Se marco la póliza como NTU correctamente. La página web debe ser actualizada para reflejar los cambios.');
+								alert (errorMessageOK);
 						//  refresh the whole page to reflect the change
 							    window.location.reload();
 							} else {
@@ -280,7 +306,8 @@ $( document ).ready(function() {
 				}
 			});
 		}
-	});  
+		return false;
+	});
 
 	$(".action_option").on( "click", function( event ) {
 		var current = $(this);

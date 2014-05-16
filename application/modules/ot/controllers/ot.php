@@ -2828,9 +2828,21 @@ alert("changed!");
 			unlink( 'proages_report.csv' );		
 	}
 
+// Ver OT
+	public function ver_ot( $id = null ){
+
+		$this->_update_ver( 'ver', $id);
+	}
+
 // Update OT	
 	public function update_poliza( $id = null ){
 
+		$this->_update_ver( 'editar', $id);
+	}
+
+// Common to Ver and Update OT	
+	private function _update_ver( $function, $id = null ){
+	
 		// Check access to the function
 		if ( $this->access_update == false ) {
 
@@ -2858,12 +2870,12 @@ alert("changed!");
 
 			$this->session->set_flashdata( 'message', array(
 				'type' => false,	
-				'message' => 'No puede editar esta orden de trabajo.'
+				'message' => "No puede $function esta orden de trabajo."
 			));
 			redirect( 'ot', 'refresh' );
 		}
 
-		if( !empty( $_POST ) ) {
+		if ( ($function == 'editar') && !empty( $_POST ) ) {
 
 			$this->form_validation->set_rules('prima', ' Prima anual', 'trim|required|decimal_or_integer');
 			$this->form_validation->set_rules('payment_interval_id', ' Forma de pago', 'trim|required|is_natural_no_zero|less_than[5]');
@@ -2943,7 +2955,9 @@ alert("changed!");
 			$("#prima-error").show();
 		}
 	});
-
+';
+	if ($function == 'editar')
+		$add_js .= '
 	$(":input[readonly=\'readonly\']").parents(".control-group").hide();	
 	$("#view-details").bind( "click", function(){
 		$(":input[readonly=\'readonly\']").parents(".control-group").toggle();
@@ -2954,7 +2968,7 @@ alert("changed!");
 		// Config view
 		$this->view = array(
 				
-		  'title' => 'Editar OT',
+		  'title' => ucfirst($function) . ' OT',
 		    // Permisions
 		  'user' => $this->sessions,
 		  'user_vs_rol' => $this->user_vs_rol,
@@ -2965,7 +2979,8 @@ alert("changed!");
 			  '<script src="'.base_url().'scripts/config.js"></script>',
 			  $add_js
 		  ),
-		  'content' => 'ot/update_poliza', // View to load
+//		  'content' => 'ot/update_poliza', // View to load
+		  'content' => 'ot/update_view', // View to load
 		  'message' => $this->session->flashdata('message'),
 		  'agents' => $agents,
 		  'tramite_types' => $tramite_types,
@@ -2975,16 +2990,28 @@ alert("changed!");
 		  'currencies' => $currency_array,
 		  'payment_conducts' => $payment_conduct_array,
 		  'payment_intervals' => $payment_interval_array,
-	 	  'data' => $ot[0]		  
+	 	  'data' => $ot[0],
+		  'function' => $function
 		);
 
 		// Render view 
 		$this->load->view( 'index', $this->view );
 	}
+// mark OT as paid
+	public function mark_paid()
+	{
+		$this->_change_ot_status(4);
+	}
 
 // mark OT as ntu
-	public function mark_ntu(){
+	public function mark_ntu()
+	{
+		$this->_change_ot_status(10);
+	}
 
+// Handle ajax request to change OT status
+	private function _change_ot_status($new_status)
+	{
 		if ( !$this->input->is_ajax_request() || 
 			!$this->access_update ){
 			echo json_encode('-1');
@@ -3000,7 +3027,7 @@ alert("changed!");
 
 			$this->load->model( 'work_order' );
 			$work_order = array(				
-				'work_order_status_id' => 10
+				'work_order_status_id' => $new_status
 			);
 
 			if ( $this->work_order->update( 'work_order', $order_id, $work_order ) &&
@@ -3020,7 +3047,7 @@ alert("changed!");
 			}
 		}
 		echo $result;
-		exit;
+		exit;	
 	}
 /*
 Display custom filter period

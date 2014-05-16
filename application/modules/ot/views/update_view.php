@@ -24,7 +24,7 @@
             <a href="<?php echo base_url() ?>ot.html">Orden de trabajo</a> <span class="divider">/</span>
         </li>
         <li>
-            Modificar OT número <b><?php echo $data['uid'] ?></b>
+            <?php echo $title ?> número <b><?php echo $data['uid'] ?></b>
         </li>
     </ul>
 </div>
@@ -33,7 +33,7 @@
     <div class="box span12">
         <div class="box-header well" data-original-title>
             <h2></h2>
-            <?php if( !isset( $message['type'] ) ): ?>
+            <?php if (( $function == 'editar') && !isset( $message['type'] ) ): ?>
             <p style="float: right;">
 			  <a style="font-weight: normal" href="javascript:void(0)" class="btn" id="view-details">Mostrar / ocultar los detalles</a>
             </p>
@@ -188,7 +188,7 @@ $display[ $data['product_group_id'] ] = '';
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Prima anual</label>
                     <div class="controls">
-                      <input style="height: 1.7em" type="number" pattern="[0-9]+([\.][0-9]+)?" step="0.01" value="<?php echo set_value('prima', $data['policy'][0]['prima']); ?>" class="input-xlarge focused required" id="prima" name="prima" />
+                      <input <?php if ($function == 'ver') echo 'readonly="readonly"' ?> style="height: 1.7em" type="number" pattern="[0-9]+([\.][0-9]+)?" step="0.01" value="<?php echo set_value('prima', $data['policy'][0]['prima']); ?>" class="input-xlarge focused required" id="prima" name="prima" />
                       <span id="prima-error" style="display: none">Campo invalido</span>
                     </div>
                   </div>
@@ -226,13 +226,23 @@ $display[ $data['product_group_id'] ] = '';
                   <div class="control-group typtramite">
                     <label class="control-label text-error" for="inputError">Forma de pago<br /></label>
                     <div class="controls">
-                      <select class="input-xlarge focused required" id="payment_interval_id" name="payment_interval_id">
-<?php foreach ($payment_intervals as $key => $value) {
-	if ($key == $data['policy'][0]['payment_interval_id'])
-		echo '<option value="' . $key . '" ' . set_select('payment_interval_id', $key, TRUE) . '>' . $value . '</option>';
-	else
-		echo '<option value="' . $key . '" ' . set_select('payment_interval_id', $key) . '>' . $value . '</option>';
-} ?>
+                      <select <?php if ($function == 'ver') echo 'readonly="readonly"' ?> class="input-xlarge focused required" id="payment_interval_id" name="payment_interval_id">
+<?php
+if ($function == 'editar')
+	foreach ($payment_intervals as $key => $value) {
+		if ($key == $data['policy'][0]['payment_interval_id'])
+			echo '<option value="' . $key . '" ' . set_select('payment_interval_id', $key, TRUE) . '>' . $value . '</option>';
+		else
+			echo '<option value="' . $key . '" ' . set_select('payment_interval_id', $key) . '>' . $value . '</option>';
+	}
+else
+	foreach ($payment_intervals as $key => $value) {
+		if ($key == $data['policy'][0]['payment_interval_id'])
+			echo '<option value="' . $key . '" selected="selected">' . $value . '</option>';
+		else
+			echo '<option value="' . $key . '" disabled="disabled">' . $value . '</option>';
+	}
+ ?>
 
                       </select>
                     </div>
@@ -253,9 +263,13 @@ $display[ $data['product_group_id'] ] = '';
                   </div>
 
                   <div id="actions-buttons-forms" class="form-actions">
+<?php if ($function == 'editar') : ?>
                     <button type="submit" class="btn btn-primary">Guardar</button>
                     <input type="button" class="btn" onclick="javascript: history.back();" value="Cancelar">
-                  </div>
+<?php else: ?>
+                    <input type="button" class="btn" onclick="javascript: window.close();" value="Cancelar">
+<?php endif; ?>
+				</div>
                 </fieldset>
               </form>
 			<?php endif; ?>
