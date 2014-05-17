@@ -3035,6 +3035,10 @@ alert("changed!");
 
 			if ( $this->work_order->update( 'work_order', $order_id, $work_order ) &&
 				($this->work_order->generic_get( 'work_order', array('id' => $order_id), 1) !== FALSE)) {
+// Send Email
+				$this->load->library( 'mailer' );
+				$notification = $this->work_order->getNotification( $order_id );
+				$this->mailer->notifications( $notification );
 
 				$row_result = array(
 					'is_poliza' => $is_poliza,

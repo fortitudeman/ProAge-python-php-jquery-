@@ -70,8 +70,15 @@ class Mailer{
 			$status_name = 'Rechazo';					
 			$stat_name = 'rechazada';
 		}
-		
-		
+		if( $notification[0]['work_order_status_id'] == 4 ){
+			$status_name = 'Pago';					
+			$stat_name = 'pagada';
+		}
+		if( $notification[0]['work_order_status_id'] == 10 ){
+			$status_name = 'NTU';					
+			$stat_name = 'marcada como NTU';
+		}
+
 		$body = '<div bgcolor="#f4f4f4">
 					 <table width="650" cellspacing="0" cellpadding="0" border="0" align="center"><tbody><tr><td height="3"><img width="650" height="3" style="display:block" src="http://serviciosisinet.com/img/top.jpg"></td></tr></tbody></table>
 					
