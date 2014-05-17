@@ -3034,10 +3034,26 @@ alert("changed!");
 			);
 
 			if ( $this->work_order->update( 'work_order', $order_id, $work_order ) &&
-				($this->work_order->generic_get( 'work_order', array('id' => $order_id), 1) !== FALSE)) {
+				( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $order_id), 1))
+				 !== FALSE)
+				)
+			{	
+				$creator = $this->work_order->generic_get( 'users', array('id' => $updated[0]->user), 1);
 // Send Email
 				$this->load->library( 'mailer' );
 				$notification = $this->work_order->getNotification( $order_id );
+				if ($creator)
+				{
+					$recipient = array(
+						'agent_id' => 0,
+						'percentage' => 100,
+						'name' => $creator[0]->name,
+						'lastnames' => $creator[0]->lastnames,
+						'company_name' => $creator[0]->company_name,
+						'email' =>  $creator[0]->email
+					);
+					$notification[0]['agents'][] = $recipient;
+				}
 				$this->mailer->notifications( $notification );
 
 				$row_result = array(

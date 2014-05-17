@@ -30,12 +30,14 @@ class Mailer{
 		if( empty( $notification ) ) return false;
 		
 			
-						
 		$agentes = '';
 		
 		if( !empty( $notification[0]['agents'] ) ){
 			
 			foreach( $notification[0]['agents'] as $value ){
+
+				if (( $notification[0]['work_order_status_id'] == 4 ) || ($notification[0]['work_order_status_id'] == 10))
+					$agentes = '';
 				
 				if( !empty( $value['company_name'] ) )
 					$agentes .=  $value['company_name'];
@@ -245,8 +247,7 @@ class Mailer{
 			$headers .= "Reply-To: info+proages@isinet.mx\r\n";
 			$headers .= "MIME-Version: 1.0\r\n";
 			$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-			
-						
+
 			@mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
 			
 			
