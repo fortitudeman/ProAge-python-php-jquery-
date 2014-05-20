@@ -2258,7 +2258,8 @@ class User extends CI_Model{
 	// Common method for getting count of negocios (first param = TRUE) and details of negocios (first param = FALSE) 
 	private function _getNegocios( $count_requested = TRUE, $agent_id = null, $filter = array()) {
 
-		if( empty( $agent_id ) ) return 0;
+		if ( empty( $agent_id ) && $count_requested)
+			return 0;
 		/*
 		SELECT DISTINCT( policies_vs_users.policy_id ) as policy_id
 		FROM `policies_vs_users`
@@ -2270,13 +2271,15 @@ class User extends CI_Model{
 		if ($count_requested)		
 			$this->db->select( 'DISTINCT( policy_number ) as policy_number' );
 		else
-			$this->db->select( 'payments.*' );		
+			$this->db->select( 'payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name' );    
 		$this->db->from( 'payments' );
-		$this->db->where( array( 'agent_id' => $agent_id, 'valid_for_report' => '1'));
-//		if ($count_requested)
-//			$this->db->where( array( 'business' => 1) );
-//		else
-			$this->db->where( "((business = '1') OR (business = '-1'))" );
+		$this->db->join( 'agents', 'agents.id=payments.agent_id' );
+		$this->db->join( 'users', 'users.id=agents.user_id' );
+		$where = array('valid_for_report' => '1');
+		if ($agent_id)
+			$where['agent_id'] = $agent_id;
+		$this->db->where($where);
+		$this->db->where( "((business = '1') OR (business = '-1'))" );
 
 		if( !empty( $filter ) ){
 			
@@ -2335,6 +2338,12 @@ class User extends CI_Model{
 						'payments.payment_date >= ' => $from . ' 00:00:00',
 						'payments.payment_date <=' => $to . ' 23:59:59') );
 				}
+			}
+			if ( !$agent_id && isset( $filter['query']['agent_name'] ) and !empty( $filter['query']['agent_name'] ) )
+			{
+				$this->_get_agent_filter_where($filter['query']['agent_name']);
+				if ($this->agent_name_where_in)
+					$this->db->where_in('agent_id', $this->agent_name_where_in);
 			}
 		}
 
@@ -2808,7 +2817,8 @@ class User extends CI_Model{
 // Common method for getting sum of prima (first param = TRUE) and details of prima (first param = FALSE) 
 	private function _getPrima( $sum_requested = TRUE, $agent_id = null, $filter = array()) {
 
-		if( empty( $agent_id ) ) return 0;
+		if ( empty( $agent_id ) && $sum_requested)
+			return 0;
 
 		/*
 		SELECT DISTINCT( policies_vs_users.policy_id ) as policy_id, policies.prima
@@ -2822,9 +2832,14 @@ class User extends CI_Model{
 		if ($sum_requested)
 			$this->db->select( 'SUM( amount ) as primas' );
 		else
-			$this->db->select( 'payments.*' );
+			$this->db->select( 'payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name' );    
 		$this->db->from( 'payments' );
-		$this->db->where( array( 'agent_id' => $agent_id, 'year_prime' => 1, 'valid_for_report' => 1) );
+		$this->db->join( 'agents', 'agents.id=payments.agent_id' );
+		$this->db->join( 'users', 'users.id=agents.user_id' );
+		$where = array( 'year_prime' => 1, 'valid_for_report' => 1);
+		if ($agent_id)
+			$where['agent_id'] = $agent_id;
+		$this->db->where($where);
 
 		if( !empty( $filter ) ){
 
@@ -2883,6 +2898,13 @@ class User extends CI_Model{
 						'payment_date >= ' => $from . ' 00:00:00',
 						'payment_date <=' => $to . ' 23:59:59') );
 				}
+			}
+
+			if ( !$agent_id && isset( $filter['query']['agent_name'] ) and !empty( $filter['query']['agent_name'] ) )
+			{
+				$this->_get_agent_filter_where($filter['query']['agent_name']);
+				if ($this->agent_name_where_in)
+					$this->db->where_in('agent_id', $this->agent_name_where_in);
 			}
 		}
 

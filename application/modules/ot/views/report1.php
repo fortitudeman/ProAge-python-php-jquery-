@@ -233,10 +233,21 @@ $post_data = isset($_POST['query']) ? ',prev_post:'. json_encode($_POST['query']
     <table  class="sortable altrowstable tablesorter" id="Tfoot" style="min-width:100% !important;" >
         <tr>
             <td ><div class="text_total">Totales</div></td>
-            <td style="width:70px; text-align:center;"><div class="numeros"><?php echo $total_negocio?></div>Negocios Pagados</td>
-            <td style="width:70px; text-align:center;"><div class="numeros"><?php echo $total_negocio_pai?></div>             
-               Negocios PAI</td>
-            <td style="width:100px;text-align:right"><div class="numeros">$<?php echo number_format($total_primas_pagadas,2) ?></div> Pagados</td>
+            <td style="width:70px; text-align:center;"><div class="numeros">
+            <a class="numeros fancybox_blanco" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({type: 'negocio'})">
+              <?php echo $total_negocio?></a>
+            </div>Negocios Pagados
+            </td>
+            <td style="width:70px; text-align:center;"><div class="numeros">
+            <a class="numeros fancybox_blanco" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({type: 'negociopai'})">
+              <?php echo $total_negocio_pai?></a>
+            </div>Negocios PAI
+            </td>
+            <td style="width:100px;text-align:right"><div class="numeros">
+            <a class="numeros fancybox_blanco" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({type: 'prima'})">
+              $<?php echo number_format($total_primas_pagadas,2) ?></a>
+            </div>Primas Pagadas
+            </td>
             <td style="width:70px; text-align:center;" class="celda_gris_roja"><div class="numeros"><?php echo $total_negocios_tramite ?></div> Negocios en <br>  Tramite</td>
             <td style="width:100px;text-align:right" class="celda_gris_roja"><div class="numeros">$<?php echo number_format($total_primas_tramite) ?></div> En Tramite</td>
             <td style="width:70px; text-align:center;" class="celda_gris_amarilla"><div class="numeros"><?php echo $total_negocio_pendiente ?></div> Negocios Pendientes</td>

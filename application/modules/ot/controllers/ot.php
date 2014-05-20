@@ -2347,6 +2347,10 @@ alert("changed!");
 			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">',
 			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
 			'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',
+			'<style>
+.fancybox_blanco {color: #CCCCFF;}
+.fancybox_blanco:hover{color: #FFFFFF;}
+</style>',
 		),
 		  'scripts' =>  array(
 		  	'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
