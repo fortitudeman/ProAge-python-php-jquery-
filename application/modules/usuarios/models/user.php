@@ -2269,7 +2269,7 @@ class User extends CI_Model{
 		WHERE policies_vs_users.user_id=6
 		*/
 		if ($count_requested)		
-			$this->db->select( 'DISTINCT( policy_number ) as policy_number' );
+			$this->db->select( 'SUM(business) AS sum_business' );
 		else
 			$this->db->select( 'payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name' );    
 		$this->db->from( 'payments' );
@@ -2348,7 +2348,15 @@ class User extends CI_Model{
 		}
 
 		if ($count_requested)
-			return $this->db->count_all_results();
+		{
+			if (isset($filter['query']) && isset($filter['query']['min_amount']))
+				$this->db->where(array('ABS(amount)  >= ' => '5000'));
+			$result = 0;
+			$query = $this->db->get();
+			if ($query->num_rows() > 0)
+				$result = (int)$query->row()->sum_business;
+			return $result;
+		} 
 		else {
 			$query = $this->db->get();
 			$result = array();
@@ -2523,10 +2531,19 @@ class User extends CI_Model{
 		
   }*/
   
-  
-  
-  
-  public function getCountNegocioPai( $agent_id = null, $filter = array() ){
+	public function getCountNegocioPai( $agent_id = null, $filter = array() )
+	{
+		if	( empty( $agent_id ) )
+			return 0;
+		$filter['query']['min_amount'] = TRUE;
+		$result = 0;
+		$array_scalar = $this->_getNegocios( TRUE, $agent_id, $filter);
+		if ($array_scalar)
+			$result = array_fill(0, $array_scalar, 0);
+		return $result; 
+	}
+
+  public function getCountNegocioPai_other_old( $agent_id = null, $filter = array() ){
  		
 		
 		
