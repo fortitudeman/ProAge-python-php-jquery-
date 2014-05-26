@@ -1734,6 +1734,29 @@ class Work_order extends CI_Model{
 			(($product_group_id == 2) && ($tramite == 90))  // "GMM" and "NUEVO NEGOCIO"
 			);
 	}
+	
+// Search values 
+	public function generic_search( $table = null, $searched = null, $like = null,
+		$limit = null, $offset = 0 )
+	{
+		if (( $table == null ) || ( $searched == null ))
+			return FALSE;
+        $this->db->select($searched, FALSE)->from($table);
+
+		//limit
+		if ($limit)
+			$this->db->limit($limit, $offset);
+
+		// like
+		if ($like)
+			$this->db->like($like[0], $like[1], $like[2]);
+
+		$q = $this->db->get();
+
+		return ($q->num_rows() > 0) ? $q->result() : FALSE;		
+	}
+	
+	
 // Generic row retrieval
 
 	public function generic_get( $table = null, $where = null, $limit = null, $offset = 0 ) {
@@ -1746,7 +1769,7 @@ class Work_order extends CI_Model{
 			$this->db->where($key, $value);
 
 		//limit
-		if ($limit)	    
+		if ($limit)
 			$this->db->limit($limit, $offset);
 
 		$q = $this->db->get();
@@ -1763,7 +1786,7 @@ class Work_order extends CI_Model{
 		foreach ($where as $key => $value)
 			$this->db->where($key, $value);
 		//limit
-		if ($limit)	    
+		if ($limit)
 			$this->db->limit($limit, $offset);
 
 		$result = $this->db->update($table, $values) && ($this->db->affected_rows() > 0);
@@ -1779,7 +1802,7 @@ class Work_order extends CI_Model{
 		foreach ($where as $key => $value)
 			$this->db->where($key, $value);
 		//limit
-		if ($limit)	    
+		if ($limit)
 			$this->db->limit($limit, $offset);
 
 		$result = $this->db->delete($table) && ($this->db->affected_rows() > 0);

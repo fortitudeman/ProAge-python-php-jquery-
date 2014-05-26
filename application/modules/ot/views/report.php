@@ -118,15 +118,22 @@ else
                                                     <option value="2" <?php if ($other_filters['generacion'] == 2) echo 'selected="selected"' ?>>Consolidado</option>
                                                 </select>
                                             </th>
-                                            <th style="white-space:nowrap;" title="Escriba algo para ver sugerencias por el nombre del agente. Seleccione un agente. Luego, puede continuar a escribir para añadir otro nombre. Despues, click el icono 'filtrar' para actualizadar la página web.">
+                                            <th style="white-space:nowrap;" title="Escriba algo para ver sugerencias por el nombre del agente. Seleccione un agente. Luego, puede continuar a escribir para añadir otro nombre. Despues, click el icono 'filtrar' para actualizar la página web.">
                                                 <textarea placeholder="ESCRIBA LOS NOMBRES DE LOS AGENTES" id="agent-name" name="query[agent_name]" rows="1" class="input-xlarge select4" style="min-width: 250px; height: 2.2em"><?php echo $other_filters['agent_name']; ?></textarea>
                                             </th>
                                             <th>
-                                                <i style="cursor: pointer; vertical-align: top" class="icon-filter" id="submit-form" title="Filtrar"></i>
+                                                <i style="cursor: pointer; vertical-align: top" class="icon-filter submit-form" id="submit-form1" title="Filtrar"></i>
                                                 <br />
-                                                <i style="cursor: pointer;" class="icon-list-alt" id="clear-agent-filter" title="Mostrar todos los agentes"></i></th>
-                                            <th>&nbsp; </th>
-                                            <th>&nbsp; </th>
+                                                <i style="cursor: pointer;" class="icon-list-alt" id="clear-agent-filter" title="Mostrar todos los agentes"></i>
+                                            </th>
+                                            <th style="white-space:nowrap;" title="Escriba algo para ver sugerencias por el número de póliza. Seleccione un número. Luego, puede continuar a escribir para añadir otro número. Despues, click el icono 'filtrar' para actualizar la página web.">
+                                                <textarea placeholder="ESCRIBA NUMEROS DE POLIZA" id="policy-num" name="query[policy_num]" rows="1" class="input-small select4" style="min-width: 8em; height: 2.2em"><?php echo $other_filters['policy_num']; ?></textarea>
+                                            </th>
+                                            <th>
+                                                <i style="cursor: pointer; vertical-align: top" class="icon-filter submit-form" id="submit-form2" title="Filtrar"></i>
+                                                <br />
+                                                <i style="cursor: pointer;" class="icon-list-alt" id="clear-policy-filter" title="Ningun filtro por el número de póliza"></i></th>
+											</th>
                                             <th>&nbsp; </th>
                                             <th></th>
                                             <th width="50%" align="right" ><?php if ($export_xls == true): ?><a href="javascript:void(0);" class="download">

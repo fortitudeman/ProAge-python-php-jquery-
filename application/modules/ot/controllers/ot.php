@@ -2228,7 +2228,7 @@ implode(', ', $ramo_tramite_types) . '
 		function extractLast( term ) {
 			return split( term ).pop();
 		}
-		$( "#submit-form").bind("click", function( event ) {
+		$( ".submit-form").bind("click", function( event ) {
 			$( "#form").submit();
 		})
 		$( "#clear-agent-filter").bind("click", function( event ) {
@@ -2281,6 +2281,7 @@ alert("changed!");
 			'agent' => '',
 			'generacion' => '', // not sure if this should not be 1 instead
 			'agent_name' => '',
+			'policy_num' => ''
 		);
 		get_ot_report_filter($other_filters, $agent_array);
 
@@ -2312,7 +2313,9 @@ alert("changed!");
 				)
 				$filters_to_save['generacion'] = $_POST['query']['generacion'];
 			if ( isset($_POST['query']['agent_name']))
-				$filters_to_save['agent_name'] = $_POST['query']['agent_name'];
+				$filters_to_save['agent_name'] = $_POST['query']['agent_name'];	
+			if ( isset($_POST['query']['policy_num']))
+				$filters_to_save['policy_num'] = $_POST['query']['policy_num'];
 			set_ot_report_filter( $filters_to_save, $agent_array );
 //			$other_filters = array_merge($other_filters, $filters_to_save);
 			foreach ($filters_to_save as $key => $value)
@@ -3155,6 +3158,33 @@ Display custom filter period
 		echo $result;
 		exit;
 	}
+
+	// Get suggestions for polizas	
+	public function search_polizas()
+	{
+		$result = array();
+		if ( !$this->input->is_ajax_request() || 
+			!$this->access_report ){
+			echo json_encode($result);
+			exit;
+		}
+		$searched = $this->input->get('term');
+		if (($searched === FALSE) || (($searched = trim($searched))) === ''  )
+		{
+			echo json_encode($result);
+			exit;
+		}
+		$this->load->model( 'work_order' );		
+		$from_db = $this->work_order->generic_search( 'payments',  'DISTINCT `policy_number`',
+			array('policy_number', $searched, 'after'));
+		if ($from_db)
+		{
+			foreach ($from_db as $value)
+				$result[] = array('id' => $value->policy_number, 'label'=> $value->policy_number, 'value' => strip_tags($value->policy_number));
+		}	
+		echo json_encode($result);
+	}
+	
 /* End of file ot.php */
 /* Location: ./application/controllers/ot.php */
 }
