@@ -132,8 +132,8 @@ else
                                             <th>
                                                 <i style="cursor: pointer; vertical-align: top" class="icon-filter submit-form" id="submit-form2" title="Filtrar"></i>
                                                 <br />
-                                                <i style="cursor: pointer;" class="icon-list-alt" id="clear-policy-filter" title="Ningun filtro por el número de póliza"></i></th>
-											</th>
+                                                <i style="cursor: pointer;" class="icon-list-alt" id="clear-policy-filter" title="Ningun filtro por el número de póliza"></i>
+	                                        </th>
                                             <th>&nbsp; </th>
                                             <th></th>
                                             <th width="50%" align="right" ><?php if ($export_xls == true): ?><a href="javascript:void(0);" class="download">
