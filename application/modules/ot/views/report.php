@@ -118,7 +118,7 @@ else
                                                     <option value="2" <?php if ($other_filters['generacion'] == 2) echo 'selected="selected"' ?>>Consolidado</option>
                                                 </select>
                                             </th>
-                                            <th style="white-space:nowrap;" title="AGENTES: Escriba el nombre del agente que desea buscar y selecciónelo de la lista que aparece. Puede buscar más posteriormente en la siguiente línea.">
+                                            <th style="white-space:nowrap;" title="Escriba el nombre del agente que desea buscar y selecciónelo de la lista que aparece. Puede buscar más posteriormente en la siguiente línea.">
                                                 <textarea placeholder="AGENTES" id="agent-name" name="query[agent_name]" rows="1" class="input-xlarge select4" style="min-width: 250px; height: 2.2em"><?php echo $other_filters['agent_name']; ?></textarea>
                                             </th>
                                             <th>
@@ -126,7 +126,7 @@ else
                                                 <br />
                                                 <i style="cursor: pointer;" class="icon-list-alt" id="clear-agent-filter" title="Mostrar todos los agentes"></i>
                                             </th>
-                                            <th style="white-space:nowrap;" title="PÓLIZAS: Escriba el número de póliza que desea buscar y selecciónelo de la lista que aparece. Puede buscar más posteriormente en la siguiente línea.">
+                                            <th style="white-space:nowrap;" title="Escriba el número de póliza que desea buscar y selecciónelo de la lista que aparece. Puede buscar más posteriormente en la siguiente línea.">
                                                 <textarea placeholder="PÓLIZAS" id="policy-num" name="query[policy_num]" rows="1" class="input-small select4" style="min-width: 8em; height: 2.2em"><?php echo $other_filters['policy_num']; ?></textarea>
                                             </th>
                                             <th>
