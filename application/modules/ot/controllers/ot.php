@@ -2209,7 +2209,17 @@ implode(', ', $ramo_tramite_types) . '
 			redirect( '/', 'refresh' );
 		}
 
-		$agent_array = $this->user->getAgents( FALSE );
+		$agent_array = array();
+		$other_filters = array();
+		$data = $this->_init_report($agent_array, $other_filters);
+
+		$this->load->helper( 'ot' );
+		
+		// Load model
+		$this->load->model( array( 'usuarios/user', 'work_order' ) );
+
+		unset( $data[0] );
+
 		$agent_multi = array();
 		foreach ( $agent_array as $key => $value )
 		{
@@ -2273,67 +2283,6 @@ alert("changed!");
 	});
 </script>
 ';
-		$this->load->helper('filter');
-		$default_filter = get_filter_period();
-		$other_filters = array(
-			'ramo' => 1,
-			'gerente' => '',
-			'agent' => '',
-			'generacion' => '', // not sure if this should not be 1 instead
-			'agent_name' => '',
-			'policy_num' => ''
-		);
-		get_ot_report_filter($other_filters, $agent_array);
-
-		if( !empty( $_POST ) )
-		{
-			if ( isset($_POST['query']['periodo']) && $this->form_validation->is_natural_no_zero($_POST['query']['periodo']) &&
-				($_POST['query']['periodo'] <= 4) )
-			set_filter_period($_POST['query']['periodo']);
-
-			$filters_to_save = array();
-			if ( isset($_POST['query']['ramo']) && $this->form_validation->is_natural_no_zero($_POST['query']['ramo']) &&
-				($_POST['query']['ramo'] <= 3) )
-				$filters_to_save['ramo'] = $_POST['query']['ramo'];
-			if ( isset($_POST['query']['gerente']) && 
-				(($_POST['query']['gerente'] == '') || 
-				$this->form_validation->is_natural_no_zero($_POST['query']['gerente']))
-				)
-				$filters_to_save['gerente'] = $_POST['query']['gerente'];
-			if ( isset($_POST['query']['agent']) &&
-				(  ($_POST['query']['agent'] == '') || 
-				( $this->form_validation->is_natural_no_zero($_POST['query']['agent']) &&
-				($_POST['query']['agent'] <= 3))   )
-				)
-				$filters_to_save['agent'] = $_POST['query']['agent'];
-			if ( isset($_POST['query']['generacion']) &&
-				(  ($_POST['query']['generacion'] == '') || 
-				 ( $this->form_validation->is_natural_no_zero($_POST['query']['generacion']) &&
-				($_POST['query']['generacion'] <= 5)) )
-				)
-				$filters_to_save['generacion'] = $_POST['query']['generacion'];
-			if ( isset($_POST['query']['agent_name']))
-				$filters_to_save['agent_name'] = $_POST['query']['agent_name'];	
-			if ( isset($_POST['query']['policy_num']))
-				$filters_to_save['policy_num'] = $_POST['query']['policy_num'];
-			set_ot_report_filter( $filters_to_save, $agent_array );
-//			$other_filters = array_merge($other_filters, $filters_to_save);
-			foreach ($filters_to_save as $key => $value)
-				$other_filters[$key] = $value;
-			$data = $this->user->getReport($_POST );
-		}
-		else
-		{
-			$query = array_merge($other_filters, array('periodo' => $default_filter));
-			$data = $this->user->getReport( array('query' => $query ) );
-		}
-		$this->load->helper( 'ot' );
-		
-		// Load model
-		$this->load->model( array( 'usuarios/user', 'work_order' ) );
-
-		unset( $data[0] );
-
 		// Config view
 		$this->view = array(
 				
@@ -2593,249 +2542,251 @@ alert("changed!");
             $result = $this->email->send(); 
             echo json_encode($result); 
 	}         
-        
-	
-	public function report_export(){
-		
-		$data = array();
-		 
-		if( !empty( $_POST ) )
-			
-			 $data = $this->user->getReport( $_POST );
-		
+
+	private function _report_export_helper($value, $ramo = 'vida_gmm')
+	{
+		if ($ramo == 'vida_gmm')
+			$data_row = array(
+				'name' => $value['name'],
+				'uids' => '',
+				'connection_date' => '',
+				'negocio' => $value['negocio'],
+				'negociopai' => 0,
+				'prima' => $value['prima'],
+				'tramite' => 0,
+				'tramite_prima' => 0,
+				'pendientes' => 0,
+				'pendientes_primas' => 0,
+				'negocios_proyectados' => 0,
+				'negocios_proyectados_primas' => 0,
+				);
 		else
-		 	
-			$data = $this->user->getReport( array( 'query' => array( 'ramo' => 1, 'periodo' => 1 ) ) );
-		
-		
+			$data_row = array(
+				'name' => $value['name'],
+				'uids' => '',
+				'connection_date' => '',
+				'iniciales' => $value['iniciales'],
+				'renovaciones' => $value['renovacion'],
+				'totales' => (int)$value['iniciales']+(int)$value['renovacion']
+				);
+		if ( !empty( $value['uids'][0]['type'] ) && ($value['uids'][0]['type'] == 'clave')
+			&& !empty( $value['uids'][0]['uid'] ))
+			$data_row['uids'] =  $value['uids'][0]['uid'];
+		else
+			$data_row['uids'] = 'Sin clave asignada';
+
+		if ( !empty( $value['connection_date'] ) && ($value['connection_date'] != '0000-00-00' ))
+			$data_row['connection_date'] =  'Conectado ' . getFormatDate( $value['connection_date'] );
+		else
+			$data_row['connection_date'] = 'No Conectado';
+
+		return $data_row;
+	}
+
+	public function report_export()
+	{
+		$agent_array = array();
+		$other_filters = array();
+		$data = $this->_init_report($agent_array, $other_filters);
+		$data_report = array();
 		// Load Helper 
 		$this->load->helper( array( 'usuarios/csv', 'ot' ) );
-		
-		
-		
-		if( empty( $_POST ) or isset( $_POST['query']['ramo'] )  and $_POST['query']['ramo'] !=3  ):
-		/*			
-			[name] => Agentes
-                        [negocio] => Negocios Pagados
-                        [negociopai] => Negocios Pal
-                        [prima] => Primas Pagadas
-                        [tramite] => Negocios en Tramite
-                        [tramite_prima] => Primas en Tramite
-                        [pendientes] => Negocios Pendientes
-                        [pendientes_primas] => Primas Pendientes
-                        [negocios_proyectados] => Negocios Proyectados
-                        [negocios_proyectados_primas] => Primas Proyectadas,
-                                    ['iniciales'] => 'Iniciales',
-			['renovaciones'] => 'Renovaciones'
-		
-		*/
-		
-		
-		$total_negocio=0;
-		$total_negocio_pai=0;
-		$total_primas_pagadas=0;
-		$total_negocios_tramite=0;
-		$total_primas_tramite=0;
-		$total_negocio_pendiente=0;
-		$total_primas_pendientes=0;
-		$total_negocios_proyectados=0;
-		$total_primas_proyectados=0;
-								
-		if( !empty( $data ) )
-			
-			$i = 0;
-			
-			foreach( $data  as $value ){
-				
-				if( $i>0 ){
-				
-				unset( $data[$i]['id'] );
-				
-				
-				if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente'; else $value['disabled'] = 'Cancelado';
-				
-				if( !empty( $value['uids'][0]['uid'] ) )								
-					$data[$i]['name'] =  $value['uids'][0]['uid']. ' - ';
-				
-				else
-				   $data[$i]['name'] = 'Sin clave asignada -';
-				   
-						
-				$data[$i]['name'] .= $value['disabled'] .' -  Generacion 1 - '; 
-                          
-						 
-							        
-                if( $value['connection_date'] != '0000-00-00' ) 
-                         $data[$i]['name'] .=  'Conectado'. getFormatDate( $value['connection_date'] );
-                else 
-                         $data[$i]['name'] .=   'No Conectado';                
-																
-				unset( $data[$i]['disabled'], $data[$i]['connection_date'], $data[$i]['uids'] );				
-				$data[$i]['negociopai'] = count( $value['negociopai'] );					
-					
-				if( isset( $value['tramite']['count'] ) ){
-					
-					$data[$i]['tramite_count'] = $value['tramite']['count'];
-					$data[$i]['tramite_prima'] = $value['tramite']['prima'];
-					$data[$i]['tramite'] = $data[$i]['tramite_count'];					
-					unset( $data[$i]['tramite_count'] );
-				}else{
-					
-					$data[$i]['tramite_count'] = 0;
-					$data[$i]['tramite_prima'] = 0;					
-					$data[$i]['tramite'] = $data[$i]['tramite_count'];					
-					unset( $data[$i]['tramite_count'] );
+
+		if( empty( $_POST ) or isset( $_POST['query']['ramo'] )  and $_POST['query']['ramo'] !=3  )
+		{ // Vida or GMM
+			$total_negocio=0;
+			$total_negocio_pai=0;
+			$total_primas_pagadas=0;
+			$total_negocios_tramite=0;
+			$total_primas_tramite=0;
+			$total_negocio_pendiente=0;
+			$total_primas_pendientes=0;
+			$total_negocios_proyectados=0;
+			$total_primas_proyectados=0;
+
+			if( !empty( $data ) )
+			{
+				foreach ( $data as $key => $value )
+				{
+					if ($key == 0)
+						$data_report[] = array(
+							'name' => 'Agentes',
+							'uids' => 'Clave única',
+							'connection_date' => 'Fecha de conexión',
+							'negocio' => 'Negocios Pagados',
+							'negociopai' => 'Negocios PAI',
+							'prima' => 'Primas Pagadas',
+							'tramite' => 'Negocios en Tramite',
+							'tramite_prima' => 'Primas en Tramite',	//	(not in $data)
+							'pendientes' => 'Negocios Pendientes',
+							'pendientes_primas' => 'Primas Pendientes', //  (not in $data)
+							'negocios_proyectados' => 'Negocios Proyectados',
+							'negocios_proyectados_primas' => 'Primas Proyectadas',
+						);
+					else
+					{
+						$data_row = $this->_report_export_helper($value, 'vida_gmm');
+
+						if ( is_array( $value['negociopai'] ))
+							$data_row['negociopai'] = count( $value['negociopai'] );
+
+						if ( isset( $value['tramite']['count'] ) )
+						{
+							$data_row['tramite'] = $value['tramite']['count'];
+							$data_row['tramite_prima'] = $value['tramite']['adjusted_prima'];
+						}
+						if( isset( $value['aceptadas']['count'] ) )
+						{
+							$data_row['pendientes'] = $value['aceptadas']['count'];
+							$data_row['pendientes_primas'] = $value['aceptadas']['adjusted_prima'];
+						}
+						$data_row['negocios_proyectados'] = (int)$data_row['pendientes'] + 
+//							(int)$data_row['tramite'] + (int)$data_row['negociopai'] + (int)$data_row['negocio'];
+							(int)$data_row['tramite'] + (int)$data_row['negocio']; // to make consistent with report on screen
+						$data_row['negocios_proyectados_primas'] = (float)$data_row['prima'] + 
+							(float)$data_row['pendientes_primas'] + (float)$data_row['tramite_prima'];
+						$total_negocio += (int)$data_row['negocio'];
+						$total_negocio_pai += (int)$data_row['negociopai'];
+						$total_primas_pagadas += (float)$data_row['prima'];
+						$total_negocios_tramite += (int)$data_row['tramite'];
+						$total_primas_tramite += (float)$data_row['tramite_prima'];
+						$total_negocio_pendiente += (int)$data_row['pendientes'];
+						$total_primas_pendientes += (float)$data_row['pendientes_primas'];
+						$total_negocios_proyectados += (int)$data_row['negocios_proyectados'];
+						$total_primas_proyectados += (float)$data_row['negocios_proyectados_primas'];
+
+						$data_row['prima'] = '$ '.$data_row['prima'];
+						$data_row['tramite_prima'] = '$ '.$data_row['tramite_prima'];
+						$data_row['pendientes_primas'] = '$ '.$data_row['pendientes_primas'];
+						$data_row['negocios_proyectados_primas'] = '$ '.$data_row['negocios_proyectados_primas'];
+						$data_report[] = $data_row;
+					}
 				}
-				
-				
-				
-				if( isset( $value['aceptadas']['count'] ) ){
-					
-					$data[$i]['pendientes'] = $value['aceptadas']['count'];
-					$data[$i]['pendientes_primas'] = $value['aceptadas']['prima'];
-					unset( $data[$i]['aceptadas'] );
-				}else{
-					
-					$data[$i]['pendientes'] = 0;
-					$data[$i]['pendientes_primas'] = 0;
-					unset( $data[$i]['aceptadas'] );
-				}
-								
-			   	
-				 $data[$i]['negocios_proyectados'] = ( (int)$data[$i]['pendientes']+(int)$data[$i]['tramite']+(int)$data[$i]['negociopai']+(int)$data[$i]['negocio'] );
-				 $data[$i]['negocios_proyectados_primas'] =( (float)$data[$i]['prima']+(float)$data[$i]['pendientes_primas']+(float)$data[$i]['tramite_prima']);
-			     
-				 
-				 $total_negocio += (int)$data[$i]['negocio'];
-				 $total_negocio_pai += (int)$data[$i]['negociopai'];
-			   	 $total_primas_pagadas += (float)$data[$i]['prima'];
-				 $total_negocios_tramite += (int)$data[$i]['tramite'];
-				 $total_primas_tramite += (float)$data[$i]['tramite_prima'];
-				 $total_negocio_pendiente += (int)$data[$i]['pendientes'];
-				 $total_primas_pendientes += (float)$data[$i]['pendientes_primas'];
-				 $total_negocios_proyectados += (int) $data[$i]['negocios_proyectados'];
-				 $total_primas_proyectados += (float) $data[$i]['negocios_proyectados_primas'];
-				 
-				 
-				 $data[$i]['prima'] = '$ '.$data[$i]['prima'];
-				 $data[$i]['tramite_prima'] = '$ '.$data[$i]['tramite_prima'];
-				 $data[$i]['pendientes_primas'] = '$ '.$data[$i]['pendientes_primas'];
-				 $data[$i]['negocios_proyectados_primas'] = '$ '.$data[$i]['negocios_proyectados_primas'];
-				 
-			   }
-				
-				$i++;	
+
+				$data_report[] = array(
+					'name' => 'Totales: ',
+					'uids' => '',
+					'connection_date' => '',
+					'negocio' => $total_negocio,
+					'negociopai' => $total_negocio_pai,
+					'prima' => '$ '.$total_primas_pagadas,
+					'tramite' => $total_negocios_tramite,
+					'tramite_prima' => '$ '.$total_primas_tramite,
+					'pendientes' => $total_negocio_pendiente,
+					'pendientes_primas' => '$ '.$total_primas_pendientes,
+					'negocios_proyectados' => $total_negocios_proyectados,
+					'negocios_proyectados_primas' => '$ '.$total_primas_proyectados,
+				);
 			}
-		
-		/*
-			[name] => Agentes
-            [negocio] => Negocios Pagados
-            [negociopai] => Negocios Pal
-            [prima] => Primas Pagadas
-            [tramite] => Negocios en Tramite
-            [tramite_prima] => Primas en Tramite
-            [pendientes] => Negocios Pendientes
-            [pendientes_primas] => Primas Pendientes
-            [negocios_proyectados] => Negocios Proyectados
-            [negocios_proyectados_primas] => Primas Proyectadas
-            [iniciales] => Iniciales
-            [renovaciones] => Renovaciones
-		*/
-	
-	
-		$data[$i] = array(
-			'name' => 'Totales: ',	
-			'negocio' => $total_negocio,	
-			'negociopai' => $total_negocio_pai,	
-			'prima' => '$ '.$total_primas_pagadas,	
-			'tramite' => $total_negocios_tramite,	
-			'tramite_prima' => '$ '.$total_primas_tramite,	
-			'pendientes' => $total_negocio_pendiente,	
-			'pendientes_primas' => '$ '.$total_primas_pendientes,	
-			'negocios_proyectados' => $total_negocios_proyectados,	
-			'negocios_proyectados_primas' => '$ '.$total_primas_proyectados,	
-		);
-				
-		
-		else:
-			
+		} else
+		{ // Autos
 			$iniciales=0;
 			$renovacion=0;
-			$total=0;
 			$totalgeneral=0;
-			
-			/*[name] => Agentes
-                        [negocio] => Negocios Pagados
-                        [negociopai] => Negocios Pal
-                        [prima] => Primas Pagadas
-                        [tramite] => Negocios en Tramite
-                        [tramite_prima] => Primas en Tramite
-                        [pendientes] => Negocios Pendientes
-                        [pendientes_primas] => Primas Pendientes
-                        [negocios_proyectados] => Negocios Proyectados
-                        [negocios_proyectados_primas] => Primas Proyectadas
-                        [iniciales] => Iniciales
-                        [renovaciones] => Renovaciones
-			*/
-			
-			unset( $data[0]['negocio'],$data[0]['negociopai'],$data[0]['prima'],$data[0]['tramite'], $data[0]['tramite_prima'] );
-			unset( $data[0]['pendientes'],$data[0]['pendientes_primas'],$data[0]['negocios_proyectados'],$data[0]['negocios_proyectados_primas'] );
-			
-			 $data[0]['total'] = 'Total';
-			
 			if( !empty( $data ) )
-                            {
-				$i = 0;
-				foreach( $data  as $value )
-                                    {
-					if( $i>0 ){
-					
-						unset( $data[$i]['id'] );
-				
-				
-						if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente'; else $value['disabled'] = 'Cancelado';
-						
-						if( !empty( $value['uids'][0]['uid'] ) )								
-							$data[$i]['name'] =  $value['uids'][0]['uid']. ' - ';						
-						else
-						   $data[$i]['name'] = 'Sin clave asignada -';						   
-								
-						$data[$i]['name'] .= $value['disabled'] .' -  Generacion 1 - '; 
-											
-						if( $value['connection_date'] != '0000-00-00' ) 
-								 $data[$i]['name'] .=  'Conectado'. getFormatDate( $value['connection_date'] );
-						else 
-								 $data[$i]['name'] .=   'No Conectado';
-					
+			{
+				foreach ( $data as $key => $value )
+				{
+					if ($key == 0)
+						$data_report[] = array(
+							'name' => 'Agentes',
+							'uids' => 'Clave única',
+							'connection_date' => 'Fecha de conexión',
+							'iniciales' => 'Iniciales',
+							'renovaciones' => 'Renovaciones',
+							'totales' =>  'Totales'
+						);
+					else
+					{
+						$data_row = $this->_report_export_helper($value, 'autos');
 						$iniciales += (int)$value['iniciales'];		
 						$renovacion +=(int) $value['renovacion'];		
-						$total =  (int)$value['iniciales']+(int)$value['renovacion'];
-						$totalgeneral += (int)$total;						
-						$data[$i]['totales'] =$total;
-					
-						unset( $data[$i]['id'], $data[$i]['uids'],$data[$i]['connection_date'],$data[$i]['disabled'],$data[$i]['negocio'] );
-						unset( $data[$i]['negociopai'],$data[$i]['prima'],$data[$i]['tramite'],$data[$i]['aceptadas'] );
-						unset( $data[$i]['generacion'] );
+						$totalgeneral += $data_row['totales'];						
+
+						$data_report[] = $data_row;
 					}
-					$i++;
 				}
-				
-				$data[$i] = array(
-					'name' => 'Totales: ',	
-					'iniciales' => $iniciales,	
-					'renovacion' => $renovacion,	
+				$data_report[] = array(
+					'name' => 'Totales: ',
+					'uids' => '',
+					'connection_date' => '',
+					'iniciales' => $iniciales,
+					'renovaciones' => $renovacion,
 					'totalgeneral' => $totalgeneral
 				);
 			}
-		endif;	
-		
-	 	array_to_csv($data, 'proages_report.csv');
-		
+		}
+
+	 	array_to_csv($data_report, 'proages_report.csv');
+
 		if( is_file( 'proages_report.csv' ) )
 			echo file_get_contents( 'proages_report.csv' );
-		
+
 		if( is_file( 'proages_report.csv' ) )
 			unlink( 'proages_report.csv' );		
+	}
+
+// Init report processing (reporte and exportar)
+	private function _init_report(&$agent_array, &$other_filters)
+	{
+		$data = array();
+		$agent_array = $this->user->getAgents( FALSE );
+
+		$this->load->helper('filter');
+		$default_filter = get_filter_period();
+		$other_filters = array(
+			'ramo' => 1,
+			'gerente' => '',
+			'agent' => '',
+			'generacion' => '', // not sure if this should not be 1 instead
+			'agent_name' => '',
+			'policy_num' => ''
+		);
+		get_ot_report_filter($other_filters, $agent_array);
+
+		if( !empty( $_POST ) )
+		{
+			if ( isset($_POST['query']['periodo']) && $this->form_validation->is_natural_no_zero($_POST['query']['periodo']) &&
+				($_POST['query']['periodo'] <= 4) )
+			set_filter_period($_POST['query']['periodo']);
+
+			$filters_to_save = array();
+			if ( isset($_POST['query']['ramo']) && $this->form_validation->is_natural_no_zero($_POST['query']['ramo']) &&
+				($_POST['query']['ramo'] <= 3) )
+				$filters_to_save['ramo'] = $_POST['query']['ramo'];
+			if ( isset($_POST['query']['gerente']) && 
+				(($_POST['query']['gerente'] == '') || 
+				$this->form_validation->is_natural_no_zero($_POST['query']['gerente']))
+				)
+				$filters_to_save['gerente'] = $_POST['query']['gerente'];
+			if ( isset($_POST['query']['agent']) &&
+				(  ($_POST['query']['agent'] == '') || 
+				( $this->form_validation->is_natural_no_zero($_POST['query']['agent']) &&
+				($_POST['query']['agent'] <= 3))   )
+				)
+				$filters_to_save['agent'] = $_POST['query']['agent'];
+			if ( isset($_POST['query']['generacion']) &&
+				(  ($_POST['query']['generacion'] == '') || 
+				 ( $this->form_validation->is_natural_no_zero($_POST['query']['generacion']) &&
+				($_POST['query']['generacion'] <= 5)) )
+				)
+				$filters_to_save['generacion'] = $_POST['query']['generacion'];
+			if ( isset($_POST['query']['agent_name']))
+				$filters_to_save['agent_name'] = $_POST['query']['agent_name'];	
+			if ( isset($_POST['query']['policy_num']))
+				$filters_to_save['policy_num'] = $_POST['query']['policy_num'];
+			set_ot_report_filter( $filters_to_save, $agent_array );
+//			$other_filters = array_merge($other_filters, $filters_to_save);
+			foreach ($filters_to_save as $key => $value)
+				$other_filters[$key] = $value;
+			$data = $this->user->getReport($_POST );
+		}
+		else
+		{
+			$query = array_merge($other_filters, array('periodo' => $default_filter));
+			$data = $this->user->getReport( array('query' => $query ) );
+		}
+		return $data;
 	}
 
 // Ver OT
