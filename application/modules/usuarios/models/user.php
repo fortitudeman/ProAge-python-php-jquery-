@@ -2061,8 +2061,10 @@ class User extends CI_Model{
 				$this->db->where_in('policy_number', $policy_filter);
 			}
 		}
+	$this->db->order_by('name', 'asc');
+	$this->db->order_by('lastnames', 'asc'); 
 	$query = $this->db->get();
-  	
+
 	if ($query->num_rows() == 0) return false;		
 	
 	$report = array();

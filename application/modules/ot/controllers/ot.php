@@ -2576,7 +2576,7 @@ alert("changed!");
 			$data_row['uids'] = 'Sin clave asignada';
 
 		if ( !empty( $value['connection_date'] ) && ($value['connection_date'] != '0000-00-00' ))
-			$data_row['connection_date'] =  'Conectado ' . getFormatDate( $value['connection_date'] );
+			$data_row['connection_date'] =  $value['connection_date'];
 		else
 			$data_row['connection_date'] = 'No Conectado';
 
