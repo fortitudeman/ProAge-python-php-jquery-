@@ -275,7 +275,7 @@ implode(', ', $ramo_tramite_types) . '
 
 // Create new role
 	public function create(){
-	
+
 		// Check access teh user for create
 		if( $this->access_create == false ){
 				
@@ -467,19 +467,16 @@ implode(', ', $ramo_tramite_types) . '
 					redirect( 'ot', 'refresh' );
 					
 				}
-				
-				
-				
-				
-				// Send Email		
+
+				// Send Email
 				$this->load->library( 'mailer' );
-				
 				$notification = $this->work_order->getNotification();
-						
-				$this->mailer->notifications( $notification );
-				
-				
-								
+				$this->mailer->notifications( $notification, null, null, array(
+						'from' => $this->sessions['email'],
+						'reply-to' => $this->sessions['email']
+					)
+				);
+
 				if( $controlSaved == true ){
 					
 					// Set false message		
@@ -860,94 +857,74 @@ implode(', ', $ramo_tramite_types) . '
 		$this->load->model( 'work_order' );
 		
 		$work_order = array(				
-				'work_order_status_id' => 4
+			'work_order_status_id' => 4
 		);
-		
-		$this->work_order->update( 'work_order', $this->input->post( 'id' ), $work_order );
-		
-		echo 'Ot Marcada como pagada correctamente';
-		
+
+		$ot = $this->input->post( 'id' );
+		if ( $this->work_order->update( 'work_order', $ot, $work_order ) &&
+			( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
+				!== FALSE)
+			)
+		{
+			// Send Email
+			$this->_send_notification($ot, $updated);
+			echo 'Ot Marcada como pagada correctamente';
+		}
+		else
+			echo 'Ocurrio un error. El registro no puede ser guardado, consulte a su administrador.';
 		exit;
 	}
-	
-	
-	
-	
+
 	/**
 	 *	Activate/Desactivate
 	 **/
 	public function activar( $ot = null ){
-		
-		
-		
+
 		// Check access teh user for create
 		if( $this->access_activate == false ){
-				
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Activar.", Informe a su administrador para que le otorge los permisos necesarios.'
-							
 			));	
-			
-			
 			redirect( 'ot', 'refresh' );
-		
 		}
-		
+
 		// Load Model 
 		$this->load->model( 'work_order' );
-		
-		
-		
-		
+
 		// Save Record
 		if( !empty( $_POST ) ){
-			
-			
-					
-			
+
+			$comments_posted = $this->input->post('comments');
+			if ($comments_posted === FALSE)
+				$comments_posted = '';
 			$work_order = array(
-				
 				'work_order_status_id' => 6,
 				'work_order_reason_id' => $this->input->post( 'work_order_reason_id' ),
 				'work_order_responsible_id' => $this->input->post( 'work_order_responsible_id' ),
 //				'creation_date' => '0000-00-00 00:00:00', // Quitar el tiempo
-				'comments' => $this->input->post( 'comments' ),
+				'comments' => $comments_posted,
 				'last_updated' => date( 'd-m-Y H:i:s' )
 			);
-			
-					
-			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
-												
-				
-			// Send Email		
-			$this->load->library( 'mailer' );
-			
-			$notification = $this->work_order->getNotification( $ot );
-			
-			
-			$responsible = $this->work_order->getResponsiblesById( $notification[0]['work_order_responsible_id'] );
-			$reason = $this->work_order->getResponsiblesById( $notification[0]['work_order_reason_id'] );
-					
-			$this->mailer->notifications( $notification, $reason[0]['name'], $responsible[0]['name'] );
-				
-				
+
+			if ( $ot && $this->work_order->update( 'work_order', $ot, $work_order ) &&
+				( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
+				 !== FALSE)
+				)
+			{
+				// Send Email
+				$this->_send_notification($ot, $updated);
+
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
-					
 					'type' => true,	
 					'message' => 'Se ha guardado el registro correctamente.'
-								
 				));												
-				
-				
 				redirect( 'ot', 'refresh' );
-				
+
 			}else{
-				
-				
+
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
 					
@@ -955,29 +932,13 @@ implode(', ', $ramo_tramite_types) . '
 					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
 								
 				));												
-				
-				
 				redirect( 'ot', 'refresh' );
-				
+
 			}
 			exit;
-			
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		$data = $this->work_order->getOtActivateDesactivate( $ot );
-		
-		
+
 		// Config view
 		$this->view = array(
 				
@@ -1011,8 +972,7 @@ implode(', ', $ramo_tramite_types) . '
 		$this->load->view( 'index', $this->view );	
 		
 	}
-	
-	
+
 	public function desactivar( $ot = null ){
 		
 			$this->load->model( 'work_order' );
@@ -1022,54 +982,33 @@ implode(', ', $ramo_tramite_types) . '
 				'creation_date' => date( 'Y-m-d H:i:s' ), // Quitar el tiempo
 				'last_updated' => date( 'Y-m-d H:i:s' )
 			);
-			
-				
-			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
-				
-				
-				// Send Email		
-				$this->load->library( 'mailer' );
-				
-				$notification = $this->work_order->getNotification( $ot );
-													
-				$this->mailer->notifications( $notification );
-				
-				
-				// Set true message		
+			if ( $ot &&
+				$this->work_order->update( 'work_order', $ot, $work_order ) &&
+				( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
+				 !== FALSE)
+				)
+			{
+				// Send Email
+				$this->_send_notification($ot, $updated);
+
+				// Set true message
 				$this->session->set_flashdata( 'message', array( 
-					
 					'type' => true,	
 					'message' => 'Se ha guardado el registro correctamente.'
-								
-				));												
-				
-				
-				redirect( 'ot', 'refresh' );
-				
+
+				));
+			redirect( 'ot', 'refresh' );
 			}else{
-				
-				
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
-					
 					'type' => false,	
 					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
-								
 				));												
-				
-				
-				redirect( 'ot', 'refresh' );
-				
+			redirect( 'ot', 'refresh' );
 			}
 			exit;
-		
 	}
-	
-	
-	
-	
-	
-	
+
 	public function cancelar( $ot = null ){
 		
 		// Check access teh user for create
@@ -1090,78 +1029,42 @@ implode(', ', $ramo_tramite_types) . '
 		
 		// Load Model 
 		$this->load->model( 'work_order' );
-		
-		
-		
-		
+
 		// Save Record
 		if( !empty( $_POST ) ){
-			
-			
 			$work_order = array(
-				
 				'work_order_status_id' => 2,
 				'work_order_reason_id' => $this->input->post( 'work_order_reason_id' ),
 				'work_order_responsible_id' => $this->input->post( 'work_order_responsible_id' ),
 				'last_updated' => date( 'd-m-Y H:i:s' )
 			);
-			
-			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
-				
-				
-				
-				$this->load->library( 'mailer' );
-			
-				$notification = $this->work_order->getNotification( $ot );
-				
-				
-				$responsible = $this->work_order->getResponsiblesById( $notification[0]['work_order_responsible_id'] );
-				$reason = $this->work_order->getResponsiblesById( $notification[0]['work_order_reason_id'] );
-						
-				$this->mailer->notifications( $notification, $reason[0]['name'], $responsible[0]['name'] );
-				
-				
+
+			if ( $this->work_order->update( 'work_order', $ot, $work_order ) &&
+				( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
+				 !== FALSE)
+				)
+			{
+				// Send Email
+				$this->_send_notification($ot, $updated);
+
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
-					
 					'type' => true,	
 					'message' => 'Se ha guardado el registro correctamente.'
 								
 				));												
-				
-				
 				redirect( 'ot', 'refresh' );
-				
 			}else{
-				
-				
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
-					
 					'type' => false,	
 					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
 								
 				));												
-				
-				
 				redirect( 'ot', 'refresh' );
-				
 			}
 			exit;
-			
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		$data = $this->work_order->getOtActivateDesactivate( $ot );
 		
 		// Config view
@@ -1197,10 +1100,34 @@ implode(', ', $ramo_tramite_types) . '
 		$this->load->view( 'index', $this->view );	
 		
 	}
-	
-	
-	
-	
+
+	private function _send_notification($order_id, $updated)
+	{
+		$notification = $this->work_order->getNotification( $order_id );
+		if ($notification && isset($notification[0]))
+		{
+			$creator = $this->work_order->generic_get( 'users', array('id' => $updated[0]->user), 1);
+			$from_reply_to = array();
+			if ($creator)
+			{
+				$from_reply_to = array(
+					'from' => $creator[0]->email,
+					'reply-to' =>  $creator[0]->email);
+			}
+			$responsible = $this->work_order->getResponsiblesById( $notification[0]['work_order_responsible_id'] );
+			$reason = $this->work_order->getReasonById( $notification[0]['work_order_reason_id'] );
+			$this->load->library( 'mailer' );
+			if (!$responsible || !$reason || !isset($responsible[0]) || !isset($reason[0]))
+			{
+				$this->mailer->notifications( $notification, null, null, $from_reply_to );
+			}
+			else
+			{
+				$this->mailer->notifications( $notification, $reason[0]['name'], $responsible[0]['name'], $from_reply_to ); 
+			}
+		}
+	}
+
 	/**
 	 *	Aceptar y rechazar
 	 **/
@@ -1220,16 +1147,14 @@ implode(', ', $ramo_tramite_types) . '
 			
 			$this->work_order->setPolicy( $ot, $poliza );
 						
-			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
-				
-				
-				// Send Email		
-				$this->load->library( 'mailer' );
-				
-				$notification = $this->work_order->getNotification( $ot );
-								
-				$this->mailer->notifications( $notification );
-				
+			if ( $this->work_order->update( 'work_order', $ot, $work_order ) &&
+				( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
+				 !== FALSE)
+				)
+			{
+				// Send Email
+				$this->_send_notification($ot, $updated);
+
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
 					
@@ -1265,22 +1190,18 @@ implode(', ', $ramo_tramite_types) . '
 			$this->load->model( 'work_order' );
 		
 			$work_order = array(
-				
 				'work_order_status_id' => 8,
 				'last_updated' => date( 'd-m-Y H:i:s' )
 			);
-			
-						
-			if( $this->work_order->update( 'work_order', $ot, $work_order ) == true ){
-				
-				
-				// Send Email		
-				$this->load->library( 'mailer' );
-				
-				$notification = $this->work_order->getNotification( $ot );
-								
-				$this->mailer->notifications( $notification );
-				
+
+			if ( $this->work_order->update( 'work_order', $ot, $work_order ) &&
+				( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
+				 !== FALSE)
+				)
+			{
+				// Send Email
+				$this->_send_notification($ot, $updated);
+
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
 					
@@ -1288,13 +1209,9 @@ implode(', ', $ramo_tramite_types) . '
 					'message' => 'Se ha guardado el registro correctamente.'
 								
 				));												
-				
-				
 				redirect( 'ot', 'refresh' );
 				
 			}else{
-				
-				
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
 					
@@ -1302,13 +1219,9 @@ implode(', ', $ramo_tramite_types) . '
 					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
 								
 				));												
-				
-				
 				redirect( 'ot', 'refresh' );
-				
 			}
-		
-	}	
+	}
 	
 	
 	
@@ -2995,11 +2908,12 @@ alert("changed!");
 				( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $order_id), 1))
 				 !== FALSE)
 				)
-			{	
+			{
 				$creator = $this->work_order->generic_get( 'users', array('id' => $updated[0]->user), 1);
 // Send Email
 				$this->load->library( 'mailer' );
 				$notification = $this->work_order->getNotification( $order_id );
+				$from_reply_to = array();
 				if ($creator)
 				{
 					$recipient = array(
@@ -3011,9 +2925,11 @@ alert("changed!");
 						'email' =>  $creator[0]->email
 					);
 					$notification[0]['agents'][] = $recipient;
+					$from_reply_to = array(
+						'from' => $creator[0]->email,
+						'reply-to' =>  $creator[0]->email);
 				}
-				$this->mailer->notifications( $notification );
-
+				$this->mailer->notifications( $notification, null, null, $from_reply_to);
 				$row_result = array(
 					'is_poliza' => $is_poliza,
 					'gmm' => $gmm,

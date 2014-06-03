@@ -22,32 +22,26 @@ class Mailer{
         $this->mail->AddReplyTo('info+proages@isinet.mx', 'Isinet');
         $this->mail->SetFrom('info+proages@isinet.mx', 'Isinet');
     }
- 
- 
-// Send Notifications emails 
-    public function notifications( $notification = array(), $razon = null, $responsable = null ){
-        
-		if( empty( $notification ) ) return false;
-		
-			
-		$agentes = '';
-		
-		if( !empty( $notification[0]['agents'] ) ){
-			
-			foreach( $notification[0]['agents'] as $value ){
 
+// Send Notifications emails 
+    public function notifications( $notification = array(), $razon = null, $responsable = null, $from_reply_to = array() ){
+
+		if( empty( $notification ) ) return false;
+
+		$agentes = '';
+
+		if( !empty( $notification[0]['agents'] ) ){
+
+			foreach( $notification[0]['agents'] as $value ){
 				if (( $notification[0]['work_order_status_id'] == 4 ) || ($notification[0]['work_order_status_id'] == 10))
 					$agentes = '';
-				
 				if( !empty( $value['company_name'] ) )
 					$agentes .=  $value['company_name'];
 				else
 					$agentes .=  $value['name'];	
-		
 		$status_name = '';
 		$stat_name = '';
-		
-		
+
 		if( $notification[0]['work_order_status_id'] == 5 ){
 			$status_name = 'Creación';
 			$stat_name = 'creada';
@@ -83,17 +77,10 @@ class Mailer{
 
 		$body = '<div bgcolor="#f4f4f4">
 					 <table width="650" cellspacing="0" cellpadding="0" border="0" align="center"><tbody><tr><td height="3"><img width="650" height="3" style="display:block" src="http://serviciosisinet.com/img/top.jpg"></td></tr></tbody></table>
-					
-					
-					
 					 <table width="650" cellspacing="0" cellpadding="0" border="0" align="center" style="border-left-width:1px;border-left-style:solid;border-left-color:rgb(197,197,197);border-right-width:1px;border-right-style:solid;border-right-color:rgb(197,197,197)"><tbody><tr><td bgcolor="#FFFFFF" align="center" height="50" style="line-height:29px"><span style="font-size:22px"><b>					
 					'.$status_name.'</b></span><span style="color:rgb(25,25,25);font-family:Helvetica,arial,sans-serif;font-size:22px;font-weight:bold"> de la Orden de Trabajo '.$notification[0]['uid'].'</span></td></tr></tbody></table>
-					
-					
 					 <table width="650" cellspacing="0" cellpadding="0" border="0" align="center" style="border-left:1px solid #c5c5c5;border-right:1px solid #c5c5c5"><tbody><tr><td bgcolor="#FFFFFF" height="20" valign="top"><img width="648" height="1" style="display:block" src="http://serviciosisinet.com/img/divider.jpg"></td>
-					
 					</tr></tbody></table>
-					
 					 <table width="650" cellspacing="0" cellpadding="0" border="0" align="center" style="border-left-width:1px;border-left-style:solid;border-left-color:rgb(197,197,197);border-right-width:1px;border-right-style:solid;border-right-color:rgb(197,197,197)">
 					<tbody>
 					  <tr>
@@ -101,19 +88,12 @@ class Mailer{
 						<td bgcolor="#FFFFFF" align="left" style="font-family:Helvetica,arial,sans-serif;font-size:14px;line-height:15px">
 							<p style="color:rgb(79,79,79)">'.$agentes.'</p>
 							<p><font color="#4f4f4f">Le notificamos que la solicitud con la Orden de trabajo  '.$notification[0]['uid'].' fue '.$stat_name.'</font><font color="#4f4f4f">.</font></p>';
-							
-							
 							if( !empty( $razon ) and !empty( $responsable ) ):
-							
 							$body .= '<p><b>Razón</b>: '.$razon.'</p>
 									  <p><b>Responsable</b>: '.$responsable.'</p>
 									  <p><b>Comentarios:</b> '.$notification[0]['comments'].'</p> ';
-									  							
 							endif;
-							
-							
-							
-							
+
 							/*
 							Número de OT
 							Fecha de trámite
@@ -127,17 +107,7 @@ class Mailer{
 							Nombre del asegurado
 							Póliza (si existe)
 							Comentarios (si existen)*/
-							
-							
-								
-							
-							
-							
-							
-							
-							
-							
-							
+
 							$body .= ' <table width="80%" align="center" style="color:rgb(79,79,79)">
 								  <tbody><tr>
 									  <td colspan="2" align="center"><p><b>Detalles de la Orden de Trabajo</b></p>
@@ -147,15 +117,11 @@ class Mailer{
 									  <td width="30%"><b>Orden de Trabajo:</b></td>
 									  <td width="70%"> '.$notification[0]['uid'].'</td>    
 								  </tr>';
-								 
-								 
 								   if( $notification[0]['creation_date'] != '0000-00-00 00:00:00'  )
-								 
 								  $body .= '<tr>
 									  <td><b>Fecha de tramite:</b><br><small>(año-mes-dia)</small></td>
 									  <td> '.date( 'Y-m-d', strtotime($notification[0]['creation_date'] ) ).'</td>
 								  </tr>';
-								  
 							$body .= '<tr>
 									  <td><b>Ramo:</b></td>
 									  <td>'.$notification[0]['group_name'].'</td>    
@@ -176,75 +142,65 @@ class Mailer{
 												  <td>'.$notification[0]['policy'][0]['products'][0]['name'].'</td>    
 												</tr>';
 								  
-								 if( !empty( $notification[0]['policy'][0]['prima'] ) )
-								  
+								 if( !empty( $notification[0]['policy'][0]['prima'] ) && ($notification[0]['policy'][0]['prima'] != null) )							  
 										  $body .= '<tr>
 													  <td><b>Prima:</b></td>
 													  <td>'.$notification[0]['policy'][0]['prima'].'</td>    
 												  </tr> ';
-								 
 								 if( !empty( $notification[0]['policy'][0]['payment_intervals_name'] ) )	  
-										  
-										  
+
 								  $body .= '<tr>
 										  <td><b>Forma de Pago:</b></td>
 										  <td>'.$notification[0]['policy'][0]['payment_intervals_name'].'</td>    
 									  </tr>';
-								 
+
 								  if( !empty( $notification[0]['policy'][0]['payment_method_name'] ) )	  
 
 									   $body .= '<tr>
 										  <td><b>Conducto:</b></td>
 										  <td>'.$notification[0]['policy'][0]['payment_method_name'].'</td>    
 									  </tr>';
-									  
-									  
-					    $body .= '<tr>
-									  <td><b>Asegurado:</b></td>
-									  <td> '.$notification[0]['policy'][0]['name'].'</td>    
-								  </tr>';
-								  
+
+		if( !empty( $notification[0]['policy'][0]['name'] ) )										  
+			$body .= '<tr>
+				<td><b>Asegurado:</b></td>
+				<td> '.$notification[0]['policy'][0]['name'].'</td>    
+			</tr>';
+
 								   if( !empty( $notification[0]['policy'][0]['uid'] ) )	  
-								   
+
 								    $body .= '<tr>
 										  <td><b>Poliza:</b></td>
 										  <td> '.$notification[0]['policy'][0]['uid'].'</td>    
 									  </tr>';
-								  
-								  
 								  if( !empty($notification[0]['comments'] ) )	  
 								   $body .= '<tr>
 									  <td><b>Comentarios:</b></td>
 									  <td> '.$notification[0]['comments'].'</td>    
 								  </tr>';								  
-							
-							
 							 $body .= ' </tbody></table>
-					
 						</td>
 						<td bgcolor="#FFFFFF" width="30">&nbsp;</td>
 					</tr>
 					</tbody></table>
-					
-					
+
 					 <table width="650" cellspacing="0" cellpadding="0" border="0" align="center" style="border-left:1px solid #c5c5c5;border-right:1px solid #c5c5c5"><tbody><tr> <td bgcolor="#FFFFFF" height="20" valign="top">&nbsp;</td></tr></tbody></table>
-					
-					
-					
 					 <table width="650" cellspacing="0" cellpadding="0" border="0" align="center"><tbody><tr><td height="22"><img width="650" height="22" style="display:block" src="http://serviciosisinet.com/img/bottom.jpg"></td></tr></tbody></table>
-					
-					
 					<table width="650" cellspacing="0" cellpadding="0" border="0" align="center"><tbody><tr><td width="650" bgcolor="#f4f4f4" align="center"><span style="font-family:Helvetica,arial,sans-serif;font-size:11px;color:#636363;font-style:normal;line-height:16px"></span></td>
-					
 					</tr></tbody></table><div class="yj6qo"></div><div class="adL">
 					</div></div>';
-		
-		
 			//if( !empty( $value['email'] ) ){
-			
-			
-			$headers = "From: info+proages@isinet.mx\r\n";
-			$headers .= "Reply-To: info+proages@isinet.mx\r\n";
+
+			if (isset($from_reply_to['from']))
+				$headers = "From: " . $from_reply_to['from'] . "\r\n";
+			else
+				$headers = "From: info+proages@isinet.mx\r\n";
+
+			if (isset($from_reply_to['reply-to']))
+				$headers .= "Reply-To: " . $from_reply_to['reply-to'] . "\r\n";
+			else
+				$headers .= "Reply-To: info+proages@isinet.mx\r\n";
+
 			$headers .= "MIME-Version: 1.0\r\n";
 			$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
