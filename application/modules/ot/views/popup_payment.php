@@ -30,7 +30,6 @@ if ( $access_delete )
 }
 $ignore_image = '
 <img style="cursor: pointer" class="mark_ignored action_option" alt="Ignorar" title="Ignorar" src="' . $base_url . 'images/payment_ignore.jpg" />';
-
 ?>
 <table class="altrowstable payment_table">
     <thead>
@@ -39,6 +38,8 @@ $ignore_image = '
             <th>Fecha de pago</th>
             <th>Poliza</th>
             <th>Asegurado</th>
+            <th>Agente importado</th>
+            <th>Folio importado</th>
             <th style="text-align: right; padding-right: 3em">Prima (en $)</th>
             <th style="text-align: right; padding-right: 7em">Negocio</th>
         </tr>
@@ -60,6 +61,8 @@ $ignore_image = '
             <td><?php echo $value->payment_date ?></td>
             <td><?php echo $value->policy_number ?></td>
             <td><?php echo $value->asegurado ? $value->asegurado : 'No disponible'?></td>
+            <td><?php echo $value->imported_agent_name ? $value->imported_agent_name : 'No disponible'?></td>
+            <td><?php echo $value->imported_folio ? $value->imported_folio : 'No disponible'?></td>
 			<td style="text-align: right; padding-right: 2.5em"><?php echo number_format($value->amount, 2);?></td>
 			<td style="width: 110px; text-align: right; padding-right: 2.5em">
 <span style="padding-left: 2.5em; padding-right: 1.5em; text-align: right;"><?php echo $value->business;?></span>

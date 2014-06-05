@@ -13,6 +13,27 @@
 
   	
 */
+$min_year = 2001;
+$max_year = date('Y');
+$posted_month = $this->input->post('month');
+$selected_month = $posted_month ? $posted_month : date('n');
+$posted_year = $this->input->post('year');
+$selected_year = $posted_year ? $posted_year : date('Y');
+$month_texts = array(
+	1 => 'Enero',
+	2 => 'Febrero',
+	3 => 'Marzo',
+	4 => 'Abril',
+	5 => 'Mayo',
+	6 => 'Junio',
+	7 => 'Julio',
+	8 => 'Agosto',
+	9 => 'Septiembre',
+	10 => 'Octubre',
+	11 => 'Noviembre',
+	12 => 'Diciembre',
+);
+$fields_not_shown = array('imported_folio', 'imported_agent_name', 'import_date');
 ?>
 
 
@@ -40,86 +61,36 @@
         </div>
         
         <div class="box-content">
-        	
-            
-			
-			<?php // Return Message error ?>
-                        
-            <?php if( isset( $message ) and !empty( $message ) and $message['type'] == false ): unset( $message['type'] );?>
-            <div class="alert alert-error">
-                  <button type="button" class="close" data-dismiss="alert">×</button>
-                  <strong>Error: </strong> 
-				  <?php  // Show Dinamical message error 
-				  		
-						echo "MESSAGE:".$message['message'];
-						
-						foreach( $message['message'] as $raiz ):
-														
-							if( empty( $raiz ) ) break;
-								
-																						
-								foreach( $raiz as $array ):
-									
-									if( empty( $array ) ) break;
-									
-										foreach( $array as $messagetext ):
-											
-											if( empty( $messagetext ) ) break;
-													
-													echo $messagetext.'<br>';
-												
-										endforeach;
-									
-									
-								endforeach;
-								
-								
-													
-						endforeach;
-				  
-				  ?>
-            </div>
-            <?php endif; ?>
-            
-            
-            
-            
-            <?php if( isset( $message ) and !empty( $message ) and $message['type'] == true ): unset( $message['type'] );?>
+<?php if( isset( $message ) && isset( $message['type'] ) ): ?>
+    <?php if( $message['type'] == true ): ?>
             <div class="alert alert-success">
-                  <button type="button" class="close" data-dismiss="alert">×</button>
-                  <strong>Listo: </strong> 
-				  <?php  // Show Dinamical message error 
-				  		
-						foreach( $message['message'] as $raiz ):
-														
-							if( empty( $raiz ) ) break;
-								
-																						
-								foreach( $raiz as $array ):
-									
-									if( empty( $array ) ) break;
-									
-										foreach( $array as $messagetext ):
-											
-											if( empty( $messagetext ) ) break;
-													
-													echo $messagetext.'<br>';
-												
-										endforeach;
-									
-									
-								endforeach;
-								
-								
-													
-						endforeach;
-				  
-				  ?>
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <img src="<?php echo base_url() ?>images/true.png" width="20" height="20" />
+                <strong>Listo: </strong>
+	<?php else: ?>
+            <div class="alert alert-error">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <strong>Error: </strong>
+	<?php endif; ?>
+	<?php
+		if (!is_array($message['message'])):
+			echo $message['message'];
+		else:
+			foreach( $message['message'] as $raiz ):
+				if( empty( $raiz ) ) break;
+					foreach( $raiz as $array ):
+						if( empty( $array ) ) break;
+						foreach( $array as $messagetext ):
+							if( empty( $messagetext ) ) break;
+							echo $messagetext.'<br>';
+							endforeach;
+					endforeach;
+			endforeach;
+		endif;
+	?>
             </div>
-            <?php endif; ?>
-            
-            
-                    	
+<?php endif; ?>
+
             <form id="formfile" action="<?php echo base_url() ?>ot/import_payments.html" class="form-horizontal" method="post" enctype="multipart/form-data">
               <fieldset>
                 <div class="control-group">
@@ -147,31 +118,47 @@
                 </div>
               </fieldset>
             </form>
-        	
-            
-            
-            
-            
-            
-            
-            
+
             <?php 			
 			/**
              *	Change Index, Selectes options fields
 			 **/
             ?>
-            
-            
+
             <?php if( isset( $tmp_file ) and $process == 'change-index' ): // Is is load a file?>
             
-            <form action="<?php echo base_url() ?>ot/import_payments.html" id="import-form" method="post">
+            <form action="<?php echo base_url() ?>ot/import_payments.html" id="import-form" class="form-horizontal" method="post">
             
             <input type="hidden" name="tmp_file" value="<?php echo $tmp_file ?>">
             
             <input type="hidden" name="process" value="<?php echo $process ?>">
             
             <input type="hidden" name="product" value="<?php echo $product ?>" />
-            
+<?php if (($posted_month !== FALSE) && ($posted_year !== FALSE) ): ?>
+            <input type="hidden" name="month" value="<?php echo $posted_month ?>" />
+            <input type="hidden" name="year" value="<?php echo $posted_year ?>" />
+<?php else: ?>
+            <div class="control-group">
+              <label class="control-label text-error" for="month_year">Mes - Año:</label>
+              <div class="controls">
+                <select name="month" class="required span3">
+<?php foreach ($month_texts as $key => $month_text):
+	$selected = ($key == $selected_month) ? ' selected="selected"' : '';
+?>
+
+				  <option value="<?php echo $key ?>" <?php echo $selected ?>><?php echo $month_text ?></option>
+<?php endforeach; ?>
+				</select>
+                <select name="year" class="required span2">
+<?php for ($i = $max_year; $i > $min_year; $i--): 
+	$selected = ($i == $selected_year) ? ' selected="selected"' : '';
+?>
+				  <option value="<?php echo $i ?>" <?php echo $selected ?>><?php echo $i ?></option>
+<?php endfor; ?>
+				</select>
+              </div>
+            </div>
+<?php endif; ?>
             <div class="alert alert-info">
             	Especifique a qué campos corresponde la información que está importando en las siguientes cajas de selección
             </div>
@@ -314,15 +301,11 @@
 				  		
 						$i=0;				
 						foreach( $file_array as $rows ):
-							
+
 							if( $i > 0 ) break;
-							
 							if( !empty( $rows ) ): 
-								
 								echo '<tr>';
-								
 								foreach( $rows as $key => $value ): 
-																		
 									if( $key == 'is_new' )	$key = 'Es nuevo negocio';
 									if( $key == 'year_prime' )	$key = 'Año prima';
 									if( $key == 'wathdo' )	$key = '¿Asignar el pago a OT?';
@@ -336,42 +319,28 @@
 									if( $key == 'percentage' )	$key = 'Porcentaje';
 									if( $key == 'product_id' )	$key = 'Ramo';
 									if( $key == 'name' )	$key = 'Asegurado';
-									
-									echo '<th>'.$key.'</th>'; 
-								
+									if (!in_array($key, $fields_not_shown))
+										echo '<th>'.$key.'</th>'; 
 								endforeach;
-            	  				
 								echo '</tr>'; 
-								
 							endif;
 				  			$i++;
 				  		endforeach;
-						
-						
-						
+
 						foreach( $file_array as $rows ):
-							
+
 							if( !empty( $rows ) ):
-								
 								echo '<tr>';
-								
-								foreach( $rows as $value ): 
-								
-									echo '<td>'.$value.'</td>'; 
-								
+								foreach( $rows as $key => $value ): 
+									if (!in_array($key, $fields_not_shown))
+										echo '<td>'.$value.'</td>'; 
 								endforeach;
-            	  				
 								echo '</tr>'; 
-								
 							endif;
-				  
 				  		endforeach;
-				  
 				  endif; 
 			?>
-            
             </table>
-            
             </div>
             
             <div id="actions-buttons-forms-send" class="form-actions">
@@ -383,15 +352,7 @@
             </form>
            
             <?php endif; ?>
-            
-            
-            
-            
-            
-            
-            
-            
-            
+
             <?php 			
 			/**
              *	Preview save data
@@ -420,19 +381,12 @@
             	              
             <?php
            		  if( !empty( $file_array ) ):  // Show data
-				  		
 						$i=0;				
 						foreach( $file_array as $rows ):
-							
 							if( $i > 0 ) break;
-							
 							if( !empty( $rows ) ): 
-								
 								echo '<tr>';
-								
 								foreach( $rows as $key => $value ): 
-																		
-									
 									if( $key == 'is_new' )	$key = 'Es nuevo negocio';
 									if( $key == 'year_prime' )	$key = 'Año prima';
 									if( $key == 'wathdo' )	$key = '¿Asignar el pago a OT?';
@@ -446,34 +400,23 @@
 									if( $key == 'percentage' )	$key = 'Porcentaje';
 									if( $key == 'product_id' )	$key = 'Ramo';
 									if( $key == 'name' )	$key = 'Asegurado';
-									echo '<th>'.$key.'</th>'; 
-								
+									if (!in_array($key, $fields_not_shown))
+										echo '<th>'.$key.'</th>'; 
 								endforeach;
-            	  				
 								echo '</tr>'; 
-								
 							endif;
 				  			$i++;
 				  		endforeach;
-						
-						
-						
+
 						foreach( $file_array as $rows ):
-							
 							if( !empty( $rows ) ):
-								
 								echo '<tr>';
-								
-								foreach( $rows as $value ): 
-								
+								foreach( $rows as $key => $value ): 
+								if (!in_array($key, $fields_not_shown))
 									echo '<td>'.$value.'</td>'; 
-								
 								endforeach;
-            	  				
 								echo '</tr>'; 
-								
 							endif;
-				  
 				  		endforeach;
 				  
 				  endif; 
@@ -492,38 +435,7 @@
             </form>
            
             <?php endif; ?>
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+
         </div>
     </div><!--/span-->
 

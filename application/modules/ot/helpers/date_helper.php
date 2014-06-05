@@ -119,4 +119,16 @@ if ( ! function_exists('cuatrimestre'))
 	}
 }
 
+if ( ! function_exists('my_check_date'))
+{
+	function my_check_date($date = null)
+	{
+		if (!$date)
+			return FALSE;
+		$date_parts = explode('-', $date);
+		if (count($date_parts) < 3)
+			return FALSE;
+		return checkdate( $date_parts[1], $date_parts[2], $date_parts[0]);
+	}
+}
 ?>

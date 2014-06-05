@@ -1511,20 +1511,8 @@ implode(', ', $ramo_tramite_types) . '
 		$this->load->view( 'index', $this->view );	
 	
 	}
-	
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 /**
  *	Payments
  **/
@@ -1543,7 +1531,9 @@ implode(', ', $ramo_tramite_types) . '
 		$tmp_file =null;
 		$file_array = array();	
 		$process = '';
+
 		if( !empty( $_FILES ) ){
+// 1: Upload the file to import
 			$process = 'change-index';
 			$product = $_POST['product'];
 			$name = explode( '.', $_FILES['file']['name'] );
@@ -1570,7 +1560,20 @@ implode(', ', $ramo_tramite_types) . '
 		}
 
 		// Chane index
+// 2: "Pre import"
 		if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'change-index' ){
+
+			$posted_month = $this->input->post('month');
+			$posted_year = $this->input->post('year');
+			if (($posted_month === FALSE) || ($posted_year === FALSE) || !$posted_month || !$posted_year )
+			{
+				$this->session->set_flashdata( 'message', array( 
+					'type' => false,	
+					'message' => 'Por favor seleccione un mes.'
+				));	
+				redirect( '/ot/import_payments.html', 'refresh' );
+			}
+
 			$process = 'choose-agents';
 			$product = $_POST['product'];
 			// Load Model
@@ -1594,48 +1597,70 @@ implode(', ', $ramo_tramite_types) . '
 			}
 			unset( $_POST['tmp_file'], $_POST['process'], $_POST['product'] );
 
+			$this->load->helper('date');
 			for( $i=0; $i<=count( $file_array ); $i++ ){
+// Prepare the import
 				if( isset( $file_array[$i] ) ) 
-				for( $index=1; $index<=count( $_POST ); $index++ ){
-					if( $_POST[$index] != 'nonimport' ){
-						$file_array[$i][$_POST[$index]]=$file_array[$i][$index];
-						if( $_POST[$index] == 'clave' ){
-							$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], 'clave', $i  );
-							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]], 'clave' );
-						}		
+				{
+					$always_imported = array(
+						'imported_folio' => $file_array[$i][4],
+						'imported_agent_name' => $file_array[$i][11],
+						'import_date' => sprintf("%04d-%02d-01", $posted_year, $posted_month));
+					for( $index=1; $index<=count( $_POST ); $index++ ){
+						if( $_POST[$index] != 'nonimport' ){
+							$file_array[$i][$_POST[$index]]=$file_array[$i][$index];
+							if( $_POST[$index] == 'payment_date' ){
+								if (!my_check_date($file_array[$i]['payment_date']))
+								{
+									$this->session->set_flashdata( 'message', array( 
+										'type' => false,	
+										'message' => 'No se pudo importar el archivo porque contiene fecha(s) de pago invalida(s).'
+									));	
+									redirect( '/ot/import_payments', 'refresh' );
+								}
+							}
 
-						if( $_POST[$index] == 'agent_uidsnational' ){
-							$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], 'national', $i  );
-							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]], 'national' );
-						}						
+							if( $_POST[$index] == 'clave' ){
+								$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], 'clave', $i  );
+								$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]], 'clave' );
+							}
 
-						if( $_POST[$index] == 'agent_uidsprovincial' ){
-							$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], 'provincial', $i  );
-							$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]], 'provincial' );
+							if( $_POST[$index] == 'agent_uidsnational' ){
+								$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], 'national', $i  );
+								$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]], 'national' );
+							}						
+
+							if( $_POST[$index] == 'agent_uidsprovincial' ){
+								$file_array[$i]['agent'] = $this->user->getAgentByFolio( $file_array[$i][$_POST[$index]], 'provincial', $i  );
+								$file_array[$i]['agent_id'] = $this->user->getIdAgentByFolio( $file_array[$i][$_POST[$index]], 'provincial' );
+							}
+
+							if( $_POST[$index] == 'uid' ){
+								$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '00000' );
+								$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '0000' );
+								$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '000' );
+								$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '00' );
+								$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '0' );
+							}
+
+							$file_array[$i]['wathdo'] = '';						
+							if( isset( $file_array[$i]['year_prime'] ) and $file_array[$i]['year_prime'] == 1 ){
+								$policy = $this->work_order->getPolicyByUid( $file_array[$i]['uid'] );
+								if( empty( $policy ) )
+									$file_array[$i]['wathdo'] = $this->work_order->getWathdo( $i );
+								else
+									$file_array[$i]['wathdo'] =  $this->work_order->getByPolicyUid( $file_array[$i]['uid'] );					
+							}else if( isset( $file_array[$i]['year_prime'] ) and $file_array[$i]['year_prime'] == 0 ){
+								$file_array[$i]['wathdo'] = '';
+							}
 						}
-
-						if( $_POST[$index] == 'uid' ){
-							$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '00000' );
-							$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '0000' );
-							$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '000' );
-							$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '00' );
-							$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '0' );
-						}
-
-						$file_array[$i]['wathdo'] = '';						
-						if( isset( $file_array[$i]['year_prime'] ) and $file_array[$i]['year_prime'] == 1 ){
-							$policy = $this->work_order->getPolicyByUid( $file_array[$i]['uid'] );
-							if( empty( $policy ) )
-								$file_array[$i]['wathdo'] = $this->work_order->getWathdo( $i );
-							else
-								$file_array[$i]['wathdo'] =  $this->work_order->getByPolicyUid( $file_array[$i]['uid'] );					
-						}else if( isset( $file_array[$i]['year_prime'] ) and $file_array[$i]['year_prime'] == 0 ){
-							$file_array[$i]['wathdo'] = '';
-						}
+						unset( $file_array[$i][$index] );
 					}
-					unset( $file_array[$i][$index] );
+					$file_array[$i] = array_merge($file_array[$i], $always_imported);
 				}
 			}
+// Here: $file_array contains an array of arrays - each of these arrays are indexed by the fields to import
+
 			// Load Model
 			$this->load->model( 'work_order' );
 			$this->work_order->importPaymentsTmp( $file_array );
@@ -1717,10 +1742,17 @@ implode(', ', $ramo_tramite_types) . '
 		  $controlSaved = true;
 		  $i = 1;
 		  $message = array( 'type' => false );
-		  foreach( $file_array as $item ){
-			  // Verify policy
-			  //$policy = $this->work_order->getPolicyByUid( $item->uid );
-			  if( empty( $policy ) ){
+
+		  if (!count($file_array))
+		  {
+			$message['message'][0][0]['saved'] = 'No se pudo importar el archivo: los datos de preimportacion no existan mas.';
+		  }
+		  else
+		  {
+			foreach( $file_array as $item ){
+				// Verify policy
+				//$policy = $this->work_order->getPolicyByUid( $item->uid );
+				if( empty( $policy ) ){
 				$policy = array(
 					'product_group_id' => $_POST['product'],
 					'prima' => $item->amount,
@@ -1728,12 +1760,12 @@ implode(', ', $ramo_tramite_types) . '
 					'last_updated' => date( 'Y-m-d H:i:s' ),
 					'date' => date( 'Y-m-d H:i:s' )
 				);
-				if( isset(  $item->name ) )
+				if( isset(	$item->name ) )
 					$policy['name'] = $item->name;
 				$this->work_order->create( 'policies', $policy );
 				$policy = $this->work_order->getPolicyByUid( $item->uid );
 				$agent = $this->user->getUserIdByAgentId( $item->agent_id  );
-				$agents = array( 							  
+				$agents = array(
 					  'user_id' => $agent, 
 					  'policy_id' => $policy[0]['id'],
 					  'since' => date( 'Y-m-d H:i:s' )
@@ -1741,11 +1773,11 @@ implode(', ', $ramo_tramite_types) . '
 				if( isset( $item->percentage ) )	
 					$agents['percentage'] = $item->percentage;
 				else
-					$agents['percentage'] = 100;		  
+					$agents['percentage'] = 100;
 			 	$this->work_order->create( 'policies_vs_users', $agents );
-			  }
-			  $payment_date = strtotime( $item->payment_date );
-			  $payment = array( 
+				}
+				$payment_date = strtotime( $item->payment_date );
+				$payment = array( 
 				'product_group' => $product,
 				'agent_id' => $item->agent_id,
 				'year_prime' => $item->year_prime,
@@ -1755,30 +1787,40 @@ implode(', ', $ramo_tramite_types) . '
 				'business' => $item->is_new,
 				'policy_number' => $item->uid,
 				'last_updated' => date( 'Y-m-d H:i:s' ),
-				'date' => date( 'Y-m-d H:i:s' )
-			  );		 
-			  $user_id = $this->user->getUserIdByAgentId( $item->agent_id  );
-			  if( $this->work_order->checkPayment( $item->uid, $item->amount, $item->payment_date, $user_id ) == true ){
-					  if( $this->work_order->replace( 'payments', $payment ) == false )	$controlSaved = false;
-					  if( (float)$policy[0]['prima'] >= (float)$item->amount ){
+				'date' => date( 'Y-m-d H:i:s' ),
+				'import_date' => $item->import_date,
+				'imported_agent_name' => $item->imported_agent_name,
+				'imported_folio' => $item->imported_folio
+				);		 
+				$user_id = $this->user->getUserIdByAgentId( $item->agent_id);
+				if (!$user_id)
+				{
+					$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
+				}
+				elseif( $this->work_order->checkPayment( $item->uid, $item->amount, $item->payment_date, $user_id ) == true ){
+						if( $this->work_order->replace( 'payments', $payment ) == false )
+						$controlSaved = false;
+						if( (float)$policy[0]['prima'] >= (float)$item->amount ){
 							$ot = $this->work_order->getWorkOrderByPolicy(  $policy[0]['id'] );
 							if( !empty( $ot ) ){
 								$work_order = array( 'work_order_status_id' => 4 );
 								$this->work_order->update( 'work_order', $ot[0]['id'], $work_order );
 							}
-					  }
-					  if( $controlSaved == false )
-						$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
-			  }else{
-				$message['message'] = true;
-				$message['message'][0][$i]['saved'] = 'La linea '.$i.' ya existia y no se ha guardado.';
-			  }
-			  $i++;
+						}
+						if( $controlSaved == false )
+							$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
+				}else{
+					$message['message'] = true;
+					$message['message'][0][$i]['saved'] = 'La linea '.$i.' ya existia y no se ha guardado.';
+				}
+				$i++;
+			}
 		  }
 		  if( !isset( $message['message'] ) ){
 		  	
 			$message['type'] = true;
-			$message['message'][0][0]['saved'] = 'El archivo se importo correctamente.';
+//			$message['message'][0][0]['saved'] = 'El archivo se importo correctamente.';
+			$message['message'] = 'El archivo se importo correctamente.';
 		  }
 		  // Clean System
 		  $tmp_file = $_POST['tmp_file'];

@@ -1535,10 +1535,10 @@ class Work_order extends CI_Model{
   
   public function checkPayment( $uid = null, $prima = null, $payment_date = null, $user_id = null ){
 	 
-	if( empty( $uid ) ) return 'error';
-	if( empty( $prima ) ) return 'error';
-	if( empty( $payment_date ) ) return 'error';
-	if( empty( $user_id ) ) return 'error';
+	if( empty( $uid ) ) return false;
+	if( empty( $prima ) ) return false;
+	if( empty( $payment_date ) ) return false;
+	if( empty( $user_id ) ) return false;
 	
 	/*
 	    SELECT * 
