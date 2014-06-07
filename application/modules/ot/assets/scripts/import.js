@@ -67,4 +67,53 @@ $( ".create-user" )
   .click(function() {
 	$( "#dialog-form" ).dialog( "open" );
   });*/
+
+  	$("#delete-submit").on( "click", function( event ) {
+
+		var selectedMonth = $("#month-delete").val();
+		var selectedYear = $("#year-delete").val();
+		if ( (selectedMonth < 1) || (selectedMonth > 12) ||
+			( selectedYear < 1900 ) || ( selectedYear > 2100 ) ) {
+			alert('El mes - año estan invalidos.');
+			return false;
+		}
+
+		var confirmMessage = '¿Está seguro que desea borrar todos los datos de pago del mes '
+			+ selectedMonth + '/' + selectedYear + '?';
+
+		if ( confirm( confirmMessage ) ) {
+
+			url = Config.base_url() + 'ot/delete_payments.html';
+			$.ajax({
+				url: url,
+				type: 'POST',
+				data: $( "#import-delete").serialize(),
+				dataType : 'json',
+				beforeSend: function(){
+					$( "#delete-submit").hide();
+				},
+				success: function(response){
+					$( "#delete-submit").show();
+					switch (response) {
+						case '-1':
+							alert ('No se pudo borrar los pagos. Informe a su administrador.');
+							break;
+						case '-2':
+							alert ('Ocurrio un error, no se pudo borrar los pagos, consulte a su administrador.');
+							break;
+						case '0':
+							alert ('No hay pagos para el mes - año ' + selectedMonth + '/' + selectedYear + '.');
+							break;
+						default:
+							alert ('Se pudo borrar los pagos del mes - año ' + selectedMonth + '/' + selectedYear + ' correctamente.');
+							break;
+					}
+				}
+			});
+		}
+		return false;        
+	});
+
+
+
 });	  

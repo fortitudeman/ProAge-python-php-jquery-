@@ -1846,6 +1846,7 @@ implode(', ', $ramo_tramite_types) . '
                 // Load Model
 		$this->load->model( 'work_order' );
                 $products = $this->work_order->getProductsGroupsOptions();
+
 		// Config view
 		$this->view = array(
 				
@@ -1860,10 +1861,10 @@ implode(', ', $ramo_tramite_types) . '
 		  'scripts' =>  array(
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',	
+//			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',	
 			  '<script type="text/javascript">$( document ).ready( function(){ $( "#formfile" ).validate(); });</script>',
 			  '<script src="'.base_url().'scripts/config.js"></script>',
-			  '<script src="'.base_url().'ot/assets/scripts/import.js"></script>'				
+			  '<script src="'.base_url().'ot/assets/scripts/import.js"></script>'
 		  ),
 		  'content' => 'ot/import_payments', // View to load
 		  'products' => $products,
@@ -2796,6 +2797,40 @@ Display custom filter period
 			}
 			if ( $db_result )
 				$result = json_encode('1');
+		}
+		echo $result;
+		exit;
+	}
+
+	// delete (imported) payments of given month/year
+	public function delete_payments()
+	{
+
+		if ( !$this->input->is_ajax_request() || 
+			!$this->access_update ){
+			echo json_encode('-1');
+			exit;
+		}
+		$result = json_encode('-2');
+		$month = $this->input->post('month_delete');
+		$year = $this->input->post('year_delete');
+		if ($month && $year)
+		{
+			$this->load->model( 'work_order' );
+			$month = (int) $month;
+			$year = (int) $year;
+			$where = array(
+				'import_date' => sprintf("%04d-%02d-01", (int) $year, (int) $month)
+			);
+			$db_result = $this->work_order->generic_get('payments', $where);
+			if (!$db_result)
+				$result = json_encode('0');
+			else
+			{
+				$db_result = $this->work_order->generic_delete('payments', $where);
+				if ( $db_result )
+					$result = json_encode('1');
+			}
 		}
 		echo $result;
 		exit;

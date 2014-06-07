@@ -15,10 +15,18 @@
 */
 $min_year = 2001;
 $max_year = date('Y');
+$current_month = date('n');
+
 $posted_month = $this->input->post('month');
-$selected_month = $posted_month ? $posted_month : date('n');
+$selected_month = $posted_month ? $posted_month : $current_month;
 $posted_year = $this->input->post('year');
-$selected_year = $posted_year ? $posted_year : date('Y');
+$selected_year = $posted_year ? $posted_year : $max_year;
+
+$posted_month_delete = $this->input->post('month_delete');
+$selected_month_delete = $posted_month_delete ? $posted_month_delete : $current_month;
+$posted_year_delete = $this->input->post('year_delete');
+$selected_year_delete = $posted_year_delete ? $posted_year_delete : $max_year;
+
 $month_texts = array(
 	1 => 'Enero',
 	2 => 'Febrero',
@@ -33,7 +41,10 @@ $month_texts = array(
 	11 => 'Noviembre',
 	12 => 'Diciembre',
 );
+
 $fields_not_shown = array('imported_folio', 'imported_agent_name', 'import_date');
+
+$is_posted = (count($_POST) > 0);
 ?>
 
 
@@ -91,7 +102,8 @@ $fields_not_shown = array('imported_folio', 'imported_agent_name', 'import_date'
             </div>
 <?php endif; ?>
 
-            <form id="formfile" action="<?php echo base_url() ?>ot/import_payments.html" class="form-horizontal" method="post" enctype="multipart/form-data">
+            <form id="formfile" action="<?php echo base_url() ?>ot/import_payments.html" class="form-horizontal <?php if (!$is_posted) echo ' span7' ?>" method="post" enctype="multipart/form-data" <?php if (!$is_posted): ?>style="border-right: 1px solid #CCCCCC"<?php endif?>>
+              <h4>Importar pagos :</h4>
               <fieldset>
                 <div class="control-group">
                   <label class="control-label text-error" for="inputError">Archivo: </label>
@@ -100,8 +112,7 @@ $fields_not_shown = array('imported_folio', 'imported_agent_name', 'import_date'
                     <small class="text">Archivo CSV o EXCEL</small>
                   </div>
                 </div>
-                
-                
+
                 <div class="control-group">
                   <label class="control-label text-error" for="inputError">Tipo de archivo: </label>
                   <div class="controls">
@@ -110,15 +121,46 @@ $fields_not_shown = array('imported_folio', 'imported_agent_name', 'import_date'
                     </select>
                   </div>
                 </div>
-               
-               
-                <div id="actions-buttons-forms" class="form-actions">
+
+              </fieldset>
+			  <div id="actions-buttons-forms" class="form-actions">
                   <button type="submit" class="btn btn-primary">Cargar</button>
                   <input type="button" class="btn" onclick="javascript: history.back()" value="Cancelar">
-                </div>
-              </fieldset>
+               </div>
             </form>
 
+<?php if (!$is_posted): ?>
+            <form id="import-delete" action="<?php echo base_url() ?>ot/delete_payments.html" class="form-horizontal span5" method="post">
+              <h4>Borrar pagos :</h4>
+              <fieldset>
+              <div class="control-group">
+                <label class="control-label text-error" for="month_year" style="margin-left: -4em">Del mes / año: &nbsp;</label>
+                <div class="controls" style="margin-left: -3em">
+                  <select name="month_delete" id="month-delete" class="required" style="width: 100px">
+
+<?php foreach ($month_texts as $key => $month_text):
+	$selected = ($key == $selected_month_delete) ? ' selected="selected"' : '';
+?>
+
+				    <option value="<?php echo sprintf("%02d", $key) ?>" <?php echo $selected ?>><?php echo $month_text ?></option>
+<?php endforeach; ?>
+				  </select>
+                  <select name="year_delete" id="year-delete" class="required" style="width: 100px">
+<?php for ($i = $max_year; $i > $min_year; $i--): 
+	$selected = ($i == $selected_year_delete) ? ' selected="selected"' : '';
+?>
+				    <option value="<?php echo $i ?>" <?php echo $selected ?>><?php echo $i ?></option>
+<?php endfor; ?>
+				  </select>
+                </div>
+              </div>
+              </fieldset>
+              <div id="borrar-button-form" class="form-actions">
+                  <button type="submit" id="delete-submit" class="btn btn-primary" style="margin-left: -7em">Borrar</button>
+              </div>
+            </form>
+<?php endif; ?>
+            <div style="clear: both">&nbsp;</div>
             <?php 			
 			/**
              *	Change Index, Selectes options fields
@@ -139,7 +181,7 @@ $fields_not_shown = array('imported_folio', 'imported_agent_name', 'import_date'
             <input type="hidden" name="year" value="<?php echo $posted_year ?>" />
 <?php else: ?>
             <div class="control-group">
-              <label class="control-label text-error" for="month_year">Mes - Año:</label>
+              <label class="control-label text-error" for="month_year">Mes - Año de la importacion:</label>
               <div class="controls">
                 <select name="month" class="required span3">
 <?php foreach ($month_texts as $key => $month_text):
@@ -268,11 +310,11 @@ $fields_not_shown = array('imported_folio', 'imported_agent_name', 'import_date'
 			 **/
             ?>
             
-            
+<?php if ($is_posted): ?>
             <div id="dialog-form" title="Request new user" style="display:none">
               <iframe src="<?php echo base_url() ?>usuarios/create_request_new_user.html" width="800" height="600"></iframe>
             </div>
-            
+<?php endif; ?>
             <input type="hidden" id="control" />
             
             
