@@ -130,7 +130,7 @@ $is_posted = (count($_POST) > 0);
             </form>
 
 <?php if (!$is_posted): ?>
-            <form id="import-delete" action="<?php echo base_url() ?>ot/delete_payments.html" class="form-horizontal span5" method="post">
+            <form id="import-delete" action="<?php echo base_url() ?>ot/delete_payments.html" class="form-horizontal span5" style="min-width: 320px" method="post">
               <h4>Borrar pagos :</h4>
               <fieldset>
               <div class="control-group">
