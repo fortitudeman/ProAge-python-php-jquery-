@@ -134,8 +134,8 @@ $is_posted = (count($_POST) > 0);
               <h4>Borrar pagos :</h4>
               <fieldset>
               <div class="control-group">
-                <label class="control-label text-error" for="month_year" style="margin-left: -4em">Del mes / año: &nbsp;</label>
-                <div class="controls" style="margin-left: -3em">
+                <label class="control-label text-error" for="month_year">Del mes / año: &nbsp;</label>
+                <div class="controls">
                   <select name="month_delete" id="month-delete" class="required" style="width: 100px">
 
 <?php foreach ($month_texts as $key => $month_text):
@@ -156,7 +156,7 @@ $is_posted = (count($_POST) > 0);
               </div>
               </fieldset>
               <div id="borrar-button-form" class="form-actions">
-                  <button type="submit" id="delete-submit" class="btn btn-primary" style="margin-left: -7em">Borrar</button>
+                  <button type="submit" id="delete-submit" class="btn btn-primary">Borrar</button>
               </div>
             </form>
 <?php endif; ?>

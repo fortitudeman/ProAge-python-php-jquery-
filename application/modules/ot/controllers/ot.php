@@ -2808,8 +2808,7 @@ Display custom filter period
 
 		if ( !$this->input->is_ajax_request() || 
 			!$this->access_update ){
-			echo json_encode('-1');
-			exit;
+			redirect( 'ot.html', 'refresh' );
 		}
 		$result = json_encode('-2');
 		$month = $this->input->post('month_delete');
