@@ -360,12 +360,10 @@ class User extends CI_Model{
 
 // FInd Method
 	public function find( $find =  null ) {
-		
-		
+
 		if( empty( $find ) ) return false;
 		
-		
-		$this->db->select();
+		$to_select = 'users.*';
 		$this->db->from(  'users' );
 		
 		if( isset( $find['rol'] ) and !empty( $find['rol'] ) ){
@@ -382,99 +380,68 @@ class User extends CI_Model{
 						
 			
 		}
-		
-		
+
 		if( isset( $find['find'] ) and !empty( $find['find'] ) )
 			$this->db->like( 'users.name', $find['find'] );
-		
-		
-		
+
 		// Advanced search
 		if( isset( $find['advanced'] ) and !empty( $find['advanced'] ) ){
 			
 			foreach( $find['advanced'] as $value ){
-			
-				if( in_array( 'clave', $value ) or in_array( 'national', $value ) or in_array( 'provincial', $value  ) or in_array( 'license_expired_date', $value  ) ){
-					
+				if( in_array( 'clave', $value ) or 
+					in_array( 'national', $value ) or
+					in_array( 'provincial', $value  ) or
+					in_array( 'license_expired_date', $value  ) ){
+					$to_select .= ', agents.id as agent_id';
 					$this->db->join( 'agents', 'agents.user_id=users.id' );	
-					
 				}
 				
-				if( in_array( 'clave', $value ) or in_array( 'national', $value ) or in_array( 'provincial', $value  ) ){
-					
+				if( in_array( 'clave', $value ) or
+					in_array( 'national', $value ) or
+					in_array( 'provincial', $value  ) ){
+					$to_select .= ', agent_uids.id as agent_uid_id';
 					$this->db->join( 'agent_uids', 'agent_uids.agent_id=agents.id' );	
-					
 				}
 				break;
-			
 			}
-			
-			
-			
+
 			foreach( $find['advanced'] as $value )
-				
-				
-					
-					
-				
 				if( $value[0] == 'clave' ){
-					
 					$this->db->like( array( 'agent_uids.type' => $value[0], 'agent_uids.uid' => $value[1] ) );	
-					
 				}
-				
+
 				if( $value[0] == 'national' ){
-					
 					$this->db->like( array( 'agent_uids.type' => $value[0], 'agent_uids.uid' => $value[1] ) );	
-					
 				}
 				
 				if( $value[0] == 'provincial' ){
-					
 					$this->db->like( array( 'agent_uids.type' => $value[0], 'agent_uids.uid' => $value[1] ) );	
-					
 				}
-				
-				
+
 				if( $value[0] == 'birthdate' ){
-					
 					$this->db->where( array( 'users.birthdate' => $value[1] ) );	
-					
 				}
-				
+
 				if( $value[0] == 'manager_id' ){
-					
 					$this->db->where( array( 'users.manager_id' => $value[1] ) );	
-					
 				}
-				
-				
+
 				if( $value[0] == 'name' ){
-					
 					$this->db->like( array( 'users.name' => $value[1] ) );	
-					
 				}
-				
+
 				if( $value[0] == 'lastname' ){
-					
 					$this->db->like( array( 'users.lastnames' => $value[1] ) );	
-					
 				}
-				
+
 				if( $value[0] == 'email' ){
-					
 					$this->db->where( array( 'users.email' => $value[1] ) );	
-					
 				}
 				
 				if( $value[0] == 'license_expired_date' ){
-					
 					$this->db->where( array( 'agents.license_expired_date' => $value[1] ) );	
-					
 				}
-					
-					
-					
+
 					//clavenationalprovincial
 				
 				//print_r( $value[0] );
@@ -488,28 +455,17 @@ class User extends CI_Model{
 			//exit;
 			
 		}
-		
-		
-		
-		
-			
-		
+		$this->db->select($to_select);
 		$query = $this->db->get();
-		
-			
-						
+
 		if ($query->num_rows() == 0) return false;
- 
-		
+
 		// Clean vars
 		unset( $this->data );
 
 		$this->data = array();
-		
-		
-		
 		foreach ($query->result() as $row) {
-			
+
 			// Getting Manager name
 			if( !empty( $row->manager_id ) ){
 				
@@ -532,8 +488,7 @@ class User extends CI_Model{
 			}else{
 				$manager='';
 			}
-			
-			
+
 			// Getting Types
 			/*
 			SELECT user_roles.name 
@@ -541,8 +496,7 @@ class User extends CI_Model{
 			JOIN  `user_roles` ON user_roles.id=`users_vs_user_roles`.user_role_id
 			WHERE users_vs_user_roles.user_id=1;
 			*/
-			
-			
+
 			$tipo='';
 			$this->db->select( 'user_roles.name' );
 			$this->db->from( 'users_vs_user_roles' );
@@ -558,10 +512,6 @@ class User extends CI_Model{
 				
 			unset( $types ); // Clean memory
 			
-			
-			
-			
-			
 			// Getting Clave
 			/*
 				SELECT agent_uids.uid 
@@ -576,16 +526,13 @@ class User extends CI_Model{
 			$this->db->where( array( 'agent_uids.type' => 'clave', 'agents.user_id' => $row->id )  );
 			
 			$claves = $this->db->get();
-			
+
 			if ($claves->num_rows() == 0) $clave = '';
-			
+
 			foreach ($claves->result() as $row_claves)
 					$clave .= $row_claves->uid.'<br>';	
-				
 			unset( $claves ); // Clean memory
-			
-			
-			
+
 			// Getting Clave
 			/*
 				SELECT agent_uids.uid 
@@ -598,19 +545,15 @@ class User extends CI_Model{
 			$this->db->from( 'agents' );
 			$this->db->join( 'agent_uids', 'agent_uids.agent_id=agents.id' );
 			$this->db->where( array( 'agent_uids.type' => 'national', 'agents.user_id' => $row->id )  );
-			
+
 			$nationals = $this->db->get();
-			
 			if ($nationals->num_rows() == 0) $national = '';
-			
+
 			foreach ($nationals->result() as $row_national)
 					$national .= $row_national->uid.'<br>';	
-				
+
 			unset( $nationals ); // Clean memory
-			
-			
-			
-			
+
 			// Getting Clave
 			/*
 				SELECT agent_uids.uid 
@@ -623,17 +566,16 @@ class User extends CI_Model{
 			$this->db->from( 'agents' );
 			$this->db->join( 'agent_uids', 'agent_uids.agent_id=agents.id' );
 			$this->db->where( array( 'agent_uids.type' => 'provincial', 'agents.user_id' => $row->id )  );
-			
+
 			$provincials = $this->db->get();
-			
+
 			if ($provincials->num_rows() == 0) $provincial = '';
 			
 			foreach ($provincials->result() as $row_provincial)
 					$provincial .= $row_provincial->uid.'<br>';	
-				
+
 			unset( $provincials ); // Clean memory
-			
-			
+
 			$this->data[] = array( 
 		    	'id' => $row->id,
 		    	'name' => $row->name,
@@ -648,13 +590,11 @@ class User extends CI_Model{
 		    	'date' => $row->date ,
 		    	'last_updated' => $row->last_updated
 		    );
-		
-			
-			
+
 		}
 
 		return $this->data;
-		
+
    }
 
 
