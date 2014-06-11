@@ -102,7 +102,7 @@ $is_posted = (count($_POST) > 0);
             </div>
 <?php endif; ?>
 
-            <form id="formfile" action="<?php echo base_url() ?>ot/import_payments.html" class="form-horizontal <?php if (!$is_posted) echo ' span7' ?>" method="post" enctype="multipart/form-data" <?php if (!$is_posted): ?>style="border-right: 1px solid #CCCCCC"<?php endif?>>
+            <form id="formfile" action="<?php echo base_url() ?>ot/import_payments.html" class="form-horizontal <?php if (!$is_posted && $access_delete) echo ' span7' ?>" method="post" enctype="multipart/form-data" <?php if (!$is_posted && $access_delete): ?>style="border-right: 1px solid #CCCCCC"<?php endif?>>
               <h4>Importar pagos :</h4>
               <fieldset>
                 <div class="control-group">
@@ -129,7 +129,7 @@ $is_posted = (count($_POST) > 0);
                </div>
             </form>
 
-<?php if (!$is_posted): ?>
+<?php if (!$is_posted && $access_delete): ?>
             <form id="import-delete" action="<?php echo base_url() ?>ot/delete_payments.html" class="form-horizontal span5" style="min-width: 320px" method="post">
               <h4>Borrar pagos :</h4>
               <fieldset>

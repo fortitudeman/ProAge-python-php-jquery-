@@ -1868,6 +1868,7 @@ implode(', ', $ramo_tramite_types) . '
 		  ),
 		  'content' => 'ot/import_payments', // View to load
 		  'products' => $products,
+		  'access_delete' => $this->access_delete,
 		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
 		);
 		if( isset( $message ) ){ $this->view['message'] = $message; unset( $tmp_file, $file_array ); }				
@@ -2805,10 +2806,12 @@ Display custom filter period
 	// delete (imported) payments of given month/year
 	public function delete_payments()
 	{
-
-		if ( !$this->input->is_ajax_request() || 
-			!$this->access_update ){
+		if ( !$this->input->is_ajax_request() )
 			redirect( 'ot.html', 'refresh' );
+
+		if ( !$this->access_delete ){
+			echo json_encode('-1');
+			exit;
 		}
 		$result = json_encode('-2');
 		$month = $this->input->post('month_delete');
