@@ -2053,8 +2053,7 @@ alert("changed!");
  **/	
 	public function reporte_popup()
 	{
-
-            $work_order_ids = $this->input->post('wrk_ord_ids');  
+			$work_order_ids = $this->input->post('wrk_ord_ids');  
             $data['is_poliza'] = $this->input->post('is_poliza');
             $data['gmm'] = $this->input->post('gmm');
 
@@ -2098,7 +2097,7 @@ alert("changed!");
 		$data['values'] = array();
 		foreach($work_order_ids as $work_order_id)
 		{
-			$row_result['value'] = $this->work_order->pop_up_data($work_order_id);
+			$row_result['value'] = $this->work_order->pop_up_data($work_order_id, (int)$this->input->post('agent_id'));
 			$row_result['value']['general'][0]->adjusted_prima = $row_result['value']['general'][0]->prima;
 
 			// For OTs en tramite and pendientes, adjust prima:
@@ -2108,7 +2107,7 @@ alert("changed!");
 			{
 				$row_result['value']['general'][0]->adjusted_prima = 
 					$this->user->get_adjusted_prima($row_result['value']['general'][0]->policy_id,
-					$ramo, $period);
+					$ramo, $period) * ($row_result['value']['general'][0]->p_percentage / 100);
 			}
 			$data['values'][$work_order_id]['main'] = $this->load->view('popup_report_main_row', $row_result, TRUE);
 			$data['values'][$work_order_id]['menu'] = $this->load->view('popup_report_menu_row', $row_result, TRUE);

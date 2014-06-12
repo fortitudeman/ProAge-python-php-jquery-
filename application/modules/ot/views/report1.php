@@ -3,12 +3,12 @@ $post_data = isset($_POST['query']) ? ',prev_post:'. json_encode($_POST['query']
 ?>
 <script type="text/javascript">
 
-    function report_popup(wrk_ord_ids,poliza,gmm)
+    function report_popup(agent_id, wrk_ord_ids,poliza,gmm)
     {
 		$.fancybox.showLoading();
 
 		$.post("ot/reporte_popup",
-			{wrk_ord_ids:wrk_ord_ids,is_poliza:poliza,gmm:gmm<?php echo $post_data ?>},function(data)
+			{agent_id: agent_id, wrk_ord_ids:wrk_ord_ids,is_poliza:poliza,gmm:gmm<?php echo $post_data ?>},function(data)
         { 
             if(data)
             {
@@ -117,22 +117,22 @@ $post_data = isset($_POST['query']) ? ',prev_post:'. json_encode($_POST['query']
                     </a>
 				</td>
                 <td class="celda_roja" style="text-align:center;">
-                    <a class="numeros fancybox"   style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>                    
+                    <a class="numeros fancybox"   style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>                    
                         <?php if(isset($value['tramite']['count'])) echo $value['tramite']['count']; else echo 0; ?>
                     </a>
                 </td>
                 <td class="celda_roja" style="text-align:right;" >
-                    <a class="numeros fancybox" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>
+                    <a class="numeros fancybox" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>
                         $<?php if( isset( $value['tramite']['adjusted_prima'] ) ) echo number_format($value['tramite']['adjusted_prima'],2); else echo number_format ('0',2); ?>
                     </a>
                 </td>
                 <td class="celda_amarilla" style="text-align:center;">
-                    <a class="numeros fancybox"  style="text-align:center;" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo  $tata; ?>")' <?php }?>>
+                    <a class="numeros fancybox"  style="text-align:center;" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo  $tata; ?>")' <?php }?>>
                         <?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?>
                     </a>
                 </td>
                 <td class="celda_amarilla" style="text-align:right;">
-                    <a class="numeros fancybox"  <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $tata; ?>")' <?php }?>>
+                    <a class="numeros fancybox"  <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $tata; ?>")' <?php }?>>
                         $<?php if( isset( $value['aceptadas']['adjusted_prima'] ) ) echo number_format($value['aceptadas']['adjusted_prima'],2); else  echo number_format($value['aceptadas'],2); ?>
                     </a>
                 </td>

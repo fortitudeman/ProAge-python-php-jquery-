@@ -1674,12 +1674,12 @@ class Work_order extends CI_Model{
   
   
   
-  function pop_up_data($work_order_id)
+  function pop_up_data($work_order_id, $agent_id)
     {
-        $this->db->select('*,work_order.id AS work_order_id,agent_user.email AS agent_user_email,policies.uid AS policies_uid,policies.name AS policies_name,products.name AS products_name,policies.period AS policies_period,work_order_status.name AS work_order_status_name,payment_methods.name AS payment_methods_name,currencies.name AS currencies_name,work_order.uid AS work_order_uid,payment_intervals.name AS payment_intervals_name, work_order_types.patent_id AS patent_id');
+        $this->db->select('*,work_order.id AS work_order_id,agent_user.email AS agent_user_email,policies.uid AS policies_uid,policies.name AS policies_name,products.name AS products_name,policies.period AS policies_period,work_order_status.name AS work_order_status_name,payment_methods.name AS payment_methods_name,currencies.name AS currencies_name,work_order.uid AS work_order_uid,payment_intervals.name AS payment_intervals_name, work_order_types.patent_id AS patent_id, `policies_vs_users`.`percentage` as `p_percentage`');
         //$this->db->select('*');
         $this->db->from('work_order');
-        $this->db->where('work_order.id',$work_order_id); 
+        $this->db->where(array('work_order.id' => $work_order_id, 'agent_user.id' => $agent_id)); 
         $this->db->join('users','work_order.user = users.id','left');
         $this->db->join('work_order_status','work_order.work_order_status_id = work_order_status.id','left');
         $this->db->join('policies','work_order.policy_id = policies.id','left');
@@ -1695,6 +1695,7 @@ class Work_order extends CI_Model{
         $this->db->join('work_order_types','work_order.work_order_type_id = work_order_types.id','left');        
         //$query = $this->db->get_where('work_order',array('work_order.id'=>$work_order_id));
         $query = $this->db->get();
+
         $result['general'] = $query->result();
 		foreach ($result['general'] as $key => $value) {
 			$result['general'][$key]->is_ntuable = $this->is_ntuable(

@@ -2983,7 +2983,7 @@ AND
 		
 		*/
 
-		$this->db->select('DISTINCT( policies_vs_users.policy_id ) AS policy_id,work_order.id AS work_order_id');
+		$this->db->select('DISTINCT( policies_vs_users.policy_id ) AS policy_id, policies_vs_users.user_id, policies_vs_users.percentage,work_order.id AS work_order_id');
 		$this->db->from('work_order_types' );
 		$this->db->join('work_order','work_order.work_order_type_id=work_order_types.id');
 		$this->db->join('policies','policies.id=work_order.policy_id' );		
@@ -3018,7 +3018,7 @@ AND
 		
 		foreach ($query->result() as $row)
 		{
-			$tramite['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period);
+			$tramite['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period) * ($row->percentage / 100);
 			/*
 			SELECT SUM( prima )
 			FROM policies
@@ -3040,7 +3040,7 @@ AND
 				foreach ($queryprima->result() as $rowprima)
 				{
 					if(!empty( $rowprima->prima)) 
-						$tramite['prima'] = (float)$tramite['prima'] + (float)$rowprima->prima;					
+						$tramite['prima'] = (float)$tramite['prima'] + ((float)$rowprima->prima * $row->percentage / 100);					
 				}
 			}
 			$work_order_ids[] = $row->work_order_id;
@@ -3062,9 +3062,8 @@ AND
 		WHERE work_order.work_order_status_id=7   
 		AND policies_vs_users.user_id=7
 		*/
-		
-		
-		$this->db->select('DISTINCT( policies_vs_users.policy_id ) AS policy_id,work_order.id AS work_order_id' );
+
+		$this->db->select('DISTINCT( policies_vs_users.policy_id ) AS policy_id, policies_vs_users.percentage, work_order.id AS work_order_id' );
 		$this->db->from( 'policies' );
 		$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
@@ -3097,7 +3096,7 @@ AND
 		$aceptadas['count']=0;		
 		foreach ($query->result() as $row)
         {
-			$aceptadas['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period);
+			$aceptadas['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period) * $row->percentage / 100;
 		/*
 		SELECT SUM( prima )
 		FROM policies
@@ -3111,7 +3110,8 @@ AND
 				foreach ($querypolicies->result() as $rowprima)
 				{
 					$aceptadas['count'] = (int)$aceptadas['count']+1;					
-					if( !empty( $rowprima->prima ) ) $aceptadas['prima'] = (float)$aceptadas['prima'] + (float)$rowprima->prima;					
+					if( !empty( $rowprima->prima ) )
+						$aceptadas['prima'] = (float)$aceptadas['prima'] + ((float)$rowprima->prima  * $row->percentage / 100);					
 				}
 			}
 			$work_order_ids[] = $row->work_order_id;       
