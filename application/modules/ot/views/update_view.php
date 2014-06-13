@@ -88,7 +88,7 @@
                   <div class="control-group *new-bussiness">
                     <label class="control-label text-error" for="inputError">Agente</label>
                     <div class="controls">
-                       <select class="input-xlarge focused required" name="agent[]" id="agent-select" readonly="readonly">
+                       <select class="input-xxlarge focused required" name="agent[]" id="agent-select" readonly="readonly" multiple="multiple">
 <?php
 $selected_agents = array();
 foreach ($data['agents'] as $value)
