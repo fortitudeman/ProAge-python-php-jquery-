@@ -2488,7 +2488,9 @@ class User extends CI_Model{
 		$filter['query']['min_amount'] = TRUE;
 		$result = 0;
 		$array_scalar = $this->_getNegocios( TRUE, $agent_id, $filter);
-		if ($array_scalar)
+		if (!is_numeric($array_scalar))
+			log_message('error', 'application/modules/usuarios/models/user.php - getCountNegocioPai() - not int - ' . print_r($array_scalar, TRUE));
+		elseif ($array_scalar > 0)
 			$result = array_fill(0, $array_scalar, 0);
 		return $result; 
 	}
