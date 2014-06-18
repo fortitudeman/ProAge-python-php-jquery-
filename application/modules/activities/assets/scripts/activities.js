@@ -99,7 +99,8 @@ $( document ).ready(function() {
 			$( '#end' ).val(  endDate.getFullYear() +'-'+ Month +'-'+ endDate.getDate() );
 
 			var parentForm = $(this).parents("form");
-			if (parentForm.attr('id') == 'activity-report-form') {
+			var parentFormId = parentForm.attr('id');
+			if ((parentFormId == 'activity-report-form') || (parentFormId == 'sales-activity-form')) {
 				parentForm.submit();
 			}
         },

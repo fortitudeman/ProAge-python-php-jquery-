@@ -133,6 +133,13 @@ if ( ! function_exists('get_period_start_end'))
 				$selection['end'] = sprintf("%s-%s-%s", $current_year, $current_month, date('t'));
 				break;
 			case 2: // Week
+				$from_to_time = strtotime($selection['begin']);
+				$to_to_time = strtotime($selection['end']);
+				if (($from_to_time !== -1) && ($to_to_time !== -1) && ($from_to_time <= $to_to_time))
+				{
+					$selection['begin'] = date('Y-m-d', $from_to_time );
+					$selection['end'] = date('Y-m-d', $to_to_time );					
+				}
 				break;	
 			case 3: // Year
 				$selection['begin'] = sprintf("%s-01-01", $current_year);
@@ -191,6 +198,69 @@ if ( ! function_exists('set_ot_report_filter'))
 }
 
 /*
+ Store filter fields other than the period in session (a more generic version of set_ot_report_filter()
+*/
+if ( ! function_exists('generic_set_report_filter'))
+{
+	function generic_set_report_filter( $to_save, $agents_in_db )
+	{
+		if (!$to_save)
+			return;
+		$CI =& get_instance();
+
+		$to_check_array2 = array();
+		if (isset($to_save['agent_name']))
+		{
+			$to_check_array1 = explode("\n", $to_save['agent_name']);
+			$to_replace = array(']', "\n", "\r");
+			foreach ($to_check_array1 as $value)
+			{
+				$pieces = explode( ' [ID: ', $value);
+				if (isset($pieces[1]))
+				{
+					$pieces[1] = str_replace($to_replace, '', $pieces[1]);
+					if (isset($agents_in_db[$pieces[1]]) && !isset($to_check_array2[$pieces[1]]))
+						$to_check_array2[] = $pieces[1];
+				}
+			}
+		}
+		$to_save['agent_name'] = implode('|', $to_check_array2);
+		$CI->session->set_userdata($CI->misc_filter_name, $to_save);
+		$CI->misc_filters = $to_save;
+	}
+}
+
+/*
+ Get filter fields other than the period (a more generic version than get_ot_report_filter()
+*/
+if ( ! function_exists('get_generic_filter'))
+{
+	function get_generic_filter(&$other_filters, $agents_in_db)
+	{
+		$CI =& get_instance();
+		if ( $CI->misc_filters !== FALSE )
+		{
+			foreach ($CI->misc_filters as $key => $value)
+			{
+				if ($key != 'agent_name')
+					$other_filters[$key] = $value;
+				else
+				{
+					$agent_names_in_session = explode('|', $value);
+					foreach ($agent_names_in_session as $agent_value)
+					{
+						if (isset($agents_in_db[$agent_value]))
+						{
+							$other_filters['agent_name'] .= $agents_in_db[$agent_value] . " [ID: $agent_value]\n";
+						}
+					}
+				}
+			}
+//			$result = array_merge($other_filters, $CI->ot_r_misc_filter);
+		}
+	}
+}
+/*
  Get ot/reporte/html filter fields other than the period
 */
 if ( ! function_exists('get_ot_report_filter'))
@@ -221,6 +291,80 @@ if ( ! function_exists('get_ot_report_filter'))
 	}
 }
 
+/*
+ Builds the javascript to handle agent autocomplete
+*/
+if ( ! function_exists('get_agent_autocomplete_js'))
+{
+	function get_agent_autocomplete_js($agent_array, $form_selector = '#form', $submit_selector = '.submit-form',
+		$clear_selector = '#clear-agent-filter', $agent_selector = '#agent-name')
+	{
+		$agent_multi = array();
+		foreach ( $agent_array as $key => $value )
+		{
+			$agent_multi[] = "\n'$value [ID: $key]'";
+		}
+		$inline_js = 
+'
+<script type="text/javascript">
+	$( document ).ready( function(){ 
+		var agentList = [' . implode(',', $agent_multi) . '
+		];
+
+		function split( val ) {
+			return val.split( /\n\s*/ );
+		}
+		function extractLast( term ) {
+			return split( term ).pop();
+		}
+		$( "' . $submit_selector . '").bind("click", function( event ) {
+			$( "' . $form_selector . '").submit();
+		})
+		$( "' . $clear_selector . '").bind("click", function( event ) {
+			$( "' . $agent_selector . '" ).val("");
+			$( "' . $form_selector . '").submit();
+		})
+		$( "' . $agent_selector . '" )
+		// don\'t navigate away from the field on tab when selecting an item
+			.bind( "keydown", function( event ) {
+				if ( event.keyCode === $.ui.keyCode.TAB &&
+					$( this ).data( "ui-autocomplete" ).menu.active ) {
+					event.preventDefault();
+				}
+			})
+/*			.bind( "change", function( event ) {
+alert("changed!");
+			})*/
+			.autocomplete({
+				minLength: 0,
+				source: function( request, response ) {
+					// delegate back to autocomplete, but extract the last term
+					response( $.ui.autocomplete.filter(
+						agentList, extractLast( request.term ) ) );
+				},			
+				focus: function() {
+					// prevent value inserted on focus
+					return false;
+				},
+				select: function( event, ui ) {
+					var terms = split( this.value );
+					// remove the current input
+					terms.pop();
+					// add the selected item
+					terms.push( ui.item.value );
+					// add placeholder to get the comma-and-space at the end
+					terms.push( "" );
+					this.value = terms.join( "\n" );
+					$( "' . $form_selector . '").submit();
+					return false;
+				}
+			})
+	});
+</script>
+';
+		return ($inline_js);
+	}
+}
 /* End of file ot.php */
 /* Location: ./application/helpers/filter_helper.php */
 ?>

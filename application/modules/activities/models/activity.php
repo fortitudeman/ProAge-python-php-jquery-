@@ -17,7 +17,7 @@ class Activity extends CI_Model{
 	private $data = array();
 	
 	private $insertId;
-	
+	private $agent_name_where_in = null;
 		
 	public function __construct(){
 		
@@ -179,11 +179,17 @@ class Activity extends CI_Model{
 		$this->db->select();
 		$this->db->from( 'agents_activity' );
 		$this->db->where( 'agent_id', $agent_id );
+		if (isset($filter['begin']) && isset($filter['end']))
+		{
+			$this->db->where(array(
+				'begin >= ' => $filter['begin'],
+				'end <= ' => $filter['end'],				
+			));
+		}
 		$this->db->order_by( 'id', 'desc' );
-        $this->db->limit( 50, $start );
+//        $this->db->limit( 50, $start );
 		
 		$query = $this->db->get();	
-		
 		if ($query->num_rows() == 0) return false;
  	
 		$data = array();
@@ -336,5 +342,257 @@ SUM( `agents_activity`.`autos_businesses` )  AS `autos_businesses`,
 		return $data;
 			
     }
+
+// Sales activity
+	public function sales_activity( $values )
+	{
+		$agents_with_activity = array();
+		$data = array(
+			'totals' => array(
+				'cita' => 0, 'prospectus' => 0, 'interview' => 0),
+			'rows' => array(),
+		);
+		$activity_rows = array();
+		$solicitudes_work_order_rows = array();
+		$negocios_work_order_rows = array();
+		$payment_rows = array();
+
+		if ($values['periodo'] == 2)	// if Week is selected
+		{
+			$fields_selected = '`agents_activity`.`agent_id` , 
+1  AS `weeks_reported` ,
+`agents_activity`.`cita` AS `cita` , 
+`agents_activity`.`prospectus` AS `prospectus`, 
+`agents_activity`.`interview`  AS `interview`';
+			$this->db->select($fields_selected, FALSE);
+		}
+		else // Month, Year or Custom
+		{
+			$fields_selected = '`agents_activity`.`agent_id` ,
+COUNT( `agents_activity`.`agent_id` ) AS `weeks_reported` ,
+SUM( `agents_activity`.`cita` ) AS `cita` , 
+SUM( `agents_activity`.`prospectus` )  AS `prospectus`, 
+SUM( `agents_activity`.`interview` )  AS `interview`';
+			$this->db->select($fields_selected, FALSE);
+			$this->db->group_by('agent_id');
+		}
+		$this->db->from( 'agents_activity' );
+		$this->db->join( 'agents', 'agents_activity.agent_id=agents.id');
+		$this->db->where( array(
+			'begin >= ' => $values['begin'],
+			'end <= ' => $values['end']) );
+
+		$agents_selected = array();
+		if ( isset( $values['agent_name'] ) and !empty( $values['agent_name'] ) )
+		{
+			$this->_get_agent_filter_where($values['agent_name']);
+			if ($this->agent_name_where_in)
+			{
+				foreach ($this->agent_name_where_in as $value)
+					$agents_selected[$value] = $value;
+				$this->db->where_in('agents.id', $this->agent_name_where_in);
+			}
+		}
+		$query = $this->db->get();
+ 	
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				foreach ($data['totals'] as $key => $value)
+					$data['totals'][$key] += $row->$key;
+				$activity_rows[$row->agent_id] = array(
+					'weeks_reported' => $row->weeks_reported,
+					'citaT' => $row->cita,
+					'citaP' => $row->cita / $row->weeks_reported,				
+					'prospectusT' => $row->prospectus,
+					'prospectusP' => $row->prospectus / $row->weeks_reported,				
+					'interviewT' => $row->interview,
+					'interviewP' => $row->interview / $row->weeks_reported,
+				);
+				$agents_with_activity[$row->agent_id] = $row->agent_id;
+			}
+		}
+		$query->free_result();
+////////////////////////////////
+		$totals_work_order = array('VIDA_solicitudes' => 0, 'GMM_solicitudes' => 0);
+		$solicitudes_work_order_rows = $this->_get_ots($values, $agents_selected, $totals_work_order, $agents_with_activity);
+		$data['totals'] = array_merge($data['totals'], $totals_work_order);
+
+////////////////////////////////
+		$totals_work_order = array('VIDA_negocios' => 0, 'GMM_negocios' => 0);
+		$negocios_work_order_rows = $this->_get_ots($values, $agents_selected, $totals_work_order, $agents_with_activity,
+			'negocios', array('work_order_status_id' => 4, 'product_group.name' => 'GMM'));
+		$data['totals'] = array_merge($data['totals'], $totals_work_order);
+
+////////////////////////////////
+
+		$this->db->select( 'SUM(business) AS sum_business, product_group.name as group_name, agents.id as agent_id' );
+		$this->db->from( 'payments' );
+		$this->db->join( 'product_group', 'product_group.id=payments.product_group' );
+		$this->db->join( 'agents', 'agents.id=payments.agent_id' );
+		$this->db->where(array('valid_for_report' => '1', 'product_group.name' => 'Vida'));
+		$this->db->where( "((business = '1') OR (business = '-1'))" );
+		$this->db->where( array(
+			'payments.payment_date >= ' => $values['begin'] . ' 00:00:00',
+			'payments.payment_date <= ' => $values['end']  . ' 23:59:59'
+			));
+		if ($this->agent_name_where_in)
+			$this->db->where_in('agents.id', $this->agent_name_where_in);
+		$this->db->group_by(array('agent_id', 'group_name'));
+		$query = $this->db->get();
+		$totals_payments = array('VIDA_negocios' => 0);
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				if (!$agents_selected || isset($agents_selected[$row->agent_id]))
+				{
+					$group_name = strtoupper($row->group_name);
+					if (isset($totals_payments[$group_name . '_negocios']))
+						$totals_payments[$group_name . '_negocios'] += $row->sum_business;
+					$payment_rows[$row->agent_id][$group_name] = array(
+						'negocios' => $row->sum_business); 
+					$agents_with_activity[$row->agent_id] = $row->agent_id;
+				}
+			}
+		}
+		$query->free_result();
+		$data['totals'] = array_merge($data['totals'], $totals_payments);
+
+		if (count($agents_with_activity))
+		{
+			$this->db->select( 'users.id as user_id, users.name, users.lastnames, users.company_name, agents.id as agent_id' );
+			$this->db->from( 'users' );
+			$this->db->join( 'agents', 'agents.user_id=users.id' );
+			$this->db->where_in('agents.id', $agents_with_activity);
+			$this->db->order_by('name asc, lastnames asc, company_name asc');
+			$query = $this->db->get();
+			if ($query->num_rows() > 0)
+			{
+				$base_url = base_url();
+				foreach ($query->result() as $row)
+				{
+					$name = $row->name . ' ' . $row->lastnames;
+					if ($row->company_name)
+						$name .= ' ' . $row->company_name;
+					$data['rows'][$row->agent_id] = array(
+						'user_id' => $row->user_id,
+						'simulator_url' => $base_url . 'simulator/index/' . $row->user_id . '/1.html',
+						'perfil_url' => $base_url . 'agent/index/' . $row->user_id . '/1.html',
+						'activities_url' => $base_url . 'activities/index/' . $row->user_id . '.html',
+						'name' => $name,
+						'weeks_reported' => 0,
+						'citaT' => 0,
+						'citaP' => 0,
+						'interviewT' => 0,
+						'interviewP' => 0,				
+						'prospectusT' => 0,
+						'prospectusP' => 0,
+						'vida_solicitudes' => 0,
+						'vida_negocios' => 0,
+						'gmm_solicitudes' => 0,
+						'gmm_negocios' => 0,
+					);
+					if (isset($activity_rows[$row->agent_id]))
+					{
+						foreach ($activity_rows[$row->agent_id] as $key => $activity_value)
+							$data['rows'][$row->agent_id][$key] = $activity_value;
+					}
+					if (isset($solicitudes_work_order_rows[$row->agent_id]))
+					{
+						if (isset($solicitudes_work_order_rows[$row->agent_id]['VIDA']) && 
+							isset($solicitudes_work_order_rows[$row->agent_id]['VIDA']['solicitudes']))
+							$data['rows'][$row->agent_id]['vida_solicitudes'] = $solicitudes_work_order_rows[$row->agent_id]['VIDA']['solicitudes'];
+						if (isset($solicitudes_work_order_rows[$row->agent_id]['GMM']) && 
+							isset($solicitudes_work_order_rows[$row->agent_id]['GMM']['solicitudes']))
+							$data['rows'][$row->agent_id]['gmm_solicitudes'] = $solicitudes_work_order_rows[$row->agent_id]['GMM']['solicitudes'];
+					}
+					if (isset($negocios_work_order_rows[$row->agent_id]))
+					{
+						if (isset($negocios_work_order_rows[$row->agent_id]['GMM']) && 
+							isset($negocios_work_order_rows[$row->agent_id]['GMM']['negocios']))
+							$data['rows'][$row->agent_id]['gmm_negocios'] = $negocios_work_order_rows[$row->agent_id]['GMM']['negocios'];
+					}
+					if (isset($payment_rows[$row->agent_id]))
+					{				
+						if (isset($payment_rows[$row->agent_id]['VIDA']) && 
+							isset($payment_rows[$row->agent_id]['VIDA']['negocios']))
+							$data['rows'][$row->agent_id]['vida_negocios'] = $payment_rows[$row->agent_id]['VIDA']['negocios'];
+						if (isset($payment_rows[$row->agent_id]['GMM']) && 
+							isset($payment_rows[$row->agent_id]['GMM']['negocios']))
+							$data['rows'][$row->agent_id]['gmm_negocios'] = $payment_rows[$row->agent_id]['GMM']['negocios'];
+					}
+				}
+			}
+			$query->free_result();
+		}
+		return $data;
+    }
+/////////////////////////
+	private function _get_agent_filter_where($agent_name)
+	{
+		if ($this->agent_name_where_in !== null)
+			return;
+		$this->agent_name_where_in = array();
+		$agent_name_array = explode("\n", $agent_name);
+		$to_replace = array(']', "\n", "\r");
+		foreach ($agent_name_array as $value)
+		{
+			$pieces = explode( ' [ID: ', $value);
+			if (isset($pieces[1]))
+			{
+				$pieces[1] = str_replace($to_replace, '', $pieces[1]);
+				if (!isset($this->agent_name_where_in[$pieces[1]]))
+					$this->agent_name_where_in[] = $pieces[1];
+			}
+		}
+	}
+
+/*  Retrieve from table `work_order` for sales activity
+    Maybe this should be put in /application/modules/ot/models/work_order.php */
+
+	private function _get_ots($values, $agents_selected, &$totals_work_order, &$agents_with_activity, $field = 'solicitudes', $add_where = array())
+	{
+		$work_order_rows = array();
+		$column_name = $field . '_count';
+		$this->db->select( 'product_group.name as group_name, COUNT(work_order.id) AS ' . $column_name . ', agents.id as agent_id' );
+		$this->db->from( 'work_order' );
+		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
+		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
+		$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=work_order.policy_id' );
+		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
+
+		if ($add_where)
+			$this->db->where($add_where);
+		$this->db->where( array(
+			'creation_date >= ' => $values['begin'] . ' 00:00:00',
+			'creation_date <= ' => $values['end']  . ' 23:59:59',
+			));
+		$this->db->where(
+			'(((patent_id = 47) && (product_group_id = 1)) || ((patent_id = 90) && (product_group_id = 2)))'
+		);
+		if ($this->agent_name_where_in)
+			$this->db->where_in('agents.id', $this->agent_name_where_in);
+
+		$this->db->group_by(array('agent_id', 'group_name'));
+		$query = $this->db->get();
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				if (!$agents_selected || isset($agents_selected[$row->agent_id]))
+				{
+					$group_name = strtoupper($row->group_name);
+					$totals_work_order[$group_name . '_' . $field] += $row->{$column_name};
+					$work_order_rows[$row->agent_id][$group_name] = array(
+						$field => $row->{$column_name}); 
+					$agents_with_activity[$row->agent_id] = $row->agent_id;
+				}
+			}
+		}
+		$query->free_result();
+		return $work_order_rows;
+	}
 }
 ?>

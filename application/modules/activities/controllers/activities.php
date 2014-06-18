@@ -36,7 +36,7 @@ class Activities extends CI_Controller {
 	public $access_viewall = false;
 
 	public $default_period_filter = FALSE;
-	public $ot_r_misc_filter = FALSE;
+	public $misc_filters = FALSE;
 	public $custom_period_from = FALSE;
 	public $custom_period_to = FALSE;
 	public $period_filter_for = FALSE;
@@ -106,10 +106,9 @@ class Activities extends CI_Controller {
 		$this->custom_period_from = $this->session->userdata('custom_period_from_activities_report');
 		$this->custom_period_to = $this->session->userdata('custom_period_to_activities_report');
 
-		$this->ot_r_misc_filter = $this->session->userdata('ot_r_misc_filter');
+		$this->misc_filter_name = 'activity_misc_filter';
+		$this->misc_filters = $this->session->userdata($this->misc_filter_name);
 	}
-	
-	
 
 // Show all records	
 	public function index( $userid = null, $filter = null ){
@@ -131,13 +130,15 @@ class Activities extends CI_Controller {
 			redirect( 'home', 'refresh' );
 		
 		}
-						
-		
+		$this->load->helper('filter');
+		if (isset($this->misc_filters['begin']) && isset($this->misc_filters['end']))
+		{
+			$filter['begin'] = $this->misc_filters['begin'];
+			$filter['end'] = $this->misc_filters['end'];
+		}
 		// Load Model
 		$this->load->model( array( 'activity', 'user' ) );
-		
-		
-		
+
 		// Pagination config	
 		$this->load->library('pagination');
 		
@@ -750,6 +751,216 @@ class Activities extends CI_Controller {
 		// Render view 
 		$this->load->view( 'index', $this->view );	
 	}
+
+//Report of Ventas
+	public function sales_activities_stats( $userid = null ){
+
+		// Check user privilege
+		if( $this->access_report == false ){
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Actividad de ventas". Informe a su administrador para que le otorgue los permisos necesarios.'
+			));	
+
+			if( !empty( $userid ) )				
+				redirect( 'activities/index/'.$userid, 'refresh' );
+			else
+				redirect( 'activities', 'refresh' );
+		}
+		$this->load->model( 'activity' );
+
+		$agent_array = array();
+		$other_filters = array();
+		$default_week = array();
+		$data = $this->_init_report($agent_array, $other_filters, $default_week);
+
+		$inline_js = get_agent_autocomplete_js($agent_array, '#sales-activity-form');
+		$inline_js .=
+'
+<script type="text/javascript">
+	$( document ).ready( function(){ 
+		$("#sales-activity-normal").show();
+		$("#sales-activity-efectividad").hide();
+		$("#view-normal").bind( "click", function(){
+			$("#sales-activity-normal").show();
+			$("#sales-activity-efectividad").hide();
+		})
+		$("#view-efectividad").bind( "click", function(){
+			$("#sales-activity-normal").hide();
+			$("#sales-activity-efectividad").show();
+		})
+	});
+</script>
+';
+
+/*		$inline_js .=
+'
+<script type="text/javascript">
+	function payment_popup(params) {
+		$.fancybox.showLoading();
+		$.post("ot/payment_popup", jQuery.param(params) + "&" + $("#form").serialize(), function(data) { 
+			if (data) {
+				$.fancybox({
+					content:data
+				});
+				return false;
+			}
+		});
+	}
+</script>
+';*/
+		switch ($other_filters['periodo'])
+		{
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+				$report_period = ' desde ' . $other_filters['begin'] . ' hasta ' . $other_filters['end'];
+				break;
+			default:
+				$report_period = '';
+				break;
+		}
+
+		$base_url = base_url();
+		$this->view = array(
+		  'title' => 'Actividad de ventas',
+		    // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'access_create' => $this->access_create,
+		  'access_update' => $this->access_update,
+		  'access_delete' => $this->access_delete,
+		  'access_report' => $this->access_report,
+		  'access_viewall' => $this->access_viewall,
+		  'access_export' => $this->access_export,
+		  'css' => array(
+		  	'<link href="'. $base_url . 'activities/assets/style/create.css" rel="stylesheet" media="screen">',
+//			'<link href="'. $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
+			'<link href="'. $base_url . 'activities/assets/style/table_sorter.css" rel="stylesheet">',
+'<style>
+.sales-activity-results {
+	margin-left: 1em
+}
+.sales-activity-results tr th, td {
+	font-size: 12px;
+	border: 1px solid #000000;
+}
+.sales-activity-numeric {
+	text-align: right;
+	padding-right: 0.5em
+}
+.medium-grey {
+	background-color: #bfbfbf;
+}
+.light-grey {
+	background-color: #d9d9d9;
+}
+.medium-red {
+	background-color: #ff2500;
+}
+.medium-grey-body {
+	background-color: #dddac4;
+}
+.light-grey-body {
+	background-color: #eaf2dc;
+}
+.light-red-body {
+	background-color: #f4dbd9;
+}
+.light-green-body {
+	background-color: #d7e4ba;
+}
+.light-blue-body {
+	background-color: #b5dfea;
+}
+</style>'
+		  ),
+		  'scripts' =>  array(
+			'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/jquery.validate.js"></script>',
+			'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/es_validator.js"></script>',
+			'<script src="'.$base_url.'scripts/config.js"></script>',
+			'<script src="'.$base_url.'activities/assets/scripts/activities.js"></script>',
+			'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
+			'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
+			'<script src="' . $base_url . 'activities/assets/scripts/sales_activity_report.js"></script>',
+			'<script type="text/javascript" src="'. $base_url .'scripts/custom-period.js"></script>',
+			$inline_js,
+		  ),
+		  'content' => 'activities/sales_activities',
+		  'data' => $data,
+		  'period_form' => show_custom_period(), // custom period configuration form
+		  'other_filters' => $other_filters,
+		  'report_period' => $report_period,
+		  'default_week' => $default_week,
+		  'message' => $this->session->flashdata('message')
+		);
+
+		// Render view 
+		$this->load->view( 'index', $this->view );		
+	
+	}
+
+// Init actividades de venta report processing
+	private function _init_report(&$agent_array, &$other_filters, &$default_week)
+	{
+		$data = array();
+		$agent_array = $this->user->getAgents( FALSE );
+
+		$this->load->helper(array('filter', 'date_report'));
+		$default_filter = get_filter_period();
+		$default_week = get_calendar_week();
+
+		$other_filters = array(
+			'agent_name' => '',
+			'activity_view' => 'normal',
+			'begin' => $default_week['start'],
+			'end' => $default_week['end']
+		);
+		get_generic_filter($other_filters, $agent_array);
+
+		if ( count( $_POST ) && (($periodo = $this->input->post('periodo')) !== FALSE) &&
+			(($agent_name = $this->input->post('agent_name')) !== FALSE) && 
+			(($activity_view = $this->input->post('activity_view')) !== FALSE) &&
+			(($begin = $this->input->post('begin')) !== FALSE) &&
+			(($end = $this->input->post('end')) !== FALSE))
+		{
+			$default_week = array('start' => $begin, 'end' => $end);
+			if ( $this->form_validation->is_natural_no_zero($periodo) &&
+				($periodo <= 4))
+				set_filter_period($periodo);
+
+			if (($activity_view != 'normal') && ($activity_view != 'efectividad'))
+				$activity_view = 'normal';
+
+			$other_filters['periodo'] = $periodo;
+			$other_filters['begin'] = $begin;
+			$other_filters['end'] = $end;			
+			get_period_start_end($other_filters);
+
+			$filters_to_save = array(
+				'agent_name' => $agent_name,
+				'activity_view' => $activity_view,
+				'begin' => $other_filters['begin'],
+				'end' => $other_filters['end']
+				);
+			generic_set_report_filter( $filters_to_save, $agent_array );
+//			foreach ($filters_to_save as $key => $value)
+//				$other_filters[$key] = $value;
+			$data = $this->activity->sales_activity($other_filters);
+		}
+		else
+		{
+			$other_filters = array_merge(
+				$other_filters, array('periodo' => $default_filter));
+			get_period_start_end($other_filters);
+			$data = $this->activity->sales_activity($other_filters);
+		}
+		return $data;
+	}
+
 /* End of file activities.php */
 /* Location: ./application/controllers/activities.php */
 }
