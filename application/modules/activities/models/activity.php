@@ -355,7 +355,6 @@ SUM( `agents_activity`.`autos_businesses` )  AS `autos_businesses`,
 		$activity_rows = array();
 		$solicitudes_work_order_rows = array();
 		$negocios_work_order_rows = array();
-		$payment_rows = array();
 
 		if ($values['periodo'] == 2)	// if Week is selected
 		{
@@ -416,50 +415,21 @@ SUM( `agents_activity`.`interview` )  AS `interview`';
 		$query->free_result();
 ////////////////////////////////
 		$totals_work_order = array('VIDA_solicitudes' => 0, 'GMM_solicitudes' => 0);
-		$solicitudes_work_order_rows = $this->_get_ots($values, $agents_selected, $totals_work_order, $agents_with_activity);
+		$solicitudes_work_order_rows = $this->get_ot_count($values, $agents_selected, $totals_work_order, $agents_with_activity);
 		$data['totals'] = array_merge($data['totals'], $totals_work_order);
 
 ////////////////////////////////
 		$totals_work_order = array('VIDA_negocios' => 0, 'GMM_negocios' => 0);
-		$negocios_work_order_rows = $this->_get_ots($values, $agents_selected, $totals_work_order, $agents_with_activity,
+		$negocios_work_order_rows = $this->get_ot_count($values, $agents_selected, $totals_work_order, $agents_with_activity,
 			'negocios', array('work_order_status_id' => 4, 'product_group.name' => 'GMM'));
 		$data['totals'] = array_merge($data['totals'], $totals_work_order);
 
 ////////////////////////////////
-
-		$this->db->select( 'SUM(business) AS sum_business, product_group.name as group_name, agents.id as agent_id' );
-		$this->db->from( 'payments' );
-		$this->db->join( 'product_group', 'product_group.id=payments.product_group' );
-		$this->db->join( 'agents', 'agents.id=payments.agent_id' );
-		$this->db->where(array('valid_for_report' => '1', 'product_group.name' => 'Vida'));
-		$this->db->where( "((business = '1') OR (business = '-1'))" );
-		$this->db->where( array(
-			'payments.payment_date >= ' => $values['begin'] . ' 00:00:00',
-			'payments.payment_date <= ' => $values['end']  . ' 23:59:59'
-			));
-		if ($this->agent_name_where_in)
-			$this->db->where_in('agents.id', $this->agent_name_where_in);
-		$this->db->group_by(array('agent_id', 'group_name'));
-		$query = $this->db->get();
 		$totals_payments = array('VIDA_negocios' => 0);
-		if ($query->num_rows() > 0)
-		{
-			foreach ($query->result() as $row)
-			{
-				if (!$agents_selected || isset($agents_selected[$row->agent_id]))
-				{
-					$group_name = strtoupper($row->group_name);
-					if (isset($totals_payments[$group_name . '_negocios']))
-						$totals_payments[$group_name . '_negocios'] += $row->sum_business;
-					$payment_rows[$row->agent_id][$group_name] = array(
-						'negocios' => $row->sum_business); 
-					$agents_with_activity[$row->agent_id] = $row->agent_id;
-				}
-			}
-		}
-		$query->free_result();
+		$payment_rows = $this->get_payment_count($values, $agents_selected, $totals_payments, $agents_with_activity);
 		$data['totals'] = array_merge($data['totals'], $totals_payments);
 
+////////////////////////////////
 		if (count($agents_with_activity))
 		{
 			$this->db->select( 'users.id as user_id, users.name, users.lastnames, users.company_name, agents.id as agent_id' );
@@ -549,14 +519,30 @@ SUM( `agents_activity`.`interview` )  AS `interview`';
 		}
 	}
 
-/*  Retrieve from table `work_order` for sales activity
+/*  Requests from table `work_order` related to sales activity
     Maybe this should be put in /application/modules/ot/models/work_order.php */
 
-	private function _get_ots($values, $agents_selected, &$totals_work_order, &$agents_with_activity, $field = 'solicitudes', $add_where = array())
+	public function get_ot_count($values, $agents_selected, &$totals_work_order, &$agents_with_activity, $field = 'solicitudes', $add_where = array())
+	{
+		return $this->_get_ots(TRUE, $values, $agents_selected, $totals_work_order, $agents_with_activity, $field, $add_where);
+	}
+
+	public function get_ot_list($values, $agents_selected, &$totals_work_order, &$agents_with_activity, $field = 'solicitudes', $add_where = array())
+	{
+		return $this->_get_ots(FALSE, $values, $agents_selected, $totals_work_order, $agents_with_activity, $field, $add_where);
+	}
+
+	private function _get_ots($get_count, $values, $agents_selected, &$totals_work_order, &$agents_with_activity, $field = 'solicitudes', $add_where = array())
 	{
 		$work_order_rows = array();
-		$column_name = $field . '_count';
-		$this->db->select( 'product_group.name as group_name, COUNT(work_order.id) AS ' . $column_name . ', agents.id as agent_id' );
+		if ($get_count)
+		{
+			$column_name = $field . '_count';
+			$this->db->select( 'product_group.name as group_name, COUNT(work_order.id) AS ' . $column_name . ', agents.id as agent_id' );
+		}
+		else
+			$this->db->select( 'product_group.name as group_name, work_order.id AS work_order_id, agents.id as agent_id' );
+
 		$this->db->from( 'work_order' );
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
@@ -574,25 +560,108 @@ SUM( `agents_activity`.`interview` )  AS `interview`';
 		);
 		if ($this->agent_name_where_in)
 			$this->db->where_in('agents.id', $this->agent_name_where_in);
-
-		$this->db->group_by(array('agent_id', 'group_name'));
+		if ($get_count)
+			$this->db->group_by(array('agent_id', 'group_name'));
 		$query = $this->db->get();
+
 		if ($query->num_rows() > 0)
 		{
-			foreach ($query->result() as $row)
+			if ($get_count)
 			{
-				if (!$agents_selected || isset($agents_selected[$row->agent_id]))
+				foreach ($query->result() as $row)
 				{
-					$group_name = strtoupper($row->group_name);
-					$totals_work_order[$group_name . '_' . $field] += $row->{$column_name};
-					$work_order_rows[$row->agent_id][$group_name] = array(
-						$field => $row->{$column_name}); 
-					$agents_with_activity[$row->agent_id] = $row->agent_id;
+					if (!$agents_selected || isset($agents_selected[$row->agent_id]))
+					{
+						$group_name = strtoupper($row->group_name);
+						$totals_work_order[$group_name . '_' . $field] += $row->{$column_name};
+						$work_order_rows[$row->agent_id][$group_name] = array(
+							$field => $row->{$column_name}); 
+						$agents_with_activity[$row->agent_id] = $row->agent_id;
+					}
 				}
+			}
+			else
+			{
+				foreach ($query->result() as $row)
+					$work_order_rows[] = $row;
 			}
 		}
 		$query->free_result();
 		return $work_order_rows;
+	}
+
+/*  Requests from table `payments` related to sales activity */
+	public function get_payment_count($values, $agents_selected, &$totals_payments, &$agents_with_activity, $field = 'negocios', $add_where = array())
+	{
+		return $this->_get_payments(TRUE, $values, $agents_selected, $totals_payments, $agents_with_activity, $field, $add_where);
+	}
+
+	public function get_payment_list($values, $agents_selected, &$totals_payments, &$agents_with_activity, $field = 'negocios', $add_where = array())
+	{
+		return $this->_get_payments(FALSE, $values, $agents_selected, $totals_payments, $agents_with_activity, $field, $add_where);
+	}
+
+	private function _get_payments($get_count, $values, $agents_selected, &$totals_payments, &$agents_with_activity, $field = 'negocios', $add_where = array())
+	{
+		$payment_rows = array();
+		if ($get_count)
+			$this->db->select( 'SUM(business) AS sum_business, product_group.name as group_name, agents.id as agent_id' );
+		else
+//			$this->db->select( 'payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name' );    
+			$this->db->select( 'payments.*, product_group.name as group_name, agents.id as agent_id, users.name as first_name, users.lastnames as last_name, users.company_name as company_name' );
+		$this->db->from( 'payments' );
+		$this->db->join( 'product_group', 'product_group.id=payments.product_group' );
+		$this->db->join( 'agents', 'agents.id=payments.agent_id' );
+		$this->db->join( 'users', 'users.id=agents.user_id' );		
+
+		$this->db->where(array('valid_for_report' => '1', 'product_group.name' => 'Vida'));
+		$this->db->where( "((business = '1') OR (business = '-1'))" );
+		$this->db->where( array(
+			'payments.payment_date >= ' => $values['begin'] . ' 00:00:00',
+			'payments.payment_date <= ' => $values['end']  . ' 23:59:59'
+			));
+		if ($this->agent_name_where_in)
+			$this->db->where_in('agents.id', $this->agent_name_where_in);
+		if ($add_where)
+			$this->db->where($add_where);
+
+		if ($get_count)
+			$this->db->group_by(array('agent_id', 'group_name'));
+		$query = $this->db->get();
+
+		if ($query->num_rows() > 0)
+		{
+			if ($get_count)
+			{
+				foreach ($query->result() as $row)
+				{
+					if (!$agents_selected || isset($agents_selected[$row->agent_id]))
+					{
+						$group_name = strtoupper($row->group_name);
+						$totals_payments[$group_name . '_' . $field] += $row->sum_business;
+						$payment_rows[$row->agent_id][$group_name] = array(
+							$field => $row->sum_business);
+						$agents_with_activity[$row->agent_id] = $row->agent_id;
+					}
+				}
+			}
+			else
+			{
+				foreach ($query->result() as $row)
+				{
+					$row->asegurado = '';
+					if ($row->policy_number) {
+						$query_policy = $this->db->get_where('policies', array('uid' => $row->policy_number), 1, 0);
+						if ($query_policy->num_rows() > 0)
+							$row->asegurado = $query_policy->row()->name;
+						$query_policy->free_result();
+					}
+					$payment_rows[] = $row;
+				}
+			}
+		}
+		$query->free_result();
+		return $payment_rows;
 	}
 }
 ?>

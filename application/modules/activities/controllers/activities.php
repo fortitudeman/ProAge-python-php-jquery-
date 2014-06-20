@@ -794,22 +794,6 @@ class Activities extends CI_Controller {
 </script>
 ';
 
-/*		$inline_js .=
-'
-<script type="text/javascript">
-	function payment_popup(params) {
-		$.fancybox.showLoading();
-		$.post("ot/payment_popup", jQuery.param(params) + "&" + $("#form").serialize(), function(data) { 
-			if (data) {
-				$.fancybox({
-					content:data
-				});
-				return false;
-			}
-		});
-	}
-</script>
-';*/
 		switch ($other_filters['periodo'])
 		{
 			case 1:
@@ -838,8 +822,8 @@ class Activities extends CI_Controller {
 		  'access_export' => $this->access_export,
 		  'css' => array(
 		  	'<link href="'. $base_url . 'activities/assets/style/create.css" rel="stylesheet" media="screen">',
-//			'<link href="'. $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
 			'<link href="'. $base_url . 'activities/assets/style/table_sorter.css" rel="stylesheet">',
+			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">',
 '<style>
 .sales-activity-results {
 	margin-left: 1em
@@ -886,6 +870,7 @@ class Activities extends CI_Controller {
 			'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
 			'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
 			'<script src="' . $base_url . 'activities/assets/scripts/sales_activity_report.js"></script>',
+			'<script src="' . $base_url . 'ot/assets/scripts/jquery.fancybox.js"></script>',
 			'<script type="text/javascript" src="'. $base_url .'scripts/custom-period.js"></script>',
 			$inline_js,
 		  ),
@@ -959,6 +944,120 @@ class Activities extends CI_Controller {
 			$data = $this->activity->sales_activity($other_filters);
 		}
 		return $data;
+	}
+
+// Sale activity details
+	public function sales_popup()
+	{
+//array(7) { ["agent_id"]=> string(2) "24" ["type"]=> string(16) "vida-solicitudes" ["activity_view"]=> string(6) "normal" ["periodo"]=> string(1) "4" ["begin"]=> string(10) "2014-02-26" ["end"]=> string(10) "2014-04-05" ["agent_name"]=> string(145) "ANTONIO GARCIA ESPINOSA [ID: 48] IRVING OSORNIO LANDEROS [ID: 24] MARIA ELENA GUTIERREZ GARCIA [ID: 22] ADRIANA HERNADEZ LLERENAS [ID: 112] " } echo "<p>----------</p>";
+		$this->load->model(array('activity', 'ot/work_order'));
+		$agent_user_id = $this->input->post('agent_id');
+		$parts = explode('_', $agent_user_id);
+		if (count($parts) >= 2)
+		{
+			$agent_id = $parts[0];
+			$user_id = $parts[1];
+		}
+		else
+		{
+			$agent_id = 0;
+			$user_id = 0;
+		}		
+		$begin = $this->input->post('begin');
+		$end = $this->input->post('end');
+		if ($agent_id && $user_id && $begin && $end)
+		{
+			$values = array('begin' => $begin, 'end' => $end);
+			$agents_selected = array($agent_id => $agent_id);
+			$totals_work_order = array('VIDA_solicitudes' => 0, 'GMM_solicitudes' => 0,
+				'VIDA_negocios' => 0, 'GMM_negocios' => 0);
+			$agents_with_activity = array();
+			$add_where = array(
+				'agents.id' => $agent_id);
+			$request_type = $this->input->post('type');
+			switch ( $request_type )
+			{
+				case 'vida-solicitudes': // from work_order
+					$add_where = array_merge($add_where, 
+						array('product_group.name' => 'Vida'));
+					$this->_details_from_ots($values, $agents_selected, $totals_work_order, 
+						$agents_with_activity, 'solicitudes', $add_where, $user_id, 1);
+					break;
+				case 'gmm-solicitudes': // from work_order
+					$add_where = array_merge($add_where, 
+						array('product_group.name' => 'GMM'));
+					$this->_details_from_ots($values, $agents_selected, $totals_work_order, 
+						$agents_with_activity, 'solicitudes', $add_where, $user_id, 2);
+					break;
+				case 'vida-negocios': // from payments
+					$data = array(
+						'access_update' => $this->access_update,
+						'access_delete' => $this->access_delete,
+						'values' => array()
+					);
+					$add_where = array_merge($add_where, 
+						array('product_group.name' => 'Vida'));
+					$data['values'] = $this->activity->get_payment_list($values, $agents_selected,
+						$totals_work_order, $agents_with_activity, 'negocios', $add_where);
+					$this->load->view('popup_payment', $data);
+					break;
+				case 'gmm-negocios': // from work_order
+					$add_where = array_merge($add_where, 
+						array('work_order_status_id' => 4, 'product_group.name' => 'GMM'));
+					$this->_details_from_ots($values, $agents_selected, $totals_work_order, 
+						$agents_with_activity, 'negocios', $add_where, $user_id, 2);
+					break;
+				default:
+					exit('Ocurrio un error. Consulte a su administrador.');
+					break;
+			}
+		}
+		else
+			exit('Ocurrio un error. Consulte a su administrador.');			
+	}
+
+	private function _details_from_ots($values, $agents_selected, $totals_work_order, 
+		$agents_with_activity, $field, $add_where, $user_id, $ramo)
+	{
+		$data = array(
+			'access_update' => $this->access_update,
+			'access_delete' => $this->access_delete,
+			'values' => array()
+		);
+		$this->load->vars(array('gmm' => $ramo, 'is_poliza' => 'yes'));
+// is_poliza = 'no' for columns negocios and primas en tramite (work_order.work_order_status_id=5 OR  work_order.work_order_status_id=9)
+// is_poliza = 'yes' for columns negocios and primas aceptadas (work_order.work_order_status_id=7)
+		$details = array();
+		$ots = $this->activity->get_ot_list($values, $agents_selected,
+			$totals_work_order, $agents_with_activity, 'solicitudes', $add_where);
+		$work_order_ids = array();
+		foreach ($ots as $row)
+			$work_order_ids[$row->work_order_id] = $row->work_order_id;
+		if ($work_order_ids)
+			$details = $this->work_order->pop_up_data($work_order_ids, $user_id);
+		if ($details)
+		{
+			$ot = array('director' => $details['director']);
+			foreach ($details['general'] as $row_result)
+			{
+				$row_result->adjusted_prima = $row_result->prima;
+
+			// For OTs en tramite and pendientes, adjust prima:
+				if (($row_result->work_order_status_id == 5) ||
+					($row_result->work_order_status_id == 9) ||
+					($row_result->work_order_status_id == 7) )
+				{
+					$row_result->adjusted_prima = 
+						$this->user->get_adjusted_prima($row_result->policy_id)
+						* ($row_result->p_percentage / 100);
+				}
+				$ot['value'] = $row_result;
+				$data['values'][$row_result->work_order_id] = array(
+					'main' => $this->load->view('popup_report_main_row', $ot, TRUE),
+					'menu' => $this->load->view('popup_report_menu_row', $ot, TRUE));
+			}
+		}
+		$this->load->view('popup_report', $data);
 	}
 
 /* End of file activities.php */

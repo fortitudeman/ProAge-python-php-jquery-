@@ -1671,47 +1671,52 @@ class Work_order extends CI_Model{
 		return true;
  
   }
-  
-  
-  
-  function pop_up_data($work_order_id, $agent_id)
-    {
-        $this->db->select('*,work_order.id AS work_order_id,agent_user.email AS agent_user_email,policies.uid AS policies_uid,policies.name AS policies_name,products.name AS products_name,policies.period AS policies_period,work_order_status.name AS work_order_status_name,payment_methods.name AS payment_methods_name,currencies.name AS currencies_name,work_order.uid AS work_order_uid,payment_intervals.name AS payment_intervals_name, work_order_types.patent_id AS patent_id, `policies_vs_users`.`percentage` as `p_percentage`');
-        //$this->db->select('*');
-        $this->db->from('work_order');
-        $this->db->where(array('work_order.id' => $work_order_id, 'agent_user.id' => $agent_id)); 
-        $this->db->join('users','work_order.user = users.id','left');
-        $this->db->join('work_order_status','work_order.work_order_status_id = work_order_status.id','left');
-        $this->db->join('policies','work_order.policy_id = policies.id','left');
-        
-        $this->db->join('policies_vs_users','policies.id = policies_vs_users.policy_id','left');
-        $this->db->join('agents','policies_vs_users.user_id = agents.id','left');
-        $this->db->join('users agent_user','agents.user_id = agent_user.id','left');
-        
-        $this->db->join('products','policies.product_id = products.id','left');         
-        $this->db->join('payment_intervals','policies.payment_interval_id = payment_intervals.id','left'); 
-        $this->db->join('payment_methods','policies.payment_method_id = payment_methods.id','left');
-        $this->db->join('currencies','policies.currency_id = currencies.id','left');
-        $this->db->join('work_order_types','work_order.work_order_type_id = work_order_types.id','left');        
-        //$query = $this->db->get_where('work_order',array('work_order.id'=>$work_order_id));
-        $query = $this->db->get();
+ 
+// The variable name $agent_id below is misleading: what should be passed is `users`.`id`
+	function pop_up_data($work_order_id, $agent_id, $add_where = null)
+	{
+		$this->db->select('*,work_order.id AS work_order_id,agent_user.email AS agent_user_email,policies.uid AS policies_uid,policies.name AS policies_name,products.name AS products_name,policies.period AS policies_period,work_order_status.name AS work_order_status_name,payment_methods.name AS payment_methods_name,currencies.name AS currencies_name,work_order.uid AS work_order_uid,payment_intervals.name AS payment_intervals_name, work_order_types.patent_id AS patent_id, `policies_vs_users`.`percentage` as `p_percentage`');
+		//$this->db->select('*');
+		$this->db->from('work_order');
+		$this->db->where(array('agent_user.id' => $agent_id));
+		if (is_array($work_order_id))
+			$this->db->where_in('work_order.id', $work_order_id);
+		else
+			$this->db->where(array('work_order.id' => $work_order_id));
+		if ($add_where)
+			$this->db->where($add_where);
+		$this->db->join('users','work_order.user = users.id','left');
+		$this->db->join('work_order_status','work_order.work_order_status_id = work_order_status.id','left');
+		$this->db->join('policies','work_order.policy_id = policies.id','left');
 
-        $result['general'] = $query->result();
+		$this->db->join('policies_vs_users','policies.id = policies_vs_users.policy_id','left');
+		$this->db->join('agents','policies_vs_users.user_id = agents.id','left');
+		$this->db->join('users agent_user','agents.user_id = agent_user.id','left');
+
+		$this->db->join('products','policies.product_id = products.id','left');
+		$this->db->join('payment_intervals','policies.payment_interval_id = payment_intervals.id','left'); 
+		$this->db->join('payment_methods','policies.payment_method_id = payment_methods.id','left');
+		$this->db->join('currencies','policies.currency_id = currencies.id','left');
+		$this->db->join('work_order_types','work_order.work_order_type_id = work_order_types.id','left');
+		//$query = $this->db->get_where('work_order',array('work_order.id'=>$work_order_id));
+		$query = $this->db->get();
+
+		$result['general'] = $query->result();
 		foreach ($result['general'] as $key => $value) {
 			$result['general'][$key]->is_ntuable = $this->is_ntuable(
 				$value->product_group_id,
 				$value->patent_id,
 				$value->work_order_status_id);
 		}
-        
-        $this->db->select('email,name');
-        $this->db->from('users_vs_user_roles');
-        $this->db->where('users_vs_user_roles.user_role_id',4); 
-        $this->db->join('users','users_vs_user_roles.user_id = users.id');        
-        $query_later = $this->db->get();
-        $result['director'] = $query_later->result();
-        return $result;
-    }
+
+		$this->db->select('email,name');
+		$this->db->from('users_vs_user_roles');
+		$this->db->where('users_vs_user_roles.user_role_id',4); 
+		$this->db->join('users','users_vs_user_roles.user_id = users.id');
+		$query_later = $this->db->get();
+		$result['director'] = $query_later->result();
+		return $result;
+	}
 
 // Determine if an OT is editable
 
@@ -1742,7 +1747,7 @@ class Work_order extends CI_Model{
 	{
 		if (( $table == null ) || ( $searched == null ))
 			return FALSE;
-        $this->db->select($searched, FALSE)->from($table);
+		$this->db->select($searched, FALSE)->from($table);
 
 		//limit
 		if ($limit)

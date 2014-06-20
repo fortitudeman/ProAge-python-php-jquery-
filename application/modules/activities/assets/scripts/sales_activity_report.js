@@ -41,4 +41,39 @@ $( document ).ready(function() {
 		.on("sortEnd",function(e, t) {
 		});
 
+	$(".tbody").find("a").attr("title", "Haga click aqui para ver los detalles")
+		.on("click", function() {
+			var current = $(this);
+			var parentTrId = current.parents("tr").attr("id");
+			agentId = parentTrId.replace(/normal-agent-id-/, "").replace(/efectividad-agent-id-/, "");
+			var type = "";
+			if (current.hasClass("vida-solicitudes")) {
+				type = "vida-solicitudes";
+			}
+			else if (current.hasClass("vida-negocios")) {
+				type = "vida-negocios";
+			}
+			else if (current.hasClass("gmm-solicitudes")) {
+				type = "gmm-solicitudes";
+			}
+			else if (current.hasClass("gmm-negocios")) {
+				type = "gmm-negocios";
+			}
+			if (type.length > 0) {
+				$.fancybox.showLoading();
+				var postData = 'agent_id=' + agentId + '&type=' + type + "&" + $("#sales-activity-form").serialize();
+				$.post(Config.base_url() + "activities/sales_popup.html",
+					postData,
+					function(data) { 
+						if	(data) {
+							$.fancybox({
+								content:data
+							});
+							return false;
+						}
+					});
+			}
+			return false;
+		});
+
 });

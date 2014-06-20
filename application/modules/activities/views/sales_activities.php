@@ -89,8 +89,8 @@ else
                                     <div id="semana-container" <?php if (!$selected_filter_period[2]) echo 'style="display: none"' ?> title="Seleccione una Semana">
                                       <div id="week"></div>
                                       <label></label> <span id="startDate"></span>  <span id="endDate"></span>
-                                       <input id="begin" name="begin" type="hidden" readonly="readonly" value="<?php echo set_value('begin', isset($default_week['start']) ? $default_week['start'] : '')  ?>">
-                                       <input id="end" name="end" type="hidden" readonly="readonly" value="<?php echo set_value('end', isset($default_week['end']) ? $default_week['end'] : '')  ?>">
+                                       <input id="begin" name="begin" type="hidden" readonly="readonly" value="<?php echo set_value('begin', isset($other_filters['begin']) ? $other_filters['begin'] : '')  ?>">
+                                       <input id="end" name="end" type="hidden" readonly="readonly" value="<?php echo set_value('end', isset($other_filters['end']) ? $other_filters['end'] : '')  ?>">
                                     </div>
                                   </div>
 
@@ -131,7 +131,7 @@ else
 		foreach ($data['rows'] as $key => $value)
 		{
 			echo '
-<tr id="normal-agent-id-' . $key . '">
+<tr id="normal-agent-id-' . $key . '_' . $value['user_id'] . '">
 	<td rowspan="2"><a href="#" class="toggle">' . $value['name'] . '</a></td>
 	<td class="sales-activity-numeric">' . $value['weeks_reported'] . '</td>
 	<td class="medium-grey-body sales-activity-numeric">' . $value['citaT'] . '</td>
@@ -140,10 +140,18 @@ else
 	<td class="light-grey-body sales-activity-numeric">' . number_format($value['interviewP'], 2) . '</td>	
 	<td class="light-red-body sales-activity-numeric">' . $value['prospectusT'] . '</td>
 	<td class="light-red-body sales-activity-numeric">' . number_format($value['prospectusP'], 2) . '</td>		
-	<td class="light-green-body sales-activity-numeric">' . $value['vida_solicitudes'] . '</td>
-	<td class="light-green-body sales-activity-numeric">' . $value['vida_negocios'] . '</td>
-	<td class="light-blue-body sales-activity-numeric">' . $value['gmm_solicitudes'] . '</td>
-	<td class="light-blue-body sales-activity-numeric">' . $value['gmm_negocios'] . '</td>	
+	<td class="light-green-body sales-activity-numeric">
+		<a class="vida-solicitudes" href="#">' . $value['vida_solicitudes'] . '</a>
+	</td>
+	<td class="light-green-body sales-activity-numeric">
+		<a class="vida-negocios" href="#">' . $value['vida_negocios'] . '</a>
+	</td>
+	<td class="light-blue-body sales-activity-numeric">
+		<a class="gmm-solicitudes" href="#">' . $value['gmm_solicitudes'] . '</a>
+	</td>
+	<td class="light-blue-body sales-activity-numeric">
+		<a class="gmm-negocios" href="#">' . $value['gmm_negocios'] . '</a>
+	</td>
 </tr>
 <tr class="tablesorter-childRow">
 <td colspan="11">
@@ -193,7 +201,7 @@ else
 				$efectividad_3 = '-';
 				
 			echo '
-<tr id="efectividad-agent-id-' . $key . '">
+<tr id="efectividad-agent-id-' . $key . '_' . $value['user_id'] . '">
 	<td rowspan="2"><a href="#" class="toggle">' . $value['name'] . '</a></td>
 	<td class="sales-activity-numeric">' . $value['weeks_reported'] . '</td>
 	<td class="medium-grey-body sales-activity-numeric">' . $value['citaT'] . '</td>
@@ -201,11 +209,19 @@ else
 	<td class="sales-activity-numeric">' . $efectividad_1 . '</td>	
 	<td class="light-red-body sales-activity-numeric">' . $value['prospectusT'] . '</td>
 	<td class="light-red-body sales-activity-numeric">' . number_format($value['prospectusP'], 2) . '</td>		
-	<td class="light-green-body sales-activity-numeric">' . $value['vida_solicitudes'] . '</td>
-	<td class="light-green-body sales-activity-numeric">' . $value['vida_negocios'] . '</td>
+	<td class="light-green-body sales-activity-numeric">
+		<a class="vida-solicitudes" href="#">' . $value['vida_solicitudes'] . '</a>
+	</td>
+	<td class="light-green-body sales-activity-numeric">
+		<a class="vida-negocios" href="#">' . $value['vida_negocios'] . '</a>
+	</td>
 	<td class="sales-activity-numeric">' . $efectividad_2 . '</td>
-	<td class="light-blue-body sales-activity-numeric">' . $value['gmm_solicitudes'] . '</td>
-	<td class="light-blue-body sales-activity-numeric">' . $value['gmm_negocios'] . '</td>
+	<td class="light-blue-body sales-activity-numeric">
+		<a class="gmm-solicitudes" href="#">' . $value['gmm_solicitudes'] . '</a>
+	</td>
+	<td class="light-blue-body sales-activity-numeric">
+		<a class="gmm-negocios" href="#">' . $value['gmm_negocios'] . '</a>
+	</td>
 	<td class="sales-activity-numeric">' . $efectividad_3 . '</td>
 </tr>
 <tr class="tablesorter-childRow">
