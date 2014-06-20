@@ -949,7 +949,6 @@ class Activities extends CI_Controller {
 // Sale activity details
 	public function sales_popup()
 	{
-//array(7) { ["agent_id"]=> string(2) "24" ["type"]=> string(16) "vida-solicitudes" ["activity_view"]=> string(6) "normal" ["periodo"]=> string(1) "4" ["begin"]=> string(10) "2014-02-26" ["end"]=> string(10) "2014-04-05" ["agent_name"]=> string(145) "ANTONIO GARCIA ESPINOSA [ID: 48] IRVING OSORNIO LANDEROS [ID: 24] MARIA ELENA GUTIERREZ GARCIA [ID: 22] ADRIANA HERNADEZ LLERENAS [ID: 112] " } echo "<p>----------</p>";
 		$this->load->model(array('activity', 'ot/work_order'));
 		$agent_user_id = $this->input->post('agent_id');
 		$parts = explode('_', $agent_user_id);

@@ -607,7 +607,6 @@ SUM( `agents_activity`.`interview` )  AS `interview`';
 		if ($get_count)
 			$this->db->select( 'SUM(business) AS sum_business, product_group.name as group_name, agents.id as agent_id' );
 		else
-//			$this->db->select( 'payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name' );    
 			$this->db->select( 'payments.*, product_group.name as group_name, agents.id as agent_id, users.name as first_name, users.lastnames as last_name, users.company_name as company_name' );
 		$this->db->from( 'payments' );
 		$this->db->join( 'product_group', 'product_group.id=payments.product_group' );
