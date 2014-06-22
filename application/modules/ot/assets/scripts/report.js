@@ -242,7 +242,7 @@ $( document ).ready(function() {
 	$(".ot-action").on( "click", function( event ) {
 		var current = $(this);
 		var allParams = current.attr('id').split('-');
-		if (allParams.length < 4) {
+		if (allParams.length < 5) {
 			alert ('Ocurrio un error con los parámetros. Consulte a su administrador.');
 			return false;
 		}
@@ -272,7 +272,7 @@ $( document ).ready(function() {
 			$.ajax({
 				url: url,
 				type: 'POST',
-				data: ({order_id: allParams[1], gmm: allParams[2], is_poliza: allParams[3]}),
+				data: ({order_id: allParams[1], gmm: allParams[2], is_poliza: allParams[3], user_id: allParams[4]}),
 				dataType : 'json',
 				beforeSend: function(){
 					current.hide();
@@ -334,7 +334,7 @@ $( document ).ready(function() {
 			var form = $(this).siblings(".payment_detail_form");
 			form.children(".payment_action").val(paymentAction);
 			$.ajax({
-				url: '<?php echo site_url('ot/payment_actions')?>',
+				url: Config.base_url() + 'ot/payment_actions.html',
 				type: 'POST',
 				data: form.serialize(),
 				dataType : 'json',

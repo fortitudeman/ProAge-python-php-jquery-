@@ -9,9 +9,6 @@
 <?php if ($values):
 $base_url = base_url();
 $additional_form_fields = '';
-if (($for_agent_id = $this->input->post('for_agent_id')) !== FALSE)
-	$additional_form_fields .= '
-<input type="hidden" name="for_agent_id" value="' . $for_agent_id . '" />';
 if (($type = $this->input->post('type')) !== FALSE)
 	$additional_form_fields .= '
 <input type="hidden" name="type" value="' .  $type . '" />';
@@ -34,7 +31,7 @@ $ignore_image = '
 <table class="altrowstable payment_table">
     <thead>
         <tr id="popup_tr">
-            <?php if ($for_agent_id === FALSE) : ?><th width="200px">Agente</th><?php endif; ?>
+            <th width="200px">Agente</th>
             <th>Fecha de pago</th>
             <th>Poliza</th>
             <th>Asegurado</th>
@@ -47,7 +44,6 @@ $ignore_image = '
     <tbody>
 <?php foreach ($values as $value): ?>
         <tr class="payment_row" >
-<?php if ($for_agent_id === FALSE) : ?>
             <td>
 <?php
 	if (!$value->first_name && !$value->last_name)
@@ -57,7 +53,6 @@ $ignore_image = '
 ?>
 			
             </td>
-<?php endif; ?>
             <td><?php echo $value->payment_date ?></td>
             <td><?php echo $value->policy_number ?></td>
             <td><?php echo $value->asegurado ? $value->asegurado : 'No disponible'?></td>
@@ -73,6 +68,7 @@ endif;
 echo $delete_image;
 ?>
 <form class="payment_detail_form" method="post" action="#">
+<input type="hidden" name="for_agent_id" value="<?php echo $value->agent_id ?>" />
 <input type="hidden" name="amount" value="<?php echo $value->amount ?>" />
 <input type="hidden" name="payment_date" value="<?php echo $value->payment_date ?>" />
 <input type="hidden" name="policy_number" value="<?php echo $value->policy_number ?>" />

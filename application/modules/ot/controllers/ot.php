@@ -2662,8 +2662,10 @@ alert("changed!");
 // Handle ajax request to change OT status
 	private function _change_ot_status($new_status)
 	{
-		if ( !$this->input->is_ajax_request() || 
-			!$this->access_update ){
+		if ( !$this->input->is_ajax_request() )
+			redirect( 'ot.html', 'refresh' );
+
+		if ( !$this->access_update ){
 			echo json_encode('-1');
 			exit;
 		}
@@ -2671,10 +2673,11 @@ alert("changed!");
 		$order_id = $this->input->post('order_id');
 		$gmm = $this->input->post('gmm');
 		$is_poliza = $this->input->post('is_poliza');
-		if (($order_id !== FALSE) && ($gmm !== FALSE) && ($is_poliza !== FALSE))
+		$user_id = $this->input->post('user_id');
+		if (($order_id !== FALSE) && ($gmm !== FALSE) && ($is_poliza !== FALSE) && ($user_id !== FALSE))
 		{
 			$order_id = (int)$order_id;
-
+			$user_id = (int)$user_id;
 			$this->load->model( 'work_order' );
 			$work_order = array(				
 				'work_order_status_id' => $new_status
@@ -2710,7 +2713,7 @@ alert("changed!");
 					'is_poliza' => $is_poliza,
 					'gmm' => $gmm,
 					'access_update' => $this->access_update);
-				$row_result['value'] = $this->work_order->pop_up_data($order_id);
+				$row_result['value'] = $this->work_order->pop_up_data($order_id, $user_id);
 				$this->load->model( 'user' );
 				$row_result['value']['general'][0]->adjusted_prima = $this->user->get_adjusted_prima(
 					$row_result['value']['general'][0]->policy_id );
@@ -2755,9 +2758,10 @@ Display custom filter period
 // actions on payment (ignore, delete)
 	public function payment_actions()
 	{
+		if ( !$this->input->is_ajax_request() )
+			redirect( 'ot.html', 'refresh' );
 
-		if ( !$this->input->is_ajax_request() || 
-			!$this->access_update ){
+		if ( !$this->access_update ){
 			echo json_encode('-1');
 			exit;
 		}

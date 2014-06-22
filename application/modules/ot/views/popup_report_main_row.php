@@ -66,8 +66,8 @@ else
 						</div></td>
                         <td>
 <?php if ( $access_update && ($value['general'][0]->is_ntuable) ) : ?>
-                          <img style="cursor: pointer" class="mark-ntu ot-action" id="mark_ntu-<?php echo $value['general'][0]->work_order_id . '-' . $gmm . '-' . $is_poliza ?>" alt="Marcar como NTU" title="Marcar como NTU" src="<?php echo base_url()?>images/small-red-x.png" />
-                          <img style="cursor: pointer" class="mark-pagada ot-action" id="mark_pagada-<?php echo $value['general'][0]->work_order_id . '-' . $gmm . '-' . $is_poliza ?>" alt="Marcar como pagada" title="Marcar como pagada" src="<?php echo base_url()?>images/coin_stacks_copper_edit.png" />
+                          <img style="cursor: pointer" class="mark-ntu ot-action" id="mark_ntu-<?php echo $value['general'][0]->work_order_id . '-' . $gmm . '-' . $is_poliza . '-' . $value['general'][0]->user_id ?>" alt="Marcar como NTU" title="Marcar como NTU" src="<?php echo base_url()?>images/small-red-x.png" />
+                          <img style="cursor: pointer" class="mark-pagada ot-action" id="mark_pagada-<?php echo $value['general'][0]->work_order_id . '-' . $gmm . '-' . $is_poliza . '-' . $value['general'][0]->user_id ?>" alt="Marcar como pagada" title="Marcar como pagada" src="<?php echo base_url()?>images/coin_stacks_copper_edit.png" />
 <?php endif;?>
 						</td>
 <?php
