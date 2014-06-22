@@ -920,6 +920,7 @@ class Activities extends CI_Controller {
 			if (($activity_view != 'normal') && ($activity_view != 'efectividad'))
 				$activity_view = 'normal';
 
+			$other_filters['agent_name'] = $agent_name;				
 			$other_filters['periodo'] = $periodo;
 			$other_filters['begin'] = $begin;
 			$other_filters['end'] = $end;			
