@@ -35,6 +35,9 @@ class Activities extends CI_Controller {
 
 	public $access_viewall = false;
 
+	public $access_ot_update = false;
+	public $access_ot_delete = false;
+
 	public $default_period_filter = FALSE;
 	public $misc_filters = FALSE;
 	public $custom_period_from = FALSE;
@@ -74,30 +77,41 @@ class Activities extends CI_Controller {
 
 
 		// Added Acctions for user, change the bool access
-		if( !empty( $this->user_vs_rol ) and !empty( $this->roles_vs_access ) )	
-		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Actividades', $value ) ):
-			
-			
-			if( $value['action_name'] == 'Crear' )
-				$this->access_create = true;
-						
-			if( $value['action_name'] == 'Editar' )
-				$this->access_update = true;
-				
-			if( $value['action_name'] == 'Eliminar' )
-				$this->access_delete = true;	
+		if( !empty( $this->user_vs_rol ) and !empty( $this->roles_vs_access ) )
+		{
+			foreach( $this->roles_vs_access  as $value )
+			{
+				if( in_array( 'Actividades', $value ) )
+				{
 
-			if( $value['action_name'] == 'Ver reporte' )
-				$this->access_report = true;	
-			
-			if( $value['action_name'] == 'Ver todos los registros' )
-				$this->access_viewall = true;	
+					if( $value['action_name'] == 'Crear' )
+						$this->access_create = true;
 
-			if( $value['action_name'] == 'Export xls' )
-				$this->access_export = true;
-				
-		endif; endforeach;
-							
+					if( $value['action_name'] == 'Editar' )
+						$this->access_update = true;
+
+					if( $value['action_name'] == 'Eliminar' )
+						$this->access_delete = true;	
+
+					if( $value['action_name'] == 'Ver reporte' )
+						$this->access_report = true;	
+
+					if( $value['action_name'] == 'Ver todos los registros' )
+						$this->access_viewall = true;	
+
+					if( $value['action_name'] == 'Export xls' )
+						$this->access_export = true;
+
+				}
+				elseif ($value['module_name'] == 'Orden de trabajo')
+				{
+					if ($value['action_name'] == 'Editar')
+						$this->access_ot_update = TRUE;
+					elseif ($value['action_name'] == 'Eliminar')
+						$this->access_ot_delete = TRUE;
+				}
+			}
+		}					
 								
 		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
 

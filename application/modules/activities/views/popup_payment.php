@@ -20,7 +20,7 @@ if (($query !== FALSE) && is_array($query))
 <input type="hidden" name="query[' . $key . ']" value="' .  $value . '" />';
 }
 $delete_image = '';
-if ( $access_delete )
+if ( $this->access_ot_delete )
 {
 	$delete_image = '
 &nbsp;&nbsp;<img style="cursor: pointer" class="payment_delete action_option" alt="Borrar" title="Borrar" src="' . $base_url . 'images/payment_delete.jpg" />';
@@ -62,7 +62,7 @@ $ignore_image = '
 			<td style="width: 110px; text-align: right; padding-right: 2.5em">
 <span style="padding-left: 2.5em; padding-right: 1.5em; text-align: right;"><?php echo $value->business;?></span>
 <?php
-if ( $access_update && $value->valid_for_report ) :
+if ( $this->access_ot_update && $value->valid_for_report ) :
 	echo $ignore_image;
 endif;
 echo $delete_image;
