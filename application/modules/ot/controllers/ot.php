@@ -2761,21 +2761,36 @@ Display custom filter period
 		if ( !$this->input->is_ajax_request() )
 			redirect( 'ot.html', 'refresh' );
 
-		if ( !$this->access_update ){
-			echo json_encode('-1');
-			exit;
+		$action = $this->input->post('payment_action');
+		switch ($action)
+		{
+			case 'mark_ignored':
+				if ( !$this->access_update ){
+					echo json_encode('-1');
+					exit;
+				}
+				break;
+			case 'payment_delete':
+				if ( !$this->access_delete ){
+					echo json_encode('-1');
+					exit;
+				}
+				break;
+			default:
+				echo json_encode('0');
+				exit;
+				break;
 		}
 		$result = json_encode('0');
 		$agent_id = $this->input->post('for_agent_id');
 		$amount = $this->input->post('amount');
 		$payment_date = $this->input->post('payment_date');
 		$policy_number = $this->input->post('policy_number');
-		$action = $this->input->post('payment_action');
+
 		if (($agent_id !== FALSE) && strlen($agent_id = trim($agent_id)) &&
 			($amount !== FALSE) && strlen($amount = trim($amount)) && $this->form_validation->decimal_or_integer($amount) &&
 			($payment_date !== FALSE) && (strlen($payment_date = trim($payment_date)) == 10) &&
-			($policy_number !== FALSE) && (strlen($policy_number = trim($policy_number)) >=  0) &&
-			($action !== FALSE) && (($action == 'mark_ignored') || ($action == 'payment_delete'))
+			($policy_number !== FALSE) && (strlen($policy_number = trim($policy_number)) >=  0)
 			)
 		{
 			$this->load->model( 'work_order' );
