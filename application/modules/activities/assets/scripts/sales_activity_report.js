@@ -41,7 +41,7 @@ $( document ).ready(function() {
 		.on("sortEnd",function(e, t) {
 		});
 
-	$(".tbody").find("a").attr("title", "Haga click aqui para ver los detalles")
+		$(".solicitudes-negocios").attr("title", "Haga click aqui para ver los detalles")
 		.on("click", function() {
 			var current = $(this);
 			var parentTrId = current.parents("tr").attr("id");

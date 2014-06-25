@@ -186,6 +186,7 @@
                         <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Actividades', $value ) ): ?>
                         <?php if( $value['action_name'] == 'Ver reporte' ): ?>
                         <li><a href="<?php echo base_url() ?>activities/report.html"><i class="icon-tasks"></i><span class="hidden-tablet">Reporte actividades</span></a></li>
+                        <li><a href="<?php echo base_url() ?>activities/sales_activities_stats.html"><i class="icon-tasks"></i><span class="hidden-tablet">Actividades de ventas</span></a></li>
                         <?php endif; ?>
                         <?php endif; endforeach; endif; ?>
                         

@@ -21,6 +21,7 @@ if ( isset($_POST['periodo']) &&
 }
 else
 	$selected_filter_period = get_selected_filter_period();
+$divided_by_zero = '-99999%';
 ?>
 
 <div>
@@ -67,8 +68,8 @@ else
                                 <div class="control-group">
                                   <label class="control-label text-error" for="inputError">Vista :</label>
                                   <div class="controls">
-                                    <input type="radio" id="view-normal" name="activity_view" value="normal" <?php if ($other_filters['activity_view'] == 'normal') echo 'checked="checked"'?>>&nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input type="radio" id="view-efectividad" name="activity_view" value="efectividad" <?php if ($other_filters['activity_view'] == 'efectividad') echo 'checked="checked"'?>>&nbsp;&nbsp;Efectividad					  
+                                    <input type="radio" id="view-normal" name="activity_view" value="normal" <?php /*if ($other_filters['activity_view'] == 'normal')*/ echo 'checked="checked"'?>>&nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="radio" id="view-efectividad" name="activity_view" value="efectividad" <?php /*if ($other_filters['activity_view'] == 'efectividad') echo 'checked="checked"' */ ?>>&nbsp;&nbsp;Efectividad					  
                                   </div>
                                 </div>
 
@@ -121,7 +122,7 @@ else
 </tr>
 <tr>
 <th class="medium-red">TOTALES</th><th class="medium-red">PROM</th>
-<th class="medium-red">TOTALES</th><th class="medium-red">PROM</th>
+<th>TOTALES</th><th>PROM</th>
 <th class="medium-red">TOTALES</th><th class="medium-red">PROM</th>
 <th>SOLICITUDES</th><th>NEGOCIOS</th>
 <th class="medium-red">SOLICITUDES</th><th class="medium-red">NEGOCIOS</th>
@@ -141,16 +142,16 @@ else
 	<td class="light-red-body sales-activity-numeric">' . $value['prospectusT'] . '</td>
 	<td class="light-red-body sales-activity-numeric">' . number_format($value['prospectusP'], 2) . '</td>		
 	<td class="light-green-body sales-activity-numeric">
-		<a class="vida-solicitudes" href="#">' . $value['vida_solicitudes'] . '</a>
+		<a class="vida-solicitudes solicitudes-negocios" href="#">' . $value['vida_solicitudes'] . '</a>
 	</td>
 	<td class="light-green-body sales-activity-numeric">
-		<a class="vida-negocios" href="#">' . $value['vida_negocios'] . '</a>
+		<a class="vida-negocios solicitudes-negocios" href="#">' . $value['vida_negocios'] . '</a>
 	</td>
 	<td class="light-blue-body sales-activity-numeric">
-		<a class="gmm-solicitudes" href="#">' . $value['gmm_solicitudes'] . '</a>
+		<a class="gmm-solicitudes solicitudes-negocios" href="#">' . $value['gmm_solicitudes'] . '</a>
 	</td>
 	<td class="light-blue-body sales-activity-numeric">
-		<a class="gmm-negocios" href="#">' . $value['gmm_negocios'] . '</a>
+		<a class="gmm-negocios solicitudes-negocios" href="#">' . $value['gmm_negocios'] . '</a>
 	</td>
 </tr>
 <tr class="tablesorter-childRow">
@@ -190,15 +191,15 @@ else
 			if ($value['citaT'])
 				$efectividad_1 = number_format(100 * $value['interviewT'] / $value['citaT'] , 0) . '%';
 			else
-				$efectividad_1 = '-';
+				$efectividad_1 = $divided_by_zero;
 			if ($value['vida_solicitudes'])
 				$efectividad_2 = number_format(100 * $value['vida_negocios'] / $value['vida_solicitudes'], 0) . '%';
 			else
-				$efectividad_2 = '-';
+				$efectividad_2 = $divided_by_zero;
 			if ($value['gmm_solicitudes'])
 				$efectividad_3 = number_format(100 * $value['gmm_negocios'] / $value['gmm_solicitudes'], 0) . '%';
 			else
-				$efectividad_3 = '-';
+				$efectividad_3 = $divided_by_zero;
 				
 			echo '
 <tr id="efectividad-agent-id-' . $key . '_' . $value['user_id'] . '">
@@ -210,17 +211,17 @@ else
 	<td class="light-red-body sales-activity-numeric">' . $value['prospectusT'] . '</td>
 	<td class="light-red-body sales-activity-numeric">' . number_format($value['prospectusP'], 2) . '</td>		
 	<td class="light-green-body sales-activity-numeric">
-		<a class="vida-solicitudes" href="#">' . $value['vida_solicitudes'] . '</a>
+		<a class="vida-solicitudes solicitudes-negocios" href="#">' . $value['vida_solicitudes'] . '</a>
 	</td>
 	<td class="light-green-body sales-activity-numeric">
-		<a class="vida-negocios" href="#">' . $value['vida_negocios'] . '</a>
+		<a class="vida-negocios solicitudes-negocios" href="#">' . $value['vida_negocios'] . '</a>
 	</td>
 	<td class="sales-activity-numeric">' . $efectividad_2 . '</td>
 	<td class="light-blue-body sales-activity-numeric">
-		<a class="gmm-solicitudes" href="#">' . $value['gmm_solicitudes'] . '</a>
+		<a class="gmm-solicitudes solicitudes-negocios" href="#">' . $value['gmm_solicitudes'] . '</a>
 	</td>
 	<td class="light-blue-body sales-activity-numeric">
-		<a class="gmm-negocios" href="#">' . $value['gmm_negocios'] . '</a>
+		<a class="gmm-negocios solicitudes-negocios" href="#">' . $value['gmm_negocios'] . '</a>
 	</td>
 	<td class="sales-activity-numeric">' . $efectividad_3 . '</td>
 </tr>
