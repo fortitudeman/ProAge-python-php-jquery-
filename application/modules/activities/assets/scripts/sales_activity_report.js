@@ -19,6 +19,12 @@ $( document ).ready(function() {
 	$(".sales-activity-results")
 		.tablesorter({ 
 			theme : 'default',
+			stringTo: 'max',
+			headers: {  // non-numeric content is treated as a MIN value
+				4: { sorter: "digit", string : "min" },
+				9: { sorter: "digit", string: "min" },
+				12: { sorter: "digit", string: "min" }
+			},
 			// this is the default setting
 			cssChildRow: "tablesorter-childRow"
 		});

@@ -21,7 +21,7 @@ if ( isset($_POST['periodo']) &&
 }
 else
 	$selected_filter_period = get_selected_filter_period();
-$divided_by_zero = '-99999%';
+$divided_by_zero = 'N/D';
 ?>
 
 <div>
@@ -121,11 +121,11 @@ $divided_by_zero = '-99999%';
 <th colspan="2" class="light-grey">GMM</th>
 </tr>
 <tr>
-<th class="medium-red">TOTALES</th><th class="medium-red">PROM</th>
 <th>TOTALES</th><th>PROM</th>
-<th class="medium-red">TOTALES</th><th class="medium-red">PROM</th>
+<th>TOTALES</th><th>PROM</th>
+<th>TOTALES</th><th>PROM</th>
 <th>SOLICITUDES</th><th>NEGOCIOS</th>
-<th class="medium-red">SOLICITUDES</th><th class="medium-red">NEGOCIOS</th>
+<th>SOLICITUDES</th><th>NEGOCIOS</th>
 </tr></thead>
 <tbody class="tbody">';
 
@@ -180,9 +180,9 @@ $divided_by_zero = '-99999%';
 </tr>
 <tr>
 <th>CITAS</th><th>ENTREVISTAS</th><th>EFECTIVIDAD</th>
-<th class="medium-red">TOTALES</th><th class="medium-red">PROM</th>
+<th>TOTALES</th><th>PROM</th>
 <th>SOLICITUDES</th><th>NEGOCIOS</th><th>EFECTIVIDAD</th>
-<th class="medium-red">SOLICITUDES</th><th class="medium-red">NEGOCIOS</th><th class="medium-red">EFECTIVIDAD</th>
+<th>SOLICITUDES</th><th>NEGOCIOS</th><th>EFECTIVIDAD</th>
 </tr></thead>
 <tbody class="tbody">';
 
