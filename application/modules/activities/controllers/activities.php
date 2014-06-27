@@ -35,6 +35,7 @@ class Activities extends CI_Controller {
 
 	public $access_viewall = false;
 
+	public $access_sales_activities = false;
 	public $access_ot_update = false;
 	public $access_ot_delete = false;
 
@@ -101,7 +102,8 @@ class Activities extends CI_Controller {
 
 					if( $value['action_name'] == 'Export xls' )
 						$this->access_export = true;
-
+					if( $value['action_name'] == 'Actividades de ventas' )
+						$this->access_sales_activities = true;
 				}
 				elseif ($value['module_name'] == 'Orden de trabajo')
 				{
@@ -770,7 +772,7 @@ class Activities extends CI_Controller {
 	public function sales_activities_stats( $userid = null ){
 
 		// Check user privilege
-		if( $this->access_report == false ){
+		if( !$this->access_sales_activities) {
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
 				'type' => false,	
