@@ -117,20 +117,36 @@ $divided_by_zero = 'N/D';
 <th rowspan="2" class="medium-grey">AGENTE</th>
 <th rowspan="2" class="medium-grey">N° DE SEMANAS REPORTADAS</th>
 <th colspan="2" class="light-grey">CITAS</th><th colspan="2" class="light-grey">ENTREVISTAS</th>
-<th colspan="2" class="light-grey">PROSPECTOS</th><th colspan="2" class="light-grey">VIDA</th>
-<th colspan="2" class="light-grey">GMM</th>
+<th colspan="2" class="light-grey">PROSPECTOS</th>
+<th colspan="4" class="light-grey">VIDA</th>
+<th colspan="4" class="light-grey">GMM</th>
 </tr>
 <tr>
 <th>TOTALES</th><th>PROM</th>
 <th>TOTALES</th><th>PROM</th>
 <th>TOTALES</th><th>PROM</th>
-<th>SOLICITUDES</th><th>NEGOCIOS</th>
-<th>SOLICITUDES</th><th>NEGOCIOS</th>
+<th>SOLICITUDES</th><th>PROM</th><th>NEGOCIOS</th><th>PROM</th>
+<th>SOLICITUDES</th><th>PROM</th><th>NEGOCIOS</th><th>PROM</th>
 </tr></thead>
 <tbody class="tbody">';
 
 		foreach ($data['rows'] as $key => $value)
 		{
+			if ($value['weeks_reported'])
+			{
+				$vida_solicitudes_p = number_format($value['vida_solicitudes'] / $value['weeks_reported'], 2);
+				$vida_negocios_p =  number_format($value['vida_negocios'] / $value['weeks_reported'], 2);
+				$gmm_solicitudes_p = number_format($value['gmm_solicitudes'] / $value['weeks_reported'], 2);
+				$gmm_negocios_p =  number_format($value['gmm_negocios'] / $value['weeks_reported'], 2);
+			}
+			else
+			{
+				$vida_solicitudes_p = $divided_by_zero;
+				$vida_negocios_p = $divided_by_zero;
+				$gmm_solicitudes_p = $divided_by_zero;
+				$gmm_negocios_p = $divided_by_zero;
+			}
+
 			echo '
 <tr id="normal-agent-id-' . $key . '_' . $value['user_id'] . '">
 	<td rowspan="2"><a href="#" class="toggle">' . $value['name'] . '</a></td>
@@ -144,18 +160,37 @@ $divided_by_zero = 'N/D';
 	<td class="light-green-body sales-activity-numeric">
 		<a class="vida-solicitudes solicitudes-negocios" href="#">' . $value['vida_solicitudes'] . '</a>
 	</td>
+
+	<td class="light-green-body sales-activity-numeric">
+		<a class="vida-solicitudes solicitudes-negocios" href="#">' . $vida_solicitudes_p . '</a>
+	</td>
+
 	<td class="light-green-body sales-activity-numeric">
 		<a class="vida-negocios solicitudes-negocios" href="#">' . $value['vida_negocios'] . '</a>
 	</td>
+
+	<td class="light-green-body sales-activity-numeric">
+		<a class="vida-negocios solicitudes-negocios" href="#">' . $vida_negocios_p . '</a>
+	</td>
+
 	<td class="light-blue-body sales-activity-numeric">
 		<a class="gmm-solicitudes solicitudes-negocios" href="#">' . $value['gmm_solicitudes'] . '</a>
 	</td>
+
+	<td class="light-blue-body sales-activity-numeric">
+		<a class="gmm-solicitudes solicitudes-negocios" href="#">' . $gmm_solicitudes_p . '</a>
+	</td>
+
 	<td class="light-blue-body sales-activity-numeric">
 		<a class="gmm-negocios solicitudes-negocios" href="#">' . $value['gmm_negocios'] . '</a>
 	</td>
+
+	<td class="light-blue-body sales-activity-numeric">
+		<a class="gmm-negocios solicitudes-negocios" href="#">' . $gmm_negocios_p . '</a>
+	</td>
 </tr>
 <tr class="tablesorter-childRow">
-<td colspan="11">
+<td colspan="15">
 	<a href="' . $value['activities_url'] . '" class="btn btn-link">Ver actividad de ventas</a> |
 	<a href="' . $value['simulator_url'] . '" class="btn btn-link">Simular resultado y definir meta</a> |
 	<a href="' . $value['perfil_url'] . '" class="btn btn-link">Vision general</a>

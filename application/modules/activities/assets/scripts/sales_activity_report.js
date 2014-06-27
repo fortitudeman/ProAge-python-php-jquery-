@@ -16,7 +16,21 @@
 $( document ).ready(function() {
 
 	$(".tablesorter-childRow td").hide();	
-	$(".sales-activity-results")
+	$("#sales-activity-normal")
+		.tablesorter({ 
+			theme : 'default',
+			stringTo: 'max',
+			headers: {  // non-numeric content is treated as a MIN value
+				9: { sorter: "digit", string: "min" },
+				11: { sorter: "digit", string : "min" },
+				13: { sorter: "digit", string : "min" },
+				15: { sorter: "digit", string: "min" }
+			},
+			// this is the default setting
+			cssChildRow: "tablesorter-childRow"
+		});
+
+	$("#sales-activity-efectividad")
 		.tablesorter({ 
 			theme : 'default',
 			stringTo: 'max',
@@ -28,7 +42,6 @@ $( document ).ready(function() {
 			// this is the default setting
 			cssChildRow: "tablesorter-childRow"
 		});
-
 	// Toggle child row content (td), not hiding the row since we are using rowspan
 	// Using delegate because the pager plugin rebuilds the table after each page change
 	// "delegate" works in jQuery 1.4.2+; use "live" back to v1.3; for older jQuery - SOL
