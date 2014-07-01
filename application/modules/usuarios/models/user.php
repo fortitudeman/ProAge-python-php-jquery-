@@ -2251,9 +2251,10 @@ class User extends CI_Model{
 				{
 					$year = date( 'Y' );
 					$month = date( 'm' );
+					$next_month = date('m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")));
 					$this->db->where( array(
 						'payments.payment_date >= ' => $year . '-' . $month . '-01',
-						'payments.payment_date < ' => $year . '-' . ($month + 1) . '-01',
+						'payments.payment_date < ' => $year . '-' . $next_month . '-01',
 						)); 
 				}
 				if( $filter['query']['periodo'] == 2 )
@@ -2720,9 +2721,10 @@ WHERE `sum_payment` > '5000'
 				{
 					$year = date( 'Y' );
 					$month = date( 'm' );
+					$next_month = date('m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")));
 					$this->db->where( array(
 						'payments.payment_date >= ' => $year . '-' . $month . '-01',
-						'payments.payment_date < ' => $year . '-' . ($month + 1) . '-01',
+						'payments.payment_date < ' => $year . '-' . $next_month . '-01',
 						)); 
 				}
 				if( $filter['query']['periodo'] == 2 )
@@ -3010,9 +3012,10 @@ WHERE `sum_payment` > '5000'
 				{
 					$year = date( 'Y' );
 					$month = date( 'm' );
+					$next_month = date('m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")));
 					$this->db->where( array(
 						'payment_date >= ' => $year . '-' . $month . '-01',
-						'payment_date < ' => $year . '-' . ($month + 1) . '-01',
+						'payment_date < ' => $year . '-' . $next_month . '-01',
 						)); 
 				}
 				if( $filter['query']['periodo'] == 2 )
