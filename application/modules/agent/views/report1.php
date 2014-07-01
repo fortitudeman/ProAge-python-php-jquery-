@@ -71,10 +71,7 @@
                     $prima += (float)$value['aceptadas'];		
 		if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente'; else $value['disabled'] = 'Cancelado';		
 		$total_negocio += $value['negocio'];		
-		if( $value['negociopai']  != 0 ) 			
-			$total_negocio_pai += count( $value['negociopai'] ); 
-		else
-			$total_negocio_pai += $value['negociopai'];		
+		$total_negocio_pai += $value['negociopai'];		
 		$total_primas_pagadas +=$value['prima'];
 		$total_negocios_tramite +=$value['tramite']['count'];
 		$total_primas_tramite +=  $value['tramite']['prima'];		
@@ -93,7 +90,7 @@
             ?>															
             <tr id="tr_<?php echo $value['id'] ?>">
                 <td class="celda_gris"><div class="numeros" style="text-align:center;"><?php echo $value['negocio'] ; ?></div></td>
-                <td class="celda_gris"><div class="numeros" style="text-align:center;"><?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?></div></td>
+                <td class="celda_gris"><div class="numeros" style="text-align:center;"><?php echo $value['negociopai']; ?></div></td>
                 <td class="celda_gris"><div class="numeros" style="text-align:right">$<?php echo number_format($value['prima'],2) ; ?></div></td>
                 <td class="celda_roja" style="text-align:center" >
                     <a class="numeros fancybox"  <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>                    

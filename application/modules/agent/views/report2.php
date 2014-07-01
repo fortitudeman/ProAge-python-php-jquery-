@@ -70,10 +70,7 @@
                     $prima += (float)$value['aceptadas'];		
 		if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente'; else $value['disabled'] = 'Cancelado';		
 		$total_negocio += $value['negocio'];		
-		if( $value['negociopai']  != 0 ) 			
-			$total_negocio_pai += count( $value['negociopai'] ); 
-		else
-			$total_negocio_pai += $value['negociopai'];		
+		$total_negocio_pai += $value['negociopai'];		
 		$total_primas_pagadas +=$value['prima'];
 		$total_negocios_tramite +=$value['tramite']['count'];
 		$total_primas_tramite +=  $value['tramite']['prima'];		

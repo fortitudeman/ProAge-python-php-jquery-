@@ -67,10 +67,7 @@ $post_data = isset($_POST['query']) ? ',prev_post:'. json_encode($_POST['query']
 
 		if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente'; else $value['disabled'] = 'Cancelado';		
 		$total_negocio += $value['negocio'];		
-		if( $value['negociopai']  != 0 ) 			
-			$total_negocio_pai += count( $value['negociopai'] ); 
-		else
-			$total_negocio_pai += $value['negociopai'];		
+		$total_negocio_pai += $value['negociopai'];
 		$total_primas_pagadas +=$value['prima'];
 		$total_negocios_tramite +=$value['tramite']['count'];
 		if (isset($value['tramite']['adjusted_prima']))
@@ -108,7 +105,7 @@ $post_data = isset($_POST['query']) ? ',prev_post:'. json_encode($_POST['query']
                 </td>
                 <td class="celda_gris" style="text-align:right;">
                     <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'negociopai'})">
-                    <?php if( $value['negociopai']  != 0 ) echo count( $value['negociopai'] ); else echo $value['negociopai']; ?>
+                    <?php echo $value['negociopai']; ?>
 				    </a>
 				</td>
                 <td class="celda_gris" style="text-align:right">
