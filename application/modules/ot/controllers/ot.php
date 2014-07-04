@@ -2132,8 +2132,10 @@ alert("changed!");
 		switch ( $request_type )
 		{
 			case 'negocio':
-			case 'negociopai':
 				$data['values'] = $this->user->getNegocioDetails( $this->input->post('for_agent_id'), $filter );
+				break;
+			case 'negociopai':
+				$data['values'] = $this->user->getNegocioPai( $this->input->post('for_agent_id'), $filter );
 				break;
 			case 'prima':
 				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );

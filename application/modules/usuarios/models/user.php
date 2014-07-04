@@ -2511,26 +2511,13 @@ class User extends CI_Model{
 
 	private function _getNegocioPai( $count_requested = TRUE, $agent_id = null, $filter = array())
 	{
-		if ($count_requested)
-		{
-			$sql_begin = 'SELECT SUM(business) AS sum_business';
-			if (!$agent_id)
-				$sql_begin .= ', `agent_id` ';
-		}
-		else
-			$sql_begin = 'SELECT `payments`.*, `users`.`name` AS first_name, `users`.`lastnames` AS last_name, `users`.`company_name` AS company_name';
-
-		$sql_begin .= '
-FROM `payments` ';
-
-		if (!$count_requested)
-			$sql_begin .= "
+		$sql_begin = 'SELECT `payments`.*, `users`.`name` AS first_name, `users`.`lastnames` AS last_name, `users`.`company_name` AS company_name
+FROM `payments` 
 JOIN `agents` ON `agents`.`id` = `payments`.`agent_id`
-JOIN `users` ON `users`.`id` = `agents`.`user_id` ";
-
-		$sql_begin .= '
+JOIN `users` ON `users`.`id` = `agents`.`user_id`
 WHERE `policy_number`
 IN ( ';
+
 		$sql_end = ')';
 		$sub_sql = "
 SELECT `t_year`.`policy_number` 
@@ -2545,16 +2532,6 @@ WHERE `valid_for_report` = '1'";
 			$sub_sql .= "
 AND `agent_id` = '$agent_id'";
 
-		$sub_sql .= "
-AND (
-(
-business = '1'
-)
-OR (
-business = '-1'
-)
-)
-";
 		if( !empty( $filter ) )
 		{
 			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) )
@@ -2638,32 +2615,34 @@ GROUP BY `payments`.`policy_number`
 ) AS t_year
 WHERE `sum_payment` > '5000'
 ";
-		if ($count_requested && !$agent_id)
-			$sql_end .= ' GROUP BY `agent_id`';
+		$sql_end .= ' ORDER BY `payments`.`payment_date` ASC';
 		$sql = $sql_begin . $sub_sql . $sql_end;
 
 		$query = $this->db->query($sql);
 
-		if ($count_requested)
+		$temp_result = array();
+		$temp_rows = array();
+		$temp_counts = array();
+		$temp_not_empty = FALSE;
+		if ($query->num_rows() > 0)
 		{
-			if ($query->num_rows() > 0) 
+			$temp_not_empty = TRUE;
+			foreach ($query->result() as $row)
 			{
-				if ($agent_id)
-					$result = (int)$query->row()->sum_business;
-				else
+				$set = FALSE;
+				if (!isset($temp_result[$row->agent_id]))
 				{
-					$result = array();
-					foreach ($query->result() as $row)
-						$result[$row->agent_id] = $row->sum_business;
+					$temp_result[$row->agent_id] = array();
+					$temp_counts[$row->agent_id] = 1;
+					$set = TRUE;
 				}
-			}
-			else
-				$result = 0;				
-			return $result;
-		} else {
-			$result = array();
-			if ($query->num_rows() > 0) {
-				foreach ($query->result() as $row) {
+				elseif (!isset($temp_result[$row->agent_id][$row->policy_number]))
+				{
+					$temp_counts[$row->agent_id]++;
+					$set = TRUE;
+				}
+				if ($set)
+				{
 					$row->asegurado = '';
 					if ($row->policy_number) {
 						$query_policy = $this->db->get_where('policies', array('uid' => $row->policy_number), 1, 0);
@@ -2671,11 +2650,25 @@ WHERE `sum_payment` > '5000'
 							$row->asegurado = $query_policy->row()->name;
 						$query_policy->free_result();
 					}
-					$result[] = $row;
+					$temp_result[$row->agent_id][$row->policy_number] = $row->policy_number;
+					$temp_rows[] = $row;
 				}
 			}
-			return $result;
 		}
+
+		if ($count_requested)
+		{
+			if ($temp_not_empty)
+			{
+				if ($agent_id)
+					return $temp_counts[$agent_id];
+				else
+					return $temp_counts;
+			}
+			else
+				return 0;
+		} else
+			return $temp_rows;
 	}
 
   public function getCountNegocioPai_other_old( $agent_id = null, $filter = array() ){
