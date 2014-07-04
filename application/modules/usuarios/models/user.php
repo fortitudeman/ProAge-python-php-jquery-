@@ -2518,7 +2518,16 @@ JOIN `users` ON `users`.`id` = `agents`.`user_id`
 WHERE `policy_number`
 IN ( ';
 
-		$sql_end = ')';
+		$sql_end = ") AND `valid_for_report` = '1' AND `year_prime` = '1' 
+AND (
+(
+business = '1'
+)
+OR (
+business = '-1'
+)
+)		
+";
 		$sub_sql = "
 SELECT `t_year`.`policy_number` 
 FROM (
@@ -2526,18 +2535,34 @@ SELECT `payments`.*, SUM( `payments`.`amount` ) AS sum_payment
 FROM (
 `payments`
 )
-WHERE `valid_for_report` = '1' AND `year_prime` = '1' ";
+WHERE `valid_for_report` = '1' AND `year_prime` = '1' 
+AND (
+(
+business = '1'
+)
+OR (
+business = '-1'
+)
+)
+";
 
 		if ($agent_id)
+		{
 			$sub_sql .= "
 AND `agent_id` = '$agent_id'";
+			$sql_end .= "
+AND `agent_id` = '$agent_id'";
+		}
 
 		if( !empty( $filter ) )
 		{
 			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) )
+			{
 				$sub_sql .= " AND `product_group` = '" . $filter['query']['ramo'] . "'
 ";
-		
+				$sql_end .= " AND `product_group` = '" . $filter['query']['ramo'] . "'
+";
+			}
 			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) )
 			{
 				$year = date( 'Y' );				
@@ -2604,8 +2629,11 @@ AND `payments`.`payment_date` <= '$to 23:59:59'";
 					$agent_filter = array();
 					foreach ($this->agent_name_where_in as $agent_key => $agent_value)
 						$agent_filter[$agent_key] = "'$agent_value'";
+					$agent_filter_str = implode(',', $agent_filter);
 					$sub_sql .= "
-AND `agent_id` IN (" . implode(',', $agent_filter) . ") ";
+AND `agent_id` IN (" . $agent_filter_str . ") ";
+					$sql_end .= "
+AND `agent_id` IN (" . $agent_filter_str . ") ";
 				}
 			}
 		}
