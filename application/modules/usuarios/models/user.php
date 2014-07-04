@@ -2526,7 +2526,7 @@ SELECT `payments`.*, SUM( `payments`.`amount` ) AS sum_payment
 FROM (
 `payments`
 )
-WHERE `valid_for_report` = '1'";
+WHERE `valid_for_report` = '1' AND `year_prime` = '1' ";
 
 		if ($agent_id)
 			$sub_sql .= "
