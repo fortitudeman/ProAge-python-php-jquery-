@@ -116,7 +116,7 @@ $is_posted = (count($_POST) > 0);
                 <div class="control-group">
                   <label class="control-label text-error" for="inputError">Tipo de archivo: </label>
                   <div class="controls">
-                    <select name="product" class="required">
+                    <select name="product" class="required" style="width: 8em">
                     	<?php if( isset( $products ) and !empty( $products ) ) echo $products; ?>
                     </select>
                   </div>
@@ -136,7 +136,7 @@ $is_posted = (count($_POST) > 0);
               <div class="control-group">
                 <label class="control-label text-error" for="month_year">Del mes / año: &nbsp;</label>
                 <div class="controls">
-                  <select name="month_delete" id="month-delete" class="required" style="width: 100px">
+                  <select name="month_delete" id="month-delete" class="required" style="width: 8em">
 
 <?php foreach ($month_texts as $key => $month_text):
 	$selected = ($key == $selected_month_delete) ? ' selected="selected"' : '';
@@ -145,7 +145,7 @@ $is_posted = (count($_POST) > 0);
 				    <option value="<?php echo sprintf("%02d", $key) ?>" <?php echo $selected ?>><?php echo $month_text ?></option>
 <?php endforeach; ?>
 				  </select>
-                  <select name="year_delete" id="year-delete" class="required" style="width: 100px">
+                  <select name="year_delete" id="year-delete" class="required" style="width: 8em">
 <?php for ($i = $max_year; $i > $min_year; $i--): 
 	$selected = ($i == $selected_year_delete) ? ' selected="selected"' : '';
 ?>
@@ -154,6 +154,16 @@ $is_posted = (count($_POST) > 0);
 				  </select>
                 </div>
               </div>
+
+              <div class="control-group">
+                  <label class="control-label text-error" for="inputError">Tipo de archivo: </label>
+                  <div class="controls">
+                    <select name="product_type_delete" class="required" id="product-type-delete" style="width: 8em">
+                    	<?php if( isset( $products ) and !empty( $products ) ) echo $products; ?>
+                    </select>
+                  </div>
+              </div>
+
               </fieldset>
               <div id="borrar-button-form" class="form-actions">
                   <button type="submit" id="delete-submit" class="btn btn-primary">Borrar</button>

@@ -2836,13 +2836,15 @@ Display custom filter period
 		$result = json_encode('-2');
 		$month = $this->input->post('month_delete');
 		$year = $this->input->post('year_delete');
-		if ($month && $year)
+		$ramo = $this->input->post('product_type_delete');
+		if ($month && $year && $ramo)
 		{
 			$this->load->model( 'work_order' );
 			$month = (int) $month;
 			$year = (int) $year;
 			$where = array(
-				'import_date' => sprintf("%04d-%02d-01", (int) $year, (int) $month)
+				'import_date' => sprintf("%04d-%02d-01", (int) $year, (int) $month),
+				'product_group' => (int) $ramo
 			);
 			$db_result = $this->work_order->generic_get('payments', $where);
 			if (!$db_result)

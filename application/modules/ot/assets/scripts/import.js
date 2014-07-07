@@ -70,19 +70,29 @@ $( ".create-user" )
 
   	$("#delete-submit").on( "click", function( event ) {
 
+		var selectedTipoArchivo = $("#product-type-delete").val();
 		var selectedMonth = $("#month-delete").val();
 		var selectedYear = $("#year-delete").val();
+		if ( (selectedTipoArchivo.length == 0) || (selectedTipoArchivo < 1) || (selectedTipoArchivo > 3) ) {
+			alert('El tipo de archivo esta invalido (seleccione un valor).');
+			return false;
+		}
 		if ( (selectedMonth < 1) || (selectedMonth > 12) ||
 			( selectedYear < 1900 ) || ( selectedYear > 2100 ) ) {
 			alert('El mes - año estan invalidos.');
 			return false;
 		}
 
+		var tipoArchivoLabel = '';
+		$("#product-type-delete option:selected").each(function () {
+			tipoArchivoLabel = ' (tipo de archivo : ' + $(this).text() + ')';
+			return false;
+		});
+
 		var confirmMessage = '¿Está seguro que desea borrar todos los datos de pago del mes '
-			+ selectedMonth + '/' + selectedYear + '?';
+			+ selectedMonth + '/' + selectedYear + tipoArchivoLabel + ' ?';
 
 		if ( confirm( confirmMessage ) ) {
-
 			url = Config.base_url() + 'ot/delete_payments.html';
 			$.ajax({
 				url: url,
@@ -102,10 +112,10 @@ $( ".create-user" )
 							alert ('Ocurrio un error, no se pudo borrar los pagos, consulte a su administrador.');
 							break;
 						case '0':
-							alert ('No hay pagos para el mes - año ' + selectedMonth + '/' + selectedYear + '.');
+							alert ('No hay pagos para el mes - año ' + selectedMonth + '/' + selectedYear  + tipoArchivoLabel + '.');
 							break;
 						default:
-							alert ('Se pudo borrar los pagos del mes - año ' + selectedMonth + '/' + selectedYear + ' correctamente.');
+							alert ('Se pudo borrar los pagos del mes - año ' + selectedMonth + '/' + selectedYear  + tipoArchivoLabel + ' correctamente.');
 							break;
 					}
 				}
