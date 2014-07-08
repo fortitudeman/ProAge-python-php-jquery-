@@ -2519,31 +2519,15 @@ WHERE `policy_number`
 IN ( ';
 
 		$sql_end = ") AND `valid_for_report` = '1' AND `year_prime` = '1' 
-AND (
-(
-business = '1'
-)
-OR (
-business = '-1'
-)
-)		
 ";
 		$sub_sql = "
 SELECT `t_year`.`policy_number` 
 FROM (
-SELECT `payments`.*, SUM( `payments`.`amount` ) AS sum_payment
+SELECT `payments`.*, SUM( `payments`.`amount` ) AS `sum_payment`, SUM( ABS(`payments`.`business` )) AS `abs_business`
 FROM (
 `payments`
 )
 WHERE `valid_for_report` = '1' AND `year_prime` = '1' 
-AND (
-(
-business = '1'
-)
-OR (
-business = '-1'
-)
-)
 ";
 
 		if ($agent_id)
@@ -2641,7 +2625,7 @@ AND `agent_id` IN (" . $agent_filter_str . ") ";
 		$sub_sql .= "
 GROUP BY `payments`.`policy_number`
 ) AS t_year
-WHERE `sum_payment` > '5000'
+WHERE (`sum_payment` > '5000') AND (`abs_business` > 0)
 ";
 		$sql_end .= ' ORDER BY `payments`.`payment_date` ASC';
 		$sql = $sql_begin . $sub_sql . $sql_end;
