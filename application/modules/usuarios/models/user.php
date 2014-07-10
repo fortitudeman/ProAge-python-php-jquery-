@@ -2810,14 +2810,16 @@ WHERE (`abs_business` > '0')
 ) AS `payment_acc`
 FROM `payments`
 ) `payments`
-, `users`
+JOIN `agents` ON `agents`.`id`=`payments`.`agent_id`
+JOIN `users` ON `users`.`id`=`agents`.`user_id`
 WHERE `payment_acc` >= '5000'
-AND `users`.`id` = `agent_id`
 GROUP BY `agent_id`, `policy_number`
 )
 AS `wrapping_t`
 ";
 //		if ($sql_date_filter && $sql_agent_filter)
+		if (!$sql_date_filter)
+			$sql_date_filter = " WHERE (above_5000 <= '" . date('Y-m-d') . "') ";
 		$sql_str .= " $sql_date_filter $sql_agent_filter ";
 
 		if ($count_requested)
