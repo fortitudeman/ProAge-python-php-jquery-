@@ -2793,9 +2793,9 @@ AND (
 AND `t2`.`payment_date` <= `payments`.`payment_date`
 AND 
 " . $sql_plus . $sql_agent_filter . " 
-AND `policy_number`
+AND CONCAT(`agent_id`, '|', `policy_number`)
 IN ( 
-SELECT `t_year`.`policy_number` 
+SELECT CONCAT(`t_year`.`agent_id`, '|', `t_year`.`policy_number`)
 FROM (
 SELECT `payments`.*, SUM( ABS(`payments`.`business` )) AS `abs_business`
 FROM (
