@@ -140,6 +140,7 @@ $selected_filter_period = get_selected_filter_period();
                             <option value="terminada">Terminadas</option>
                             <option value="canceladas">Canceladas</option>
                             <option value="NTU">Póliza NTU</option>
+                            <option value="pagada">Pagadas</option>
                             <option value="todas" selected="selected">Todas</option>
                           </select>
 					    </th>
@@ -154,13 +155,14 @@ $selected_filter_period = get_selected_filter_period();
 <div id="ot-list">
             <table class="sortable altrowstable tablesorter" id="sorter" style="width:100%;">
               <colgroup>
-				<col width="5%" />
-				<col width="20%" />
+				<col width="14%" />
 				<col width="15%" />
+				<col width="15%" />
+				<col width="6%" />
+				<col width="17%" />
+				<col width="15%" />
+				<col width="8%" />
 				<col width="10%" />
-				<col width="20%" />
-				<col width="15%" />
-				<col width="15%" />
               </colgroup>
               <thead class="head">
 				<tr>
@@ -171,6 +173,7 @@ $selected_filter_period = get_selected_filter_period();
                       <th>Tipo de trámite&nbsp;</th>
                       <th>Nombre del asegurado&nbsp;</th>
                       <th>Estado&nbsp;</th>
+                      <th>Prima&nbsp;</th>
                   </tr>
               </thead>   
               <tbody class="tbody" id="data">

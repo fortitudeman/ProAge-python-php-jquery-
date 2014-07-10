@@ -2517,7 +2517,7 @@ alert("changed!");
 		}
 
 		// Check if OT is editable
-		if (! $this->work_order->is_editable( $ot[0]['product_group_id'],
+/*		if (! $this->work_order->is_editable( $ot[0]['product_group_id'],
 			$ot[0]['parent_type_name']['id'], $ot[0]['status_id'] ) ) {
 
 			$this->session->set_flashdata( 'message', array(
@@ -2525,7 +2525,7 @@ alert("changed!");
 				'message' => "No puede $function esta orden de trabajo."
 			));
 			redirect( 'ot', 'refresh' );
-		}
+		}*/
 
 		if ( ($function == 'editar') && !empty( $_POST ) ) {
 

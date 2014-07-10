@@ -475,6 +475,9 @@ class Work_order extends CI_Model{
 			case 'NTU':
 				$this->db->where( 'work_order.work_order_status_id', 10 );
 				break;
+			case 'pagada':
+				$this->db->where( 'work_order.work_order_status_id', 4 );
+				break;
 			default:
 				break;
 		}
@@ -575,7 +578,8 @@ class Work_order extends CI_Model{
 				'duration' =>  $row->duration,
 				'last_updated' =>  $row->last_updated,
 				'date' =>  $row->date,
-				'is_editable' => $this->is_editable( $row->product_group_id, $type_tramite, $row->work_order_status_id )
+				'is_editable' => $this->is_editable( $row->product_group_id, $type_tramite, $row->work_order_status_id ),
+				'is_nuevo_negocio' => $this->is_nuevo_negocio( $row->product_group_id, $type_tramite)
 		    );
 		}
 		return $ot;
@@ -1723,24 +1727,27 @@ class Work_order extends CI_Model{
 	public function is_editable( $product_group_id, $tramite, $ot_status ) {
 
 		return ($ot_status != 4) &&						// OT is editable if not already paid
-			(												// AND:
-			(($product_group_id == 1) && ($tramite == 47)) 	// "Vida" and "NUEVO NEGOCIO" or ...
-				||
-			(($product_group_id == 2) && ($tramite == 90))  // "GMM" and "NUEVO NEGOCIO"
-			);
+			$this->is_nuevo_negocio( $product_group_id, $tramite ); // AND NUEVO NEGOCIO
 	}
 // Determine if an OT is "NTU-able"
 
 	public function is_ntuable( $product_group_id, $tramite, $ot_status ) {
 
-		return ($ot_status == 7) &&						// OT is editable if status "aceptado"
-			(												// AND:
+		return ($ot_status == 7) &&						// OT is NTUable if status "aceptado"
+			$this->is_nuevo_negocio( $product_group_id, $tramite ); // AND NUEVO NEGOCIO
+	}
+
+// Determine if an OT is "NUEVO NEGOCIO"
+
+	public function is_nuevo_negocio( $product_group_id, $tramite ) {
+
+		return 	(
 			(($product_group_id == 1) && ($tramite == 47)) 	// "Vida" and "NUEVO NEGOCIO" or ...
 				||
 			(($product_group_id == 2) && ($tramite == 90))  // "GMM" and "NUEVO NEGOCIO"
 			);
 	}
-	
+
 // Search values 
 	public function generic_search( $table = null, $searched = null, $like = null,
 		$limit = null, $offset = 0 )

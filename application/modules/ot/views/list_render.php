@@ -22,6 +22,7 @@
 											
 				if( $value['parent_type_name']['name'] == 'NUEVO NEGOCIO' )
 					$new = true;
+
 				$show_menu = ( ($value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 8 and $value['work_order_status_id'] != 4 and $value['work_order_status_id'] != 7)
 					or 
 					($value['work_order_status_id'] == 7 and $new == true)
@@ -29,10 +30,19 @@
 					($value['is_editable'])
 					);
 				$show_menu =  ($value['work_order_status_id'] == 10) ? FALSE : $show_menu;
+
+				if ( $this->access_update )
+				{
+					$ver_update_ot = '&nbsp;' . anchor('ot/update_poliza/' . $value['id'], '<i class="icon-edit" title="Editar OT '. $value['uid']. '"></i>', array('title' => 'Editar')) .
+						'&nbsp;' .
+						anchor('ot/ver_ot/' . $value['id'], '<i class="icon-eye-open" title="Ver OT '. $value['uid']. '"></i>', array('target' => '_blank', 'title' => 'Ver'));
+				}
+				else
+					$ver_update_ot = '';
 				?>
 				<tr class="data-row-class" id="data-row-<?php echo $value['id'] ?>">
                 	<td class="center"><?php 
-										    
+
 					$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
 					if( $value['work_order_status_id'] == 5 or $value['work_order_status_id'] == 9 ) {
 						if( (float)$color <= 5 ) 
@@ -49,6 +59,7 @@
 						echo '<a href="#" class="toggle" title="Mostrar / occultar menu">' . $value['uid']. '</a>';
 					else
 						echo $value['uid'];
+					echo $ver_update_ot;
 					?>
                     </td>
                     <td class="center"><?php if( $value['creation_date'] != '0000-00-00 00:00:00' ) echo $value['creation_date'] ?></td>
@@ -66,11 +77,15 @@
                     <td class="center"><?php echo $value['group_name'] ?></td>
                     <td class="center"><?php echo $value['parent_type_name']['name'] ?></td>
                     <td class="center"><?php echo $value['policy'][0]['name'] ?></td>
-                                       
                     <td class="center" ><?php echo ucwords(str_replace( 'desactivada', 'en trámite', $value['status_name'])); ?></td>
+                    <td class="center">
+<?php
+if ($value['is_nuevo_negocio'] && ($value['policy'][0]['prima'] != 'NULL')) echo number_format($value['policy'][0]['prima'], 2); else echo '0.00';
+?>
+					</td>
                 </tr>
                 <tr id="menu-<?php echo $value['id'] ?>" <?php if ( $show_menu ) echo 'class="tablesorter-childRow"'; else echo 'style="display: none"'; ?>>
-                	<td colspan="8" style="background-color: #E0E0E0; padding-left: 1.5em">
+                	<td colspan="9" style="background-color: #E0E0E0; padding-left: 1.5em">
 
                     <?php
 					$scrips='';
@@ -86,11 +101,11 @@
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
 						if( $value['work_order_status_id'] ==  7 and $new == true)
 							echo '<a href="javascript:void(0)" onclick="setPay(\''.$value['id'].'\')">Marcar como pagada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
-						if ( $value['is_editable'] )
+/*						if ( $value['is_editable'] )
 							echo anchor('ot/update_poliza/' . $value['id'], 'Editar', array('title' => 'Editar')) .
 							'&nbsp;&nbsp;|&nbsp;&nbsp;';
 						echo anchor('ot/ver_ot/' . $value['id'], 'Ver', array('target' => '_blank', 'title' => 'Ver')) .
-							'&nbsp;&nbsp;|&nbsp;&nbsp;';
+							'&nbsp;&nbsp;|&nbsp;&nbsp;';*/
 					}
 					if( $this->access_delete == true )
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')">Cancelar</a>&nbsp;&nbsp;';
@@ -104,7 +119,7 @@
                 <?php endforeach;  ?> 
                 <?php else: ?>
 		        <tr>
-                	<td colspan="7">
+                	<td colspan="8">
                         <div class="alert alert-block">
                               <button type="button" class="close" data-dismiss="alert">×</button>
                               <strong>Atención: </strong> No se encontrarón registros, agregar uno <a href="<?php echo base_url() ?>ot/create.html" class="btn btn-link">Aquí</a>
