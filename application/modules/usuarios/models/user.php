@@ -2817,8 +2817,8 @@ GROUP BY `agent_id`, `policy_number`
 )
 AS `wrapping_t`
 ";
-		if ($sql_date_filter && $sql_agent_filter)
-			$sql_str .= "$sql_date_filter $sql_agent_filter ";
+//		if ($sql_date_filter && $sql_agent_filter)
+		$sql_str .= " $sql_date_filter $sql_agent_filter ";
 
 		if ($count_requested)
 			$sql_str .= "
