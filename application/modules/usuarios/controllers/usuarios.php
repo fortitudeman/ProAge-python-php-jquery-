@@ -38,7 +38,9 @@ class Usuarios extends CI_Controller {
 	public $access_request_new_user = false;
 	
 	public $access_send_message = false;
-	
+
+	private $image_path;
+	private $resized_widths;
 /** Construct Function **/
 /** Setting Load perms **/
 	
@@ -104,158 +106,98 @@ class Usuarios extends CI_Controller {
 							
 								
 		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) redirect( 'usuarios/login', 'refresh' );
-			
+
+		$this->load->config('config_proages');
+
+		$this->image_path = $this->config->item('profile_picture_path');
+		if ($this->image_path === FALSE)		
+			$this->image_path = APPPATH . 'modules/usuarios/assets/profiles/';
+
+		$this->resized_widths = $this->config->item('profile_picture_widths');
+		if ($this->resized_widths === FALSE)
+			$this->resized_widths = array(50, 150, 250);
+
+		$this->load->helper( 'user_image' );
 	}
 	
 	
 // Login method	
 	public function login(){
-		
-		
+
 		if( !empty( $_POST ) ){
-						
+
 			// Validations
 			$this->form_validation->set_rules('username', 'Usuario', 'required|xxs_clean');
 			$this->form_validation->set_rules('password', 'Password', 'required|xxs_clean');
 			
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
-			
-				   
-				    
-					
+
 					// Load Model
 					$this->load->model( 'user' );
-					
-					
+
 					// Getting data for the user
 					$user = $this->user->setLogin( $this->input->post() );
-					
-					
+
 					// Validation for empty user, not exist
 					if( empty( $user ) ){ 
-												
 							// Set true message		
 							$this->session->set_flashdata( 'message', array( 
-								
 								'type' => false,	
 								'message' => 'Los datos que ingresaste no son correctos, verificalos.'
-											
 							));												
-							
-							
 							redirect( 'usuarios/login', 'refresh' );
-							
-							
 					}
-					
-					
-					
-					// Save Session
+
+					// Save Session:
 					$this->session->set_userdata( array( 'system' => $user[0] ) );
-					// Get user home page depending on role
+
+					// Resize profile image if needed:
+					$this->_resize_image($user[0]['picture']);
+
+					// Get user home page depending on role:
 					$home_page = $this->rol->get_user_home_page( $user[0]['id'] );
 					if ( ! $home_page )
 						$redirect_to = 'home';
 					else
 						$redirect_to = $home_page['uri_segments'];
-					redirect( $redirect_to, 'refresh' );
 
+					redirect( $redirect_to, 'refresh' );
 				}else{
-					
-					
 					// Set false message		
 					$this->session->set_flashdata( 'message', array( 
-						
 						'type' => false,	
 						'message' => 'Debes de ingresar tu nombre de usuario y contraseña.'
-									
 					));												
-					
-					
 					redirect( 'usuarios/login', 'refresh' );
-						
 				}			
-			
 			exit;
-			
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		// Config view
 		$this->view = array(
-				
 		  'title' => 'Login',
 		  'css' => array(),
 		  'scripts' =>  array(
-		  		
 				'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			    '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
 			    '<script src="'.base_url().'scripts/config.js"></script>',	
 				'<script src="'.base_url().'usuarios/assets/scripts/md5.js"></script>',							
 				'<script src="'.base_url().'usuarios/assets/scripts/login.js"></script>'		
-				
-				
 		  ),
 		  'message' => $this->session->flashdata('message') // Return Message, true and false if have		  
-		  		
 		);
-				
 		// Render view 
 		$this->load->view( 'login', $this->view );	
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 // User logout	
 	public function logout(){
-	
-		
-		
+
 		// Remove vars of user login
 		$this->session->unset_userdata( 'system' );
 		
 		redirect( 'usuarios/login', 'refresh' );
-	
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 // Show all records	
 	public function index( $filter = null ){
@@ -483,9 +425,11 @@ class Usuarios extends CI_Controller {
 						$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
 						
 					 
-						if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) ){
+						if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) )
+						{
 							$user['picture'] = $file;
-						}else{
+							$this->_resize_image($file);
+						} else {
 							$user['picture'] = "default.png";
 						};
 					
@@ -905,18 +849,16 @@ class Usuarios extends CI_Controller {
 				
 				// Uploaded a picture
 				if( !empty( $_FILES['imagen']['name'] ) ){
-			
 						$file = $_FILES['imagen']['name'];  
-		 
 						$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-					
 						// replace characters other than letters, numbers and . by _
 						$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
-						
-					 
-						if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) ){
+
+						if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) )
+						{
 							$user['picture'] = $file;
-						}else{
+							$this->_resize_image($file);
+						} else{
 							$user['picture'] = "default.png";
 						};
 					
@@ -1948,19 +1890,24 @@ class Usuarios extends CI_Controller {
 			// replace characters other than letters, numbers and . by _
 			$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
 
-			if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) ){
+			if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) )
+			{
 				$usernew['picture'] = $file;
+				$this->_resize_image($file);
 			}
 		}				
 
-		if( $this->input->post( 'deleteimage' ) == 'true' ){
-
+		if( $this->input->post( 'deleteimage' ) == 'true' )
+		{
 			$delete_previous = TRUE;
 			$usernew['picture'] = 'default.png';
 		}
 		// Drop Last Image
 		if ( $delete_previous && ( $user['picture'] != 'default.png' ) && is_file( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] ) )
+		{
 			unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user['picture'] );
+			$this->_delete_profile_image($user['picture']);
+		}
 
 	}
 	private function _update_user( $id, $usernew, $update_session = FALSE ) {
@@ -2041,7 +1988,7 @@ class Usuarios extends CI_Controller {
 			}
 		}
 
-		
+		get_default_user_image( $user['picture'] );
 		// Config view
 		$this->view = array(
 				
@@ -2197,39 +2144,34 @@ class Usuarios extends CI_Controller {
 				
 				// Uploaded a picture
 				if( !empty( $_FILES['imagen']['name'] ) ){
-			
-						$file = $_FILES['imagen']['name'];  
-		 
-						$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-					
-						// replace characters other than letters, numbers and . by _
-						$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
-						
-					 
-						if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) ){
-							$user['picture'] = $file;
-						}else{
-							$user['picture'] = "default.png";
-						};
-												
-						if( $data[0]['picture'] != $file and is_file( APPPATH.'modules/usuarios/assets/profiles/'.$data[0]['picture'] ) )
-							unlink( APPPATH.'modules/usuarios/assets/profiles/'.$data[0]['picture'] );
-						
+
+					$file = $_FILES['imagen']['name'];  
+					$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
+					// replace characters other than letters, numbers and . by _
+					$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
+					if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) )
+					{
+						$user['picture'] = $file;
+						$this->_resize_image($file);
+					} else {
+						$user['picture'] = "default.png";
+					}
+
+					if( ($data[0]['picture'] != 'default.png') &&
+						( $data[0]['picture'] != $file ) &&
+						is_file( APPPATH.'modules/usuarios/assets/profiles/'.$data[0]['picture'] ) )
+					{
+						unlink( APPPATH.'modules/usuarios/assets/profiles/'.$data[0]['picture'] );
+						$this->_delete_profile_image($data[0]['picture']);
+					}
 					
 				}else{
 					$user['picture'] = $data[0]['picture'];
 				}
-				
-				
-				
+
 				if( !empty( $_POST['password'] ) )
 					$user['password']  = md5($this->input->post( 'password' ) );		
-				
-				
-				
-				
-							
-								
+
 				if( $this->user->update( 'users', $id, $user ) == false) $controlSaved = false ;
 				
 				if( $controlSaved == false ){
@@ -2467,29 +2409,11 @@ class Usuarios extends CI_Controller {
 					
 					
 					redirect( 'usuarios', 'refresh' );
-					
-					
-					
 				}
-				
-				
 			}	
-			
-			
-			
-			
 		}
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		get_default_user_image( $data[0]['picture'] );
 		// Config view
 		$this->view = array(
 				
@@ -2575,25 +2499,17 @@ class Usuarios extends CI_Controller {
 		if( !empty( $_POST ) and isset( $_POST['delete'] ) and $_POST['delete'] == true ){
 			
 			$deleteControl = true;
-			
-			
-			
-			
-			// Drop Image
+
+			// Drop Images
 			if( is_file( APPPATH.'modules/usuarios/assets/profiles/'.$user[0]['picture'] ) and $user[0]['picture'] != 'default.png' )
-					unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user[0]['picture'] );
-					
-			
-			
-			
+			{
+				unlink( APPPATH.'modules/usuarios/assets/profiles/'.$user[0]['picture'] );
+				$this->_delete_profile_image($user[0]['picture']);
+			}
 			// Delete from users
 			if( isset( $user[0]['id'] ) )
 				if( $this->user->delete( 'users', 'id',  $user[0]['id'] ) == false )  $deleteControl = false;
-				
-		   
-		   	
-			
-			
+
 			if( $deleteControl == false ){
 				
 				// Set false message		
@@ -2746,19 +2662,55 @@ class Usuarios extends CI_Controller {
 		$this->load->view( 'index', $this->view );	
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	private function _resize_image($file)
+	{
+		if ($file == 'default.png')
+			return;
+
+		$pos = strrpos($file, ".");
+		if ($pos === FALSE)
+			return;
+
+		$original_size = @getimagesize($this->image_path . $file);
+		if ($original_size === FALSE)
+			return;
+
+		$base_fname = substr($file, 0, $pos );
+		$fextension = substr($file, $pos + 1);
+
+		$this->load->library('image_lib');
+
+		$config = array(
+			'source_image' => $this->image_path . $file,
+			'maintain_ratio' => TRUE,
+			'create_thumb' => TRUE,
+			'master_dim' => 'width'
+		);
+
+		foreach ($this->resized_widths as $width)
+		{
+			if (file_exists($this->image_path . $base_fname . "_$width.$fextension"))
+				break;
+			$config['width'] = $width;
+			$config['height'] = $original_size[1] * $width / $original_size[0];
+			$config['thumb_marker'] = "_$width";
+			$this->image_lib->initialize($config);
+			$this->image_lib->resize();
+		}
+	}
+
+	private function _delete_profile_image($file)
+	{
+		$pos = strrpos($file, ".");
+		if ($pos !== FALSE)
+		{
+			$base_fname = substr($file, 0, $pos );
+			$fextension = substr($file, $pos + 1);
+			foreach ($this->resized_widths as $width)
+				@unlink($this->image_path . $base_fname . "_$width.$fextension");
+		}
+	}
 /* End of file usuarios.php */
 /* Location: ./application/controllers/usuarios.php */
 }

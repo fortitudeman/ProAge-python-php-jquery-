@@ -13,6 +13,11 @@
 
   	
 */
+if (isset($user) && isset($user['picture']))
+{
+	$this->load->helper( 'user_image' );
+	get_default_user_image( $user['picture'] );
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -103,7 +108,7 @@
 				<!-- user dropdown starts -->
 				<div class="btn-group pull-right" >
 					<a class="btn dropdown-toggle" data-toggle="dropdown" href="javascript: void(0);">
-						<img src="<?php echo base_url() . 'usuarios/assets/profiles/' . $user['picture'] ?>" width="50" height="50">
+						<img src="<?php echo base_url() . 'usuarios/assets/profiles/' . $user['picture'] ?>" />
                         <span class="hidden-phone"> <?php echo $user['name'] ?></span>
 						<span class="caret"></span>
 					</a>
@@ -191,7 +196,7 @@
                         <li><a href="<?php echo base_url() ?>activities/sales_activities_stats.html"><i class="icon-tasks"></i><span class="hidden-tablet">Actividades de ventas</span></a></li>
                         <?php endif; ?>
                         <?php endif; endforeach; endif; ?>
-                        
+
 						<!--
                         <li><a class="ajax-link" href="form.html"><i class="icon-edit"></i><span class="hidden-tablet"> Forms</span></a></li>
 						<li><a class="ajax-link" href="chart.html"><i class="icon-list-alt"></i><span class="hidden-tablet"> Charts</span></a></li>

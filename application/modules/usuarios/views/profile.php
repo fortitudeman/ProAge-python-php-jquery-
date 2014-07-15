@@ -106,7 +106,7 @@
                   <div class="control-group">
                     <label class="control-label  text-error" for="inputError">Imagen: </label>
                     <div class="controls">
-                      <img src="<?php echo base_url() . 'usuarios/assets/profiles/' . $data['picture'] ?>" width="50" height="50">
+                      <img src="<?php echo base_url() . 'usuarios/assets/profiles/' . $data['picture'] ?>" />
                       <input type="file" name="imagen" /><br /><input type="hidden" name="deleteimage" id="deleteimage" value="false" /><br /><input type="button" id="delimage" value="Borrar Imagen" />
                     </div>
                   </div>
