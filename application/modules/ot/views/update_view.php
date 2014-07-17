@@ -96,8 +96,8 @@ foreach ($data['agents'] as $value)
 foreach ($agents as $key => $value) {
 	if (isset($selected_agents[$key]))
 		echo '<option value="' . $key . '" selected="selected">' . $selected_agents[$key] . '</option>';
-	else
-		echo '<option value="' . $key . '" disabled="disabled">' . $value . '</option>';
+//	else
+//		echo '<option value="' . $key . '" disabled="disabled">' . $value . '</option>';
 }
 ?>
 					   

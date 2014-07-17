@@ -19,6 +19,10 @@ $( document ).ready(function() {
 	$("#sorter")
 		.tablesorter({ 
 			theme : 'default',
+			stringTo: 'max',
+			headers: {  // non-numeric content is treated as a MIN value
+				7: { sorter: "digit", string: "min" }			
+			},
 			// this is the default setting
 			cssChildRow: "tablesorter-childRow"
 		});

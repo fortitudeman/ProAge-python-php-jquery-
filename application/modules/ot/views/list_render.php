@@ -80,7 +80,9 @@
                     <td class="center" ><?php echo ucwords(str_replace( 'desactivada', 'en trámite', $value['status_name'])); ?></td>
                     <td class="center">
 <?php
-if ($value['is_nuevo_negocio'] && ($value['policy'][0]['prima'] != 'NULL')) echo number_format($value['policy'][0]['prima'], 2); else echo '0.00';
+if ($value['is_nuevo_negocio'] && ($value['policy'][0]['prima'] != 'NULL'))
+	echo number_format($value['policy'][0]['prima'], 2);
+else echo '-';
 ?>
 					</td>
                 </tr>
