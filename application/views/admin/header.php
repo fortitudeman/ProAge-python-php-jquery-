@@ -18,6 +18,21 @@ if (isset($user) && isset($user['picture']))
 	$this->load->helper( 'user_image' );
 	get_default_user_image( $user['picture'] );
 }
+$segments = $this->uri->rsegment_array();
+if (($this->roles_vs_access !== FALSE) &&
+	(isset($segments[1])) &&
+	($segments[1] == 'agent')
+	)
+{
+	$hide_menu = FALSE;
+	foreach ($this->roles_vs_access as $access)
+	{
+		if (($access['module_name'] == 'Agent Profile') && ($access['action_name'] == 'Ocultar el menú'))
+			$hide_menu = TRUE;
+	}
+}
+else
+	$hide_menu = FALSE;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,7 +58,7 @@ if (isset($user) && isset($user['picture']))
 	<link href="<?php echo base_url() ?>bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="<?php echo base_url() ?>bootstrap/FortAwesome/css/font-awesome.css" rel="stylesheet">
 	<link href="<?php echo base_url() ?>style/charisma-app.css" rel="stylesheet">
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+ 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
     <link href="<?php echo base_url() ?>bootstrap/Ui/css/custom-theme/jquery-ui-1.10.0.custom.css" rel="stylesheet">
 	<link href='<?php echo base_url() ?>style/fullcalendar.css' rel='stylesheet'>
 	<link href='<?php echo base_url() ?>style/fullcalendar.print.css' rel='stylesheet'  media='print'>
@@ -78,11 +93,13 @@ if (isset($user) && isset($user['picture']))
 	<div class="navbar">
 		<div class="navbar-inner">
 			<div class="container-fluid">
+<?php if (!$hide_menu): ?>
 				<a class="btn btn-navbar" data-toggle="collapse" data-target=".top-nav.nav-collapse,.sidebar-nav.nav-collapse">
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</a>
+<?php endif; ?>
 				<a class="brand" href="<?php echo base_url(); ?>"> <img alt="Charisma Logo" src="<?php echo base_url() ?>images/logo20.png" /> <span>Proages</span></a>
 				
 				<!-- theme selector starts -->
@@ -139,7 +156,7 @@ if (isset($user) && isset($user['picture']))
 	<div class="container-fluid">
 		<div class="row-fluid">
 		<?php if(!isset($no_visible_elements) || !$no_visible_elements) { ?>
-		
+<?php if (!$hide_menu): ?>
 			<!-- left menu starts -->
 			<div class="span2 main-menu-span">
 				<div class="well nav-collapse sidebar-nav">
@@ -216,8 +233,8 @@ if (isset($user) && isset($user['picture']))
 				</div><!--/.well -->
 			</div><!--/span-->
 			<!-- left menu ends -->
-			
-						
-			<div id="content" class="span10">
+<?php endif; ?>
+
+			<div id="content" class="span<?php if ($hide_menu) echo 12; else echo 10; ?>">
 			<!-- content starts -->
 			<?php } ?>

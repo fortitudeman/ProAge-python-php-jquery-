@@ -13,6 +13,7 @@
 
 
  */
+$base_url = base_url();
 if ( isset($_POST['periodo']) &&
 	($_POST['periodo'] >= 1) && ($_POST['periodo'] <= 4) )
 {
@@ -22,15 +23,18 @@ if ( isset($_POST['periodo']) &&
 else
 	$selected_filter_period = get_selected_filter_period();
 $divided_by_zero = 'N/D';
+
+$agent_profile_page = ($this->uri->segment(1) == 'agent');
+if (!$agent_profile_page):
 ?>
 
 <div>
     <ul class="breadcrumb">
         <li>
-            <a href="<?php echo base_url() ?>">Admin</a> <span class="divider">/</span>
+            <a href="<?php echo $base_url ?>">Admin</a> <span class="divider">/</span>
         </li>
         <li>
-            <a href="<?php echo base_url() ?>activities.html">Actividades </a> <span class="divider">/</span>
+            <a href="<?php echo $base_url ?>activities.html">Actividades </a> <span class="divider">/</span>
         </li>               
         <li>
             Actividad de ventas
@@ -46,70 +50,107 @@ $divided_by_zero = 'N/D';
                 <?php if ($message['type'] == true): ?>
                     <div class="alert alert-success">
                         <button type="button" class="close" data-dismiss="alert">×</button>
-                        <img src="<?php echo base_url() ?>images/true.png" width="20" height="20" />
+                        <img src="<?php echo $base_url ?>images/true.png" width="20" height="20" />
                         <strong>Listo: </strong> <?php echo $message['message']; // Show Dinamical message Success  ?>
                     </div>
                 <?php elseif ($message['type'] == false): ?>
                     <div class="alert alert-error">
                         <button type="button" class="close" data-dismiss="alert">×</button>
-                        <img src="<?php echo base_url() ?>images/false.png" width="20" height="20" />
+                        <img src="<?php echo $base_url ?>images/false.png" width="20" height="20" />
                         <strong>Error: </strong> <?php echo $message['message']; // Show Dinamical message error  ?>
                     </div>
                 <?php endif; ?>			
-            <?php endif; ?> 
+            <?php endif; ?>
 
+<?php endif; ?>
             <div class="row">
-                <div class="span11" style="width:95%">
-                    <div class="main-container">
-                        <div class="main clearfix">
+<?php if ($agent_profile_page):
+	$current_page = $this->uri->segment(2);
+	if ($current_page === FALSE)
+		$current_page = 'index';
+	$span_count = 0;
+?>
+<div style="padding-bottom: 3.5em">
+<?php if ($this->access_create_activity): ?>
+                  <a href="<?php echo $base_url ?>agent/create_activity/<?php echo $this->user_id ?>.html" id="add-activity" class="span4 subpage-link <?php if ($current_page == 'create_activity') echo ' subpage-link-current' ?>">
+                    <i style="color: #365b9d; font-size: x-large" class="icon-plus" title="Capturar nuevo registro"></i>
+                    Capturar nuevo registro
+                  </a>
+<?php else:
+	$span_count += 4;
+endif; ?>
+<?php if ($this->access_activity_list): ?>
+                  <a href="<?php echo $base_url ?>agent/activity_details/<?php echo $this->user_id ?>.html" id="view-details" class="span4 subpage-link <?php if ($current_page == 'activity_details') echo ' subpage-link-current' ?>">
+                    <i style="color: #365b9d; font-size: x-large" class="icon-zoom-in" title="Ver detalle"></i>
+                    Ver detalle
+                  </a>
+<?php else:
+	$span_count += 4;
+endif;
+	$span_count +=4;
+ ?>
+                  <span class="span<?php echo $span_count?>"></span>
+</div>
+<?php endif; ?>
+                  <form id="sales-activity-form" action="<?php echo current_url() ?>" class="row form-horizontal" method="post">
+                      <fieldset>
+<?php if (!$agent_profile_page): ?>
+                          <div class="control-group">
+                            <label class="control-label text-error" for="inputError">Vista :</label>
+                            <div class="controls">
+                              <input type="radio" id="view-normal" name="activity_view" value="normal" <?php /*if ($other_filters['activity_view'] == 'normal')*/ echo 'checked="checked"'?>>&nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;&nbsp;
+                              <input type="radio" id="view-efectividad" name="activity_view" value="efectividad" <?php /*if ($other_filters['activity_view'] == 'efectividad') echo 'checked="checked"' */ ?>>&nbsp;&nbsp;Efectividad					  
+                            </div>
+                          </div>
+<?php else: ?>
 
-                          <form id="sales-activity-form" action="<?php echo base_url() ?>activities/sales_activities_stats.html" class="row form-horizontal" method="post">
-                            <fieldset>
-                                <div class="control-group">
-                                  <label class="control-label text-error" for="inputError">Vista :</label>
-                                  <div class="controls">
-                                    <input type="radio" id="view-normal" name="activity_view" value="normal" <?php /*if ($other_filters['activity_view'] == 'normal')*/ echo 'checked="checked"'?>>&nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input type="radio" id="view-efectividad" name="activity_view" value="efectividad" <?php /*if ($other_filters['activity_view'] == 'efectividad') echo 'checked="checked"' */ ?>>&nbsp;&nbsp;Efectividad					  
-                                  </div>
-                                </div>
+			                  <input type="hidden" id="activity-view" name="activity_view" value="normal" />
+<?php endif; ?>
 
-                                <div class="row">
-                                  <div class="span5 offset1">
-                                    <div>
-                                      <select id="periodo" name="periodo" title="Período" >
-                                        <option value="2" <?php echo $selected_filter_period[2] ?>>Una Semana</option>
-                                        <option value="1" <?php echo $selected_filter_period[1] ?>>Mes actual</option>
-                                        <option value="3" <?php echo $selected_filter_period[3] ?>>Año actual</option>
-                                        <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
-                                      </select>
-                                      <span>
-                                          &nbsp;&nbsp;<i style="cursor: pointer; vertical-align: top" class="icon-calendar" id="cust_update-period" title="Click para editar el período personalizado"></i>
-                                          &nbsp;&nbsp;<i style="cursor: pointer; vertical-align: top; color: #06be1d; display: none" class="icon-calendar" id="week_update-period" title="Click para seleccionar otra semana"></i>
-                                      </span>
-                                    </div>		  
-                                    <div id="semana-container" <?php if (!$selected_filter_period[2]) echo 'style="display: none"' ?> title="Seleccione una Semana">
-                                      <div id="week"></div>
-                                      <label></label> <span id="startDate"></span>  <span id="endDate"></span>
-                                       <input id="begin" name="begin" type="hidden" readonly="readonly" value="<?php echo set_value('begin', isset($other_filters['begin']) ? $other_filters['begin'] : '')  ?>">
-                                       <input id="end" name="end" type="hidden" readonly="readonly" value="<?php echo set_value('end', isset($other_filters['end']) ? $other_filters['end'] : '')  ?>">
-                                    </div>
-                                  </div>
+                          <div class="row">
+                            <div class="span5 offset1">
+                              <div>
+                                <select id="periodo" name="periodo" title="Período" >
+                                  <option value="2" <?php echo $selected_filter_period[2] ?>>Una Semana</option>
+                                  <option value="1" <?php echo $selected_filter_period[1] ?>>Mes actual</option>
+                                  <option value="3" <?php echo $selected_filter_period[3] ?>>Año actual</option>
+                                  <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
+                                </select>
+                                <span>
+                                    &nbsp;&nbsp;<i style="cursor: pointer; vertical-align: top" class="icon-calendar" id="cust_update-period" title="Click para editar el período personalizado"></i>
+                                    &nbsp;&nbsp;<i style="cursor: pointer; vertical-align: top; color: #06be1d; display: none" class="icon-calendar" id="week_update-period" title="Click para seleccionar otra semana"></i>
+                                </span>
+                              </div>		  
+                              <div id="semana-container" <?php if (!$selected_filter_period[2]) echo 'style="display: none"' ?> title="Seleccione una Semana">
+                                <div id="week"></div>
+                                <label></label> <span id="startDate"></span>  <span id="endDate"></span>
+                                 <input id="begin" name="begin" type="hidden" readonly="readonly" value="<?php echo set_value('begin', isset($other_filters['begin']) ? $other_filters['begin'] : '')  ?>">
+                                 <input id="end" name="end" type="hidden" readonly="readonly" value="<?php echo set_value('end', isset($other_filters['end']) ? $other_filters['end'] : '')  ?>">
+                              </div>
+                            </div>
 
-                                  <div class="span6">
-                                    <textarea placeholder="AGENTES" id="agent-name" name="agent_name" rows="1" class="input-xlarge select4" style="min-width: 250px; max-width: 300px; height: 1.5em"><?php echo $other_filters['agent_name']; ?></textarea>
-			                        <span>
-                                        <i style="cursor: pointer; vertical-align: top" class="icon-filter submit-form" id="submit-form1" title="Filtrar"></i>
-                                        <i style="cursor: pointer; vertical-align: top" class="icon-list-alt" id="clear-agent-filter" title="Mostrar todos los agentes"></i>
-                                    </span>
-                                  </div>
-                                </div>
-                            </fieldset>
-                          </form>
+                            <div class="span6">
+<?php if (!$agent_profile_page): ?>
+                              <textarea placeholder="AGENTES" id="agent-name" name="agent_name" rows="1" class="input-xlarge select4" style="min-width: 250px; max-width: 300px; height: 1.5em"><?php echo $other_filters['agent_name']; ?></textarea>
+			                  <span>
+                                  <i style="cursor: pointer; vertical-align: top" class="icon-filter submit-form" id="submit-form1" title="Filtrar"></i>
+                                  <i style="cursor: pointer; vertical-align: top" class="icon-list-alt" id="clear-agent-filter" title="Mostrar todos los agentes"></i>
+                              </span>
+<?php else: ?>
 
+			                  <input type="hidden" id="agent-name" name="agent_name" value="<?php echo $other_filters['agent_name']; ?>" />
+<?php endif; ?>
+
+                            </div>
+                          </div>
+                      </fieldset>
+                    </form>
 
 <?php
 	if (isset($data['rows']) && count($data['rows']))
 	{
+		if ($agent_profile_page)
+			echo '<h4 class="sales-subheader">Actividad</h4>';
 		echo '
 <table class="sortable altrowstable tablesorter sales-activity-results" id="sales-activity-normal">
 <thead class="head">
@@ -202,7 +243,12 @@ $divided_by_zero = 'N/D';
 		echo '
 </tbody>
 </table>
-<br />
+<br />';
+
+		if ($agent_profile_page)
+			echo '<h4 class="sales-subheader">Efectividad</h4>';
+
+		echo '
 <table class="sortable altrowstable tablesorter sales-activity-results" id="sales-activity-efectividad">
 <thead class="head">
 <tr>
@@ -279,17 +325,18 @@ $divided_by_zero = 'N/D';
 	{
 echo '<p class="sales-activity-results">No hay datos</p>';
 	}
- ?>
+?>
 
-                        </div> <!-- #main -->
-
-<?php echo $period_form ?>
-
-                    </div> <!-- #main-container -->
-                </div>                                                                                                 	
             </div>
+<?php if (!$agent_profile_page): ?>
         </div>               
     </div>
     
 </div><!--/span-->
 </div><!--/row-->
+<?php endif ?>
+
+<div style="margin-top: 10em">
+<?php echo $period_form ?>
+
+</div>

@@ -13,23 +13,9 @@
   	
 */
 $( document ).ready(function() {
-    
-	$( '.link-ramos' ).bind( 'click', function(){
-		
-		if( this.id == 'vida' ){	
-			$( '#ramo' ).val(1);
-		}
-		if( this.id == 'gmm' ){
-			$( '#ramo' ).val(2);		
-		}
-		if( this.id == 'autos' ){
-			$( '#ramo' ).val(3);		
-		}
-		
-		$( '#form' ).submit();
-		
-	});
-	
+	$(".btn-ramo").bind( "click", function(){
+		$("#hidden-ramo").val($(this).val());
+	})
 });
 function moneyFormat( n ){	
 	if( isNaN( n ) ) return 0;	

@@ -151,25 +151,7 @@ class Ot extends CI_Controller {
 		$this->load->helper( 'date' );
 
 		// Tramite types per ramo
-		
-		$ramo_tramite_types = array(
-			'1' => $this->work_order->getTypeTramite(1), // ramo
-			'2' => $this->work_order->getTypeTramite(2), // gmm
-			'3' => $this->work_order->getTypeTramite(3)  // autos
-			);
-
-		$all_tramite_types = '';
-		foreach ($ramo_tramite_types as $key => $value)
-		{
-			$all_tramite_types .= str_replace('<option value="">Seleccione</option>',
-				'<optgroup label="Ramo = %s">', $value) . '</optgroup>';
-			$ramo_tramite_types[$key] = str_replace('<option value="">Seleccione</option>',
-				'<option value="">Todos</option>', $value);
-			$ramo_tramite_types[$key] = sprintf("\n$key : '%s'", $ramo_tramite_types[$key]);
-
-		}
-		$all_tramite_types = sprintf($all_tramite_types, 'Vida', 'GMM', 'Autos');
-		$ramo_tramite_types[0] = "\n0 : '" . '<option value="">Todos</option>' . $all_tramite_types . "'";
+		$ramo_tramite_types = $this->work_order->get_tramite_types();
 
 		$add_js = '
 <script type="text/javascript">
@@ -212,6 +194,13 @@ implode(', ', $ramo_tramite_types) . '
 </style>',
 		  ),
 		  'scripts' => array(
+'
+<script type="text/javascript">
+	$( document ).ready( function(){ 
+		Config.findUrl = "ot/find.html";
+	});
+</script>
+',
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
 			'<script src="'.base_url().'ot/assets/scripts/list_js.js"></script>',
 			'<script src="'.base_url().'scripts/config.js"></script>',
@@ -233,6 +222,7 @@ implode(', ', $ramo_tramite_types) . '
 	
 	
 // Getting Filter
+// Copied and pasted to the code of agent/find:
 	public function find(){
 		
 		// If is not ajax request redirect
@@ -2050,7 +2040,8 @@ alert("changed!");
         
 /**
  *	Reports Popup
- **/	
+ **/
+// Copied and pasted to the code of agent/reporte_popup.html:
 	public function reporte_popup()
 	{
 			$work_order_ids = $this->input->post('wrk_ord_ids');  
@@ -2115,7 +2106,7 @@ alert("changed!");
 		$this->load->view('popup_report', $data);	
 	}
 
-// Popup pertaining to payments
+// Popup pertaining to payments (NOTE: copied and pasted of agent/.../payment_popup.html code)
 	public function payment_popup()
 	{
 		$data = array('values' => FALSE,
@@ -2744,7 +2735,7 @@ Display custom filter period
 		if ( $this->input->is_ajax_request() )
 		{
 			$filter_for = $this->input->post('filter_for');
-			$valid_filter_for_s = array('ot_index', 'ot_reporte', 'activities_report');
+			$valid_filter_for_s = array('ot_index', 'ot_reporte', 'activities_report', 'agent_profile');
 			if (in_array($filter_for, $valid_filter_for_s))
 			{
 				$this->period_filter_for = $filter_for;

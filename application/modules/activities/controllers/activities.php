@@ -128,9 +128,9 @@ class Activities extends CI_Controller {
 
 // Show all records	
 	public function index( $userid = null, $filter = null ){
-		
-		
-		
+// Copied / pasted to the code of agent/activity_details.html
+// But without the pagination below that does not work
+
 		// Check access teh user for create
 		if( $this->access == false ){
 				
@@ -171,7 +171,7 @@ class Activities extends CI_Controller {
 			$url = base_url().'activities/index/';
 			$user = $this->user->getForUpdateOrDelete($this->sessions['id']);
 		}
-		
+
 		$config['full_tag_open'] = '<div class="pagination pagination-right"><ul>'; 
 		$config['full_tag_close'] = '</ul></div>';
 		$config['first_link'] = false;
@@ -237,9 +237,8 @@ class Activities extends CI_Controller {
 
 // Create new user
 	public function create( $userid = null ){
-		
-				
-		
+// Copied / pasted to the code of agent/create_activity.html
+
 		// Check access the user for create
 		if( $this->access_create == false ){
 				
@@ -343,10 +342,7 @@ class Activities extends CI_Controller {
 			$user = $this->user->getForUpdateOrDelete($userid);
 		else
 			$user = $this->user->getForUpdateOrDelete($this->sessions['id']);
-		
-		
-		
-		
+
 		// Config view
 		$this->view = array(
 				
@@ -839,44 +835,8 @@ class Activities extends CI_Controller {
 		  'css' => array(
 		  	'<link href="'. $base_url . 'activities/assets/style/create.css" rel="stylesheet" media="screen">',
 			'<link href="'. $base_url . 'activities/assets/style/table_sorter.css" rel="stylesheet">',
-			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">',
-'<style>
-.sales-activity-results {
-	margin-left: 1em
-}
-.sales-activity-results tr th, td {
-	font-size: 12px;
-	border: 1px solid #000000;
-}
-.sales-activity-numeric {
-	text-align: right;
-	padding-right: 0.5em
-}
-.medium-grey {
-	background-color: #bfbfbf;
-}
-.light-grey {
-	background-color: #d9d9d9;
-}
-.medium-red {
-	background-color: #ff2500;
-}
-.medium-grey-body {
-	background-color: #dddac4;
-}
-.light-grey-body {
-	background-color: #eaf2dc;
-}
-.light-red-body {
-	background-color: #f4dbd9;
-}
-.light-green-body {
-	background-color: #d7e4ba;
-}
-.light-blue-body {
-	background-color: #b5dfea;
-}
-</style>'
+			'<link rel="stylesheet" href="'. $base_url .'ot/assets/style/jquery.fancybox.css">',
+			'<link rel="stylesheet" href="'. $base_url .'activities/assets/style/activity_sales.css">',
 		  ),
 		  'scripts' =>  array(
 			'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/jquery.validate.js"></script>',
@@ -905,6 +865,7 @@ class Activities extends CI_Controller {
 	}
 
 // Init actividades de venta report processing
+// Copied / pasted to the code of agent/agent_sales_activity/89.html
 	private function _init_report(&$agent_array, &$other_filters, &$default_week)
 	{
 		$data = array();

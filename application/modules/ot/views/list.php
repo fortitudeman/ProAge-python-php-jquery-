@@ -16,6 +16,9 @@
 $agents = str_replace('<option value="">Seleccione</option>', '<option value="">Todos</option>', $agents);
 $this->load->helper('filter');
 $selected_filter_period = get_selected_filter_period();
+
+$agent_profile_page = ($this->uri->segment(1) == 'agent');
+if (!$agent_profile_page):
 ?>
 <div>
     <ul class="breadcrumb">
@@ -86,10 +89,15 @@ $selected_filter_period = get_selected_filter_period();
                 <div class="span1"></div>
 
             </div>
-            
+<?php endif; ?>
+
             <div class="row"><br />
-                <form id="ot-form" method="post">                      	
+                <form id="ot-form" method="post">
+<?php if (!$agent_profile_page): ?>
                   <input class="filter-field" type="hidden" name="user" id="todas-mias" value="mios" />
+<?php else: ?>
+                  <input class="filter-field" type="hidden" name="user" id="todas-mias" value="todos" />
+<?php endif; ?>
 
                   <table class="filterstable">
                     <thead>
@@ -115,14 +123,15 @@ $selected_filter_period = get_selected_filter_period();
 						    <option value="3">Autos</option>
 						  </select>
 					    </th>
-					    <th>Gerente :<br />
+
+					    <th <?php if ($agent_profile_page) echo 'style="display: none"' ?>>Gerente :<br />
 						  <select class="filter-field" id="gerente" name="gerente">
-						  <option value="">Todos</option>
+						  <option value="" <?php if ($agent_profile_page) echo 'selected="selected"' ?>>Todos</option>
 						  <?php echo $gerentes ?>
 
 						  </select>
 					    </th>
-					    <th>Agente :<br />
+					    <th <?php if ($agent_profile_page) echo 'style="display: none"' ?>>Agente :<br />
 						  <select class="filter-field" id="agent" name="agent">
 						  <?php echo $agents ?>
 
@@ -180,12 +189,17 @@ $selected_filter_period = get_selected_filter_period();
 
               </tbody>
           </table>
+<?php if (!$agent_profile_page): ?>
 
 </div>
-
-<?php echo $period_form ?>
 
         </div>
     </div><!--/span-->
 
 </div><!--/row-->
+<?php endif ?>
+
+<div style="margin-top: 10em">
+<?php echo $period_form ?>
+
+</div>

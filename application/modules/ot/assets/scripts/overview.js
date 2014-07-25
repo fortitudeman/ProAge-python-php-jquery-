@@ -22,9 +22,8 @@ var proagesOverview = {};
 $( document ).ready( function(){
 
 	proagesOverview.getOts = function(Data) {
-
 		$.ajax({
-			url:  Config.base_url()+'ot/find.html',
+			url:  Config.base_url() + Config.findUrl,
 			type: "POST",
 			data: Data,
 			cache: false,

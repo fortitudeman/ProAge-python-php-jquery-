@@ -13,9 +13,10 @@
 
   	
 */
+$base_url = base_url();
+$agent_profile_page = ($this->uri->segment(1) == 'agent');
+if (!$agent_profile_page):
 ?>
-
-
 <div>
     <ul class="breadcrumb">
        
@@ -63,8 +64,6 @@
                           <strong>Listo: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
                     </div>
                 <?php endif; ?>
-               
-                
                 <?php if( $message['type'] == false ): ?>
                     <div class="alert alert-error">
                           <button type="button" class="close" data-dismiss="alert">×</button>
@@ -72,11 +71,79 @@
                           <strong>Error: </strong> <?php  echo $message['message']; // Show Dinamical message error ?>
                     </div>
                 <?php endif; ?>
-            
-			
-			
 			<?php endif; ?>
-                                            
+<?php endif; ?>
+
+<?php if ($agent_profile_page):
+	if ( isset($_POST['periodo']) &&
+		($_POST['periodo'] >= 1) && ($_POST['periodo'] <= 4) )
+	{
+		$selected_filter_period = array(1 => '', 2 => '', 3 => '', 4 => '');
+		$selected_filter_period[$_POST['periodo']] = ' selected="selected"';
+	}
+	else
+		$selected_filter_period = get_selected_filter_period();
+
+	$current_page = $this->uri->segment(2);
+	if ($current_page === FALSE)
+		$current_page = 'index';
+	$span_count = 0;
+?>
+<div style="padding-bottom: 3.5em">
+<?php if ($this->access_create_activity): ?>
+                  <a href="<?php echo $base_url ?>agent/create_activity/<?php echo $this->user_id ?>.html" id="add-activity" class="span4 subpage-link">
+                    <i style="color: #365b9d; font-size: x-large" class="icon-plus" title="Capturar nuevo registro"></i>
+                    Capturar nuevo registro
+                  </a>
+<?php else:
+	$span_count += 4;
+endif; ?>
+<?php if ($this->access_activity_list): ?>
+                  <a href="<?php echo $base_url ?>agent/activity_details/<?php echo $this->user_id ?>.html" id="view-details" class="span4 subpage-link subpage-link-current">
+                    <i style="color: #365b9d; font-size: x-large" class="icon-zoom-in" title="Ver detalle"></i>
+                    Ver detalle
+                  </a>
+<?php else:
+	$span_count += 4;
+endif;
+	$span_count +=4;
+ ?>
+                  <span class="span<?php echo $span_count?>"></span>
+</div>
+
+                  <form id="sales-activity-form" action="<?php echo current_url() ?>" class="row form-horizontal" method="post">
+                      <fieldset>
+                          <input type="hidden" id="activity-view" name="activity_view" value="normal" />
+                          <div class="row">
+                            <div class="span5 offset1">
+                              <div>
+                                <select id="periodo" name="periodo" title="Período" >
+                                  <option value="2" <?php echo $selected_filter_period[2] ?>>Una Semana</option>
+                                  <option value="1" <?php echo $selected_filter_period[1] ?>>Mes actual</option>
+                                  <option value="3" <?php echo $selected_filter_period[3] ?>>Año actual</option>
+                                  <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
+                                </select>
+                                <span>
+                                    &nbsp;&nbsp;<i style="cursor: pointer; vertical-align: top" class="icon-calendar" id="cust_update-period" title="Click para editar el período personalizado"></i>
+                                    &nbsp;&nbsp;<i style="cursor: pointer; vertical-align: top; color: #06be1d; display: none" class="icon-calendar" id="week_update-period" title="Click para seleccionar otra semana"></i>
+                                </span>
+                              </div>		  
+                              <div id="semana-container" <?php if (!$selected_filter_period[2]) echo 'style="display: none"' ?> title="Seleccione una Semana">
+                                <div id="week"></div>
+                                <label></label> <span id="startDate"></span>  <span id="endDate"></span>
+                                 <input id="begin" name="begin" type="hidden" readonly="readonly" value="<?php echo set_value('begin', isset($other_filters['begin']) ? $other_filters['begin'] : '')  ?>">
+                                 <input id="end" name="end" type="hidden" readonly="readonly" value="<?php echo set_value('end', isset($other_filters['end']) ? $other_filters['end'] : '')  ?>">
+                              </div>
+                            </div>
+
+                            <div class="span6">
+			                  <input type="hidden" id="agent-name" name="agent_name" value="<?php echo $other_filters['agent_name']; ?>" />
+                          </div>
+                      </fieldset>
+                    </form>
+<div>Actividades <?php echo $report_period ?> :</div>
+<?php endif; ?>
+
         	<?php if( !empty( $data ) ): ?>
             <table class="table table-striped table-bordered bootstrap-datatable datatable">
               <thead>
@@ -115,12 +182,12 @@
                     <td class="center"><?php echo $value['last_updated'] ?></td>
                     <td>
                          <?php if( $access_update == true ): ?>
-                        <a class="btn btn-info" href="<?php echo base_url() ?>activities/update/<?php echo $value['activity_id'] ?><?php if( !empty( $userid ) ) echo '/'.$userid  ?>.html" title="Editar Actividad">
+                        <a target="_blank" class="btn btn-info" href="<?php echo base_url() ?>activities/update/<?php echo $value['activity_id'] ?><?php if( !empty( $userid ) ) echo '/'.$userid  ?>.html" title="Editar Actividad">
                             <i class="icon-edit icon-white"></i>            
                         </a>
                         <?php endif; ?>
                         <?php if( $access_delete == true ): ?>
-                        <a class="btn btn-danger" href="<?php echo base_url() ?>activities/delete/<?php echo $value['activity_id'] ?><?php if( !empty( $userid ) ) echo '/'.$userid  ?>.html" title="Eliminar Actividad">
+                        <a target="_blank" class="btn btn-danger" href="<?php echo base_url() ?>activities/delete/<?php echo $value['activity_id'] ?><?php if( !empty( $userid ) ) echo '/'.$userid  ?>.html" title="Eliminar Actividad">
                             <i class="icon-trash icon-white"></i> 
                         </a>
                         <?php endif; ?>
@@ -140,7 +207,7 @@
                   <strong>Atención: </strong> No hay registro de actividades. . <a href="<?php echo base_url() ?>activities/create<?php if( !empty( $userid ) ) echo '/'.$userid  ?>.html" class="btn btn-link">Haga click aquí para capturar un nuevo registro</a>
             </div>
 		  <?php endif; ?>
-                           
+<?php if (!$agent_profile_page): ?>
         </div>
     </div><!--/span-->
 
@@ -162,4 +229,10 @@
     </div><!--/row-->
 
 <?php endif; ?>
+<?php else: ?>
+<div style="margin-top: 10em">
+<?php echo $period_form ?>
+
+</div>
+<?php endif;?>
 

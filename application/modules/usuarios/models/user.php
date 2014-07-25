@@ -3655,5 +3655,57 @@ AND
 			}
 		}
 	}
+
+	public function get_agent_by_user($user_id)
+	{
+		if( empty( $user_id ) ) return false;
+
+		
+		$this->db->select( 'users.*, agents.connection_date, agents.id as agent_id' );
+		$this->db->from( 'users' );
+		$this->db->join( 'agents', 'agents.user_id=users.id' );		
+		$this->db->where( 'users.id =', $user_id );
+		$this->db->limit(1);
+		$query = $this->db->get();
+
+		if ($query->num_rows() == 0)
+			return FALSE;
+
+		foreach ($query->result() as $row)
+		{
+			if ( !empty( $row->company_name ) )
+				$row->agent_name = $row->company_name;
+			else
+				$row->agent_name = $row->name . ' ' . $row->lastnames;
+			$row->generacion = '';
+
+			if( $row->connection_date != '0000-00-00' and $row->connection_date != '' )
+			{
+				$resultado =  date( 'Y', strtotime( $row->connection_date ) );
+
+				//Consolidado: < 3 años < hoy
+				if( $resultado < ( date( 'Y' )-3 ))
+					$row->generacion = 'Consolidado';  
+
+				//Generación 1: Fecha de conexión > 1 año < hoy
+				if( $resultado > ( date( 'Y' )-1 )  )
+					$row->generacion = 'Generación 1';
+            
+				//Generación 2: fecha de conexión > 1  año y < 2 años
+				if( $resultado >= ( date( 'Y' )-2 ) and $resultado <= ( date( 'Y' )-1 ) )
+					$row->generacion = 'Generación 2';
+      
+				//Generación 3: fecha de conexión > 2 años y < 3 años <option value="5">Generación 3</option>
+				if( $resultado >= ( date( 'Y' )-3 ) and $resultado <= ( date( 'Y' )-2 ) ) 
+					$row->generacion = 'Generación 3';
+			}
+			else
+				$row->generacion = 'Generación 1';
+
+			$row->uids = $this->getAgentsUids( $row->agent_id );
+			return $row;
+		}
+		return FALSE;
+	}
 }
 ?>

@@ -60,7 +60,7 @@ $( document ).ready(function() {
 		.on("sortEnd",function(e, t) {
 		});
 
-		$(".solicitudes-negocios").attr("title", "Haga click aqui para ver los detalles")
+	$(".solicitudes-negocios").attr("title", "Haga click aqui para ver los detalles")
 		.on("click", function() {
 			var current = $(this);
 			var parentTrId = current.parents("tr").attr("id");

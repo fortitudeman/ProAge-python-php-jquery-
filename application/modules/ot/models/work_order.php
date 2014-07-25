@@ -1822,5 +1822,29 @@ class Work_order extends CI_Model{
 		return $result;
 	}
 
+// Tramite type dropdown
+	public function get_tramite_types()
+	{
+		// Tramite types per ramo
+		$ramo_tramite_types = array(
+			'1' => $this->getTypeTramite(1), // vida
+			'2' => $this->getTypeTramite(2), // gmm
+			'3' => $this->getTypeTramite(3)  // autos
+			);
+
+		$all_tramite_types = '';
+		foreach ($ramo_tramite_types as $key => $value)
+		{
+			$all_tramite_types .= str_replace('<option value="">Seleccione</option>',
+				'<optgroup label="Ramo = %s">', $value) . '</optgroup>';
+			$ramo_tramite_types[$key] = str_replace('<option value="">Seleccione</option>',
+				'<option value="">Todos</option>', $value);
+			$ramo_tramite_types[$key] = sprintf("\n$key : '%s'", $ramo_tramite_types[$key]);
+
+		}
+		$all_tramite_types = sprintf($all_tramite_types, 'Vida', 'GMM', 'Autos');
+		$ramo_tramite_types[0] = "\n0 : '" . '<option value="">Todos</option>' . $all_tramite_types . "'";
+		return $ramo_tramite_types;
+	}
 }
 ?>
