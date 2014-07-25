@@ -135,6 +135,7 @@ class Agent extends CI_Controller {
 						default:
 							break;
 					}
+					break;
 				default:
 					break;
 			}
