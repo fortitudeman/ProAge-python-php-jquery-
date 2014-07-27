@@ -36,6 +36,9 @@ class Agent extends CI_Controller {
 	public $access_simulator = FALSE;
 
 	public $access_activate = FALSE;
+	public $access_ot_report = FALSE;
+	public $access_update_ot = FALSE;
+	public $access_delete_ot = FALSE;
 
 	public $access_create_activity = FALSE;
 	public $access_activity_list = FALSE;
@@ -113,8 +116,23 @@ class Agent extends CI_Controller {
 					$this->access_simulator = TRUE;
 					break;
 				case 'Orden de trabajo':
-					if ($value['action_name'] = 'Activar/Desactivar' )
-						$this->access_activate = TRUE;
+					switch ($value['action_name'])
+					{
+						case 'Activar/Desactivar':
+							$this->access_activate = TRUE;
+							break;
+						case 'Ver reporte':
+							$this->access_ot_report = TRUE;
+							break;
+						case 'Editar':
+							$this->access_update_ot = TRUE;
+							break;
+						case 'Eliminar':
+							$this->access_delete_ot = TRUE;
+							break;
+						default:
+							break;
+					}
 					break;
 				case 'Actividades':
 					$this->access_activity_list = TRUE;
@@ -278,6 +296,16 @@ class Agent extends CI_Controller {
 	public function agent_report()
 	{
 		$this->_init_profile();
+		if ( $this->access_ot_report == false )
+		{	
+			// Set false message		
+			$this->session->set_flashdata( 'message', array
+			( 
+				'type' => false,	
+				'message' => 'No tiene permisos para ver el reporte "Orden de trabajo" en la sección "Perfil de agente", Informe a su administrador para que le otorge los permisos necesarios.'
+			));	
+			redirect( '/', 'refresh' );
+		}
 
 		$filter = array('ramo' => 1, 'periodo' => get_filter_period());
 		if (count($_POST))
@@ -731,8 +759,8 @@ implode(', ', $ramo_tramite_types) . '
 	public function payment_popup()
 	{
 		$data = array('values' => FALSE,
-			'access_update' => $this->access_update,
-			'access_delete' => $this->access_delete,
+			'access_update' => $this->access_update_ot,
+			'access_delete' => $this->access_delete_ot,
 		);
 		$this->load->model('usuarios/user');
 		$filter = array();
