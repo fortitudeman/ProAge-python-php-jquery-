@@ -109,21 +109,16 @@ class Simulator extends CI_Controller {
 
 	// Show all records	
 	private function _index_common( $userid = null, $ramo = null ){
-		
-		// Check access teh user for create
-		if( $this->access == false ){
-				
+
+		// Check access user access
+		if (!$this->access && ($userid != $this->sessions['id']) )
+		{
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Simulador", Informe a su administrador para que le otorge los permisos necesarios.'
-							
-			));	
-			
-			
+				'message' => 'No tiene permisos para ingresar en esta sección "Simulador" o no tiene permisos ver el simulator de este usuario. Informe a su administrador.'
+			));
 			redirect( 'home', 'refresh' );
-		
 		}
 		$simulator = 'vida';
 		if( $ramo == 1 ) $simulator = 'vida';

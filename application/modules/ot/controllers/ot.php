@@ -2484,17 +2484,8 @@ alert("changed!");
 	}
 
 // Common to Ver and Update OT	
-	private function _update_ver( $function, $id = null ){
-	
-		// Check access to the function
-		if ( $this->access_update == false ) {
-
-			$this->session->set_flashdata( 'message', array(
-				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Editar", Informe a su administrador para que le otorge los permisos necesarios.'
-			));
-			redirect( 'ot', 'refresh' );
-		}
+	private function _update_ver( $function, $id = null )
+	{
 		$this->load->model('work_order');   
 		$ot = $this->work_order->getWorkOrderById(  $id );
 
@@ -2503,6 +2494,33 @@ alert("changed!");
 			$this->session->set_flashdata( 'message', array(
 				'type' => false,	
 				'message' => 'No existe esta orden de trabajo.'
+			));
+			redirect( 'ot', 'refresh' );
+		}
+
+		if (!$this->access_update)
+		{
+			foreach ($ot[0]['agents'] as $ot_agent)
+			{
+				if (($ot_agent['user_id'] == $this->sessions['id']) &&
+					($function == 'ver'))
+				{
+					$this->access_update = TRUE;
+					$break;
+				}
+			}
+		}
+
+		// Check access to the function
+		if ( !$this->access_update )
+		{
+			if ($function == 'ver')
+				$message = 'No tiene permisos para ingresar la sección "Ver Orden de trabajo" o no puede ver esta Orden de trabajo. Informe a su administrador.';
+			else
+				'No tiene permisos para ingresar la sección "Orden de trabajo Editar". Informe a su administrador para que le otorge los permisos necesarios.';
+			$this->session->set_flashdata( 'message', array(
+				'type' => false,	
+				'message' => $message
 			));
 			redirect( 'ot', 'refresh' );
 		}

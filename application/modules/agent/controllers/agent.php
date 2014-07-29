@@ -304,7 +304,7 @@ class Agent extends CI_Controller {
 				'type' => false,	
 				'message' => 'No tiene permisos para ver el reporte "Orden de trabajo" en la sección "Perfil de agente", Informe a su administrador para que le otorge los permisos necesarios.'
 			));	
-			redirect( '/', 'refresh' );
+			redirect( 'home', 'refresh' );
 		}
 
 		$filter = array('ramo' => 1, 'periodo' => get_filter_period());
@@ -485,17 +485,6 @@ implode(', ', $ramo_tramite_types) . '
 	public function agent_sales_activity()
 	{
 		$this->_init_profile();
-
-			// Check user privilege
-		if( !$this->access_sales_activities)
-		{
-			// Set false message		
-			$this->session->set_flashdata( 'message', array( 
-				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Actividad de ventas". Informe a su administrador para que le otorgue los permisos necesarios.'
-			));	
-			redirect( 'agent/index/' . $this->user_id, 'refresh' );
-		}
 
 		$this->misc_filters['agent_name'] = $this->agent->agent_id;
 
@@ -738,17 +727,19 @@ implode(', ', $ramo_tramite_types) . '
 		if (($this->user_id = $this->uri->segment(3)) === FALSE)
 			show_404();
 
-		// Check access
+		// Allow user to access his/her agent profile page
+		$this->access = $this->access || ($this->user_id == $this->sessions['id']);
 		if( $this->access == false )
 		{
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
 				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Perfil Agente", Informe a su administrador para que le otorgue los permisos necesarios.'
-			));	
+				'message' => 'No tiene permisos para ingresar en esta sección "Perfil Agente" o para ingresar el perfil del usuario. Informe a su administrador.'
+			));
 			redirect( 'home', 'refresh' );
 		}
-
+		$this->access_ot_report = $this->access_ot_report || ($this->user_id == $this->sessions['id']);
+		
 		$this->load->model( array( 'usuarios/user', 'activities/activity', 'simulator/simulators', 'ot/work_order' ) );
 		$this->agent = $this->user->get_agent_by_user( (int) $this->user_id );
 		if ($this->agent === FALSE)

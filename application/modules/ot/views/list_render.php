@@ -13,6 +13,7 @@
 
   	
 */
+$agent_profile_page = ($this->uri->segment(1) == 'agent');
 ?>
                 <?php  if( !empty( $data ) ): ?>
                 <?php  foreach( $data as $value ):  ?>
@@ -37,6 +38,9 @@
 						'&nbsp;' .
 						anchor('ot/ver_ot/' . $value['id'], '<i class="icon-eye-open" title="Ver OT '. $value['uid']. '"></i>', array('target' => '_blank', 'title' => 'Ver'));
 				}
+				elseif ($agent_profile_page)
+					$ver_update_ot = 
+						'&nbsp;' . anchor('ot/ver_ot/' . $value['id'], '<i class="icon-eye-open" title="Ver OT '. $value['uid']. '"></i>', array('target' => '_blank', 'title' => 'Ver'));
 				else
 					$ver_update_ot = '';
 				?>

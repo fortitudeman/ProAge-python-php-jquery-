@@ -36,7 +36,9 @@ $selected_filter_period[$filter['periodo']] = ' selected="selected"';
                         <option value="3" <?php echo $selected_filter_period[3] ?>>Año</option>
                         <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
                     </select>
-<?php if ($this->access_simulator):
+<?php
+//if ($this->access_simulator):
+if (TRUE):
 $segments = $this->uri->rsegment_array();
 $segments[1] = 'simulator';
 $segments[2] = 'index';
