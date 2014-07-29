@@ -84,7 +84,7 @@ switch ($filter['ramo'])
 <table class="sortable altrowstable tablesorter" id="sorter-report1" style="width:100%;">
     <thead class="head">
         <tr>
-            <th id="table_agents" class="header_manager" style="width:auto; text-align:center; ">Agentes</th>
+            <th id="table_agents" class="header_manager" style="width:auto; text-align:center; display: none">Agentes</th>
             <th id="total_negocio" class="header_manager" style="width:70px; text-align:center; ">Negocios Pagados</th>
             <th id="total_negocio_pai" class="header_manager" style="width:70px; text-align:center; ">Negocios<br>PAI</th>
             <th id="total_primas_pagadas" class="header_manager" style="width:100px; text-align:center; ">Primas<br>Pagadas</th>
@@ -111,7 +111,7 @@ switch ($filter['ramo'])
 		$prima = (float)($value['prima'] + $value['tramite']['adjusted_prima'] + $primas_pendientes_pago);
 	?>
         <tr id="tr_<?php echo $value['id'] ?>">
-            <td class="">
+            <td class="" style="display: none">
                 <div style="color: #1186C1; font-size: 14px;" id="<?php echo $value['id'] ?>">
                     <?php echo $value['name'] ?>
                 </div> 
@@ -180,7 +180,7 @@ switch ($filter['ramo'])
 <table class="sortable altrowstable tablesorter" id="sorter-report3" style="width:100%;">
     <thead  class="head">
         <tr>
-            <th id="table_agents" class="header_manager" style="width:100px">Agentes</th>
+            <th id="table_agents" class="header_manager" style="width:100px; display: none">Agentes</th>
             <th id="total_negocio" class="header_manager" style="width:70px;">Iniciales </th>
             <th id="total_negocio_pai" class="header_manager" style="width:70px;">Renovación</th>
             <th id="total_primas_pagadas" class="header_manager" style="width:100px;">Totales</th>
@@ -190,7 +190,7 @@ switch ($filter['ramo'])
     <tbody class="tbody">
       <?php  if( !empty( $value ) ): ?>
         <tr>
-            <td style="width:100px">
+            <td style="width:100px; display: none">
                 <div style="color: #1186C1; font-size: 14px;" id="<?php echo $value['id'] ?>">
                     <?php echo $value['name'] ?>
                 </div> 

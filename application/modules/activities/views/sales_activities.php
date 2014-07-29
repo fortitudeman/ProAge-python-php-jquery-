@@ -155,7 +155,10 @@ endif;
 <table class="sortable altrowstable tablesorter sales-activity-results" id="sales-activity-normal">
 <thead class="head">
 <tr>
-<th rowspan="2" class="medium-grey">AGENTE</th>
+<th rowspan="2" class="medium-grey"';
+		if ($agent_profile_page)
+			echo ' style="display: none"';
+		echo '>AGENTE</th>
 <th rowspan="2" class="medium-grey">N° DE SEMANAS REPORTADAS</th>
 <th colspan="2" class="light-grey">CITAS</th><th colspan="2" class="light-grey">ENTREVISTAS</th>
 <th colspan="2" class="light-grey">PROSPECTOS</th>
@@ -190,7 +193,10 @@ endif;
 
 			echo '
 <tr id="normal-agent-id-' . $key . '_' . $value['user_id'] . '">
-	<td rowspan="2"><a href="#" class="toggle">' . $value['name'] . '</a></td>
+	<td rowspan="2"';
+			if ($agent_profile_page)
+				echo ' style="display: none"';
+			echo '><a href="#" class="toggle">' . $value['name'] . '</a></td>
 	<td class="sales-activity-numeric">' . $value['weeks_reported'] . '</td>
 	<td class="medium-grey-body sales-activity-numeric">' . $value['citaT'] . '</td>
 	<td class="medium-grey-body sales-activity-numeric">' . number_format($value['citaP'], 2) . '</td>
@@ -252,7 +258,10 @@ endif;
 <table class="sortable altrowstable tablesorter sales-activity-results" id="sales-activity-efectividad">
 <thead class="head">
 <tr>
-<th rowspan="2" class="medium-grey">AGENTE</th>
+<th rowspan="2" class="medium-grey"';
+		if ($agent_profile_page)
+			echo ' style="display: none"';
+		echo '>AGENTE</th>
 <th rowspan="2" class="medium-grey">N° DE SEMANAS REPORTADAS</th>
 <th colspan="3" class="light-grey">CITAS - ENTREVISTAS</th>
 <th colspan="2" class="light-grey">PROSPECTOS POR ENTREVISTA</th>
@@ -284,7 +293,10 @@ endif;
 				
 			echo '
 <tr id="efectividad-agent-id-' . $key . '_' . $value['user_id'] . '">
-	<td rowspan="2"><a href="#" class="toggle">' . $value['name'] . '</a></td>
+	<td rowspan="2"';
+			if ($agent_profile_page)
+				echo ' style="display: none"';
+			echo '><a href="#" class="toggle">' . $value['name'] . '</a></td>
 	<td class="sales-activity-numeric">' . $value['weeks_reported'] . '</td>
 	<td class="medium-grey-body sales-activity-numeric">' . $value['citaT'] . '</td>
 	<td class="light-grey-body sales-activity-numeric">' . $value['interviewT'] . '</td>

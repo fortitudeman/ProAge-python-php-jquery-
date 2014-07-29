@@ -26,7 +26,7 @@ if ($current_page === FALSE)
 
 <div class="row-fluid sortable">
     <div class="box span12">      
-        <div class="box-content" style="padding-left: 2em">
+        <div class="box-content" style="padding-left: 3em"> <!-- To tweak left padding -->
             <?php // Show Messages ?>            
             <?php if (isset($message['type'])): ?>            
                 <?php if ($message['type'] == true): ?>
@@ -61,7 +61,7 @@ if( $data->connection_date != '0000-00-00' and $data->connection_date != ''): ?>
 	En proceso de conexión
 <?php endif; ?> 
                 </div>
-                <div class="span4">
+                <div class="span4" style="text-align: right">
 <?php if( !empty( $data->picture ) ): ?>
 						<img src="<?php echo $base_url . 'usuarios/assets/profiles/' . $data->picture ?>" width="100px" />
 <?php endif; ?>
