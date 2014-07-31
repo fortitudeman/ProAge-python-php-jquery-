@@ -39,6 +39,7 @@ class Agent extends CI_Controller {
 	public $access_ot_report = FALSE;
 	public $access_update_ot = FALSE;
 	public $access_delete_ot = FALSE;
+	public $access_create_ot = FALSE;
 
 	public $access_create_activity = FALSE;
 	public $access_activity_list = FALSE;
@@ -118,6 +119,9 @@ class Agent extends CI_Controller {
 				case 'Orden de trabajo':
 					switch ($value['action_name'])
 					{
+						case 'Crear':
+							$this->access_create_ot = TRUE;
+							break;						
 						case 'Activar/Desactivar':
 							$this->access_activate = TRUE;
 							break;
@@ -860,6 +864,7 @@ implode(', ', $ramo_tramite_types) . '
 		$data = $this->work_order->find( TRUE );
 
 		$view_data = array('data' => $data);
+		$this->access_create = $this->access_create_ot;
 		$this->load->view('ot/list_render', $view_data);
 	}
 

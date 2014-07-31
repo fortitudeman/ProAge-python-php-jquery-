@@ -126,10 +126,12 @@ else echo '-';
                 <?php else: ?>
 		        <tr>
                 	<td colspan="8">
+<?php if ($this->access_create): ?>
                         <div class="alert alert-block">
                               <button type="button" class="close" data-dismiss="alert">×</button>
                               <strong>Atención: </strong> No se encontrarón registros, agregar uno <a href="<?php echo base_url() ?>ot/create.html" class="btn btn-link">Aquí</a>
                         </div>
+<?php endif; ?>
                 	</td>
                 </tr>
                                 

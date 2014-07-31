@@ -47,7 +47,7 @@ $simulator_url = $base_url . implode('/', $segments) . '/1.html';
                     <a style="margin-left: 3em" href="<?php echo $simulator_url; ?>" class="btn btn-primary" target="_blank">
                     VER META</a>
                     <a style="margin-left: 3em" href="<?php echo $simulator_url; ?>" class="btn btn-primary" target="_blank">
-                    SIMULAR INGRESSO</a>
+                    SIMULAR INGRESO</a>
 <?php endif; ?>
                 </form>
  <!--
