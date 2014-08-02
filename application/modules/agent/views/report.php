@@ -55,7 +55,7 @@ $simulator_url = $base_url . implode('/', $segments) . '/1.html';
                 <a href="javascript:void(0);" class="download"><img src="<?php echo $base_url ?>ot/assets/images/down.png"></a>
 <?php endif; ?>
  -->
- 
+
 <?php
 $post_data = isset($_POST['query']) ? ',prev_post:'. json_encode($_POST['query']) : '';
 ?>
@@ -137,7 +137,7 @@ switch ($filter['ramo'])
 <?php if (!$value['tramite']): ?>
                 <span class="numeros fancybox">0</span>
 <?php else: ?>
-                <a class="numeros fancybox"   style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo $_POST; ?>")' <?php }?>>
+                <a class="numeros fancybox"   style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo $filter['ramo']; ?>")' <?php }?>>
                     <?php if(isset($value['tramite']['count'])) echo $value['tramite']['count']; else echo 0; ?>
                 </a>
 <?php endif; ?>
@@ -146,7 +146,7 @@ switch ($filter['ramo'])
 <?php if (!$value['tramite']): ?>
                 <span class="numeros fancybox">$0.00</span>
 <?php else: ?>
-                <a class="numeros fancybox" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo $_POST; ?>")' <?php }?>>
+                <a class="numeros fancybox" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo $filter['ramo']; ?>")' <?php }?>>
                     $<?php if( isset( $value['tramite']['adjusted_prima'] ) ) echo number_format($value['tramite']['adjusted_prima'],2); else echo number_format ('0',2); ?>
                 </a>
 <?php endif; ?>
@@ -155,7 +155,7 @@ switch ($filter['ramo'])
 <?php if (!$value['aceptadas']): ?>
                 <span class="numeros fancybox">0</span>
 <?php else: ?>
-                <a class="numeros fancybox"  style="text-align:center;" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $_POST; ?>")' <?php }?>>
+                <a class="numeros fancybox"  style="text-align:center;" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $filter['ramo']; ?>")' <?php }?>>
                     <?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?>
                 </a>
 <?php endif; ?>
@@ -164,7 +164,7 @@ switch ($filter['ramo'])
 <?php if (!$value['aceptadas']): ?>
                 <span class="numeros fancybox">$0.00</span>
 <?php else: ?>
-                <a class="numeros fancybox"  <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $_POST; ?>")' <?php }?>>
+                <a class="numeros fancybox"  <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $filter['ramo']; ?>")' <?php }?>>
                     $<?php if( isset( $value['aceptadas']['adjusted_prima'] ) ) echo number_format($value['aceptadas']['adjusted_prima'],2); else  echo number_format($value['aceptadas'],2); ?>
                 </a>
 <?php endif; ?>
