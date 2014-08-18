@@ -13,14 +13,7 @@
 
 
  */
-if ( isset($_POST['query']['periodo']) &&
-	($_POST['query']['periodo'] >= 1) && ($_POST['query']['periodo'] <= 4) )
-{
-	$selected_filter_period = array(1 => '', 2 => '', 3 => '', 4 => '');
-	$selected_filter_period[$_POST['query']['periodo']] = ' selected="selected"';
-}
-else
-	$selected_filter_period = get_selected_filter_period();
+$selected_period = get_filter_period();
 ?>
 
 <div>
@@ -72,24 +65,18 @@ else
                             <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" <?php if ($other_filters['ramo'] == 3) echo 'style="color:#06F"' ?>>Autos</a>
 
                             <p class="line">&nbsp; </p>
-                            <div>&nbsp;&nbsp;<i style="cursor: pointer" class="icon-calendar" id="cust_update-period" title="Click para editar el período personalizado"></i></div>
-                            <form id="form" method="post">                      	
+                           <form id="form" method="post">
                                 <input type="hidden" name="query[ramo]" id="ramo" value="<?php echo $other_filters['ramo'] ?>" />
 
                                 <table  class="filterstable" style="width:99%;">
                                     <thead>
                                         <tr style="vertical-align: top;">
                                             <th>
-                                                <select id="periodo" name="query[periodo]" onchange="this.form.submit();">
-                                                    <option value="1" <?php echo $selected_filter_period[1] ?>>Mes</option>
-<?php if (($other_filters['ramo'] == 1) || ($other_filters['ramo'] == 3)): ?> 
-                                                    <option value="2" <?php echo $selected_filter_period[2] ?> class="set_periodo">Trimestre</option>
-<?php else: ?>
-                                                    <option value="2" <?php echo $selected_filter_period[2] ?> class="set_periodo">Cuatrimestre</option>
-<?php endif; ?>
-                                                    <option value="3" <?php echo $selected_filter_period[3] ?>>Año</option>
-                                                    <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
-                                                </select>
+<?php echo $period_fields ?>
+<select id="periodo_form" name="periodo" style="width: 175px" title="Período">
+	  <option value="<?php echo $selected_period ?>"></option>
+</select>
+<input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
                                             </th>
                                             <th>
                                                 <input type="hidden" id="gerente_value" value="<?php echo $other_filters['gerente']; ?>" />
@@ -166,9 +153,6 @@ else
                                                           
 
                         </div> <!-- #main -->
-
-<?php echo $period_form ?>
-
                     </div> <!-- #main-container -->
                 </div>                                                                                                 	
             </div>

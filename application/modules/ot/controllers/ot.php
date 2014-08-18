@@ -1891,10 +1891,14 @@ implode(', ', $ramo_tramite_types) . '
 
 		$agent_array = array();
 		$other_filters = array();
+		$this->load->helper( array('ot', 'filter' ));
 		$data = $this->_init_report($agent_array, $other_filters);
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+		}
 
-		$this->load->helper( 'ot' );
-		
 		// Load model
 		$this->load->model( array( 'usuarios/user', 'work_order' ) );
 
@@ -1963,6 +1967,7 @@ alert("changed!");
 	});
 </script>
 ';
+
 		// Config view
 		$this->view = array(
 				
@@ -1998,7 +2003,7 @@ alert("changed!");
 			'<script src="'.base_url().'scripts/config.js"></script>'	,	
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
 			'<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'scripts/custom-period.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'scripts/select_period.js"></script>',
 			$inline_js,
 '
 <script type="text/javascript">
@@ -2013,22 +2018,13 @@ alert("changed!");
 			}
 		});
 	}
-	$( document ).ready( function(){ 
-		$("#periodo").bind( "click", function(){
-			$("#periodo option:selected").each(function () {
-				if ($(this).val() == 4) {
-					$( "#cust_period-form" ).dialog( "open" );
-				}
-			});
-		})
-	});
 </script>
 '		  ),
 		  'manager' => $this->user->getSelectsGerentes2(),
 		  'content' => 'ot/report', // View to load
 		  'data' => $data,
 		  'tata' => $_POST,
-		  'period_form' => $this->show_custom_period(), // custom period configuration form
+		  'period_fields' => show_period_fields('ot_reporte', $other_filters['ramo']),
 		  'other_filters' => $other_filters,
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		);
@@ -2430,7 +2426,7 @@ alert("changed!");
 		{
 			if ( isset($_POST['query']['periodo']) && $this->form_validation->is_natural_no_zero($_POST['query']['periodo']) &&
 				($_POST['query']['periodo'] <= 4) )
-			set_filter_period($_POST['query']['periodo']);
+				set_filter_period($_POST['query']['periodo']);
 
 			$filters_to_save = array();
 			if ( isset($_POST['query']['ramo']) && $this->form_validation->is_natural_no_zero($_POST['query']['ramo']) &&

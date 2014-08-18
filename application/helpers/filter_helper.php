@@ -85,7 +85,7 @@ if ( ! function_exists('show_custom_period'))
 */
 if ( ! function_exists('update_custom_period'))
 {
-	function update_custom_period($from, $to)
+	function update_custom_period($from, $to, $update_filter_for = TRUE)
 	{
 		$result = 0;
 		if (($from !== FALSE) && ($to !== FALSE))
@@ -98,17 +98,19 @@ if ( ! function_exists('update_custom_period'))
 				checkdate ( $to_array[1], $to_array[2], $to_array[0]) &&
 				( $CI->period_filter_for !== FALSE ))
 			{
-				$CI->session->set_userdata( array(
-//					'custom_period_from' => $from,
-//					'custom_period_to' => $to,
-//					'default_period_filter' => 4
+				$new_sess_data = array(
 					'custom_period_from_' . $CI->period_filter_for => $from,
 					'custom_period_to_' . $CI->period_filter_for => $to,
-					'default_period_filter_' . $CI->period_filter_for => 4
-				));
+				);
+				if ($update_filter_for)
+				{
+					$new_sess_data['default_period_filter_' . $CI->period_filter_for] = 4;
+					$CI->default_period_filter = 4;
+				}
+				$CI->session->set_userdata( $new_sess_data);
 				$CI->custom_period_from = $from;
 				$CI->custom_period_to = $to;
-				$CI->default_period_filter = 4;
+
 				$result = 1;
 			}
 		}
@@ -365,6 +367,44 @@ alert("changed!");
 		return ($inline_js);
 	}
 }
-/* End of file ot.php */
+/*
+Display fields related to period filter selection
+*/
+if ( ! function_exists('show_period_fields'))
+{
+	function show_period_fields($filter_for, $ramo = 1)
+	{
+// $filter_for = 'ot_index', 'ot_reporte', 'activities_report', 'agent_profile' etc. depending on the page
+		$CI =& get_instance();
+		$CI->load->helper('activities/date_report');
+		$default_week = get_calendar_week();
+		$data = array(
+			'from' => $CI->custom_period_from,
+			'to' => $CI->custom_period_to,
+			'filter_for' => $filter_for,
+			'ramo' => $ramo,
+			'begin' => $default_week['start'],
+			'end' => $default_week['end']
+		);
+		if ( ( $data['from'] === FALSE ) || ( $data['to'] === FALSE ) )
+		{
+			$CI->load->helper('tri_cuatrimester');
+			if ($ramo == 1) // Vida -> current trimestre
+			{
+				$rank = floor((date('m') - 1) / 3) + 1;
+				$result = get_tri_cuatrimester( $rank, 'trimestre' );
+			}
+			else	// -> current cuatrimestre
+			{
+				$rank = floor((date('m') - 1) / 4) + 1;
+				$result = get_tri_cuatrimester( $rank, 'cuatrimestre' );
+			}
+			$data['from'] = substr($result['begind'], 0, 10);
+			$data['to'] = substr($result['end'], 0, 10);
+		}
+		return $CI->load->view('select_period', $data, TRUE);
+	}
+}
+/* End of file filter_helper.php */
 /* Location: ./application/helpers/filter_helper.php */
 ?>
