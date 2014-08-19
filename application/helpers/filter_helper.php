@@ -378,6 +378,7 @@ if ( ! function_exists('show_period_fields'))
 		$CI =& get_instance();
 		$CI->load->helper('activities/date_report');
 		$default_week = get_calendar_week();
+		$selected_period_filter = $CI->default_period_filter;
 		$data = array(
 			'from' => $CI->custom_period_from,
 			'to' => $CI->custom_period_to,
@@ -387,21 +388,36 @@ if ( ! function_exists('show_period_fields'))
 			'end' => $default_week['end']
 		);
 		if ( ( $data['from'] === FALSE ) || ( $data['to'] === FALSE ) )
+			$selected_period_filter = 2;
+		
+		switch ($selected_period_filter)
 		{
-			$CI->load->helper('tri_cuatrimester');
-			if ($ramo == 1) // Vida -> current trimestre
-			{
-				$rank = floor((date('m') - 1) / 3) + 1;
-				$result = get_tri_cuatrimester( $rank, 'trimestre' );
-			}
-			else	// -> current cuatrimestre
-			{
-				$rank = floor((date('m') - 1) / 4) + 1;
-				$result = get_tri_cuatrimester( $rank, 'cuatrimestre' );
-			}
-			$data['from'] = substr($result['begind'], 0, 10);
-			$data['to'] = substr($result['end'], 0, 10);
-		}
+			case 1: // month
+				$data['from'] = date( 'Y' ) . '-' . date( 'm' ) . '-01';
+				$data['to'] = date( 'Y-m-d');
+			break;
+			case 2: // trimestre or cuatrimestre
+				$CI->load->helper('tri_cuatrimester');
+				if ($ramo == 1) // Vida -> current trimestre
+				{
+					$rank = floor((date('m') - 1) / 3) + 1;
+					$result = get_tri_cuatrimester( $rank, 'trimestre' );
+				}
+				else	// -> current cuatrimestre
+				{
+					$rank = floor((date('m') - 1) / 4) + 1;
+					$result = get_tri_cuatrimester( $rank, 'cuatrimestre' );
+				}
+				$data['from'] = substr($result['begind'], 0, 10);
+				$data['to'] = substr($result['end'], 0, 10);
+				break;
+			case 3: // Year
+				$data['from'] = date( 'Y' ) . '-01-01';
+				$data['to'] = date( 'Y-m-d');
+			break;
+			default:
+			break;
+		}		
 		return $CI->load->view('select_period', $data, TRUE);
 	}
 }

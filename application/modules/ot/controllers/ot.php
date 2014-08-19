@@ -1892,12 +1892,12 @@ implode(', ', $ramo_tramite_types) . '
 		$agent_array = array();
 		$other_filters = array();
 		$this->load->helper( array('ot', 'filter' ));
-		$data = $this->_init_report($agent_array, $other_filters);
 		if (count($_POST))
 		{
 			update_custom_period($this->input->post('cust_period_from'),
 				$this->input->post('cust_period_to'), FALSE);
 		}
+		$data = $this->_init_report($agent_array, $other_filters);
 
 		// Load model
 		$this->load->model( array( 'usuarios/user', 'work_order' ) );

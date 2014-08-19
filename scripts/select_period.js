@@ -110,9 +110,9 @@ $( document ).ready(function() {
 				$("#cust_period_to").val(currentYear + '-' + currentMonth + '-' + currentDay);
 				submitForm = true;
 			break;
-			case '2':	// Cuatrimestre
+			case '2':	// Cuatrimestre or Trimestre
 				submitForm = true;
-				if ((selectedRamo == 2) || (selectedRamo == 3)) {
+				if (selectedRamo == 1) { //  Vida -> Trimestre
 					var rank = Math.floor((currentMonth - 1) / 3) + 1;
 					switch (rank) {
 						case 1:
@@ -125,7 +125,7 @@ $( document ).ready(function() {
 						break;
 						case 3:
 							$("#cust_period_from").val(currentYear + '-07-01');
-							$("#cust_period_to").val(currentYear + '-09-31');
+							$("#cust_period_to").val(currentYear + '-09-30');
 						break;
 						case 4:
 							$("#cust_period_from").val(currentYear + '-10-01');
@@ -135,7 +135,7 @@ $( document ).ready(function() {
 							submitForm = false;
 						break;
 					}
-				} else if (selectedRamo == 1) { //  or Trimestre
+				} else if ((selectedRamo == 2) || (selectedRamo == 3)) { // GMM or Autos -> Cuatrimestre
 					var rank = Math.floor((currentMonth -1) / 4) + 1;
 					switch (rank) {
 						case 1:
@@ -190,9 +190,10 @@ $( document ).ready(function() {
 	var submitTheForm = function() {
 		if (parentForm) {
 			parentForm.append(
-				'<input type="text" name="cust_period_from" value="' + defFrom + '" />' +
-				'<input type="text" name="cust_period_to" value="' + defTo + '" />')
-				.submit();
+				'<input type="hidden" name="cust_period_from" value="' + defFrom + '" />' +
+				'<input type="hidden" name="cust_period_to" value="' + defTo + '" />');
+			$( "#cust_period-form" ).dialog( "close" );
+			parentForm.submit();
 		}
 	}
 
@@ -251,7 +252,7 @@ $( document ).ready(function() {
 				$("#periodo").val(4);
 				updatePeriodSelect("#periodo_form");
 				submitTheForm();
-//				$( this ).dialog( "close" );
+				$( this ).dialog( "close" );
 				return false;
 			},
 			"Cancelar": function() {
