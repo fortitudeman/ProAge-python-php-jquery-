@@ -273,7 +273,9 @@ $( document ).ready(function() {
 			"Guardar": function() {
 				$("#cust_period_from").val($( '#begin' ).val());
 				$("#cust_period_to").val($( '#end' ).val());
+				$("#periodo").val(4);
 				updatePeriodSelect("#periodo_form");
+				submitTheForm();
 				$( this ).dialog( "close" );
 				return false;
 			},
@@ -297,15 +299,6 @@ $( document ).ready(function() {
 		if ((periodoHidden <= 5) && (periodoHidden >= 1)) {
 			$("#periodo").val(periodoHidden);
 			updateEndStart(periodoHidden);
-/* TODO: update 
-			#periodo_form, // Done
-			#cust_period_from, // Done
-			#cust_period_to, // Done
-			#begin ?
-			#end ?			
-			defFrom, // Done
-			defTo, // Done
-			and submit the form*/
 		}
 		return false;
 	})
