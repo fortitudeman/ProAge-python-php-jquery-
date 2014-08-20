@@ -15,13 +15,13 @@
 */
 ?>
 <div id="selected-ramo" style="display: none"><?php echo $ramo ?></div>
-<div style="display: none" id="cust_period-form" title="Selecionna el período">
+<div style="display: none" id="cust_period-form" title="Selecciona el período">
     <div style="width: 40%; float: right; font-weight: bold" id="periodo-links"><br />
     Selecciona un período:<br />
         <a href="javascript: void(0);" tabindex="1" id="month-select">Mes actual</a><br />
         <a href="javascript: void(0);" tabindex="2" id="tri-cuatri-select"><?php if ($ramo == 1) echo 'Trimestre'; else echo 'Cuatrimestre'; ?> actual</a><br />
         <a href="javascript: void(0);" tabindex="3" id="year-select">Año actual</a><br />
-        <a href="javascript: void(0);" tabindex="5" id="week-select">Selecionna una semana &gt;</a><br />
+        <a href="javascript: void(0);" tabindex="5" id="week-select">Selecciona una semana &gt;</a><br />
     </div>
     <div style="width: 60%;">
 	    <label for="cust_period_from">Desde</label>
