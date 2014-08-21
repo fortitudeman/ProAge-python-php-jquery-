@@ -31,7 +31,8 @@ $agent_profile_page = ($this->uri->segment(1) == 'agent');
 					($value['is_editable'])
 					);
 				$show_menu =  ($value['work_order_status_id'] == 10) ? FALSE : $show_menu;
-
+				if (!$this->access_activate && !$this->access_update && !$this->access_delete)
+					$show_menu = FALSE;
 				if ( $this->access_update )
 				{
 					$ver_update_ot = '&nbsp;' . anchor('ot/update_poliza/' . $value['id'], '<i class="icon-edit" title="Editar OT '. $value['uid']. '"></i>', array('title' => 'Editar')) .
@@ -100,7 +101,7 @@ else echo '-';
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp; |&nbsp;&nbsp;';
 					else if( $this->access_activate == true and $value['work_order_status_id'] ==  6 )
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')">Desactivar</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
-					else 
+					else if ($this->access_update && $this->access_activate)
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
 					if( $this->access_update == true ){
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')">Marcar como aceptada</a>&nbsp;&nbsp; | &nbsp;&nbsp;';
