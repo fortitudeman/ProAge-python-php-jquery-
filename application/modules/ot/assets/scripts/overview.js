@@ -40,7 +40,31 @@ $( document ).ready( function(){
 				$(".tablesorter-childRow td").hide();	
 			}
 		});
-	}				
+	}
+	
+	proagesOverview.triCuatrimestre = function(selectedRamo) {
+		var triCuatri = '';
+		switch ( selectedRamo ) {
+			case '1': // Vida
+				triCuatri = 'Trimestre';
+				break;
+			case '2': // GMM
+			case '3': // Autos
+				triCuatri = 'Cuatrimestre';
+				break;
+			default:
+				triCuatri = 'Trimestre';
+				selectedRamo = 0;
+				break;
+		}
+		$( '.set_periodo' ).html(triCuatri );
+		$( '#periodo option' ).each(function () {
+			if ($(this).val() == '2') {
+				$(this).html(triCuatri);
+				return false;
+			}
+		});
+	}
 
 	$( '.filter-field').bind( 'change', function(){
 		if ( this.id == 'ramo' ) {
@@ -50,21 +74,11 @@ $( document ).ready( function(){
 				currentTramiteType = $(this).val();
 				return false;
 			});
-
-			switch ( selectedRamo ) {
-				case '1': // Vida
-					$( '.set_periodo' ).html( 'Trimestre' );
-					break;
-				case '2': // GMM
-				case '3': // Autos
-					$( '.set_periodo' ).html( 'Cuatrimestre' );
-					break;
-				default:
-					$( '.set_periodo' ).html( 'Trimestre' );
-					selectedRamo = 0;
-					break;
-			}
-			$( '#patent-type').html(proagesOverview.tramiteTypes[selectedRamo]);
+			proagesOverview.triCuatrimestre(selectedRamo);
+			if (selectedRamo.length)
+				$( '#patent-type').html(proagesOverview.tramiteTypes[selectedRamo]);
+			else
+				$( '#patent-type').html(proagesOverview.tramiteTypes[0]);			
 
 			$( '#patent-type option' ).each(function () {
 				if ( $(this).val() == currentTramiteType ) {
@@ -97,13 +111,16 @@ $( document ).ready( function(){
 	});
 
 	$( '#ot-form').submit( function () {
-		proagesOverview.getOts($( "#ot-form").serialize());
-		return false;
+		if ($("#export-xls-input").val() == "export_xls") {
+			$("#export-xls-input").val("");
+		} else {
+			proagesOverview.getOts($( "#ot-form").serialize());
+			return false;
+		}
 	});
 
 	// Filters
 	$( '.hide' ).hide();
-
 	proagesOverview.getOts($( "#ot-form").serialize());
 
 });

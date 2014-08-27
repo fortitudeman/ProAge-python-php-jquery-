@@ -45,6 +45,8 @@ class Ot extends CI_Controller {
 	
 	public $default_period_filter = FALSE;
 	public $ot_r_misc_filter = FALSE;
+	public $misc_filters = FALSE;
+	public $misc_filter_name = FALSE;
 	public $custom_period_from = FALSE;
 	public $custom_period_to = FALSE;
 	public $period_filter_for = FALSE;
@@ -82,7 +84,8 @@ class Ot extends CI_Controller {
 		
 		// Added Acctions for user, change the bool access
 		if( !empty( $this->user_vs_rol ) )	
-		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ):
+		foreach( $this->roles_vs_access  as $value ): 
+		if( in_array( 'Orden de trabajo', $value ) ):
 			
 			
 			if( $value['action_name'] == 'Crear' )
@@ -107,11 +110,13 @@ class Ot extends CI_Controller {
 				$this->access_report = true;		
 						
 			if( $value['action_name'] ='Export xls' )
-				$this->access_export_xls = true;		
-			
-			
-						
-		endif; endforeach;
+				$this->access_export_xls = true;
+		endif;
+		if( in_array( 'Operations', $value ) ):
+			if( $value['action_name'] == 'Crear' )
+				$this->access_create = true;
+		endif;
+		endforeach;
 		if( empty( $this->sessions ) and $this->uri->segment(2) != 'login'  ) 
 		{
 			redirect( 'usuarios/login', 'refresh' );
@@ -127,6 +132,8 @@ class Ot extends CI_Controller {
 				$this->default_period_filter = $this->session->userdata('default_period_filter_ot_index');
 				$this->custom_period_from = $this->session->userdata('custom_period_from_ot_index');
 				$this->custom_period_to = $this->session->userdata('custom_period_to_ot_index');
+				$this->misc_filter_name = 'ot_misc_filter';
+				$this->misc_filters = $this->session->userdata($this->misc_filter_name);
 			}
 			else
 			{
@@ -134,6 +141,8 @@ class Ot extends CI_Controller {
 				$this->default_period_filter = $this->session->userdata('default_period_filter_ot_reporte');
 				$this->custom_period_from = $this->session->userdata('custom_period_from_ot_reporte');
 				$this->custom_period_to = $this->session->userdata('custom_period_to_ot_reporte');
+//				$this->misc_filter_name = 'ot_r_misc_filter';
+//				$this->misc_filters = $this->session->userdata($this->misc_filter_name);
 			}
 		}
 		$this->ot_r_misc_filter = $this->session->userdata('ot_r_misc_filter');
@@ -142,16 +151,19 @@ class Ot extends CI_Controller {
 // Show all records	
 	public function index(){
 		
-		
-		
 		// Load Model
 		$this->load->model( array( 'work_order', 'user' ) );
-		
 		// Load Helpers
-		$this->load->helper( 'date' );
+		$this->load->helper( array('date', 'filter', 'ot') );
 
-		// Tramite types per ramo
-		$ramo_tramite_types = $this->work_order->get_tramite_types();
+		$other_filters = array();
+		get_generic_filter($other_filters, array());
+
+		$gerente_str = '';
+		$agente_str = '<option value="">Todos</option>';
+		$ramo_tramite_types = array();
+		$patent_type_ramo = 0;
+		prepare_ot_form($other_filters, $gerente_str, $agente_str, $ramo_tramite_types, $patent_type_ramo);
 
 		$add_js = '
 <script type="text/javascript">
@@ -159,7 +171,7 @@ class Ot extends CI_Controller {
 		proagesOverview.tramiteTypes = {' . 
 implode(', ', $ramo_tramite_types) . '
 		};
-		$( "#patent-type").html(proagesOverview.tramiteTypes[0]);
+		$( "#patent-type").html(proagesOverview.tramiteTypes[' . $patent_type_ramo . ']);
 		$("#periodo").bind( "click", function(){
 			$("#periodo option:selected").each(function () {
 				if ($(this).val() == 4) {
@@ -204,17 +216,17 @@ implode(', ', $ramo_tramite_types) . '
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
 			'<script src="'.base_url().'ot/assets/scripts/list_js.js"></script>',
 			'<script src="'.base_url().'scripts/config.js"></script>',
+			$add_js,
 			'<script src="'.base_url().'ot/assets/scripts/overview.js"></script>',
 			'<script type="text/javascript" src="'. base_url() .'scripts/custom-period.js"></script>',	
-			$add_js,
 		  ),
 		  'content' => 'ot/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  'period_form' => $this->show_custom_period(), // custom period configuration form 
-		  'agents' => $this->user->getAgents(),
-		  'gerentes' => $this->user->getSelectsGerentes(),
+		  'agents' => $agente_str,
+		  'gerentes' => $gerente_str,
+		  'other_filters' => $other_filters
 		);
-		
 		
 		// Render view 
 		$this->load->view( 'index', $this->view );	
@@ -224,7 +236,7 @@ implode(', ', $ramo_tramite_types) . '
 // Getting Filter
 // Copied and pasted to the code of agent/find:
 	public function find(){
-		
+	
 		// If is not ajax request redirect
 		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
 		
@@ -234,12 +246,9 @@ implode(', ', $ramo_tramite_types) . '
 		// Load Helper
 		$this->load->helper( array( 'ot', 'date', 'filter' ) );
 
-		if ( ( ( $periodo = $this->input->post('periodo') ) !== FALSE ) && 
-			( ( $periodo == 1 ) || (  $periodo == 2 ) || ( $periodo == 3 ) || ( $periodo == 4) ) )
-			set_filter_period($periodo);
-
-		$data = $this->work_order->find( $this->access_all );
-
+		$other_filters = array();
+		$data = get_ot_data($other_filters, $this->access_all);
+		
 		$view_data = array('data' => $data);
 		$this->load->view('ot/list_render', $view_data);
 	}	
@@ -2749,7 +2758,8 @@ Display custom filter period
 		if ( $this->input->is_ajax_request() )
 		{
 			$filter_for = $this->input->post('filter_for');
-			$valid_filter_for_s = array('ot_index', 'ot_reporte', 'activities_report', 'agent_profile');
+			$valid_filter_for_s = array('ot_index', 'ot_reporte', 'activities_report', 'agent_profile',
+				'operations');
 			if (in_array($filter_for, $valid_filter_for_s))
 			{
 				$this->period_filter_for = $filter_for;
@@ -2890,7 +2900,7 @@ Display custom filter period
 		}	
 		echo json_encode($result);
 	}
-	
+
 /* End of file ot.php */
 /* Location: ./application/controllers/ot.php */
 }

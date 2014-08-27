@@ -418,10 +418,175 @@ class Work_order extends CI_Model{
 		return $type[0]['type'];
 		
 	}
-	
-	
-	
-	
+
+	// OTs filtered
+	public function find_new( $filter, $access_all = FALSE  )
+	{
+		$agentes_gerentes = array();
+		// Gerentes (prepare the agents who have selected gerente)
+		if  ( isset($filter['gerente']) && ( $gerente = $filter['gerente'] ) )
+		{
+			$this->db->select( 'agents.id' );
+			$this->db->from( 'agents' );
+			$this->db->join('users', 'users.id = agents.user_id');			
+			$this->db->join( 'users_vs_user_roles', 'users_vs_user_roles.user_id=users.id '  );
+			$this->db->where( 'manager_id', (int) $gerente );
+			$this->db->where( 'users_vs_user_roles.user_role_id', 1 );
+			$query = $this->db->get();
+			foreach ($query->result() as $row)
+				$agentes_gerentes[] = $row->id;
+			if (count($agentes_gerentes) == 0)
+				return FALSE;
+		}
+
+		// Prepare work order type for filter on patent id (this should be validated against ramo filter field)
+		$patent_work_order_types = array();
+		if  ( isset($filter['patent_type']) && ( $patent_type = $filter['patent_type'] ) )
+		{
+			$this->db->select( 'work_order_types.id' );
+			$this->db->from( 'work_order_types' );
+			$this->db->where( 'patent_id', (int)$patent_type );
+
+			$query = $this->db->get();
+			foreach ($query->result() as $row)
+				$patent_work_order_types[] = $row->id;
+		}
+
+		$this->db->select( 'product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
+		$this->db->from( 'work_order' );
+		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
+		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
+		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
+
+		if (isset($filter['work_order_status_id']))
+		{
+			switch ($filter['work_order_status_id'])
+			{
+				case 'activadas':
+					$this->db->where( 'work_order.work_order_status_id', 6 );
+					break;
+				case 'canceladas':
+					$this->db->where( 'work_order.work_order_status_id', 2 );
+					break;
+				case 'tramite':
+					$this->db->where_in('work_order.work_order_status_id', array('5', '9'));
+					break;
+				case 'terminada':
+					$this->db->where_in('work_order.work_order_status_id', array('7', '6'));
+					break;
+				case 'NTU':
+					$this->db->where( 'work_order.work_order_status_id', 10 );
+					break;
+				case 'pagada':
+					$this->db->where( 'work_order.work_order_status_id', 4 );
+					break;
+				default:
+					break;
+			}
+		}
+
+		if ( !$access_all || (isset($filter['user']) && ( $filter['user'] == 'mios' ) ))
+			$this->db->where( array( 'work_order.user' => $this->sessions['id'] ) );
+
+		// OT id
+		if  ( isset($filter['id']) && ( $id = $filter['id'] ) )
+			$this->db->where( array( 'work_order.uid' => trim( $id )) );
+
+		// Ramo
+		if  ( isset($filter['ramo']) && ( $ramo = $filter['ramo'] ) &&
+			( ( $ramo == 1 ) || (  $ramo == 2 ) || ( $ramo == 3 ) ) )
+			$this->db->where( array( 'work_order.product_group_id' => $ramo ) );
+
+		// Complete handling filter on patent id (tipo  de tramite)
+		if ( count($patent_work_order_types) ) {
+			$this->db->where_in('work_order.work_order_type_id', $patent_work_order_types);
+		}
+
+		// Periodo
+		if  ( isset($filter['periodo']) && ( $periodo = $filter['periodo'] ) &&
+			( ( $periodo == 1 ) || (  $periodo == 2 ) || ( $periodo == 3 ) || ( $periodo == 4) ) )
+		{
+			if( $periodo == 1 ) // Month
+				$this->db->where( 'work_order.creation_date >= ', date( 'Y' ) . '-' . (date( 'm' )) . '-01'); 
+			if( $periodo == 2 ) // Trimester or cuatrimester depending ramo
+			{
+				$this->load->helper('tri_cuatrimester');
+				if( ($ramo == 2 ) || ( $ramo == 3 ) )
+					$begin_end = get_tri_cuatrimester( cuatrimestre(), 'cuatrimestre' ) ;
+				else
+					$begin_end = get_tri_cuatrimester( trimestre(), 'trimestre' );
+
+				if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
+					$this->db->where( array(
+						'work_order.creation_date >= ' => $begin_end['begind'],
+						'work_order.creation_date <=' =>  $begin_end['end']) );
+			}
+			if(  $periodo == 3 ) // Year
+				$this->db->where( array(
+					'work_order.creation_date >= ' => date( 'Y' ) .'-01-01', 
+					'work_order.creation_date <=' => date( 'Y-m-d' ) . ' 23:59:59') );
+
+			if( $periodo == 4 ) // Custom
+			{
+				$from = $this->custom_period_from;
+				$to = $this->custom_period_to;
+				if ( ( $from === FALSE ) || ( $to === FALSE ) )
+				{
+					$from = date('Y-m-d');
+					$to = $from;
+				}
+				$this->db->where( array(
+					'work_order.creation_date >= ' => $from . ' 00:00:00',
+					'work_order.creation_date <=' => $to . ' 23:59:59') );
+			}
+		}	
+
+		// Agent
+		if  ( isset($filter['agent']) && ( $agent = $filter['agent'] ) )
+		{
+			/**
+			 JOIN policies_vs_users ON policies_vs_users.policy_id=work_order.policy_id
+			 WHERE policies_vs_users.user_id=1
+			*/		
+			$this->db->join( 'policies_vs_users AS policies_users_A', 'policies_users_A.policy_id=work_order.policy_id' );
+			$this->db->where( 'policies_users_A.user_id', (int) $agent );
+
+		}
+		// Complete Gerente filtering
+		if ( count($agentes_gerentes) ) {
+			$this->db->join( 'policies_vs_users AS policies_users_B', 'policies_users_B.policy_id=work_order.policy_id' );
+			$this->db->where_in( 'policies_users_B.user_id', $agentes_gerentes );		
+		}
+
+		$query = $this->db->get();
+		if ($query->num_rows() == 0) return false;
+
+		$ot = array();
+		foreach ($query->result() as $row)
+		{
+			$type_tramite = $this->getParentsWorkTipes( $row->work_order_type_id );
+			$ot[] = array( 
+		    	'id' => $row->id,
+				'uid' => $row->uid,
+				'policy' => $this->getPolicyBuId( $row->policy_id ),
+				'agents' => $this->getAgentsByPolicy( $row->policy_id ),
+		    	'product_group_id' => $row->product_group_id,
+				'group_name' => $row->group_name,
+				'parent_type_name' => $this->getTypeTramiteId( $type_tramite ),
+				'type_name' => $row->type_name,
+				'work_order_status_id' => $row->work_order_status_id,				
+		    	'status_name' =>  $row->status_name,
+				'creation_date' =>  $row->creation_date,
+				'duration' =>  $row->duration,
+				'last_updated' =>  $row->last_updated,
+				'date' =>  $row->date,
+				'is_editable' => $this->is_editable( $row->product_group_id, $type_tramite, $row->work_order_status_id ),
+				'is_nuevo_negocio' => $this->is_nuevo_negocio( $row->product_group_id, $type_tramite)
+		    );
+		}
+		return $ot;
+   }
+ 
 // Getting for filters	
 	public function find( $access_all = false ) {
 
@@ -1845,6 +2010,48 @@ class Work_order extends CI_Model{
 		}
 		$all_tramite_types = sprintf($all_tramite_types, 'Vida', 'GMM', 'Autos');
 		$ramo_tramite_types[0] = "\n0 : '" . '<option value="">Todos</option>' . $all_tramite_types . "'";
+		return $ramo_tramite_types;
+	}
+// Work order tramite types array
+	public function get_tramite_types_arr()
+	{
+		$work_order_types = $this->generic_get(
+			'work_order_types', array( 'duration' => 0 ));
+
+		$ramo_tramite_types = array(
+			1 => array(), // Vida
+			2 => array(), // GMM
+			3 => array()	// Autos
+			);
+		foreach ($work_order_types as $ot_type)
+		{
+			if (isset($ramo_tramite_types[$ot_type->patent_id]))
+				$ramo_tramite_types[$ot_type->patent_id][$ot_type->id] = $ot_type->name;
+		}
+		return ($ramo_tramite_types);
+	}
+
+	public function get_tramite_types_select_arr($selected_option = NULL)
+	{
+		$ramos = array(1 => 'Vida', 2 => 'GMM', 3 => 'Autos');
+		// Tramite types per ramo
+		$ramo_tramite_types = $this->get_tramite_types_arr();
+		$all_tramite_types = '';
+		foreach ($ramo_tramite_types as $key_ramo => $value_ramo)
+		{
+			$options = '';
+			foreach ($value_ramo as $key => $value)
+			{
+				$selected = ($key == $selected_option) ? ' selected="selected"' : '';
+				$options .= '<option value="' . $key . '"' . $selected . '>' . $value . '</option>';
+			}
+			$all_tramite_types .= 
+				'<optgroup label="Ramo = ' . $ramos[$key_ramo] . '">' . $options . '</optgroup>';
+			$options = $key_ramo . " : '" . '<option value="">Todos</option>' . $options . "'";
+			$ramo_tramite_types[$key_ramo] = "\n" . $options;
+		}
+		$ramo_tramite_types[0] = "\n0 : '" . '<option value="">Todos</option>' . $all_tramite_types . "'";
+
 		return $ramo_tramite_types;
 	}
 }

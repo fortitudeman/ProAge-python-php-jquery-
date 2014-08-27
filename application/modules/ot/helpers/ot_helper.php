@@ -179,6 +179,48 @@ function getFormatDate( $date = null ){
 	 
 			 
 }	
+/*
+	Prepare form fields for ot.html page
+*/
+if ( ! function_exists('prepare_ot_form'))
+{
+	function prepare_ot_form($other_filters, &$gerente_str, &$agente_str, &$ramo_tramite_types, &$patent_type_ramo)
+	{
+		$CI =& get_instance();
+		$gerente_str = '';
+		$gerentes_array = $CI->user->getSelectsGerentes2();
+		if ($gerentes_array)
+		{
+			foreach ($gerentes_array as $key => $gerente)
+			{
+				$selected = '';
+				if (isset($other_filters['gerente']) && ($gerente['id'] == $other_filters['gerente']))
+					$selected = ' selected="selected"';
+				$gerentes_array[$key] = '<option value="' . $gerente['id'] . '"' . $selected . '>' . $gerente['name'] . '</option>';
+			}
+			$gerente_str .= implode("\n", $gerentes_array);
+		}
 
-
+		$agente_str = '<option value="">Todos</option>';
+		$agent_array = $CI->user->getAgents( FALSE );
+		if ($agent_array)
+		{
+			foreach ($agent_array as $key => $value)
+			{
+				$selected = '';
+				if (isset($other_filters['agent']) && ($key == $other_filters['agent']))
+					$selected = ' selected="selected"';
+				$agent_array[$key] = '<option value="' . $key . '"' . $selected . '>' . $value . '</option>';
+			}
+			$agente_str .= implode("\n", $agent_array);
+		}
+		if (isset($other_filters['patent_type']))
+			$ramo_tramite_types = $CI->work_order->get_tramite_types_select_arr($other_filters['patent_type']);
+		else 
+			$ramo_tramite_types = $CI->work_order->get_tramite_types_select_arr();
+		$patent_type_ramo = 0;
+		if (isset($other_filters['ramo']) && isset($ramo_tramite_types[$other_filters['ramo']]))
+			$patent_type_ramo = $other_filters['ramo'];
+	}
+}
 ?>

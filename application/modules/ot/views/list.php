@@ -13,12 +13,28 @@
 
   	
 */
+$base_url = base_url();
 $agents = str_replace('<option value="">Seleccione</option>', '<option value="">Todos</option>', $agents);
 $this->load->helper('filter');
 $selected_filter_period = get_selected_filter_period();
 
+$estado_selected = array(
+	'activadas' => '',
+	'tramite' => '',
+	'terminada' => '',
+	'canceladas' => '',
+	'NTU' => '',
+	'pagada' => '',
+	'todas' => '');
+if (isset($other_filters['work_order_status_id']) && 
+	isset($estado_selected[$other_filters['work_order_status_id']]))
+	$estado_selected[$other_filters['work_order_status_id']] = ' selected="selected"';
+else
+	$estado_selected['todas'] = ' selected="selected"';
+
 $agent_profile_page = ($this->uri->segment(1) == 'agent');
-if (!$agent_profile_page):
+$operation_profile_page = ($this->uri->segment(1) == 'operations');
+if (!$agent_profile_page && !$operation_profile_page):
 ?>
 <div>
     <ul class="breadcrumb">
@@ -79,10 +95,25 @@ if (!$agent_profile_page):
             <div class="row">
             	<div class="span1"></div>
             	<div class="span7">
-                	<?php if( $access_all == true ): ?>
-                    <a href="javascript:void(0);" class="btn btn-link find" id="todas">Todas</a>
-                    <?php endif; ?>
-                    <a href="javascript:void(0);" class="btn find btn-primary" id="mios">Mias</a>
+<?php
+	$class_mios = 'btn-primary';
+	$class_todos = 'btn-link';
+	$todas_mias_value = 'mios';
+	if (isset($other_filters['user']))
+	{
+		if ($other_filters['user'] !== 'mios')
+		{
+			$class_mios = 'btn-link';
+			$class_todos = 'btn-primary';
+			$todas_mias_value = 'todos';			
+		}
+	}
+	if( $access_all == true ):
+					
+?>
+                    <a href="javascript:void(0);" class="btn find <?php echo $class_todos ?>" id="todos">Todas</a>
+<?php endif; ?>
+                    <a href="javascript:void(0);" class="btn find <?php echo $class_mios ?>" id="mios">Mias</a>
                 </div>
 
                 <div class="span2"></div>
@@ -92,9 +123,9 @@ if (!$agent_profile_page):
 <?php endif; ?>
 
             <div class="row"><br />
-                <form id="ot-form" method="post">
-<?php if (!$agent_profile_page): ?>
-                  <input class="filter-field" type="hidden" name="user" id="todas-mias" value="mios" />
+                <form id="ot-form" method="post" <?php if ($operation_profile_page) echo 'action="' . $export_url . '"' ?>>
+<?php if (!$agent_profile_page && !$operation_profile_page): ?>
+                  <input class="filter-field" type="hidden" name="user" id="todas-mias" value="<?php echo $todas_mias_value ?>" />
 <?php else: ?>
                   <input class="filter-field" type="hidden" name="user" id="todas-mias" value="todos" />
 <?php endif; ?>
@@ -102,9 +133,35 @@ if (!$agent_profile_page):
                   <table class="filterstable">
                     <thead>
                       <tr>
-					    <th colspan="5">Número :
-  					      <input class="filter-field" type="text" id="id" name="id" title="Pulse la tecla Tab para validar un número a buscar" />
-					    </th>
+					    <th colspan="5">
+<?php if ($operation_profile_page): ?>
+					    <input type="hidden" value="" id="export-xls-input" name="export_xls_input" disabled="disabled" />
+<div class="row">	
+	<div class="span6">
+	Número :
+<input class="filter-field" type="text" id="id" name="id" title="Pulse la tecla Tab para validar un número a buscar" />
+	</div>
+	<div class="span3">	
+<?php if ($this->access_create) :?>
+                <a href="<?php echo $base_url ?>ot/create.html" style="font-size: larger;" target="_blank" class="btn btn-link" title="Crear">
+                    <i class="icon-plus"></i></a>
+<?php endif; ?>
+	</div>
+	<div class="span3" style="text-align: right">	
+<?php if ($this->access_export_xls) :?>
+                <a href="javascript:void(0);" id="export-xls" title="Exportar" style="font-size: larger;">
+                    <img src="<?php echo $base_url ?>ot/assets/images/down.png" title="Exportar" />
+				</a>
+<?php endif; ?>
+	</div>
+</div>
+<?php else:
+	$numero = isset($other_filters['id']) ?  $other_filters['id'] : '';
+?>
+					  Número :
+					  <input value="<?php echo $numero ?>" class="filter-field" type="text" id="id" name="id" title="Pulse la tecla Tab para validar un número a buscar" />
+<?php endif; ?>
+					  </th>
                       </tr>
                       <tr>					  
 					    <th>Período :&nbsp;<i class="icon-calendar" id="cust_update-period" title="Click para editar el período personalizado"></i><br />
@@ -117,10 +174,18 @@ if (!$agent_profile_page):
 					    </th>
 					    <th>Ramo :<br />
 						  <select class="filter-field" id="ramo" name="ramo">
-						    <option value="" selected="selected">Todos</option>
-						    <option value="1">Vida</option>
-						    <option value="2">GMM</option>
-						    <option value="3">Autos</option>
+<?php
+	$selected = array('selected="selected"', '', '', '');
+	if (isset($other_filters['ramo']))
+	{
+		$selected[0] = '';
+		$selected[$other_filters['ramo']] = 'selected="selected"';
+	}
+?>
+						    <option value="" <?php echo $selected [0] ?>>Todos</option>
+						    <option value="1" <?php echo $selected [1] ?> >Vida</option>
+						    <option value="2" <?php echo $selected [2] ?>>GMM</option>
+						    <option value="3" <?php echo $selected [3] ?>>Autos</option>
 						  </select>
 					    </th>
 
@@ -144,13 +209,13 @@ if (!$agent_profile_page):
 					    </th>
 					    <th>Estado :<br />
                           <select class="filter-field" id="work_order_status_id" name="work_order_status_id">
-                            <option value="activadas">Activadas</option>
-                            <option value="tramite">En trámite</option>
-                            <option value="terminada">Terminadas</option>
-                            <option value="canceladas">Canceladas</option>
-                            <option value="NTU">Póliza NTU</option>
-                            <option value="pagada">Pagadas</option>
-                            <option value="todas" selected="selected">Todas</option>
+                            <option value="activadas" <?php echo $estado_selected['activadas'] ?>>Activadas</option>
+                            <option value="tramite" <?php echo $estado_selected['tramite'] ?>>En trámite</option>
+                            <option value="terminada" <?php echo $estado_selected['terminada'] ?>>Terminadas</option>
+                            <option value="canceladas" <?php echo $estado_selected['canceladas'] ?>>Canceladas</option>
+                            <option value="NTU" <?php echo $estado_selected['NTU'] ?>>Póliza NTU</option>
+                            <option value="pagada" <?php echo $estado_selected['pagada'] ?>>Pagadas</option>
+                            <option value="todas" <?php echo $estado_selected['todas'] ?>>Todas</option>
                           </select>
 					    </th>
                       </tr>
@@ -189,7 +254,7 @@ if (!$agent_profile_page):
 
               </tbody>
           </table>
-<?php if (!$agent_profile_page): ?>
+<?php if (!$agent_profile_page && !$operation_profile_page): ?>
 
 </div>
 

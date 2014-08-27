@@ -421,6 +421,78 @@ if ( ! function_exists('show_period_fields'))
 		return $CI->load->view('select_period', $data, TRUE);
 	}
 }
+
+/*
+	Get filtered data for ot.html
+*/
+if ( ! function_exists('get_ot_data'))
+{
+	function get_ot_data(&$other_filters, $access_all)
+	{
+		$CI =& get_instance();
+
+		$data = array();
+		$default_filter = get_filter_period();
+		$other_filters = array(
+			'user' => 'mios',
+			'id' => '',
+			'ramo' => '',
+			'gerente' => '',
+			'agent' => '',
+			'patent_type' => '',
+			'work_order_status_id' => '',
+		);
+		get_generic_filter($other_filters, array());
+
+		if ( !empty( $_POST ) )
+		{
+			if ( isset($_POST['periodo']) && $CI->form_validation->is_natural_no_zero($_POST['periodo']) &&
+				($_POST['periodo'] <= 4) )
+				set_filter_period($_POST['periodo']);
+
+			$filters_to_save = array();
+			if ( isset($_POST['user']) && 
+				(($_POST['user'] == 'mios') || ($_POST['user'] == 'todos')) )
+				$other_filters['user'] = $_POST['user'];
+				
+			if ( isset($_POST['id']) )
+				$other_filters['id'] = $_POST['id'];
+
+			if ( isset($_POST['ramo']) && (($CI->form_validation->is_natural_no_zero($_POST['ramo']) &&
+				($_POST['ramo'] <= 3)) || (($_POST['ramo']) === '')) )
+				$other_filters['ramo'] = $_POST['ramo'];
+
+			if ( isset($_POST['gerente']) && 
+				(($_POST['gerente'] === '') || 
+				$CI->form_validation->is_natural_no_zero($_POST['gerente']))
+				)
+				$other_filters['gerente'] = $_POST['gerente'];
+
+			if ( isset($_POST['agent']) &&
+				( ($_POST['agent'] === '') || 
+				$CI->form_validation->is_natural_no_zero($_POST['agent']))
+				)
+				$other_filters['agent'] = $_POST['agent'];
+
+			if ( isset($_POST['patent_type']) &&
+				( ($_POST['patent_type'] === '') || 
+				 $CI->form_validation->is_natural_no_zero($_POST['patent_type']) )
+				)
+				$other_filters['patent_type'] = $_POST['patent_type'];
+
+			if ( isset($_POST['work_order_status_id']))
+				$other_filters['work_order_status_id'] = $_POST['work_order_status_id'];	
+			generic_set_report_filter( $other_filters, array() );
+			$data = $CI->work_order->find_new( $_POST, $access_all );
+		}
+		else
+		{
+			$query = array_merge($other_filters, array('periodo' => $default_filter));
+			$data = $CI->work_order->find_new( $query, $access_all );
+		}
+		return $data;
+	}
+}
 /* End of file filter_helper.php */
 /* Location: ./application/helpers/filter_helper.php */
 ?>
