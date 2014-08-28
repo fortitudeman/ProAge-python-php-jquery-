@@ -728,8 +728,8 @@ implode(', ', $ramo_tramite_types) . '
 
 	private function _init_profile()
 	{
-		if (($this->user_id = $this->uri->segment(3)) === FALSE)
-			show_404();
+		if (($this->user_id = $this->uri->rsegment(3)) === FALSE)
+			redirect( 'agent/index/' . $this->sessions['id'], 'refresh' );		
 
 		// Allow user to access his/her agent profile page
 		$this->access = $this->access || ($this->user_id == $this->sessions['id']);
