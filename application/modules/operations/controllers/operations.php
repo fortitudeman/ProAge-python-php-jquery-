@@ -542,16 +542,18 @@ implode(', ', $ramo_tramite_types) . '
 				'pagada' => 'Pagados',
 				'canceladas' => 'Cancelados',
 				'NTU' => 'NTU');
+			$total = 0;
 			foreach ($per_status as $key_status => $value_status)
 			{
 				$data_report[] = array(
 					$value_status,
 					$stats['per_status'][$key_status],
 				);
+				$total += $stats['per_status'][$key_status];
 			}
 			$data_report[] = array(
 				'Trámites de nuevos negocios:',
-				$stats['recap-middle'],
+				$total,
 				);
 		}
 
@@ -601,7 +603,7 @@ implode(', ', $ramo_tramite_types) . '
 		$na_value = 'N/D';
 		foreach ($stats as $key => $value)
 		{
-			if ($key)
+			if ($key && $value['value'])
 			{
 				$data_report[] = array(
 					$value['label'],
@@ -682,10 +684,10 @@ implode(', ', $ramo_tramite_types) . '
 
 		$save_session = $this->sessions['id'];
 		$this->sessions['id'] = $this->user_id;
-$this->benchmark->mark('code_start');
+//$this->benchmark->mark('code_start');
 		$data = $this->work_order->find( FALSE );
-$this->benchmark->mark('code_end');
-log_message('error', "Periodo: $periodo - _read_ots: " . $this->benchmark->elapsed_time('code_start', 'code_end'));
+//$this->benchmark->mark('code_end');
+//log_message('error', "Periodo: $periodo - _read_ots: " . $this->benchmark->elapsed_time('code_start', 'code_end'));
 
 		$this->sessions['id']= $save_session;
 		return $data;
@@ -702,11 +704,12 @@ log_message('error', "Periodo: $periodo - _read_ots: " . $this->benchmark->elaps
 			set_filter_period($posted_periodo);
 			$periodo = $posted_periodo;
 		}
-$this->benchmark->mark('code_start');
+//$this->benchmark->mark('code_start');
 		$this->work_order->init_operations($this->user_id, $periodo, $ramo);
-		$result = $this->work_order->operation_stats($ramo, array('t2.name' => 'NUEVO NEGOCIO'));
-$this->benchmark->mark('code_end');
-log_message('error', "Periodo: $periodo - _read_stats: " . $this->benchmark->elapsed_time('code_start', 'code_end'));
+		$add_where = $ramo ? array('t2.name' => 'NUEVO NEGOCIO') : NULL;
+		$result = $this->work_order->operation_stats($ramo, $add_where);
+//$this->benchmark->mark('code_end');
+//log_message('error', "Periodo: $periodo - _read_stats: " . $this->benchmark->elapsed_time('code_start', 'code_end'));
 		return $result;
 	}
 
@@ -714,11 +717,11 @@ log_message('error', "Periodo: $periodo - _read_stats: " . $this->benchmark->ela
 	{
 		$this->load->helper('filter');
 		$periodo = get_filter_period();
-$this->benchmark->mark('code_start');
+//$this->benchmark->mark('code_start');
 		$this->work_order->init_operations($this->user_id, $periodo, $ramo);
 		$result = $this->work_order->operation_detailed($ramo, $status);
-$this->benchmark->mark('code_end');
-log_message('error', "Periodo: $periodo - _read_details: " . $this->benchmark->elapsed_time('code_start', 'code_end'));
+//$this->benchmark->mark('code_end');
+//log_message('error', "Periodo: $periodo - _read_details: " . $this->benchmark->elapsed_time('code_start', 'code_end'));
 		return $result;		
 	}
 }

@@ -2109,7 +2109,6 @@ class Work_order extends CI_Model{
 			$this->operation_where = array_merge($this->operation_where, $add_where);
 		if ($ramo)
 		{
-//			$products = $this->generic_get('products', array('product_group_id' => $ramo));
 			$ot = array('recap-middle' => 0);
 		}
 		else
@@ -2156,7 +2155,7 @@ class Work_order extends CI_Model{
 				->where($this->operation_where)
 				->group_by(array('product_group_id', 'work_order_status_id', 'work_order_responsible_id', 'patent_id'))
 				->get();
-//echo $this->db->last_query();
+
 		if ($query->num_rows() == 0)
 			return $ot;
 
@@ -2278,8 +2277,7 @@ class Work_order extends CI_Model{
 			$this->db->or_where('work_order_status_id', $or);
 		$query = $this->db->group_by('products.id')
 				->get();
-			
-//echo $this->db->last_query();
+
 		if ($query->num_rows() == 0)
 			return $ot;
 
