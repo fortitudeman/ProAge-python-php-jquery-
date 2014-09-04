@@ -34,7 +34,7 @@ if ( ! function_exists('get_selected_filter_period'))
 {
 	function get_selected_filter_period()
 	{
-		$result = array(1 => '', 2 => '', 3 => '', 4 => '');
+		$result = array(1 => '', 2 => '', 3 => '', 4 => '', 5 => '');
 		$option_selected = get_filter_period();
 		if ( isset($result[$option_selected]) )
 			$result[$option_selected] = ' selected="selected"';
@@ -52,7 +52,7 @@ if ( ! function_exists('set_filter_period'))
 	function set_filter_period( $to_save )
 	{
 		$CI =& get_instance();
-		if (( $to_save >= 1 ) && ( $to_save <= 4 ) && ($CI->period_filter_for !== FALSE))
+		if (( $to_save >= 1 ) && ( $to_save <= 5 ) && ($CI->period_filter_for !== FALSE))
 		{
 //			$CI->session->set_userdata('default_period_filter', $to_save);
 			$CI->session->set_userdata('default_period_filter_' . $CI->period_filter_for, $to_save);

@@ -2054,5 +2054,241 @@ class Work_order extends CI_Model{
 
 		return $ramo_tramite_types;
 	}
+
+	// Operation statistics	
+	private $operation_where = array();
+	public function init_operations($user_id = NULL, $periodo = NULL, $ramo = NULL) 
+	{
+		if (($user_id === NULL) || ($periodo === NULL))
+			return FALSE;
+		$this->operation_where['work_order.user'] = $user_id;
+		if ($ramo)
+			$this->operation_where['work_order.product_group_id'] = $ramo;
+		switch ($periodo)
+		{
+			case 1: // Month
+				$this->operation_where['work_order.creation_date >= '] = 
+					date( 'Y' ) . '-' . (date( 'm' )) . '-01'; 
+				break;
+			case 2:  // Trimester
+			case 5:  // Cuatrimester
+				$this->load->helper(array('tri_cuatrimester', 'ot/date'));
+				if ($periodo == 5 )
+					$begin_end = get_tri_cuatrimester( cuatrimestre(), 'cuatrimestre' ) ;
+				else
+					$begin_end = get_tri_cuatrimester( trimestre(), 'trimestre' );
+
+				if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
+				{
+					$this->operation_where['work_order.creation_date >= '] = $begin_end['begind'];
+					$this->operation_where['work_order.creation_date <='] =  $begin_end['end'];
+				}
+				break;
+			case 3: // Year
+				$this->operation_where['work_order.creation_date >= '] = date( 'Y' ) .'-01-01';
+				$this->operation_where['work_order.creation_date <='] =  date( 'Y-m-d' ) . ' 23:59:59';
+				break;
+			case 4: // Custom
+				$from = $this->custom_period_from;
+				$to = $this->custom_period_to;
+				if ( ( $from === FALSE ) || ( $to === FALSE ) )
+				{
+					$from = date('Y-m-d');
+					$to = $from;
+				}
+				$this->operation_where['work_order.creation_date >= '] = $from . ' 00:00:00';
+				$this->operation_where['work_order.creation_date <='] = $to . ' 23:59:59';
+				break;
+		}
+	
+	}
+
+	public function operation_stats( $ramo = NULL, $add_where = NULL )
+	{
+		if ($add_where)
+			$this->operation_where = array_merge($this->operation_where, $add_where);
+		if ($ramo)
+		{
+//			$products = $this->generic_get('products', array('product_group_id' => $ramo));
+			$ot = array('recap-middle' => 0);
+		}
+		else
+		{
+			$ramo_tramite_types = $this->get_tramite_types_arr();
+			$responsibles = $this->generic_get('work_order_responsibles');
+			$ot = array(
+				'per_ramo_tramite' => array(),
+				'per_responsible' => array(),
+				'recap-left' => 0,
+				'recap-middle' => 0,
+				'recap-right' => 0
+			);
+			foreach ($ramo_tramite_types as $ramo_key => $tramite_value)
+			{
+				foreach ($tramite_value as $key => $value)
+				{
+					$ot['per_ramo_tramite'][$ramo_key][$key]['label'] = $value;
+					$ot['per_ramo_tramite'][$ramo_key][$key]['value'] = 0;
+				}
+				$ot['per_ramo_tramite'][$ramo_key]['all'] = 0;
+			}
+			foreach ($responsibles as $responsible)
+			{
+				$ot['per_responsible'][$responsible->id] = array(
+					'label' => $responsible->name,
+					'value' => 0,
+				);
+			}
+		}
+		$ot['per_status'] = array(
+			'tramite' => 0,
+			'terminada' => 0,
+			'canceladas' => 0,
+			'activadas' => 0,
+			'NTU' => 0,
+			'pagada' => 0
+			);
+
+		$query = $this->db->select('COUNT(*) AS count, product_group_id, work_order_status_id, work_order_responsible_id, t1.patent_id, , t2.name AS tramite_type')
+				->from('work_order' )
+				->join('work_order_types AS t1', 't1.id = work_order.work_order_type_id')
+				->join('work_order_types AS t2', 't2.id = t1.patent_id')
+				->where($this->operation_where)
+				->group_by(array('product_group_id', 'work_order_status_id', 'work_order_responsible_id', 'patent_id'))
+				->get();
+//echo $this->db->last_query();
+		if ($query->num_rows() == 0)
+			return $ot;
+
+		foreach ($query->result() as $row)
+		{
+			if (!$ramo)
+			{
+				$ot['per_ramo_tramite'][$row->product_group_id][$row->patent_id]['value'] += $row->count;
+				$ot['per_ramo_tramite'][$row->product_group_id]['all']  += $row->count;
+				$ot['recap-left'] += $row->count;
+			}
+			switch ($row->work_order_status_id)
+			{
+/*
+'tramite': '5' OR '9'
+'terminada': '7' OR '6' OR '4' OR 'NTU'
+'canceladas': 2
+'activadas': 6
+'NTU': 10
+'pagada': 4
+*/
+				case 5: // tramite
+				case 9:
+					$ot['per_status']['tramite'] += $row->count;
+					$ot['recap-middle'] += $row->count;
+				break;
+				case 2: // cancelada
+					$ot['per_status']['canceladas'] += $row->count;
+					$ot['recap-middle'] += $row->count;
+				break;
+				case 4: // pagada
+					$ot['per_status']['pagada'] += $row->count;
+					$ot['per_status']['terminada'] += $row->count;
+					$ot['recap-middle'] += $row->count;
+				break;
+				case 6: // activada
+//					$ot['per_status']['terminada'] += $row->count;
+					$ot['per_status']['activadas'] += $row->count;
+					$ot['recap-middle'] += $row->count;
+				break;
+				case 7: // aceptada
+					$ot['per_status']['terminada'] += $row->count;
+					$ot['recap-middle'] += $row->count;
+				break;
+				case 10: // NTU
+					$ot['per_status']['terminada'] += $row->count;
+					$ot['per_status']['NTU'] += $row->count;
+					$ot['recap-middle'] += $row->count;
+				default:
+				break;
+			}
+			if (!$ramo && isset($ot['per_responsible'][$row->work_order_responsible_id]))
+			{
+				$ot['per_responsible'][$row->work_order_responsible_id]['value'] += $row->count;
+				$ot['recap-right'] += $row->count;
+			}
+		}
+		return $ot;
+	}
+
+	public function operation_detailed( $ramo = NULL, $ot_status = NULL )
+	{
+		if (($ramo === NULL) || ($ot_status === NULL))
+			return FALSE;
+/*
+'tramite': '5' OR '9'
+'terminada': '7' OR '6'
+'canceladas': 2
+'activadas': 6
+'NTU': 10
+'pagada': 4
+*/
+		$or_where = array();
+		switch ($ot_status)
+		{
+			case 'tramite':
+				$this->operation_where['work_order_status_id'] = 5;
+				$or_where[] = 9;
+				break;
+			case 'terminada':
+				$this->operation_where['work_order_status_id'] = 7;
+				$or_where[] = 6;
+				break;
+			case 'canceladas':
+				$this->operation_where['work_order_status_id'] = 2;
+				break;
+			case 'activadas':
+				$this->operation_where['work_order_status_id'] = 6;
+				break;
+			case 'NTU':
+				$this->operation_where['work_order_status_id'] = 10;
+				break;
+			case 'pagada':
+				$this->operation_where['work_order_status_id'] = 4;
+				break;
+			default:
+				return FALSE;
+				break;
+		}
+		$ot = array();
+		$products = $this->getProducts( $ramo );
+		foreach ($products as $product)
+		{
+			$ot[$product['id']] = array(
+				'label' => $product['name'],
+				'value' => 0,
+			);
+		}
+		$ot[0] = array(
+			'label' => 'Total',
+			'value' => 0,
+			);
+		$this->db->select('COUNT(*) AS count, products.id AS prod_id, products.name AS product_name')
+				->from('work_order' )
+				->join('policies', 'policies.id = work_order.policy_id')
+				->join('products', 'products.id = policies.product_id')
+				->where($this->operation_where);
+		foreach ($or_where as $or)
+			$this->db->or_where('work_order_status_id', $or);
+		$query = $this->db->group_by('products.id')
+				->get();
+			
+//echo $this->db->last_query();
+		if ($query->num_rows() == 0)
+			return $ot;
+
+		foreach ($query->result() as $row)
+		{
+			$ot[$row->prod_id]['value'] = $row->count;
+			$ot[0]['value'] += $row->count;			
+		}
+		return $ot;
+	}
 }
 ?>
