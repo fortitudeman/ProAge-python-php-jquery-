@@ -78,8 +78,14 @@ $( document ).ready( function(){
 			if (selectedRamo.length)
 				$( '#patent-type').html(proagesOverview.tramiteTypes[selectedRamo]);
 			else
-				$( '#patent-type').html(proagesOverview.tramiteTypes[0]);			
-
+				$( '#patent-type').html(proagesOverview.tramiteTypes[0]);
+			if ((selectedRamo == 2) || (selectedRamo == 3)) {
+				$("#tri-cuatri-select").html("Cuatrimestre actual");
+				$("#selected-ramo").html("2");
+			} else {
+				$("#tri-cuatri-select").html("Trimestre actual");
+				$("#selected-ramo").html("1");
+			}
 			$( '#patent-type option' ).each(function () {
 				if ( $(this).val() == currentTramiteType ) {
 					$(this).prop('selected', true);

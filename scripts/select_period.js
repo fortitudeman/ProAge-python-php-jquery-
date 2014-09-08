@@ -112,6 +112,7 @@ $( document ).ready(function() {
 			break;
 			case '2':	// Cuatrimestre or Trimestre
 				submitForm = true;
+				selectedRamo = $("#selected-ramo").html();
 				if (selectedRamo == 1) { //  Vida -> Trimestre
 					var rank = Math.floor((currentMonth - 1) / 3) + 1;
 					switch (rank) {
@@ -302,6 +303,5 @@ $( document ).ready(function() {
 		}
 		return false;
 	})
-	
-	
+
 });

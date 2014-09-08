@@ -156,6 +156,12 @@ class Ot extends CI_Controller {
 		// Load Helpers
 		$this->load->helper( array('date', 'filter', 'ot') );
 
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+		}
+
 		$other_filters = array();
 		get_generic_filter($other_filters, array());
 
@@ -172,17 +178,11 @@ class Ot extends CI_Controller {
 implode(', ', $ramo_tramite_types) . '
 		};
 		$( "#patent-type").html(proagesOverview.tramiteTypes[' . $patent_type_ramo . ']);
-		$("#periodo").bind( "click", function(){
-			$("#periodo option:selected").each(function () {
-				if ($(this).val() == 4) {
-					$( "#cust_period-form" ).dialog( "open" );
-				}
-			});
-		})
 	});
 </script>
 ';
 
+		$ramo = isset($other_filters['ramo']) ? $other_filters['ramo'] : 1;
 		// Config view
 		$this->view = array(
 				
@@ -218,16 +218,16 @@ implode(', ', $ramo_tramite_types) . '
 			'<script src="'.base_url().'scripts/config.js"></script>',
 			$add_js,
 			'<script src="'.base_url().'ot/assets/scripts/overview.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'scripts/custom-period.js"></script>',	
+			'<script type="text/javascript" src="'. base_url() .'scripts/select_period.js"></script>',
 		  ),
 		  'content' => 'ot/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'period_form' => $this->show_custom_period(), // custom period configuration form 
+		  'period_fields' => show_period_fields('ot_reporte', $ramo),
 		  'agents' => $agente_str,
 		  'gerentes' => $gerente_str,
 		  'other_filters' => $other_filters
 		);
-		
+
 		// Render view 
 		$this->load->view( 'index', $this->view );	
 	}
@@ -239,13 +239,17 @@ implode(', ', $ramo_tramite_types) . '
 	
 		// If is not ajax request redirect
 		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
-		
+
 		// Load Model
 		$this->load->model( 'work_order' );
 		
 		// Load Helper
 		$this->load->helper( array( 'ot', 'date', 'filter' ) );
-
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+		}
 		$other_filters = array();
 		$data = get_ot_data($other_filters, $this->access_all);
 		
