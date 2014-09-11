@@ -167,7 +167,7 @@ if (!$agent_profile_page && !$operation_profile_page):
                       <tr>					  
 					    <th>
 <?php if (!$agent_profile_page && !$operation_profile_page): ?>
-Período :
+Período :<br />
 <?php echo $period_fields ?>
 <select id="periodo_form" name="periodo" style="width: 175px" title="Período">
 	  <option value="<?php echo $selected_period ?>"></option>
