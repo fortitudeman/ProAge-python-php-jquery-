@@ -2171,7 +2171,7 @@ class Work_order extends CI_Model{
 			{
 /*
 'tramite': '5' OR '9'
-'terminada': '7' OR '6' OR '4' OR 'NTU'
+'terminada': '4' OR '7' OR '8' OR '10'
 'canceladas': 2
 'activadas': 6
 'NTU': 10
@@ -2192,11 +2192,11 @@ class Work_order extends CI_Model{
 					$ot['recap-middle'] += $row->count;
 				break;
 				case 6: // activada
-//					$ot['per_status']['terminada'] += $row->count;
 					$ot['per_status']['activadas'] += $row->count;
 					$ot['recap-middle'] += $row->count;
 				break;
 				case 7: // aceptada
+				case 8: // rechazada
 					$ot['per_status']['terminada'] += $row->count;
 					$ot['recap-middle'] += $row->count;
 				break;
@@ -2222,34 +2222,35 @@ class Work_order extends CI_Model{
 			return FALSE;
 /*
 'tramite': '5' OR '9'
-'terminada': '7' OR '6'
+'terminada': '4' OR '7' OR '8' OR '10'
 'canceladas': 2
 'activadas': 6
 'NTU': 10
 'pagada': 4
 */
-		$or_where = array();
+		$status_where = array();
 		switch ($ot_status)
 		{
 			case 'tramite':
-				$this->operation_where['work_order_status_id'] = 5;
-				$or_where[] = 9;
+				$status_where = array(5, 9);
 				break;
 			case 'terminada':
-				$this->operation_where['work_order_status_id'] = 7;
-				$or_where[] = 6;
+				$status_where = array(4, 7, 8, 10);
 				break;
 			case 'canceladas':
-				$this->operation_where['work_order_status_id'] = 2;
+				$status_where = array(2);
 				break;
 			case 'activadas':
-				$this->operation_where['work_order_status_id'] = 6;
+				$status_where = array(6);
 				break;
 			case 'NTU':
-				$this->operation_where['work_order_status_id'] = 10;
+				$status_where = array(10);
 				break;
 			case 'pagada':
-				$this->operation_where['work_order_status_id'] = 4;
+				$status_where = array(4);
+				break;
+			case 'todos':
+				$status_where = array(5, 9, 4, 2, 10);
 				break;
 			default:
 				return FALSE;
@@ -2273,11 +2274,10 @@ class Work_order extends CI_Model{
 				->join('policies', 'policies.id = work_order.policy_id')
 				->join('products', 'products.id = policies.product_id')
 				->where($this->operation_where);
-		foreach ($or_where as $or)
-			$this->db->or_where('work_order_status_id', $or);
+		if ($status_where)
+			$this->db->where_in('work_order_status_id', $status_where);
 		$query = $this->db->group_by('products.id')
 				->get();
-
 		if ($query->num_rows() == 0)
 			return $ot;
 

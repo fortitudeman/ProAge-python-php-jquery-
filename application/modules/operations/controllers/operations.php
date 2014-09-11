@@ -413,7 +413,7 @@ implode(', ', $ramo_tramite_types) . '
 		$valid_stat_types = array(1 => 1, 2 => 2, 3 => 3);
 		$valid_status = array(
 			'tramite' => 'tramite', 'pagada' => 'pagada',
-			'canceladas' => 'canceladas', 'NTU' => 'NTU');
+			'canceladas' => 'canceladas', 'NTU' => 'NTU', 'todos' => 'todos');
 		$stat_type = $this->uri->segment(3, 0);
 		$status = $this->uri->segment(4, 0);		
 		if (!isset($valid_stat_types[$stat_type]) || !isset($valid_status[$status]))

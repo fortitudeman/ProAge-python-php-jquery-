@@ -24,6 +24,10 @@ $recap_details = 0;
 ?>
             <div class="row">
               <div class="span6">
+                <p>
+                  <a href="javascript:history.back();" title="Regresar">
+                  &lt;- Click aquí para regresar</a>
+                </p>
                 <form id="operation-stats-form" method="post" action="<?php echo current_url()?>">
 Período :&nbsp;<i class="icon-calendar" id="cust_update-period" title="Click para editar el período personalizado"></i><br />
                   <select class="filter-field" id="periodo" name="periodo" style="width: 9.5em">
@@ -101,7 +105,10 @@ echo $stats['per_status']['NTU'];
                         <td colspan="3"></td>
                       </tr>
                       <tr style="background-color: yellow;">
-                        <td>Trámites de nuevos negocios:</td>
+                        <td>
+                          <a class="stat-link" id="todos_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">
+                          Trámites de nuevos negocios:</a>
+                        </td>
                         <td><?php echo $recap_details ?></td>
                       </tr>
                   </table>

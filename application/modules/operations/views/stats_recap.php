@@ -62,7 +62,7 @@ $export_segments[2] = 'stat_recap_export';
 echo $stats['per_ramo_tramite'][1]['all']; ?>
                         </td>
                         <td>
-                          <a id="vida_link" href="<?php echo $base_url . implode('/', $segments) ?>.html" style="font-size: larger;" target="_blank" class="btn btn-link" title="Ver Detalles">
+                          <a id="vida_link" href="<?php echo $base_url . implode('/', $segments) ?>.html" style="font-size: larger;" class="btn btn-link" title="Ver Detalles">
                             <i class="icon-plus"></i></a>
                         </td>
                         <td><?php $percent = $stats['recap-left'] ? round(100 * $stats['per_ramo_tramite'][1]['all'] / $stats['recap-left']) . '%' : $na_value; echo $percent; ?></td>
@@ -89,7 +89,7 @@ echo $stats['per_ramo_tramite'][2]['all'];
 ?>
                         </td>
                         <td>
-                          <a id="gmm_link" href="<?php echo $base_url . implode('/', $segments) ?>.html" style="font-size: larger;" target="_blank" class="btn btn-link" title="Ver Detalles">
+                          <a id="gmm_link" href="<?php echo $base_url . implode('/', $segments) ?>.html" style="font-size: larger;" class="btn btn-link" title="Ver Detalles">
                           <i class="icon-plus"></i></a>
                         </td>
                         <td><?php $percent = $stats['recap-left'] ? round(100 * $stats['per_ramo_tramite'][2]['all'] / $stats['recap-left']) . '%' : $na_value; echo $percent; ?></td>
@@ -115,7 +115,7 @@ echo $stats['per_ramo_tramite'][3]['all']; ?>
                         </td>
 						
                         <td>
-                          <a id="autos_link" href="<?php echo $base_url . implode('/', $segments) ?>.html" style="font-size: larger;" target="_blank" class="btn btn-link" title="Ver Detalles">
+                          <a id="autos_link" href="<?php echo $base_url . implode('/', $segments) ?>.html" style="font-size: larger;" class="btn btn-link" title="Ver Detalles">
                           <i class="icon-plus"></i></a>
                         </td>
                         <td><?php $percent = $stats['recap-left'] ? round(100 * $stats['per_ramo_tramite'][3]['all'] / $stats['recap-left']) . '%' : $na_value; echo $percent; ?></td>
