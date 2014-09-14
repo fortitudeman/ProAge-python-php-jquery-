@@ -185,7 +185,7 @@ $post_data = isset($_POST['query']) ? ',prev_post:'. json_encode($_POST['query']
 		?>
 
             |<a href="<?php echo $simulator_url ?>" class="btn btn-link">Simular resultado y definir meta</a>|
-           <a href="<?php echo $activities_url ?>" class="btn btn-link">Actividades en campo</a> | <a href="<?php echo $perfil_url ?>" class="btn btn-link">Perfil</a><br />            
+           <a href="<?php echo $activities_url ?>" class="btn btn-link">Actividades en campo</a> | <a href="<?php echo $perfil_url ?>" class="btn btn-link" target="_blank">Perfil</a><br />            
     </div>
         
             <div id="info_<?php echo $value['id'] ?>" style="display: none;">

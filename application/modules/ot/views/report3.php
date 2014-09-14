@@ -63,7 +63,7 @@
 				?>
 
             |<a href="<?php echo $simulator_url ?>" class="btn btn-link">Simular resultado y definir meta</a>|
-           <a href="<?php echo $activities_url ?>" class="btn btn-link">Actividades en campo</a> | <a href="<?php echo $perfil_url ?>" class="btn btn-link">Perfil</a><br />            
+           <a href="<?php echo $activities_url ?>" class="btn btn-link">Actividades en campo</a> | <a href="<?php echo $perfil_url ?>" class="btn btn-link" target="_blank">Perfil</a><br />            
                 </div>
             </td>
             <td class="celda_gris"><div class="numeros"style="text-align:right">$ <?php echo $value['iniciales'] ?></div></td>
