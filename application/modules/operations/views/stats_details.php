@@ -59,10 +59,9 @@ Período :&nbsp;<i class="icon-calendar" id="cust_update-period" title="Click pa
                           En trámite</a>
                         </td>
                         <td>
-<?php
-$recap_details += $stats['per_status']['tramite'];
-echo $stats['per_status']['tramite'];
-?>
+<?php $recap_details += $stats['per_status']['tramite'];?>
+                          <a class="stat-link" id="tramite_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">
+                          <?php echo $stats['per_status']['tramite'];?></a>
                         </td>
                       </tr>
                       <tr>
@@ -71,10 +70,9 @@ echo $stats['per_status']['tramite'];
                           Pagados</a>
                         </td>
                         <td>
-<?php
-$recap_details += $stats['per_status']['pagada'];
-echo $stats['per_status']['pagada'];
-?>
+<?php $recap_details += $stats['per_status']['pagada'];?>
+                          <a class="stat-link" id="pagada_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">
+                          <?php echo $stats['per_status']['pagada'];?></a>
                         </td>
                       </tr>
                       <tr>
@@ -83,10 +81,9 @@ echo $stats['per_status']['pagada'];
                           Cancelados</a>
                         </td>
                         <td>
-<?php
-$recap_details += $stats['per_status']['canceladas'];
-echo $stats['per_status']['canceladas'];
-?>
+<?php $recap_details += $stats['per_status']['canceladas']; ?>
+                          <a class="stat-link" id="canceladas_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">
+                          <?php echo $stats['per_status']['canceladas'];?></a>
                         </td>
                       </tr>
                       <tr style="border-bottom: 2em solid white">
@@ -95,10 +92,9 @@ echo $stats['per_status']['canceladas'];
                           NTU</a>
                         </td>
                         <td>
-<?php
-$recap_details += $stats['per_status']['NTU'];
-echo $stats['per_status']['NTU'];
-?>
+<?php $recap_details += $stats['per_status']['NTU']; ?>
+                          <a class="stat-link" id="NTU_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">
+                          <?php echo $stats['per_status']['NTU']; ?></a>
                         </td>
                       </tr>
                       <tr>
@@ -109,7 +105,10 @@ echo $stats['per_status']['NTU'];
                           <a class="stat-link" id="todos_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">
                           Trámites de nuevos negocios:</a>
                         </td>
-                        <td><?php echo $recap_details ?></td>
+                        <td>
+                          <a class="stat-link" id="todos_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">
+                          <?php echo $recap_details ?></a>
+						</td>
                       </tr>
                   </table>
 		        </div>
