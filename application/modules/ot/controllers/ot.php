@@ -182,7 +182,8 @@ implode(', ', $ramo_tramite_types) . '
 </script>
 ';
 
-		$ramo = isset($other_filters['ramo']) ? $other_filters['ramo'] : 1;
+//		$ramo = isset($other_filters['ramo']) ? $other_filters['ramo'] : 1;
+		$ramo = 55;
 		// Config view
 		$this->view = array(
 				

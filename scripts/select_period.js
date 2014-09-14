@@ -94,6 +94,55 @@ $( document ).ready(function() {
 
 	defTo = $("#cust_period_to").val();
 
+	var getEndStart = function (trimestre, currentMonth, currentYear) {
+		var result = true;
+		var rank = 0;
+		if (trimestre) { // trimestre
+			rank = Math.floor((currentMonth - 1) / 3) + 1;
+			switch (rank) {
+				case 1:
+					$("#cust_period_from").val(currentYear + '-01-01');
+					$("#cust_period_to").val(currentYear + '-03-31');
+				break;
+				case 2:
+					$("#cust_period_from").val(currentYear + '-04-01');
+					$("#cust_period_to").val(currentYear + '-06-30');
+				break;
+				case 3:
+					$("#cust_period_from").val(currentYear + '-07-01');
+					$("#cust_period_to").val(currentYear + '-09-30');
+				break;
+				case 4:
+					$("#cust_period_from").val(currentYear + '-10-01');
+					$("#cust_period_to").val(currentYear + '-12-31');
+				break;
+				default:
+					result = false;
+				break;
+			}
+		} else { // cuatrimestre
+			rank = Math.floor((currentMonth -1) / 4) + 1;
+			switch (rank) {
+				case 1:
+					$("#cust_period_from").val(currentYear + '-01-01');
+					$("#cust_period_to").val(currentYear + '-04-30');
+				break;
+				case 2:
+					$("#cust_period_from").val(currentYear + '-05-01');
+					$("#cust_period_to").val(currentYear + '-08-31');
+				break;
+				case 3:
+					$("#cust_period_from").val(currentYear + '-09-01');
+					$("#cust_period_to").val(currentYear + '-12-31');
+				break;
+				default:
+					result = false;
+				break;
+			}	
+		}
+		return result;
+	}
+
 	var updateEndStart = function( periodoHidden ) {
 		var submitForm = false;
 		var curDate = new Date();
@@ -114,47 +163,9 @@ $( document ).ready(function() {
 				submitForm = true;
 				selectedRamo = $("#selected-ramo").html();
 				if (selectedRamo == 1) { //  Vida -> Trimestre
-					var rank = Math.floor((currentMonth - 1) / 3) + 1;
-					switch (rank) {
-						case 1:
-							$("#cust_period_from").val(currentYear + '-01-01');
-							$("#cust_period_to").val(currentYear + '-03-31');
-						break;
-						case 2:
-							$("#cust_period_from").val(currentYear + '-04-01');
-							$("#cust_period_to").val(currentYear + '-06-30');
-						break;
-						case 3:
-							$("#cust_period_from").val(currentYear + '-07-01');
-							$("#cust_period_to").val(currentYear + '-09-30');
-						break;
-						case 4:
-							$("#cust_period_from").val(currentYear + '-10-01');
-							$("#cust_period_to").val(currentYear + '-12-31');
-						break;
-						default:
-							submitForm = false;
-						break;
-					}
+					submitForm = getEndStart(true, currentMonth, currentYear);
 				} else if ((selectedRamo == 2) || (selectedRamo == 3)) { // GMM or Autos -> Cuatrimestre
-					var rank = Math.floor((currentMonth -1) / 4) + 1;
-					switch (rank) {
-						case 1:
-							$("#cust_period_from").val(currentYear + '-01-01');
-							$("#cust_period_to").val(currentYear + '-04-30');
-						break;
-						case 2:
-							$("#cust_period_from").val(currentYear + '-05-01');
-							$("#cust_period_to").val(currentYear + '-08-31');
-						break;
-						case 3:
-							$("#cust_period_from").val(currentYear + '-09-01');
-							$("#cust_period_to").val(currentYear + '-12-31');
-						break;
-						default:
-							submitForm = false;
-						break;
-					}
+					submitForm = getEndStart(false, currentMonth, currentYear);
 				} else
 					submitForm = false;				
 			break;
@@ -167,6 +178,12 @@ $( document ).ready(function() {
 			break;
 			case '5':	// Semana
 				$("#semana-container").dialog( "open" );
+			break;
+			case '6':	// Trimestre
+				submitForm = getEndStart(true, currentMonth, currentYear);
+			break;
+			case '7': // Cuatrimestre
+				submitForm = getEndStart(false, currentMonth, currentYear);			
 			break;
 			default:
 			break;
@@ -297,8 +314,11 @@ $( document ).ready(function() {
 
 	$("#periodo-links a").bind( "click", function(){
 		var periodoHidden = $(this).attr("tabindex");
-		if ((periodoHidden <= 5) && (periodoHidden >= 1)) {
-			$("#periodo").val(periodoHidden);
+		if ((periodoHidden <= 7) && (periodoHidden >= 1)) {
+			if ((periodoHidden == 6) || (periodoHidden == 7))
+				$("#periodo").val(4);			
+			else
+				$("#periodo").val(periodoHidden);
 			updateEndStart(periodoHidden);
 		}
 		return false;
