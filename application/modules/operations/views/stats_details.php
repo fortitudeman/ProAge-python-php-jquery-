@@ -16,6 +16,7 @@
 $base_url = base_url();
 $this->load->helper('filter');
 $selected_filter_period = get_selected_filter_period();
+$selected_period = get_filter_period();
 $segments = $this->uri->rsegment_array();
 $export_segments = $segments;
 $export_segments[2] = 'stat_recap_export';
@@ -29,14 +30,12 @@ $recap_details = 0;
                   &lt;- Click aquí para regresar</a>
                 </p>
                 <form id="operation-stats-form" method="post" action="<?php echo current_url()?>">
-Período :&nbsp;<i class="icon-calendar" id="cust_update-period" title="Click para editar el período personalizado"></i><br />
-                  <select class="filter-field" id="periodo" name="periodo" style="width: 9.5em">
-                    <option value="1" <?php echo $selected_filter_period[1] ?>>Mes</option>
-                    <option value="2" <?php echo $selected_filter_period[2] ?>>Trimestre</option>
-                    <option value="3" <?php echo $selected_filter_period[3] ?>>Año</option>
-                    <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
-                    <option value="5" <?php echo $selected_filter_period[5] ?>>Cuatrimestre</option>
-                  </select>
+Período :<br />
+<?php echo $period_fields ?>
+<select id="periodo_form" name="periodo" style="width: 175px" title="Período">
+	  <option value="<?php echo $selected_period ?>"></option>
+</select>
+<input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
                 </form>
               </div>
               <div class="span6" style="text-align: right">			  
@@ -118,8 +117,3 @@ Período :&nbsp;<i class="icon-calendar" id="cust_update-period" title="Click pa
 		        </div>
             </div>			
 
-
-<div style="margin-top: 10em">
-<?php echo $period_form ?>
-
-</div>

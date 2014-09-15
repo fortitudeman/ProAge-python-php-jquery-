@@ -34,8 +34,8 @@ else
 
 $agent_profile_page = ($this->uri->segment(1) == 'agent');
 $operation_profile_page = ($this->uri->segment(1) == 'operations');
+$selected_period = get_filter_period();
 if (!$agent_profile_page && !$operation_profile_page):
-	$selected_period = get_filter_period();
 ?>
 <div>
     <ul class="breadcrumb">
@@ -134,7 +134,7 @@ if (!$agent_profile_page && !$operation_profile_page):
                   <table class="filterstable">
                     <thead>
                       <tr>
-					    <th colspan="5">
+					    <th colspan="6">
 <?php if ($operation_profile_page): ?>
 					    <input type="hidden" value="" id="export-xls-input" name="export_xls_input" disabled="disabled" />
 <div class="row">	
@@ -166,7 +166,7 @@ if (!$agent_profile_page && !$operation_profile_page):
                       </tr>
                       <tr>					  
 					    <th>
-<?php if (!$agent_profile_page && !$operation_profile_page): ?>
+<?php if (!$agent_profile_page): ?>
 Período :<br />
 <?php echo $period_fields ?>
 <select id="periodo_form" name="periodo" style="width: 175px" title="Período">
@@ -265,17 +265,17 @@ Período :<br />
 
               </tbody>
           </table>
+</div>
 <?php if (!$agent_profile_page && !$operation_profile_page): ?>
 
-</div>
+        </div><!-- box-content -->
 
-        </div>
     </div><!--/span-->
 
 </div><!--/row-->
 <?php endif ?>
 
-<?php if ($agent_profile_page  || $operation_profile_page): ?>
+<?php if ($agent_profile_page): ?>
 <div style="margin-top: 10em">
 <?php echo $period_form ?>
 

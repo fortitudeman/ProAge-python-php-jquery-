@@ -151,16 +151,17 @@ class Operations extends CI_Controller {
 			));	
 			redirect( 'home', 'refresh' );
 		}
-/*		$this->load->helper( array('ot/ot', 'filter' ));
+		$this->load->helper( array('ot/ot', 'filter' ));
 		if (count($_POST))
 		{
 			update_custom_period($this->input->post('cust_period_from'),
 				$this->input->post('cust_period_to'), FALSE);
-		}*/
+		}
 		$base_url = base_url();
+		$ramo= 55;
 		$content_data = array(
 			'access_all' => $this->access_all,
-			'period_form' => show_custom_period(),
+			'period_fields' => show_period_fields('operations', $ramo),
 			'agents' => $this->user->getAgents(),
 			'gerentes' => $this->user->getSelectsGerentes(),
 			'export_url' => $base_url . 'operations/report_export/' .  $this->user_id . '.html'
@@ -180,17 +181,7 @@ implode(', ', $ramo_tramite_types) . '
 			$("#export-xls-input").val("export_xls");
 			$(this).parents("form").submit();
 		})
-		
-		$("#periodo").bind( "click", function(){
-			var parentForm = $(this).parents("form");
-			$("#periodo option:selected").each(function () {
-				if ($(this).val() == 4) {
-					$( "#cust_period-form" ).dialog( "open" );
-				} else
-					parentForm.submit();
-				return false;
-			});
-		})
+
 	});
 </script>
 ';
@@ -225,7 +216,7 @@ implode(', ', $ramo_tramite_types) . '
 				'<script src="' . $base_url . 'ot/assets/scripts/list_js.js"></script>',
 				'<script src="' . $base_url . 'scripts/config.js"></script>',
 				'<script src="' . $base_url . 'ot/assets/scripts/overview.js"></script>',
-				'<script type="text/javascript" src="' . $base_url . 'scripts/custom-period.js"></script>',	
+				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
 				$add_js,
 			),
 			'content' => 'operations/operation_profile', // View to load
@@ -323,15 +314,22 @@ implode(', ', $ramo_tramite_types) . '
 			));	
 			redirect( 'home', 'refresh' );
 		}
-
+		$this->load->helper( array('ot/ot', 'filter' ));
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+		}
 		if ($stat_type == 'recap')
 			$stats = $this->_read_stats();
 		else
 			$stats = $this->_read_stats($stat_type);
+
 		$base_url = base_url();
+		$ramo = 55;
 		$content_data = array(
 			'access_all' => $this->access_all,
-			'period_form' => show_custom_period(),
+			'period_fields' => show_period_fields('operations', $ramo),
 			'stats' => $stats,
 			);
 		if ($stat_type == 'recap')
@@ -347,23 +345,11 @@ implode(', ', $ramo_tramite_types) . '
 			$("#export-xls-input").val("export_xls");
 			$(this).parents("form").submit();
 		})
-		
-		$("#periodo").bind( "click", function(){
-			var parentForm = $(this).parents("form");
-			$("#periodo option:selected").each(function () {
-				if ($(this).val() == 4) {
-					$( "#cust_period-form" ).dialog( "open" );
-				} else {
-					parentForm.submit();
-				}
-				return false;
-			});
-		})
 
-		$("#periodo").bind( "change", function(){
+/*		$("#periodo").bind( "change", function(){
 			var parentForm = $(this).parents("form");
 			parentForm.submit();
-		})
+		})*/
 
 		$(".stat-link").bind( "click", function(){
 			var linkId = $(this).attr("id");
@@ -395,7 +381,7 @@ implode(', ', $ramo_tramite_types) . '
 			),
 			'scripts' => array(
 				'<script src="' . $base_url . 'scripts/config.js"></script>',
-				'<script type="text/javascript" src="' . $base_url . 'scripts/custom-period.js"></script>',	
+				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
 				$add_js,
 			),
 			'content' => 'operations/operation_profile', // View to load
@@ -660,7 +646,7 @@ implode(', ', $ramo_tramite_types) . '
 	}
 
 // List OTs
-// Copied and pasted from the code of agent/find:
+// Inspired from the code of agent/find:
 	public function find()
 	{
 		// If is not ajax request redirect
@@ -677,18 +663,14 @@ implode(', ', $ramo_tramite_types) . '
 	{
 		// Load Helpers
 		$this->load->helper( array( 'ot/ot', 'ot/date', 'filter' ) );
-
-		if ( ( ( $periodo = $this->input->post('periodo') ) !== FALSE ) && 
-			( $periodo >= 1 ) && (  $periodo <= 5 ) )
-			set_filter_period($periodo);
-
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+		}
 		$save_session = $this->sessions['id'];
 		$this->sessions['id'] = $this->user_id;
-//$this->benchmark->mark('code_start');
-		$data = $this->work_order->find( FALSE );
-//$this->benchmark->mark('code_end');
-//log_message('error', "Periodo: $periodo - _read_ots: " . $this->benchmark->elapsed_time('code_start', 'code_end'));
-
+		$data = get_ot_data($other_filters, $this->access_all);
 		$this->sessions['id']= $save_session;
 		return $data;
 	}
@@ -704,12 +686,9 @@ implode(', ', $ramo_tramite_types) . '
 			set_filter_period($posted_periodo);
 			$periodo = $posted_periodo;
 		}
-//$this->benchmark->mark('code_start');
 		$this->work_order->init_operations($this->user_id, $periodo, $ramo);
 		$add_where = $ramo ? array('t2.name' => 'NUEVO NEGOCIO') : NULL;
 		$result = $this->work_order->operation_stats($ramo, $add_where);
-//$this->benchmark->mark('code_end');
-//log_message('error', "Periodo: $periodo - _read_stats: " . $this->benchmark->elapsed_time('code_start', 'code_end'));
 		return $result;
 	}
 
@@ -717,11 +696,8 @@ implode(', ', $ramo_tramite_types) . '
 	{
 		$this->load->helper('filter');
 		$periodo = get_filter_period();
-//$this->benchmark->mark('code_start');
 		$this->work_order->init_operations($this->user_id, $periodo, $ramo);
 		$result = $this->work_order->operation_detailed($ramo, $status);
-//$this->benchmark->mark('code_end');
-//log_message('error', "Periodo: $periodo - _read_details: " . $this->benchmark->elapsed_time('code_start', 'code_end'));
 		return $result;		
 	}
 }
