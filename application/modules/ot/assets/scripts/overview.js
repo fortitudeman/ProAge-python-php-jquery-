@@ -27,7 +27,6 @@ $( document ).ready( function(){
 			type: "POST",
 			data: Data,
 			cache: false,
-			async: false,
 			//dataType: 'json',
 			beforeSend: function(){
 				$( '#loading' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-1.gif">   Cargando...' );
