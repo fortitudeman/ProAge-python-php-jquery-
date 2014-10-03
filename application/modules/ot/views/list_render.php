@@ -37,7 +37,9 @@ $agent_profile_page = ($this->uri->segment(1) == 'agent');
 				{
 					$ver_update_ot = '&nbsp;' . anchor('ot/update_poliza/' . $value['id'], '<i class="icon-edit" title="Editar OT '. $value['uid']. '"></i>', array('title' => 'Editar')) .
 						'&nbsp;' .
-						anchor('ot/ver_ot/' . $value['id'], '<i class="icon-eye-open" title="Ver OT '. $value['uid']. '"></i>', array('target' => '_blank', 'title' => 'Ver'));
+						anchor('ot/ver_ot/' . $value['id'], '<i class="icon-eye-open" title="Ver OT '. $value['uid']. '"></i>', array('target' => '_blank', 'title' => 'Ver')) .
+						'&nbsp;' .
+						anchor('ot/update_ot/' . $value['id'], '<i class="icon-pencil" title="Editar OT (más) '. $value['uid']. '"></i>', array('title' => 'Editar (más)'));
 				}
 				elseif ($agent_profile_page)
 					$ver_update_ot = 

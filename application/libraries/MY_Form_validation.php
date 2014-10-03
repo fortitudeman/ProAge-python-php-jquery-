@@ -106,4 +106,24 @@ class MY_Form_validation extends CI_Form_validation{
             $this->set_message('decimal_or_integer', 'El campo %s debe contener un número decimal o entero.');
         return $result;
 	}
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Match 2 fields to others
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	fields
+	 * @return	bool
+	 */
+	public function is_unique_but($str, $fields)
+	{
+		list($table, $field_unique, $field_common_name, $field_common_value)=explode('.', $fields);
+		$query = $this->CI->db->limit(1)->get_where($table, array(
+			$field_unique => $str,
+			"$field_common_name !=" => $field_common_value)
+		);
+		return $query->num_rows() === 0;
+    }
 }

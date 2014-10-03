@@ -2487,10 +2487,16 @@ alert("changed!");
 		$this->_update_ver( 'ver', $id);
 	}
 
-// Update OT	
+// Update OT (prima and forma de pago)
 	public function update_poliza( $id = null ){
 
 		$this->_update_ver( 'editar', $id);
+	}
+	
+// Update OT (update more fields)
+	public function update_ot( $id = null ){
+
+		$this->_update_ver( 'update', $id);
 	}
 
 // Common to Ver and Update OT	
@@ -2546,24 +2552,92 @@ alert("changed!");
 			redirect( 'ot', 'refresh' );
 		}*/
 
-		if ( ($function == 'editar') && !empty( $_POST ) ) {
+		$is_nuevo_negocio = ($ot[0]['parent_type_name']['id'] == 47) || ($ot[0]['parent_type_name']['id'] == 90);
 
-			$this->form_validation->set_rules('prima', ' Prima anual', 'trim|required|decimal_or_integer');
-			$this->form_validation->set_rules('payment_interval_id', ' Forma de pago', 'trim|required|is_natural_no_zero|less_than[5]');
- 
+		if ( (($function == 'editar') || ($function == 'update') ) && !empty( $_POST ) ) {
+
+			if ($function == 'editar') {
+				$this->form_validation->set_rules('prima', ' Prima anual', 'trim|required|decimal_or_integer');
+				$this->form_validation->set_rules('payment_interval_id', ' Forma de pago', 'trim|required|is_natural_no_zero|less_than[5]');
+			} else {
+				$this->form_validation->set_rules('ot', 'Número de OT', "is_unique_but[work_order.uid.id.$id]");
+				$this->form_validation->set_rules('creation_date', 'Fecha de tramite', 'trim|required|min_length[10]');
+				$this->form_validation->set_rules('agent[]', 'Agente', 'trim|required|is_natural_no_zero');
+				$this->form_validation->set_rules('name', 'Nombre del asegurado / contratante', 'trim|required|xxs_clean');
+				$this->form_validation->set_rules('policy_uid', ' Poliza', 'trim|xxs_clean');
+				$this->form_validation->set_rules('comments', 'Comentarios', 'trim|xxs_clean');
+				if ($is_nuevo_negocio) {
+					$this->form_validation->set_rules('currency_id', 'Moneda', 'trim|required|is_natural_no_zero|less_than[3]');
+					$this->form_validation->set_rules('payment_method_id', 'Conducto', 'trim|required|is_natural_no_zero|less_than[7]');
+					$this->form_validation->set_rules('payment_interval_id', ' Forma de pago', 'trim|required|is_natural_no_zero|less_than[5]');
+				}
+			}
 			// Run Validation
-			if ( $this->form_validation->run() == TRUE ){
+			if ( $this->form_validation->run() ) {
 
-				$field_values = array(
-					'prima' => $this->input->post( 'prima' ),
-					'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
-				);
+				$error = false;
+				$current_date = date( 'Y-m-d H:s:i' );
+				if ($function == 'editar')
+					$field_values = array(
+						'prima' => $this->input->post( 'prima' ),
+						'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
+					);
+				else {
 
-				if ( $this->work_order->update( 'policies', $ot[0]['policy_id'], $field_values) )
+	// 1. update table `work_order`
+					$ot_fields = array(
+						'uid' => $this->input->post( 'ot' ),
+						'creation_date' => $this->input->post('creation_date') . ' ' . date( 'H:s:i' ),
+						'comments' => $this->input->post('comments'),
+						'last_updated' => $current_date,
+					);	
+					if ( !$this->work_order->update( 'work_order', $ot[0]['id'], $ot_fields) )
+						$error = true;
+					else {
+
+	// 2. update table `policies_vs_users`
+						$posted_agents = $this->input->post('agent');
+						$percentages = $this->input->post('porcentaje');
+						if (($posted_agents !== FALSE) && is_array($posted_agents) &&
+							is_array($percentages) && (count($posted_agents) == count($percentages))) {
+							$agents = array();
+							foreach ($posted_agents as $key => $value)
+								$agents[] = array(
+									'user_id' => $value, 
+									'policy_id' => $ot[0]['policy_id'],
+									'percentage' => $percentages[$key],
+									'since' => $current_date
+									);
+							$this->work_order->generic_delete( 'policies_vs_users',
+								array('policy_id' => $ot[0]['policy_id']));	
+							if (! $this->work_order->create_banch( 'policies_vs_users', $agents ))
+								$error = true;
+						}
+					}
+
+					if (!$error) {
+
+	// 4. update table `policies`
+						$field_values = array(
+							'name' => $this->input->post( 'name' ),
+							'last_updated' => $current_date,
+							'date' => $current_date,
+							'uid' => $this->input->post( 'uid' )
+							);
+						if ($is_nuevo_negocio)
+							$field_values = array_merge($field_values, array(
+								'currency_id' => $this->input->post( 'currency_id' ),
+								'payment_method_id' => $this->input->post( 'payment_method_id' ),
+								'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
+							));
+					}
+				}
+				if ( isset($field_values) && 
+					$this->work_order->update( 'policies', $ot[0]['policy_id'], $field_values) )
 					$message = array(
 						'type' => true,	
 						'message' => 'Se guardo el registro correctamente.'
-					);	
+					);
 				else
 					$message = array(
 						'type' => false,	
@@ -2627,15 +2701,30 @@ alert("changed!");
 		}
 	});
 ';
-	if ($function == 'editar')
+	if ($function == 'editar') 
 		$add_js .= '
 	$(":input[readonly=\'readonly\']").parents(".control-group").hide();	
 	$("#view-details").bind( "click", function(){
 		$(":input[readonly=\'readonly\']").parents(".control-group").toggle();
 		return false;
-	});
-</script>
+	});';
+
+	$edit_script = '';
+	if ($function == 'update') {
+		$edit_script = '<script src="' . base_url() . 'ot/assets/scripts/edit.js"></script>';
+		if ($is_nuevo_negocio)
+			$add_js .= '
+	$(".hide-update-nuevo").hide();
 ';
+		else
+			$add_js .= '
+	$(".hide-update-others").hide();
+';
+	}
+	$add_js .= '
+</script>
+';		
+
 		// Config view
 		$this->view = array(
 				
@@ -2647,10 +2736,12 @@ alert("changed!");
 		  'css' => array(
 		  ),
 		  'scripts' =>  array(
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+			  $edit_script,
 			  '<script src="'.base_url().'scripts/config.js"></script>',
 			  $add_js
 		  ),
-//		  'content' => 'ot/update_poliza', // View to load
 		  'content' => 'ot/update_view', // View to load
 		  'message' => $this->session->flashdata('message'),
 		  'agents' => $agents,
@@ -2662,6 +2753,7 @@ alert("changed!");
 		  'payment_conducts' => $payment_conduct_array,
 		  'payment_intervals' => $payment_interval_array,
 	 	  'data' => $ot[0],
+		  'is_nuevo_negocio' => $is_nuevo_negocio,
 		  'function' => $function
 		);
 

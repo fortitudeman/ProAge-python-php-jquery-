@@ -13,6 +13,9 @@
 
   	
 */
+$update = ($function == 'update');
+$update_nn_editable = $update && $is_nuevo_negocio;
+$update_others_editable = $update && !$is_nuevo_negocio;
 ?>
 
 <div>
@@ -74,36 +77,79 @@
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Número OT</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="ot" name="ot" type="text" value="<?php echo $data['uid'] ?>" readonly="readonly">
+<?php if ($update): ?>
+                      <input class="input-small focused" id="otnumber" type="text" readonly="readonly" value="<?php echo substr($data['uid'], 0, 5); ?>">
+                      <input class="input-xlarge focused required" id="ot" name="ot" type="text" value="<?php echo substr($data['uid'], 5); ?>">
+<?php else: ?>
+                      <input class="input-xlarge focused required update-editable" id="ot" name="ot" type="text" value="<?php echo $data['uid'] ?>" readonly="readonly">
+<?php endif; ?>
                     </div>
                   </div>
 
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Fecha de tramite</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="creation_date" name="creation_date" value="<?php echo substr($data['creation_date'], 0, 10) ?>" type="text" readonly="readonly">
+                      <input class="input-xlarge focused required update-editable date" id="creation_date" name="creation_date" value="<?php echo substr($data['creation_date'], 0, 10) ?>" type="text"  <?php if (!$update) echo 'readonly="readonly"'?>>
                     </div>
                   </div>
-
+<?php if (!$update) : ?>
                   <div class="control-group *new-bussiness">
                     <label class="control-label text-error" for="inputError">Agente</label>
                     <div class="controls">
-                       <select class="input-xxlarge focused required" name="agent[]" id="agent-select" readonly="readonly" multiple="multiple">
+                       <select class="input-xxlarge focused required update-editable" name="agent[]" id="agent-select" readonly="readonly" multiple="multiple">
 <?php
 $selected_agents = array();
 foreach ($data['agents'] as $value)
 	$selected_agents[ $value['agent_id'] ] = sprintf("%s %s (percentaje : %s)", $value['name'], $value['lastnames'], $value['percentage']);
 foreach ($agents as $key => $value) {
-	if (isset($selected_agents[$key]))
+	if (isset($selected_agents[$key])) {
 		echo '<option value="' . $key . '" selected="selected">' . $selected_agents[$key] . '</option>';
-//	else
-//		echo '<option value="' . $key . '" disabled="disabled">' . $value . '</option>';
+	}
 }
 ?>
-					   
                        </select>
+                   </div>
+                  </div>
+<!--                  <input type="hidden" id="agenconfirm" value="true" />  -->
+<?php else:
+if ($data['agents']):
+	$count = 0;
+	foreach ($data['agents'] as $key => $value):
+		$count++;
+?>
+
+                  <div class="control-group *new-bussiness">
+                    <label class="control-label text-error" for="inputError">Agente</label>
+                    <div class="controls">
+                       <select class="input-xlarge focused required" name="agent[]" id="agent-select">
+<?php foreach ($agents as $a_key => $a_value):
+	if ($value['agent_id'] == $a_key)
+		echo '<option value="' . $a_key . '" selected="selected">' . $a_value . "</option>\n";
+	else
+		echo '<option value="' . $a_key . '">' . $a_value . "</option>\n";
+endforeach; ?>
+                       </select>
+                       <input value="<?php echo $value['percentage']; ?>%" class="input-small focused required" id="agent-<?php echo $count; ?>" name="porcentaje[]" type="text" onblur="javascript: setFields( 'agent-<?php echo $count; ?>' )" placeholder="%">
                     </div>
                   </div>
+<?php endforeach;
+else :
+	$count = 1;?>
+                  <div class="control-group *new-bussiness">
+                    <label class="control-label text-error" for="inputError">Agente</label>
+                    <div class="controls">
+                       <select class="input-xlarge focused required" name="agent[]" id="agent-select">
+<?php foreach ($agents as $a_key => $a_value):
+	echo '<option value="' . $a_key . '">' . $a_value . "</option>\n";
+endforeach; ?>
+                       </select>
+                       <input value="100%" class="input-small focused required" id="agent-1" name="porcentaje[]" type="text" onblur="javascript: setFields( 'agent-1' )" placeholder="%">
+                    </div>
+                  </div>
+<?php endif; ?>
+                  <input type="hidden" id="countAgent" value="<?php echo $count; ?>" />
+                  <div id="dinamicagent"></div>
+<?php endif; ?>
 
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Ramo</label>
@@ -155,7 +201,7 @@ $display[ $data['product_group_id'] ] = '';
                     </div>
                   </div>
 
-                  <div class="control-group typtramite">
+                  <div class="control-group typtramite hide-update-others">
                     <label class="control-label text-error" for="inputError">Producto<br /><div id="loadproduct"></div></label>
                     <div class="controls">
                       <select class="input-xlarge focused required" id="product_id" name="product_id" readonly="readonly">
@@ -170,7 +216,7 @@ $display[ $data['product_group_id'] ] = '';
                     </div>
                   </div>
 
-                  <div class="control-group period">
+                  <div class="control-group period hide-update-others">
                     <label class="control-label text-error" for="inputError">Plazo</label>
                     <div class="controls">
                       <select class="input-xlarge focused required" id="period" name="period" readonly="readonly">
@@ -185,21 +231,23 @@ $display[ $data['product_group_id'] ] = '';
                     </div>
                   </div>
 
-                  <div class="control-group">
+                  <div class="control-group hide-update-others">
                     <label class="control-label text-error" for="inputError">Prima anual</label>
                     <div class="controls">
-                      <input <?php if ($function == 'ver') echo 'readonly="readonly"' ?> style="height: 1.7em" type="number" pattern="[0-9]+([\.][0-9]+)?" step="0.01" value="<?php echo set_value('prima', $data['policy'][0]['prima']); ?>" class="input-xlarge focused required" id="prima" name="prima" />
+                      <input <?php if (($function == 'ver') || ($function == 'update')) echo 'readonly="readonly"' ?> style="height: 1.7em" type="number" pattern="[0-9]+([\.][0-9]+)?" step="0.01" value="<?php echo set_value('prima', $data['policy'][0]['prima']); ?>" class="input-xlarge focused required" id="prima" name="prima" />
                       <span id="prima-error" style="display: none">Campo invalido</span>
                     </div>
                   </div>
 
-                  <div class="control-group typtramite">
+                  <div class="control-group typtramite hide-update-others">
                     <label class="control-label text-error" for="inputError">Moneda</label>
                     <div class="controls">
-                      <select class="input-xlarge focused required" id="currency_id" name="currency_id" readonly="readonly">
+                      <select class="input-xlarge focused required update-nn-editable" id="currency_id" name="currency_id" <?php if (!$update_nn_editable) echo 'readonly="readonly"'?>>
 <?php foreach ($currencies as $key => $value) {
 	if ($key == $data['policy'][0]['currency_id'])
 		echo '<option value="' . $key . '" selected="selected">' . $value . '</option>';
+	elseif ($update_nn_editable)
+		echo '<option value="' . $key . '">' . $value . '</option>';
 	else
 		echo '<option value="' . $key . '" disabled="disabled">' . $value . '</option>';
 } ?>
@@ -208,13 +256,15 @@ $display[ $data['product_group_id'] ] = '';
                     </div>
                   </div>
 
-                  <div class="control-group typtramite">
+                  <div class="control-group typtramite hide-update-others">
                     <label class="control-label text-error" for="inputError">Conducto<br /></label>
                     <div class="controls">
-                      <select class="input-xlarge focused required" id="payment_method_id" name="payment_method_id" readonly="readonly">
+                      <select class="input-xlarge focused required update-nn-editable" id="payment_method_id" name="payment_method_id" <?php if (!$update_nn_editable) echo 'readonly="readonly"'?>>
 <?php foreach ($payment_conducts as $key => $value) {
 	if ($key == $data['policy'][0]['payment_method_id'])
 		echo '<option value="' . $key . '" selected="selected">' . $value . '</option>';
+	elseif ($update_nn_editable)
+		echo '<option value="' . $key . '">' . $value . '</option>';
 	else
 		echo '<option value="' . $key . '" disabled="disabled">' . $value . '</option>';
 } ?>
@@ -223,10 +273,10 @@ $display[ $data['product_group_id'] ] = '';
                     </div>
                   </div>
 
-                  <div class="control-group typtramite">
+                  <div class="control-group typtramite hide-update-others">
                     <label class="control-label text-error" for="inputError">Forma de pago<br /></label>
                     <div class="controls">
-                      <select <?php if ($function == 'ver') echo 'readonly="readonly"' ?> class="input-xlarge focused required" id="payment_interval_id" name="payment_interval_id">
+                      <select <?php if (($function == 'ver') || (!$update_nn_editable && $update)) echo 'readonly="readonly"' ?> class="input-xlarge focused required update-nn-editable" id="payment_interval_id" name="payment_interval_id">
 <?php
 if ($function == 'editar')
 	foreach ($payment_intervals as $key => $value) {
@@ -239,6 +289,8 @@ else
 	foreach ($payment_intervals as $key => $value) {
 		if ($key == $data['policy'][0]['payment_interval_id'])
 			echo '<option value="' . $key . '" selected="selected">' . $value . '</option>';
+		elseif ($update_nn_editable)
+			echo '<option value="' . $key . '">' . $value . '</option>';
 		else
 			echo '<option value="' . $key . '" disabled="disabled">' . $value . '</option>';
 	}
@@ -251,19 +303,28 @@ else
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Nombre del asegurado / contratante</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="name" name="name" type="text" value="<?php echo $data['policy'][0]['name'] ?>" readonly="readonly">
+                      <input class="input-xlarge focused required update-editable" id="name" name="name" type="text" value="<?php echo $data['policy'][0]['name'] ?>"  <?php if(!$update) echo 'readonly="readonly"'?>>
                     </div>
-                  </div> 
+                  </div>
+
+<?php if ($function == 'update') :?>
+                  <div class="control-group poliza">
+                    <label class="control-label text-error" for="inputError">Poliza</label>
+                    <div class="controls">
+                       <input class="input-xlarge focused required update-editable" id="uid" name="uid" type="text" value="<?php echo $data['policy'][0]['uid'] ?>" <?php if(!$update) echo 'readonly="readonly"'?>>
+                    </div>
+                  </div>
+<?php endif ?>
 
                   <div class="control-group">
-                    <label class="control-label text-error" for="inputError">Comentarios</label>
+                    <label class="control-label" for="inputError">Comentarios</label>
                     <div class="controls">
-                      <textarea class="input-xlarge focused required" id="comments" name="comments" rows="6" readonly="readonly"><?php echo $data['comments'] ?></textarea>
+                      <textarea class="input-xlarge focused update-editable" id="comments" name="comments" rows="6" <?php if (!$update) echo 'readonly="readonly"'?>><?php echo $data['comments'] ?></textarea>
                     </div>
                   </div>
 
                   <div id="actions-buttons-forms" class="form-actions">
-<?php if ($function == 'editar') : ?>
+<?php if (($function == 'editar') || ($function == 'update')): ?>
                     <button type="submit" class="btn btn-primary">Guardar</button>
                     <input type="button" class="btn" onclick="javascript: history.back();" value="Cancelar">
 <?php else: ?>
