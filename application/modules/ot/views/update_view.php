@@ -219,10 +219,12 @@ $display[ $data['product_group_id'] ] = '';
                   <div class="control-group period hide-update-others">
                     <label class="control-label text-error" for="inputError">Plazo</label>
                     <div class="controls">
-                      <select class="input-xlarge focused required" id="period" name="period" readonly="readonly">
+                      <select class="input-xlarge focused required" id="period" name="period" <?php if (!$update || ($update && !$is_nuevo_negocio)) echo 'readonly="readonly"' ?>>
 <?php foreach ($periods as $value) {
 	if ($value == $data['policy'][0]['period'])
 		echo '<option value="' . $value . '" selected="selected">' . $value . '</option>';
+	elseif ($update_nn_editable)
+		echo '<option value="' . $value . '">' . $value . '</option>';	
 	else
 		echo '<option value="' . $value . '" disabled="disabled">' . $value . '</option>';
 } ?>
@@ -234,7 +236,7 @@ $display[ $data['product_group_id'] ] = '';
                   <div class="control-group hide-update-others">
                     <label class="control-label text-error" for="inputError">Prima anual</label>
                     <div class="controls">
-                      <input <?php if (($function == 'ver') || ($function == 'update')) echo 'readonly="readonly"' ?> style="height: 1.7em" type="number" pattern="[0-9]+([\.][0-9]+)?" step="0.01" value="<?php echo set_value('prima', $data['policy'][0]['prima']); ?>" class="input-xlarge focused required" id="prima" name="prima" />
+                      <input <?php if (($function == 'ver') || ($update && !$is_nuevo_negocio)) echo 'readonly="readonly"' ?> style="height: 1.7em" type="number" pattern="[0-9]+([\.][0-9]+)?" step="0.01" value="<?php echo set_value('prima', $data['policy'][0]['prima']); ?>" class="input-xlarge focused required" id="prima" name="prima" />
                       <span id="prima-error" style="display: none">Campo invalido</span>
                     </div>
                   </div>

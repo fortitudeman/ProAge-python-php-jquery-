@@ -2570,6 +2570,8 @@ alert("changed!");
 					$this->form_validation->set_rules('currency_id', 'Moneda', 'trim|required|is_natural_no_zero|less_than[3]');
 					$this->form_validation->set_rules('payment_method_id', 'Conducto', 'trim|required|is_natural_no_zero|less_than[7]');
 					$this->form_validation->set_rules('payment_interval_id', ' Forma de pago', 'trim|required|is_natural_no_zero|less_than[5]');
+					$this->form_validation->set_rules('prima', 'Prima anual', 'trim|decimal_or_integer');
+					$this->form_validation->set_rules('period', 'Plazo', 'trim|xxs_clean');
 				}
 			}
 			// Run Validation
@@ -2616,12 +2618,10 @@ alert("changed!");
 					}
 
 					if (!$error) {
-
 	// 4. update table `policies`
 						$field_values = array(
 							'name' => $this->input->post( 'name' ),
 							'last_updated' => $current_date,
-							'date' => $current_date,
 							'uid' => $this->input->post( 'uid' )
 							);
 						if ($is_nuevo_negocio)
@@ -2629,11 +2629,15 @@ alert("changed!");
 								'currency_id' => $this->input->post( 'currency_id' ),
 								'payment_method_id' => $this->input->post( 'payment_method_id' ),
 								'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
+								'period' => $this->input->post( 'period' ),
+								'prima' => $this->input->post( 'prima' ),						
 							));
 					}
 				}
-				if ( isset($field_values) && 
-					$this->work_order->update( 'policies', $ot[0]['policy_id'], $field_values) )
+				if ( !$error && isset($field_values) )
+					$error = !$this->work_order->update( 'policies', $ot[0]['policy_id'], $field_values);
+
+				if ( !$error )	
 					$message = array(
 						'type' => true,	
 						'message' => 'Se guardo el registro correctamente.'
