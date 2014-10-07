@@ -2578,11 +2578,12 @@ alert("changed!");
 			if ( $this->form_validation->run() ) {
 
 				$error = false;
-				$current_date = date( 'Y-m-d H:s:i' );
+				$current_date = date( 'Y-m-d H:i:s' );
 				if ($function == 'editar')
 					$field_values = array(
 						'prima' => $this->input->post( 'prima' ),
 						'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
+						'last_updated' => $current_date,
 					);
 				else {
 

@@ -174,6 +174,15 @@ $display[ $data['product_group_id'] ] = '';
                   <div class="control-group typtramite">
                     <label class="control-label text-error" for="inputError">Tipo tramite</label>
                     <div class="controls">
+<?php if ($update): ?>
+<?php foreach ($tramite_types as $value) {
+		if ($value->id == $data['parent_type_name']['id'])
+			echo $value->name;
+	}
+?>
+                      <select style="display: none" class="input-xlarge focused required" id="work_order_type_id" name="work_order_type_id" readonly="readonly">
+
+<?php else: ?>
                       <select class="input-xlarge focused required" id="work_order_type_id" name="work_order_type_id" readonly="readonly">
 <?php foreach ($tramite_types as $value) {
 	if ($value->id == $data['parent_type_name']['id'])
@@ -181,7 +190,7 @@ $display[ $data['product_group_id'] ] = '';
 	else
 		echo '<option value="' . $value->id . '" disabled="disabled">' . $value->name . '</option>';
 } ?>
-
+<?php endif; ?>
                       </select>
                     </div>
                   </div>
@@ -189,6 +198,15 @@ $display[ $data['product_group_id'] ] = '';
                   <div class="control-group subtype">
                     <label class="control-label text-error" for="inputError">Sub tipo<br /><div id="loadsubtype"></div></label>
                     <div class="controls">
+<?php if ($update): ?>
+<?php foreach ($sub_types as $value) {
+		if ($value->id == $data['type_id'])
+			echo $value->name;
+	}
+?>
+                      <select style="display: none" class="input-xlarge focused required" id="work_order_type_id" name="work_order_type_id" readonly="readonly">
+
+<?php else: ?>
                       <select class="input-xlarge focused required" id="subtype" name="subtype" readonly="readonly">
 <?php foreach ($sub_types as $value) {
 	if ($value->id == $data['type_id'])
@@ -196,7 +214,7 @@ $display[ $data['product_group_id'] ] = '';
 	else
 		echo '<option value="' . $value->id . '" disabled="disabled">' . $value->name . '</option>';
 } ?>
-
+<?php endif; ?>
                       </select>
                     </div>
                   </div>
@@ -204,6 +222,15 @@ $display[ $data['product_group_id'] ] = '';
                   <div class="control-group typtramite hide-update-others">
                     <label class="control-label text-error" for="inputError">Producto<br /><div id="loadproduct"></div></label>
                     <div class="controls">
+<?php if ($update): ?>
+<?php foreach ($products_by_group as $value) {
+		if ($value['id'] == $data['policy'][0]['products'][0]['id'])
+			echo $value['name'];
+	}
+?>
+                      <select style="display: none" class="input-xlarge focused required" id="work_order_type_id" name="work_order_type_id" readonly="readonly">
+
+<?php else: ?>
                       <select class="input-xlarge focused required" id="product_id" name="product_id" readonly="readonly">
 <?php foreach ($products_by_group as $value) {
 	if ($value['id'] == $data['policy'][0]['products'][0]['id'])
@@ -211,15 +238,15 @@ $display[ $data['product_group_id'] ] = '';
 	else
 		echo '<option value="' . $value['id'] . '" disabled="disabled">' . $value['name'] . '</option>';
 } ?>
-
+<?php endif; ?>
                       </select>
                     </div>
                   </div>
 
                   <div class="control-group period hide-update-others">
-                    <label class="control-label text-error" for="inputError">Plazo</label>
+                    <label class="control-label" for="inputError">Plazo</label>
                     <div class="controls">
-                      <select class="input-xlarge focused required" id="period" name="period" <?php if (!$update || ($update && !$is_nuevo_negocio)) echo 'readonly="readonly"' ?>>
+                      <select class="input-xlarge focused" id="period" name="period" <?php if (!$update || ($update && !$is_nuevo_negocio)) echo 'readonly="readonly"' ?>>
 <?php foreach ($periods as $value) {
 	if ($value == $data['policy'][0]['period'])
 		echo '<option value="' . $value . '" selected="selected">' . $value . '</option>';
@@ -228,7 +255,6 @@ $display[ $data['product_group_id'] ] = '';
 	else
 		echo '<option value="' . $value . '" disabled="disabled">' . $value . '</option>';
 } ?>
-
                       </select>
                     </div>
                   </div>
