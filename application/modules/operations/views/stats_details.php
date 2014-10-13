@@ -23,25 +23,35 @@ $export_segments[2] = 'stat_recap_export';
 $ramo = $this->uri->segment(3);
 $recap_details = 0;
 ?>
-            <div class="row">
-              <div class="span6">
-                <p>
-                  <a href="javascript:history.back();" title="Regresar">
-                  &lt;- Click aquí para regresar</a>
-                </p>
-                <form id="operation-stats-form" method="post" action="<?php echo current_url()?>">
-Período :<br />
+            <form id="operation-stats-form" method="post" action="<?php echo current_url()?>">
+              <div class="row">
+                  <div class="span12">
+                      <a href="javascript:history.back();" title="Regresar">&lt;- Click aquí para regresar</a>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="span2">
+Coordinadores&nbsp;:
+                  </div>
+                  <div class="span10">
+<?php echo $coordinator_select ?>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="span2">
+Período&nbsp;:
+                  </div>
+                  <div class="span10">
 <?php echo $period_fields ?>
 <select id="periodo_form" name="periodo" style="width: 175px" title="Período">
 	  <option value="<?php echo $selected_period ?>"></option>
 </select>
 <input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
-                </form>
-              </div>
-              <div class="span6" style="text-align: right">			  
 
+                  </div>
               </div>
-            </div>				
+            </form>
+			
             <div class="row" id="operations-stats">
 		        <div class="span5" id="left-col">
                   <p><span>Nuevos de Negocios <?php echo ucfirst($segments[3]) ?></span>

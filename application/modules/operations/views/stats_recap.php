@@ -21,19 +21,27 @@ $na_value = 'N/D';
 
 $segments = $this->uri->rsegment_array();
 ?>
-            <div class="row">
-              <div class="span6">
-                <form id="operation-stats-form" method="post" action="<?php echo current_url()?>">
-Período :<br />
+            <form id="operation-stats-form" method="post" action="<?php echo current_url()?>">
+              <div class="row">
+                  <div class="span2">
+Coordinadores&nbsp;:
+                  </div>
+                  <div class="span10">
+<?php echo $coordinator_select ?>
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="span2">
+Período&nbsp;:
+                  </div>
+                  <div class="span6">
 <?php echo $period_fields ?>
 <select id="periodo_form" name="periodo" style="width: 175px" title="Período">
 	  <option value="<?php echo $selected_period ?>"></option>
 </select>
 <input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
-
-                </form>
-              </div>
-              <div class="span6" style="text-align: right">			  
+                  </div>
+                  <div class="span4" style="text-align: right">
 <?php if ($this->access_export_xls) :
 $export_segments = $segments;
 $export_segments[2] = 'stat_recap_export';
@@ -42,8 +50,10 @@ $export_segments[2] = 'stat_recap_export';
                     <img src="<?php echo $base_url ?>ot/assets/images/down.png" title="Exportar" />
 				</a>
 <?php endif; ?>
+                  </div>
               </div>
-            </div>				
+            </form>
+
             <div class="row" id="operations-stats">
 		        <div class="span4" id="left-col">
                   <table>

@@ -44,8 +44,9 @@ if ($current_page === FALSE)
                         <strong>Error: </strong> <?php echo $message['message']; // Show Dinamical message error  ?>
                     </div>
                 <?php endif; ?>			
-            <?php endif; ?> 
+            <?php endif; ?>
 
+<?php if ($data): ?>
             <div class="row">
                 <div class="span8">
                     <h3><?php echo $data->displayed_user_name ?></h3>
@@ -56,10 +57,11 @@ if ($current_page === FALSE)
 <?php endif; ?>
                 </div>
             </div>
-
+<?php endif; ?>
+			
             <div class="row">
-                <a href="<?php echo $base_url ?>operations/ot/<?php echo $this->user_id ?>.html" class="span3 subpage-link <?php if (($current_page == 'ot') || ($current_page == 'index')) echo ' subpage-link-current' ?>">ÓRDENES DE TRABAJO</a>
-                <a href="<?php echo $base_url ?>operations/statistics/recap/<?php echo $this->user_id ?>.html" class="span9 subpage-link <?php if ($current_page == 'statistics') echo ' subpage-link-current' ?>">ESTADÍSTICA OPERATIVA</a>
+                <a id="ot-link" href="<?php echo $base_url ?>operations/ot/<?php echo $this->user_id ?>.html" class="span3 subpage-link <?php if (($current_page == 'ot') || ($current_page == 'index')) echo ' subpage-link-current' ?>">ÓRDENES DE TRABAJO</a>
+                <a id="stats-link" href="<?php echo $base_url ?>operations/statistics/recap/<?php echo $this->user_id ?>.html" class="span9 subpage-link <?php if ($current_page == 'statistics') echo ' subpage-link-current' ?>">ESTADÍSTICA OPERATIVA</a>
             </div>
 
 <?php echo $sub_page_content; ?>

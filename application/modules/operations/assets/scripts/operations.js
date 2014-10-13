@@ -12,6 +12,19 @@
 
   	
 */
-$( document ).ready(function() {
 
-});
+	var getLinks = function() {
+		$.ajax({
+			url:  Config.base_url() + "operations/get_links.html",
+			type: "POST",
+			data: $("#coordinador-name").serializeArray(),
+			dataType: "json",
+			success: function(data){
+				if (data.length == 2) {
+					$("#ot-link").attr("href", data[0]);
+					$("#stats-link").attr("href", data[1]);
+				}
+			}
+		});
+	}
+

@@ -46,6 +46,9 @@ class Operations extends CI_Controller {
 	public $operation_user = FALSE;
 	public $user_id = FALSE;
 
+	private $coordinator_select = '';
+	private $inline_js = '';
+
 /** Construct Function **/
 /** Setting Load perms **/
 	
@@ -164,7 +167,8 @@ class Operations extends CI_Controller {
 			'period_fields' => show_period_fields('operations', $ramo),
 			'agents' => $this->user->getAgents(),
 			'gerentes' => $this->user->getSelectsGerentes(),
-			'export_url' => $base_url . 'operations/report_export/' .  $this->user_id . '.html'
+			'export_url' => $base_url . 'operations/report_export/' .  $this->user_id . '.html',
+			'coordinator_select' => $this->coordinator_select,
 			);
 		$sub_page_content = $this->load->view('ot/list', $content_data, true);
 
@@ -183,6 +187,11 @@ implode(', ', $ramo_tramite_types) . '
 		})
 
 	});
+	var submitThisForm = function() {
+		proagesOverview.getOts($( "#ot-form").serialize());
+		getLinks();
+	}
+//	getLinks();
 </script>
 ';
 
@@ -217,7 +226,9 @@ implode(', ', $ramo_tramite_types) . '
 				'<script src="' . $base_url . 'scripts/config.js"></script>',
 				'<script src="' . $base_url . 'ot/assets/scripts/overview.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/operations.js"></script>',				
 				$add_js,
+				$this->inline_js
 			),
 			'content' => 'operations/operation_profile', // View to load
 			'message' => $this->session->flashdata('message'),
@@ -229,6 +240,21 @@ implode(', ', $ramo_tramite_types) . '
 		$this->load->view( 'index', $this->view );	
 	}
 
+	public function get_links()
+	{
+		$result = array();
+		$base_url = base_url();
+		$coordinator_name = $this->input->post('coordinator_name');
+		if ($coordinator_name)
+		{
+			$coordinators = $this->_extract_coordinator_name($coordinator_name);
+			$result = array(
+				$base_url . 'operations/ot/' . $coordinators . '.html',
+				$base_url . 'operations/statistics/recap/' . $coordinators . '.html',					
+				);
+		}
+		echo json_encode($result);
+	}
 // Export the OTs
 	public function report_export()
 	{
@@ -331,6 +357,7 @@ implode(', ', $ramo_tramite_types) . '
 			'access_all' => $this->access_all,
 			'period_fields' => show_period_fields('operations', $ramo),
 			'stats' => $stats,
+			'coordinator_select' => $this->coordinator_select
 			);
 		if ($stat_type == 'recap')
 			$sub_page_content = $this->load->view('stats_recap', $content_data, true);
@@ -346,22 +373,23 @@ implode(', ', $ramo_tramite_types) . '
 			$(this).parents("form").submit();
 		})
 
-/*		$("#periodo").bind( "change", function(){
-			var parentForm = $(this).parents("form");
-			parentForm.submit();
-		})*/
-
 		$(".stat-link").bind( "click", function(){
 			var linkId = $(this).attr("id");
 			linkId = linkId.replace(/_link/, "");
 			var detailUrl = "' . $base_url . 
 				'operations/stat_details/' . $stat_type . '/" + linkId ' . ' + "/' . $this->user_id . '.html";
 			$("#right-col").html("Cargando ...");
-			$("#right-col").load(detailUrl, { "posted": ["1", "2"] }, function(){
+			$("#right-col").load(detailUrl, $("#coordinador-name").serializeArray(), function(){
 				});
 			return false;
 		})
 	});
+	
+	var submitThisForm = function() {
+		$("#operation-stats-form").submit();
+		getLinks();
+	}
+
 </script>
 ';
 
@@ -382,7 +410,9 @@ implode(', ', $ramo_tramite_types) . '
 			'scripts' => array(
 				'<script src="' . $base_url . 'scripts/config.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/operations.js"></script>',
 				$add_js,
+				$this->inline_js
 			),
 			'content' => 'operations/operation_profile', // View to load
 			'message' => $this->session->flashdata('message'),
@@ -620,13 +650,59 @@ implode(', ', $ramo_tramite_types) . '
 		exit;
 	}
 
+	private function _extract_coordinator_name($coordinator_name)
+	{
+		$to_check_array2 = array();
+		$to_check_array1 = explode("\n", $coordinator_name);
+		$to_replace = array(']', "\n", "\r");
+		foreach ($to_check_array1 as $value)
+		{
+			$pieces = explode( ' [ID: ', $value);
+			if (isset($pieces[1]))
+			{
+				$pieces[1] = (int)str_replace($to_replace, '', $pieces[1]);
+				if (!isset($to_check_array2[$pieces[1]]))
+					$to_check_array2[] = $pieces[1];
+			}
+		}
+		return implode('_', $to_check_array2);
+	}
+	
 	private function _init_profile($segment = 3)
 	{
-		if (($this->user_id = $this->uri->rsegment($segment)) === FALSE)
-			redirect( 'operations/index/' . $this->sessions['id'], 'refresh' );		
+		$this->load->model( 'ot/work_order' );
+		if ($coordinator_name = $this->input->post('coordinator_name'))
+			$this->user_id = $this->_extract_coordinator_name($coordinator_name);
 
-		// Allow user to access his/her profile page
-		$this->access = $this->access || ($this->user_id == $this->sessions['id']);
+		elseif (($this->user_id = $this->uri->rsegment($segment)) === FALSE) // no OT owner in URL
+			redirect( 'operations/index/' . $this->sessions['id'], 'refresh' );
+		else
+		{
+			$ot_owners = explode('_', $this->user_id);
+			foreach ($ot_owners as $owner_key => $owner_value)
+				$ot_owners[$owner_key] = (int) $owner_value;
+			$this->user_id = implode('_', $ot_owners);
+			if (count($ot_owners) == 1)
+			{
+				// Allow user to access his/her profile page
+				$this->access = $this->access || ($this->user_id == $this->sessions['id']);
+				if ($this->access)
+				{
+					$user = $this->work_order->generic_get('users', array('id' => $ot_owners[0]), 1);
+					if (!$user)
+						show_404();
+					$this->operation_user = $user[0];
+					$this->operation_user->displayed_user_name = $this->operation_user->company_name ? 
+						$this->operation_user->company_name : 
+						$this->operation_user->name . ' ' . $this->operation_user->lastnames;
+				}
+			}
+			$other_filters = array();
+			get_generic_filter($other_filters, array());
+			$other_filters['coordinators'] = $this->user_id;
+			generic_set_report_filter( $other_filters, array() );
+		}
+
 		if ( !$this->access )
 		{
 			$this->session->set_flashdata( 'message', array( 
@@ -635,14 +711,88 @@ implode(', ', $ramo_tramite_types) . '
 			));
 			redirect( 'home', 'refresh' );
 		}
-		$this->load->model( 'ot/work_order' );
-		$user = $this->work_order->generic_get('users', array('id' => (int) $this->user_id ), 1);
-		if (!$user)
-			show_404();
-		$this->operation_user = $user[0];
-		$this->operation_user->displayed_user_name = $this->operation_user->company_name ? 
-			$this->operation_user->company_name : 
-			$this->operation_user->name . ' ' . $this->operation_user->lastnames;
+
+		$selected_coordinators = explode('_', $this->user_id);
+		$selected_coordinator_text	= '';
+		
+		$coordinators_in_db = $this->user->find(array('rol' => 2));
+		$coordinators_array = array();
+		foreach ($coordinators_in_db as $value_c)
+		{
+			$displayed_name = $value_c['company_name'] ?
+				$value_c['company_name'] :
+				$value_c['name'] . ' ' .  $value_c['lastnames'];
+			$coordinators_array[$value_c['id']] = $displayed_name;
+		}
+		$coordinators_multi = array();
+		foreach ( $coordinators_array as $key => $value )
+		{
+			$coordinators_multi[] = "\n'$value [ID: $key]'";
+			if (in_array($key, $selected_coordinators)) 
+				$selected_coordinator_text .= $value .  " [ID: $key]\n";
+		}
+
+		$this->inline_js = 
+'
+<script type="text/javascript">
+	$( document ).ready( function(){
+
+		var coordinatorList = [' . implode(',', $coordinators_multi) . '
+		];
+
+		function split( val ) {
+			return val.split( /\n\s*/ );
+		}
+		function extractLast( term ) {
+			return split( term ).pop();
+		}
+		$( ".submit-form").bind("click", function( event ) {
+			submitThisForm();
+		})
+		$( "#clear-coordinator-filter").bind("click", function( event ) {
+			$( "#coordinador-name" ).val("");
+			submitThisForm();
+		})
+		$( "#coordinador-name" )
+		// don\'t navigate away from the field on tab when selecting an item
+			.bind( "keydown", function( event ) {
+				if ( event.keyCode === $.ui.keyCode.TAB &&
+					$( this ).data( "ui-autocomplete" ).menu.active ) {
+					event.preventDefault();
+				}
+			})
+			.autocomplete({
+				minLength: 0,
+				source: function( request, response ) {
+					// delegate back to autocomplete, but extract the last term
+					response( $.ui.autocomplete.filter(
+						coordinatorList, extractLast( request.term ) ) );
+				},			
+				focus: function() {
+					// prevent value inserted on focus
+					return false;
+				},
+				select: function( event, ui ) {
+					var terms = split( this.value );
+					// remove the current input
+					terms.pop();
+					// add the selected item
+					terms.push( ui.item.value );
+					// add placeholder to get the comma-and-space at the end
+					terms.push( "" );
+					this.value = terms.join( "\n" );
+					submitThisForm();
+					return false;
+				}
+			})
+	});
+</script>
+';
+		
+		$this->coordinator_select = $this->load->view('coordinator_select', array(
+			'coordinators' => $coordinators_in_db,
+			'selected_coordinator_text' => $selected_coordinator_text,
+			), TRUE);
 	}
 
 // List OTs
@@ -668,10 +818,8 @@ implode(', ', $ramo_tramite_types) . '
 			update_custom_period($this->input->post('cust_period_from'),
 				$this->input->post('cust_period_to'), FALSE);
 		}
-		$save_session = $this->sessions['id'];
-		$this->sessions['id'] = $this->user_id;
+		$other_filters = array('coordinators' => $this->user_id);
 		$data = get_ot_data($other_filters, $this->access_all);
-		$this->sessions['id']= $save_session;
 		return $data;
 	}
 

@@ -288,7 +288,6 @@ if ( ! function_exists('get_ot_report_filter'))
 					}
 				}
 			}
-//			$result = array_merge($other_filters, $CI->ot_r_misc_filter);
 		}
 	}
 }
@@ -433,7 +432,7 @@ if ( ! function_exists('get_ot_data'))
 
 		$data = array();
 		$default_filter = get_filter_period();
-		$other_filters = array(
+		$new_other_filters = array(
 			'user' => 'mios',
 			'id' => '',
 			'ramo' => '',
@@ -442,7 +441,9 @@ if ( ! function_exists('get_ot_data'))
 			'patent_type' => '',
 			'work_order_status_id' => '',
 		);
-		get_generic_filter($other_filters, array());
+		get_generic_filter($new_other_filters, array());
+		if (isset($other_filters['coordinators']))
+			$other_filters = array_merge($new_other_filters, $other_filters);
 
 		if ( !empty( $_POST ) )
 		{
@@ -481,15 +482,12 @@ if ( ! function_exists('get_ot_data'))
 				$other_filters['patent_type'] = $_POST['patent_type'];
 
 			if ( isset($_POST['work_order_status_id']))
-				$other_filters['work_order_status_id'] = $_POST['work_order_status_id'];	
+				$other_filters['work_order_status_id'] = $_POST['work_order_status_id'];
 			generic_set_report_filter( $other_filters, array() );
-			$data = $CI->work_order->find_new( $_POST, $access_all );
 		}
-		else
-		{
-			$query = array_merge($other_filters, array('periodo' => $default_filter));
-			$data = $CI->work_order->find_new( $query, $access_all );
-		}
+
+		$query = array_merge($other_filters, array('periodo' => $CI->default_period_filter));
+		$data = $CI->work_order->find_new( $query, $access_all );	
 		return $data;
 	}
 }

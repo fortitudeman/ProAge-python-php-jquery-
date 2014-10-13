@@ -135,11 +135,25 @@ if (!$agent_profile_page && !$operation_profile_page):
                     <thead>
                       <tr>
 					    <th colspan="6">
+
+						
 <?php if ($operation_profile_page): ?>
 					    <input type="hidden" value="" id="export-xls-input" name="export_xls_input" disabled="disabled" />
+<?php if (isset($coordinator_select)): ?>
+<div class="row">
+	<div class="span2">
+Coordinadores&nbsp;:
+	</div>
+	<div class="span10">
+<?php echo $coordinator_select ?>
+	</div>
+</div>	
+<?php endif; ?>	
 <div class="row">	
-	<div class="span6">
-	Número :
+	<div class="span2">
+	Número&nbsp;:
+	</div>
+	<div class="span4">
 <input class="filter-field" type="text" id="id" name="id" title="Pulse la tecla Tab para validar un número a buscar" />
 	</div>
 	<div class="span3">	

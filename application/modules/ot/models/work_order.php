@@ -485,7 +485,14 @@ class Work_order extends CI_Model{
 			}
 		}
 
-		if ( !$access_all || (isset($filter['user']) && ( $filter['user'] == 'mios' ) ))
+		if (isset($filter['coordinators']) )
+		{
+			if (is_array($filter['coordinators']))
+				$this->db->where_in( 'work_order.user', $filter['coordinators'] );
+			else
+				$this->db->where_in( 'work_order.user', explode('_', $filter['coordinators'] ));
+		}
+		elseif ( !$access_all || (isset($filter['user']) && ( $filter['user'] == 'mios' ) ))
 			$this->db->where( array( 'work_order.user' => $this->sessions['id'] ) );
 
 		// OT id
@@ -2057,11 +2064,12 @@ class Work_order extends CI_Model{
 
 	// Operation statistics	
 	private $operation_where = array();
+	private $operation_where_in = array();
 	public function init_operations($user_id = NULL, $periodo = NULL, $ramo = NULL) 
 	{
 		if (($user_id === NULL) || ($periodo === NULL))
 			return FALSE;
-		$this->operation_where['work_order.user'] = $user_id;
+		$this->operation_where_in['work_order.user'] = explode('_', $user_id);
 		if ($ramo)
 			$this->operation_where['work_order.product_group_id'] = $ramo;
 		switch ($periodo)
@@ -2147,7 +2155,8 @@ class Work_order extends CI_Model{
 			'NTU' => 0,
 			'pagada' => 0
 			);
-
+		foreach ($this->operation_where_in as $key_c => $key_v)
+			$this->db->where_in($key_c , $key_v);
 		$query = $this->db->select('COUNT(*) AS count, product_group_id, work_order_status_id, work_order_responsible_id, t1.patent_id, , t2.name AS tramite_type')
 				->from('work_order' )
 				->join('work_order_types AS t1', 't1.id = work_order.work_order_type_id')
@@ -2269,11 +2278,13 @@ class Work_order extends CI_Model{
 			'label' => 'Total',
 			'value' => 0,
 			);
+		foreach ($this->operation_where_in as $key_c => $key_v)
+			$this->db->where_in($key_c , $key_v);
 		$this->db->select('COUNT(*) AS count, products.id AS prod_id, products.name AS product_name')
 				->from('work_order' )
 				->join('policies', 'policies.id = work_order.policy_id')
 				->join('products', 'products.id = policies.product_id')
-				->where($this->operation_where);
+				->where($this->operation_where)	;
 		if ($status_where)
 			$this->db->where_in('work_order_status_id', $status_where);
 		$query = $this->db->group_by('products.id')
