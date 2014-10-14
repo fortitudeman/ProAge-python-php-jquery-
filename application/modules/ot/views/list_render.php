@@ -21,7 +21,7 @@ $agent_profile_page = ($this->uri->segment(1) == 'agent');
 				
 				$new = false;
 											
-				if( $value['parent_type_name']['name'] == 'NUEVO NEGOCIO' )
+				if( $value['parent_type_name'] == 'NUEVO NEGOCIO' )
 					$new = true;
 
 				$show_menu = ( ($value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 8 and $value['work_order_status_id'] != 4 and $value['work_order_status_id'] != 7)
@@ -82,14 +82,15 @@ $agent_profile_page = ($this->uri->segment(1) == 'agent');
 						?>
                     </td>
                     <td class="center"><?php echo $value['group_name'] ?></td>
-                    <td class="center"><?php echo $value['parent_type_name']['name'] ?></td>
-                    <td class="center"><?php echo $value['policy'][0]['name'] ?></td>
+                    <td class="center"><?php echo $value['parent_type_name'] ?></td>
+                    <td class="center"><?php echo $value['asegurado'] ?></td>
                     <td class="center" ><?php echo ucwords(str_replace( 'desactivada', 'en trámite', $value['status_name'])); ?></td>
                     <td class="center">
 <?php
-if ($value['is_nuevo_negocio'] && ($value['policy'][0]['prima'] != 'NULL'))
-	echo number_format($value['policy'][0]['prima'], 2);
-else echo '-';
+if ($value['is_nuevo_negocio'] && ($value['policy_prima'] != 'NULL'))
+	echo number_format($value['policy_prima'], 2);
+else
+	echo '-';
 ?>
 					</td>
                 </tr>

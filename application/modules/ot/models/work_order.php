@@ -452,11 +452,12 @@ class Work_order extends CI_Model{
 				$patent_work_order_types[] = $row->id;
 		}
 
-		$this->db->select( 'product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
+		$this->db->select( 'policies.name as asegurado, policies.prima as policy_prima, work_order_types.patent_id as tramite_type, product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
 		$this->db->from( 'work_order' );
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
+		$this->db->join( 'policies', 'policies.id=work_order.policy_id' );
 
 		if (isset($filter['work_order_status_id']))
 		{
@@ -569,27 +570,61 @@ class Work_order extends CI_Model{
 		if ($query->num_rows() == 0) return false;
 
 		$ot = array();
-		foreach ($query->result() as $row)
+		$tramite_types = array();
+		$policy_ids = array();
+		foreach ($query->result_array() as $row)
 		{
-			$type_tramite = $this->getParentsWorkTipes( $row->work_order_type_id );
-			$ot[] = array( 
-		    	'id' => $row->id,
-				'uid' => $row->uid,
-				'policy' => $this->getPolicyBuId( $row->policy_id ),
-				'agents' => $this->getAgentsByPolicy( $row->policy_id ),
-		    	'product_group_id' => $row->product_group_id,
-				'group_name' => $row->group_name,
-				'parent_type_name' => $this->getTypeTramiteId( $type_tramite ),
-				'type_name' => $row->type_name,
-				'work_order_status_id' => $row->work_order_status_id,				
-		    	'status_name' =>  $row->status_name,
-				'creation_date' =>  $row->creation_date,
-				'duration' =>  $row->duration,
-				'last_updated' =>  $row->last_updated,
-				'date' =>  $row->date,
-				'is_editable' => $this->is_editable( $row->product_group_id, $type_tramite, $row->work_order_status_id ),
-				'is_nuevo_negocio' => $this->is_nuevo_negocio( $row->product_group_id, $type_tramite)
-		    );
+			$ot[$row['id']] = $row;
+			$policy_ids[$row['id']] = $row['policy_id'];
+			if (!isset($tramite_types[$row['tramite_type']]))
+				$tramite_types[$row['tramite_type']] = $row['tramite_type'];
+		}
+		$query->free_result();
+
+		$query_parent_type_name = $this->db
+			->select('id, name')
+			->from('work_order_types')
+			->where_in('id', array_values($tramite_types))
+			->get();
+		$tramite_names = array();
+		foreach ($query_parent_type_name->result() as $row)
+		{
+			$tramite_names[$row->id] = $row->name;
+		}
+		$query_parent_type_name->free_result();
+
+		$agents = array();		
+		$this->db->select( ' policies_vs_users.policy_id as id_of_policy, policies_vs_users.percentage, policies_vs_users.user_id AS agent_id, users.name, users.lastnames, users.company_name, users.email, users.id as user_id ' )
+			->from( 'policies_vs_users' )
+			->join( 'agents', 'agents.id=policies_vs_users.user_id' )
+			->join( 'users', 'users.id=agents.user_id ' )
+			->where_in('policies_vs_users.policy_id', array_values($policy_ids));
+		$query = $this->db->get();
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				if (!isset($agents[$row->id_of_policy]))
+					$agents[$row->id_of_policy] = array();
+				$agents[$row->id_of_policy][] = array(
+					'agent_id' => $row->agent_id,
+					'percentage' => $row->percentage,
+					'name' => $row->name,
+					'lastnames' => $row->lastnames,
+					'company_name' => $row->company_name,
+					'email' => $row->email,
+					'user_id' => $row->user_id,
+				);
+			}
+		}
+		foreach ($ot as $key => $row)
+		{
+			$ot_agents = (isset($agents[$row['policy_id']])) ? $agents[$row['policy_id']] : array();
+			$ot[$key] = array_merge($row, array(
+				'agents' => $ot_agents,
+				'parent_type_name' => $tramite_names[$row['tramite_type']],
+				'is_editable' => $this->is_editable( $row['product_group_id'], $row['tramite_type'], $row['work_order_status_id'] ),
+				'is_nuevo_negocio' => $this->is_nuevo_negocio( $row['product_group_id'], $row['tramite_type'])));
 		}
 		return $ot;
    }
@@ -624,11 +659,12 @@ class Work_order extends CI_Model{
 				$patent_work_order_types[] = $row->id;
 		}
 
-		$this->db->select( 'product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
+		$this->db->select( 'policies.name as asegurado, policies.prima as policy_prima, work_order_types.patent_id as tramite_type, product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
 		$this->db->from( 'work_order' );
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
+		$this->db->join( 'policies', 'policies.id=work_order.policy_id' );
 
 		switch ($this->input->post('work_order_status_id'))
 		{
@@ -732,27 +768,61 @@ class Work_order extends CI_Model{
 		if ($query->num_rows() == 0) return false;
 
 		$ot = array();
-		foreach ($query->result() as $row)
+		$tramite_types = array();
+		$policy_ids = array();
+		foreach ($query->result_array() as $row)
 		{
-			$type_tramite = $this->getParentsWorkTipes( $row->work_order_type_id );
-			$ot[] = array( 
-		    	'id' => $row->id,
-				'uid' => $row->uid,
-				'policy' => $this->getPolicyBuId( $row->policy_id ),
-				'agents' => $this->getAgentsByPolicy( $row->policy_id ),
-		    	'product_group_id' => $row->product_group_id,
-				'group_name' => $row->group_name,
-				'parent_type_name' => $this->getTypeTramiteId( $type_tramite ),
-				'type_name' => $row->type_name,
-				'work_order_status_id' => $row->work_order_status_id,				
-		    	'status_name' =>  $row->status_name,
-				'creation_date' =>  $row->creation_date,
-				'duration' =>  $row->duration,
-				'last_updated' =>  $row->last_updated,
-				'date' =>  $row->date,
-				'is_editable' => $this->is_editable( $row->product_group_id, $type_tramite, $row->work_order_status_id ),
-				'is_nuevo_negocio' => $this->is_nuevo_negocio( $row->product_group_id, $type_tramite)
-		    );
+			$ot[$row['id']] = $row;
+			$policy_ids[$row['id']] = $row['policy_id'];
+			if (!isset($tramite_types[$row['tramite_type']]))
+				$tramite_types[$row['tramite_type']] = $row['tramite_type'];
+		}
+		$query->free_result();
+
+		$query_parent_type_name = $this->db
+			->select('id, name')
+			->from('work_order_types')
+			->where_in('id', array_values($tramite_types))
+			->get();
+		$tramite_names = array();
+		foreach ($query_parent_type_name->result() as $row)
+		{
+			$tramite_names[$row->id] = $row->name;
+		}
+		$query_parent_type_name->free_result();
+
+		$agents = array();		
+		$this->db->select( ' policies_vs_users.policy_id as id_of_policy, policies_vs_users.percentage, policies_vs_users.user_id AS agent_id, users.name, users.lastnames, users.company_name, users.email, users.id as user_id ' )
+			->from( 'policies_vs_users' )
+			->join( 'agents', 'agents.id=policies_vs_users.user_id' )
+			->join( 'users', 'users.id=agents.user_id ' )
+			->where_in('policies_vs_users.policy_id', array_values($policy_ids));
+		$query = $this->db->get();
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				if (!isset($agents[$row->id_of_policy]))
+					$agents[$row->id_of_policy] = array();
+				$agents[$row->id_of_policy][] = array(
+					'agent_id' => $row->agent_id,
+					'percentage' => $row->percentage,
+					'name' => $row->name,
+					'lastnames' => $row->lastnames,
+					'company_name' => $row->company_name,
+					'email' => $row->email,
+					'user_id' => $row->user_id,
+				);
+			}
+		}
+		foreach ($ot as $key => $row)
+		{
+			$ot_agents = (isset($agents[$row['policy_id']])) ? $agents[$row['policy_id']] : array();
+			$ot[$key] = array_merge($row, array(
+				'agents' => $ot_agents,
+				'parent_type_name' => $tramite_names[$row['tramite_type']],
+				'is_editable' => $this->is_editable( $row['product_group_id'], $row['tramite_type'], $row['work_order_status_id'] ),
+				'is_nuevo_negocio' => $this->is_nuevo_negocio( $row['product_group_id'], $row['tramite_type'])));
 		}
 		return $ot;
    }
