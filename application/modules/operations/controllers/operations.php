@@ -242,8 +242,11 @@ implode(', ', $ramo_tramite_types) . '
 
 	public function get_links()
 	{
-		$result = array();
 		$base_url = base_url();
+		$result = array(
+				$base_url . 'operations/ot.html',
+				$base_url . 'operations/statistics/recap.html',					
+				);
 		$coordinator_name = $this->input->post('coordinator_name');
 		if ($coordinator_name)
 		{
@@ -670,13 +673,24 @@ implode(', ', $ramo_tramite_types) . '
 	
 	private function _init_profile($segment = 3)
 	{
-		$this->load->model( 'ot/work_order' );
-		if ($coordinator_name = $this->input->post('coordinator_name'))
-			$this->user_id = $this->_extract_coordinator_name($coordinator_name);
+		$other_filters = array();
+		get_generic_filter($other_filters, array());
 
-		elseif (($this->user_id = $this->uri->rsegment($segment)) === FALSE) // no OT owner in URL
-			redirect( 'operations/index/' . $this->sessions['id'], 'refresh' );
+		$this->load->model( 'ot/work_order' );
+		if (count($_POST) && ($coordinator_name = $this->input->post('coordinator_name')) !== FALSE)
+			$this->user_id = $this->_extract_coordinator_name($coordinator_name);
 		else
+		{
+			$in_segment = $this->uri->rsegment($segment);
+			if ($in_segment !== FALSE)
+				$this->user_id = $in_segment;
+			elseif (isset($other_filters['coordinators'] ) && is_string($other_filters['coordinators']))
+				$this->user_id = $other_filters['coordinators'];
+		}
+
+		if ($this->user_id === FALSE)
+			redirect( 'operations/index/' . $this->sessions['id'], 'refresh' );
+		if (strlen($this->user_id))
 		{
 			$ot_owners = explode('_', $this->user_id);
 			foreach ($ot_owners as $owner_key => $owner_value)
@@ -697,10 +711,6 @@ implode(', ', $ramo_tramite_types) . '
 						$this->operation_user->name . ' ' . $this->operation_user->lastnames;
 				}
 			}
-			$other_filters = array();
-			get_generic_filter($other_filters, array());
-			$other_filters['coordinators'] = $this->user_id;
-			generic_set_report_filter( $other_filters, array() );
 		}
 
 		if ( !$this->access )
@@ -711,11 +721,18 @@ implode(', ', $ramo_tramite_types) . '
 			));
 			redirect( 'home', 'refresh' );
 		}
+		$other_filters['coordinators'] = $this->user_id;
+		generic_set_report_filter( $other_filters, array() );
 
 		$selected_coordinators = explode('_', $this->user_id);
 		$selected_coordinator_text	= '';
-		
-		$coordinators_in_db = $this->user->find(array('rol' => 2));
+
+		$roles = $this->rol->get_user_roles_where(array(
+			'modules.name' => 'Orden de trabajo', 'actions.name' => 'Crear'));
+		foreach ($roles as $role)
+			$where_in[] = $role->user_role_id;
+		$where_in = array_unique(array_merge($where_in, array('2')));
+		$coordinators_in_db = $this->user->get_users_with_role($where_in);
 		$coordinators_array = array();
 		foreach ($coordinators_in_db as $value_c)
 		{
@@ -750,6 +767,7 @@ implode(', ', $ramo_tramite_types) . '
 			submitThisForm();
 		})
 		$( "#clear-coordinator-filter").bind("click", function( event ) {
+//			$( "#coordinador-name" ).val("--Todos--");
 			$( "#coordinador-name" ).val("");
 			submitThisForm();
 		})

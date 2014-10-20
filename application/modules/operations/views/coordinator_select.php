@@ -16,8 +16,8 @@
 
 <span title="Escriba el nombre del coordinador que desea buscar y selecciónelo de la lista que aparece. Puede buscar más posteriormente en la siguiente línea.">
     <textarea placeholder="COORDINADORES" id="coordinador-name" name="coordinator_name" rows="1" class="input-xlarge select4" style="min-width: 250px; height: 2.2em"><?php echo $selected_coordinator_text; ?></textarea>
-    &nbsp;<i style="cursor: pointer; display: none" class="icon-filter submit-form" id="submit-form1" title="Filtrar"></i>
-    &nbsp;<i style="cursor: pointer; display: none" class="icon-list-alt" id="clear-coordinator-filter" title="Mostrar todos los coordinadores"></i>
+    &nbsp;<i style="cursor: pointer;" class="icon-filter submit-form" id="submit-form1" title="Filtrar"></i>
+    &nbsp;<i style="cursor: pointer;" class="icon-list-alt" id="clear-coordinator-filter" title="Mostrar todos los coordinadores"></i>
 </span>
 
 

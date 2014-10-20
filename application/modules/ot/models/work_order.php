@@ -490,7 +490,7 @@ class Work_order extends CI_Model{
 		{
 			if (is_array($filter['coordinators']))
 				$this->db->where_in( 'work_order.user', $filter['coordinators'] );
-			else
+			elseif ($filter['coordinators'])
 				$this->db->where_in( 'work_order.user', explode('_', $filter['coordinators'] ));
 		}
 		elseif ( !$access_all || (isset($filter['user']) && ( $filter['user'] == 'mios' ) ))
@@ -2137,9 +2137,11 @@ class Work_order extends CI_Model{
 	private $operation_where_in = array();
 	public function init_operations($user_id = NULL, $periodo = NULL, $ramo = NULL) 
 	{
-		if (($user_id === NULL) || ($periodo === NULL))
+//		if (($user_id === NULL) || ($periodo === NULL))
+		if (!$periodo)
 			return FALSE;
-		$this->operation_where_in['work_order.user'] = explode('_', $user_id);
+		if ($user_id)
+			$this->operation_where_in['work_order.user'] = explode('_', $user_id);
 		if ($ramo)
 			$this->operation_where['work_order.product_group_id'] = $ramo;
 		switch ($periodo)
@@ -2234,7 +2236,6 @@ class Work_order extends CI_Model{
 				->where($this->operation_where)
 				->group_by(array('product_group_id', 'work_order_status_id', 'work_order_responsible_id', 'patent_id'))
 				->get();
-
 		if ($query->num_rows() == 0)
 			return $ot;
 

@@ -3707,5 +3707,20 @@ AND
 		}
 		return FALSE;
 	}
+
+	public function get_users_with_role($roles = array())
+	{
+		$result = array();
+		if (empty($roles))
+			return $result;
+ 		$query = $this->db->select('users.*')
+			->from(  'users' )
+			->join( 'users_vs_user_roles', 'users_vs_user_roles.user_id=users.id' )
+			->where_in( 'users_vs_user_roles.user_role_id', $roles )
+			->get();
+		foreach ($query->result_array() as $row)
+			$result[] = $row;
+		return $result;
+	}
 }
 ?>

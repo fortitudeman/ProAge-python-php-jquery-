@@ -625,6 +625,24 @@ class Rol extends CI_Model{
 			}
 		}
 		return $result;
-   }  
+   }
+
+	public function get_user_roles_where( $where = array() )
+	{
+		$this->db->select( 'user_roles_vs_access.*, modules.name as module_name, actions.name as action_name' );	
+		$this->db->from( 'user_roles_vs_access' );
+		$this->db->join( 'modules', 'user_roles_vs_access.module_id=modules.id' );
+		$this->db->join( 'actions', 'user_roles_vs_access.action_id=actions.id' );
+		if ($where)
+			$this->db->where($where);
+
+		$query = $this->db->get();
+		if ($query->num_rows() == 0)
+			return array();
+		$data = array();
+		foreach ($query->result() as $row)
+			$data[] = $row;
+		return $data;
+	}
 }
 ?>
