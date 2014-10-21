@@ -20,6 +20,7 @@ $selected_period = get_filter_period();
 $na_value = 'N/D';
 
 $segments = $this->uri->rsegment_array();
+unset($segments[4]);
 ?>
             <form id="operation-stats-form" method="post" action="<?php echo current_url()?>">
               <div class="row">
