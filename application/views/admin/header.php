@@ -182,11 +182,16 @@ else
                         <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>usuarios.html"><i class="icon-th"></i><span class="hidden-tablet">Usuarios</span></a></li>
                         <?php break; endif; endforeach; endif; ?>
-                       
+<!--                       
                         <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>ot.html"><i class="icon-tablet"></i><span class="hidden-tablet">Orden trabajo</span></a></li>
                         <?php break; endif; endforeach; endif; ?>
-                                               
+-->
+
+                        <?php if( isset($user) && isset($user['id']) && !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Operations', $value ) ): ?>
+                         <li><a href="<?php echo base_url() ?>operations/index/<?php echo $user['id'] ?>.html"><i class="icon-tablet"></i><span class="hidden-tablet">Operaciones</span></a></li>
+                        <?php break; endif; endforeach; endif; ?>
+
                         <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
                         <?php if( $value['action_name'] == 'Importar payments' ): ?>
                         <li><a href="<?php echo base_url() ?>ot/import_payments.html"><i class="icon-hdd"></i><span class="hidden-tablet">Importar Pagos</span></a></li>

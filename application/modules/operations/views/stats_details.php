@@ -95,7 +95,7 @@ Período&nbsp;:
                           <?php echo $stats['per_status']['canceladas'];?></a>
                         </td>
                       </tr>
-                      <tr style="border-bottom: 2em solid white">
+                      <tr>
                         <td>
                           <a class="stat-link" id="NTU_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">
                           NTU</a>
@@ -106,6 +106,30 @@ Período&nbsp;:
                           <?php echo $stats['per_status']['NTU']; ?></a>
                         </td>
                       </tr>
+
+                      <tr>
+                        <td>
+                          <a class="stat-link" id="pendientes_pago_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">
+                          Pendientes de pago</a>
+                        </td>
+                        <td>
+<?php $recap_details += $stats['per_status']['pendientes_pago']; ?>
+                          <a class="stat-link" id="pendientes_pago_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">
+                          <?php echo $stats['per_status']['pendientes_pago']; ?></a>
+                        </td>
+                      </tr>
+                      <tr style="border-bottom: 2em solid white">
+                        <td>
+                          <a class="stat-link" id="activadas_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">
+                          Activados</a>
+                        </td>
+                        <td>
+<?php $recap_details += $stats['per_status']['activadas']; ?>
+                          <a class="stat-link" id="activadas_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">
+                          <?php echo $stats['per_status']['activadas']; ?></a>
+                        </td>
+                      </tr>
+
                       <tr>
                         <td colspan="3"></td>
                       </tr>

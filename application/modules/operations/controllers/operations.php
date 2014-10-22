@@ -297,15 +297,15 @@ implode(', ', $ramo_tramite_types) . '
 			}
 			$agent_value = implode('|', $agents);
 			$prima = '_';
-			if ($value['is_nuevo_negocio'] && ($value['policy'][0]['prima'] != 'NULL'))
-				$prima = number_format($value['policy'][0]['prima'], 2);
+			if ($value['is_nuevo_negocio'] && ($value['policy_prima'] != 'NULL'))
+				$prima = number_format($value['policy_prima'], 2);
 			$data_report[] = array(
 				$value['uid'],
 				$value['creation_date'],
 				$agent_value,
 				$value['group_name'],
-				$value['parent_type_name']['name'],
-				$value['policy'][0]['name'],
+				$value['parent_type_name'],
+				$value['asegurado'],
 				ucwords(str_replace( 'desactivada', 'en trámite', $value['status_name'])),
 				$prima
 			);
@@ -432,9 +432,11 @@ implode(', ', $ramo_tramite_types) . '
 		$valid_stat_types = array(1 => 1, 2 => 2, 3 => 3);
 		$valid_status = array(
 			'tramite' => 'tramite', 'pagada' => 'pagada',
-			'canceladas' => 'canceladas', 'NTU' => 'NTU', 'todos' => 'todos');
+			'canceladas' => 'canceladas', 'NTU' => 'NTU',
+			'pendientes_pago' => 'pendientes_pago', 'activadas' => 'activadas',
+			'todos' => 'todos');
 		$stat_type = $this->uri->segment(3, 0);
-		$status = $this->uri->segment(4, 0);		
+		$status = $this->uri->segment(4, 0);
 		if (!isset($valid_stat_types[$stat_type]) || !isset($valid_status[$status]))
 		{
 			echo 'Ocurrio un error.';
@@ -560,7 +562,9 @@ implode(', ', $ramo_tramite_types) . '
 			$per_status = array('tramite' => 'En trámite',
 				'pagada' => 'Pagados',
 				'canceladas' => 'Cancelados',
-				'NTU' => 'NTU');
+				'NTU' => 'NTU',
+				'pendientes_pago' => 'Pendientes de pago',
+				'activadas' => 'Activados');
 			$total = 0;
 			foreach ($per_status as $key_status => $value_status)
 			{
@@ -596,7 +600,10 @@ implode(', ', $ramo_tramite_types) . '
 		$valid_stat_types = array(1 => 1, 2 => 2, 3 => 3);
 		$valid_status = array(
 			'tramite' => 'tramite', 'pagada' => 'pagada',
-			'canceladas' => 'canceladas', 'NTU' => 'NTU');
+			'pendientes_pago' => 'pendientes_pago', 'activadas' => 'activadas',			
+			'canceladas' => 'canceladas', 'NTU' => 'NTU',
+			'todos' => 'todos'
+			);
 		$stat_type = $this->uri->segment(3, 0);
 
 		$status = $this->uri->segment(4, 0);		
@@ -748,6 +755,8 @@ implode(', ', $ramo_tramite_types) . '
 			if (in_array($key, $selected_coordinators)) 
 				$selected_coordinator_text .= $value .  " [ID: $key]\n";
 		}
+		if (!$selected_coordinator_text && $this->operation_user)
+			$selected_coordinator_text = $this->operation_user->displayed_user_name . ' [ID: ' . $this->sessions['id'] . "]\n";
 
 		$this->inline_js = 
 '
@@ -767,7 +776,6 @@ implode(', ', $ramo_tramite_types) . '
 			submitThisForm();
 		})
 		$( "#clear-coordinator-filter").bind("click", function( event ) {
-//			$( "#coordinador-name" ).val("--Todos--");
 			$( "#coordinador-name" ).val("");
 			submitThisForm();
 		})
@@ -806,7 +814,7 @@ implode(', ', $ramo_tramite_types) . '
 	});
 </script>
 ';
-		
+
 		$this->coordinator_select = $this->load->view('coordinator_select', array(
 			'coordinators' => $coordinators_in_db,
 			'selected_coordinator_text' => $selected_coordinator_text,

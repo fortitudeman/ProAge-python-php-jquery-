@@ -567,6 +567,7 @@ class Work_order extends CI_Model{
 		}
 
 		$query = $this->db->get();
+
 		if ($query->num_rows() == 0) return false;
 
 		$ot = array();
@@ -2225,7 +2226,8 @@ class Work_order extends CI_Model{
 			'canceladas' => 0,
 			'activadas' => 0,
 			'NTU' => 0,
-			'pagada' => 0
+			'pagada' => 0,
+			'pendientes_pago' => 0
 			);
 		foreach ($this->operation_where_in as $key_c => $key_v)
 			$this->db->where_in($key_c , $key_v);
@@ -2236,6 +2238,7 @@ class Work_order extends CI_Model{
 				->where($this->operation_where)
 				->group_by(array('product_group_id', 'work_order_status_id', 'work_order_responsible_id', 'patent_id'))
 				->get();
+
 		if ($query->num_rows() == 0)
 			return $ot;
 
@@ -2256,6 +2259,8 @@ class Work_order extends CI_Model{
 'activadas': 6
 'NTU': 10
 'pagada': 4
+----------
+'pendientes de pago': 7
 */
 				case 5: // tramite
 				case 9:
@@ -2275,8 +2280,10 @@ class Work_order extends CI_Model{
 					$ot['per_status']['activadas'] += $row->count;
 					$ot['recap-middle'] += $row->count;
 				break;
-				case 7: // aceptada
+				case 7: // aceptada, pendientes de pago
 				case 8: // rechazada
+					if ($row->work_order_status_id == 7)
+						$ot['per_status']['pendientes_pago'] += $row->count;
 					$ot['per_status']['terminada'] += $row->count;
 					$ot['recap-middle'] += $row->count;
 				break;
@@ -2307,6 +2314,8 @@ class Work_order extends CI_Model{
 'activadas': 6
 'NTU': 10
 'pagada': 4
+----------
+'pendientes de pago': 7
 */
 		$status_where = array();
 		switch ($ot_status)
@@ -2329,8 +2338,11 @@ class Work_order extends CI_Model{
 			case 'pagada':
 				$status_where = array(4);
 				break;
+			case 'pendientes_pago':
+				$status_where = array(7);
+				break;
 			case 'todos':
-				$status_where = array(5, 9, 4, 2, 10);
+				$status_where = array(5, 6, 7, 9, 4, 2, 10);
 				break;
 			default:
 				return FALSE;
@@ -2360,6 +2372,7 @@ class Work_order extends CI_Model{
 			$this->db->where_in('work_order_status_id', $status_where);
 		$query = $this->db->group_by('products.id')
 				->get();
+
 		if ($query->num_rows() == 0)
 			return $ot;
 

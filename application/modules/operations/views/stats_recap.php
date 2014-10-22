@@ -73,12 +73,14 @@ $export_segments[2] = 'stat_recap_export';
 echo $stats['per_ramo_tramite'][1]['all']; ?>
                         </td>
                         <td>
-                          <a id="vida_link" href="<?php echo $base_url . implode('/', $segments) ?>.html" style="font-size: larger;" class="btn btn-link" title="Ver Detalles">
-                            <i class="icon-plus"></i></a>
                         </td>
                         <td><?php $percent = $stats['recap-left'] ? round(100 * $stats['per_ramo_tramite'][1]['all'] / $stats['recap-left']) . '%' : $na_value; echo $percent; ?></td>
                       </tr>
 <?php foreach ($stats['per_ramo_tramite'][1] as $key => $value) :
+if ($value['label'] == 'NUEVO NEGOCIO')
+	$value['label'] = '<a id="vida_link" href="' . $base_url . implode('/', $segments) .
+		'.html" title="Ver Detalles">' . 
+		$value['label'] . '</a>';
 if ($key != 'all') : ?>
                       <tr>
                         <td style="text-align: left"><?php echo $value['label'] ?></td>
@@ -100,12 +102,14 @@ echo $stats['per_ramo_tramite'][2]['all'];
 ?>
                         </td>
                         <td>
-                          <a id="gmm_link" href="<?php echo $base_url . implode('/', $segments) ?>.html" style="font-size: larger;" class="btn btn-link" title="Ver Detalles">
-                          <i class="icon-plus"></i></a>
                         </td>
                         <td><?php $percent = $stats['recap-left'] ? round(100 * $stats['per_ramo_tramite'][2]['all'] / $stats['recap-left']) . '%' : $na_value; echo $percent; ?></td>
                       </tr>
 <?php foreach ($stats['per_ramo_tramite'][2] as $key => $value) :
+if ($value['label'] == 'NUEVO NEGOCIO')
+	$value['label'] = '<a id="gmm_link" href="' . $base_url . implode('/', $segments) .
+		'.html" title="Ver Detalles">' . 
+		$value['label'] . '</a>';
 if ($key != 'all') : ?>
                       <tr>
                         <td style="text-align: left"><?php echo $value['label'] ?></td>
@@ -126,12 +130,14 @@ echo $stats['per_ramo_tramite'][3]['all']; ?>
                         </td>
 						
                         <td>
-                          <a id="autos_link" href="<?php echo $base_url . implode('/', $segments) ?>.html" style="font-size: larger;" class="btn btn-link" title="Ver Detalles">
-                          <i class="icon-plus"></i></a>
                         </td>
                         <td><?php $percent = $stats['recap-left'] ? round(100 * $stats['per_ramo_tramite'][3]['all'] / $stats['recap-left']) . '%' : $na_value; echo $percent; ?></td>
                       </tr>
 <?php foreach ($stats['per_ramo_tramite'][3] as $key => $value) :
+if ($value['label'] == 'NUEVO NEGOCIO')
+	$value['label'] = '<a id="autos_link" href="' . $base_url . implode('/', $segments) .
+		'.html" title="Ver Detalles">' . 
+		$value['label'] . '</a>';
 if ($key != 'all') : ?>
                       <tr>
                         <td style="text-align: left"><?php echo $value['label'] ?></td>
