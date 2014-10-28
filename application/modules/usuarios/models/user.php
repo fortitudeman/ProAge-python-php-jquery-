@@ -1875,22 +1875,31 @@ class User extends CI_Model{
 
 	
 	
-  public function getReport( $filter = array() ){
- 	
-	$negocios_pai = $this->_getNegocioPai(TRUE, null, $filter);
+	public function getReport( $filter = array() )
+	{
+$this->benchmark->mark('code_start');
 	/**
 	 *	SELECT users.*, agents.id as agent_id
 		FROM `agents`
 	 **/
-	
 	$this->db->select( 'users.*, agents.connection_date, agents.id as agent_id' );
 	$this->db->from( 'agents' );
 	$this->db->join( 'users', 'users.id=agents.user_id' );
-	
+
 	$generacion = '';
-	
-	if( !empty( $filter ) ){
-			
+	$is_vida = false;
+	$is_gmm = false;
+	$is_autos = false;
+		
+	if( !empty( $filter ) && is_array($filter['query'])){
+		if( isset( $filter['query']['ramo']))
+		{
+			$is_vida = ($filter['query']['ramo'] == 1 );
+			$is_gmm = ($filter['query']['ramo'] == 2 );
+			$is_autos = ($filter['query']['ramo'] == 3 );
+		}
+		
+		
 			if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) ){
 				/*
 				<option value="">Todas las Generaciónes</option>
@@ -2000,7 +2009,7 @@ class User extends CI_Model{
 				$this->db->join( 'payments', 'payments.agent_id=agents.id' );
 				$this->db->where_in('policy_number', $policy_filter);
 			}
-		}
+	}
 	$this->db->order_by('name', 'asc');
 	$this->db->order_by('lastnames', 'asc'); 
 	$query = $this->db->get();
@@ -2010,7 +2019,6 @@ class User extends CI_Model{
 	$report = array();
 		
 	$report[0] = array(
-		
 		'name' => 'Agentes',
 		'negocio' => 'Negocios Pagados',
 		'negociopai' => 'Negocios Pal',
@@ -2023,15 +2031,18 @@ class User extends CI_Model{
 		'negocios_proyectados_primas' => 'Primas Proyectadas',
 		'iniciales' => 'Iniciales',
 		'renovaciones' => 'Renovaciones'
-		
 	);
 	
-	
 	$user_ids = array();
+	$agent_ids = array();
+	$rank_agent = array();
+	$i = 1;
+	
 	foreach ($query->result() as $row){
 		if ( !isset($user_ids[$row->id]) )
 		{
-			$user_ids[$row->id] = $row->id;
+			$agent_ids[] = $row->agent_id;
+			$user_ids[$row->id] = $row->agent_id;
 
 			$name = null;
 			if( empty(  $row->company_name ) )
@@ -2061,24 +2072,62 @@ class User extends CI_Model{
 			$report_row = array(
 				'id' => $row->id,
 				'name' => $name,
-				'uids' => $this->getAgentsUids( $row->agent_id ),
+				'uids' => array(),
 				'connection_date' => $row->connection_date,
 				'disabled' => $row->disabled,
-				'negocio' => $this->getCountNegocio( $row->agent_id, $filter ),
+				'negocio' => 0,
 				'negociopai' => 0,
-				'prima' => $this->getPrima( $row->agent_id, $filter ),
-				'tramite'=>$this->getTramite($row->agent_id,$filter),
-				'aceptadas' => $this->getAceptadas($row->agent_id,$filter),
-				'iniciales' => $this->getIniciales( $row->agent_id, $filter ),
-				'renovacion' => $this->getRenovacion( $row->agent_id, $filter ),
+				'prima' => 0,
+				'tramite' => array('work_order_ids' => array(), 'count' => 0, 'adjusted_prima' => 0),
+				'aceptadas' => array('work_order_ids' => array(), 'count' => 0, 'adjusted_prima' => 0),
+				'iniciales' => 0,
+				'renovacion' => 0,
 				'generacion' => $generacion,
 				'agent_id' => $row->agent_id
 				);
-			if (isset($negocios_pai[$row->agent_id]))
-				$report_row['negociopai'] = $negocios_pai[$row->agent_id];
-			$report[] = $report_row;
+			if ($is_autos)
+			{
+				$report_row['iniciales'] = $this->getIniciales( $row->agent_id, $filter );
+				$report_row['renovacion'] = $this->getRenovacion( $row->agent_id, $filter );
+			}
+			$report[$i] = $report_row;
+			$rank_agent[$row->agent_id] = $i;
+			$i++;
 		}
 	}
+	if (count($agent_ids))
+	{
+		$uids_arr = $this->getAgentsUids( $agent_ids );
+		if ($is_vida)
+			$negocios_pai = $this->_getNegocioPai(TRUE, null, $filter);
+
+		if ($is_vida || $is_gmm)
+		{
+			$negocios = $this->getCountNegocio( $agent_ids, $filter);
+			$primas = $this->getPrima( $agent_ids, $filter);
+			$tramites = $this->getTramite($agent_ids, $filter);
+			$aceptadas = $this->getAceptadas($agent_ids, $filter);
+		}
+		foreach ($rank_agent as $key => $value)
+		{
+			if (isset($uids_arr[$key]))
+				$report[$value]['uids'] = array(0 => $uids_arr[$key]);
+			if ($is_vida || $is_gmm )
+			{
+				if ($is_vida && isset($negocios_pai[$key]))
+					$report[$value]['negociopai'] = $negocios_pai[$key];
+				if (is_array($negocios) && isset($negocios[$key]))
+					$report[$value]['negocio'] = $negocios[$key];
+				if (is_array($primas) && isset($primas[$key]))
+					$report[$value]['prima'] = $primas[$key];
+				if (is_array($tramites) && isset($tramites[$key]))
+					$report[$value]['tramite'] = $tramites[$key];
+				if (is_array($aceptadas) && isset($aceptadas[$key]))
+					$report[$value]['aceptadas'] = $aceptadas[$key];
+			}
+		}
+	}
+$this->benchmark->mark('code_end');
 	return $report;
  }
  
@@ -2159,7 +2208,7 @@ class User extends CI_Model{
 			'renovacion' => $this->getRenovacion( $row->agent_id, $filter ),
 			'generacion' => $generacion			
 		);
-	}	
+	}
 	return $report;
  }	
  
@@ -2167,8 +2216,10 @@ class User extends CI_Model{
  
  
  public function getAgentsUids( $agent = null ){
- 	
-	if( empty( $agent ) );
+
+
+	if( empty( $agent ) )
+		return FALSE;
 	/*
 	SELECT * 
 	FROM `agent_uids`
@@ -2177,21 +2228,34 @@ class User extends CI_Model{
 	
 	$this->db->select();
 	$this->db->from( 'agent_uids' );
-	$this->db->where( 'agent_id', $agent );
+ 	if (is_array($agent))
+		$this->db->where_in('agent_id', $agent);
+	else
+		$this->db->where(array('agent_id' => $agent));	
 	$this->db->where( 'type', 'clave' );
-	
+					
 	$query = $this->db->get(); 
-  	
+
 	if ($query->num_rows() == 0) return false;		
  	
 	$uids = array();
-	
-	foreach ($query->result() as $row)
-	
-		$uids[] = array(
-			'type' => $row->type,
-			'uid' => $row->uid
-		);
+
+ 	if (!is_array($agent))
+	{
+		foreach ($query->result() as $row)
+			$uids[] = array(
+				'type' => $row->type,
+				'uid' => $row->uid
+			);
+	}
+	else
+	{
+		foreach ($query->result() as $row)
+			$uids[$row->agent_id] = array(
+				'type' => $row->type,
+				'uid' => $row->uid
+			);
+	}
 		
 	return $uids;
 	
@@ -2220,16 +2284,22 @@ class User extends CI_Model{
 		JOIN  users ON users.id=agents.user_id
 		WHERE policies_vs_users.user_id=6
 		*/
-		if ($count_requested)		
-			$this->db->select( 'SUM(business) AS sum_business' );
+		if ($count_requested)
+		{
+			if ($agent_id && is_array($agent_id))
+				$this->db->select( 'SUM(business) AS sum_business, payments.agent_id as n_agent_id' );
+			else
+				$this->db->select( 'SUM(business) AS sum_business' );
+		}
 		else
 			$this->db->select( 'payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name' );    
 		$this->db->from( 'payments' );
 		$this->db->join( 'agents', 'agents.id=payments.agent_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
 		$where = array('valid_for_report' => '1');
-		if ($agent_id)
+		if ($agent_id && !is_array($agent_id))
 			$where['agent_id'] = $agent_id;
+
 		$this->db->where($where);
 		$this->db->where( "((business = '1') OR (business = '-1'))" );
 
@@ -2304,13 +2374,29 @@ class User extends CI_Model{
 		{
 			if (isset($filter['query']) && isset($filter['query']['min_amount']))
 				$this->db->where(array('ABS(amount)  >= ' => '5000'));
+			if ($agent_id && is_array($agent_id))
+			{
+				$this->db->where_in('agent_id', $agent_id);
+				$this->db->group_by('payments.agent_id');
+			}
 			$result = 0;
 			$query = $this->db->get();
 			if ($query->num_rows() > 0)
-				$result = (int)$query->row()->sum_business;
+			{
+				if ($agent_id && !is_array($agent_id))
+					$result = (int)$query->row()->sum_business;
+				else
+				{
+					$result = array();
+					foreach ($query->result() as $row)
+						$result[$row->n_agent_id] = $row->sum_business;
+				}
+			}
 			return $result;
 		} 
 		else {
+			if ($agent_id && is_array($agent_id))
+				$this->db->where_in('agent_id', $agent_id);
 			$query = $this->db->get();
 			$result = array();
 			if ($query->num_rows() > 0) {
@@ -2328,161 +2414,6 @@ class User extends CI_Model{
 			return $result;
 		}
   }  
-  // getCountNegocio Old
-  /*
-  public function getCountNegocio( $agent_id = null, $filter = array() ){
- 		
-						
-		if( empty( $agent_id ) ) return 0;
-		*
-		SELECT DISTINCT( policies_vs_users.policy_id ) as policy_id
-		FROM `policies_vs_users`
-		JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
-		JOIN  agents ON agents.id=policies_vs_users.user_id
-		JOIN  users ON users.id=agents.user_id
-		WHERE policies_vs_users.user_id=6
-		*
-		
-		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id' );
-		$this->db->from( 'policies_vs_users' );
-		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
-		$this->db->join( 'users', 'users.id=agents.user_id' );
-		$this->db->where( array( 'policies_vs_users.user_id' => $agent_id ) );
-  		
-		
-						
-		if( !empty( $filter ) ){
-			
-			
-			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
-						
-				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
-			}
-			
-			*
-			<option value="1">Mes</option>
-			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
-			<option value="3">Año</option>
-			*
-			
-			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
-			
-			
-			$trimestre = $this->trimestre();
-			
-			$cuatrimetre = $this->cuatrimestre();
-									
-			$anio = date( 'Y' ).'-01-01';
-						
-			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
-			
-			
-			if( $filter['query']['periodo'] == 1 )
-			
-				$this->db->where( 'work_order.creation_date >= ', $mes); 
-			
-			
-			
-			if( $filter['query']['periodo'] == 2 )
-			
-				
-				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
-					
-					if( $cuatrimetre == 1 ){			
-						$begind = date( 'Y' ).'-01-01';	
-						$end = date( 'Y' ).'-04-'.date('d');	
-					}
-					
-					if( $cuatrimetre == 2 ){			
-						$begind = date( 'Y' ).'-04-01';	
-						$end = date( 'Y' ).'-08-'.date('d');	
-					}
-					
-					if( $cuatrimetre == 3 ){			
-						$begind = date( 'Y' ).'-08-01';	
-						$end = date( 'Y' ).'-12-'.date('d');	
-					}
-					
-					$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
-				
-				}else{
-					
-					
-					if( $trimestre == 1 ){			
-						$begind = date( 'Y' ).'-01-01';	
-						$end = date( 'Y' ).'-03-'.date('d');	
-					}
-					
-					if( $trimestre == 2 ){			
-						$begind = date( 'Y' ).'-03-01';	
-						$end = date( 'Y' ).'-06-'.date('d');	
-					}
-					
-					if( $trimestre == 3 ){			
-						$begind = date( 'Y' ).'-06-01';	
-						$end = date( 'Y' ).'-09-'.date('d');	
-					}
-					
-					if( $trimestre == 4 ){			
-						$begind = date( 'Y' ).'-09-01';	
-						$end = date( 'Y' ).'-12-'.date('d');	
-					}
-					
-						
-					$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
-				}
-				
-				
-				
-				
-				
-				
-			if( $filter['query']['periodo'] == 3 )
-			
-				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
-			
-			}
-							
-		}
-		
-		
-		$query = $this->db->get(); 
-  		
-		if ($query->num_rows() == 0) return 0;		
-		
-		
-		$negocio = array();
-		
-		$negocio['count'] = 0;
-		
-		foreach ($query->result() as $row){
-			
-			*
-			SELECT *
-			FROM payments
-			WHERE policy_id=30;
-			*
-					
-			$this->db->select();
-			$this->db->from( 'payments' );
-			$this->db->where( 'policy_id', $row->policy_id );
-			
-						
-			$querypayemnt = $this->db->get(); 
-			
-			if ($querypayemnt->num_rows() > 0)		
-						
-				$negocio['count'] =(int)$negocio['count']+1;
-													
-			
-		}
-		
-		
-		
-		return $negocio['count'];
-		
-  }*/
   
 	public function getCountNegocioPai( $agent_id = null, $filter = array() )
 	{
@@ -2985,165 +2916,6 @@ GROUP BY `agent_id`";
 			
 		return $pai;
   }
-  
-  
-  
-  /*  getCountNegocioPai
-   public function getCountNegocioPai( $agent_id = null, $filter = array() ){
- 		
-		
-		
-		if( empty( $agent_id ) ) return 0;
-		*
-		SELECT DISTINCT( policies_vs_users.policy_id ) as policy_id
-		FROM `policies_vs_users`
-		JOIN  policies ON policies.id=policies_vs_users.policy_id
-		JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
-		JOIN  agents ON agents.id=policies_vs_users.user_id
-		JOIN  users ON users.id=agents.user_id
-		WHERE policies_vs_users.user_id=1
-    	AND policies.prima>10000
-		*
-		
-		$this->db->select( 'DISTINCT( policies_vs_users.policy_id ) as policy_id' );
-		$this->db->from( 'policies_vs_users' );
-		$this->db->join( 'policies', 'policies.id=policies_vs_users.policy_id' );
-		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
-		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );
-		$this->db->join( 'users', 'users.id=agents.user_id' );
-		$this->db->where( array( 'policies_vs_users.user_id' => $agent_id, 'policies.prima >' => 10000 ) );
-  		
-		
-		if( !empty( $filter ) ){
-			
-			
-			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) ){
-						
-				$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] ); 
-			}
-			
-			*
-			<option value="1">Mes</option>
-			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
-			<option value="3">Año</option>
-			*
-			
-			$mes = date( 'Y' ).'-'.(date( 'm' )).'-01';
-			
-			
-			$trimestre = $this->trimestre();
-			
-			$cuatrimetre = $this->cuatrimestre();
-									
-			$anio = date( 'Y' ).'-01-01';
-						
-			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) ){
-			
-			
-			if( $filter['query']['periodo'] == 1 )
-			
-				$this->db->where( 'work_order.creation_date >= ', $mes); 
-			
-			
-			
-			if( $filter['query']['periodo'] == 2 )
-			
-				
-				if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 ){
-					
-					if( $cuatrimetre == 1 ){			
-						$begind = date( 'Y' ).'-01-01';	
-						$end = date( 'Y' ).'-04-'.date('d');	
-					}
-					
-					if( $cuatrimetre == 2 ){			
-						$begind = date( 'Y' ).'-04-01';	
-						$end = date( 'Y' ).'-08-'.date('d');	
-					}
-					
-					if( $cuatrimetre == 3 ){			
-						$begind = date( 'Y' ).'-08-01';	
-						$end = date( 'Y' ).'-12-'.date('d');	
-					}
-					
-					$this->db->where( array( 'work_order.creation_date >= ' =>  $begind , 'work_order.creation_date <=' =>  $end  ) ); 
-				
-				}else{
-					
-					
-					if( $trimestre == 1 ){			
-						$begind = date( 'Y' ).'-01-01';	
-						$end = date( 'Y' ).'-03-'.date('d');	
-					}
-					
-					if( $trimestre == 2 ){			
-						$begind = date( 'Y' ).'-03-01';	
-						$end = date( 'Y' ).'-06-'.date('d');	
-					}
-					
-					if( $trimestre == 3 ){			
-						$begind = date( 'Y' ).'-06-01';	
-						$end = date( 'Y' ).'-09-'.date('d');	
-					}
-					
-					if( $trimestre == 4 ){			
-						$begind = date( 'Y' ).'-09-01';	
-						$end = date( 'Y' ).'-12-'.date('d');	
-					}
-					
-						
-					$this->db->where( array( 'work_order.creation_date >= ' => $begind, 'work_order.creation_date <=' =>  $end ) ); 
-				}
-				
-				
-				
-				
-				
-				
-			if( $filter['query']['periodo'] == 3 )
-			
-				$this->db->where( array( 'work_order.creation_date >= ' => $anio,  'work_order.creation_date <=' => date( 'Y-m-d' ) ) ); 
-			
-			}
-							
-		}
-		
-		
-		$query = $this->db->get(); 
-  		
-		if ($query->num_rows() == 0) return 0;		
-		
-		$pai = array();
-		
-		foreach ($query->result() as $row){
-			
-			*
-				SELECT SUM(amount) as amount
-				FROM payments
-				WHERE policy_id=28
-			*
-			
-			$this->db->select_sum( 'amount' );
-			$this->db->from( 'payments' );
-			$this->db->where( array( 'policy_id' => $row->policy_id ) );
-						
-			$querypai = $this->db->get(); 
-			
-			if ($querypai->num_rows() == 0) break;			
-			
-			foreach ($querypai->result() as $rowpai)
-			
-				if( (float)$rowpai->amount >= 5000 )
-					
-					$pai[]=$rowpai->amount;
-			
-					
-			
-				
-		}
-			
-		return $pai;
-  }*/
 
 	public function getPrima( $agent_id = null, $filter = array() ){
 
@@ -3171,15 +2943,21 @@ GROUP BY `agent_id`";
 		WHERE policies_vs_users.user_id=6
 		*/
 		if ($sum_requested)
-			$this->db->select( 'SUM( amount ) as primas' );
+		{
+			if ($agent_id && is_array($agent_id))
+				$this->db->select( 'SUM(amount) AS primas, payments.agent_id as n_agent_id' );
+			else
+				$this->db->select( 'SUM(amount) AS primas' );
+		}			
 		else
 			$this->db->select( 'payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name' );    
 		$this->db->from( 'payments' );
 		$this->db->join( 'agents', 'agents.id=payments.agent_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );
 		$where = array( 'year_prime' => 1, 'valid_for_report' => 1);
-		if ($agent_id)
+		if ($agent_id && !is_array($agent_id))
 			$where['agent_id'] = $agent_id;
+
 		$this->db->where($where);
 
 		if( !empty( $filter ) ){
@@ -3249,15 +3027,31 @@ GROUP BY `agent_id`";
 					$this->db->where_in('agent_id', $this->agent_name_where_in);
 			}
 		}
+		if ($agent_id && is_array($agent_id))
+			$this->db->where_in('agent_id', $agent_id);		
+		if ($sum_requested && $agent_id && is_array($agent_id))
+			$this->db->group_by('payments.agent_id');
 
 		$query = $this->db->get();
 		if ($sum_requested) {
-			if ($query->num_rows() == 0) return 0;		
-			foreach ($query->result() as $row){
-				$prima = (float)$row->primas;	
+			if ($query->num_rows() == 0) return 0;
+
+			if ($agent_id && !is_array($agent_id))
+			{
+				foreach ($query->result() as $row)
+					$prima = (float)$row->primas;	
 			}
+			else
+			{
+				$prima = array();
+				foreach ($query->result() as $row)
+					$prima[$row->n_agent_id] = (float)$row->primas;
+			}
+
 			return $prima;
 		} else {
+//			if ($agent_id && is_array($agent_id))
+//				$this->db->where_in('agent_id', $agent_id);
 			$result = array();
 			if ($query->num_rows() > 0) {
 				foreach ($query->result() as $row) {
@@ -3327,7 +3121,7 @@ AND
 
 	public function getTramite($user_id = null, $filter = array())
 	{
-		if( empty( $user_id ) ) return 0;
+		if( empty( $user_id ) && !is_array($user_id)) return 0;
 		
                 /*
 		SELECT DISTINCT( policies_vs_users.policy_id ) AS policy_id
@@ -3368,7 +3162,10 @@ AND
 
 		$this->db->where("( work_order.work_order_status_id=5 OR  work_order.work_order_status_id=9)");
 		$this->db->where("( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )");
-		$this->db->where( 'policies_vs_users.user_id', $user_id );
+		if (!is_array($user_id))
+			$this->db->where( 'policies_vs_users.user_id', $user_id );
+		else
+			$this->db->where_in( 'policies_vs_users.user_id', $user_id );		
 
 		$ramo = 1;
 		$period = 2;
@@ -3381,52 +3178,69 @@ AND
 			}
 
 		}
+
 		$query = $this->db->get();
+		if ($query->num_rows() == 0) return 0;
 
-		if ($query->num_rows() == 0) return 0;		
-
-		$tramite = array();			
-		$work_order_ids = array();            
-		$tramite['count'] = $query->num_rows();		
-		$tramite['prima'] = 0;
-		$tramite['adjusted_prima'] = 0;
-		
-		foreach ($query->result() as $row)
+		$tramite = array();
+		if (!is_array($user_id))
 		{
-			$tramite['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period) * ($row->percentage / 100);
+			$work_order_ids = array();            
+			$tramite['count'] = $query->num_rows();		
+			$tramite['prima'] = 0;
+			$tramite['adjusted_prima'] = 0;
+			foreach ($query->result() as $row)
+			{
+				$tramite['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period) * ($row->percentage / 100);
 			/*
 			SELECT SUM( prima )
 			FROM policies
 			WHERE id=9
 			*/			
-			$this->db->select_sum( 'prima' );
-			$this->db->from( 'policies' );
-			$this->db->where( array( 'id' => $row->policy_id ) );
+				$this->db->select_sum( 'prima' );
+				$this->db->from( 'policies' );
+				$this->db->where( array( 'id' => $row->policy_id ) );
 
-			$queryprima = $this->db->get();
-			$prima = 0;
-			
-			if ($queryprima->num_rows() == 0)
-			{
-				$prima = 0;											
-			}
-			else
-			{	
-				foreach ($queryprima->result() as $rowprima)
+				$queryprima = $this->db->get();
+				$prima = 0;
+				if ($queryprima->num_rows() == 0)
 				{
-					if(!empty( $rowprima->prima)) 
-						$tramite['prima'] = (float)$tramite['prima'] + ((float)$rowprima->prima * $row->percentage / 100);					
+					$prima = 0;											
 				}
+				else
+				{	
+					foreach ($queryprima->result() as $rowprima)
+					{
+						if(!empty( $rowprima->prima)) 
+							$tramite['prima'] = (float)$tramite['prima'] + ((float)$rowprima->prima * $row->percentage / 100);					
+					}
+				}
+				$work_order_ids[] = $row->work_order_id;
+			}	
+			$tramite['work_order_ids'] = $work_order_ids;
+		}
+		else
+		{
+			foreach ($user_id as $id_of_user)
+			{
+				$tramite[$id_of_user] = array(
+					'work_order_ids' => array(),
+					'count' => 0,
+					'adjusted_prima' => 0);
 			}
-			$work_order_ids[] = $row->work_order_id;
-		}	
-		$tramite['work_order_ids'] = $work_order_ids;
+			foreach ($query->result() as $row)
+			{
+				$tramite[$row->user_id]['count']++;
+				$tramite[$row->user_id]['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period) * ($row->percentage / 100);
+				$tramite[$row->user_id]['work_order_ids'][] = $row->work_order_id;
+			}
+		}
 		return $tramite;
 	}	
 
 	public function getAceptadas(  $user_id = null, $filter = array() )
 	{
-		if( empty( $user_id ) ) return 0;
+		if( empty( $user_id ) && !is_array($user_id)) return 0;
 		/*
 		SELECT DISTINCT( policies_vs_users.policy_id ) AS policy_id
 		FROM policies
@@ -3437,8 +3251,7 @@ AND
 		WHERE work_order.work_order_status_id=7   
 		AND policies_vs_users.user_id=7
 		*/
-
-		$this->db->select('DISTINCT( policies_vs_users.policy_id ) AS policy_id, policies_vs_users.percentage, work_order.id AS work_order_id' );
+		$this->db->select('DISTINCT( policies_vs_users.policy_id ) AS policy_id, policies_vs_users.user_id, policies_vs_users.percentage, work_order.id AS work_order_id' );
 		$this->db->from( 'policies' );
 		$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policies.id' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policies_vs_users.policy_id' );
@@ -3447,7 +3260,10 @@ AND
 		$this->db->join( 'users', 'users.id=agents.user_id' );
 		$this->db->where('work_order.work_order_status_id', '7' );
 		$this->db->where("( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )");
-		$this->db->where( 'policies_vs_users.user_id', $user_id );
+		if (!is_array($user_id))
+			$this->db->where( 'policies_vs_users.user_id', $user_id );
+		else
+			$this->db->where_in( 'policies_vs_users.user_id', $user_id );
 
 		$ramo = 1;
 		$period = 2;
@@ -3461,37 +3277,55 @@ AND
 		}
 
 		$query = $this->db->get(); 
-
 		if ($query->num_rows() == 0) return 0;			
 
-		$aceptadas = array();	
-		$work_order_ids = array();
-		$aceptadas['prima'] = 0;
-		$aceptadas['adjusted_prima'] = 0;		
-		$aceptadas['count']=0;		
-		foreach ($query->result() as $row)
-        {
-			$aceptadas['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period) * $row->percentage / 100;
+		$aceptadas = array();
+		if (!is_array($user_id))
+		{
+			$work_order_ids = array();
+			$aceptadas['prima'] = 0;
+			$aceptadas['adjusted_prima'] = 0;		
+			$aceptadas['count']=0;		
+			foreach ($query->result() as $row)
+			{
+				$aceptadas['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period) * $row->percentage / 100;
 		/*
 		SELECT SUM( prima )
 		FROM policies
 		WHERE id=1*/
-			$this->db->select_sum( 'prima' );
-			$this->db->from( 'policies' );
-			$this->db->where( array( 'id' => $row->policy_id ) );
-			$querypolicies = $this->db->get();
-			if ($querypolicies->num_rows() > 0)
-			{
-				foreach ($querypolicies->result() as $rowprima)
+				$this->db->select_sum( 'prima' );
+				$this->db->from( 'policies' );
+				$this->db->where( array( 'id' => $row->policy_id ) );
+				$querypolicies = $this->db->get();
+				if ($querypolicies->num_rows() > 0)
 				{
-					$aceptadas['count'] = (int)$aceptadas['count']+1;					
-					if( !empty( $rowprima->prima ) )
-						$aceptadas['prima'] = (float)$aceptadas['prima'] + ((float)$rowprima->prima  * $row->percentage / 100);					
+					foreach ($querypolicies->result() as $rowprima)
+					{
+						$aceptadas['count'] = (int)$aceptadas['count']+1;					
+						if( !empty( $rowprima->prima ) )
+							$aceptadas['prima'] = (float)$aceptadas['prima'] + ((float)$rowprima->prima  * $row->percentage / 100);					
+					}
 				}
+				$work_order_ids[] = $row->work_order_id;
 			}
-			$work_order_ids[] = $row->work_order_id;       
+			$aceptadas['work_order_ids'] = $work_order_ids;
 		}
-		$aceptadas['work_order_ids'] = $work_order_ids;
+		else
+		{
+			foreach ($user_id as $id_of_user)
+			{
+				$aceptadas[$id_of_user] = array(
+					'work_order_ids' => array(),
+					'count' => 0,
+					'adjusted_prima' => 0);
+			}
+			foreach ($query->result() as $row)
+			{
+				$aceptadas[$row->user_id]['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period) * $row->percentage / 100;
+				$aceptadas[$row->user_id]['work_order_ids'][] = $row->work_order_id;
+				$aceptadas[$row->user_id]['count']++;
+			}
+		}
 		return $aceptadas;		
 	}
 
