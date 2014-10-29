@@ -2095,6 +2095,7 @@ $this->benchmark->mark('code_start');
 			$i++;
 		}
 	}
+	$query->free_result();
 	if (count($agent_ids))
 	{
 		$uids_arr = $this->getAgentsUids( $agent_ids );
@@ -2256,7 +2257,7 @@ $this->benchmark->mark('code_end');
 				'uid' => $row->uid
 			);
 	}
-		
+	$query->free_result();
 	return $uids;
 	
  }
@@ -2392,6 +2393,7 @@ $this->benchmark->mark('code_end');
 						$result[$row->n_agent_id] = $row->sum_business;
 				}
 			}
+			$query->free_result();
 			return $result;
 		} 
 		else {
@@ -2411,6 +2413,7 @@ $this->benchmark->mark('code_end');
 					$result[] = $row;
 				}
 			}
+			$query->free_result();
 			return $result;
 		}
   }  
@@ -2766,6 +2769,7 @@ GROUP BY `agent_id`";
 				$result = array();
 				foreach ($query->result() as $row)
 					$result[$row->agent_id] = $row->payment_count;
+				$query->free_result();
 				if ($agent_id)
 					return $result[$agent_id];
 				else
@@ -2785,6 +2789,7 @@ GROUP BY `agent_id`";
 					}
 					$result[] = $row;				
 				}
+				$query->free_result();
 				return $result;
 			}
 		}
@@ -3047,7 +3052,7 @@ GROUP BY `agent_id`";
 				foreach ($query->result() as $row)
 					$prima[$row->n_agent_id] = (float)$row->primas;
 			}
-
+			$query->free_result();
 			return $prima;
 		} else {
 //			if ($agent_id && is_array($agent_id))
@@ -3065,6 +3070,7 @@ GROUP BY `agent_id`";
 					$result[] = $row;
 				}
 			}
+			$query->free_result();
 			return $result;
 		}
 	}
@@ -3235,6 +3241,7 @@ AND
 				$tramite[$row->user_id]['work_order_ids'][] = $row->work_order_id;
 			}
 		}
+		$query->free_result();
 		return $tramite;
 	}	
 
@@ -3326,6 +3333,7 @@ AND
 				$aceptadas[$row->user_id]['count']++;
 			}
 		}
+		$query->free_result();
 		return $aceptadas;		
 	}
 
