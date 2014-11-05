@@ -282,40 +282,22 @@ implode(', ', $ramo_tramite_types) . '
 
 		// Check access teh user for create
 		if( $this->access_create == false ){
-				
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Crear", Informe a su administrador para que le otorge los permisos necesarios.'
-							
 			));	
-			
-			
 			redirect( 'ot', 'refresh' );
-		
 		}
-		
-		
-		
-		
-		
-		
-		
+
 		if( !empty( $_POST ) ){
-			
-			
-			
 			$this->form_validation->set_rules('ramo', 'Ramo', 'required');
 			$this->form_validation->set_rules('ot', 'Número de OT', 'is_unique[work_order.uid]');
 			$this->form_validation->set_rules('work_order_type_id', 'Tipo de tramite', 'required');
 			$this->form_validation->set_rules('subtype', 'Sub tipo', 'required');
-			
-			
-			
+
 			// IF IS A NEW BUSSINESS
 			if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' ){
-				
 				// Validations
 				$this->form_validation->set_rules('product_id', 'Producto', 'required|xxs_clean');
 				$this->form_validation->set_rules('currency_id', 'Moneda', 'required|xxs_clean');
@@ -324,34 +306,19 @@ implode(', ', $ramo_tramite_types) . '
 				$this->form_validation->set_rules('name', 'Nombre', 'required|xxs_clean');
 				//$this->form_validation->set_rules('lastname_father', 'Apellido paterno', 'required|xxs_clean');
 				//$this->form_validation->set_rules('lastname_mother', 'Apellido materno', 'required|xxs_clean');
-				
 			}
-			
-			
-			
-			
-			
-			
-					
+
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
-				
-				
 				// Load Model
 				$this->load->model( 'work_order' );
-				
 				$controlSaved = true;
-				
 				$policyId = 0;
-				
+
 				// Save new bussiness
 				//if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' ){
-						
-					
 				if( !empty( $_POST['product_id'] ) ){
-					
 					$policy = array(
-					
 						'product_id' => $this->input->post( 'product_id' ),
 						'period' => $this->input->post( 'period' ),
 						'currency_id' => $this->input->post( 'currency_id' ),
@@ -366,9 +333,7 @@ implode(', ', $ramo_tramite_types) . '
 						'expired_date' => $this->input->post( 'expired_date' ),
 						'last_updated' => date( 'Y-m-d H:i:s' ),
 						'date' => date( 'Y-m-d H:i:s' )
-						
 					  );
-					  
 				}else{
 					$policy = array(
 						'name' => $this->input->post( 'name' ),
@@ -377,64 +342,34 @@ implode(', ', $ramo_tramite_types) . '
 						'date' => date( 'Y-m-d H:i:s' )
 					);
 				}
-				
-				  
 				if( $this->work_order->create( 'policies', $policy ) == false )
-				   
-				   $controlSaved = false;
-									  
-				  $policyId = $this->work_order->insert_id();
-				
+					$controlSaved = false;
+
+				$policyId = $this->work_order->insert_id();
+
 				// Agents Adds
 				$agents = array();
-				
 				for( $i=0; $i<=count( $this->input->post('agent') ); $i++ )
-					
 					if( !empty(  $_POST['agent'][$i] ) )
-				   
 						$agents[] = array( 
-							  
 							  'user_id' => $_POST['agent'][$i], 
 							  'policy_id' => $policyId,
 							  'percentage' => $_POST['porcentaje'][$i],
 							  'since' => date( 'Y-m-d H:i:s' )
-						  
 						);
-			  
-			  
-			  
-			  
-			   if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false )
-				  
-				  $controlSaved = false;	
-						
+
+				if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false )
+					$controlSaved = false;	
 				//}
-				
-				
-				
 				if( $controlSaved == false ){
-					
 					// Set false message		
 					$this->session->set_flashdata( 'message', array( 
-						
 						'type' => false,	
 						'message' => 'No se puede crear la orden de trabajo Poliza, consulte a su administrador.'
-									
 					));	
-					
-					
 					redirect( 'ot', 'refresh' );
-					
 				}
-				
-				
-				
-				
-				
-				
-				
-				
-				
+
 				$ot = array(
 					'user' => $this->sessions['id'],
 					'policy_id' => $policyId,
@@ -448,28 +383,19 @@ implode(', ', $ramo_tramite_types) . '
 					'duration' => '',
 					'last_updated' => date( 'Y-m-d H:s:i' ),
 					'date' => date( 'Y-m-d H:s:i' )
-					
 				);	
 							
 				// Save OT
 				if( $this->work_order->create( 'work_order', $ot ) == false )
-					
-					 $controlSaved = false;
-				
-				
+					$controlSaved = false;
+
 				if( $controlSaved == false ){
-					
 					// Set false message		
 					$this->session->set_flashdata( 'message', array( 
-						
 						'type' => false,	
 						'message' => 'No se puede crear la orden de trabajo, consulte a su administrador.'
-									
 					));	
-					
-					
 					redirect( 'ot', 'refresh' );
-					
 				}
 
 				// Send Email
@@ -482,48 +408,29 @@ implode(', ', $ramo_tramite_types) . '
 				);
 
 				if( $controlSaved == true ){
-					
 					// Set false message		
 					$this->session->set_flashdata( 'message', array( 
-						
 						'type' => true,	
 						'message' => 'Se ha creado el registro correctamente.'
-									
 					));	
-					
-					
 					redirect( 'ot', 'refresh' );
-					
 				}
-				 
 			}	
-						
 		}
-		
-		
 		// Load Model
 		$this->load->model( 'work_order' );
-		
 		// Get products
 		$product = $this->work_order->getProductsOptions();
-		
-		
 		//Get Currency
 		$currency = $this->work_order->getCurrencyOptions();
-		
 		// Get Payments intervals
 		$payment_intervals = $this->work_order->getPaymentIntervalOptions();		
-		
 		// Get Conduct (payment mode)
 		$payment_conduct = $this->work_order->getPaymentMethodsConductoOptions();
-		
 		// Get Agents
 		$agents = $this->user->getAgents();
-		
-				
 		// Config view
 		$this->view = array(
-				
 		  'title' => 'Crear OT',
 		   // Permisions
 		  'user' => $this->sessions,
@@ -536,141 +443,96 @@ implode(', ', $ramo_tramite_types) . '
 			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
 			  '<script src="'.base_url().'ot/assets/scripts/create.js"></script>',		
 			  '<script src="'.base_url().'scripts/config.js"></script>'
-			  	
 		  ),
 		  'content' => 'ot/create', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-			
-		  
 		  'product' => $product,
 		  'currency' => $currency,
 		  'payment_intervals' => $payment_intervals,
 		  'payment_conduct' => $payment_conduct,
 		  'agents' => $agents	
-	
 		);
-		
-		
+
 		// Render view 
 		$this->load->view( 'index', $this->view );	
-	
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	// Getting type tramite
 	public function typetramite(){
-		
-		
+
 		// If is not ajax request redirect
 		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
 		
 		// Load Model
 		$this->load->model( 'work_order' );	
-		
+
 		$options = $this->work_order->getTypeTramite( $this->input->post( 'ramo' ) );
-		
 		echo $options;
-		
-		
+
 		return;
 	}
-	
-	
-	
+
 	// Getting sub type
 	public function subtype(){
-		
-		
+
 		// If is not ajax request redirect
 		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
-		
+
 		// Load Model
 		$this->load->model( 'work_order' );	
-		
+
 		$options = $this->work_order->getSubType( $this->input->post( 'type' ) );
-		
 		echo $options;
-		
-		
 		return;
 	}
-	
+
 	public function period(){
-		
-		
+
 		// If is not ajax request redirect
 		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
-		
 		// Load Model
 		$this->load->model( 'work_order' );	
-		
 		$options = $this->work_order->getPeriod( $this->input->post( 'id' ) );
 		//print_r($_POST);
 		echo $options;
-		
-		
 		return;
-		
-		
 	}
 /**
  *	Condig Policies
  **/	
 	public function policies(){
-		
-		
+
 		// If is not ajax request redirect
 		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
-		
 		// Load Model
 		$this->load->model( 'work_order' );	
-		
 		$options = $this->work_order->getPolicies( $this->input->post( 'ramo' ) );
 		//print_r($_POST);
 		echo $options;
-		
-		
+
 		return;
 	}
-	
-	
-	
+
 /**
  *	Create policies
  **/
-	
+
 	public function create_policy(){
-		
+
 		exit;
 		// Check access teh user for create
 		if( $this->access_create == false ){
-				
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Crear Politica.", Informe a su administrador para que le otorge los permisos necesarios.'
-							
 			));	
-
 			redirect( 'ot', 'refresh' );
-		
 		}
-
 		// Load model
 		$this->load->model( array( 'work_order', 'user' ) );
-
 		// Save the record
 		if( !empty( $_POST ) ){
-		
 			// Validations
 			$this->form_validation->set_rules('ramo', 'Ramo', 'required|xxs_clean');
 			$this->form_validation->set_rules('product_id', 'Producto', 'required|xxs_clean');
@@ -682,14 +544,10 @@ implode(', ', $ramo_tramite_types) . '
 			$this->form_validation->set_rules('lastname_mother', 'Apellido materno', 'required|xxs_clean');
 			//$this->form_validation->set_rules('agent[]', 'Agente', 'required|xxs_clean');
 			//$this->form_validation->set_rules('porcentaje[]', 'Porcentaje', 'required|xxs_clean');
-
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
-
-				  $controlSave = true;
-
-				  $policy = array(
-				  	
+				$controlSave = true;
+				$policy = array(
 					'product_id' => $this->input->post( 'product_id' ),
 					'currency_id' => $this->input->post( 'currency_id' ),
 					'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
@@ -703,60 +561,43 @@ implode(', ', $ramo_tramite_types) . '
 					'last_updated' => date( 'Y-m-d H:i:s' ),
 					'date' => date( 'Y-m-d H:i:s' )
 
-				  );
+				);
 
-				  if( $this->work_order->create( 'policies', $policy ) == false )
+				if( $this->work_order->create( 'policies', $policy ) == false )
+					$controlSave = false;
+				$policyId = $this->work_order->insert_id();
 
-					 $controlSave = false;
+				// Agents Adds
+				$agents = array();
+				for( $i=0; $i<=count( $this->input->post('agent') ); $i++ )
+					if( !empty(  $_POST['agent'][$i] ) )
+						$agents[] = array( 
+							'user_id' => $_POST['agent'][$i], 
+							'policy_id' => $policyId,
+							'percentage' => $_POST['porcentaje'][$i],
+							'since' => date( 'Y-m-d H:i:s' )
+						);
 
-				  $policyId = $this->work_order->insert_id();
-
-				  // Agents Adds
-				  $agents = array();
-
-				  for( $i=0; $i<=count( $this->input->post('agent') ); $i++ )
-
-					  if( !empty(  $_POST['agent'][$i] ) )
-
-						  $agents[] = array( 
-								
-								'user_id' => $_POST['agent'][$i], 
-								'policy_id' => $policyId,
-								'percentage' => $_POST['porcentaje'][$i],
-								'since' => date( 'Y-m-d H:i:s' )
-							
-						  );
-
-				 if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false );
-
+				if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false );
 					$controlSave = false;
 
-				 if( $controlSave == true ){ 
-
+				if( $controlSave == true ){ 
 					  // Set true message		
-					  $this->session->set_flashdata( 'message', array( 
+					$this->session->set_flashdata( 'message', array( 
+						'type' => true,	
+						'message' => 'Se agrego la nueva politica.'		  
+					));												
+					redirect( 'ot/create', 'refresh' );
 
-						  'type' => true,	
-						  'message' => 'Se agrego la nueva politica.'		  
-					  ));												
-
-					  redirect( 'ot/create', 'refresh' );
-
-				 }else{
-
+				}else{
 					// Set true message		
-					  $this->session->set_flashdata( 'message', array( 
-
-						  'type' => false,	
-						  'message' => 'Ocurrio un error no se puede guardar la nueva politica, consulte a su administrador.'
-
-					  ));												
-
-					  redirect( 'ot/create', 'refresh' );
-				 }
-
+					$this->session->set_flashdata( 'message', array( 
+						'type' => false,	
+						'message' => 'Ocurrio un error no se puede guardar la nueva politica, consulte a su administrador.'
+					));												
+					redirect( 'ot/create', 'refresh' );
+				}
 			}
-
 			exit;
 		}
 
@@ -777,7 +618,6 @@ implode(', ', $ramo_tramite_types) . '
 
 		// Config view
 		$this->view = array(
-
 		  'title' => 'Crear Politica',
 		   // Permisions
 		  'user' => $this->sessions,
@@ -790,12 +630,9 @@ implode(', ', $ramo_tramite_types) . '
 			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
 			  '<script src="'.base_url().'ot/assets/scripts/create_polocy.js"></script>',		
 			  '<script src="'.base_url().'scripts/config.js"></script>'
-			  	
 		  ),
 		  'content' => 'ot/create_policy', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  
-		  
 		  'product' => $product,
 		  'currency' => $currency,
 		  'payment_intervals' => $payment_intervals,
@@ -803,8 +640,6 @@ implode(', ', $ramo_tramite_types) . '
 		  'agents' => $agents
 	
 		);
-		
-		
 		// Render view 
 		$this->load->view( 'index', $this->view );	
 	}
@@ -812,40 +647,26 @@ implode(', ', $ramo_tramite_types) . '
 	
 	// Get Options for a new select
 	public function getSelectAgents(){
-		
+
 		if( !$this->input->is_ajax_request() ){ echo 'Access denied'; exit; }
-		
-		
-		
+
 		// Load model
 		$this->load->model( 'user' );
-		
 		// Get Agents
 		$agents = $this->user->getAgents();
-		
 		echo $agents;
 	}
-	
-	
-	
-	
-	
-	
+
 	// Load Products by Produc Group
 	public function getPolicyByGroup(){
-		
-		
+
 		if( !$this->input->is_ajax_request() ){ echo 'Access denied'; exit; }
-		
-		
+
 		// Load model
 		$this->load->model( 'work_order' );
-		
+
 		$product = $this->work_order->getProductsOptions( $this->input->post( 'product_group' ) );
-		
-		
 		echo $product;
-		
 		exit;
 	}
 	
@@ -854,16 +675,14 @@ implode(', ', $ramo_tramite_types) . '
 	 **/
 	
 	public function setPay(){
-		
+
 		if( !$this->input->is_ajax_request() ){ echo 'Access denied'; exit; }
-		
+
 		// Load Model 
 		$this->load->model( 'work_order' );
-		
 		$work_order = array(				
 			'work_order_status_id' => 4
 		);
-
 		$ot = $this->input->post( 'id' );
 		if ( $this->work_order->update( 'work_order', $ot, $work_order ) &&
 			( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
@@ -899,7 +718,6 @@ implode(', ', $ramo_tramite_types) . '
 
 		// Save Record
 		if( !empty( $_POST ) ){
-
 			$comments_posted = $this->input->post('comments');
 			if ($comments_posted === FALSE)
 				$comments_posted = '';
@@ -926,18 +744,13 @@ implode(', ', $ramo_tramite_types) . '
 					'message' => 'Se ha guardado el registro correctamente.'
 				));												
 				redirect( 'ot', 'refresh' );
-
 			}else{
-
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
-					
 					'type' => false,	
 					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
-								
 				));												
 				redirect( 'ot', 'refresh' );
-
 			}
 			exit;
 		}
@@ -945,7 +758,6 @@ implode(', ', $ramo_tramite_types) . '
 
 		// Config view
 		$this->view = array(
-				
 		  'title' => 'Activar OT',
 		   // Permisions
 		  'user' => $this->sessions,
@@ -958,82 +770,65 @@ implode(', ', $ramo_tramite_types) . '
 			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
 			  '<script src="'.base_url().'ot/assets/scripts/activate_desactivate.js"></script>',		
 			  '<script src="'.base_url().'scripts/config.js"></script>'
-			  	
 		  ),
 		  'content' => 'ot/activate', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  
 		  'ot' => $ot,
-		  
 		  'reason' => $this->work_order->getReason( $data[0]['product_group_id'], 6, $data[0]['work_order_reason_id'] ),
-		  
 		  'responsibles' => $this->work_order->getResponsibles(  $data[0]['work_order_responsible_id'] ),
 		  'data' => $data
-		  
 		);
-				
 		// Render view 
 		$this->load->view( 'index', $this->view );	
-		
 	}
 
 	public function desactivar( $ot = null ){
-		
-			$this->load->model( 'work_order' );
-			$work_order = array(
-				
-				'work_order_status_id' => 9,
-				'creation_date' => date( 'Y-m-d H:i:s' ), // Quitar el tiempo
-				'last_updated' => date( 'Y-m-d H:i:s' )
-			);
-			if ( $ot &&
-				$this->work_order->update( 'work_order', $ot, $work_order ) &&
-				( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
-				 !== FALSE)
-				)
-			{
-				// Send Email
-				$this->_send_notification($ot, $updated);
 
-				// Set true message
-				$this->session->set_flashdata( 'message', array( 
-					'type' => true,	
-					'message' => 'Se ha guardado el registro correctamente.'
-
+		$this->load->model( 'work_order' );
+		$work_order = array(
+			'work_order_status_id' => 9,
+			'creation_date' => date( 'Y-m-d H:i:s' ), // Quitar el tiempo
+			'last_updated' => date( 'Y-m-d H:i:s' )
+		);
+		if ( $ot &&
+			$this->work_order->update( 'work_order', $ot, $work_order ) &&
+			( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
+			 !== FALSE)
+			)
+		{
+			// Send Email
+			$this->_send_notification($ot, $updated);
+			// Set true message
+			$this->session->set_flashdata( 'message', array( 
+				'type' => true,	
+				'message' => 'Se ha guardado el registro correctamente.'
 				));
 			redirect( 'ot', 'refresh' );
-			}else{
-				// Set true message		
-				$this->session->set_flashdata( 'message', array( 
-					'type' => false,	
-					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
-				));												
+		}else{
+			// Set true message		
+			$this->session->set_flashdata( 'message', array( 
+				'type' => false,	
+				'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
+			));												
 			redirect( 'ot', 'refresh' );
-			}
-			exit;
+		}
+		exit;
 	}
 
 	public function cancelar( $ot = null ){
-		
+
 		// Check access teh user for create
 		if( $this->access_delete == false ){
-				
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Cancelar.", Informe a su administrador para que le otorge los permisos necesarios.'
-							
 			));	
-			
-			
 			redirect( 'ot', 'refresh' );
-		
 		}
-		
+
 		// Load Model 
 		$this->load->model( 'work_order' );
-
 		// Save Record
 		if( !empty( $_POST ) ){
 			$work_order = array(
@@ -1063,17 +858,15 @@ implode(', ', $ramo_tramite_types) . '
 				$this->session->set_flashdata( 'message', array( 
 					'type' => false,	
 					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
-								
 				));												
 				redirect( 'ot', 'refresh' );
 			}
 			exit;
 		}
 		$data = $this->work_order->getOtActivateDesactivate( $ot );
-		
+
 		// Config view
 		$this->view = array(
-				
 		  'title' => 'Desactivar OT',
 		   // Permisions
 		  'user' => $this->sessions,
@@ -1086,23 +879,17 @@ implode(', ', $ramo_tramite_types) . '
 			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
 			  '<script src="'.base_url().'ot/assets/scripts/activate_desactivate.js"></script>',		
 			  '<script src="'.base_url().'scripts/config.js"></script>'
-			  	
 		  ),
 		  'content' => 'ot/cancelar', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  
 		  'ot' => $ot,
-		  
 		  'reason' => $this->work_order->getReason( $data[0]['product_group_id'], 2, $data[0]['work_order_reason_id'] ),
-		  
 		  'responsibles' => $this->work_order->getResponsibles(  $data[0]['work_order_responsible_id'] ),
 		  'data' => $data
-		  
 		);
-				
+
 		// Render view 
 		$this->load->view( 'index', $this->view );	
-		
 	}
 
 	private function _send_notification($order_id, $updated)
@@ -1136,100 +923,74 @@ implode(', ', $ramo_tramite_types) . '
 	 *	Aceptar y rechazar
 	 **/
 	public function aceptar( $ot = null, $poliza = null, $pago = null ){
-		
-		
-		// Load Model
-			$this->load->model( 'work_order' );
-		
-			$work_order = array(				
-				'work_order_status_id' => 7,
-				'last_updated' => date( 'd-m-Y H:i:s' )
-			);
-			
-			if( $pago == "true" ) $work_order['work_order_status_id']=4;
-			
-			
-			$this->work_order->setPolicy( $ot, $poliza );
-						
-			if ( $this->work_order->update( 'work_order', $ot, $work_order ) &&
-				( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
-				 !== FALSE)
-				)
-			{
-				// Send Email
-				$this->_send_notification($ot, $updated);
 
-				// Set true message		
-				$this->session->set_flashdata( 'message', array( 
-					
-					'type' => true,	
-					'message' => 'Se ha guardado el registro correctamente.'
-								
-				));												
-				
-				
-				redirect( 'ot', 'refresh' );
-				
-			}else{
-				
-				
-				// Set true message		
-				$this->session->set_flashdata( 'message', array( 
-					
-					'type' => false,	
-					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
-								
-				));												
-				
-				
-				redirect( 'ot', 'refresh' );
-				
-			}
-		
+		// Load Model
+		$this->load->model( 'work_order' );
+		$work_order = array(				
+			'work_order_status_id' => 7,
+			'last_updated' => date( 'd-m-Y H:i:s' )
+		);
+		if( $pago == "true" ) $work_order['work_order_status_id']=4;
+
+		$this->work_order->setPolicy( $ot, $poliza );
+		if ( $this->work_order->update( 'work_order', $ot, $work_order ) &&
+			( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
+			 !== FALSE)
+			)
+		{
+			// Send Email
+			$this->_send_notification($ot, $updated);
+
+			// Set true message		
+			$this->session->set_flashdata( 'message', array( 
+				'type' => true,	
+				'message' => 'Se ha guardado el registro correctamente.'
+			));												
+			redirect( 'ot', 'refresh' );
+		}else{
+			// Set true message		
+			$this->session->set_flashdata( 'message', array( 
+				'type' => false,	
+				'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
+			));												
+			redirect( 'ot', 'refresh' );
+		}
 	} 
 	 
 	public function rechazar( $ot = null ){
-			
-			// Load Model
-			$this->load->model( 'work_order' );
-		
-			$work_order = array(
-				'work_order_status_id' => 8,
-				'last_updated' => date( 'd-m-Y H:i:s' )
-			);
 
-			if ( $this->work_order->update( 'work_order', $ot, $work_order ) &&
-				( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
-				 !== FALSE)
-				)
-			{
-				// Send Email
-				$this->_send_notification($ot, $updated);
+		// Load Model
+		$this->load->model( 'work_order' );
 
-				// Set true message		
-				$this->session->set_flashdata( 'message', array( 
-					
-					'type' => true,	
-					'message' => 'Se ha guardado el registro correctamente.'
-								
-				));												
-				redirect( 'ot', 'refresh' );
-				
-			}else{
-				// Set true message		
-				$this->session->set_flashdata( 'message', array( 
-					
-					'type' => false,	
-					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
-								
-				));												
-				redirect( 'ot', 'refresh' );
-			}
+		$work_order = array(
+			'work_order_status_id' => 8,
+			'last_updated' => date( 'd-m-Y H:i:s' )
+		);
+
+		if ( $this->work_order->update( 'work_order', $ot, $work_order ) &&
+			( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
+			 !== FALSE)
+			)
+		{
+			// Send Email
+			$this->_send_notification($ot, $updated);
+
+			// Set true message		
+			$this->session->set_flashdata( 'message', array( 
+				'type' => true,	
+				'message' => 'Se ha guardado el registro correctamente.'
+			));												
+			redirect( 'ot', 'refresh' );
+		}else{
+			// Set true message		
+			$this->session->set_flashdata( 'message', array( 
+				'type' => false,	
+				'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
+			));												
+			redirect( 'ot', 'refresh' );
+		}
 	}
-	
-	
-	
-	
+
 /*
 // Cancel work order
 	public function cancelar( $ot = null ){
@@ -1349,95 +1110,38 @@ implode(', ', $ramo_tramite_types) . '
 	
 	}	
 */	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 // update work order
 	public function update( $ot = null ){
-		
-		
-		// Set false message		
-/*			$this->session->set_flashdata( 'message', array( 
-				
-				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Editar", Informe a su administrador para que le otorge los permisos necesarios.'
-							
-			));	
-			
-			
-			redirect( 'ot', 'refresh' );
-*/		
-		
-		
+
 		// Check access teh user for create
 		if( $this->access_create == false ){
-				
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Editar", Informe a su administrador para que le otorge los permisos necesarios.'
-							
 			));	
-			
-			
 			redirect( 'ot', 'refresh' );
-		
 		}
-		
 		if( empty( $ot ) ){
-			
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No existe esta orden de trabajo..'
-							
 			));	
-			
-			
 			redirect( 'ot', 'refresh' );
-			
 		}
-		
-		
 		// Load Model
 		$this->load->model( 'work_order' );
-		
-		
-		
 		if( !empty( $_POST ) ){
-			
-			
-			
 			$this->form_validation->set_rules('ramo', 'Ramo', 'required');
 			$this->form_validation->set_rules('work_order_type_id', 'Tipo de tramite', 'required');
 			$this->form_validation->set_rules('subtype', 'Sub tipo', 'required');
 			$this->form_validation->set_rules('comments', 'Comentarios', 'required');
-			
-			
-						
+
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
-				
-				
-				
 				$otupdate = array(
-					
 					'policy_id' => $this->input->post( 'policy_id' ),
 					'product_group_id' => $this->input->post( 'ramo' ),
 					'work_order_type_id' => $this->input->post( 'subtype' ),
@@ -1445,51 +1149,31 @@ implode(', ', $ramo_tramite_types) . '
 					'comments' => $this->input->post('comments'),
 					'duration' => '',
 					'last_updated' => date( 'Y-m-d H:s:i' )
-					
 				);	
-				
+
 				if( $this->work_order->update( 'work_order', $ot, $otupdate ) == true ){
-					
 					// Set false message		
 					$this->session->set_flashdata( 'message', array( 
-						
 						'type' => true,	
 						'message' => 'Se ha guardado el registro correctamente.'
-									
 					));	
-					
-					
 					redirect( 'ot', 'refresh' );
-					
 				}else{
-					
 					// Set false message		
 					$this->session->set_flashdata( 'message', array( 
-						
 						'type' => false,	
 						'message' => 'El registro no puede ser modificado, consulte a su administrador..'
-									
 					));	
-					
-					
 					redirect( 'ot', 'refresh' );
-					
 				}
-									 
 			}	
-			
-				
-				exit;		
+			exit;		
 		}
-		
-		
-		
+
 		$data = $this->work_order->getById( $ot );
-		
-				
+
 		// Config view
 		$this->view = array(
-				
 		  'title' => 'Modificar OT',
 		   // Permisions
 		  'user' => $this->sessions,
@@ -1502,18 +1186,14 @@ implode(', ', $ramo_tramite_types) . '
 			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
 			  '<script src="'.base_url().'ot/assets/scripts/update.js"></script>',		
 			  '<script src="'.base_url().'scripts/config.js"></script>'
-			  	
 		  ),
 		  'content' => 'ot/update', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  'data' => $data	
-	
 		);
-		
-		
+
 		// Render view 
 		$this->load->view( 'index', $this->view );	
-	
 	}
 
 
@@ -1890,7 +1570,6 @@ implode(', ', $ramo_tramite_types) . '
  **/	
 	public function reporte()
 	{	
-   
 		// Check access for report
 		if( $this->access_report == false )
 		{	
@@ -2045,30 +1724,26 @@ alert("changed!");
 		// Render view 
 		$this->load->view( 'index', $this->view );	
 	}
-	
-        
-        
+
 /**
  *	Reports Popup
  **/
 // Copied and pasted to the code of agent/reporte_popup.html:
 	public function reporte_popup()
 	{
-			$work_order_ids = $this->input->post('wrk_ord_ids');  
-            $data['is_poliza'] = $this->input->post('is_poliza');
-            $data['gmm'] = $this->input->post('gmm');
+		$work_order_ids = $this->input->post('wrk_ord_ids');  
+		$data['is_poliza'] = $this->input->post('is_poliza');
+		$data['gmm'] = $this->input->post('gmm');
 
-            $this->load->model( array( 'work_order', 'usuarios/user' ) );
-           
-            $this->view = array(
-                'css' => array(
+		$this->load->model( array( 'work_order', 'usuarios/user' ) );
+		$this->view = array(
+			'css' => array(
 			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',			
 			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
-                        <link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
-                        '<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
-			
-		  ),
-                'scripts' =>  array(
+			<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
+			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
+			),
+			'scripts' =>  array(
 		  	'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
 			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
@@ -2080,7 +1755,7 @@ alert("changed!");
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',			
 			'<script src="'.base_url().'scripts/config.js"></script>'	,	
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
-                      '<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
+			'<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
 		  ));
 
 		$ramo = 1;
@@ -2148,25 +1823,23 @@ alert("changed!");
 		$this->load->view('popup_payment', $data);	
 	}
 
-        public function reporte_popupa()
-        {
-           
-            $work_order_ids = $this->input->post('wrk_ord_ids'); 
-            $data['is_poliza'] = $this->input->post('is_poliza');
-            $data['gmm'] = $this->input->post('gmm');
-            $work_ids = explode(',',$work_order_ids);
-            $this->load->model('work_order');   
-            
-            $this->view = array(
-                'css' => array(
+	public function reporte_popupa()
+	{
+		$work_order_ids = $this->input->post('wrk_ord_ids'); 
+		$data['is_poliza'] = $this->input->post('is_poliza');
+		$data['gmm'] = $this->input->post('gmm');
+		$work_ids = explode(',',$work_order_ids);
+		$this->load->model('work_order');   
+
+		$this->view = array(
+			'css' => array(
 			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',			
 			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
-                        <link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
-                        '<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
-			
-		  ),
-                'scripts' =>  array(
-		  	'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+			<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
+			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
+			),
+			'scripts' =>  array(
+			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
 			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
 			//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',			
@@ -2177,62 +1850,59 @@ alert("changed!");
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',			
 			'<script src="'.base_url().'scripts/config.js"></script>'	,	
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
-                      '<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
-		  ));
-            
-            $results = array();  
-            foreach($work_ids as $work_order_id)
-            {
-                $results[] = $this->work_order->pop_up_data($work_order_id);                
-            }
-            $data['values'] = $results;
-            $this->load->view('popup_report',$data);	
+			'<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
+			));
+
+		$results = array();  
+		foreach($work_ids as $work_order_id)
+		{
+			$results[] = $this->work_order->pop_up_data($work_order_id);                
+		}
+		$data['values'] = $results;
+		$this->load->view('popup_report',$data);	
 	}
         
  /**
  *	Reports Popup
  **/	
 	public function reporte_popup_later()
-        {
+	{
             //$data['value'] = $this->uri->segment(3);
             $this->load->model(array('work_order'));            
             $data['values'] = $this->work_order->pop_up_data(); 
             $result = $this->load->view('popup_report',$data);
             echo json_encode($result);
 	}
-        
-        
+
 /**
  *	Email Popup
  **/	
 	public function email_popup()
-        {
-            //$data['email_address'] = $this->uri->segment(3);  
-            $tata = $this->input->post("work_ids");
-            $email = $this->input->post("email");
-            $data['Id'] = substr($tata,9, -1);
-            $data['username'] = $this->sessions['username'];
-            
-            $this->load->view('popup_email',$data);	
+	{
+		//$data['email_address'] = $this->uri->segment(3);  
+		$tata = $this->input->post("work_ids");
+		$email = $this->input->post("email");
+		$data['Id'] = substr($tata,9, -1);
+		$data['username'] = $this->sessions['username'];
+		$this->load->view('popup_email',$data);	
 	}  
-        
-       
+
  /**
  *	Send Email 
  **/	
 	public function send_email()
-        {
-            $email_address = $this->input->post('email_address');            
-            $email_body = $this->input->post('email_body');            
-            $this->load->library('email');
-            $this->email->set_mailtype("html");
-            $this->email->from('proAges@example.com','proAges');
-            $this->email->to($email_address);
-            $this->email->subject('Email from proAges');
-            $this->email->message($email_body);
-         
-            $result = $this->email->send(); 
-            echo json_encode($result); 
+	{
+		$email_address = $this->input->post('email_address');            
+		$email_body = $this->input->post('email_body');            
+		$this->load->library('email');
+		$this->email->set_mailtype("html");
+		$this->email->from('proAges@example.com','proAges');
+		$this->email->to($email_address);
+		$this->email->subject('Email from proAges');
+		$this->email->message($email_body);
+
+		$result = $this->email->send(); 
+		echo json_encode($result); 
 	}         
 
 	private function _report_export_helper($value, $ramo = 'vida_gmm')
