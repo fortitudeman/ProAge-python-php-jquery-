@@ -2456,46 +2456,65 @@ class Usuarios extends CI_Controller {
 	
 	// Delete Users
 	public function delete( $id = null ){
-		
-		
+
 		// Check access teh user for delete
 		if( $this->access_delete == false ){
-				
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No tiene permisos para ingresar en esta sección "Usuarios Eliminar", Informe a su administrador para que le otorge los permisos necesarios.'
-							
 			));	
-			
-			
 			redirect( 'usuarios', 'refresh' );
-		
 		}
-		
-		
+
 		// Load Model
 		$this->load->model( 'user' );
 		$user = $this->user->getForUpdateOrDelete( $id );
-		
+
 		// Check Record if exist
 		if( empty( $user ) ){
-			
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No existe el registro. No puede eliminar este registro.'
-							
 			));	
-			
-			
 			redirect( 'usuarios', 'refresh' );
-			
 		}
-		
-		
+
+		$user_infos = array($id => array(
+			'uids' => '',
+			'agent_id' => NULL,
+			'is_deletable' => TRUE));
+		if (isset($user['agent_uids']))
+		{
+			foreach ($user['agent_uids'] as $uid)
+			{
+				if (($uid['type'] == 'clave') || ($uid['type'] == 'national') || ($uid['type'] == 'provincial'))
+					$user_infos[$id]['uids'] .= $uid['type'];
+			}
+		}
+		if (isset($user['agents']) && isset($user['agents'][0]))
+			$user_infos[$id]['agent_id'] = $user['agents'][0]['id'];
+		foreach ($user['users_vs_user_roles'] as $user_role)
+		{
+			if ($user_role['user_role_id'] == 5)
+			{
+				$user_infos[$id]['is_deletable'] = FALSE;
+				break;
+			}
+		}
+		if ($user_infos[$id]['is_deletable'])
+			$this->user->is_deletable($user_infos);
+
+		// If user is not deletable
+		if( !$user_infos[$id]['is_deletable'] ){
+			$this->session->set_flashdata( 'message', array( 
+				'type' => false,	
+				'message' => 'No puede eliminar este registro.'
+			));	
+			redirect( 'usuarios', 'refresh' );
+		}
+
 		if( !empty( $_POST ) and isset( $_POST['delete'] ) and $_POST['delete'] == true ){
 			
 			$deleteControl = true;

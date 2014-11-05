@@ -125,21 +125,13 @@ class User extends CI_Model{
 // Return insert id
 	public function insert_id(){   return $this->insertId;  }
 
-
-
-
-
-
-
-
-
-
-/**
- |	Getting for overview
- **/ 
-	
 	public function overview( $start = 0, $filter = null ) {
-		
+
+		$agents = array();
+		$query = $this->db->get('agents');
+		foreach ($query->result() as $row)
+			$agents[$row->user_id] = $row->id;
+
 		/*
 		 SELECT id, name, lastnames, email 
 		 FROM `users` 
@@ -171,12 +163,9 @@ class User extends CI_Model{
 		unset( $this->data );
 
 		$this->data = array();
-		
-		
-		
+
+		$user_infos = array();
 		foreach ($query->result() as $row) {
-			
-			
 			// Getting Manager name
 			if( !empty( $row->manager_id ) ){
 				
@@ -221,7 +210,10 @@ class User extends CI_Model{
 			if ($types->num_rows() == 0) $tipo = '';
 			
 			foreach ($types->result() as $row_types)
-					$tipo .= $row_types->name.'<br>';	
+			{
+				$tipo .= $row_types->name.'<br>';
+				$is_administrator = ($row_types->name == 'Administrador');
+			}
 				
 			unset( $types ); // Clean memory
 			
@@ -315,18 +307,112 @@ class User extends CI_Model{
 		    	'date' => $row->date ,
 		    	'last_updated' => $row->last_updated
 		    );
-		
-		
-
+			$user_infos[$row->id] = array(
+				'uids' => $clave . $national . $provincial,
+				'agent_id' => isset($agents[$row->id]) ? $agents[$row->id] :  NULL,
+				'is_deletable' => !$is_administrator);
 		}
-
+		$query->free_result();
+		$this->is_deletable($user_infos);
+		foreach ($this->data as $key => $value)
+			$this->data[$key]['is_deletable'] = $user_infos[$value['id']]['is_deletable'];
 		return $this->data;
 		
    }
 
-	
+// Determines if users are deletable
+	public function is_deletable(&$user_infos)
+	{
+		$to_check = array(
+			array(
+				'table' => 'agents_activity',
+				'field' => 'agent_id',
+				'variable' => 'agent'),
+			array(
+				'table' => 'payments',
+				'field' => 'agent_id',
+				'variable' => 'agent'),
+			array(
+				'table' => 'policies_vs_users',
+				'field' => 'user_id',
+				'variable' => 'agent'),
+			array(
+				'table' => 'simulator',
+				'field' => 'agent_id',
+				'variable' => 'agent'),
+			array(
+				'table' => 'work_order',
+				'field' => 'user',
+				'variable' => 'user'),	
+		);
 
-
+		if (count($user_infos) > 1)
+		{
+			foreach ($to_check as $description)
+			{
+				$query = $this->db->query(
+					'SELECT DISTINCT (' . $description['field'] . ') AS identification FROM ' . $description['table']);
+				$$description['table'] = array();
+				foreach ($query->result() as $row)
+					${$description['table']}[$row->identification] = $row->identification;
+				$query->free_result();
+			}
+			foreach ($user_infos as $user_id => $infos)
+			{
+				if ($infos['is_deletable'])
+				{
+					foreach ($to_check as $description)
+					{
+						if ((($description['variable'] == 'agent') &&
+							isset($infos['agent_id']) &&
+							isset(${$description['table']}[$infos['agent_id']]))
+							||
+							(($description['variable'] == 'user') &&
+							isset(${$description['table']}[$user_id])))
+						{
+							$user_infos[$user_id]['is_deletable'] = FALSE;
+							break;
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			foreach ($user_infos as $user_id => $infos)
+			{
+				if ($infos['is_deletable'])
+				{
+					foreach ($to_check as $description)
+					{
+						$num_rows = 0;
+						if (($description['variable'] == 'agent') &&
+							$infos['agent_id'] )					
+						{
+							$query = $this->db->select($description['field'])
+								->get_where($description['table'], 
+								array($description['field'] => $infos['agent_id']), 1, 0);
+							$num_rows = $query->num_rows();
+							$query->free_result();
+						}
+						elseif ($description['variable'] == 'user')
+						{
+							$query = $this->db->select($description['field'])
+								->get_where($description['table'], 
+								array($description['field'] => $user_id), 1, 0);
+							$num_rows = $query->num_rows();
+							$query->free_result();							
+						}
+						if ($num_rows)
+						{
+							$user_infos[$user_id]['is_deletable'] = FALSE;
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
 // Count records for pagination
 	public function record_count( $filter = null ) {
        

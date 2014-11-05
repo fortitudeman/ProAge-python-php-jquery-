@@ -252,7 +252,7 @@
                             <i class="icon-edit icon-white"></i>            
                         </a>
                         <?php endif; ?>
-                        <?php if( $access_delete == true ): ?>
+                        <?php if( $access_delete && $value['is_deletable']): ?>
                         <a class="btn btn-danger" href="<?php echo base_url() ?>usuarios/delete/<?php echo $value['id'] ?>.html" title="Eliminar Usuario">
                             <i class="icon-trash icon-white"></i> 
                         </a>
