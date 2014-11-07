@@ -135,36 +135,39 @@ function chooseOption( choose, is_new ){
 		
 		if( choose[0] == 'activar' )
 			window.location=Config.base_url()+"ot/activar/"+choose[1]+".html";
-		if( choose[0] == 'desactivar' )
-			window.location=Config.base_url()+"ot/desactivar/"+choose[1]+".html";	
+		if( choose[0] == 'desactivar' ) {
+			var sendNotification = (confirm( "¿Con notificacion por correo electrónico?" ) ) ? "1": "0";
+			window.location=Config.base_url()+"ot/desactivar/"+choose[1]+ '/' + sendNotification + ".html";
+		}
 		if( choose[0] == 'aceptar' ){
-			
-			if( confirm( 'Seguro quiere marcar como aceptada' ) ){
-				
+			if( confirm( '¿Seguro quiere marcar como aceptada?' ) ){
 				if( is_new == true ){
 					var poliza=prompt("Ingresa un número de poliza","");	
-					var pago=confirm("¿Quiere marcar la Póliza como pagada?");	
-					if( poliza!=null )
-						window.location=Config.base_url()+"ot/aceptar/"+choose[1]+"/"+poliza+"/"+pago+".html";	
-					
+					if (( poliza!=null ) && (poliza.length > 0)){
+						var pago=confirm("¿Quiere marcar la Póliza como pagada?");
+						var sendNotification = (confirm( "¿Con notificacion por correo electrónico?" ) ) ? "1": "0";
+						window.location=Config.base_url()+"ot/aceptar/"+choose[1]+ "/" + sendNotification +"/"+poliza+"/"+pago+".html";
+					}
 				}else{
-					window.location=Config.base_url()+"ot/aceptar/"+choose[1]+".html";	
+					var sendNotification = (confirm( "¿Con notificacion por correo electrónico?" ) ) ? "1": "0";
+					window.location=Config.base_url()+"ot/aceptar/"+choose[1]+ "/" + sendNotification + ".html";	
 				}
-				
-				
 			}
-			
 		}
-		if( choose[0] == 'rechazar' )
-			if( confirm( 'Seguro quiere marcar como rechazada' ) ) window.location=Config.base_url()+"ot/rechazar/"+choose[1]+".html";		
+		if( choose[0] == 'rechazar' ) {
+			if( confirm( 'Seguro quiere marcar como rechazada' ) ) {
+				var sendNotification = (confirm( "¿Con notificacion por correo electrónico?" ) ) ? "1": "0";
+				window.location=Config.base_url()+"ot/rechazar/"+choose[1]+ '/' + sendNotification + ".html";
+			}
+		}
 		if( choose[0] == 'cancelar' )
 			window.location=Config.base_url()+"ot/cancelar/"+choose[1]+".html";
-	
 }
 
 function setPay( id ){
-	if( confirm( "¿Está seguro que quiere marcar la OT como pagada?" ) ){		
-		var Data = { id: id };		
+	if( confirm( "¿Está seguro que quiere marcar la OT como pagada?" ) ){
+		var sendNotification = (confirm( "¿Con notificacion por correo electrónico?" ) ) ? "1": "0";
+		var Data = { id: id, notification: sendNotification };		
 		$.ajax({
 
 			url:  Config.base_url()+'ot/setPay.html',

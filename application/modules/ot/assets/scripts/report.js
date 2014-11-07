@@ -269,10 +269,11 @@ $( document ).ready(function() {
 			return false;
 
 		if ( confirm( confirmMessage ) ) {
+			var sendNotification = (confirm( "¿Con notificacion por correo electrónico?" ) ) ? "1": "0";
 			$.ajax({
 				url: url,
 				type: 'POST',
-				data: ({order_id: allParams[1], gmm: allParams[2], is_poliza: allParams[3], user_id: allParams[4]}),
+				data: ({order_id: allParams[1], gmm: allParams[2], is_poliza: allParams[3], user_id: allParams[4], send_notification: sendNotification}),
 				dataType : 'json',
 				beforeSend: function(){
 					current.hide();

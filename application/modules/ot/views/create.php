@@ -234,7 +234,14 @@
                       <textarea class="input-xlarge focused" id="comments" name="comments" rows="6"></textarea>
                     </div>
                   </div>
-             
+
+                  <div class="control-group">
+                    <label class="control-label" for="inputError">¿Con notificacion por correo electrónico?</label>
+                    <div class="controls">
+                      <input type="checkbox" value="1" name="notification" checked="checked" />&nbsp;Si&nbsp;&nbsp;
+					  </div>
+                  </div>
+
                   <div id="actions-buttons-forms" class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>
                     <button class="btn" onclick="javascript: history.back()">Cancelar</button>

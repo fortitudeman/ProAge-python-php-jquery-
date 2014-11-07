@@ -399,13 +399,17 @@ implode(', ', $ramo_tramite_types) . '
 				}
 
 				// Send Email
-				$this->load->library( 'mailer' );
-				$notification = $this->work_order->getNotification();
-				$this->mailer->notifications( $notification, null, null, array(
-						'from' => $this->sessions['email'],
-						'reply-to' => $this->sessions['email']
-					)
-				);
+				$notification = $this->input->post('notification');
+				if ($notification !== FALSE)
+				{
+					$this->load->library( 'mailer' );
+					$notification = $this->work_order->getNotification();
+					$this->mailer->notifications( $notification, null, null, array(
+							'from' => $this->sessions['email'],
+							'reply-to' => $this->sessions['email']
+						)
+					);
+				}
 
 				if( $controlSaved == true ){
 					// Set false message		
@@ -690,7 +694,8 @@ implode(', ', $ramo_tramite_types) . '
 			)
 		{
 			// Send Email
-			$this->_send_notification($ot, $updated);
+			if ($this->input->post( 'notification' ) === 1)
+				$this->_send_notification($ot, $updated);
 			echo 'Ot Marcada como pagada correctamente';
 		}
 		else
@@ -736,7 +741,9 @@ implode(', ', $ramo_tramite_types) . '
 				)
 			{
 				// Send Email
-				$this->_send_notification($ot, $updated);
+				$notification = $this->input->post('notification');
+				if ($notification !== FALSE)
+					$this->_send_notification($ot, $updated);
 
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
@@ -797,7 +804,8 @@ implode(', ', $ramo_tramite_types) . '
 			)
 		{
 			// Send Email
-			$this->_send_notification($ot, $updated);
+			if ($this->uri->rsegment(4, 1) == 1)
+				$this->_send_notification($ot, $updated);
 			// Set true message
 			$this->session->set_flashdata( 'message', array( 
 				'type' => true,	
@@ -844,7 +852,9 @@ implode(', ', $ramo_tramite_types) . '
 				)
 			{
 				// Send Email
-				$this->_send_notification($ot, $updated);
+				$notification = $this->input->post('notification');
+				if ($notification !== FALSE)
+					$this->_send_notification($ot, $updated);
 
 				// Set true message		
 				$this->session->set_flashdata( 'message', array( 
@@ -922,7 +932,7 @@ implode(', ', $ramo_tramite_types) . '
 	/**
 	 *	Aceptar y rechazar
 	 **/
-	public function aceptar( $ot = null, $poliza = null, $pago = null ){
+	public function aceptar( $ot = null, $send_notification = null, $poliza = null, $pago = null ){
 
 		// Load Model
 		$this->load->model( 'work_order' );
@@ -939,7 +949,8 @@ implode(', ', $ramo_tramite_types) . '
 			)
 		{
 			// Send Email
-			$this->_send_notification($ot, $updated);
+			if ($send_notification == 1)
+				$this->_send_notification($ot, $updated);
 
 			// Set true message		
 			$this->session->set_flashdata( 'message', array( 
@@ -957,7 +968,7 @@ implode(', ', $ramo_tramite_types) . '
 		}
 	} 
 	 
-	public function rechazar( $ot = null ){
+	public function rechazar( $ot = null, $send_notification = null){
 
 		// Load Model
 		$this->load->model( 'work_order' );
@@ -973,7 +984,8 @@ implode(', ', $ramo_tramite_types) . '
 			)
 		{
 			// Send Email
-			$this->_send_notification($ot, $updated);
+			if ($send_notification == 1)
+				$this->_send_notification($ot, $updated);
 
 			// Set true message		
 			$this->session->set_flashdata( 'message', array( 
@@ -2462,6 +2474,7 @@ alert("changed!");
 		$gmm = $this->input->post('gmm');
 		$is_poliza = $this->input->post('is_poliza');
 		$user_id = $this->input->post('user_id');
+		$send_notification = $this->input->post('send_notification');
 		if (($order_id !== FALSE) && ($gmm !== FALSE) && ($is_poliza !== FALSE) && ($user_id !== FALSE))
 		{
 			$order_id = (int)$order_id;
@@ -2477,26 +2490,29 @@ alert("changed!");
 				)
 			{
 				$creator = $this->work_order->generic_get( 'users', array('id' => $updated[0]->user), 1);
-// Send Email
-				$this->load->library( 'mailer' );
-				$notification = $this->work_order->getNotification( $order_id );
-				$from_reply_to = array();
-				if ($creator)
+			// Send Email
+				if (($send_notification === FALSE) || ($send_notification == 1))
 				{
-					$recipient = array(
-						'agent_id' => 0,
-						'percentage' => 100,
-						'name' => $creator[0]->name,
-						'lastnames' => $creator[0]->lastnames,
-						'company_name' => $creator[0]->company_name,
-						'email' =>  $creator[0]->email
-					);
-					$notification[0]['agents'][] = $recipient;
-					$from_reply_to = array(
-						'from' => $creator[0]->email,
-						'reply-to' =>  $creator[0]->email);
+					$this->load->library( 'mailer' );
+					$notification = $this->work_order->getNotification( $order_id );
+					$from_reply_to = array();
+					if ($creator)
+					{
+						$recipient = array(
+							'agent_id' => 0,
+							'percentage' => 100,
+							'name' => $creator[0]->name,
+							'lastnames' => $creator[0]->lastnames,
+							'company_name' => $creator[0]->company_name,
+							'email' =>  $creator[0]->email
+						);
+						$notification[0]['agents'][] = $recipient;
+						$from_reply_to = array(
+							'from' => $creator[0]->email,
+							'reply-to' =>  $creator[0]->email);
+					}
+					$this->mailer->notifications( $notification, null, null, $from_reply_to);
 				}
-				$this->mailer->notifications( $notification, null, null, $from_reply_to);
 				$row_result = array(
 					'is_poliza' => $is_poliza,
 					'gmm' => $gmm,

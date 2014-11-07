@@ -41,12 +41,10 @@
         </div>
         
         <div class="box-content">
-        	
-            
+
             <form id="form" action="<?php echo base_url() ?>ot/cancelar/<?php echo $ot ?>.html" class="form-horizontal" method="post">
                 <fieldset>
-                     
-                  
+
                    <div class="control-group subtype">
                     <label class="control-label text-error" for="inputError">Razón</label>
                     <div class="controls">
@@ -55,8 +53,7 @@
                       </select>
                     </div>
                   </div>
-                  
-                  
+
                   <div class="control-group poliza">
                     <label class="control-label text-error" for="inputError">Responsable</label>
                     <div class="controls">
@@ -65,22 +62,23 @@
                       </select>
                     </div>
                   </div>
-                 
-                  
+
+                  <div class="control-group">
+                    <label class="control-label" for="inputError">¿Con notificacion por correo electrónico?</label>
+                    <div class="controls">
+                      <input type="checkbox" value="1" name="notification" checked="checked" />&nbsp;Si&nbsp;&nbsp;
+					  </div>
+                  </div>
+
                   <input type="hidden" id="creation_date" name="creation_date" />
-                                            
-                  
-                  
-                    
-                  
-                                    
+
                   <div id="actions-buttons-forms" class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>
                     <input type="button" class="btn" onclick="javascript: history.back()" value="Cancelar">
                   </div>
                 </fieldset>
               </form>
-        
+
         </div>
     </div><!--/span-->
 
