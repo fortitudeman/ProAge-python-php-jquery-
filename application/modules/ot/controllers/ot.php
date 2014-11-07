@@ -694,7 +694,7 @@ implode(', ', $ramo_tramite_types) . '
 			)
 		{
 			// Send Email
-			if ($this->input->post( 'notification' ) === 1)
+			if ($this->input->post( 'notification' ) == 1)
 				$this->_send_notification($ot, $updated);
 			echo 'Ot Marcada como pagada correctamente';
 		}
@@ -907,14 +907,17 @@ implode(', ', $ramo_tramite_types) . '
 		$notification = $this->work_order->getNotification( $order_id );
 		if ($notification && isset($notification[0]))
 		{
-			$creator = $this->work_order->generic_get( 'users', array('id' => $updated[0]->user), 1);
-			$from_reply_to = array();
+			$from_reply_to = array(
+				'from' => $this->sessions['email'],
+				'reply-to' => $this->sessions['email']
+				);
+/*			$creator = $this->work_order->generic_get( 'users', array('id' => $updated[0]->user), 1);
 			if ($creator)
 			{
 				$from_reply_to = array(
 					'from' => $creator[0]->email,
 					'reply-to' =>  $creator[0]->email);
-			}
+			}*/
 			$responsible = $this->work_order->getResponsiblesById( $notification[0]['work_order_responsible_id'] );
 			$reason = $this->work_order->getReasonById( $notification[0]['work_order_reason_id'] );
 			$this->load->library( 'mailer' );
@@ -2508,8 +2511,10 @@ alert("changed!");
 						);
 						$notification[0]['agents'][] = $recipient;
 						$from_reply_to = array(
-							'from' => $creator[0]->email,
-							'reply-to' =>  $creator[0]->email);
+/*							'from' => $creator[0]->email,
+							'reply-to' =>  $creator[0]->email);*/
+						'from' => $this->sessions['email'],
+						'reply-to' => $this->sessions['email']);
 					}
 					$this->mailer->notifications( $notification, null, null, $from_reply_to);
 				}
