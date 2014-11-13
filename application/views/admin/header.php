@@ -100,7 +100,7 @@ else
 					<span class="icon-bar"></span>
 				</a>
 <?php endif; ?>
-				<a class="brand" href="<?php echo base_url(); ?>"> <img alt="Charisma Logo" src="<?php echo base_url() ?>images/logo20.png" /> <span>Proages</span></a>
+ 				<a class="brand" href="<?php echo base_url(); ?>"> <img alt="Charisma Logo" src="<?php echo base_url() . 'images/' . $this->config->item('logo') ?>" /> <span><?php echo $this->config->item('company_name') ?></span></a>
 				
 				<!-- theme selector starts -->
 				<div class="btn-group pull-right theme-container" >
@@ -162,9 +162,9 @@ else
 				<div class="well nav-collapse sidebar-nav">
 					<ul class="nav nav-tabs nav-stacked main-menu">
 						<li class="nav-header hidden-tablet">Navegación</li>
-                       
-						<li><a class="ajax-link" href="<?php echo base_url() ?>"><i class="icon-home"></i><span class="hidden-tablet"> Proages</span></a></li>						
-                        
+
+						<li><a class="ajax-link" href="<?php echo base_url() ?>"><i class="icon-home"></i><span class="hidden-tablet"><?php echo $this->config->item('company_name') ?></span></a></li>						
+
                         <?php 
 							/**
 							 *	Check $roles_vs_access for setting or added navigation for an user

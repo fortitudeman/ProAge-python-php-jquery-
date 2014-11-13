@@ -38,7 +38,7 @@
 		</div>
 
 		<footer>
-			<p class="pull-left">&copy; <a href="#" target="_blank">ProAges</a> <?php echo date('Y') ?></p>
+			<p class="pull-left">&copy; <a href="#" target="_blank"><?php echo $this->config->item('company_name') ?></a> <?php echo date('Y') ?></p>
 			<!--<p class="pull-right">Powered by: Apps ISC.Ulises</p>-->
 		</footer>
 		<?php } ?>

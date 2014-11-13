@@ -49,14 +49,15 @@ $agent_profile_page = ($this->uri->segment(1) == 'agent');
 				?>
 				<tr class="data-row-class" id="data-row-<?php echo $value['id'] ?>">
                 	<td class="center"><?php 
-
+					$days_yellow = $this->config->item('days_yellow');
+					$days_red = $this->config->item('days_red');
 					$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
 					if( $value['work_order_status_id'] == 5 or $value['work_order_status_id'] == 9 ) {
-						if( (float)$color <= 5 ) 
+						if( (float)$color <= $days_yellow ) 
 							echo '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
-						else if( (float)$color > 5 and (float)$color <= 10 )	
+						else if( ((float)$color > $days_yellow) and ((float)$color <= $days_red ))
 							echo '<div style="background-color:#FF0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';									
-						else if( (float)$color > 10 )	
+						else if( (float)$color > $days_red )	
 							echo '<div style="background-color:#F30; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
 					}
 											

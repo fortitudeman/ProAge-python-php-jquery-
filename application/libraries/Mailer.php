@@ -4,7 +4,10 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 class Mailer{
 		
 	var $mail;
- 
+
+	private $email_from;
+	private $company;
+
     public function __construct()
     {
         require_once('PHPMailer/class.phpmailer.php');
@@ -19,8 +22,14 @@ class Mailer{
         // $this->mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
         // $this->mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
         // $this->mail->Port       = 465;                   // set the SMTP port for the GMAIL server
-        $this->mail->AddReplyTo('info+proages@isinet.mx', 'Isinet');
-        $this->mail->SetFrom('info+proages@isinet.mx', 'Isinet');
+
+        $CI =& get_instance();
+		$this->email_from = $CI->config->item('email_sender');
+		$this->company = $CI->config->item('company_name');
+		$this->mail->AddReplyTo($this->email_from, $this->company);
+		$this->mail->SetFrom($this->email_from, $this->company);
+//        $this->mail->AddReplyTo('info+proages@isinet.mx', 'Isinet');
+//        $this->mail->SetFrom('info+proages@isinet.mx', 'Isinet');
     }
 
 // Send Notifications emails 
@@ -194,12 +203,12 @@ class Mailer{
 			if (isset($from_reply_to['from']))
 				$headers = "From: " . $from_reply_to['from'] . "\r\n";
 			else
-				$headers = "From: info+proages@isinet.mx\r\n";
+				$headers = "From: " . $this->email_from . "\r\n";
 
 			if (isset($from_reply_to['reply-to']))
 				$headers .= "Reply-To: " . $from_reply_to['reply-to'] . "\r\n";
 			else
-				$headers .= "Reply-To: info+proages@isinet.mx\r\n";
+				$headers .= "Reply-To: " . $this->email_from . "\r\n";
 
 			$headers .= "MIME-Version: 1.0\r\n";
 			$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
