@@ -1,6 +1,6 @@
 
 INSERT INTO `modules` (`name`, `label`, `last_updated`, `date`) VALUES
-('Settings', 'Configuración', '2014-11-11', 1388663270);
+('Settings', 'ConfiguraciÃ³n', '2014-11-11', 1388663270);
 
 CREATE TABLE `settings` (
   `key` varchar(40) CHARACTER SET utf8 COLLATE utf8_spanish_ci DEFAULT NULL,
@@ -14,10 +14,10 @@ CREATE TABLE `settings` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `settings` (`key`, `value`, `name`, `rank`, `form_type`,  `form_validation`, `tooltip`) VALUES
-('logo', 'logo20.png', 'Logo', 1, 'image', 'gif|jpg|png,50,100,150', 'Tamaño max: 50k, anchura max: 100px, altura max: 150px'),
-('email_sender', 'info+proages@isinet.mx', 'Correo electrónico del remitente', 2, 'email', 'trim|valid_email|required', ''),
+('logo', 'logo20.png', 'Logo', 1, 'image', 'gif|jpg|png,50,100,150', 'TamaÃ±o max: 50k, anchura max: 100px, altura max: 150px'),
+('email_sender', 'info+proages@isinet.mx', 'Correo electrÃ³nico del remitente', 2, 'email', 'trim|valid_email|required', ''),
 ('company_name', 'Proages', 'Nombre de la empresa', 3, 'text', 'trim|xss_clean', ''),
-('days_yellow', '6', 'Número de días para marcar un OT amarillo', 4, 'number', 'trim|is_natural', ''),
-('days_red', '11', 'Número de días para marcar un OT rojo', 5, 'number', 'trim|is_natural', '');
+('days_yellow', '5', 'NÃºmero de dÃ­as para marcar un OT amarillo', 4, 'number', 'trim|is_natural', ''),
+('days_red', '10', 'NÃºmero de dÃ­as para marcar un OT rojo', 5, 'number', 'trim|is_natural', '');
 
 
