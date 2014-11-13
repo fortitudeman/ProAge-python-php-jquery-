@@ -9,8 +9,12 @@
 |	http://codeigniter.com/user_guide/general/hooks.html
 |
 */
-
-
-
+$hook['post_controller_constructor'] = array(
+    'class'    => '',
+    'function' => 'get_settings',
+    'filename' => 'Settings.php',
+    'filepath' => 'hooks',
+    'params'   => array()
+    );
 /* End of file hooks.php */
 /* Location: ./application/config/hooks.php */
