@@ -335,7 +335,9 @@ else
                     </div>
                   </div>
 
-<?php if ($function == 'update') :?>
+<?php if (($function == 'update') && (
+		($is_nuevo_negocio && in_array($data['status_id'], array(7, 4, 10))) ||
+		(!$is_nuevo_negocio)) ) :?>
                   <div class="control-group poliza">
                     <label class="control-label text-error" for="inputError">Poliza</label>
                     <div class="controls">

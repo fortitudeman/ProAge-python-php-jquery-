@@ -2249,15 +2249,18 @@ alert("changed!");
 				$this->form_validation->set_rules('creation_date', 'Fecha de tramite', 'trim|required|min_length[10]');
 				$this->form_validation->set_rules('agent[]', 'Agente', 'trim|required|is_natural_no_zero');
 				$this->form_validation->set_rules('name', 'Nombre del asegurado / contratante', 'trim|required|xxs_clean');
-				$this->form_validation->set_rules('policy_uid', ' Poliza', 'trim|xxs_clean');
 				$this->form_validation->set_rules('comments', 'Comentarios', 'trim|xxs_clean');
 				if ($is_nuevo_negocio) {
+					if (in_array($ot[0]['status_id'], array(7, 4, 10)))
+						$this->form_validation->set_rules('policy_uid', 'Poliza', 'trim|xxs_clean');
 					$this->form_validation->set_rules('currency_id', 'Moneda', 'trim|required|is_natural_no_zero|less_than[3]');
 					$this->form_validation->set_rules('payment_method_id', 'Conducto', 'trim|required|is_natural_no_zero|less_than[7]');
 					$this->form_validation->set_rules('payment_interval_id', ' Forma de pago', 'trim|required|is_natural_no_zero|less_than[5]');
 					$this->form_validation->set_rules('prima', 'Prima anual', 'trim|decimal_or_integer');
 					$this->form_validation->set_rules('period', 'Plazo', 'trim|xxs_clean');
 				}
+				else
+					$this->form_validation->set_rules('policy_uid', 'Poliza', 'trim|xxs_clean');				
 			}
 			// Run Validation
 			if ( $this->form_validation->run() ) {
@@ -2308,9 +2311,10 @@ alert("changed!");
 						$field_values = array(
 							'name' => $this->input->post( 'name' ),
 							'last_updated' => $current_date,
-							'uid' => $this->input->post( 'uid' )
+//							'uid' => $this->input->post( 'uid' )
 							);
 						if ($is_nuevo_negocio)
+						{
 							$field_values = array_merge($field_values, array(
 								'currency_id' => $this->input->post( 'currency_id' ),
 								'payment_method_id' => $this->input->post( 'payment_method_id' ),
@@ -2318,6 +2322,11 @@ alert("changed!");
 								'period' => $this->input->post( 'period' ),
 								'prima' => $this->input->post( 'prima' ),						
 							));
+							if (in_array($ot[0]['status_id'], array(7, 4, 10)))
+								$field_values['uid'] = $this->input->post( 'uid' );
+						}
+						else
+							$field_values['uid'] = $this->input->post( 'uid' );						
 					}
 				}
 				if ( !$error && isset($field_values) )
