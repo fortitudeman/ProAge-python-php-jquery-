@@ -200,9 +200,9 @@ class Mailer{
 					</div></div>';
 			//if( !empty( $value['email'] ) ){
 
-			if (isset($from_reply_to['from']))
-				$headers = "From: " . $from_reply_to['from'] . "\r\n";
-			else
+//			if (isset($from_reply_to['from']))
+//				$headers = "From: " . $from_reply_to['from'] . "\r\n";
+//			else
 				$headers = "From: " . $this->email_from . "\r\n";
 
 			if (isset($from_reply_to['reply-to']))
