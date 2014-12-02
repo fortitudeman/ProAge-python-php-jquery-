@@ -11,11 +11,12 @@
   Skype:		systemonlinesoftware
   Location:		Guadalajara Jalisco Mexíco
 
-  	
 */
+$uri_segments = $this->uri->rsegment_array();
+$is_director_page = ($uri_segments[1] == 'director');
+$markup = $is_director_page ? 'h5' : 'h3';
 ?>
-
-<?php if (!$for_print): ?>
+<?php if (!$for_print && !$is_director_page): ?>
 <div class="row-fluid sortable">		
     <div class="box span12">
         <div class="box-header well" data-original-title>
@@ -30,11 +31,10 @@
         </div>
         <div class="box-content">
 <?php endif; ?>
+<?php if (!$is_director_page): ?>
 		  <?php // Show Messages ?>
-          
+
           <?php if( isset( $message['type'] ) ): ?>
-             
-             
               <?php if( $message['type'] == true ): ?>
                   <div class="alert alert-success">
                         <button type="button" class="close" data-dismiss="alert">×</button>
@@ -42,8 +42,7 @@
                         <strong>Listo: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
                   </div>
               <?php endif; ?>
-             
-              
+
               <?php if( $message['type'] == false ): ?>
                   <div class="alert alert-error">
                         <button type="button" class="close" data-dismiss="alert">×</button>
@@ -51,13 +50,11 @@
                         <strong>Error: </strong> <?php  echo $message['message']; // Show Dinamical message error ?>
                   </div>
               <?php endif; ?>
-          
-          
-          
           <?php endif; ?>
-
+<?php endif; ?>
           <?php
-			$uri_segments = $this->uri->rsegment_array();
+//			$uri_segments = $this->uri->rsegment_array();
+			$uri_segments[1] = 'simulator';		
 			$uri_segments[2] = 'print_index';
 			$link_attributes = 'class="btn btn-primary" id="print-button"';
 			if (!$for_print) {
@@ -75,7 +72,7 @@
 			if (!$users[0]['name']) $users[0]['name'] = $users[0]['company_name'];
 		  ?> 
           <p style="float: right; padding-top: 10px; margin-right: 3em"><?php echo anchor(implode('/', $uri_segments), $link_text, $link_attributes); ?></p>
-          <h3>Simulador de metas de <?php echo $name_ramo;?> para <?php echo $users[0]['name'] . " " . $users[0]['lastnames']?></h3>
+          <<?php echo $markup ?>>Simulador de metas de <?php echo $name_ramo;?> para <?php echo $users[0]['name'] . " " . $users[0]['lastnames']?></<?php echo $markup ?>>
 
           <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 1 or isset( $ramo ) and $ramo == 'vida' ): $ramoID = 1; ?>  
               <a href="../<?php echo $userid; ?>/1.html" class="links-menu btn btn-link" id="vida" style="color:#06F">Vida</a>
@@ -110,32 +107,31 @@
          
          <div class="row" style="margin-right: 3em">
 <?php if (!$for_print || !$print_meta) :?>
-         <div class="span11 simulator" style="margin-left:40px;">
+         <div class="span11 simulator" id="simulator-section" style="margin-left:40px;">
          	<?php $data[0]['data'] ?>
-            <?php if( isset( $data[0]['data'] ) )
-					 $dataview = array( 'data' => $data[0]['data'] );
-				   else $dataview = array();  
-				  
-				  
-				  $this->load->view( 'simulator_'.$ramo, $dataview ) ?>
-            
+            <?php
+				if( isset( $data[0]['data'] ) )
+					$dataview = array( 'data' => $data[0]['data'] );
+				else
+					$dataview = array();  
+				$this->load->view( 'simulator_'.$ramo, $dataview );
+			?>
          </div>
 <?php endif; ?>
 <?php if (!$for_print || $print_meta) :?>
-          <div class="span12 metas" >
-                    
-            <?php if( isset( $config ) ){
-					 $dataview = array( 'config' => $config );
-				  } else $dataview = array();  
-				  				  
-				  $this->load->view( 'metas', array( $dataview ) ) ?>
-            
+          <div class="span12 metas" id="meta-section">
+            <?php
+				if( isset( $config ) )
+					$dataview = array( 'config' => $config );
+				else $dataview = array();  
+				$this->load->view( 'metas', array( $dataview ) );
+			?>
          </div>
 <?php endif; ?>
          </div>  
            
            </form>                                 
- <?php if (!$for_print): ?>        	                           
+<?php if (!$for_print && !$is_director_page): ?>	                           
         </div><!-- /.box-content -->
     </div><!--/span-->
 

@@ -1,8 +1,11 @@
 <?php
-    $iniciales=0;
-    $renovacion=0;
-    $total=0;
-    $totalgeneral=0;
+$iniciales=0;
+$renovacion=0;
+$total=0;
+$totalgeneral=0;
+$base_url = base_url();
+$segments = $this->uri->rsegment_array();
+$is_director_module = ($segments[1] == 'director');
 ?>
 
 <table  class="sortable altrowstable tablesorter" id="sorter-report3"  style="width:100%;">
@@ -43,27 +46,30 @@
                         - Ver desempeño en campo (es la liga a las actividades de ese agente)
                         - Ver perfil (esta página aún no está creada, es el siguiente punto)
                     */
-				$simulator_url = base_url().'simulator/index/'.$value['id'];
-					if( isset( $_POST['query']['ramo'] ) )
-						$simulator_url .= '/'.$_POST['query']['ramo'];
-					else
-						$simulator_url .= '/1';
-				$simulator_url .= '.html';		
-				
-				
-				$perfil_url = base_url().'agent/index/'.$value['id'];
-					if( isset( $_POST['query']['ramo'] ) )
-						$perfil_url .= '/'.$_POST['query']['ramo'];
-					else
-						$perfil_url .= '/1';
-				$perfil_url .= '.html';	
-		
-				$activities_url = base_url().'activities/index/'.$value['id'].'.html';
-				
-				?>
 
-            |<a href="<?php echo $simulator_url ?>" class="btn btn-link">Simular resultado y definir meta</a>|
-           <a href="<?php echo $activities_url ?>" class="btn btn-link">Actividades en campo</a> | <a href="<?php echo $perfil_url ?>" class="btn btn-link" target="_blank">Perfil</a><br />            
+		if (!$is_director_module)
+		{
+			$simulator_url = $base_url .'simulator/index/'.$value['id'];
+			if( isset( $_POST['query']['ramo'] ) )
+				$simulator_url .= '/'.$_POST['query']['ramo'];
+			else
+				$simulator_url .= '/1';
+			$simulator_url .= '.html';		
+			$activities_url = $base_url . 'activities/index/'.$value['id'].'.html';
+		}
+		$perfil_url = $base_url .'agent/index/'.$value['id'];
+		if( isset( $_POST['query']['ramo'] ) )
+			$perfil_url .= '/'.$_POST['query']['ramo'];
+		else
+			$perfil_url .= '/1';
+		$perfil_url .= '.html';
+		if (!$is_director_module): 
+		?>
+           |<a href="<?php echo $simulator_url ?>" class="btn btn-link">Simular resultado y definir meta</a>|
+           <a href="<?php echo $activities_url ?>" class="btn btn-link">Actividades en campo</a>
+		<?php endif; ?>		   
+		   |
+           <a href="<?php echo $perfil_url ?>" class="btn btn-link" target="_blank">Perfil</a><br />
                 </div>
             </td>
             <td class="celda_gris"><div class="numeros"style="text-align:right">$ <?php echo $value['iniciales'] ?></div></td>

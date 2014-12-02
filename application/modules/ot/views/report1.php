@@ -1,5 +1,8 @@
 <?php
 $post_data = isset($_POST['query']) ? ',prev_post:'. json_encode($_POST['query']) : '';
+$base_url = base_url();
+$segments = $this->uri->rsegment_array();
+$is_director_module = ($segments[1] == 'director');
 ?>
 <script type="text/javascript">
 
@@ -168,27 +171,30 @@ $post_data = isset($_POST['query']) ? ',prev_post:'. json_encode($_POST['query']
             - Ver desempeño en campo (es la liga a las actividades de ese agente)
             - Ver perfil (esta página aún no está creada, es el siguiente punto)
         */
-		$simulator_url = base_url().'simulator/index/'.$value['id'];
+
+		if (!$is_director_module)
+		{
+			$simulator_url = $base_url .'simulator/index/'.$value['id'];
 			if( isset( $_POST['query']['ramo'] ) )
 				$simulator_url .= '/'.$_POST['query']['ramo'];
 			else
 				$simulator_url .= '/1';
-		$simulator_url .= '.html';		
-		
-		
-		$perfil_url = base_url().'agent/index/'.$value['id'];
-			if( isset( $_POST['query']['ramo'] ) )
-				$perfil_url .= '/'.$_POST['query']['ramo'];
-			else
-				$perfil_url .= '/1';
-		$perfil_url .= '.html';	
-		
-		$activities_url = base_url().'activities/index/'.$value['id'].'.html';
-		
+			$simulator_url .= '.html';		
+			$activities_url = $base_url . 'activities/index/'.$value['id'].'.html';
+		}
+		$perfil_url = $base_url .'agent/index/'.$value['id'];
+		if( isset( $_POST['query']['ramo'] ) )
+			$perfil_url .= '/'.$_POST['query']['ramo'];
+		else
+			$perfil_url .= '/1';
+		$perfil_url .= '.html';
+		if (!$is_director_module): 
 		?>
-
-            |<a href="<?php echo $simulator_url ?>" class="btn btn-link">Simular resultado y definir meta</a>|
-           <a href="<?php echo $activities_url ?>" class="btn btn-link">Actividades en campo</a> | <a href="<?php echo $perfil_url ?>" class="btn btn-link" target="_blank">Perfil</a><br />            
+           |<a href="<?php echo $simulator_url ?>" class="btn btn-link">Simular resultado y definir meta</a>|
+           <a href="<?php echo $activities_url ?>" class="btn btn-link">Actividades en campo</a>
+		<?php endif; ?>		   
+		   |
+           <a href="<?php echo $perfil_url ?>" class="btn btn-link" target="_blank">Perfil</a><br />
     </div>
         
             <div id="info_<?php echo $value['id'] ?>" style="display: none;">

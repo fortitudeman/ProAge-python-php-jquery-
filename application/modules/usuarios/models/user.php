@@ -1946,27 +1946,12 @@ class User extends CI_Model{
 			
 	}	
 
-
-
-
-
-
-
-
-
-
-
-
-
 /**
  *	Report of agents
  **/
 
-	
-	
-	public function getReport( $filter = array() )
+	public function getReport( $filter = array(), $meta = false )
 	{
-$this->benchmark->mark('code_start');
 	/**
 	 *	SELECT users.*, agents.id as agent_id
 		FROM `agents`
@@ -2106,8 +2091,19 @@ $this->benchmark->mark('code_start');
 	if ($query->num_rows() == 0) return false;		
 	
 	$report = array();
-		
-	$report[0] = array(
+	if ($meta)
+	{
+		$report[0] = array(
+			'cua' => 'CUA',
+			'name' => 'AGENTE',
+			'generacion' => 'GEN',
+			'negocios' => 'NEGOCIOS',
+			'primas_iniciales' => 'PRIMAS INICIALES'
+		);
+	}
+	else
+	{
+		$report[0] = array(
 		'name' => 'Agentes',
 		'negocio' => 'Negocios Pagados',
 		'negociopai' => 'Negocios Pal',
@@ -2120,13 +2116,15 @@ $this->benchmark->mark('code_start');
 		'negocios_proyectados_primas' => 'Primas Proyectadas',
 		'iniciales' => 'Iniciales',
 		'renovaciones' => 'Renovaciones'
-	);
-	
+		);
+
+	}
+		
 	$user_ids = array();
 	$agent_ids = array();
 	$rank_agent = array();
 	$i = 1;
-	
+
 	foreach ($query->result() as $row){
 		if ( !isset($user_ids[$row->id]) )
 		{
@@ -2139,8 +2137,8 @@ $this->benchmark->mark('code_start');
 			else
 				$name =  $row->company_name;
 
-			if( $row->connection_date != '0000-00-00' and $row->connection_date != '' ){
-			
+			if( $row->connection_date != '0000-00-00' and $row->connection_date != '' )
+			{
 				$resultado =  date( 'Y', strtotime( $row->connection_date ) );
 				//Consolidado: < 3 años < hoy
 				if( $resultado < ( date( 'Y' )-3 ))
@@ -2157,27 +2155,39 @@ $this->benchmark->mark('code_start');
 			}else{
 				$generacion = 'Generación 1';
 			}
-
 			$report_row = array(
 				'id' => $row->id,
 				'name' => $name,
-				'uids' => array(),
-				'connection_date' => $row->connection_date,
-				'disabled' => $row->disabled,
-				'negocio' => 0,
-				'negociopai' => 0,
-				'prima' => 0,
-				'tramite' => array('work_order_ids' => array(), 'count' => 0, 'adjusted_prima' => 0),
-				'aceptadas' => array('work_order_ids' => array(), 'count' => 0, 'adjusted_prima' => 0),
-				'iniciales' => 0,
-				'renovacion' => 0,
 				'generacion' => $generacion,
-				'agent_id' => $row->agent_id
+				'agent_id' => $row->agent_id,
 				);
-			if ($is_autos)
+			if ($meta)
 			{
-				$report_row['iniciales'] = $this->getIniciales( $row->agent_id, $filter );
-				$report_row['renovacion'] = $this->getRenovacion( $row->agent_id, $filter );
+				$report_row = array_merge($report_row, array(
+					'cua' => '',
+					'negocios' => 0,
+					'primas_iniciales' => 0
+				));
+			}
+			else
+			{
+				$report_row = array_merge($report_row, array(
+					'connection_date' => $row->connection_date,
+					'disabled' => $row->disabled,
+					'negocio' => 0,
+					'negociopai' => 0,
+					'prima' => 0,
+					'tramite' => array('work_order_ids' => array(), 'count' => 0, 'adjusted_prima' => 0),
+					'aceptadas' => array('work_order_ids' => array(), 'count' => 0, 'adjusted_prima' => 0),
+					'iniciales' => 0,
+					'renovacion' => 0,
+					'uids' => array(),
+					));
+				if ($is_autos)
+				{
+					$report_row['iniciales'] = $this->getIniciales( $row->agent_id, $filter );
+					$report_row['renovacion'] = $this->getRenovacion( $row->agent_id, $filter );
+				}
 			}
 			$report[$i] = $report_row;
 			$rank_agent[$row->agent_id] = $i;
@@ -2185,24 +2195,58 @@ $this->benchmark->mark('code_start');
 		}
 	}
 	$query->free_result();
+
 	if (count($agent_ids))
 	{
 		$uids_arr = $this->getAgentsUids( $agent_ids );
-		if ($is_vida)
+		if ($is_vida && !$meta)
 			$negocios_pai = $this->_getNegocioPai(TRUE, null, $filter);
 
-		if ($is_vida || $is_gmm)
+		if ( !$meta && ($is_vida || $is_gmm))
 		{
 			$negocios = $this->getCountNegocio( $agent_ids, $filter);
 			$primas = $this->getPrima( $agent_ids, $filter);
 			$tramites = $this->getTramite($agent_ids, $filter);
 			$aceptadas = $this->getAceptadas($agent_ids, $filter);
 		}
+		if ($meta)
+		{
+			// get Negocios and Primas iniciales
+			$simulator_infos = array();
+			if( isset( $filter['query']['ramo']) && ($filter['query']['ramo'] > 0) && 
+				($filter['query']['ramo'] <= 3))
+				$ramo = (int)$filter['query']['ramo'];
+			else
+				$ramo = 1;
+			$start_end = $this->_get_start_end_in_month($filter, $ramo);
+
+			$query = $this->db->select('period, agent_id, data')
+					->from('simulator')
+					->where(array('product_group_id' => $ramo))
+					->where_in('agent_id', $agent_ids)
+					->get();
+			foreach ($query->result() as $simulator_row)
+			{
+				$simulator_infos[$simulator_row->agent_id] = array(
+//					'period' => $simulator_row->period,
+					'data' => $this->_get_simulator_data($start_end, $simulator_row->data));
+			}
+		}
 		foreach ($rank_agent as $key => $value)
 		{
 			if (isset($uids_arr[$key]))
-				$report[$value]['uids'] = array(0 => $uids_arr[$key]);
-			if ($is_vida || $is_gmm )
+			{
+				if ($meta)
+				{
+					if ($uids_arr[$key]['type'] == 'clave')
+					{
+						$report[$value]['cua'] = $uids_arr[$key]['uid'];
+					}	
+				}
+				else
+					$report[$value]['uids'] = array(0 => $uids_arr[$key]);
+			}
+			if ( !$meta && ($is_vida || $is_gmm))
 			{
 				if ($is_vida && isset($negocios_pai[$key]))
 					$report[$value]['negociopai'] = $negocios_pai[$key];
@@ -2215,12 +2259,303 @@ $this->benchmark->mark('code_start');
 				if (is_array($aceptadas) && isset($aceptadas[$key]))
 					$report[$value]['aceptadas'] = $aceptadas[$key];
 			}
+			if ($meta)
+			{
+				if (isset($simulator_infos[$key]))
+				{
+					$report[$value]['negocios'] = $simulator_infos[$key]['data']['negocios'];
+					$report[$value]['primas_iniciales'] = $simulator_infos[$key]['data']['primas_iniciales'];
+				}
+			}
 		}
 	}
-$this->benchmark->mark('code_end');
 	return $report;
  }
+
+// computes the Negocios and Primas iniciales from the simulator table row
+	private function _get_simulator_data($start_end, $simulator_data)
+	{
+		$start_end['start'] = $start_end['start'] + 0;
+		$start_end['end'] = $start_end['end'] + 0;		
+		$simulator_arr = json_decode($simulator_data);
+		$result = array(
+			'negocios' => 0,
+			'primas_iniciales' => 0);
+		for ($i = $start_end['start']; $i <= $start_end['end']; $i++)
+		{
+			if (isset($simulator_arr->{'primas-negocios-meta-' . $i}))
+				$result['negocios'] += $simulator_arr->{'primas-negocios-meta-' . $i};
+			if (isset($simulator_arr->{'primas-meta-' . $i}))
+				$result['primas_iniciales'] += $simulator_arr->{'primas-meta-' . $i};	
+		}
+		return $result;
+	}
+
+	private function _get_start_end_in_month($filter, $ramo)
+	{
+		$start_end = array('start' => 1, 'end' => 12);
+		if ( !isset( $filter['query']['periodo'] )  || empty( $filter['query']['periodo'] ) )
+			return $start_end;
+		switch ($filter['query']['periodo'])
+		{
+			case 1:
+				$month = date( 'm' );
+				$start_end = array('start' => $month, 'end' => $month);
+				break;
+			case 2:
+				$this->load->helper('tri_cuatrimester');
+				if (($ramo == 2) || ($ramo == 3))
+					$begin_end = get_tri_cuatrimester( $this->cuatrimestre(), 'cuatrimestre' ) ;
+				else
+					$begin_end = get_tri_cuatrimester( $this->trimestre(), 'trimestre' );
+				if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
+				{
+					$parts = explode('-', $begin_end['begind']);
+					$start_end['start'] = $parts[1];
+					$parts = explode('-', $begin_end['end']);
+					$start_end['end'] = $parts[1];
+				}
+				$break;
+			case 3:
+				$break;
+			case 4:
+				$from = $this->custom_period_from;
+				$to = $this->custom_period_to;
+				if ( ( $from === FALSE ) || ( $to === FALSE ) )
+				{
+					$from = date('Y-m-d');
+					$to = $from;
+				}
+				$parts = explode('-', $from);
+				$start_end['start'] = $parts[1];
+				$parts = explode('-', $to);
+				$start_end['end'] = $parts[1];
+				break;
+		}
+		return $start_end;
+	}
+
+	
+	private function _row_export_generic($value, $ramo = 'vida_gmm')
+	{
+		if ($ramo == 'vida_gmm')
+			$data_row = array(
+				'name' => $value['name'],
+				'uids' => '',
+				'connection_date' => '',
+				'negocio' => $value['negocio'],
+				'negociopai' => 0,
+				'prima' => $value['prima'],
+				'tramite' => 0,
+				'tramite_prima' => 0,
+				'pendientes' => 0,
+				'pendientes_primas' => 0,
+				'negocios_proyectados' => 0,
+				'negocios_proyectados_primas' => 0,
+				);
+		else
+			$data_row = array(
+				'name' => $value['name'],
+				'uids' => '',
+				'connection_date' => '',
+				'iniciales' => $value['iniciales'],
+				'renovaciones' => $value['renovacion'],
+				'totales' => (int)$value['iniciales']+(int)$value['renovacion']
+				);
+		if ( !empty( $value['uids'][0]['type'] ) && ($value['uids'][0]['type'] == 'clave')
+			&& !empty( $value['uids'][0]['uid'] ))
+			$data_row['uids'] =  $value['uids'][0]['uid'];
+		else
+			$data_row['uids'] = 'Sin clave asignada';
+
+		if ( !empty( $value['connection_date'] ) && ($value['connection_date'] != '0000-00-00' ))
+			$data_row['connection_date'] =  $value['connection_date'];
+		else
+			$data_row['connection_date'] = 'No Conectado';
+
+		return $data_row;
+	}
+
+/*	report export helper methods
+	TODO: use them in the ot module also (currently used in the director module only
+*/
+	private function _format_export_generic($data, $ramo)
+	{
+		if ($ramo != 3)
+		{ // Vida or GMM
+			$total_negocio=0;
+			$total_negocio_pai=0;
+			$total_primas_pagadas=0;
+			$total_negocios_tramite=0;
+			$total_primas_tramite=0;
+			$total_negocio_pendiente=0;
+			$total_primas_pendientes=0;
+			$total_negocios_proyectados=0;
+			$total_primas_proyectados=0;
+
+			if( !empty( $data ) )
+			{
+				foreach ( $data as $key => $value )
+				{
+					if ($key == 0)
+						$data_report[] = array(
+							'name' => 'Agentes',
+							'uids' => 'Clave única',
+							'connection_date' => 'Fecha de conexión',
+							'negocio' => 'Negocios Pagados',
+							'negociopai' => 'Negocios PAI',
+							'prima' => 'Primas Pagadas',
+							'tramite' => 'Negocios en Tramite',
+							'tramite_prima' => 'Primas en Tramite',	//	(not in $data)
+							'pendientes' => 'Negocios Pendientes',
+							'pendientes_primas' => 'Primas Pendientes', //  (not in $data)
+							'negocios_proyectados' => 'Negocios Proyectados',
+							'negocios_proyectados_primas' => 'Primas Proyectadas',
+						);
+					else
+					{
+						$data_row = $this->_row_export_generic($value, 'vida_gmm');
+
+						if ( is_array( $value['negociopai'] ))
+							$data_row['negociopai'] = count( $value['negociopai'] );
+
+						if ( isset( $value['tramite']['count'] ) )
+						{
+							$data_row['tramite'] = $value['tramite']['count'];
+							$data_row['tramite_prima'] = $value['tramite']['adjusted_prima'];
+						}
+						if( isset( $value['aceptadas']['count'] ) )
+						{
+							$data_row['pendientes'] = $value['aceptadas']['count'];
+							$data_row['pendientes_primas'] = $value['aceptadas']['adjusted_prima'];
+						}
+						$data_row['negocios_proyectados'] = (int)$data_row['pendientes'] + 
+//							(int)$data_row['tramite'] + (int)$data_row['negociopai'] + (int)$data_row['negocio'];
+							(int)$data_row['tramite'] + (int)$data_row['negocio']; // to make consistent with report on screen
+						$data_row['negocios_proyectados_primas'] = (float)$data_row['prima'] + 
+							(float)$data_row['pendientes_primas'] + (float)$data_row['tramite_prima'];
+						$total_negocio += (int)$data_row['negocio'];
+						$total_negocio_pai += (int)$data_row['negociopai'];
+						$total_primas_pagadas += (float)$data_row['prima'];
+						$total_negocios_tramite += (int)$data_row['tramite'];
+						$total_primas_tramite += (float)$data_row['tramite_prima'];
+						$total_negocio_pendiente += (int)$data_row['pendientes'];
+						$total_primas_pendientes += (float)$data_row['pendientes_primas'];
+						$total_negocios_proyectados += (int)$data_row['negocios_proyectados'];
+						$total_primas_proyectados += (float)$data_row['negocios_proyectados_primas'];
+
+						$data_row['prima'] = '$ '.$data_row['prima'];
+						$data_row['tramite_prima'] = '$ '.$data_row['tramite_prima'];
+						$data_row['pendientes_primas'] = '$ '.$data_row['pendientes_primas'];
+						$data_row['negocios_proyectados_primas'] = '$ '.$data_row['negocios_proyectados_primas'];
+						$data_report[] = $data_row;
+					}
+				}
+
+				$data_report[] = array(
+					'name' => 'Totales: ',
+					'uids' => '',
+					'connection_date' => '',
+					'negocio' => $total_negocio,
+					'negociopai' => $total_negocio_pai,
+					'prima' => '$ '.$total_primas_pagadas,
+					'tramite' => $total_negocios_tramite,
+					'tramite_prima' => '$ '.$total_primas_tramite,
+					'pendientes' => $total_negocio_pendiente,
+					'pendientes_primas' => '$ '.$total_primas_pendientes,
+					'negocios_proyectados' => $total_negocios_proyectados,
+					'negocios_proyectados_primas' => '$ '.$total_primas_proyectados,
+				);
+			}
+		} else
+		{ // Autos
+			$iniciales=0;
+			$renovacion=0;
+			$totalgeneral=0;
+			if( !empty( $data ) )
+			{
+				foreach ( $data as $key => $value )
+				{
+					if ($key == 0)
+						$data_report[] = array(
+							'name' => 'Agentes',
+							'uids' => 'Clave única',
+							'connection_date' => 'Fecha de conexión',
+							'iniciales' => 'Iniciales',
+							'renovaciones' => 'Renovaciones',
+							'totales' =>  'Totales'
+						);
+					else
+					{
+						$data_row = $this->_row_export_generic($value, 'autos');
+						$iniciales += (int)$value['iniciales'];		
+						$renovacion +=(int) $value['renovacion'];		
+						$totalgeneral += $data_row['totales'];						
+
+						$data_report[] = $data_row;
+					}
+				}
+				$data_report[] = array(
+					'name' => 'Totales: ',
+					'uids' => '',
+					'connection_date' => '',
+					'iniciales' => $iniciales,
+					'renovaciones' => $renovacion,
+					'totalgeneral' => $totalgeneral
+				);
+			}
+		}
+		return $data_report;
+	}
+
+	private function _format_export_meta($data)
+	{
+		$data_report = array();
+		if( !empty( $data ) )
+		{
+			$total_negocios = 0;
+			$total_primas_iniciales = 0;
+			$count = count($data);
+			$data_report[0] = $data[0];
+			for ($i = 1; $i < $count; $i++)
+			{
+				$data_report[$i] = array(
+					'cua' => $data[$i]['cua'],
+					'name' => $data[$i]['name'],
+					'generacion' => $data[$i]['generacion'],
+					'negocios' => '$ '. $data[$i]['negocios'],
+					'primas_iniciales' => '$ '. $data[$i]['primas_iniciales']
+					);
+				$total_negocios += (int)$data[$i]['negocios'];
+				$total_primas_iniciales += (float)$data[$i]['primas_iniciales'];				
+			}
+
+			$data_report[] = array(
+				'cua' => '',
+				'name' => 'TOTALES',
+				'generacion' => '',
+				'negocios' => '$ '. $total_negocios,
+				'primas_iniciales' => '$ '. $total_primas_iniciales,
+			);
+		}
+		return $data_report;
+	}
+
+	public function format_export_report($data = array(), $type = 'generic', $ramo = null)
+	{
+		if (($type == 'generic') &&
+			(empty($ramo) || ($ramo < 1) || ($ramo > 3)))
+			return FALSE;
+
+		if ($type == 'generic')
+			$result = $this->_format_export_generic($data, $ramo);
+		else
+			$result = $this->_format_export_meta($data);
+		return $result;
+	}
  
+/*	End report export helper methods
+*/
  public function getReportAgent( $userid = null, $filter = array() ){
  	
 	/**

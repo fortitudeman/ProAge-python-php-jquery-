@@ -68,46 +68,30 @@ $( document ).ready(function() {
 	});
 	
 	$( '.link-ramo' ).bind( 'click', function(){
-		
 		$( '#vida' ).css({'color': '#000'});
 		$( '#gmm' ).css({'color': '#000'});
 		$( '#autos' ).css({'color': '#000'});
-			
-		
+
 		if( this.id == 'vida' ){
-							
 			$( '#ramo' ).val(1);
-			
 			$( '#vida' ).css( 'color', '#06F' );
-			
 			$( '.set_periodo' ).html( 'Trimestre' );
 			// 'Trimestre' );
-			
 		}
-		
+
 		if( this.id == 'gmm' ){
-		
 			$( '#ramo' ).val(2);
-			
 			$( '#gmm' ).css( 'color', '#06F' );
-			
 			$( '.set_periodo' ).html( 'Cuatrimestre' );
 		}
-		
 		if( this.id == 'autos' ){
-			
 			$( '#ramo' ).val(3);
-			
 			$( '#autos' ).css( 'color', '#06F' );
-			
 			$( '.set_periodo' ).html( 'Cuatrimestre' );
 		}
-			
-		
-		$( '#form' ).attr( "action", '' );	
-		
+		$( "#ver-meta" ).val("");
+		$( '#form' ).attr( "action", '' );
 		$( '#form' ).submit();
-		
 	});
 			
 	$( '.filter' ).bind( 'click', function(){
@@ -115,13 +99,9 @@ $( document ).ready(function() {
 	});
 	
 	$( '.download' ).bind( 'click', function(){
-		
 		$( '#form' ).attr( "action", Config.base_url() + 'ot/report_export.html' );
-		
 		$( '#form' ).submit();
-		
 		$( '#form' ).attr( "action", '' );
-		
 	});
 	
 	

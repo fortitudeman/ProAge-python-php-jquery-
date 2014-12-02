@@ -428,8 +428,6 @@ class Simulators extends CI_Model{
 		$trim=floor(($mes-1) / 4)+1;
 		return $trim;
 	}
-	
-	
-	
+
 }
 ?>
