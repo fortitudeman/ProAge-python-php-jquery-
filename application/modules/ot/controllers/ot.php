@@ -2006,7 +2006,8 @@ alert("changed!");
 
 						if ( is_array( $value['negociopai'] ))
 							$data_row['negociopai'] = count( $value['negociopai'] );
-
+						else
+							$data_row['negociopai'] = $value['negociopai'];
 						if ( isset( $value['tramite']['count'] ) )
 						{
 							$data_row['tramite'] = $value['tramite']['count'];
