@@ -10,7 +10,7 @@ $is_director_module = ($segments[1] == 'director');
     {
 		$.fancybox.showLoading();
 
-		$.post("ot/reporte_popup",
+		$.post("<?php echo $base_url ?>ot/reporte_popup",
 			{agent_id: agent_id, wrk_ord_ids:wrk_ord_ids,is_poliza:poliza,gmm:gmm<?php echo $post_data ?>},function(data)
         { 
             if(data)
@@ -36,7 +36,7 @@ $is_director_module = ($segments[1] == 'director');
     $total_primas_pendientes=0;
     $total_negocios_proyectados=0;
     $total_primas_proyectados=0;
-    $tata;
+    $tata = json_encode($tata);
 ?>
 
 

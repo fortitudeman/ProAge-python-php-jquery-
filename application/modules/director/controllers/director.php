@@ -267,6 +267,7 @@ class Director extends CI_Controller {
 	$( document ).ready(function() {
 		$( "#meta-button" ).bind( "click", function(){
 			$( "#ver-meta" ).val("metas");
+			$( "#form" ).attr( "action", "' . $base_url . 'director/sales_planning.html" );
 			$( "#form" ).submit();
 		});
 	});	
