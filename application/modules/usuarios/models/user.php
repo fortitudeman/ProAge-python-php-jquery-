@@ -2315,9 +2315,9 @@ class User extends CI_Model{
 					$parts = explode('-', $begin_end['end']);
 					$start_end['end'] = $parts[1];
 				}
-				$break;
+				break;
 			case 3:
-				$break;
+				break;
 			case 4:
 				$from = $this->custom_period_from;
 				$to = $this->custom_period_to;
@@ -2330,6 +2330,8 @@ class User extends CI_Model{
 				$start_end['start'] = $parts[1];
 				$parts = explode('-', $to);
 				$start_end['end'] = $parts[1];
+				break;
+			default:
 				break;
 		}
 		return $start_end;

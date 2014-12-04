@@ -98,8 +98,8 @@ if ( ! function_exists('simulator_view'))
 			);			
 			$PrimasLogradas = array(
 				'07' => $CI->simulators->getPrimasLograda( $agentid, $product_group_id, '07', $year ),
-				'08' => $CI->getPrimasLograda( $agentid, $product_group_id, '08', $year ),
-				'09' => $CI->getPrimasLograda( $agentid, $product_group_id, '09', $year ),
+				'08' => $CI->simulators->getPrimasLograda( $agentid, $product_group_id, '08', $year ),
+				'09' => $CI->simulators->getPrimasLograda( $agentid, $product_group_id, '09', $year ),
 			);
 		} 		
 		if( $trimestre == 4 ){			
