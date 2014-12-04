@@ -89,7 +89,7 @@ $update_others_editable = $update && !$is_nuevo_negocio;
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Fecha de tramite</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required update-editable date" id="creation_date" name="creation_date" value="<?php echo substr($data['creation_date'], 0, 10) ?>" type="text"  <?php if (!$update) echo 'readonly="readonly"'?>>
+                      <input class="input-xlarge focused required update-editable" id="creation_date" name="creation_date" value="<?php echo substr($data['creation_date'], 0, 10) ?>" type="text"  <?php if (!$update) echo 'readonly="readonly"'?>>
                     </div>
                   </div>
 <?php if (!$update) : ?>
