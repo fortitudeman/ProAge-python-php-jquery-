@@ -451,7 +451,7 @@ if ( ! function_exists('get_ot_data'))
 				($_POST['periodo'] <= 4) )
 				set_filter_period($_POST['periodo']);
 
-			$filters_to_save = array();
+//			$filters_to_save = array();
 			if ( isset($_POST['user']) && 
 				(($_POST['user'] == 'mios') || ($_POST['user'] == 'todos')) )
 				$other_filters['user'] = $_POST['user'];

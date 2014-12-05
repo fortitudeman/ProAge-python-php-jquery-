@@ -17,7 +17,6 @@ $base_url = base_url();
 $agents = str_replace('<option value="">Seleccione</option>', '<option value="">Todos</option>', $agents);
 $this->load->helper('filter');
 $selected_filter_period = get_selected_filter_period();
-
 $estado_selected = array(
 	'activadas' => '',
 	'tramite' => '',
@@ -154,7 +153,9 @@ Coordinadores&nbsp;:
 	Número&nbsp;:
 	</div>
 	<div class="span4">
-<input class="filter-field" type="text" id="id" name="id" title="Pulse la tecla Tab para validar un número a buscar" />
+<?php $numero = isset($other_filters['id']) ?  $other_filters['id'] : '';?>	
+
+        <input value="<?php echo $numero ?>" class="filter-field" type="text" id="id" name="id" title="Pulse la tecla Tab para validar un número a buscar" />
 	</div>
 	<div class="span3">	
 <?php if ($this->access_create) :?>

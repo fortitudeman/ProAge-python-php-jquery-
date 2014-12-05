@@ -144,7 +144,7 @@ class Operations extends CI_Controller {
 		if ($this->default_period_filter == 5)
 			set_filter_period( 2 );
 
-		$this->_init_profile();
+		$other_filters = $this->_init_profile();
 		if ( !$this->access_report )
 		{	
 			$this->session->set_flashdata( 'message', array
@@ -162,17 +162,24 @@ class Operations extends CI_Controller {
 		}
 		$base_url = base_url();
 		$ramo= 55;
+
+		$gerente_str = '';
+		$agente_str = '<option value="">Todos</option>';
+		$ramo_tramite_types = array();
+		$patent_type_ramo = 0;
+		prepare_ot_form($other_filters, $gerente_str, $agente_str, $ramo_tramite_types, $patent_type_ramo);
+		
 		$content_data = array(
 			'access_all' => $this->access_all,
 			'period_fields' => show_period_fields('operations', $ramo),
-			'agents' => $this->user->getAgents(),
-			'gerentes' => $this->user->getSelectsGerentes(),
+			'agents' => $agente_str,
+			'gerentes' => $gerente_str,
 			'export_url' => $base_url . 'operations/report_export/' .  $this->user_id . '.html',
 			'coordinator_select' => $this->coordinator_select,
+			'other_filters' => $other_filters
 			);
 		$sub_page_content = $this->load->view('ot/list', $content_data, true);
 
-		$ramo_tramite_types = $this->work_order->get_tramite_types();
 		$add_js = '
 <script type="text/javascript">
 	$( document ).ready( function(){ 
@@ -194,7 +201,6 @@ implode(', ', $ramo_tramite_types) . '
 //	getLinks();
 </script>
 ';
-
 		// Config view
 		$this->view = array(
 			'title' => 'Perfil de operaciones',
@@ -819,6 +825,7 @@ implode(', ', $ramo_tramite_types) . '
 			'coordinators' => $coordinators_in_db,
 			'selected_coordinator_text' => $selected_coordinator_text,
 			), TRUE);
+		return $other_filters;
 	}
 
 // List OTs
