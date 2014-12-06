@@ -2750,10 +2750,10 @@ class User extends CI_Model{
 				{
 					$year = date( 'Y' );
 					$month = date( 'm' );
-					$next_month = date('m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")));
+					$next_month = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
 					$this->db->where( array(
 						'payments.payment_date >= ' => $year . '-' . $month . '-01',
-						'payments.payment_date < ' => $year . '-' . $next_month . '-01',
+						'payments.payment_date < ' => $next_month,
 						)); 
 				}
 				if( $filter['query']['periodo'] == 2 )
@@ -2917,13 +2917,13 @@ AND `agent_id` = '$agent_id'";
 				{
 					case 1: // month
 						$month = date( 'm' );
-						$next_month = date('m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")));
+						$next_month = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
 						$sql_end .= "
 AND `payments`.`payment_date` >= '$year-$month-01'
-AND `payments`.`payment_date` < '$year-$next_month-01'";
+AND `payments`.`payment_date` < '$next_month'";
 						$sub_sql .= "
 AND `payments`.`payment_date` >= '$year-01-01'
-AND `payments`.`payment_date` < '$year-$next_month-01'";
+AND `payments`.`payment_date` < '$next_month'";
 					break;
 					case 2: // trimester/cuatrimestre
 						$this->load->helper('tri_cuatrimester');
@@ -3079,13 +3079,13 @@ AND `agent_id` IN (" . implode(',', $agent_filter) . ") ";
 				{
 					case 1: // month
 						$month = date( 'm' );
-						$next_month = date('m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")));
+						$next_month = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
 						$sql_date_filter .= "
 WHERE `above_5000` >= '$year-$month-01'
-AND `above_5000` < '$year-$next_month-01'";
+AND `above_5000` < '$next_month'";
 						$sql_plus .= "
 AND `payments`.`payment_date` >= '$year-01-01'
-AND `payments`.`payment_date` < '$year-$next_month-01'";
+AND `payments`.`payment_date` < '$next_month'";
 					break;
 					case 2: // trimester/cuatrimestre
 						$this->load->helper('tri_cuatrimester');
@@ -3273,10 +3273,10 @@ GROUP BY `agent_id`";
 				{
 					$year = date( 'Y' );
 					$month = date( 'm' );
-					$next_month = date('m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")));
+					$next_month = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
 					$this->db->where( array(
 						'payments.payment_date >= ' => $year . '-' . $month . '-01',
-						'payments.payment_date < ' => $year . '-' . $next_month . '-01',
+						'payments.payment_date < ' => $next_month,
 						)); 
 				}
 				if( $filter['query']['periodo'] == 2 )
@@ -3411,10 +3411,10 @@ GROUP BY `agent_id`";
 				{
 					$year = date( 'Y' );
 					$month = date( 'm' );
-					$next_month = date('m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")));
+					$next_month = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
 					$this->db->where( array(
 						'payment_date >= ' => $year . '-' . $month . '-01',
-						'payment_date < ' => $year . '-' . $next_month . '-01',
+						'payment_date < ' => $next_month,
 						)); 
 				}
 				if( $filter['query']['periodo'] == 2 )
@@ -3466,6 +3466,7 @@ GROUP BY `agent_id`";
 			$this->db->group_by('payments.agent_id');
 
 		$query = $this->db->get();
+
 		if ($sum_requested) {
 			if ($query->num_rows() == 0) return 0;
 

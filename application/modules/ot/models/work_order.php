@@ -515,7 +515,9 @@ class Work_order extends CI_Model{
 			( ( $periodo == 1 ) || (  $periodo == 2 ) || ( $periodo == 3 ) || ( $periodo == 4) ) )
 		{
 			if( $periodo == 1 ) // Month
-				$this->db->where( 'work_order.creation_date >= ', date( 'Y' ) . '-' . (date( 'm' )) . '-01'); 
+				$this->db->where(  array(
+					'work_order.creation_date >= ' => date( 'Y' ) . '-' . (date( 'm' )) . '-01',
+					'work_order.creation_date < ' => date('Y-m', mktime(0, 0, 0, date('m') + 1, date('d'), date('Y'))) . '-01')); 
 			if( $periodo == 2 ) // Trimester or cuatrimester depending ramo
 			{
 				$this->load->helper('tri_cuatrimester');
@@ -714,7 +716,9 @@ class Work_order extends CI_Model{
 			( ( $periodo == 1 ) || (  $periodo == 2 ) || ( $periodo == 3 ) || ( $periodo == 4) ) )
 		{
 			if( $periodo == 1 ) // Month
-				$this->db->where( 'work_order.creation_date >= ', date( 'Y' ) . '-' . (date( 'm' )) . '-01'); 
+				$this->db->where(  array(
+					'work_order.creation_date >= ' => date( 'Y' ) . '-' . (date( 'm' )) . '-01',
+					'work_order.creation_date < ' => date('Y-m', mktime(0, 0, 0, date('m') + 1, date('d'), date('Y'))) . '-01')); 
 			if( $periodo == 2 ) // Trimester or cuatrimester depending ramo
 			{
 				$this->load->helper('tri_cuatrimester');
@@ -766,6 +770,7 @@ class Work_order extends CI_Model{
 		}
 
 		$query = $this->db->get();
+
 		if ($query->num_rows() == 0) return false;
 
 		$ot = array();
@@ -2150,6 +2155,8 @@ class Work_order extends CI_Model{
 			case 1: // Month
 				$this->operation_where['work_order.creation_date >= '] = 
 					date( 'Y' ) . '-' . (date( 'm' )) . '-01'; 
+				$this->operation_where['work_order.creation_date < '] = 
+					date('Y-m', mktime(0, 0, 0, date('m') + 1, date('d'), date('Y'))) . '-01'; 
 				break;
 			case 2:  // Trimester
 			case 5:  // Cuatrimester
