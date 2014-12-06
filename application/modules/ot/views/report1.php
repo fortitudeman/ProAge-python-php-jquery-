@@ -36,7 +36,9 @@ $is_director_module = ($segments[1] == 'director');
     $total_primas_pendientes=0;
     $total_negocios_proyectados=0;
     $total_primas_proyectados=0;
-    $tata = json_encode($tata);
+//    $tata = json_encode($tata);
+	if (is_array($tata))
+		$tata = json_encode($tata);
 ?>
 
 
