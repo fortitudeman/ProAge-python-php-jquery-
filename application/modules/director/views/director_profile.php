@@ -68,6 +68,22 @@ if ($current_page === FALSE)
                 <a id="activity-link" href="<?php echo $base_url ?>director/sales_activities.html" class="span3 subpage-link<?php if ($current_page == 'sales_activities') echo ' subpage-link-current' ?>">ACTIVIDAD DE VENTAS</a>
                 <a id="ot-link" href="<?php echo $base_url ?>director/ot.html" class="span4 subpage-link<?php if ($current_page == 'ot') echo ' subpage-link-current' ?>">ORDENES DE TRABAJO</a>
             </div>
+<?php if (($current_page == 'sales_activities') || ($current_page == 'activities')): ?>
+            <div class="row">
+                <a style="font-size: 1em" id="activity-link-sub-act" href="<?php echo $base_url ?>director/activities.html" class="span3 subpage-link<?php if ($current_page == 'activities') echo ' subpage-link-current' ?>">ACTIVIDADES</a>
+                <a style="font-size: 1em" id="activity-link-sub-dis" href="<?php echo $base_url ?>director/sales_activities.html" class="span3 subpage-link<?php if ($current_page == 'sales_activities') echo ' subpage-link-current' ?>">DISTRIBUCIÓN</a>
+            </div>
+<?php endif; ?>
+<?php if (($current_page == 'sales_planning') || ($current_page == 'index')):
+	if (isset($page) && ($page == 'metas')):
+		$current_page = 'meta';
+	endif;
+?>
+            <div class="row">
+                <a style="font-size: 1em" id="plan-link-sub-results" href="<?php echo $base_url ?>director/sales_planning.html" class="span3 subpage-link<?php if (($current_page == 'sales_planning') || ($current_page == 'index')) echo ' subpage-link-current' ?>">RESULTADOS</a>
+                <a style="font-size: 1em" id="activity-link-sub-metas" href="<?php echo $base_url ?>director/sales_planning.html" class="span3 subpage-link<?php if ($current_page == 'meta') echo ' subpage-link-current' ?>">METAS</a>
+            </div>
+<?php endif; ?>
             <div class="row">
 <?php echo $sub_page_content; ?>
             </div>

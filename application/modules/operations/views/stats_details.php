@@ -18,11 +18,18 @@ $this->load->helper('filter');
 $selected_filter_period = get_selected_filter_period();
 $selected_period = get_filter_period();
 $segments = $this->uri->rsegment_array();
+
+$is_director_page = ($segments[1] == 'director');
 $export_segments = $segments;
 $export_segments[2] = 'stat_recap_export';
-$ramo = $this->uri->segment(3);
+
+$valid_ramos = array('vida', 'gmm', 'autos');
+if (!isset($ramo) || !in_array($ramo, $valid_ramos))
+	$ramo = $this->uri->segment(3, 'vida');
 $recap_details = 0;
 ?>
+
+<?php if (!$is_director_page) :?>
             <form id="operation-stats-form" method="post" action="<?php echo current_url()?>">
               <div class="row">
                   <div class="span12">
@@ -51,10 +58,11 @@ Período&nbsp;:
                   </div>
               </div>
             </form>
-			
+<?php endif; ?>
+		
             <div class="row" id="operations-stats">
 		        <div class="span5" id="left-col">
-                  <p><span>Nuevos de Negocios <?php echo ucfirst($segments[3]) ?></span>
+                  <p><span>Nuevos de Negocios <?php echo ucfirst($ramo) ?></span>
 <?php if ($this->access_export_xls) :?>
                 <a href="<?php echo $base_url . implode('/', $export_segments); ?>.html" id="detail-export-xls" title="Exportar" style="font-size: larger;">
                     <img src="<?php echo $base_url ?>ot/assets/images/down.png" title="Exportar" />

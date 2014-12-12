@@ -24,7 +24,8 @@ class Director extends CI_Controller {
 	public $roles_vs_access = array();
 	
 	public $access = false; // Force security
-	
+
+	public $access_report = FALSE;	
 	public $access_create = false;
 	
 	public $access_update = false;
@@ -59,6 +60,10 @@ class Director extends CI_Controller {
 
 	public $user_id = FALSE;
 
+	public $agent_array = array();
+	public $other_filters = array();
+	public $query_filters = array();
+	
 /** Construct Function **/
 /** Setting Load perms **/
 	
@@ -93,6 +98,7 @@ class Director extends CI_Controller {
 						{
 							case 'Ver reporte':
 								$this->access_ot_report = TRUE;
+								$this->access_report = TRUE;
 								break;
 							case 'Export xls':
 								$this->access_export_xls = TRUE;
@@ -174,6 +180,8 @@ class Director extends CI_Controller {
 		$this->misc_filter_name = 'director_misc_filter';
 		$this->misc_filters = $this->session->userdata($this->misc_filter_name);
 		$this->load->helper('filter');
+
+		$this->query_filters = $this->_init_filters();
 	}
 
 	public function index()
@@ -198,25 +206,23 @@ class Director extends CI_Controller {
 			redirect( 'home', 'refresh' );
 		}
 
-		$agent_array = array();
-		$other_filters = array();
 		$this->load->helper( array('ot/ot' ));
 		if (count($_POST))
 		{
 			update_custom_period($this->input->post('cust_period_from'),
 				$this->input->post('cust_period_to'), FALSE);
 		}
-		$data = $this->_init_planning_report($agent_array, $other_filters, $page == 'metas');
+		$data = $this->_init_planning_report($page == 'metas');
 
-		$inline_js = get_agent_autocomplete_js($agent_array);
+		$inline_js = get_agent_autocomplete_js($this->agent_array);
 		$base_url = base_url();
 
 		$report_lines = '';
+
 		$ramo = 1;
-		if (isset($_POST['query']['ramo']))
-			$ramo = $_POST['query']['ramo'];
-		else
-			$ramo = $this->uri->rsegment(3, 1);
+		if (isset($this->query_filters['query']) && isset($this->query_filters['query']['ramo']))
+			$ramo = $this->query_filters['query']['ramo'];
+
 		if ($page == 'sales_planning')
 		{
 			unset( $data[0] );
@@ -239,8 +245,8 @@ class Director extends CI_Controller {
 		$content_data = array(
 			'manager' => $this->user->getSelectsGerentes2(),
 			'period_form' => show_custom_period(),
-			'period_fields' => show_period_fields('ot_reporte', $other_filters['ramo']),
-			'other_filters' => $other_filters,
+			'period_fields' => show_period_fields('ot_reporte', $this->other_filters['ramo']),
+			'other_filters' => $this->other_filters,
 			'report_lines' => $report_lines,
 			'export_xls' => $this->access_export_xls,
 			'page' => $page
@@ -265,8 +271,15 @@ class Director extends CI_Controller {
 		});
 	}
 	$( document ).ready(function() {
-		$( "#meta-button" ).bind( "click", function(){
+		$( "#activity-link-sub-metas" ).bind( "click", function(){
 			$( "#ver-meta" ).val("metas");
+			$( "#form" ).attr( "action", "' . $base_url . 'director/sales_planning.html" );
+			$( "#form" ).submit();
+			return false;
+		});
+
+		$( "#plan-link-sub-results" ).bind( "click", function(){
+			$( "#ver-meta" ).val("");
 			$( "#form" ).attr( "action", "' . $base_url . 'director/sales_planning.html" );
 			$( "#form" ).submit();
 		});
@@ -363,6 +376,8 @@ class Director extends CI_Controller {
 			'content' => 'director/director_profile',
 			'message' => $this->session->flashdata('message'),
 			'sub_page_content' => $sub_page_content,
+			'page' => $page,
+			'ramo' => $ramo
 		);
 
 		// Render view 
@@ -386,17 +401,15 @@ class Director extends CI_Controller {
 			redirect( 'home', 'refresh' );
 		}
 
-		$agent_array = array();
-		$other_filters = array();
 		$this->load->helper( array( 'usuarios/csv', 'ot/ot' ));
 		if (count($_POST))
 		{
 			update_custom_period($this->input->post('cust_period_from'),
 				$this->input->post('cust_period_to'), FALSE);
 		}
-		$data = $this->_init_planning_report($agent_array, $other_filters, $page == 'metas');
+		$data = $this->_init_planning_report($page == 'metas');
 		if ($page == 'sales_planning')
-			$data_report = $this->user->format_export_report($data, 'generic', $other_filters['ramo']);
+			$data_report = $this->user->format_export_report($data, 'generic', $this->other_filters['ramo']);
 		else
 			$data_report = $this->user->format_export_report($data, 'metas');
 
@@ -503,6 +516,155 @@ $( document ).ready( function(){
 
 	public function sales_activities()
 	{
+		$this->_init_profile();
+		if ( !$this->access_activity_list )
+		{
+			$this->session->set_flashdata( 'message', array
+			( 
+				'type' => false,	
+				'message' => 'No tiene permisos para ver la "ACTIVIDAD DE VENTAS" en la sección "Director Commercial". Informe a su administrador para que le otorge los permisos necesarios.'
+			));	
+			redirect( 'home', 'refresh' );
+		}
+
+		if (isset($this->query_filters['query']) && isset($this->query_filters['query']['ramo']))
+			$ramo = $this->query_filters['query']['ramo'];
+		else
+			$ramo = 1;
+
+		$this->load->helper( array('ot/ot' ));
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+		}
+		$periodo = get_filter_period();
+
+		$users = $this->user->get_filtered_agents($this->query_filters);
+		if (is_array($users) && !count($users))
+		{
+			$stats = $this->work_order->init_operation_result($ramo, TRUE);
+		}
+		else
+		{
+			$this->work_order->init_operations(null, $periodo, $ramo);
+			if ($users)
+				$this->work_order->add_operation_where(array('policies_vs_users.user_id' => array_keys($users)));
+			$add_where = $ramo ? array('t2.name' => 'NUEVO NEGOCIO') : NULL;
+			$stats = $this->work_order->operation_stats($ramo, $add_where, TRUE);
+		}
+
+		$inline_js = get_agent_autocomplete_js($this->agent_array);
+		$base_url = base_url();
+
+		$text_ramo_arr = array(1 => 'vida', 2 => 'gmm', 3 => 'autos');
+		$report_lines = $this->load->view('operations/stats_details',
+			array('stats' => $stats, 'ramo' => $text_ramo_arr[$ramo]), TRUE);
+
+		$content_data = array(
+			'manager' => $this->user->getSelectsGerentes2(),
+			'period_form' => show_custom_period(),
+			'period_fields' => show_period_fields('ot_reporte', $this->other_filters['ramo']),
+			'other_filters' => $this->other_filters,
+			'report_lines' => $report_lines,
+			'export_xls' => $this->access_export_xls,
+			'page' => 'activity_distribution'
+			);
+		$sub_page_content = $this->load->view('director/report', $content_data, true);
+
+		$base_url = base_url();
+
+		$add_js = '
+<script type="text/javascript">
+	$( document ).ready( function(){ 
+
+		$("#export-xls").bind( "click", function(){
+			$("#export-xls-input").val("export_xls");
+			$(this).parents("form").submit();
+		})
+
+		$(".stat-link").bind( "click", function(){
+			var linkId = $(this).attr("id");
+			linkId = linkId.replace(/_link/, "");
+			var detailUrl = "' . $base_url . 
+				'director/stat_details/' . $ramo . '/" + linkId ' . ' + ".html";
+			$("#right-col").html("Cargando ...");
+			$("#right-col").load(detailUrl, $("#coordinador-name").serializeArray(), function(){
+				});
+			return false;
+		})
+	});
+	
+	var submitThisForm = function() {
+		$("#operation-stats-form").submit();
+		getLinks();
+	}
+
+</script>
+';
+
+			$inline_js .= 
+'
+<script type="text/javascript">
+	$( document ).ready(function() {
+		$("#periodo").bind( "click", function(){
+			var parentForm = $(this).parents("form");
+			$("#periodo option:selected").each(function () {
+				if ($(this).val() == 4) {
+					$( "#cust_period-form" ).dialog( "open" );
+				} else
+					parentForm.submit();
+				return false;
+			})
+		});
+
+		$("#export").bind( "click", function(){
+			$( "#form" ).attr( "action", "' . $base_url . 'director/sales_activity_export.html" );
+			$( "#form" ).submit();
+		});
+
+	});
+</script>
+';
+		// Config view
+		$this->view = array(
+			'title' => 'Director',
+			'user' => $this->sessions,
+			'user_vs_rol' => $this->user_vs_rol,
+			'roles_vs_access' => $this->roles_vs_access,
+			'css' => array(
+				'<link rel="stylesheet" href="'. $base_url .'ot/assets/style/main.css">',
+				'<link rel="stylesheet" href="'. $base_url .'director/assets/style/director.css">',
+				'<link href="'. $base_url .'ot/assets/style/report.css" rel="stylesheet">',
+				'<link href="'. $base_url .'ot/assets/style/theme.default.css" rel="stylesheet">',
+			),
+			'scripts' =>  array(
+				'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/jquery.validate.js"></script>',
+				'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/es_validator.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'scripts/config.js"></script>',
+				'<script type="text/javascript" src="' . $base_url . 'director/assets/scripts/filter_helper.js"></script>',
+				'<script type="text/javascript" src="' . $base_url .'director/assets/scripts/director.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/operations.js"></script>',
+				$add_js,
+				$inline_js,
+			),
+			'content' => 'director/director_profile',
+			'message' => $this->session->flashdata('message'),
+			'sub_page_content' => $sub_page_content,
+		);
+
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+	}
+
+	public function sales_activities_export()
+	{
+		echo 'TODO';
+	}
+
+	public function activities()
+	{
 		echo 'TODO';
 	}
 
@@ -558,16 +720,195 @@ $( document ).ready( function(){
 		$this->load->view('ot/popup_payment', $data);
 	}
 
+// Export stat recap
+// Copied from operations code
+	public function stat_recap_export()
+	{
+		$this->_init_profile();
+
+		if ( !$this->access_export_xls || !$this->access_activity_list)
+		{	
+			$this->session->set_flashdata( 'message', array
+			( 
+				'type' => false,	
+				'message' => 'No tiene permisos para exportar el reporte "Actividad de ventas" en la sección "Perfil del director", informe a su administrador para que le otorge los permisos necesarios.'
+			));	
+			redirect( 'home', 'refresh' );
+		}
+
+		$na_value = 'N/D';
+
+		$periodo = get_filter_period();
+
+		if (isset($this->query_filters['query']) && isset($this->query_filters['query']['ramo']))
+			$ramo = $this->query_filters['query']['ramo'];
+		else
+			$ramo = 1;
+
+		$users = $this->user->get_filtered_agents($this->query_filters);
+		if (is_array($users) && !count($users))
+		{
+			$stats = $this->work_order->init_operation_result($ramo, TRUE);
+		}
+		else
+		{
+			$this->work_order->init_operations(null, $periodo, $ramo);
+			if ($users)
+				$this->work_order->add_operation_where(array('policies_vs_users.user_id' => array_keys($users)));
+			$add_where = $ramo ? array('t2.name' => 'NUEVO NEGOCIO') : NULL;
+			$stats = $this->work_order->operation_stats($ramo, $add_where, TRUE);
+		}
+		$data_report = array(
+			array(
+				'Nuevos de Negocios ' . ucfirst($this->uri->rsegment(3))
+			),
+		);
+		$per_status = array('tramite' => 'En trámite',
+			'pagada' => 'Pagados',
+			'canceladas' => 'Cancelados',
+			'NTU' => 'NTU',
+			'pendientes_pago' => 'Pendientes de pago',
+			'activadas' => 'Activados');
+		$total = 0;
+		foreach ($per_status as $key_status => $value_status)
+		{
+			$data_report[] = array(
+				$value_status,
+				$stats['per_status'][$key_status],
+			);
+			$total += $stats['per_status'][$key_status];
+		}
+		$data_report[] = array(
+			'Trámites de nuevos negocios:',
+			$total,
+			);
+
+		// Export
+		$this->load->helper('usuarios/csv');
+		$ramo_text_arr = array(1 => 'vida', 2 => 'gmm', 3 => 'autos');
+		$filename = 'director_ventas_distribucion_' . $ramo_text_arr[$ramo] . '.csv';
+
+		header('Content-Type: application/csv');
+		header('Content-Disposition: attachement; filename="$filename"');
+	 	array_to_csv($data_report, $filename);
+		
+		if( is_file( $filename ) )
+			echo file_get_contents( $filename );
+		if( is_file( $filename ) )
+			unlink( $filename );
+		exit;
+	}
+
+// Export stat details
+// Copied from operations code
+	public function stat_detail_export()
+	{
+		$valid_stat_types = array(1 => 1, 2 => 2, 3 => 3);
+		$valid_status = array(
+			'tramite' => 'tramite', 'pagada' => 'pagada',
+			'pendientes_pago' => 'pendientes_pago', 'activadas' => 'activadas',			
+			'canceladas' => 'canceladas', 'NTU' => 'NTU',
+			'todos' => 'todos'
+			);
+		$stat_type = $this->uri->segment(3, 0);
+
+		$status = $this->uri->segment(4, 0);		
+		if (!isset($valid_stat_types[$stat_type]) || !isset($valid_status[$status]))
+		{
+			echo 'Ocurrio un error.';
+			exit();
+		}
+
+		$this->_init_profile();
+		if ( !$this->access_export_xls || !$this->access_activity_list)
+		{	
+			$this->session->set_flashdata( 'message', array
+			( 
+				'type' => false,	
+				'message' => 'No tiene permisos para exportar el reporte "Actividad de ventas" en la sección "Perfil del director", informe a su administrador para que le otorge los permisos necesarios.'
+			));	
+			redirect( 'home', 'refresh' );
+		}
+		$stats = $this->_read_details($stat_type, $status);
+		if (!$stats)
+		{
+			echo 'Ocurrio un error.';
+			exit();
+		}
+		$data_report = array(array(
+		    'Producto',
+		    'Negocios',
+		    '%',
+		    'Primas Totales',
+		    '%',
+		    'Prima Promedio',
+		));
+		$na_value = 'N/D';
+		foreach ($stats as $key => $value)
+		{
+			if ($key && $value['value'])
+			{
+				$data_report[] = array(
+					$value['label'],
+					$value['value'],
+                    $stats[0]['value'] ? round(100 * $value['value'] / $stats[0]['value']) . '%' : $na_value,
+					'$ ' . number_format($value['prima'], 2),
+					$stats[0]['prima'] ? round(100 * $value['prima'] / $stats[0]['prima']) . '%' : $na_value,
+					$value['value'] ? '$ ' . number_format($value['prima'] / $value['value'], 2) : $na_value
+				);
+			}
+		}
+		$data_report[] = array(
+			'Total',
+			$stats[0]['value'],
+			$stats[0]['value'] ? '100%' : $na_value,
+			'$ ' . number_format($stats[0]['prima'], 2),
+			$stats[0]['prima'] ? '100%' : $na_value,
+			$stats[0]['value'] ? '$ ' . number_format($stats[0]['prima'] / $stats[0]['value'], 2) : $na_value
+			);
+
+		$types_text = array(1 => 'vida', 2 => 'gmm', 3 => 'autos');
+		$filename = 'director_ventas_distribucion_' . $types_text[$stat_type] . '_' . $status . '_detalles.csv';
+
+		// Export
+		$this->load->helper('usuarios/csv');
+		header('Content-Type: application/csv');
+		header('Content-Disposition: attachement; filename="$filename"');
+	 	array_to_csv($data_report, $filename);
+		
+		if( is_file( $filename ) )
+			echo file_get_contents( $filename );
+		if( is_file( $filename ) )
+			unlink( $filename );
+		exit;
+	}
+
+	
 // Init report processing (reporte and exportar)
 // To do: factorise with _init_report in ot module
-	private function _init_planning_report(&$agent_array, &$other_filters, $meta = false)
+	private function _init_planning_report($meta = false)
 	{
 		$data = array();
-		$agent_array = $this->user->getAgents( FALSE );
+		if( !empty( $_POST ) )
+		{
+			$data = $this->user->getReport($_POST, $meta );
+		}
+		else
+		{
+			$default_filter = get_filter_period();
+			$query = array_merge($this->other_filters, array('periodo' => $default_filter));
+			$data = $this->user->getReport( array('query' => $query ), $meta );
+		}
+		return $data;
+	}
+
+	private function _init_filters()
+	{
+		$this->agent_array = $this->user->getAgents( FALSE );
 
 		$this->load->helper('filter');
 		$default_filter = get_filter_period();
-		$other_filters = array(
+		$this->other_filters = array(
 			'ramo' => 1,
 			'gerente' => '',
 			'agent' => '',
@@ -575,7 +916,7 @@ $( document ).ready( function(){
 			'agent_name' => '',
 			'policy_num' => ''
 		);
-		get_generic_filter($other_filters, $agent_array);
+		get_generic_filter($this->other_filters, $this->agent_array);
 
 		if( !empty( $_POST ) )
 		{
@@ -608,19 +949,76 @@ $( document ).ready( function(){
 				$filters_to_save['agent_name'] = $_POST['query']['agent_name'];	
 			if ( isset($_POST['query']['policy_num']))
 				$filters_to_save['policy_num'] = $_POST['query']['policy_num'];
-			generic_set_report_filter( $filters_to_save, $agent_array );
+			generic_set_report_filter( $filters_to_save, $this->agent_array );
 			foreach ($filters_to_save as $key => $value)
-				$other_filters[$key] = $value;
-			$data = $this->user->getReport($_POST, $meta );
+				$this->other_filters[$key] = $value;
+			$result = $_POST;
 		}
 		else
 		{
-			$query = array_merge($other_filters, array('periodo' => $default_filter));
-			$data = $this->user->getReport( array('query' => $query ), $meta );
+			$result = array('query' => array_merge($this->other_filters, array('periodo' => $default_filter)) );
 		}
-		return $data;
+		return $result;
 	}
 
+	public function stat_details()
+// Inspired from operations/stat_details code
+	{
+		$valid_stat_types = array(1 => 1, 2 => 2, 3 => 3);
+		$valid_status = array(
+			'tramite' => 'tramite', 'pagada' => 'pagada',
+			'canceladas' => 'canceladas', 'NTU' => 'NTU',
+			'pendientes_pago' => 'pendientes_pago', 'activadas' => 'activadas',
+			'todos' => 'todos');
+		$stat_type = $this->uri->segment(3, 0);
+		$status = $this->uri->segment(4, 0);
+		if (!isset($valid_stat_types[$stat_type]) || !isset($valid_status[$status]))
+		{
+			echo 'Ocurrio un error.';
+			exit();
+		}
+
+		$this->_init_profile();
+
+		if ( !$this->access_report )
+		{
+			echo 'No tiene permisos para ver el reporte "Estadística operativa" en la sección "Perfil de operaciones", informe a su administrador para que le otorge los permisos necesarios.';
+			exit();
+		}
+		$stats = $this->_read_details($stat_type, $status);
+
+		if (!$stats)
+		{
+			echo 'Ocurrio un error.';
+			exit();
+		}
+		$data = array('stats' => $stats);
+		$this->load->view( 'operations/details_ramo', $data );
+	}
+
+	private function _read_details($ramo = NULL, $status = NULL)
+	{
+		$this->load->helper('filter');
+		$periodo = get_filter_period();
+		get_generic_filter($this->other_filters, array());
+
+		$users = $this->user->get_filtered_agents(array('query' => $this->other_filters));
+		if (is_array($users) && !count($users))
+		{
+//			$result = $this->work_order->init_operation_result($ramo, FALSE, FALSE);
+			$result = $this->work_order->init_operation_result($ramo, FALSE, TRUE);
+		}
+		else
+		{
+			$this->work_order->init_operations(null, $periodo, $ramo);
+			if ($users)
+				$this->work_order->add_operation_where(array('policies_vs_users.user_id' => array_keys($users)));
+			$result = $this->work_order->operation_detailed($ramo, $status, TRUE);
+		}
+
+		return $result;		
+	}
+	
 /* End of file director.php */
 /* Location: ./application/modules/director/controllers/director.php */
 }

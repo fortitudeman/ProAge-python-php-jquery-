@@ -89,7 +89,6 @@ $( document ).ready(function() {
 			$( '#autos' ).css( 'color', '#06F' );
 			$( '.set_periodo' ).html( 'Cuatrimestre' );
 		}
-		$( "#ver-meta" ).val("");
 		$( '#form' ).attr( "action", '' );
 		$( '#form' ).submit();
 	});
