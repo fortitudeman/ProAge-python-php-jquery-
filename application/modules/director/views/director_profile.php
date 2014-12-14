@@ -13,6 +13,7 @@
 
 
  */
+$this->config->set_item('profile_picture_default', '150');
 $base_url = base_url();
 if (isset($user['picture']) && $user['picture'])
 {

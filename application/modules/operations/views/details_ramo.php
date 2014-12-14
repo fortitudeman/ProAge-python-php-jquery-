@@ -47,7 +47,7 @@ $segments[2] = 'stat_detail_export';
 <?php if ($is_director):?>
                         <td style="text-align: right">$ <?php echo number_format($value['prima'], 2) ?></td>
                         <td><?php $percent = $stats[0]['prima'] ? round(100 * $value['prima'] / $stats[0]['prima']) . '%' : $na_value; echo $percent; ?></td>
-                        <td style="text-align: right">$ <?php $promedio = $value['value'] ? '$ ' . number_format($value['prima'] / $value['value'], 2) : $na_value; echo $promedio; ?></td>
+                        <td style="text-align: right"><?php $promedio = $value['value'] ? '$ ' . number_format($value['prima'] / $value['value'], 2) : $na_value; echo $promedio; ?></td>
 <?php endif ; ?>
                       </tr>
 <?php endif;

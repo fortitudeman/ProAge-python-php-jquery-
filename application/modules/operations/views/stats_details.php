@@ -61,16 +61,15 @@ Período&nbsp;:
 <?php endif; ?>
 		
             <div class="row" id="operations-stats">
-		        <div class="span5" id="left-col">
-                  <p><span>Nuevos de Negocios <?php echo ucfirst($ramo) ?></span>
+		        <div class="span5" id="left-col" style="padding-left: 2em">
+                  <p><span>Nuevos de Negocios <?php echo ucfirst($ramo) ?></span></p>
 <?php if ($this->access_export_xls) :?>
-                <a href="<?php echo $base_url . implode('/', $export_segments); ?>.html" id="detail-export-xls" title="Exportar" style="font-size: larger;">
-                    <img src="<?php echo $base_url ?>ot/assets/images/down.png" title="Exportar" />
-				</a>
+                  <a href="<?php echo $base_url . implode('/', $export_segments); ?>.html" id="detail-export-xls" title="Exportar" style="font-size: larger;">
+                      <img src="<?php echo $base_url ?>ot/assets/images/down.png" title="Exportar" />
+				  </a>
 <?php endif; ?>
-                  <p>
                   <table>
-                      <tr style="background-color: white;">
+                      <tr>
                         <td>
                           <a class="stat-link" id="tramite_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">
                           En trámite</a>
@@ -139,7 +138,7 @@ Período&nbsp;:
                       </tr>
 
                       <tr>
-                        <td colspan="3"></td>
+                        <td colspan="2"></td>
                       </tr>
                       <tr style="background-color: yellow;">
                         <td>
