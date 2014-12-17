@@ -62,7 +62,7 @@ Período&nbsp;:
 		
             <div class="row" id="operations-stats">
 		        <div class="span5" id="left-col" style="padding-left: 2em">
-                  <p><span>Nuevos de Negocios <?php echo ucfirst($ramo) ?></span></p>
+                  <p><span>Nuevos Negocios de <?php echo ucfirst($ramo) ?></span></p>
 <?php if ($this->access_export_xls) :?>
                   <a href="<?php echo $base_url . implode('/', $export_segments); ?>.html" id="detail-export-xls" title="Exportar" style="font-size: larger;">
                       <img src="<?php echo $base_url ?>ot/assets/images/down.png" title="Exportar" />
