@@ -56,7 +56,7 @@ else
                               <textarea placeholder="AGENTES" id="agent-name" name="query[agent_name]" rows="1" class="input-xlarge select4" style="min-width: 250px; max-width: 300px; height: 1.5em"><?php echo $other_filters['agent_name']; ?></textarea>
 			                  <span>
                                   <i style="cursor: pointer; vertical-align: top" class="icon-filter submit-form" id="submit-form1" title="Filtrar"></i>
-                                  <i style="cursor: pointer; vertical-align: top" class="icon-list-alt" id="clear-agent-filter" title="Mostrar todos los agentes"></i>
+                                  <i style="cursor: pointer; vertical-align: top" class="icon-list-alt" id="clear-agent-filter" title="Ver total"></i>
                               </span>
                             </div>
                           </div>
@@ -176,7 +176,7 @@ else
 			$data['totals']['prospectusP'] = $divided_by_zero;
 		}
 		echo '
-<tr>
+<tr style="font-weight: bold">
 ' . 	$total_cell	. '
 	<td class="sales-activity-numeric">' . $data['totals']['weeks_reported'] . '</td>
 	<td class="medium-grey-body sales-activity-numeric">' . $data['totals']['cita'] . '</td>
@@ -281,7 +281,7 @@ else
 		else
 			$efectividad_3 = $divided_by_zero;
 		echo '
-<tr>' .	$total_cell . '
+<tr style="font-weight: bold">' .	$total_cell . '
 	<td class="sales-activity-numeric">' . $data['totals']['weeks_reported'] . '</td>
 	<td class="medium-grey-body sales-activity-numeric">' . $data['totals']['cita'] . '</td>
 	<td class="light-grey-body sales-activity-numeric">' . $data['totals']['interview'] . '</td>
