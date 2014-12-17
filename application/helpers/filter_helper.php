@@ -166,6 +166,57 @@ if ( ! function_exists('get_period_start_end'))
 		}
 	}
 }
+
+/*
+	Get start and end date depending on new (!!!) period selection
+*/
+if ( ! function_exists('get_new_period_start_end'))
+{
+	function get_new_period_start_end(&$selection)
+	{
+		if (!isset($selection['periodo']) || !isset($selection['begin']) || !isset($selection['end']))
+			return;
+		$current_month = date('m');
+		$current_year = date('Y');
+		switch ($selection['periodo']) 
+		{
+			case 1: // Month
+				$selection['begin'] = sprintf("%s-%s-01", $current_year, $current_month);
+				$selection['end'] = sprintf("%s-%s-%s", $current_year, $current_month, date('t'));
+				break;
+			case 2: // Trimestre (cannot select Cuatrimestre)
+				$mes = date('m');
+				$trimestre = floor( ( $mes - 1 ) / 3) + 1;
+				$begin_end = get_tri_cuatrimester( $trimestre, 'trimestre' );
+				$selection['begin'] = $begin_end['begind'];
+				$selection['end'] = $begin_end['end'];
+				break;	
+			case 3: // Year
+				$selection['begin'] = sprintf("%s-01-01", $current_year);
+				$selection['end'] = sprintf("%s-12-31", $current_year);
+				break;
+			case 4: // Custom
+				$CI =& get_instance();
+				$in_session = array(
+					'from' => $CI->custom_period_from,
+					'to' => $CI->custom_period_to
+				);
+				if ( ( $in_session['from'] === FALSE ) || ( $in_session['to'] === FALSE ) )
+				{
+					$in_session['from'] = date('Y-m-d');
+					$in_session['to'] = $data['from'];
+				}
+				$selection['begin'] = $in_session['from'];
+				$selection['end'] = $in_session['to'];
+				break;
+			case 5: // Week???
+				break;			
+			default:
+				break;
+		}
+	}
+}
+
 /*
  Store ot/reporte/html filter fields other than the period in session
 */

@@ -663,11 +663,6 @@ $( document ).ready( function(){
 		echo 'TODO';
 	}
 
-	public function activities()
-	{
-		echo 'TODO';
-	}
-
 	public function ot()
 	{
 		echo 'TODO';
@@ -914,10 +909,10 @@ $( document ).ready( function(){
 			'agent' => '',
 			'generacion' => '', // not sure if this should not be 1 instead
 			'agent_name' => '',
-			'policy_num' => ''
+			'policy_num' => '',
+			'activity_view' => 'normal',
 		);
 		get_generic_filter($this->other_filters, $this->agent_array);
-
 		if( !empty( $_POST ) )
 		{
 			if ( isset($_POST['query']['periodo']) && $this->form_validation->is_natural_no_zero($_POST['query']['periodo']) &&
@@ -946,9 +941,14 @@ $( document ).ready( function(){
 				)
 				$filters_to_save['generacion'] = $_POST['query']['generacion'];
 			if ( isset($_POST['query']['agent_name']))
-				$filters_to_save['agent_name'] = $_POST['query']['agent_name'];	
+				$filters_to_save['agent_name'] = $_POST['query']['agent_name'];
 			if ( isset($_POST['query']['policy_num']))
 				$filters_to_save['policy_num'] = $_POST['query']['policy_num'];
+
+			if ( isset($_POST['activity_view']) && 
+				(($_POST['activity_view'] == 'normal') || ($_POST['activity_view'] != 'efectividad')) )
+				$filters_to_save['activity_view'] = $_POST['activity_view'];
+
 			generic_set_report_filter( $filters_to_save, $this->agent_array );
 			foreach ($filters_to_save as $key => $value)
 				$this->other_filters[$key] = $value;
@@ -1018,7 +1018,107 @@ $( document ).ready( function(){
 
 		return $result;		
 	}
-	
+
+	public function activities( $userid = null )
+	{
+		// Check user privilege
+		if( !$this->access_sales_activities) {
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				'type' => false,
+				'message' => 'No tiene permisos para ver la "ACTIVIDAD DE VENTAS" en la sección "Director Commercial". Informe a su administrador para que le otorge los permisos necesarios.'
+			));
+			redirect( 'home', 'refresh' );
+		}
+		$this->load->model( 'activities/activity' );
+
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+		}
+		$this->load->helper('tri_cuatrimester');
+		$selection_filters = array(
+			'periodo' => $this->query_filters['query']['periodo'],
+			'begin' => '', 'end' => '',
+			'agent_name' => $this->query_filters['query']['agent_name']);
+		get_new_period_start_end($selection_filters);
+
+		$data = $this->activity->sales_activity($selection_filters, TRUE);
+		$content_data = array(
+			'period_fields' => show_period_fields('ot_reporte', $this->other_filters['ramo']),
+			'other_filters' => $this->other_filters,
+			'selection_filters' => $selection_filters,
+			'data' => $data,
+		);
+		$sub_page_content = $this->load->view('sales_activities', $content_data, true);
+
+		$inline_js = get_agent_autocomplete_js($this->agent_array, '#sales-activity-form');
+		$inline_js .=
+'
+<script type="text/javascript">
+	$( document ).ready( function(){ 
+		$("#sales-activity-normal").show();
+		$("#sales-activity-efectividad").hide();
+		$("#view-normal").bind( "click", function(){
+			$("#sales-activity-normal").show();
+			$("#sales-activity-efectividad").hide();
+		})
+		$("#view-efectividad").bind( "click", function(){
+			$("#sales-activity-normal").hide();
+			$("#sales-activity-efectividad").show();
+		})
+
+		$("#periodo").bind( "click", function(){
+			var parentForm = $(this).parents("form");
+			$("#periodo option:selected").each(function () {
+				if ($(this).val() == 4) {
+					$( "#cust_period-form" ).dialog( "open" );
+				} else
+				parentForm.submit();
+				return false;
+			})
+		});
+
+	});
+</script>
+';
+
+		$base_url = base_url();
+		$this->view = array(
+		  'title' => 'Director',
+		    // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'css' => array(
+			'<link rel="stylesheet" href="'. $base_url .'director/assets/style/director.css">',
+		  	'<link href="'. $base_url . 'activities/assets/style/create.css" rel="stylesheet">',
+			'<link href="'. $base_url . 'activities/assets/style/table_sorter.css" rel="stylesheet">',
+			'<link rel="stylesheet" href="'. $base_url .'ot/assets/style/jquery.fancybox.css">',
+			'<link rel="stylesheet" href="'. $base_url .'activities/assets/style/activity_sales.css">',
+		  ),
+		  'scripts' =>  array(
+			'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/jquery.validate.js"></script>',
+			'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/es_validator.js"></script>',
+			'<script src="'.$base_url.'scripts/config.js"></script>',
+			'<script src="'.$base_url.'activities/assets/scripts/activities.js"></script>',
+			'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
+			'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
+			'<script src="' . $base_url . 'activities/assets/scripts/sales_activity_report.js"></script>',
+			'<script src="' . $base_url . 'ot/assets/scripts/jquery.fancybox.js"></script>',
+			'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
+			$inline_js,
+		  ),
+		  'content' => 'director/director_profile',
+		  'message' => $this->session->flashdata('message'),
+		  'sub_page_content' => $sub_page_content,
+		);
+
+		// Render view 
+		$this->load->view( 'index', $this->view );
+	}
+
 /* End of file director.php */
 /* Location: ./application/modules/director/controllers/director.php */
 }

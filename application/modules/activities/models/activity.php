@@ -344,28 +344,40 @@ SUM( `agents_activity`.`autos_businesses` )  AS `autos_businesses`,
     }
 
 // Sales activity
-	public function sales_activity( $values )
+	public function sales_activity( $values, $new_period_filter = FALSE )
 	{
 		$agents_with_activity = array();
 		$data = array(
 			'totals' => array(
-				'cita' => 0, 'prospectus' => 0, 'interview' => 0),
+				'cita' => 0, 'prospectus' => 0, 'interview' => 0, 'weeks_reported' => 0),
 			'rows' => array(),
 		);
 		$activity_rows = array();
 		$solicitudes_work_order_rows = array();
 		$negocios_work_order_rows = array();
-
-		if ($values['periodo'] == 2)	// if Week is selected
+		if (!$new_period_filter)
 		{
-			$fields_selected = '`agents_activity`.`agent_id` , 
+			if ($values['periodo'] == 2)	// if Week is selected
+			{
+				$fields_selected = '`agents_activity`.`agent_id` , 
 1  AS `weeks_reported` ,
 `agents_activity`.`cita` AS `cita` , 
 `agents_activity`.`prospectus` AS `prospectus`, 
 `agents_activity`.`interview`  AS `interview`';
-			$this->db->select($fields_selected, FALSE);
+				$this->db->select($fields_selected, FALSE);
+			}
+			else // Month, Year or Custom
+			{
+				$fields_selected = '`agents_activity`.`agent_id` ,
+COUNT( `agents_activity`.`agent_id` ) AS `weeks_reported` ,
+SUM( `agents_activity`.`cita` ) AS `cita` , 
+SUM( `agents_activity`.`prospectus` )  AS `prospectus`, 
+SUM( `agents_activity`.`interview` )  AS `interview`';
+				$this->db->select($fields_selected, FALSE);
+				$this->db->group_by('agent_id');
+			}
 		}
-		else // Month, Year or Custom
+		else
 		{
 			$fields_selected = '`agents_activity`.`agent_id` ,
 COUNT( `agents_activity`.`agent_id` ) AS `weeks_reported` ,
@@ -377,6 +389,7 @@ SUM( `agents_activity`.`interview` )  AS `interview`';
 		}
 		$this->db->from( 'agents_activity' );
 		$this->db->join( 'agents', 'agents_activity.agent_id=agents.id');
+
 		$this->db->where( array(
 			'begin >= ' => $values['begin'],
 			'end <= ' => $values['end']) );
@@ -393,7 +406,7 @@ SUM( `agents_activity`.`interview` )  AS `interview`';
 			}
 		}
 		$query = $this->db->get();
- 	
+
 		if ($query->num_rows() > 0)
 		{
 			foreach ($query->result() as $row)

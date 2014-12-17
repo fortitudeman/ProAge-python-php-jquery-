@@ -939,9 +939,14 @@ class Activities extends CI_Controller {
 		{
 			$agent_id = 0;
 			$user_id = 0;
-		}		
+		}
 		$begin = $this->input->post('begin');
 		$end = $this->input->post('end');
+		if (!$begin || !$end)
+		{
+			$begin = $this->input->post('start_d');
+			$end = $this->input->post('end_d');		
+		}
 		if ($agent_id && $user_id && $begin && $end)
 		{
 			$values = array('begin' => $begin, 'end' => $end);
