@@ -569,7 +569,7 @@ SUM( `agents_activity`.`interview` )  AS `interview`';
 			'creation_date <= ' => $values['end']  . ' 23:59:59',
 			));
 		$this->db->where(
-			'(((patent_id = 47) && (product_group_id = 1)) || ((patent_id = 90) && (product_group_id = 2)))'
+			'(((patent_id = 47) && (work_order.product_group_id = 1)) || ((patent_id = 90) && (work_order.product_group_id = 2)))'
 		);
 		if ($this->agent_name_where_in)
 			$this->db->where_in('agents.id', $this->agent_name_where_in);

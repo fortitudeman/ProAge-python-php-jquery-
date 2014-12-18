@@ -27,6 +27,10 @@ else
 	$agent_th = '';
 	$total_cell = '';
 }
+$vida_negocios_link = $data['totals']['VIDA_negocios'] ?
+	'<a style="cursor: pointer;" class="vida negocios_class">' . $data['totals']['VIDA_negocios'] . '</a>' : $data['totals']['VIDA_negocios'];
+$gmm_negocios_link = $data['totals']['GMM_negocios'] ?
+ 	'<a style="cursor: pointer;" class="gmm negocios_class">' . $data['totals']['GMM_negocios'] . '</a>' : $data['totals']['GMM_negocios'];
 
 ?>
             <div class="row">
@@ -158,7 +162,7 @@ else
 		if ($data['totals']['weeks_reported'])
 		{
 			$vida_solicitudes_p = number_format($data['totals']['VIDA_solicitudes'] / $data['totals']['weeks_reported'], 2);
-			$vida_negocios_p =  number_format($data['totals']['VIDA_negocios'] / $data['totals']['weeks_reported'], 2);
+			$vida_negocios_p = number_format($data['totals']['VIDA_negocios'] / $data['totals']['weeks_reported'], 2);
 			$gmm_solicitudes_p = number_format($data['totals']['GMM_solicitudes'] / $data['totals']['weeks_reported'], 2);
 			$gmm_negocios_p = number_format($data['totals']['GMM_negocios'] / $data['totals']['weeks_reported'], 2);
 			$data['totals']['citaP'] = number_format($data['totals']['cita'] / $data['totals']['weeks_reported'], 2);
@@ -187,11 +191,11 @@ else
 	<td class="light-red-body sales-activity-numeric">' . $data['totals']['prospectusP'] . '</td>		
 	<td class="light-green-body sales-activity-numeric">' . $data['totals']['VIDA_solicitudes'] . '</td>
 	<td class="light-green-body sales-activity-numeric">' . $vida_solicitudes_p . '</td>
-	<td class="light-green-body sales-activity-numeric">' . $data['totals']['VIDA_negocios'] . '</td>
+	<td class="light-green-body sales-activity-numeric">' . $vida_negocios_link . '</td>
 	<td class="light-green-body sales-activity-numeric">' . $vida_negocios_p . '</td>
 	<td class="light-blue-body sales-activity-numeric">' . $data['totals']['GMM_solicitudes'] . '</td>
 	<td class="light-blue-body sales-activity-numeric">' . $gmm_solicitudes_p . '</td>
-	<td class="light-blue-body sales-activity-numeric">' . $data['totals']['GMM_negocios'] . '</td>
+	<td class="light-blue-body sales-activity-numeric">' . $gmm_negocios_link . '</td>
 	<td class="light-blue-body sales-activity-numeric">' . $gmm_negocios_p . '</td>
 </tr>
 </tbody>
@@ -289,9 +293,9 @@ else
 	<td class="light-red-body sales-activity-numeric">' . $data['totals']['prospectus'] . '</td>
 	<td class="light-red-body sales-activity-numeric">' . $data['totals']['prospectusP'] . '</td>		
 	<td class="light-green-body sales-activity-numeric">' . $data['totals']['VIDA_solicitudes'] . '</td>
-	<td class="light-green-body sales-activity-numeric">' . $data['totals']['VIDA_negocios'] . '</td>
+	<td class="light-green-body sales-activity-numeric">' . $vida_negocios_link . '</td>
 	<td class="sales-activity-numeric">' . $efectividad_2 . '</td>
-	<td class="light-blue-body sales-activity-numeric">' . $data['totals']['GMM_solicitudes'] . '</td>
+	<td class="light-blue-body sales-activity-numeric">' . $gmm_negocios_link . '</td>
 	<td class="light-blue-body sales-activity-numeric">' . $data['totals']['GMM_negocios'] . '</td>
 	<td class="sales-activity-numeric">' . $efectividad_3 . '</td>
 </tr>

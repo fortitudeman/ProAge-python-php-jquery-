@@ -982,7 +982,7 @@ $( document ).ready( function(){
 
 		if ( !$this->access_report )
 		{
-			echo 'No tiene permisos para ver el reporte "Estadística operativa" en la sección "Perfil de operaciones", informe a su administrador para que le otorge los permisos necesarios.';
+			echo 'No tiene permisos para ver el reporte "Actividad de ventas" en la sección "Perfil de director", informe a su administrador para que le otorge los permisos necesarios.';
 			exit();
 		}
 		$stats = $this->_read_details($stat_type, $status);
@@ -1068,6 +1068,28 @@ $( document ).ready( function(){
 			$("#sales-activity-normal").hide();
 			$("#sales-activity-efectividad").show();
 		})
+		$(".negocios_class").bind( "click", function(){
+			var current = $(this);
+			var url = "";
+			if (current.hasClass("vida")) {
+				url = "director/activity_details/1/pagada.html";
+			} else if (current.hasClass("gmm")) {
+				url = "director/activity_details/2/pagada.html";
+			}
+			if (url.length > 0) {
+				$.fancybox.showLoading();
+				$.post(Config.base_url() + url,
+					function(data) { 
+						if	(data) {
+							$.fancybox({
+								content:data
+							});
+							return false;
+						}
+					});
+			}
+			return false;
+		})
 
 		$("#periodo").bind( "click", function(){
 			var parentForm = $(this).parents("form");
@@ -1117,6 +1139,35 @@ $( document ).ready( function(){
 
 		// Render view 
 		$this->load->view( 'index', $this->view );
+	}
+
+	public function activity_details()
+	{
+		$valid_stat_types = array(1 => 1, 2 => 2, 3 => 3);
+		$stat_type = $this->uri->segment(3, 0);
+		$status = $this->uri->segment(4, 0);
+		if (!isset($valid_stat_types[$stat_type]) || ($status != 'pagada'))
+		{
+			echo 'Ocurrio un error.';
+			exit();
+		}
+
+		$this->_init_profile();
+
+		if ( !$this->access_report )
+		{
+			echo 'No tiene permisos para ver el reporte "Actividad de ventas" en la sección "Perfil de director", informe a su administrador para que le otorge los permisos necesarios.';
+			exit();
+		}
+		$stats = $this->_read_details($stat_type, $status);
+		
+		if (!$stats)
+		{
+			echo 'Ocurrio un error.';
+			exit();
+		}
+		$data = array('stats' => $stats);
+		$this->load->view( 'operations/details_ramo', $data );
 	}
 
 /* End of file director.php */
