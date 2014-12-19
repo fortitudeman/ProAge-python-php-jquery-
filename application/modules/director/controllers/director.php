@@ -830,38 +830,59 @@ $( document ).ready( function(){
 			echo 'Ocurrio un error.';
 			exit();
 		}
-		$data_report = array(array(
-		    'Producto',
-		    'Negocios',
-		    '%',
-		    'Primas Totales',
-		    '%',
-		    'Prima Promedio',
-		));
+		$full = ($this->uri->segment(5, '') == 'full');
+		if ($full)
+			$data_report = array(array(
+				'Producto',
+				'Negocios',
+				'%',
+				'Primas Totales',
+				'%',
+				'Prima Promedio',
+			));
+		else
+			$data_report = array(array(
+				'Producto',
+				'Negocios',
+				'%'
+			));		
 		$na_value = 'N/D';
 		foreach ($stats as $key => $value)
 		{
 			if ($key && $value['value'])
 			{
-				$data_report[] = array(
-					$value['label'],
-					$value['value'],
-                    $stats[0]['value'] ? round(100 * $value['value'] / $stats[0]['value']) . '%' : $na_value,
-					'$ ' . number_format($value['prima'], 2),
-					$stats[0]['prima'] ? round(100 * $value['prima'] / $stats[0]['prima']) . '%' : $na_value,
-					$value['value'] ? '$ ' . number_format($value['prima'] / $value['value'], 2) : $na_value
-				);
+				if ($full)
+					$data_report[] = array(
+						$value['label'],
+						$value['value'],
+						$stats[0]['value'] ? round(100 * $value['value'] / $stats[0]['value']) . '%' : $na_value,
+						'$ ' . number_format($value['prima'], 2),
+						$stats[0]['prima'] ? round(100 * $value['prima'] / $stats[0]['prima']) . '%' : $na_value,
+						$value['value'] ? '$ ' . number_format($value['prima'] / $value['value'], 2) : $na_value
+					);
+				else
+					$data_report[] = array(
+						$value['label'],
+						$value['value'],
+						$stats[0]['value'] ? round(100 * $value['value'] / $stats[0]['value']) . '%' : $na_value,
+					);				
 			}
 		}
-		$data_report[] = array(
-			'Total',
-			$stats[0]['value'],
-			$stats[0]['value'] ? '100%' : $na_value,
-			'$ ' . number_format($stats[0]['prima'], 2),
-			$stats[0]['prima'] ? '100%' : $na_value,
-			$stats[0]['value'] ? '$ ' . number_format($stats[0]['prima'] / $stats[0]['value'], 2) : $na_value
-			);
-
+		if ($full)
+			$data_report[] = array(
+				'Total',
+				$stats[0]['value'],
+				$stats[0]['value'] ? '100%' : $na_value,
+				'$ ' . number_format($stats[0]['prima'], 2),
+				$stats[0]['prima'] ? '100%' : $na_value,
+				$stats[0]['value'] ? '$ ' . number_format($stats[0]['prima'] / $stats[0]['value'], 2) : $na_value
+				);
+		else
+			$data_report[] = array(
+				'Total',
+				$stats[0]['value'],
+				$stats[0]['value'] ? '100%' : $na_value,
+				);
 		$types_text = array(1 => 'vida', 2 => 'gmm', 3 => 'autos');
 		$filename = 'director_ventas_distribucion_' . $types_text[$stat_type] . '_' . $status . '_detalles.csv';
 

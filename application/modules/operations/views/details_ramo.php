@@ -18,6 +18,8 @@ $na_value = 'N/D';
 $segments = $this->uri->rsegment_array();
 $with_primas = (($segments[1] == 'director') && isset($segments[2]) && ($segments[2] == 'stat_details'));
 $segments[2] = 'stat_detail_export';
+if ($with_primas)
+	$segments[5] = 'full';
 ?>
                   <p>
 <?php if ($this->access_export_xls) :?>
