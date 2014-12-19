@@ -971,17 +971,11 @@ class Activities extends CI_Controller {
 					$this->_details_from_ots($values, $agents_selected, $totals_work_order, 
 						$agents_with_activity, 'solicitudes', $add_where, $user_id, 2);
 					break;
-				case 'vida-negocios': // from payments
-					$data = array(
-						'access_update' => $this->access_update,
-						'access_delete' => $this->access_delete,
-						'values' => array()
-					);
+				case 'vida-negocios': // from work_order
 					$add_where = array_merge($add_where, 
-						array('product_group.name' => 'Vida'));
-					$data['values'] = $this->activity->get_payment_list($values, $agents_selected,
-						$totals_work_order, $agents_with_activity, 'negocios', $add_where);
-					$this->load->view('popup_payment', $data);
+						array('work_order_status_id' => 4, 'product_group.name' => 'Vida'));
+					$this->_details_from_ots($values, $agents_selected, $totals_work_order, 
+						$agents_with_activity, 'negocios', $add_where, $user_id, 2);
 					break;
 				case 'gmm-negocios': // from work_order
 					$add_where = array_merge($add_where, 

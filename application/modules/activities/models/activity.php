@@ -432,15 +432,15 @@ SUM( `agents_activity`.`interview` )  AS `interview`';
 		$data['totals'] = array_merge($data['totals'], $totals_work_order);
 
 ////////////////////////////////
-		$totals_work_order = array('VIDA_negocios' => 0, 'GMM_negocios' => 0);
+		$totals_work_order = array('GMM_negocios' => 0);
 		$negocios_work_order_rows = $this->get_ot_count($values, $agents_selected, $totals_work_order, $agents_with_activity,
 			'negocios', array('work_order_status_id' => 4, 'product_group.name' => 'GMM'));
 		$data['totals'] = array_merge($data['totals'], $totals_work_order);
 
-////////////////////////////////
-		$totals_payments = array('VIDA_negocios' => 0);
-		$payment_rows = $this->get_payment_count($values, $agents_selected, $totals_payments, $agents_with_activity);
-		$data['totals'] = array_merge($data['totals'], $totals_payments);
+		$totals_work_order = array('VIDA_negocios' => 0);
+		$negocios_work_order_rows_vida = $this->get_ot_count($values, $agents_selected, $totals_work_order, $agents_with_activity,
+			'negocios', array('work_order_status_id' => 4, 'product_group.name' => 'Vida'));
+		$data['totals'] = array_merge($data['totals'], $totals_work_order);
 
 ////////////////////////////////
 		if (count($agents_with_activity))
@@ -497,14 +497,11 @@ SUM( `agents_activity`.`interview` )  AS `interview`';
 							isset($negocios_work_order_rows[$row->agent_id]['GMM']['negocios']))
 							$data['rows'][$row->agent_id]['gmm_negocios'] = $negocios_work_order_rows[$row->agent_id]['GMM']['negocios'];
 					}
-					if (isset($payment_rows[$row->agent_id]))
-					{				
-						if (isset($payment_rows[$row->agent_id]['VIDA']) && 
-							isset($payment_rows[$row->agent_id]['VIDA']['negocios']))
-							$data['rows'][$row->agent_id]['vida_negocios'] = $payment_rows[$row->agent_id]['VIDA']['negocios'];
-						if (isset($payment_rows[$row->agent_id]['GMM']) && 
-							isset($payment_rows[$row->agent_id]['GMM']['negocios']))
-							$data['rows'][$row->agent_id]['gmm_negocios'] = $payment_rows[$row->agent_id]['GMM']['negocios'];
+					if (isset($negocios_work_order_rows_vida[$row->agent_id]))
+					{
+						if (isset($negocios_work_order_rows_vida[$row->agent_id]['VIDA']) && 
+							isset($negocios_work_order_rows_vida[$row->agent_id]['VIDA']['negocios']))
+							$data['rows'][$row->agent_id]['vida_negocios'] = $negocios_work_order_rows_vida[$row->agent_id]['VIDA']['negocios'];
 					}
 				}
 			}
