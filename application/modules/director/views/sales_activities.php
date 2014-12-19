@@ -17,21 +17,13 @@ $selected_period = get_filter_period();
 $base_url = base_url();
 $divided_by_zero = 'N/D';
 
-if ($other_filters['agent_name'])
-{
-	$agent_th = '<th rowspan="2" class="medium-grey">AGENTE</th>';
-	$total_cell = '<td>TOTALES</td>';
-}	
-else
-{
-	$agent_th = '';
-	$total_cell = '';
-}
+$agent_th = '<th rowspan="2" class="medium-grey">AGENTE</th>';
+$total_cell = '<td>TOTALES</td>';
+
 $vida_negocios_link = $data['totals']['VIDA_negocios'] ?
 	'<a style="cursor: pointer;" class="vida negocios_class">' . $data['totals']['VIDA_negocios'] . '</a>' : $data['totals']['VIDA_negocios'];
 $gmm_negocios_link = $data['totals']['GMM_negocios'] ?
  	'<a style="cursor: pointer;" class="gmm negocios_class">' . $data['totals']['GMM_negocios'] . '</a>' : $data['totals']['GMM_negocios'];
-
 ?>
             <div class="row">
 
@@ -40,10 +32,21 @@ $gmm_negocios_link = $data['totals']['GMM_negocios'] ?
                           <div class="control-group">
                             <label class="control-label text-error" for="inputError">Vista :</label>
                             <div class="controls">
-                              <input type="radio" id="view-normal" name="activity_view" value="normal" <?php /*if ($other_filters['activity_view'] == 'normal')*/ echo 'checked="checked"'?>>&nbsp;&nbsp;Normal&nbsp;&nbsp;&nbsp;&nbsp;
-                              <input type="radio" id="view-efectividad" name="activity_view" value="efectividad" <?php /*if ($other_filters['activity_view'] == 'efectividad') echo 'checked="checked"' */ ?>>&nbsp;&nbsp;Efectividad					  
+                              <input type="radio" id="view-normal" name="activity_view" value="normal" <?php /*if ($other_filters['activity_view'] == 'normal')*/ echo 'checked="checked"'?>>&nbsp;Normal&nbsp;&nbsp;&nbsp;&nbsp;
+                              <input type="radio" id="view-efectividad" name="activity_view" value="efectividad" <?php /*if ($other_filters['activity_view'] == 'efectividad') echo 'checked="checked"' */ ?>>&nbsp;Efectividad					  
                             </div>
                           </div>
+
+<?php if (!$other_filters['agent_name']): ?>						  
+                          <div class="control-group">
+                            <label class="control-label text-error" for="inputError">Vista de los agentes :</label>
+                            <div class="controls">
+                              <input class="agent-view all-agents-totals" type="radio" id="all-agents-totals" name="agent_view" value="totales" checked="checked">&nbsp;Sólo la fila <span style="font-weight: bold">TOTALES</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                              <input class="agent-view all-agents-detailed" type="radio" id="all-agents-detailed" name="agent_view" value="detailed">&nbsp;Todas las filas
+                            </div>
+                          </div>						  
+<?php endif; ?>
+
                           <div class="row">
                             <div class="span5 offset1">
 <?php echo $period_fields ?>
@@ -87,27 +90,26 @@ $gmm_negocios_link = $data['totals']['GMM_negocios'] ?
 <th>SOLICITUDES</th><th>PROM</th><th>NEGOCIOS</th><th>PROM</th>
 <th>SOLICITUDES</th><th>PROM</th><th>NEGOCIOS</th><th>PROM</th>
 </tr></thead>
-<tbody class="tbody">';
-		if ($other_filters['agent_name'])
-		{
-			foreach ($data['rows'] as $key => $value)
-			{
-				if ($value['weeks_reported'])
-				{
-					$vida_solicitudes_p = number_format($value['vida_solicitudes'] / $value['weeks_reported'], 2);
-					$vida_negocios_p =  number_format($value['vida_negocios'] / $value['weeks_reported'], 2);
-					$gmm_solicitudes_p = number_format($value['gmm_solicitudes'] / $value['weeks_reported'], 2);
-					$gmm_negocios_p =  number_format($value['gmm_negocios'] / $value['weeks_reported'], 2);
-				}
-				else
-				{
-					$vida_solicitudes_p = $divided_by_zero;
-					$vida_negocios_p = $divided_by_zero;
-					$gmm_solicitudes_p = $divided_by_zero;
-					$gmm_negocios_p = $divided_by_zero;
-				}
+<tbody class="tbody agent-row">';
 
-				echo '
+		foreach ($data['rows'] as $key => $value)
+		{
+			if ($value['weeks_reported'])
+			{
+				$vida_solicitudes_p = number_format($value['vida_solicitudes'] / $value['weeks_reported'], 2);
+				$vida_negocios_p = number_format($value['vida_negocios'] / $value['weeks_reported'], 2);
+				$gmm_solicitudes_p = number_format($value['gmm_solicitudes'] / $value['weeks_reported'], 2);
+				$gmm_negocios_p =  number_format($value['gmm_negocios'] / $value['weeks_reported'], 2);
+			}
+			else
+			{
+				$vida_solicitudes_p = $divided_by_zero;
+				$vida_negocios_p = $divided_by_zero;
+				$gmm_solicitudes_p = $divided_by_zero;
+				$gmm_negocios_p = $divided_by_zero;
+			}
+
+			echo '
 <tr id="normal-agent-id-' . $key . '_' . $value['user_id'] . '">
 	<td rowspan="2"><a href="#" class="toggle">' . $value['name'] . '</a></td>
 	<td class="sales-activity-numeric">' . $value['weeks_reported'] . '</td>
@@ -157,8 +159,10 @@ $gmm_negocios_link = $data['totals']['GMM_negocios'] ?
 </td>
 </tr>
 ';
-			}
 		}
+		echo '
+</tbody>';
+
 		if ($data['totals']['weeks_reported'])
 		{
 			$vida_solicitudes_p = number_format($data['totals']['VIDA_solicitudes'] / $data['totals']['weeks_reported'], 2);
@@ -180,6 +184,7 @@ $gmm_negocios_link = $data['totals']['GMM_negocios'] ?
 			$data['totals']['prospectusP'] = $divided_by_zero;
 		}
 		echo '
+<tbody class="total-row">
 <tr style="font-weight: bold">
 ' . 	$total_cell	. '
 	<td class="sales-activity-numeric">' . $data['totals']['weeks_reported'] . '</td>
@@ -219,26 +224,24 @@ $gmm_negocios_link = $data['totals']['GMM_negocios'] ?
 <th>SOLICITUDES</th><th>NEGOCIOS</th><th>EFECTIVIDAD</th>
 <th>SOLICITUDES</th><th>NEGOCIOS</th><th>EFECTIVIDAD</th>
 </tr></thead>
-<tbody class="tbody">';
+<tbody class="tbody agent-row">';
 
-		if ($other_filters['agent_name'])
+		foreach ($data['rows'] as $key => $value)
 		{
-			foreach ($data['rows'] as $key => $value)
-			{
-				if ($value['citaT'])
-					$efectividad_1 = number_format(100 * $value['interviewT'] / $value['citaT'] , 0) . '%';
-				else
-					$efectividad_1 = $divided_by_zero;
-				if ($value['vida_solicitudes'])
-					$efectividad_2 = number_format(100 * $value['vida_negocios'] / $value['vida_solicitudes'], 0) . '%';
-				else
-					$efectividad_2 = $divided_by_zero;
-				if ($value['gmm_solicitudes'])
-					$efectividad_3 = number_format(100 * $value['gmm_negocios'] / $value['gmm_solicitudes'], 0) . '%';
-				else
-					$efectividad_3 = $divided_by_zero;
-				
-				echo '
+			if ($value['citaT'])
+				$efectividad_1 = number_format(100 * $value['interviewT'] / $value['citaT'] , 0) . '%';
+			else
+				$efectividad_1 = $divided_by_zero;
+			if ($value['vida_solicitudes'])
+				$efectividad_2 = number_format(100 * $value['vida_negocios'] / $value['vida_solicitudes'], 0) . '%';
+			else
+				$efectividad_2 = $divided_by_zero;
+			if ($value['gmm_solicitudes'])
+				$efectividad_3 = number_format(100 * $value['gmm_negocios'] / $value['gmm_solicitudes'], 0) . '%';
+			else
+				$efectividad_3 = $divided_by_zero;
+			
+			echo '
 <tr id="efectividad-agent-id-' . $key . '_' . $value['user_id'] . '">
 	<td rowspan="2"><a href="#" class="toggle">' . $value['name'] . '</a></td>
 	<td class="sales-activity-numeric">' . $value['weeks_reported'] . '</td>
@@ -270,8 +273,10 @@ $gmm_negocios_link = $data['totals']['GMM_negocios'] ?
 </td>
 </tr>
 ';
-			}
 		}
+
+		echo '
+</tbody>';
 		if ($data['totals']['cita'])
 			$efectividad_1 = number_format(100 * $data['totals']['interview'] / $data['totals']['cita'] , 0) . '%';
 		else
@@ -285,6 +290,7 @@ $gmm_negocios_link = $data['totals']['GMM_negocios'] ?
 		else
 			$efectividad_3 = $divided_by_zero;
 		echo '
+<tbody class="total-row">
 <tr style="font-weight: bold">' .	$total_cell . '
 	<td class="sales-activity-numeric">' . $data['totals']['weeks_reported'] . '</td>
 	<td class="medium-grey-body sales-activity-numeric">' . $data['totals']['cita'] . '</td>

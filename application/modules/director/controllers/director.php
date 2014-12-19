@@ -1126,7 +1126,22 @@ $( document ).ready( function(){
 	});
 </script>
 ';
-
+		if (!$this->other_filters['agent_name'])
+			$inline_js .= '
+<script type="text/javascript">
+	$( document ).ready( function(){
+		$(".agent-row").hide();
+		$(".agent-view").bind( "click", function(){
+			var current = $(this);
+			var currentId = current.attr("id");
+			if (currentId == "all-agents-totals")
+				$(".agent-row").hide();
+			else
+				$(".agent-row").show();
+		});
+	});
+</script>
+';
 		$base_url = base_url();
 		$this->view = array(
 		  'title' => 'Director',
