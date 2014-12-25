@@ -33,8 +33,9 @@ else
 
 $agent_profile_page = ($this->uri->segment(1) == 'agent');
 $operation_profile_page = ($this->uri->segment(1) == 'operations');
+$director_profile_page = ($this->uri->segment(1) == 'director');
 $selected_period = get_filter_period();
-if (!$agent_profile_page && !$operation_profile_page):
+if (!$agent_profile_page && !$operation_profile_page && !$director_profile_page):
 ?>
 <div>
     <ul class="breadcrumb">
@@ -124,7 +125,7 @@ if (!$agent_profile_page && !$operation_profile_page):
 
             <div class="row"><br />
                 <form id="ot-form" method="post" <?php if ($operation_profile_page) echo 'action="' . $export_url . '"' ?>>
-<?php if (!$agent_profile_page && !$operation_profile_page): ?>
+<?php if (!$agent_profile_page && !$operation_profile_page && !$director_profile_page): ?>
                   <input class="filter-field" type="hidden" name="user" id="todas-mias" value="<?php echo $todas_mias_value ?>" />
 <?php else: ?>
                   <input class="filter-field" type="hidden" name="user" id="todas-mias" value="todos" />
@@ -136,7 +137,7 @@ if (!$agent_profile_page && !$operation_profile_page):
 					    <th colspan="6">
 
 						
-<?php if ($operation_profile_page): ?>
+<?php if ($operation_profile_page || $director_profile_page): ?>
 					    <input type="hidden" value="" id="export-xls-input" name="export_xls_input" disabled="disabled" />
 <?php if (isset($coordinator_select)): ?>
 <div class="row">
@@ -281,7 +282,7 @@ Período :<br />
               </tbody>
           </table>
 </div>
-<?php if (!$agent_profile_page && !$operation_profile_page): ?>
+<?php if (!$agent_profile_page && !$operation_profile_page && !$director_profile_page): ?>
 
         </div><!-- box-content -->
 

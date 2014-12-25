@@ -542,6 +542,130 @@ if ( ! function_exists('get_ot_data'))
 		return $data;
 	}
 }
+/*
+	Get coordinator filter form field
+	TODO: use this in the operation module also
+*/
+if ( ! function_exists('get_coordinator_form_field'))
+{
+	function get_coordinator_form_field($selected_coordinators)
+	{
+		$CI =& get_instance();
+		$selected_coordinator_text	= '';
+		$roles = $CI->rol->get_user_roles_where(array(
+			'modules.name' => 'Orden de trabajo', 'actions.name' => 'Crear'));
+		foreach ($roles as $role)
+			$where_in[] = $role->user_role_id;
+		$where_in = array_unique(array_merge($where_in, array('2')));
+		$coordinators_in_db = $CI->user->get_users_with_role($where_in);
+		$coordinators_array = array();
+		foreach ($coordinators_in_db as $value_c)
+		{
+			$displayed_name = $value_c['company_name'] ?
+				$value_c['company_name'] :
+				$value_c['name'] . ' ' .  $value_c['lastnames'];
+			$coordinators_array[$value_c['id']] = $displayed_name;
+		}
+		$coordinators_multi = array();
+		foreach ( $coordinators_array as $key => $value )
+		{
+			$coordinators_multi[] = "\n'$value [ID: $key]'";
+			if (in_array($key, $selected_coordinators)) 
+				$selected_coordinator_text .= $value .  " [ID: $key]\n";
+		}
+		if (!$selected_coordinator_text && isset($CI->operation_user) && isset($CI->operation_user->displayed_user_name))
+			$selected_coordinator_text = $CI->operation_user->displayed_user_name . ' [ID: ' . $CI->sessions['id'] . "]\n";
+
+		$result = 
+'
+<script type="text/javascript">
+	$( document ).ready( function(){
+
+		var coordinatorList = [' . implode(',', $coordinators_multi) . '
+		];
+
+		function split( val ) {
+			return val.split( /\n\s*/ );
+		}
+		function extractLast( term ) {
+			return split( term ).pop();
+		}
+		$( ".submit-form").bind("click", function( event ) {
+			submitThisForm();
+		})
+		$( "#clear-coordinator-filter").bind("click", function( event ) {
+			$( "#coordinador-name" ).val("");
+			submitThisForm();
+		})
+		$( "#coordinador-name" )
+		// don\'t navigate away from the field on tab when selecting an item
+			.bind( "keydown", function( event ) {
+				if ( event.keyCode === $.ui.keyCode.TAB &&
+					$( this ).data( "ui-autocomplete" ).menu.active ) {
+					event.preventDefault();
+				}
+			})
+			.autocomplete({
+				minLength: 0,
+				source: function( request, response ) {
+					// delegate back to autocomplete, but extract the last term
+					response( $.ui.autocomplete.filter(
+						coordinatorList, extractLast( request.term ) ) );
+				},			
+				focus: function() {
+					// prevent value inserted on focus
+					return false;
+				},
+				select: function( event, ui ) {
+					var terms = split( this.value );
+					// remove the current input
+					terms.pop();
+					// add the selected item
+					terms.push( ui.item.value );
+					// add placeholder to get the comma-and-space at the end
+					terms.push( "" );
+					this.value = terms.join( "\n" );
+					submitThisForm();
+					return false;
+				}
+			})
+	});
+</script>
+';
+		$CI->coordinator_select = $CI->load->view('operations/coordinator_select', array(
+			'coordinators' => $coordinators_in_db,
+			'selected_coordinator_text' => $selected_coordinator_text,
+			), TRUE);
+
+		return $result;
+	}
+}
+
+/*
+	Extract coordinator name
+	TODO: use this in the operation module also (_read_stats)
+*/
+if ( ! function_exists('extract_coordinator_name'))
+{
+	function extract_coordinator_name($coordinator_name)
+	{
+		$to_check_array2 = array();
+		$to_check_array1 = explode("\n", $coordinator_name);
+		$to_replace = array(']', "\n", "\r");
+		foreach ($to_check_array1 as $value)
+		{
+			$pieces = explode( ' [ID: ', $value);
+			if (isset($pieces[1]))
+			{
+				$pieces[1] = (int)str_replace($to_replace, '', $pieces[1]);
+				if (!isset($to_check_array2[$pieces[1]]))
+					$to_check_array2[] = $pieces[1];
+			}
+		}
+		return implode('_', $to_check_array2);
+	}
+}
+
 /* End of file filter_helper.php */
 /* Location: ./application/helpers/filter_helper.php */
 ?>

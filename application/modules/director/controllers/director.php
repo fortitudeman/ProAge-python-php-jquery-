@@ -63,6 +63,8 @@ class Director extends CI_Controller {
 	public $agent_array = array();
 	public $other_filters = array();
 	public $query_filters = array();
+
+	public $coordinator_select = '';
 	
 /** Construct Function **/
 /** Setting Load perms **/
@@ -182,6 +184,7 @@ class Director extends CI_Controller {
 		$this->load->helper('filter');
 
 		$this->query_filters = $this->_init_filters();
+		$this->user_id == $this->sessions['id'];
 	}
 
 	public function index()
@@ -245,7 +248,7 @@ class Director extends CI_Controller {
 		$content_data = array(
 			'manager' => $this->user->getSelectsGerentes2(),
 			'period_form' => show_custom_period(),
-			'period_fields' => show_period_fields('ot_reporte', $this->other_filters['ramo']),
+			'period_fields' => show_period_fields('director', $this->other_filters['ramo']),
 			'other_filters' => $this->other_filters,
 			'report_lines' => $report_lines,
 			'export_xls' => $this->access_export_xls,
@@ -323,16 +326,6 @@ class Director extends CI_Controller {
 '
 <script type="text/javascript">
 	$( document ).ready(function() {
-		$("#periodo").bind( "click", function(){
-			var parentForm = $(this).parents("form");
-			$("#periodo option:selected").each(function () {
-				if ($(this).val() == 4) {
-					$( "#cust_period-form" ).dialog( "open" );
-				} else
-					parentForm.submit();
-				return false;
-			})
-		});
 
 		$("#export").bind( "click", function(){
 			$( "#form" ).attr( "action", "' . $base_url . 'director/report_export.html" );
@@ -564,7 +557,7 @@ $( document ).ready( function(){
 		$content_data = array(
 			'manager' => $this->user->getSelectsGerentes2(),
 			'period_form' => show_custom_period(),
-			'period_fields' => show_period_fields('ot_reporte', $this->other_filters['ramo']),
+			'period_fields' => show_period_fields('director', $this->other_filters['ramo']),
 			'other_filters' => $this->other_filters,
 			'report_lines' => $report_lines,
 			'export_xls' => $this->access_export_xls,
@@ -607,17 +600,6 @@ $( document ).ready( function(){
 '
 <script type="text/javascript">
 	$( document ).ready(function() {
-		$("#periodo").bind( "click", function(){
-			var parentForm = $(this).parents("form");
-			$("#periodo option:selected").each(function () {
-				if ($(this).val() == 4) {
-					$( "#cust_period-form" ).dialog( "open" );
-				} else
-					parentForm.submit();
-				return false;
-			})
-		});
-
 		$("#export").bind( "click", function(){
 			$( "#form" ).attr( "action", "' . $base_url . 'director/sales_activity_export.html" );
 			$( "#form" ).submit();
@@ -659,11 +641,6 @@ $( document ).ready( function(){
 	}
 
 	public function sales_activities_export()
-	{
-		echo 'TODO';
-	}
-
-	public function ot()
 	{
 		echo 'TODO';
 	}
@@ -932,8 +909,14 @@ $( document ).ready( function(){
 			'agent_name' => '',
 			'policy_num' => '',
 			'activity_view' => 'normal',
+			'coordinators' => '',
 		);
 		get_generic_filter($this->other_filters, $this->agent_array);
+
+		$page = $this->uri->segment(2, '');
+		if (($this->other_filters['ramo'] < 1) && ($page != 'ot_list') && ($page != 'find'))
+			$this->other_filters['ramo'] = 1;
+
 		if( !empty( $_POST ) )
 		{
 			if ( isset($_POST['query']['periodo']) && $this->form_validation->is_natural_no_zero($_POST['query']['periodo']) &&
@@ -957,7 +940,7 @@ $( document ).ready( function(){
 				$filters_to_save['agent'] = $_POST['query']['agent'];
 			if ( isset($_POST['query']['generacion']) &&
 				(  ($_POST['query']['generacion'] == '') || 
-				 ( $this->form_validation->is_natural_no_zero($_POST['query']['generacion']) &&
+				( $this->form_validation->is_natural_no_zero($_POST['query']['generacion']) &&
 				($_POST['query']['generacion'] <= 5)) )
 				)
 				$filters_to_save['generacion'] = $_POST['query']['generacion'];
@@ -969,6 +952,9 @@ $( document ).ready( function(){
 			if ( isset($_POST['activity_view']) && 
 				(($_POST['activity_view'] == 'normal') || ($_POST['activity_view'] != 'efectividad')) )
 				$filters_to_save['activity_view'] = $_POST['activity_view'];
+
+			if (isset($_POST['coordinator_name']))
+				$filters_to_save['coordinators'] = extract_coordinator_name($_POST['coordinator_name']);
 
 			generic_set_report_filter( $filters_to_save, $this->agent_array );
 			foreach ($filters_to_save as $key => $value)
@@ -1067,7 +1053,7 @@ $( document ).ready( function(){
 
 		$data = $this->activity->sales_activity($selection_filters, TRUE);
 		$content_data = array(
-			'period_fields' => show_period_fields('ot_reporte', $this->other_filters['ramo']),
+			'period_fields' => show_period_fields('director', $this->other_filters['ramo']),
 			'other_filters' => $this->other_filters,
 			'selection_filters' => $selection_filters,
 			'data' => $data,
@@ -1111,17 +1097,6 @@ $( document ).ready( function(){
 			}
 			return false;
 		})
-
-		$("#periodo").bind( "click", function(){
-			var parentForm = $(this).parents("form");
-			$("#periodo option:selected").each(function () {
-				if ($(this).val() == 4) {
-					$( "#cust_period-form" ).dialog( "open" );
-				} else
-				parentForm.submit();
-				return false;
-			})
-		});
 
 	});
 </script>
@@ -1206,6 +1181,239 @@ $( document ).ready( function(){
 		$this->load->view( 'operations/details_ramo', $data );
 	}
 
+	public function ot()
+// Inspired from the code operations/statistics/recap
+	{
+		$this->_init_profile();
+		if ( !$this->access_report )
+		{	
+			$this->session->set_flashdata( 'message', array
+			( 
+				'type' => false,	
+				'message' => 'No tiene permisos para ver el reporte "Ordones de trabajo" en la sección "Perfil de director", informe a su administrador para que le otorge los permisos necesarios.'
+			));	
+			redirect( 'home', 'refresh' );
+		}
+		$this->load->helper( array('ot/ot' ));
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+		}
+		$periodo = get_filter_period();
+		$ramo = NULL;
+
+		if ($this->other_filters['coordinators'])
+			$selected_coordinators = explode('_', $this->other_filters['coordinators']);		
+		else
+			$selected_coordinators = array();
+
+		$users = $this->user->get_filtered_agents($this->query_filters);
+		if (is_array($users) && !count($users))
+		{
+			$stats = $this->work_order->init_operation_result($ramo, TRUE);
+		}
+		else
+		{
+			$this->work_order->init_operations($this->other_filters['coordinators'], $periodo, $ramo);
+			if ($users)
+				$this->work_order->add_operation_where(array('policies_vs_users.user_id' => array_keys($users)));
+			$add_where = $ramo ? array('t2.name' => 'NUEVO NEGOCIO') : NULL;
+			$stats = $this->work_order->operation_stats($ramo, $add_where, TRUE);
+		}
+
+		$inline_js = get_coordinator_form_field($selected_coordinators) . 
+			get_agent_autocomplete_js($this->agent_array);
+		$base_url = base_url();
+		$content_data = array(
+			'period_fields' => show_period_fields('director', 55),
+			'other_filters' => $this->other_filters,
+			'stats' => $stats,
+			'coordinator_select' => $this->coordinator_select
+			);
+		$sub_page_content = $this->load->view('stats_recap', $content_data, true);
+
+		$add_js = '
+<script type="text/javascript">
+	var submitThisForm = function() {
+		$("#form").submit();
+	}
+</script>
+';
+
+		// Config view
+		$this->view = array(
+			'title' => 'Director',
+			 // Permisions
+			'user' => $this->sessions,
+			'user_vs_rol' => $this->user_vs_rol,
+			'roles_vs_access' => $this->roles_vs_access,
+			'css' => array(
+				'<link href="' . $base_url . 'ot/assets/style/report.css" rel="stylesheet">',
+				'<link href="' . $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
+				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
+				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">', // TO CHECK
+				'<link rel="stylesheet" href="'. $base_url .'operations/assets/style/operations.css">',
+			),
+			'scripts' => array(
+				'<script src="' . $base_url . 'scripts/config.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/operations.js"></script>',
+				$add_js,
+				$inline_js
+			),
+			'content' => 'director/director_profile',
+			'message' => $this->session->flashdata('message'),
+			'sub_page_content' => $sub_page_content,
+		);
+
+		// Render view 
+		$this->load->view( 'index', $this->view );
+	}
+
+	public function ot_list()
+	{
+		if ($this->default_period_filter == 5)
+			set_filter_period( 2 );
+
+		$this->_init_profile();
+		if ( !$this->access_report )
+		{	
+			$this->session->set_flashdata( 'message', array
+			( 
+				'type' => false,	
+				'message' => 'No tiene permisos para ver el reporte "Ordones de trabajo" en la sección "Perfil de operaciones", informe a su administrador para que le otorge los permisos necesarios.'
+			));	
+			redirect( 'home', 'refresh' );
+		}
+		$this->load->helper( array('ot/ot'));
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+		}
+		$base_url = base_url();
+		$ramo = $this->uri->segment(3, 1);
+		$this->other_filters['ramo'] = $ramo;
+//generic_set_report_filter
+		
+		$gerente_str = '';
+		$agente_str = '<option value="">Todos</option>';
+		$ramo_tramite_types = array();
+		$patent_type_ramo = 0;
+		prepare_ot_form($this->other_filters, $gerente_str, $agente_str, $ramo_tramite_types, $patent_type_ramo);
+
+		if ($this->other_filters['coordinators'])
+			$selected_coordinators = explode('_', $this->other_filters['coordinators']);  
+		else
+			$selected_coordinators = array();
+		$inline_js = get_coordinator_form_field($selected_coordinators);
+
+		$content_data = array(
+			'access_all' => $this->access_report,
+			'period_fields' => show_period_fields('director', $ramo),
+			'agents' => $agente_str,
+			'gerentes' => $gerente_str,
+			'export_url' => $base_url . 'operations/report_export/' .  $this->user_id . '.html',
+			'coordinator_select' => $this->coordinator_select,
+			'other_filters' => $this->other_filters
+			);
+		$sub_page_content = $this->load->view('ot/list', $content_data, true);
+
+		$add_js = '
+<script type="text/javascript">
+	$( document ).ready( function(){ 
+		proagesOverview.tramiteTypes = {' . 
+implode(', ', $ramo_tramite_types) . '
+		};
+		$( "#patent-type").html(proagesOverview.tramiteTypes[0]);
+
+		$("#export-xls").bind( "click", function(){
+			$("#export-xls-input").val("export_xls");
+			$(this).parents("form").submit();
+		})
+
+	});
+	var submitThisForm = function() {
+		proagesOverview.getOts($( "#ot-form").serialize());
+//		getLinks();
+	}
+//	getLinks();
+</script>
+';
+		// Config view
+		$this->view = array(
+			'title' => 'Director',
+			 // Permisions
+			'user' => $this->sessions,
+			'user_vs_rol' => $this->user_vs_rol,
+			'roles_vs_access' => $this->roles_vs_access,
+			'css' => array(
+				'<link href="' . $base_url . 'ot/assets/style/report.css" rel="stylesheet">',
+				'<link href="' . $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
+				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
+				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">', // TO CHECK
+				'
+<style>
+.filterstable {margin-left: 2em; width:80%;}
+.filterstable th {text-align: left;}
+</style>',
+			),
+			'scripts' => array(
+'
+<script type="text/javascript">
+	$( document ).ready( function(){ 
+		Config.findUrl = "director/find.html";
+	});
+</script>
+',
+				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
+				'<script src="' . $base_url . 'ot/assets/scripts/list_js.js"></script>',
+				'<script src="' . $base_url . 'scripts/config.js"></script>',
+				'<script src="' . $base_url . 'ot/assets/scripts/overview.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/operations.js"></script>',				
+				$add_js,
+				$inline_js
+			),
+			'content' => 'director/director_profile',
+			'message' => $this->session->flashdata('message'),
+			'sub_page_content' => $sub_page_content,
+		);
+
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+	
+	}
+
+	
+// List OTs
+// Inspired from the code of agent/find and operations/find:
+	public function find()
+	{
+		// If is not ajax request redirect
+		if	( !$this->input->is_ajax_request() )
+			redirect( '/', 'refresh' );
+		$this->_init_profile();
+		$data = $this->_read_ots();
+		$view_data = array('data' => $data);
+		$this->load->view('ot/list_render', $view_data);
+	}
+
+	private function _read_ots()
+	{
+		// Load Helpers
+		$this->load->helper( array( 'ot/ot', 'ot/date', 'filter' ) );
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+		}
+		$data = get_ot_data($this->other_filters, $this->access_report);
+		return $data;
+	}
+	
+	
 /* End of file director.php */
 /* Location: ./application/modules/director/controllers/director.php */
 }

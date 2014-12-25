@@ -67,7 +67,7 @@ if ($current_page === FALSE)
             <div class="row">
                 <a id="plan-link" href="<?php echo $base_url ?>director/sales_planning.html" class="span5 subpage-link<?php if (($current_page == 'sales_planning') || ($current_page == 'index') || ($current_page == 'meta') || ($current_page == 'simulator')) echo ' subpage-link-current' ?>">PLANEACIÓN Y DESEMPEÑO DE VENTAS</a>
                 <a id="activity-link" href="<?php echo $base_url ?>director/sales_activities.html" class="span3 subpage-link<?php if (($current_page == 'sales_activities') || ($current_page == 'activities')) echo ' subpage-link-current' ?>">ACTIVIDAD DE VENTAS</a>
-                <a id="ot-link" href="<?php echo $base_url ?>director/ot.html" class="span4 subpage-link<?php if ($current_page == 'ot') echo ' subpage-link-current' ?>">ORDENES DE TRABAJO</a>
+                <a id="ot-link" href="<?php echo $base_url ?>director/ot.html" class="span4 subpage-link<?php if (($current_page == 'ot') || ($current_page == 'ot_list')) echo ' subpage-link-current' ?>">ORDENES DE TRABAJO</a>
             </div>
 <?php if (($current_page == 'sales_activities') || ($current_page == 'activities')): ?>
             <div class="row">
