@@ -146,6 +146,7 @@ class Ot extends CI_Controller {
 			}
 		}
 		$this->ot_r_misc_filter = $this->session->userdata('ot_r_misc_filter');
+
 	}
 
 // Show all records	
@@ -1276,6 +1277,9 @@ implode(', ', $ramo_tramite_types) . '
 			$process = 'choose-agents';
 			$product = $_POST['product'];
 			// Load Model
+
+			$save_setting = @ini_get('auto_detect_line_endings');
+			@ini_set('auto_detect_line_endings', true);
 			$this->load->model( array( 'work_order', 'usuarios/user' ) );
 			$tmp_file = $_POST['tmp_file'];
 			$name = explode( '.', $tmp_file );
@@ -1294,6 +1298,7 @@ implode(', ', $ramo_tramite_types) . '
 				 	 $file_array = $this->reader_csv->reader();
 				}
 			}
+			@ini_set('auto_detect_line_endings', $save_setting);
 			unset( $_POST['tmp_file'], $_POST['process'], $_POST['product'] );
 
 			$this->load->helper('date');
