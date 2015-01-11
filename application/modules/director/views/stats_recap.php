@@ -105,13 +105,13 @@ $export_segments[2] = 'stat_recap_export';
                     </tbody>
                     <tbody>
                       <tr>
-                        <td><a target="_blank" href="<?php echo $base_url ?>director/ot_list/1.html" title="Ver Detalles">Vida</a></td>
-                        <td><a target="_blank" href="<?php echo $base_url ?>director/ot_list/1.html" title="Ver Detalles">
+                        <td><a target="_self" href="<?php echo $base_url ?>director/ot_list/1.html" title="Ver Detalles">Vida</a></td>
+                        <td><a target="_self" href="<?php echo $base_url ?>director/ot_list/1.html" title="Ver Detalles">
 <?php echo $stats['per_ramo_tramite'][1]['all']; ?>
                         </a></td>
                         <td>
                         </td>
-                        <td><a target="_blank" href="<?php echo $base_url ?>director/ot_list/1.html" title="Ver Detalles">
+                        <td><a target="_self" href="<?php echo $base_url ?>director/ot_list/1.html" title="Ver Detalles">
 <?php $percent = $stats['recap-left'] ? round(100 * $stats['per_ramo_tramite'][1]['all'] / $stats['recap-left']) . '%' : $na_value; echo $percent; ?>
                         </a></td>
                       </tr>
@@ -129,13 +129,13 @@ endforeach;?>
 
                     <tbody>
                       <tr>
-                        <td><a target="_blank" href="<?php echo $base_url ?>director/ot_list/2.html" title="Ver Detalles">Gastos Médicos</a></td>
-                        <td><a target="_blank" href="<?php echo $base_url ?>director/ot_list/2.html" title="Ver Detalles">
+                        <td><a target="_self" href="<?php echo $base_url ?>director/ot_list/2.html" title="Ver Detalles">Gastos Médicos</a></td>
+                        <td><a target="_self" href="<?php echo $base_url ?>director/ot_list/2.html" title="Ver Detalles">
 <?php echo $stats['per_ramo_tramite'][2]['all']; ?>
                         </a></td>
                         <td>
                         </td>
-                        <td><a target="_blank" href="<?php echo $base_url ?>director/ot_list/2.html" title="Ver Detalles"><?php $percent = $stats['recap-left'] ? round(100 * $stats['per_ramo_tramite'][2]['all'] / $stats['recap-left']) . '%' : $na_value; echo $percent; ?>
+                        <td><a target="_self" href="<?php echo $base_url ?>director/ot_list/2.html" title="Ver Detalles"><?php $percent = $stats['recap-left'] ? round(100 * $stats['per_ramo_tramite'][2]['all'] / $stats['recap-left']) . '%' : $na_value; echo $percent; ?>
                         </a></td>
                       </tr>
 <?php foreach ($stats['per_ramo_tramite'][2] as $key => $value) :
@@ -152,14 +152,14 @@ endforeach;?>
 
                     <tbody>
                       <tr>
-                        <td><a target="_blank" href="<?php echo $base_url ?>director/ot_list/3.html" title="Ver Detalles">Automóviles</a></td>
-                        <td><a target="_blank" href="<?php echo $base_url ?>director/ot_list/3.html" title="Ver Detalles">
+                        <td><a target="_self" href="<?php echo $base_url ?>director/ot_list/3.html" title="Ver Detalles">Automóviles</a></td>
+                        <td><a target="_self" href="<?php echo $base_url ?>director/ot_list/3.html" title="Ver Detalles">
 <?php echo $stats['per_ramo_tramite'][3]['all']; ?>
                         </a></td>
 
                         <td>
                         </td>
-                        <td><a target="_blank" href="<?php echo $base_url ?>director/ot_list/3.html" title="Ver Detalles">
+                        <td><a target="_self" href="<?php echo $base_url ?>director/ot_list/3.html" title="Ver Detalles">
 <?php $percent = $stats['recap-left'] ? round(100 * $stats['per_ramo_tramite'][3]['all'] / $stats['recap-left']) . '%' : $na_value; echo $percent; ?>
                         </a></td>
                       </tr>
