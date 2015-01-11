@@ -140,7 +140,7 @@ if (!$agent_profile_page && !$operation_profile_page && !$director_profile_page)
 <?php if ($operation_profile_page || $director_profile_page): ?>
 					    <input type="hidden" value="" id="export-xls-input" name="export_xls_input" disabled="disabled" />
 <?php if (isset($coordinator_select)): ?>
-<div class="row">
+<div class="row" style="padding-left: 2em">
 	<div class="span2">
 Coordinadores&nbsp;:
 	</div>
@@ -149,7 +149,7 @@ Coordinadores&nbsp;:
 	</div>
 </div>	
 <?php endif; ?>	
-<div class="row">	
+<div class="row" style="padding-left: 2em">	
 	<div class="span2">
 	Número&nbsp;:
 	</div>
