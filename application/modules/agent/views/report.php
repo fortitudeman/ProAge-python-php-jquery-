@@ -42,7 +42,7 @@ if (TRUE):
 $segments = $this->uri->rsegment_array();
 $segments[1] = 'simulator';
 $segments[2] = 'index';
-$simulator_url = $base_url . implode('/', $segments) . '/1.html';
+$simulator_url = $base_url . implode('/', $segments) . '.html';
 ?>
                     <a style="margin-left: 3em" href="<?php echo $simulator_url; ?>" class="btn btn-primary" target="_blank">
                     VER META</a>
