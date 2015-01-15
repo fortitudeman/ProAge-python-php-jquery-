@@ -41,9 +41,23 @@ $month_texts = array(
 	11 => 'Noviembre',
 	12 => 'Diciembre',
 );
-
-$fields_not_shown = array('imported_folio', 'imported_agent_name', 'import_date');
-
+$head_cells = array(
+	'is_new' => 'Es nuevo negocio',
+	'year_prime' => 'Año prima',
+	'wathdo' => '¿Asignar el pago a OT?',
+	'payment_date' => 'Fecha de pago real',
+	'clave' => 'Clave',
+	'agent_uidsnational' => 'Folio national',
+	'agent_uidsprovincial' => 'Folio provincial',
+	'agent' => 'Agente',
+	'uid' => 'Poliza',
+	'amount' => 'Prima',
+	'percentage' => 'Porcentaje',
+	'product_id' => 'Ramo',
+//	'name' => 'Asegurado',
+	'name' => 'Nombre del agente importado'
+);
+$fields_not_shown = array('wathdo', 'imported_folio', 'imported_agent_name', 'import_date', '');
 $is_posted = (count($_POST) > 0);
 ?>
 
@@ -211,11 +225,11 @@ $is_posted = (count($_POST) > 0);
               </div>
             </div>
 <?php endif; ?>
-            <div class="alert alert-info">
+            <div style="display: none" class="alert alert-info">
             	Especifique a qué campos corresponde la información que está importando en las siguientes cajas de selección
             </div>
             
-            <div style="max-width:100%; overflow:scroll; max-height:400px;">
+            <div style="max-width:100%; overflow:scroll; max-height:400px; display: none">
             
             <table class="table table-rounder">
              
@@ -358,21 +372,8 @@ $is_posted = (count($_POST) > 0);
 							if( !empty( $rows ) ): 
 								echo '<tr>';
 								foreach( $rows as $key => $value ): 
-									if( $key == 'is_new' )	$key = 'Es nuevo negocio';
-									if( $key == 'year_prime' )	$key = 'Año prima';
-									if( $key == 'wathdo' )	$key = '¿Asignar el pago a OT?';
-									if( $key == 'payment_date' )	$key = 'Fecha de pago real';
-									if( $key == 'clave' )	$key = 'Clave';
-									if( $key == 'agent_uidsnational' )	$key = 'Folio national';
-									if( $key == 'agent_uidsprovincial' )	$key = 'Folio provincial';
-									if( $key == 'agent' )	$key = 'Agente';
-									if( $key == 'uid' )	$key = 'Poliza';
-									if( $key == 'amount' )	$key = 'Prima';
-									if( $key == 'percentage' )	$key = 'Porcentaje';
-									if( $key == 'product_id' )	$key = 'Ramo';
-									if( $key == 'name' )	$key = 'Asegurado';
 									if (!in_array($key, $fields_not_shown))
-										echo '<th>'.$key.'</th>'; 
+										echo '<th>' . $head_cells[$key] . '</th>'; 
 								endforeach;
 								echo '</tr>'; 
 							endif;
@@ -438,22 +439,9 @@ $is_posted = (count($_POST) > 0);
 							if( $i > 0 ) break;
 							if( !empty( $rows ) ): 
 								echo '<tr>';
-								foreach( $rows as $key => $value ): 
-									if( $key == 'is_new' )	$key = 'Es nuevo negocio';
-									if( $key == 'year_prime' )	$key = 'Año prima';
-									if( $key == 'wathdo' )	$key = '¿Asignar el pago a OT?';
-									if( $key == 'payment_date' )	$key = 'Fecha de pago real';
-									if( $key == 'clave' )	$key = 'Clave';
-									if( $key == 'agent_uidsnational' )	$key = 'Folio national';
-									if( $key == 'agent_uidsprovincial' )	$key = 'Folio provincial';
-									if( $key == 'agent' )	$key = 'Agente';
-									if( $key == 'uid' )	$key = 'Poliza';
-									if( $key == 'amount' )	$key = 'Prima';
-									if( $key == 'percentage' )	$key = 'Porcentaje';
-									if( $key == 'product_id' )	$key = 'Ramo';
-									if( $key == 'name' )	$key = 'Asegurado';
+								foreach( $rows as $key => $value ):
 									if (!in_array($key, $fields_not_shown))
-										echo '<th>'.$key.'</th>'; 
+										echo '<th>' . $head_cells[$key] .  '</th>';
 								endforeach;
 								echo '</tr>'; 
 							endif;
