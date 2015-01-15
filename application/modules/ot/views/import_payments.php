@@ -355,7 +355,7 @@ $is_posted = (count($_POST) > 0);
             <input type="hidden" name="product" value="<?php echo $product ?>" />
             
             <div class="alert alert-info">
-            	Verifique los agentes y las OTs relacionadas
+            	Verifique los agentes relacionados
             </div>
             
             <div style="max-width:100%; overflow:scroll; max-height:400px;">
