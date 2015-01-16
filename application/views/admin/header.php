@@ -200,7 +200,7 @@ else
                         
                         <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
                         <?php if( $value['action_name'] == 'Ver reporte' ): ?>
-                        <li><a href="<?php echo base_url() ?>ot/reporte.html"><i class="icon-tasks"></i><span class="hidden-tablet">Reporte resultados</span></a></li>
+                        <li><a href="<?php echo base_url() ?>director"><i class="icon-tasks"></i><span class="hidden-tablet">Reporte directivo</span></a></li>
                         <?php endif; ?>
                         <?php endif; endforeach; endif; ?>
                         
