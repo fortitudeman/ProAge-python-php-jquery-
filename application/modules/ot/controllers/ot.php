@@ -1447,7 +1447,11 @@ implode(', ', $ramo_tramite_types) . '
 			// Load Model
 			$this->load->model( array( 'work_order', 'usuarios/user' ) );
 			$file_array = $this->work_order->getImportPaymentsTmp();
+			if (!$file_array)
+				$this->_abort_import(1);
 			$file_array = json_decode( $file_array[0]['data'] );
+			if (!$file_array)
+				$this->_abort_import(2);
 			$tmp_file = $_POST['tmp_file'];
 			$process = 'preview';
 			$product = $_POST['product'];
@@ -1500,7 +1504,11 @@ implode(', ', $ramo_tramite_types) . '
 		  // Load Model
 			$this->load->model( array( 'work_order', 'usuarios/user' ) );
 			$file_array = $this->work_order->getImportPaymentsTmp();
+			if (!$file_array)
+				$this->_abort_import(1);
 			$file_array = json_decode( $file_array[0]['data'] );
+			if (!$file_array)
+				$this->_abort_import(2);
   			$product = $_POST['product'];
 			$controlSaved = true;
 			$i = 1;
@@ -2782,7 +2790,40 @@ Display custom filter period
 			redirect( '/ot/import_payments', 'refresh' );
 		}
 	}
-	
+
+	private function _abort_import($error_code = NULL)
+	{
+		$error_messages = array(
+			0 => 'error desconocido. Informe a su administrador.',
+			1 => 'los datos de importación temporal están vacías. Informe a su administrador.',
+			2 => 'no se pudo decodificar los datos de importación. Divida el archivo de importación antes de importar de nuevo.'
+		);
+		if (!$error_code || !isset($error_messages[$error_code]))
+			$error_code = 0;
+
+		if (isset($_POST['tmp_file']) && $_POST['tmp_file'])
+		{
+			$tmp_file = $_POST['tmp_file'];
+			$name = explode( '.', $tmp_file );
+			if( $name[1] == 'xls' ){
+				$this->load->library( 'reader_excel' );
+				$this->reader_excel->setInstance( $tmp_file );
+				$this->reader_excel->drop();
+			}
+			else
+			{
+				$this->load->library( 'reader_csv' );
+				$this->reader_csv->setInstance( $tmp_file );
+				$this->reader_csv->drop();
+			}
+		}
+		$this->work_order->removeImportPaymentsTmp();
+		$this->session->set_flashdata( 'message', array( 
+			'type' => false,	
+			'message' => $error_messages[$error_code]
+		));
+		redirect( '/ot/import_payments', 'refresh' );			
+	}
 /* End of file ot.php */
 /* Location: ./application/controllers/ot.php */
 }
