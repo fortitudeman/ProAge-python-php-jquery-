@@ -1420,7 +1420,7 @@ implode(', ', $ramo_tramite_types) . '
 						}
 						$file_array[$i]['wathdo'] = '';	
 						$sometimes_imported['wathdo'] = '';
-						if( isset( $sometimes_imported['year_prime'] ) and ($sometimes_imported['year_prime'] == 1 ) &&
+/*						if( isset( $sometimes_imported['year_prime'] ) and ($sometimes_imported['year_prime'] == 1 ) &&
 							isset($sometimes_imported['uid']))
 						{
 							$policy = $this->work_order->getPolicyByUid( $sometimes_imported['uid'] );
@@ -1429,6 +1429,7 @@ implode(', ', $ramo_tramite_types) . '
 							else
 								$sometimes_imported['wathdo'] =  $this->work_order->getByPolicyUid( $sometimes_imported['uid'] );					
 						}
+*/
 					}
 					$file_array[$i] = array_merge($sometimes_imported, $always_imported);
 				}
