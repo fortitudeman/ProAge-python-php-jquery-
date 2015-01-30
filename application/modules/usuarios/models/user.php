@@ -1816,9 +1816,9 @@ class User extends CI_Model{
 		}
 		
 		$this->db->limit(1);
-				
+		$this->db->order_by('agent_uids.id', 'asc'); 
 		$query = $this->db->get();
-		
+
 		if ($query->num_rows() == 0){
 			 
 			 $options = '<select name="agent_id['.$optiongroup.']" class="required options-'.$optiongroup.'">';
@@ -1896,9 +1896,10 @@ class User extends CI_Model{
 			
 			$this->db->where( '(agent_uids.uid=\''.$uidorigin.'\' OR agent_uids.uid=\''.$uid.'\')' );
 		}
-
+		$this->db->limit(1);
+		$this->db->order_by('id', 'asc'); 
 		$query = $this->db->get();
-		
+
 		if ($query->num_rows() == 0) return null;
 				
 		foreach ($query->result() as $row)
