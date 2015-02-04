@@ -13,8 +13,24 @@
 
 */
 $uri_segments = $this->uri->rsegment_array();
+
+$without_ramo = $uri_segments;
+unset($without_ramo[4]);
+$without_ramo = base_url() . implode('/', $without_ramo);
+
 $is_director_page = ($uri_segments[1] == 'director');
+$is_simulator_page = ($uri_segments[1] == 'simulator');
+$is_meta_page = $is_simulator_page && isset($uri_segments[2]) &&
+	(($uri_segments[2] == 'index') || ($uri_segments[2] == 'getConfigMeta') ||
+	($uri_segments[2] == 'print_index')) ;
+
 $markup = $is_director_page ? 'h5' : 'h3';
+
+if ($is_simulator_page)
+{
+	$default_month = date('m');
+	$default_year = $selected_year;
+}
 ?>
 <?php if (!$for_print && !$is_director_page): ?>
 <div class="row-fluid sortable">		
@@ -56,17 +72,21 @@ $markup = $is_director_page ? 'h5' : 'h3';
 //			$uri_segments = $this->uri->rsegment_array();
 			$uri_segments[1] = 'simulator';		
 			$uri_segments[2] = 'print_index';
-			$link_attributes = 'class="btn btn-primary" id="print-button"';
 			if (!$for_print) {
-				$link_attributes .= ' target="_blank"';
+				$link_attributes = 'class="btn btn-primary print-preview" id="print-button" target="_blank"';
 				$link_text = 'Vista previa de impresión';
 			}
 			else {
+				$link_attributes = 'class="btn btn-primary" id="print-button"';
 				$link_text = 'Imprimir';
 				if (!$print_meta)
 					$uri_segments[2] = 'print_index_simulator';
 			}
-			
+			if (isset($selected_period) && isset($selected_year))
+			{
+				$uri_segments[5] = $selected_period;
+				$uri_segments[6] = $selected_year;
+			}
 			if ($ramo == "vida") $name_ramo = "Vida";
 			if ($ramo == "gmm") $name_ramo = "GMM";
 			if (!$users[0]['name']) $users[0]['name'] = $users[0]['company_name'];
@@ -75,26 +95,56 @@ $markup = $is_director_page ? 'h5' : 'h3';
           <<?php echo $markup ?>>Simulador de metas de <?php echo $name_ramo;?> para <?php echo $users[0]['name'] . " " . $users[0]['lastnames']?></<?php echo $markup ?>>
 
           <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 1 or isset( $ramo ) and $ramo == 'vida' ): $ramoID = 1; ?>  
-              <a href="../<?php echo $userid; ?>/1.html" class="links-menu btn btn-link" id="vida" style="color:#06F">Vida</a>
+              <a href="<?php echo $without_ramo ?>/1.html" class="links-menu btn btn-link" id="vida" style="color:#06F">Vida</a>
           <?php else: ?>   
-              <a href="../<?php echo $userid; ?>/1.html" class="links-menu btn btn-link" id="vida" style="color:#000">Vida</a>
+              <a href="<?php echo $without_ramo ?>/1.html" class="links-menu btn btn-link" id="vida" style="color:#000">Vida</a>
           <?php endif; ?>              
                               
           <?php if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 2 or isset( $ramo ) and $ramo == 'gmm' ): $ramoID = 2; ?> 
-              <a href="../<?php echo $userid; ?>/2.html" class="links-menu btn btn-link" id="gmm" style="color:#06F">GMM</a>
+              <a href="<?php echo $without_ramo ?>/2.html" class="links-menu btn btn-link" id="gmm" style="color:#06F">GMM</a>
           <?php else: ?>   
-              <a href="../<?php echo $userid; ?>/2.html" class="links-menu btn btn-link" id="gmm" style="color:#000">GMM</a>
+              <a href="<?php echo $without_ramo ?>/2.html" class="links-menu btn btn-link" id="gmm" style="color:#000">GMM</a>
           <?php endif; ?>     
-          
-          
+
           <?php /* if( isset( $data[0]['product_group_id'] ) and $data[0]['product_group_id'] == 3 or isset( $ramo ) and $ramo == 'autos' ): $ramoID = 3; ?> 
-              <a href="../<?php echo $userid; ?>/3.html" class="links-menu btn btn-link" id="autos" style="color:#06F">Autos</a>
+              <a href="<?php echo $without_ramo ?>/3.html" class="links-menu btn btn-link" id="autos" style="color:#06F">Autos</a>
           <?php else: ?>   
-              <a href="../<?php echo $userid; ?>/3.html" class="links-menu btn btn-link" id="autos" style="color:#000">Autos</a>
+              <a href="<?php echo $without_ramo ?>/3.html" class="links-menu btn btn-link" id="autos" style="color:#000">Autos</a>
           <?php endif; */ ?>        
           
           <form action="" method="post" id="form">
-          
+<?php if ($is_simulator_page): ?>
+            <div class="row" style="margin: 0 1em; <?php if ($for_print) echo 'display: none' ?>">
+              <select name="period" class="input-medium auto-submit" id="period">
+                <option <?php if ($selected_period == $default_month) echo 'selected'; ?> value="<?php echo $default_month; ?>">Mensual</option>
+<?php if ($ramo == 'gmm'): ?>
+                <option <?php if ($selected_period == '121') echo 'selected'; ?> value="121">Cuatrimestre 1</option>
+                <option <?php if ($selected_period == '122') echo 'selected'; ?>  value="122">Cuatrimestre 2</option>
+                <option <?php if ($selected_period == '123') echo 'selected'; ?> value="123">Cuatrimestre 3</option>
+<?php else: ?>
+                <option <?php if ($selected_period == '111') echo 'selected'; ?> value="111">Trimestre 1</option>
+                <option <?php if ($selected_period == '112') echo 'selected'; ?> value="112">Trimestre 2</option>
+                <option <?php if ($selected_period == '113') echo 'selected'; ?> value="113">Trimestre 3</option>
+                <option <?php if ($selected_period == '114') echo 'selected'; ?> value="114">Trimestre 4</option>
+<?php endif ?>
+                <option <?php if ($selected_period == '0') echo 'selected'; ?> value="0">Annual</option>
+              </select>
+              &nbsp;
+              <select name="year" id="year" class="input-small auto-submit">
+<?php for ($i = -15; $i < 15; $i++): 
+	$year_option = date('Y', mktime(0, 0, 0, date('m'),  date('d'),  date('Y') + $i));
+	$selected = ($year_option == $default_year) ? 'selected' : ''
+?>
+	<option id="year-option-<?php echo $year_option ?>" value="<?php echo $year_option ?>" <?php echo $selected ?>><?php echo $year_option ?></option>
+
+<?php endfor ?>
+              </select>
+              &nbsp;
+              <span title="Escriba el nombre del agente que desea buscar y selecciónelo de la lista que aparece. Puede buscar más posteriormente en la siguiente línea.">
+                <textarea placeholder="AGENTES" id="agent-name" name="agent_name" rows="1" class="input-xlarge select4" style="min-width: 250px; height: 2.2em"><?php echo $other_filters['agent_name']; ?></textarea>
+			  </span>
+            </div>
+<?php endif ?>
           <input type="hidden" id="ramo" name="ramo" value="<?php if( isset( $ramoID ) ) echo $ramoID; else echo 1; ?>" />    
           
           <input type="hidden" id="userid" name="userid" value="<?php echo $userid ?>" />    
@@ -106,9 +156,10 @@ $markup = $is_director_page ? 'h5' : 'h3';
         <!-- <img src="<?php echo base_url() ?>images/distribucion.png" /> -->
          
          <div class="row" style="margin-right: 3em">
+<?php if (!$is_meta_page) :?>
 <?php if (!$for_print || !$print_meta) :?>
          <div class="span11 simulator" id="simulator-section" style="margin-left:40px;">
-         	<?php $data[0]['data'] ?>
+         	<?php /* $data[0]['data']  */ ?>
             <?php
 				if( isset( $data[0]['data'] ) )
 					$dataview = array( 'data' => $data[0]['data'] );
@@ -118,6 +169,8 @@ $markup = $is_director_page ? 'h5' : 'h3';
 			?>
          </div>
 <?php endif; ?>
+<?php endif; ?>
+
 <?php if (!$for_print || $print_meta) :?>
           <div class="span12 metas" id="meta-section">
             <?php

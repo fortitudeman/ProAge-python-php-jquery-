@@ -102,32 +102,30 @@ class Simulators extends CI_Model{
 /**
  |	Remove 
  **/ 	
-	 public function delete( $table = '', $field = 'id', $value = null ){
-        
+	public function delete( $table = '', $field = 'id', $value = null ){
 		if( empty( $table ) or empty( $field )  or empty( $value ) ) return false;
-					   
 			if( $this->db->delete( $table, array( $field => $value ) ) )
-			
-					return true;
-			
+				return true;
 			else
-			
 				return false;
-			
-			
-				
     }
 
-
-
-
+/**
+ A more generic delete
+ **/ 
+	public function generic_delete( $table = '', $where = array() )
+	{
+		if (empty($table))
+			return false;
+		if ($where)
+			$result = $this->db->delete( $table, $where);
+		else
+			$result = $this->db->delete( $table);
+		return $result;
+    }
 
 // Return insert id
 	public function insert_id(){   return $this->insertId;  }
-	
-	
-	
-
 
 // Getting by Agent
 	public function getByAgent( $agent = null, $ramo = null ){
@@ -163,14 +161,158 @@ class Simulators extends CI_Model{
 			);
 			
 		//echo "<pre>". print_r($data). "</pre>";		
-				
 		return $data;
 		
-	}	
-	
-	
-	
-	
+	}
+
+// Getting by Agent
+	public function getByAgentNew( $table = 'meta_new', $agent = null, $ramo = null, $period = 0, $year = null)
+	{
+		$data = array();
+		if ( empty( $agent ) || empty($ramo) || ($ramo < 1) || ($ramo > 3))
+			return $data;
+		if (empty($year))
+			$year = date('Y');
+		$this->db->select( $table . '.*, users.name, users.lastnames' );
+		$this->db->from( $table );
+		$this->db->join( 'agents', $table . '.agent_id=agents.id' );
+		$this->db->join( 'users', 'agents.user_id=users.id' );
+		$where = array(
+			'agent_id' => (int)$agent,
+			'ramo' => (int)$ramo,
+			'period' => (int)$period,
+			'year' => (int)$year
+		);
+		$this->db->where($where);
+		$this->db->order_by( $table . '.id', 'desc' );
+		$this->db->limit(1);
+		$query = $this->db->get();
+
+		if ($query->num_rows() == 0)
+		{
+			if ( ($year == date('Y')) && ($period == 0) )  // check 'old' table
+			{
+				$data = $this->getByAgent( $agent, $ramo );
+//				if (isset($data[0]))
+//					$this->db->delete('simulator', array('id' => $data[0]['id']));
+			}
+		}
+		foreach ($query->result() as $row)
+		{
+			$result_row = array(
+            	'id' => $row->id,
+            	'name' => $row->name,
+            	'lastnames' => $row->lastnames,
+				'data' => $row
+				);
+			if ($table == 'meta_new')
+			{
+				$computed_fields = array();
+				foreach ($this->computed_meta_fields as $value)
+					$result_row['data']->$value = 0;
+				for ($i = 1; $i < 12; $i++)
+				{
+					if ($row->ramo == 1)
+					{
+						switch (TRUE)
+						{
+							case ($i < 4):
+								$result_row['data']->{'primas-meta-primer'} += $row->{'primas-meta-' . $i};
+								$result_row['data']->{'primas-negocio-meta-primer'} += $row->{'primas-negocios-meta-' . $i};
+								$result_row['data']->{'primas-solicitud-meta-primer'} += $row->{'primas-solicitud-meta-' . $i};
+								break;
+							case (($i >= 4) && ($i < 7)):
+								$result_row['data']->{'primas-meta-segund'} += $row->{'primas-meta-' . $i};
+								$result_row['data']->{'primas-negocio-meta-segund'} += $row->{'primas-negocios-meta-' . $i};
+								$result_row['data']->{'primas-solicitud-meta-segund'} += $row->{'primas-solicitud-meta-' . $i};						break;
+							case (($i >= 7) && ($i < 10)):
+								$result_row['data']->{'primas-meta-tercer'} += $row->{'primas-meta-' . $i};
+								$result_row['data']->{'primas-negocio-meta-tercer'} += $row->{'primas-negocios-meta-' . $i};
+								$result_row['data']->{'primas-solicitud-meta-tercer'} += $row->{'primas-solicitud-meta-' . $i};
+								break;
+							case (($i >= 10) && ($i <= 12)):
+								$result_row['data']->{'primas-meta-cuarto'} += $row->{'primas-meta-' . $i};
+								$result_row['data']->{'primas-negocio-meta-cuarto'} += $row->{'primas-negocios-meta-' . $i};
+								$result_row['data']->{'primas-solicitud-meta-cuarto'} += $row->{'primas-solicitud-meta-' . $i};
+								break;
+							default:
+								break;
+						}
+					}
+					else
+					{
+						switch (TRUE)
+						{
+							case ($i < 5):
+								$result_row['data']->{'primas-meta-primer'} += $row->{'primas-meta-' . $i};
+								$result_row['data']->{'primas-negocio-meta-primer'} += $row->{'primas-negocios-meta-' . $i};
+								$result_row['data']->{'primas-solicitud-meta-primer'} += $row->{'primas-solicitud-meta-' . $i};
+								break;
+							case (($i >= 5) && ($i < 9)):
+								$result_row['data']->{'primas-meta-second'} += $row->{'primas-meta-' . $i};
+								$result_row['data']->{'primas-negocio-meta-second'} += $row->{'primas-negocios-meta-' . $i};
+								$result_row['data']->{'primas-solicitud-meta-second'} += $row->{'primas-solicitud-meta-' . $i};						break;
+							case (($i >= 0) && ($i <= 12)):
+								$result_row['data']->{'primas-meta-tercer'} += $row->{'primas-meta-' . $i};
+								$result_row['data']->{'primas-negocio-meta-tercer'} += $row->{'primas-negocios-meta-' . $i};
+								$result_row['data']->{'primas-solicitud-meta-tercer'} += $row->{'primas-solicitud-meta-' . $i};
+								break;
+							default:
+								break;
+						}
+					}
+					$result_row['data']->{'primas-meta-total'} += $row->{'primas-meta-' . $i};
+					$result_row['data']->{'primas-negocios-meta-total'} += $row->{'primas-negocios-meta-' . $i};
+					$result_row['data']->{'primas-solicitud-meta-total'} += $row->{'primas-solicitud-meta-' . $i};
+				}
+				$data[] = $result_row;
+			}
+		}
+		if (!isset($data[0]))
+			return $data;
+		// for gmm, some data are expected as arrays
+//		$primas_promedio = ($data[0]['data']->primas_promedio >= $data[0]['data']->primaspromedio) ?
+//			$data[0]['data']->primas_promedio : $data[0]['data']->primaspromedio;
+		$primas_promedio = isset($data[0]['data']->primas_promedio) ? $data[0]['data']->primas_promedio : 0;
+		if (isset($data[0]['data']->primaspromedio) && ($data[0]['data']->primaspromedio > $primas_promedio))
+			$primas_promedio = $data[0]['data']->primaspromedio;
+		$data[0]['data']->primas_promedio = $primas_promedio;
+		$data[0]['data']->primaspromedio = $primas_promedio;
+		if (!isset($data[0]['data']->prima_total_anual))
+		{
+			if (isset($data[0]['data']->primasAfectasInicialesUbicar))
+				$data[0]['data']->prima_total_anual = $data[0]['data']->primasAfectasInicialesUbicar;
+			elseif (isset($data[0]['data']->primasnetasiniciales))
+				$data[0]['data']->prima_total_anual = $data[0]['data']->primasnetasiniciales;
+			else
+				$data[0]['data']->prima_total_anual = 0;
+		}
+
+		if ($table == 'meta_new')
+		{
+			$total = (float)$data[0]['data']->prima_total_anual;
+			for ($i = 1; $i <= 12; $i++)
+				$data[0]['data']->{'mes-' . $i} = round(($data[0]['data']->{'primas-meta-' . $i} / $total * 10000) * 100) / 10000;
+		}
+		else
+		{
+			foreach ($this->maybe_array_fields as $field_name)
+			{
+				if (!isset($data[0]['data']->$field_name))
+				{
+					$to_add = array();
+					for ($i = 1; $i <= 4; $i++)
+					{
+						if (isset($data[0]['data']->{$field_name . '_' . $i}))
+							$to_add[$i] = $data[0]['data']->{$field_name . '_' . $i};
+					}
+					$data[0]['data']->$field_name = $to_add;
+				}
+			}
+		}
+		return $data;
+	}
+
 // Getting config
 	public function getConfig(){
 				
@@ -203,7 +345,24 @@ class Simulators extends CI_Model{
 		return $data;
 		
 	}		
-	
+
+	public function getNewConfigMetas($where)
+	{
+		//SELECT * FROM simulator_default_estacionalidad ORDER BY id DESC;
+		$this->db->select();
+		$this->db->from( 'simulator_default_estacionalidad' );
+		if ($where)
+			$this->db->where($where);
+		$this->db->order_by( 'id', 'asc' );
+		$query = $this->db->get();
+		if ($query->num_rows() == 0)
+			return false;
+
+		$data = array();
+		foreach ($query->result_array() as $row)
+			$data[] = $row;
+		return $data;
+	}	
 	
 	public function getConfigMetas( $year = false, $trimestre = null, $cuatrimestre = null ){
 				
@@ -429,5 +588,37 @@ class Simulators extends CI_Model{
 		return $trim;
 	}
 
+	public function create_update($table, $values = NULL)
+	{
+		if ( empty( $table ) or empty( $values ) )
+			return false;
+		$result = false;
+		$query = $this->db->get_where($table, array(
+			'period' => $values['period'],
+			'agent_id' => $values['agent_id'],
+			'ramo' => $values['ramo'],
+			'year' => $values['year'],
+			),
+			1, 0);
+		if ($query->num_rows() > 0)	// update existing row
+		{
+			$old_row = $query->row();
+			$this->db->where('id', $old_row->id);
+			$values['date'] = date( 'Y-m-d H:i:s' ) ;
+			$result = $this->db->update($table, $values);
+			if ($result)
+				$result = $old_row->id;
+		}
+		else
+		{
+			$result = $this->db->insert( $table, $values );
+			if ($result)
+			{
+				$this->insertId = $this->db->insert_id();
+				$result = $this->insertId;
+			}
+		}
+		return $result;
+	}
 }
 ?>

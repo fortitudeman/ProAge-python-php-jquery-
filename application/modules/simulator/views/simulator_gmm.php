@@ -13,6 +13,8 @@
 
   	
 */
+$uri_segments = $this->uri->rsegment_array();
+$is_simulator_page = ($uri_segments[1] == 'simulator');
 
 ?>  <input type="hidden" id="saves" name="saves" value="<?php if( !empty( $data ) ) echo 1; else echo 0; ?>" />    
 
@@ -55,9 +57,11 @@
            <td>
            <input type="hidden" name="periodo" id="periodo" value="12">
            <label>Primas netas iniciales anuales:</label></td>
+           <td>
+		   <input type="text" class="input-small" name="primasnetasiniciales" id="primasnetasiniciales" value="<?php if( isset( $data->primasnetasiniciales ) ) echo $data->primasnetasiniciales; else if( isset( $data->primasAfectasInicialesUbicar ) ) echo $data->primasAfectasInicialesUbicar; else echo 0; ?>">
+           <input type="hidden" class="input-small" name="primasAfectasInicialesUbicar" id="primasAfectasInicialesUbicar" value="<?php if( isset( $data->primasAfectasInicialesUbicar ) ) echo $data->primasAfectasInicialesUbicar; else if( isset( $data->primasnetasiniciales ) ) echo $data->primasnetasiniciales; else echo 0; ?>">
+		   </td>
 
-           <td><input type="text" class="input-small" name="primasnetasiniciales" id="primasnetasiniciales" value="<?php if( isset( $data->primasnetasiniciales ) ) echo $data->primasnetasiniciales; else if( isset( $data->primasAfectasInicialesUbicar ) ) echo $data->primasAfectasInicialesUbicar; else echo 0; ?>"></td>
-		   
            <td><label>% de acotamiento:</label></td>
 
            <td><input type="text" class="input-small" name="porAcotamiento" id="porAcotamiento" value="<?php if( isset( $data->porAcotamiento ) ) echo $data->porAcotamiento; else echo 0; ?>"></td>
@@ -68,7 +72,13 @@
            <td><label>Primas promedio</label></td>
            <td><input type="text" class="input-small" name="primaspromedio" id="primaspromedio" value="<?php if( isset( $data->primaspromedio ) ) echo $data->primaspromedio; elseif( isset( $data->primas_promedio ) ) echo $data->primas_promedio; else echo 0; ?>"></td> 
            <td><label>No Negocios:</label></td>
-           <td><input type="text" readonly="readonly" class="input-small" name="nonegocios" id="nonegocios" value="<?php if( isset( $data->nonegocios ) ) echo $data->nonegocios; else echo 0; ?>"></td>
+           <td>
+<?php if ($is_simulator_page): ?>
+           <input type="text" readonly="readonly" class="input-small" name="noNegocios" id="noNegocios" value="<?php if( isset( $data->noNegocios ) ) echo $data->noNegocios; else echo 0; ?>">
+<?php else: ?>
+           <input type="text" readonly="readonly" class="input-small" name="nonegocios" id="nonegocios" value="<?php if( isset( $data->nonegocios ) ) echo $data->nonegocios; else echo 0; ?>">
+<?php endif; ?>
+           </td>
         </tr>
 </table>
     
@@ -83,15 +93,60 @@
         
         <tr onClick="ShowHideRow(1)" style="cursor: pointer;">
            <td><p>Primas del período:</p>
-           <input type="hidden" name="simulatorPrimasPeriod[1]" id="simulatorPrimasPeriod[1]" value="<?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } } else echo 0; ?>" />
+
+<?php
+$simulatorPrimasPeriod = array(1 => 0, 2 => 0, 3 => 0, 4 => 0);
+if ( isset($data->simulatorPrimasPeriod) )
+{
+	if (is_object($data->simulatorPrimasPeriod))
+	{
+		foreach ($simulatorPrimasPeriod as $sim_key => $sim_value)
+		{
+			if (isset($data->simulatorPrimasPeriod->$sim_key))
+				$simulatorPrimasPeriod[$sim_key] = $data->simulatorPrimasPeriod->$sim_key;		
+		}
+	}
+	elseif (is_array($data->simulatorPrimasPeriod))
+	{
+		foreach ($simulatorPrimasPeriod as $sim_key => $sim_value)
+		{
+			if (isset($data->simulatorPrimasPeriod[$sim_key]))
+				$simulatorPrimasPeriod[$sim_key] = $data->simulatorPrimasPeriod[$sim_key];		
+		}
+	}
+}
+
+$simulatorIngresosPeriod = array(1 => 0, 2 => 0, 3 => 0, 4 => 0);
+if ( isset($data->simulatorIngresosPeriod) )
+{
+	if (is_object($data->simulatorIngresosPeriod))
+	{
+		foreach ($simulatorIngresosPeriod as $sim_key => $sim_value)
+		{
+			if (isset($data->simulatorIngresosPeriod->$sim_key))
+				$simulatorIngresosPeriod[$sim_key] = $data->simulatorIngresosPeriod->$sim_key;		
+		}
+	}
+	elseif (is_array($data->simulatorIngresosPeriod))
+	{
+		foreach ($simulatorIngresosPeriod as $sim_key => $sim_value)
+		{
+			if (isset($data->simulatorIngresosPeriod[$sim_key]))
+				$simulatorIngresosPeriod[$sim_key] = $data->simulatorIngresosPeriod[$sim_key];		
+		}
+	}
+}
+?>
+
+           <input type="hidden" name="simulatorPrimasPeriod[1]" id="simulatorPrimasPeriod[1]" value="<?php echo $simulatorPrimasPeriod[1]; ?>" />
            </td>
-           <td><div id="simulatorPrimasPeriod_text[1]">$ <?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } } else echo 0; ?></div></td>		   
-           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[1]" id="simulatorIngresosPeriod[1]" value="<?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } } else echo 0; ?>" /></td>
-           <td><div id="simulatorIngresosPeriod_text[1]">$ <?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 1; echo $field->$key; } } else echo 0; ?></div></td>
+           <td><div id="simulatorPrimasPeriod_text[1]">$ <?php echo $simulatorPrimasPeriod[1]; ?></div></td>		   
+           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[1]" id="simulatorIngresosPeriod[1]" value="<?php echo $simulatorIngresosPeriod[1]; ?>" /></td>
+           <td><div id="simulatorIngresosPeriod_text[1]">$ <?php echo $simulatorIngresosPeriod[1]; ?></div></td>
         </tr>
         <tr id="row1" style="display:none">
         <td colspan="4">
-        <?php showSimulator(1,$data); ?>
+        <?php showSimulator($is_simulator_page, 1, $data); ?>
         </td>
         </tr>
         
@@ -101,15 +156,15 @@
         
         <tr onClick="ShowHideRow(2)" style="cursor: pointer;">
            <td><p>Primas del período:</p>
-           <input type="hidden" name="simulatorPrimasPeriod[2]" id="simulatorPrimasPeriod[2]" value="<?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } } else echo 0; ?>" />
+           <input type="hidden" name="simulatorPrimasPeriod[2]" id="simulatorPrimasPeriod[2]" value="<?php echo $simulatorPrimasPeriod[2]; ?>" />
            </td>
-           <td><div id="simulatorPrimasPeriod_text[2]">$ <?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } } else echo 0; ?></div></td>		   
-           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[2]" id="simulatorIngresosPeriod[2]" value="<?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } } else echo 0; ?>" /></td>
-           <td><div id="simulatorIngresosPeriod_text[2]">$ <?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 2; echo $field->$key; } } else echo 0; ?></div></td>
+           <td><div id="simulatorPrimasPeriod_text[2]">$ <?php echo $simulatorPrimasPeriod[2]; ?></div></td>		   
+           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[2]" id="simulatorIngresosPeriod[2]" value="<?php echo $simulatorIngresosPeriod[2]; ?>" /></td>
+           <td><div id="simulatorIngresosPeriod_text[2]">$ <?php echo $simulatorIngresosPeriod[2]; ?></div></td>
         </tr>
         <tr id="row2" style="display:none">
         <td colspan="4">
-        <?php showSimulator(2,$data); ?>
+        <?php showSimulator($is_simulator_page, 2, $data); ?>
         </td>
         </tr>
         
@@ -119,15 +174,15 @@
         
         <tr onClick="ShowHideRow(3)" style="cursor: pointer;">
            <td><p>Primas del período:</p>
-           <input type="hidden" name="simulatorPrimasPeriod[3]" id="simulatorPrimasPeriod[3]" value="<?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } } else echo 0; ?>" />
+           <input type="hidden" name="simulatorPrimasPeriod[3]" id="simulatorPrimasPeriod[3]" value="<?php echo $simulatorPrimasPeriod[3]; ?>" />
            </td>
-           <td><div id="simulatorPrimasPeriod_text[3]">$ <?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorPrimasPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } } else echo 0; ?></div></td>		   
-           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[3]" id="simulatorIngresosPeriod[3]" value="<?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } } else echo 0; ?>" /></td>
-           <td><div id="simulatorIngresosPeriod_text[3]">$ <?php if ( isset($data->simulatorPrimasPeriod) ) { $field = $data->simulatorIngresosPeriod; if( isset( $field ) ) { $key = 3; echo $field->$key; } } else echo 0; ?></div></td>
+           <td><div id="simulatorPrimasPeriod_text[3]">$ <?php echo $simulatorPrimasPeriod[3]; ?></div></td>		   
+           <td><p>Ingresos del período</p><input type="hidden" name="simulatorIngresosPeriod[3]" id="simulatorIngresosPeriod[3]" value="<?php echo $simulatorIngresosPeriod[3]; ?>" /></td>
+           <td><div id="simulatorIngresosPeriod_text[3]">$ <?php echo $simulatorIngresosPeriod[3]; ?></div></td>
         </tr>
         <tr id="row3" style="display:none">
         <td colspan="4">
-        <?php showSimulator(3,$data); ?>
+        <?php showSimulator($is_simulator_page, 3, $data); ?>
         </td>
         </tr>
         
@@ -168,7 +223,7 @@
  </div> 
 
 <?php 
-function showSimulator($i,$data) {
+function showSimulator($is_simulator_page, $i, $data) {
 ?>
 <table width="100%">
         <tr>
@@ -318,9 +373,32 @@ function showSimulator($i,$data) {
               
            </td>           
            <td><label>% de bono ganado:</label></td>
+           <td>
+<?php
 
-           <td><input readonly="readonly" type="text" name="porbonoganado[<?php echo $i ?>]" id="porbonoganado[<?php echo $i ?>]" value="<?php if ( isset($data->porbonoganado) ) { $field = $data->porbonoganado; if( isset( $field->$i ) ) echo $field->$i; else echo 0; } else echo 0; ?>"></td>
+if ($is_simulator_page)
+{
+	$b_name = "porbonoGanado_$i";
+	$b_value = (isset($data->$b_name)) ? $data->$b_name : 0;
+}
+else
+{
+	$b_name = 'porbonoganado[' . $i . ']';
+	if ( isset($data->porbonoganado) ) 
+	{
+		$field = $data->porbonoganado; 
+		if( isset( $field->$i ) )
+			$b_value = $field->$i;
+		else
+			$b_value = 0;
+	} 
+	else
+		$b_value = 0;
+}
 
+?>
+<input readonly="readonly" type="text" name="<?php echo $b_name; ?>" id="<?php echo $b_name; ?>" value="<?php echo $b_value; ?>">
+           </td>
         </tr>
 
         <tr>

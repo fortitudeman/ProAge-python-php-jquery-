@@ -21,7 +21,32 @@ function stickyFooter(){
         .scroll(positionFooter)
         .resize(positionFooter)
 }
-$( document ).ready(function() {	
+$( document ).ready(function() {
+
+	function selectDefaultYear() {
+		var selectedPeriod = $( '#period option:selected' ).val();
+		var yearToSelect = new Date().getFullYear();
+		if ((selectedPeriod > 10) && (selectedPeriod < 100))
+			yearToSelect++;
+		var current;
+		$( '#year option' ).each(function() {
+			current = $(this);
+			if (current.val() == yearToSelect)
+				current.prop('selected', true);
+			else
+				current.prop('selected', false);
+		})
+	}
+
+	$( '#period' ).on( 'change', function(){
+		selectDefaultYear();
+	});
+
+	$( '.auto-submit' ).bind( 'change', function(){
+		$( "#form").submit();
+		return false;
+	});
+
 	stickyFooter(); 	
 	$( '.simulator' ).hide();
 	$( '.primas-meta-selector' ).bind( 'click', function(){		
@@ -34,7 +59,7 @@ $( document ).ready(function() {
 			if(  !isNaN( $( '#primas-meta-'+i ).val() ) )
 				total += parseFloat( $( '#primas-meta-'+i ).val());			
 		}			
-		$( '#primasAfectasInicialesUbicar' ).val( total );	
+		$( '#primasAfectasInicialesUbicar' ).val( total );
 		$( '#primasnetasiniciales' ).val( total );		
 		$( '#prima-total-anual' ).val( total );		
 		$( '.primas-meta-selector' ).show();		
@@ -51,7 +76,15 @@ $( document ).ready(function() {
 		$( '.metas' ).hide();
 		$( '.simulator' ).show();		
 	});
+
+// Do not know when the below is triggered
 	$( '.link-ramo' ).bind( 'click', function(){
+		var year = $( '#year' );
+		if (year.length == 0) {
+			var dataS = { userid: $( '#userid' ).val() };
+		} else {
+			var dataS = { period: $( '#period' ).val(), userid: $( '#userid' ).val(), year:$( '#year option:selected' ).val() };
+		}
 		$( '#vida' ).css({ 'color': '#000' });
 		$( '#gmm' ).css({ 'color': '#000' });
 		$( '#autos' ).css({ 'color': '#000' });	
@@ -60,18 +93,22 @@ $( document ).ready(function() {
 			$( '#vida' ).css( 'color', '#06F' );			
 			$( '#ramo' ).val( 1 );
 			$( '#periodo' ).val(3);	
+			dataS.ramo = 'vida';
 			$.ajax({
 				url:  Config.base_url()+'simulator/getSimulator.html',
 				type: "POST",
-				data: { ramo: 'vida', userid: $( '#userid' ).val() },
+//				data: { ramo: 'vida', userid: $( '#userid' ).val(), period: $( '#period' ).val(), year: $( '#year option:selected' ).val() },
+				data: dataS,
 				cache: false,
 				async: false,
 				success: function(data){
 					$( '.simulator' ).html(data);
+					dataS.varx = true;
 					$.ajax({
 						url:  Config.base_url()+'simulator/getSimulator.html',
 						type: "POST",
-						data: { ramo: 'vida', userid: $( '#userid' ).val(), varx:true },
+//						data: { ramo: 'vida', userid: $( '#userid' ).val(), period: $( '#period' ).val(), year: $( '#year option:selected' ).val(), varx:true },
+						data: dataS,
 						cache: false,
 						async: false,
 						success: function(data){
@@ -87,7 +124,7 @@ $( document ).ready(function() {
 			  .fail(function( jqxhr, settings, exception ) {
 				alert( 'El script no se puede cargar' );
 			});
-			getMetasPeriod( 'vida' );			
+			getMetasPeriod( 'vida' );
 			$( '#periodo' ).bind( 'change', function(){		
 				if( $( '#ramo' ).val() == 1 ) getMetasPeriod( 'vida' );
 				if( $( '#ramo' ).val() == 2 ) getMetasPeriod( 'gmm' );
@@ -104,19 +141,23 @@ $( document ).ready(function() {
 			$( '#ramo' ).val(2);			
 			$( '#gmm' ).css( 'color', '#06F' );			
 			$( '#ramo' ).val( 2 );			
-			$( '#periodo' ).val(4);			
+			$( '#periodo' ).val(4);
+			dataS.ramo = 'gmm';
 			$.ajax({
 				url:  Config.base_url()+'simulator/getSimulator.html',
 				type: "POST",
-				data: { ramo: 'gmm', userid: $( '#userid' ).val() },
+//				data: { ramo: 'gmm', userid: $( '#userid' ).val(), period: $( '#period' ).val(), year: $( '#year option:selected' ).val() },
+				data: dataS,
 				cache: false,
 				async: false,
 				success: function(data){
 					$( '.simulator' ).html(data);
+					dataS.varx = true;
 					$.ajax({
 						url:  Config.base_url()+'simulator/getSimulator.html',
 						type: "POST",
-						data: { ramo: 'gmm', userid: $( '#userid' ).val(), varx:true },
+//						data: { ramo: 'gmm', userid: $( '#userid' ).val(), period: $( '#period' ).val(), year: $( '#year option:selected' ).val(), varx:true },
+						data: dataS,
 						cache: false,
 						async: false,
 						success: function(data){
@@ -143,25 +184,29 @@ $( document ).ready(function() {
 			$( '#primasnetasiniciales' ).bind( 'keyup', function(){
 				getMetas();
 			});		
-			getMetasPeriod( 'gmm' );	
+			getMetasPeriod( 'gmm' );
 		}		
 		if( this.id == 'autos' ){			
 			$( '#ramo' ).val(3);			
 			$( '#autos' ).css( 'color', '#06F' );			
 			$( '#ramo' ).val( 3 );
-			$( '#periodo' ).val(4);	
+			$( '#periodo' ).val(4);
+			dataS.ramo = 'autos';
 			$.ajax({
 				url:  Config.base_url()+'simulator/getSimulator.html',
 				type: "POST",
-				data: { ramo: 'autos', userid: $( '#userid' ).val() },
+//				data: { ramo: 'autos', userid: $( '#userid' ).val(), period: $( '#period' ).val(), year: $( '#year option:selected' ).val() },
+				data: dataS,
 				cache: false,
 				async: false,
 				success: function(data){
-					$( '.simulator' ).html(data);	
+					$( '.simulator' ).html(data);
+					dataS.varx = true;
 					$.ajax({
 						url:  Config.base_url()+'simulator/getSimulator.html',
 						type: "POST",
-						data: { ramo: 'autos', userid: $( '#userid' ).val(), varx:true },
+//						data: { ramo: 'autos', userid: $( '#userid' ).val(), period: $( '#period' ).val(), year: $( '#year option:selected' ).val(), varx:true },
+						data: dataS,
 						cache: false,
 						async: false,
 						success: function(data){
@@ -191,7 +236,8 @@ $( document ).ready(function() {
 			});		
 		}
 		//getMetasPeriod( this.id );
-	});				
+	});	
+	
 	$( '#periodo' ).bind( 'change', function(){		
 		if( $( '#ramo' ).val() == 1 ) getMetasPeriod( 'vida' );
 		if( $( '#ramo' ).val() == 2 ) getMetasPeriod( 'gmm' );
@@ -209,31 +255,47 @@ $( document ).ready(function() {
 });
 
 
-function getMetasPeriod( ramo ){		
+function getMetasPeriod( ramo ){
+	var year = $( '#year' );
+	if (year.length == 0)
+		var dataS = { ramo: ramo, periodo: 12, userid: $( '#userid' ).val() };
+	else
+		var dataS = { ramo: ramo, period: $( '#period' ).val(), userid: $( '#userid' ).val(), year: $( '#year option:selected' ).val() };
 	$.ajax({
 			url:  Config.base_url()+'simulator/getConfigMeta.html',
 			type: "POST",
 			//data: { ramo: ramo, periodo: $( '#periodo' ).val(), userid: $( '#userid' ).val() },
-			data: { ramo: ramo, periodo: 12, userid: $( '#userid' ).val() },
+//			data: { ramo: ramo, periodo: 12, userid: $( '#userid' ).val() },
+			data: dataS,
 			cache: false,
 			async: false,
 			success: function(data){
 				//alert( data );
 				$( '.metas' ).html(data);				
-				$( '.primas-meta-field' ).hide();					
-				var i = $( '#primas_promedio' ).val();
+				$( '.primas-meta-field' ).hide();
+				var field = '';
+				if ($( '#primas_promedio' ).length > 0)
+					field = '#primas_promedio';
+				else if ($( '#primaspromedio' ).length > 0)
+					field = '#primaspromedio';
+				if (field.length)
+					$( "#metas-prima-promedio" ).val( $( field ).val() ); 
+
+/*				var i = $( '#primas_promedio' ).val();
 					if( i == 0 || i > 0 )
 						$( "#metas-prima-promedio" ).val( $( '#primas_promedio' ).val() ); 
 					else 
-						$( "#metas-prima-promedio" ).val( $( '#primaspromedio' ).val() ); 
-				getMetas();						
-				var i = $( '#primasAfectasInicialesUbicar' ).val();
+						$( "#metas-prima-promedio" ).val( $( '#primaspromedio' ).val() ); */
+				getMetas();
+				if ($( '#primasAfectasInicialesUbicar' ).length > 0) {
+					var i = $( '#primasAfectasInicialesUbicar' ).val();
 					if( i == 0 || i > 0 )
 						$( "#prima-total-anual" ).val( $( '#primasAfectasInicialesUbicar' ).val() ); 
-					else 
-						$( "#prima-total-anual" ).val( $( '#primasnetasiniciales' ).val() ); 
-				getMetas();						
-				$( document ).ready( function(){			
+					else if ($( '#primasnetasiniciales' ).length > 0)
+						$( "#prima-total-anual" ).val( $( '#primasnetasiniciales' ).val() );
+				}
+				getMetas();
+				$( document ).ready( function(){
 					$( "#prima-total-anual" ).bind( 'keyup', function(){	
 						$( '#primasAfectasInicialesUbicar' ).val(Math.ceil(this.value));	
 						$( '#primasnetasiniciales' ).val(Math.ceil(this.value));
@@ -281,16 +343,12 @@ function getMetasPeriod( ramo ){
 					$( '.primas-meta-field' ).bind( 'keypress', function(e){	
 						var code = e.keyCode || e.which;							
 						if(code == 13) { //Enter keycode
-						  	
+
 							var total=0;						
 							for( var i=1; i<=12; i++ ){							
 								if(  !isNaN( $( '#primas-meta-'+i ).val() ) ){
-									
 									$( '#primas-meta-text-'+i ).html( '$ '+moneyFormat(parseFloat($( '#primas-meta-'+i ).val())));
-									
-									
 									total += parseFloat( $( '#primas-meta-'+i ).val());
-									
 								}
 							}							
 							$( '#primasAfectasInicialesUbicar' ).val( total );	
@@ -300,12 +358,13 @@ function getMetasPeriod( ramo ){
 							$( '.primas-meta' ).hide();						
 							
 							for( var i=1; i<=12; i++ ){				
-									var primas = $( '#primasAfectasInicialesUbicar' ).val();
-										if( !$( '#primasAfectasInicialesUbicar' ).val() ) primas = $( '#primasnetasiniciales' ).val();
-																			  
-									var porcentaje =  Math.round((parseInt($( '#primas-meta-'+i ).val()) / parseFloat(primas)*10000)*100)/10000;								
-										$( '#mes-'+i ).val(porcentaje);
-										$( '#mes-text-'+i ).html(porcentaje);
+/*								var primas = $( '#primasAfectasInicialesUbicar' ).val();
+								if( !$( '#primasAfectasInicialesUbicar' ).val() )
+									primas = $( '#primasnetasiniciales' ).val();
+								var porcentaje =  Math.round((parseInt($( '#primas-meta-'+i ).val()) / parseFloat(primas)*10000)*100)/10000;	*/
+								var porcentaje =  Math.round((parseInt($( '#primas-meta-'+i ).val()) / parseFloat(total)*10000)*100)/10000;								
+								$( '#mes-'+i ).val(porcentaje);
+								$( '#mes-text-'+i ).html(porcentaje);
 							}	
 							getMetas();	
 							save();									
@@ -321,58 +380,125 @@ function getMetasPeriod( ramo ){
 					});
 					$( '#primasnetasiniciales' ).bind( 'keyup', function(){
 						getMetas();
-					});	
+					});
+
+					$( '#reset-meta' ).on( 'click', function(){
+						if ( confirm( '¿Esta seguro que quiere borrar la meta?' ) ) {
+							var data = {
+								ramo: $( '#ramo' ).val(),
+								period: $( '#period' ).val(),
+								agent_id: $( '#agent_id' ).val(),
+								year: $( '#year option:selected' ).val(),
+								efectividad: $( '#efectividad' ).val(),
+								prima_total_anual: $( '#prima-total-anual' ).val(),
+								primas_promedio: $( '#metas-prima-promedio' ).val(),
+							};
+							var url = Config.base_url() + 'simulator/reset_meta.html';
+							$.ajax({
+								url: url,
+								type: 'POST',
+								data: data,
+								dataType : 'json',
+								success: function(response){
+									switch (response) {
+										case '-1':
+											alert ('No se pudo borrar la meta. Informe a su administrador.');
+											break;
+										case '1':
+											alert ('La meta esta borrada correctamente.');
+											window.location.reload();
+											break;
+										default:
+										case '0':
+											alert ('Ocurrio un error, no se pudo borrar la meta. Consulte a su administrador.');
+											break;
+									}
+								}
+							});
+						}
+						return false;
+					});
+				
 					$( '#save_meta' ).bind( 'click', function(){
-						save();	
-						alert( "La meta se ha guardado correctamente" );
+						var promedio = $( '#metas-prima-promedio').val();
+						if (!(/^\d+$/.test(promedio)) || (promedio == 0)) {					
+							alert('El campo Prima Promedio debe contener un número más que 0.');
+							return false;
+						}
+						var message = save();
+						if (message.length)
+							alert(message);
+						else
+							alert( "La meta se ha guardado correctamente" );
 					});
 				});
 				getMetas();
-			}						
-	
+			}
 		});
 }
-function save(){			
-	var id = $( '#id' ).val();	
-	var saves = parseInt( $( '#save' ).val() );		
+function save(){
+	var year = $( '#year' );
 	$( '.metas' ).show();
 	$( '.simulator' ).hide();
-	if( id == 0 ){	 	 	
-	  $.ajax({
-			url:  Config.base_url()+'simulator/save.html',
+	var resultMessage = '';
+	if (year.length == 0) {	// Old simulator
+		var id = $( '#id' ).val();	
+		var saves = parseInt( $( '#save' ).val() );		
+
+		if( id == 0 ){	 	 	
+			$.ajax({
+				url:  Config.base_url()+'simulator/save.html',
+				type: "POST",
+				data: $( '#form' ).serialize(),
+				cache: false,
+				async: false,
+				success: function(data){
+					$( '#id' ).val(data);
+				}			
+			});
+		}else{
+			$.ajax({
+				url:  Config.base_url()+'simulator/update.html',
+				type: "POST",
+				data: $( '#form' ).serialize(),
+				cache: false,
+				async: false,
+				success: function(data){
+					$( '#save' ).val(data);				
+				}		
+			});
+		}
+		alert( "La meta se ha guardado correctamente" );
+	} else  { // New simulator
+		$.ajax({
+			url:  Config.base_url()+'simulator/save_meta_new.html',
 			type: "POST",
 			data: $( '#form' ).serialize(),
-			cache: false,
 			async: false,
 			success: function(data){
-				$( '#id' ).val(data);
-			}			
-		});
-	}else{
-		 $.ajax({
-			url:  Config.base_url()+'simulator/update.html',
-			type: "POST",
-			data: $( '#form' ).serialize(),
-			cache: false,
-			async: false,
-			success: function(data){
-				$( '#save' ).val(data);				
-			}		
+				if (data != '0') {
+					resultMessage = 'La meta se ha guardado correctamente.';
+//					$( '#id' ).val(data);
+				} else
+					resultMessage = 'Ocurrio un error. Consulte a su administrador.';
+			}
 		});
 	}
+	return resultMessage;
 }
 
 function updatePrimasMes() {
-		for(  var i = 1; i<=12; i++ ){
-				$( '#primas-meta-'+i ).val(parseFloat( $( "#prima-total-anual" ).val() ) * (parseFloat( $( '#mes-'+i ) .val() ) /100));
-				$( '#primas-meta-text-'+i ).val(parseFloat( $( "#prima-total-anual" ).val() ) * (parseFloat( $( '#mes-'+i ) .val() ) /100));
-		}
+	for(  var i = 1; i<=12; i++ ){
+			$( '#primas-meta-'+i ).val(parseFloat( $( "#prima-total-anual" ).val() ) * (parseFloat( $( '#mes-'+i ) .val() ) /100));
+			$( '#primas-meta-text-'+i ).val(parseFloat( $( "#prima-total-anual" ).val() ) * (parseFloat( $( '#mes-'+i ) .val() ) /100));
+	}
 }
 
-function getMetas(){		
+function getMetas(){
 		//if( $( '#primasAfectasInicialesUbicar' ).val() == 0 ) return false;	
 		var primas = $( '#primasAfectasInicialesUbicar' ).val();
-			if( !$( '#primasAfectasInicialesUbicar' ).val() ) primas = $( '#primasnetasiniciales' ).val();
+		if( !$( '#primasAfectasInicialesUbicar' ).val() )
+			primas = $( '#primasnetasiniciales' ).val();
 		
 		// Metas
 		var totalprimameta = 0;		
@@ -387,8 +513,8 @@ function getMetas(){
 			var meta =  total;//;Math.round( total* 100 )/100;			
 			var primapromedio =  Math.round( ( total /  parseFloat( $( '#metas-prima-promedio' ).val() ) ) );
 			var efectividad = $( '#efectividad' ) .val();	
-				efectividad = efectividad.replace( '%', '' );
-				efectividad =  parseInt( efectividad ) / 100;	
+			efectividad = efectividad.replace( '%', '' );
+			efectividad =  parseInt( efectividad ) / 100;	
 			var solicitud = primapromedio / efectividad ;		
 			$( '#primas-meta-'+i ).val( Math.round(total) );
 			$( '#primas-meta-text-'+i ).html( '$ ' + moneyFormat(Math.round(total)) );			
@@ -400,11 +526,15 @@ function getMetas(){
 			$( '#primas-solicitud-meta-text-'+i ).html( Math.round(solicitud));	
 			if( !isNaN( meta ) )  totaltrimestre+=meta;
 			if( !isNaN( meta ) ) totalprimameta+=meta;
-			if( !isNaN( primapromedio ) )  totalnegociometa += primapromedio;
-			if( !isNaN( totalnegociometa ) )  totalesnegociometa += primapromedio;
-			console.log(totalesnegociometa);
-			if( !isNaN( solicitud ) ) totalsolicitudmeta += solicitud; 
-			if( !isNaN( totalsolicitudmeta ) ) totalessolicitudmeta += solicitud;
+			if( !isNaN( primapromedio ) ) 
+				totalnegociometa += primapromedio;
+			if( !isNaN( totalnegociometa ) )
+				totalesnegociometa += primapromedio;
+//			console.log(totalesnegociometa);
+			if( !isNaN( solicitud ) )
+				totalsolicitudmeta += solicitud; 
+			if( !isNaN( totalsolicitudmeta ) )
+				totalessolicitudmeta += solicitud;
 			// Totales
 			// $( '#ramo' ).val() == 1			
 			if( i == 3 && $( '#ramo' ).val() == 1 ){														
@@ -511,7 +641,17 @@ function getMetas(){
 		$( '#primas-solicitud-meta-total' ).val( Math.round(totalessolicitudmeta) );
 		$( '#primas-solicitud-meta-total-text' ).html( (Math.round(totalessolicitudmeta)) );
 		
-		if ($( '#ramo' ).val() == 2) {
-			clickPrimasPromedio(); clickPrimasIniciales(); clickPorSiniestridad(); clickPrimasRenovacion(); clickXAcotamiento(); calculoBonoPrimerAnio(); clickComisionVentaInicial(); clickComisionVentaRenovacion(); gmm_ingresototal(); gmm_ingresopromedio(); 
-		}		
+		if (($( '#year' ).length == 0 ) && ($( '#ramo' ).val() == 2)) {
+			clickPrimasPromedio();
+			clickPrimasIniciales();
+			clickPorSiniestridad();
+			clickPrimasRenovacion();
+			clickXAcotamiento();
+			calculoBonoPrimerAnio();
+			clickComisionVentaInicial();
+			clickComisionVentaRenovacion();
+			gmm_ingresototal();
+			gmm_ingresopromedio();
+		}
 }
+

@@ -54,6 +54,8 @@ $( document ).ready(function(i) {
 	}
 });
 function clickPrimasIniciales () {
+	if ($( '#porAcotamiento' ).length == 0)
+		return false;
 	for ($i=1;$i<=3;$i++) {
 		var total = parseFloat( $( '#simulatorPrimasPeriod\\['+$i+'\\]' ).val() ) * parseFloat($( '#porAcotamiento' ).val().replace( '%', '' )/100);
 		$( '#primasAfectasInicialesPagar_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
@@ -76,6 +78,9 @@ function clickPrimasIniciales () {
 	}			
 }
 function clickPrimasPromedio () {
+	if (($( '#primasnetasiniciales' ).length == 0) || ($( '#primaspromedio' ).length == 0) ||
+		($( '#simulatorPrimasPeriod[1]' ).length == 0))
+		return false;
 	for ($i=1;$i<=3;$i++) {
 		var total = parseFloat( $( '#primasnetasiniciales' ).val() ) / parseFloat($( '#primaspromedio' ).val().replace( '%', '' ));	
 		var totalPeriod = parseFloat( $( '#simulatorPrimasPeriod\\['+$i+'\\]' ).val() ) / parseFloat($( '#primaspromedio' ).val().replace( '%', '' ));	
@@ -126,6 +131,8 @@ function calculoBonoPrimerAnio () {
 	}
 }
 function clickPrimasRenovacion () {
+	if ($( '#primasRenovacion[1]' ).length == 0)
+		return false;
 	for (var $i = 1; $i <= 3; $i++) {
 		var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * parseFloat($( '#XAcotamiento\\['+$i+'\\]' ).val().replace( '%', '' )/100);	
 		$( '#primasRenovacionPagar_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
@@ -137,6 +144,8 @@ function clickPrimasRenovacion () {
 	}
 }
 function clickXAcotamiento () {
+	if ($( '#primasRenovacion[1]' ).length == 0)
+		return false;
 	for ($i=1;$i<=3;$i++) {		
 		var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * parseFloat($( '#XAcotamiento\\['+$i+'\\]' ).val().replace( '%', '' )/100);	
 		$( '#primasRenovacionPagar_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
@@ -144,6 +153,8 @@ function clickXAcotamiento () {
 	}
 }
 function clickComisionVentaInicial () {
+	if ($( '#simulatorPrimasPeriod[1]' ).length == 0)
+		return false;
 	for ($i=1;$i<=3;$i++) {		
 		var total = parseFloat( $( '#simulatorPrimasPeriod\\['+$i+'\\]' ).val() ) * parseFloat($( '#comisionVentaInicial\\['+$i+'\\]' ).val().replace( '%', '' )/100);
 		$( '#ingresoComisionesVentaInicial_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
@@ -151,6 +162,8 @@ function clickComisionVentaInicial () {
 	}		
 }
 function clickComisionVentaRenovacion() {
+	if ($( '#primasRenovacion[1]' ).length == 0)
+		return false;
 	for ($i=1;$i<=3;$i++) {		
 		var total = parseFloat( $( '#primasRenovacion\\['+$i+'\\]' ).val() ) * parseFloat($( '#comisionVentaRenovacion\\['+$i+'\\]' ).val().replace( '%', '' )/100);	
 		$( '#ingresoComisionRenovacion_text\\['+$i+'\\]' ).html( '$ '+moneyFormat(total) );
@@ -158,6 +171,8 @@ function clickComisionVentaRenovacion() {
 	}
 }
 function clickPorSiniestridad () {
+	if ($( '#primasRenovacionPagar[1]' ).length == 0)
+		return false;
 	for ($i=1;$i<=3;$i++) {		
 		var primasRenovacionPagar = parseFloat( $( '#primasRenovacionPagar\\['+$i+'\\]' ).val() );
 		var siniestridad = $( '#porsiniestridad\\['+$i+'\\]' ).val();
@@ -284,6 +299,8 @@ function clickPorSiniestridad () {
 	}
 }	
 function gmm_ingresototal(){
+	if ($( '#ingresoComisionesVentaInicial[1]' ).length == 0)
+		return false;
 	var total = 0;
 	for ($j=1;$j<=3;$j++) {
 		var ingresoComisionesVentaInicial = parseFloat( $( '#ingresoComisionesVentaInicial\\['+$j+'\\]' ).val() );
@@ -302,6 +319,8 @@ function gmm_ingresototal(){
 	}
 }
 function gmm_ingresopromedio(){
+	if ($( '#ingresoTotal' ).length == 0)
+		return false;
 	var ingresoTotal = parseFloat( $( '#ingresoTotal' ).val() );
 	var periodo = parseInt( $( '#periodo' ).val() );
 	var total = ingresoTotal/periodo;
