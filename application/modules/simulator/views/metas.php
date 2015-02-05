@@ -97,7 +97,7 @@ $subtotal = 0;
 				}	
 				$porcentajes = object2array($data);
 			 ?> 
-             <?php if( !empty( $config ) ): 
+             <?php if( !empty( $config ) ):
 			 foreach( $config as $configs ):
 				$i = $configs['id']; ?> 
               <tr>
@@ -111,13 +111,15 @@ $subtotal = 0;
                    <input type="hidden" name="primas-solicitud-meta-<?php echo $i ?>" id="primas-solicitud-meta-<?php echo $i ?>" value="0" />
                 </td>
                 <td class="bgyelowlight">
-                   <?php if( $i < 10 ) {
+                   <?php 
+						if ( isset($SolicitudesLogradas['0'.$i]) ) {
 					   		echo $SolicitudesLogradas['0'.$i]; 
 							$SolicitudesLogradasTotalTrimestre+=$SolicitudesLogradas['0'.$i]; 
-						}else{ 
+						} elseif (isset($SolicitudesLogradas[$i])) { 
 							echo $SolicitudesLogradas[$i];
 							$SolicitudesLogradasTotalTrimestre+=$SolicitudesLogradas[$i]; 
-						} ?>
+						}
+						?>
 
                 </td>
                 <td class="bgorangelight">
@@ -125,13 +127,14 @@ $subtotal = 0;
                    <input type="hidden" name="primas-negocios-meta-<?php echo $i ?>" id="primas-negocios-meta-<?php echo $i ?>" value="0" />
                 </td>
                 <td class="bgorangelight">
-                    <?php if( $i < 10 ){
-							 echo $NegociosLogrados['0'.$i]; 
-						  	 $NegociosLogradosTotalTrimestre+=$NegociosLogrados['0'.$i]; 
-						  }else{
-							  echo $NegociosLogrados[$i]; 
-							  $NegociosLogradosTotalTrimestre+=$NegociosLogrados[$i]; 
-						  }
+                    <?php
+						if ( isset($NegociosLogrados['0'.$i] )) {
+							echo $NegociosLogrados['0'.$i]; 
+						  	$NegociosLogradosTotalTrimestre+=$NegociosLogrados['0'.$i]; 
+						} elseif (isset($NegociosLogrados[$i]) ) {
+							echo $NegociosLogrados[$i]; 
+							$NegociosLogradosTotalTrimestre+=$NegociosLogrados[$i]; 
+						}
 					?>
 
                 </td>
@@ -143,13 +146,15 @@ $subtotal = 0;
                 	</div>
                 </td>
                 <td class="bggreenlight">$
-                    <?php if( $i < 10 ){ 
+                    <?php
+						if ( isset($PrimasLogradas['0'.$i] )) {
 						  	echo number_format($PrimasLogradas['0'.$i],2); 
-						  	 $PrimasLogradosTotalTrimestre+=$PrimasLogradas['0'.$i]; 
-						  }else{ 
+						  	$PrimasLogradosTotalTrimestre+=$PrimasLogradas['0'.$i]; 
+						} elseif (isset($PrimasLogradas[$i]) ) {
 						  	echo number_format($PrimasLogradas[$i],2); 
-						  	 $PrimasLogradosTotalTrimestre+=$PrimasLogradas[$i]; 
-						  }?> 
+						  	$PrimasLogradosTotalTrimestre+=$PrimasLogradas[$i]; 
+						}
+					?> 
 
                 </td>
             </tr> 

@@ -274,7 +274,7 @@ class Simulator extends CI_Controller {
 		$users = $this->user->getForUpdateOrDelete( $userid );
 //		$data = $this->simulators->getByAgent( $agentid, $ramo );
 
-		$period = (int)$this->input->post('period');
+		$period = $this->input->post('period');
 		if ($period === FALSE)
 			$period = $this->uri->rsegment(5);
 		$period = ($period !== FALSE) ? $period : 0;
@@ -417,7 +417,7 @@ $( document ).ready( function(){
 		  'selected_period' => $period,
 		  'selected_year' => $year,
 		);
-		
+
 		// Render view 
 		$this->load->view( 'index', $this->view );	
 	}
@@ -451,24 +451,16 @@ $( document ).ready( function(){
 	}
 
 	public function getConfigMeta(){
+	
 		if( !$this->input->is_ajax_request() ) exit;
-		
 		$this->load->model( array( 'user', 'simulators' ) );
-		
 		$userid = $_POST['userid'];		
-				
 		$agentid = $this->user->getAgentIdByUser( $userid );
-		
 		//$agent = $this->user->getAgentsById( $agentid );
-		
 		//$userid = $this->user->getUserIdByAgentId( $agentid );
-				
 		$trimestre = null;
-				
 		$cuatrimestre = null;
-		
 		$product_group_id = null;
-		
 	    if( isset( $_POST['ramo'] ) and  $_POST['ramo'] == 'vida' ){ 
 			$trimestre = $this->simulators->trimestre( date('m') ); 
 			$product_group_id = 1; 
