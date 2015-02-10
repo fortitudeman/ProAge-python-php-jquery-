@@ -65,7 +65,16 @@ class Director extends CI_Controller {
 	public $query_filters = array();
 
 	public $coordinator_select = '';
-	
+	public $computed_meta_fields = array(
+		'primas-meta-primer', 'primas-meta-segund', 'primas-meta-second', 'primas-meta-tercer', 'primas-meta-cuarto',
+		'primas-meta-total',
+		'primas-negocio-meta-primer', 'primas-negocio-meta-segund', 'primas-negocio-meta-second',	
+		'primas-negocio-meta-tercer', 'primas-negocio-meta-cuarto',
+		'primas-negocios-meta-total', 
+		'primas-solicitud-meta-primer', 'primas-solicitud-meta-segund', 'primas-solicitud-meta-second', 
+		'primas-solicitud-meta-tercer', 'primas-solicitud-meta-cuarto', 
+		'primas-solicitud-meta-total', 
+	);
 /** Construct Function **/
 /** Setting Load perms **/
 	
@@ -301,10 +310,14 @@ class Director extends CI_Controller {
 				theme : "default",
 				stringTo: "max",
 				headers: {  // non-numeric content is treated as a MIN value
+					1: { sorter: "digit", string: "min" },
+					2: { sorter: "digit", string: "min" },
 					3: { sorter: "digit", string: "min" },
-					4: { sorter: "digit", string: "min" },					
+					4: { sorter: "digit", string: "min" },
+					5: { sorter: "digit", string: "min" },
+					6: { sorter: "digit", string: "min" },
 				},
-				sortList: [[1,0]],
+				sortList: [[0,0]],
 				// use save sort widget
 				widgets: ["saveSort"],
 				// this is the default setting
@@ -884,13 +897,67 @@ $( document ).ready( function(){
 		$data = array();
 		if( !empty( $_POST ) )
 		{
-			$data = $this->user->getReport($_POST, $meta );
+			$filter = $_POST;
+//			$data = $this->user->getReport($_POST, $meta );
 		}
 		else
 		{
 			$default_filter = get_filter_period();
 			$query = array_merge($this->other_filters, array('periodo' => $default_filter));
-			$data = $this->user->getReport( array('query' => $query ), $meta );
+			$filter = array('query' => $query );
+//			$data = $this->user->getReport( array('query' => $query ), $meta );
+		}
+		$data = $this->user->getReport($filter, $meta );
+
+		if ($meta && $data)
+		{
+			$month_start = 1;	// To refine
+			$month_end = 12;	// To refine
+			$agent_ids = array();
+			foreach ($data as $key => $datum)
+			{
+				if (isset($datum['agent_id']))
+					$agent_ids[$key] = $datum['agent_id'];
+			}
+			$meta_period = $this->simulators->translate_periodo($filter['periodo'], $filter['query']['ramo']);
+
+			$year = date('Y');
+			if (isset($filter['cust_period_from']))
+				$year = substr($filter['cust_period_from'], 0, 4);
+			$meta_data = $this->simulators->get_rows( 'meta_new', $agent_ids,
+				$filter['query']['ramo'], $meta_period, $year);
+
+			$this->work_order->init_operations(null, $filter['periodo'], $filter['query']['ramo']);
+			if ($agent_ids)
+				$this->work_order->add_operation_where(array('policies_vs_users.user_id' => $agent_ids));
+			$add_where =  array('t2.name' => 'NUEVO NEGOCIO');
+			$nuevo_negocios = $this->work_order->solicitudes_ingresadas($filter['query']['ramo'], $add_where);
+
+			$negocios_primas = $this->user->get_negocios_primas($agent_ids, $filter);
+
+			foreach ($data as $key => $value)
+			{
+				if ($key)
+				{
+					if (isset($meta_data[$data[$key]['agent_id']]))
+					{
+						for ($i = $month_start; $i <= $month_end; $i++)
+						{
+							$prima_promedio = round((float)$meta_data[$data[$key]['agent_id']]->{'primas-meta-' . $i}  / 
+								(float)$meta_data[$data[$key]['agent_id']]->primas_promedio );
+							$data[$key]['solicitudes_meta'] += 100 * $prima_promedio / $meta_data[$data[$key]['agent_id']]->efectividad;
+							$data[$key]['negocios_meta'] += round($prima_promedio);
+							$data[$key]['primas_meta'] += $meta_data[$data[$key]['agent_id']]->{'primas-meta-' . $i};
+						}
+					}
+					if (isset($nuevo_negocios[$data[$key]['agent_id']]))
+						$data[$key]['solicitudes_ingresadas'] = $nuevo_negocios[$data[$key]['agent_id']];
+					if (isset($negocios_primas['negocios'][$data[$key]['agent_id']]))
+						$data[$key]['negocios_pagados'] = $negocios_primas['negocios'][$data[$key]['agent_id']];
+					if (isset($negocios_primas['primas'][$data[$key]['agent_id']]))
+						$data[$key]['primas_pagadas'] = $negocios_primas['primas'][$data[$key]['agent_id']];
+				}
+			}
 		}
 		return $data;
 	}

@@ -2378,7 +2378,7 @@ class Work_order extends CI_Model{
 		}
 		return $ot;
 	}
-	
+
 	public function init_operation_result($ramo, $recap = TRUE, $full = FALSE)
 	{
 		if ($recap)
@@ -2456,6 +2456,32 @@ class Work_order extends CI_Model{
 				);
 		}
 		return $ot;
+	}
+
+	public function solicitudes_ingresadas( $ramo = NULL, $add_where = NULL )
+	{
+		$result = array();
+		if ($add_where)
+			$this->operation_where = array_merge($this->operation_where, $add_where);
+
+		foreach ($this->operation_where_in as $key_c => $key_v)
+			$this->db->where_in($key_c , $key_v);
+
+		$query = $this->db->select('COUNT(DISTINCT(work_order.id)) AS count, work_order.product_group_id, policies_vs_users.user_id as agent_id, t1.patent_id, t2.name AS tramite_type')
+					->from('work_order' )
+					->join('work_order_types AS t1', 't1.id = work_order.work_order_type_id')
+					->join('work_order_types AS t2', 't2.id = t1.patent_id')
+					->join('policies', 'policies.id = work_order.policy_id')
+					->join('policies_vs_users', 'policies_vs_users.policy_id = policies.id')
+					->where($this->operation_where)
+					->group_by('agent_id')
+					->get();
+		if ($query->num_rows() == 0)
+			return $result;
+
+		foreach ($query->result() as $row)
+			$result[$row->agent_id] = $row->count;
+		return $result;
 	}
 }
 ?>

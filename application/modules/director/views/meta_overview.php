@@ -15,24 +15,36 @@
 */
 $base_url = base_url();
 if ($data):
+$totals = array(
+	'solicitudes_meta' => 0,
+	'solicitudes_ingresadas' => 0,
+	'negocios_meta' => 0,
+	'negocios_pagados' => 0,
+	'primas_meta' => 0,
+	'primas_pagadas' => 0,
+);
 $total_negocios = 0;
 $total_primas_iniciales = 0;
 ?>
 <table class="sortable altrowstable tablesorter" id="sorter-meta" style="width:70%;">
   <colgroup>
+    <col width="30%" />
     <col width="10%" />
-    <col width="35%" />
+    <col width="10%" />
+    <col width="10%" />
+    <col width="10%" />
     <col width="15%" />
-    <col width="12%" />
-    <col width="28%" />
+    <col width="15%" />
   </colgroup>
   <thead class="head">
     <tr>
-      <th><?php echo $data[0]['cua'];?></th>
       <th><?php echo $data[0]['name'];?></th> 
-      <th><?php echo $data[0]['generacion'];?></th>
-      <th><?php echo $data[0]['negocios'];?></th>
-      <th><?php echo $data[0]['primas_iniciales'];?></th>
+      <th><?php echo $data[0]['solicitudes_meta'];?></th>
+      <th><?php echo $data[0]['solicitudes_ingresadas'];?></th>
+      <th><?php echo $data[0]['negocios_meta'];?></th>
+      <th><?php echo $data[0]['negocios_pagados'];?></th>
+      <th><?php echo $data[0]['primas_meta'];?></th>
+      <th><?php echo $data[0]['primas_pagadas'];?></th>	  
     </tr>
   </thead>
 <?php
@@ -42,23 +54,32 @@ $total_primas_iniciales = 0;
   <tbody class="tbody" id="data">
 <?php for ($i = 1; $i < $count; $i++):
 	$total_negocios += (int)$data[$i]['negocios'];
-	$total_primas_iniciales += (float)$data[$i]['primas_iniciales'];	
+	$total_primas_iniciales += (float)$data[$i]['primas_iniciales'];
+
+	$totals['solicitudes_meta'] += $data[$i]['solicitudes_meta'];
+	$totals['solicitudes_ingresadas'] += $data[$i]['solicitudes_ingresadas'];
+	$totals['negocios_meta'] += $data[$i]['negocios_meta'];
+	$totals['negocios_pagados'] += $data[$i]['negocios_pagados'];
+	$totals['primas_meta'] += $data[$i]['primas_meta'];
+	$totals['primas_pagadas'] += $data[$i]['primas_pagadas'];
 ?>
     <tr>
-      <td><?php echo $data[$i]['cua'];?></td>
       <td>
 <?php if (($ramo == 1) || ($ramo == 2)) :?>
 	  <a href="#" class="toggle"><?php echo $data[$i]['name'];?></a>
 <?php else:
 	echo $data[$i]['name'];
 endif; ?>	  
-	  </td>
-	  <td><?php echo $data[$i]['generacion'];?></td>
-      <td style="padding-right: 3em; text-align: right"><?php echo number_format($data[$i]['negocios'], 2);?></td>
-      <td style="padding-right: 6em; text-align: right"><?php echo number_format($data[$i]['primas_iniciales'], 2);?></td>
+      </td>
+      <td style="padding-right: 1em; text-align: right"><?php echo number_format($data[$i]['solicitudes_meta'], 0);?></td>
+      <td style="padding-right: 1em; text-align: right"><?php echo $data[$i]['solicitudes_ingresadas'];?></td>
+      <td style="padding-right: 1em; text-align: right"><?php echo $data[$i]['negocios_meta'];?></td>
+      <td style="padding-right: 1em; text-align: right"><?php echo $data[$i]['negocios_pagados'];?></td>
+      <td style="padding-right: 1em; text-align: right"><?php echo number_format($data[$i]['primas_meta'], 2);?></td>
+      <td style="padding-right: 1em; text-align: right"><?php echo number_format($data[$i]['primas_pagadas'], 2);?></td>
     </tr>
     <tr class="tablesorter-childRow">
-      <td colspan="5" style="background-color: #E0E0E0; padding-left: 1.5em">
+      <td colspan="7" style="background-color: #E0E0E0; padding-left: 1.5em">
 <?php if (($ramo == 1) || ($ramo == 2)) :
 		$link_meta = $base_url . 'director/meta/' . $data[$i]['id'] . '/' . $ramo . '.html';
 		$link_simulator = $base_url . 'director/simulator/' . $data[$i]['id'] . '/' . $ramo . '.html';
@@ -70,11 +91,13 @@ endif; ?>
   </tbody>
   <tbody style="font-size: 1.2em; font-weight: bold">
 	<tr>
-      <td></td>
       <td>TOTALES</td> 
-      <td></td>
-      <td style="padding-right: 3em; text-align: right"><?php echo number_format($total_negocios, 2);?></td>
-      <td style="padding-right: 6em; text-align: right"><?php echo number_format($total_primas_iniciales, 2);?></td>
+      <td style="padding-right: 1em; text-align: right"><?php echo number_format($totals['solicitudes_meta'], 0);?></td>
+      <td style="padding-right: 1em; text-align: right"><?php echo $totals['solicitudes_ingresadas'];?></td>
+      <td style="padding-right: 1em; text-align: right"><?php echo $totals['negocios_meta'];?></td>
+      <td style="padding-right: 1em; text-align: right"><?php echo $totals['negocios_pagados'];?></td>
+      <td style="padding-right: 1em; text-align: right"><?php echo number_format($totals['primas_meta'], 2);?></td>
+      <td style="padding-right: 1em; text-align: right"><?php echo number_format($totals['primas_pagadas'], 2);?></td>
 	</tr>
   </tbody>
 <?php endif; ?>

@@ -341,6 +341,14 @@ class User extends CI_Model{
 				'field' => 'agent_id',
 				'variable' => 'agent'),
 			array(
+				'table' => 'meta_new',
+				'field' => 'agent_id',
+				'variable' => 'agent'),
+			array(
+				'table' => 'simulator_new',
+				'field' => 'agent_id',
+				'variable' => 'agent'),
+			array(
 				'table' => 'work_order',
 				'field' => 'user',
 				'variable' => 'user'),	
@@ -2103,10 +2111,18 @@ class User extends CI_Model{
 	{
 		$report[0] = array(
 			'cua' => 'CUA',
-			'name' => 'AGENTE',
+//			'name' => 'AGENTE',
+			'name' => 'Agentes',
 			'generacion' => 'GEN',
 			'negocios' => 'NEGOCIOS',
-			'primas_iniciales' => 'PRIMAS INICIALES'
+			'primas_iniciales' => 'PRIMAS INICIALES',
+
+			'solicitudes_meta' => 'Solicitudes Meta',
+			'solicitudes_ingresadas' => 'Solicitudes Ingresadas',
+			'negocios_meta' => 'Negocios Meta',
+			'negocios_pagados' => 'Negocios Pagados',
+			'primas_meta' => 'Primas Meta',
+			'primas_pagadas' => 'Primas Pagadas',
 		);
 	}
 	else
@@ -2181,7 +2197,14 @@ class User extends CI_Model{
 				$report_row = array_merge($report_row, array(
 					'cua' => '',
 					'negocios' => 0,
-					'primas_iniciales' => 0
+					'primas_iniciales' => 0,
+
+					'solicitudes_meta' => 0,
+					'solicitudes_ingresadas' => 0,
+					'negocios_meta' => 0,
+					'negocios_pagados' => 0,
+					'primas_meta' => 0,
+					'primas_pagadas' => 0,
 				));
 			}
 			else
@@ -2226,27 +2249,12 @@ class User extends CI_Model{
 		}
 		if ($meta)
 		{
-			// get Negocios and Primas iniciales
-			$simulator_infos = array();
 			if( isset( $filter['query']['ramo']) && ($filter['query']['ramo'] > 0) && 
 				($filter['query']['ramo'] <= 3))
 				$ramo = (int)$filter['query']['ramo'];
 			else
 				$ramo = 1;
 			$start_end = $this->_get_start_end_in_month($filter, $ramo);
-
-			$query = $this->db->select('period, agent_id, data')
-					->from('simulator')
-					->where(array('product_group_id' => $ramo))
-					->where_in('agent_id', $agent_ids)
-					->get();
-
-			foreach ($query->result() as $simulator_row)
-			{
-				$simulator_infos[$simulator_row->agent_id] = array(
-//					'period' => $simulator_row->period,
-					'data' => $this->_get_simulator_data($start_end, $simulator_row->data));
-			}
 		}
 		foreach ($rank_agent as $key => $value)
 		{
@@ -2274,14 +2282,6 @@ class User extends CI_Model{
 					$report[$value]['tramite'] = $tramites[$key];
 				if (is_array($aceptadas) && isset($aceptadas[$key]))
 					$report[$value]['aceptadas'] = $aceptadas[$key];
-			}
-			if ($meta)
-			{
-				if (isset($simulator_infos[$key]))
-				{
-					$report[$value]['negocios'] = $simulator_infos[$key]['data']['negocios'];
-					$report[$value]['primas_iniciales'] = $simulator_infos[$key]['data']['primas_iniciales'];
-				}
 			}
 		}
 	}
@@ -2706,8 +2706,15 @@ class User extends CI_Model{
 	
  }
 
+	public function get_negocios_primas( $agent_id = null, $filter = array() )
+	{
+ 		return array(
+			'negocios' => $this->_getNegocios( TRUE, $agent_id, $filter),
+			'primas' => $this->_getPrima( TRUE, $agent_id, $filter));
+	}
+
 	public function getCountNegocio( $agent_id = null, $filter = array() ){
- 		
+
 		return $this->_getNegocios( TRUE, $agent_id, $filter);
 	}
 

@@ -165,6 +165,37 @@ class Simulators extends CI_Model{
 		
 	}
 
+	public function get_rows( $table = 'meta_new', $agent = null, $ramo = null, $period = 0, $year = null)
+	{
+		$data = array();
+		if ( ($agent === null) || !is_array($agent) ||
+			empty($ramo) || ($ramo < 1) || ($ramo > 3))
+			return $data;
+		if (empty($year))
+			$year = date('Y');
+		$this->db->select( $table . '.*' );
+		$this->db->from( $table );
+		$where = array(
+			'ramo' => (int)$ramo,
+			'period' => (int)$period,
+			'year' => (int)$year
+		);
+		$this->db->where($where);	
+		if ($agent)
+			$this->db->where_in('agent_id', $agent);
+		$query = $this->db->get();
+		if ($query->num_rows() == 0)
+			return $data;
+
+		foreach ($query->result() as $row)
+		{
+			$data[$row->agent_id] = $row;
+			$this->_get_computed_fields($data[$row->agent_id], $data[$row->agent_id], $table);
+			$this->_get_complementing_fields($data[$row->agent_id], $table );
+		}
+		return $data;
+	}
+
 // Getting by Agent
 	public function getByAgentNew( $table = 'meta_new', $agent = null, $ramo = null, $period = 0, $year = null)
 	{
@@ -205,112 +236,121 @@ class Simulators extends CI_Model{
             	'lastnames' => $row->lastnames,
 				'data' => $row
 				);
-			if ($table == 'meta_new')
-			{
-				$computed_fields = array();
-				foreach ($this->computed_meta_fields as $value)
-					$result_row['data']->$value = 0;
-				for ($i = 1; $i < 12; $i++)
-				{
-					if ($row->ramo == 1)
-					{
-						switch (TRUE)
-						{
-							case ($i < 4):
-								$result_row['data']->{'primas-meta-primer'} += $row->{'primas-meta-' . $i};
-								$result_row['data']->{'primas-negocio-meta-primer'} += $row->{'primas-negocios-meta-' . $i};
-								$result_row['data']->{'primas-solicitud-meta-primer'} += $row->{'primas-solicitud-meta-' . $i};
-								break;
-							case (($i >= 4) && ($i < 7)):
-								$result_row['data']->{'primas-meta-segund'} += $row->{'primas-meta-' . $i};
-								$result_row['data']->{'primas-negocio-meta-segund'} += $row->{'primas-negocios-meta-' . $i};
-								$result_row['data']->{'primas-solicitud-meta-segund'} += $row->{'primas-solicitud-meta-' . $i};						break;
-							case (($i >= 7) && ($i < 10)):
-								$result_row['data']->{'primas-meta-tercer'} += $row->{'primas-meta-' . $i};
-								$result_row['data']->{'primas-negocio-meta-tercer'} += $row->{'primas-negocios-meta-' . $i};
-								$result_row['data']->{'primas-solicitud-meta-tercer'} += $row->{'primas-solicitud-meta-' . $i};
-								break;
-							case (($i >= 10) && ($i <= 12)):
-								$result_row['data']->{'primas-meta-cuarto'} += $row->{'primas-meta-' . $i};
-								$result_row['data']->{'primas-negocio-meta-cuarto'} += $row->{'primas-negocios-meta-' . $i};
-								$result_row['data']->{'primas-solicitud-meta-cuarto'} += $row->{'primas-solicitud-meta-' . $i};
-								break;
-							default:
-								break;
-						}
-					}
-					else
-					{
-						switch (TRUE)
-						{
-							case ($i < 5):
-								$result_row['data']->{'primas-meta-primer'} += $row->{'primas-meta-' . $i};
-								$result_row['data']->{'primas-negocio-meta-primer'} += $row->{'primas-negocios-meta-' . $i};
-								$result_row['data']->{'primas-solicitud-meta-primer'} += $row->{'primas-solicitud-meta-' . $i};
-								break;
-							case (($i >= 5) && ($i < 9)):
-								$result_row['data']->{'primas-meta-second'} += $row->{'primas-meta-' . $i};
-								$result_row['data']->{'primas-negocio-meta-second'} += $row->{'primas-negocios-meta-' . $i};
-								$result_row['data']->{'primas-solicitud-meta-second'} += $row->{'primas-solicitud-meta-' . $i};						break;
-							case (($i >= 0) && ($i <= 12)):
-								$result_row['data']->{'primas-meta-tercer'} += $row->{'primas-meta-' . $i};
-								$result_row['data']->{'primas-negocio-meta-tercer'} += $row->{'primas-negocios-meta-' . $i};
-								$result_row['data']->{'primas-solicitud-meta-tercer'} += $row->{'primas-solicitud-meta-' . $i};
-								break;
-							default:
-								break;
-						}
-					}
-					$result_row['data']->{'primas-meta-total'} += $row->{'primas-meta-' . $i};
-					$result_row['data']->{'primas-negocios-meta-total'} += $row->{'primas-negocios-meta-' . $i};
-					$result_row['data']->{'primas-solicitud-meta-total'} += $row->{'primas-solicitud-meta-' . $i};
-				}
-				$data[] = $result_row;
-			}
+			$this->_get_computed_fields($result_row['data'], $row, $table);
+			$data[] = $result_row;
 		}
 		if (!isset($data[0]))
 			return $data;
-		// for gmm, some data are expected as arrays
-//		$primas_promedio = ($data[0]['data']->primas_promedio >= $data[0]['data']->primaspromedio) ?
-//			$data[0]['data']->primas_promedio : $data[0]['data']->primaspromedio;
-		$primas_promedio = isset($data[0]['data']->primas_promedio) ? $data[0]['data']->primas_promedio : 0;
-		if (isset($data[0]['data']->primaspromedio) && ($data[0]['data']->primaspromedio > $primas_promedio))
-			$primas_promedio = $data[0]['data']->primaspromedio;
-		$data[0]['data']->primas_promedio = $primas_promedio;
-		$data[0]['data']->primaspromedio = $primas_promedio;
-		if (!isset($data[0]['data']->prima_total_anual))
+		$this->_get_complementing_fields($data[0]['data'], $table );
+		return $data;
+	}
+
+	private function _get_computed_fields(&$result, $row, $table = 'meta_new' )
+	{
+		if ($table == 'meta_new')
 		{
-			if (isset($data[0]['data']->primasAfectasInicialesUbicar))
-				$data[0]['data']->prima_total_anual = $data[0]['data']->primasAfectasInicialesUbicar;
-			elseif (isset($data[0]['data']->primasnetasiniciales))
-				$data[0]['data']->prima_total_anual = $data[0]['data']->primasnetasiniciales;
+			foreach ($this->computed_meta_fields as $value)
+				$result->$value = 0;
+			for ($i = 1; $i < 12; $i++)
+			{
+				if ($row->ramo == 1)
+				{
+					switch (TRUE)
+					{
+						case ($i < 4):
+							$result->{'primas-meta-primer'} += $row->{'primas-meta-' . $i};
+							$result->{'primas-negocio-meta-primer'} += $row->{'primas-negocios-meta-' . $i};
+							$result->{'primas-solicitud-meta-primer'} += $row->{'primas-solicitud-meta-' . $i};
+							break;
+						case (($i >= 4) && ($i < 7)):
+							$result->{'primas-meta-segund'} += $row->{'primas-meta-' . $i};
+							$result->{'primas-negocio-meta-segund'} += $row->{'primas-negocios-meta-' . $i};
+							$result->{'primas-solicitud-meta-segund'} += $row->{'primas-solicitud-meta-' . $i};						break;
+						case (($i >= 7) && ($i < 10)):
+							$result->{'primas-meta-tercer'} += $row->{'primas-meta-' . $i};
+							$result->{'primas-negocio-meta-tercer'} += $row->{'primas-negocios-meta-' . $i};
+							$result->{'primas-solicitud-meta-tercer'} += $row->{'primas-solicitud-meta-' . $i};
+							break;
+						case (($i >= 10) && ($i <= 12)):
+							$result->{'primas-meta-cuarto'} += $row->{'primas-meta-' . $i};
+							$result->{'primas-negocio-meta-cuarto'} += $row->{'primas-negocios-meta-' . $i};
+							$result->{'primas-solicitud-meta-cuarto'} += $row->{'primas-solicitud-meta-' . $i};
+							break;
+						default:
+							break;
+					}
+				}
+				else
+				{
+					switch (TRUE)
+					{
+						case ($i < 5):
+							$result->{'primas-meta-primer'} += $row->{'primas-meta-' . $i};
+							$result->{'primas-negocio-meta-primer'} += $row->{'primas-negocios-meta-' . $i};
+							$result->{'primas-solicitud-meta-primer'} += $row->{'primas-solicitud-meta-' . $i};
+							break;
+						case (($i >= 5) && ($i < 9)):
+							$result->{'primas-meta-second'} += $row->{'primas-meta-' . $i};
+							$result->{'primas-negocio-meta-second'} += $row->{'primas-negocios-meta-' . $i};
+							$result->{'primas-solicitud-meta-second'} += $row->{'primas-solicitud-meta-' . $i};						break;
+						case (($i >= 0) && ($i <= 12)):
+							$result->{'primas-meta-tercer'} += $row->{'primas-meta-' . $i};
+							$result->{'primas-negocio-meta-tercer'} += $row->{'primas-negocios-meta-' . $i};
+							$result->{'primas-solicitud-meta-tercer'} += $row->{'primas-solicitud-meta-' . $i};
+							break;
+						default:
+							break;
+					}
+				}
+				$result->{'primas-meta-total'} += $row->{'primas-meta-' . $i};
+				$result->{'primas-negocios-meta-total'} += $row->{'primas-negocios-meta-' . $i};
+				$result->{'primas-solicitud-meta-total'} += $row->{'primas-solicitud-meta-' . $i};
+			}
+		}
+	}
+
+	private function _get_complementing_fields(&$full_result, $table = 'meta_new' )
+	{
+		// for gmm, some data are expected as arrays
+//		$primas_promedio = ($full_result->primas_promedio >= $full_result->primaspromedio) ?
+//			$full_result->primas_promedio : $full_result->primaspromedio;
+		$primas_promedio = isset($full_result->primas_promedio) ? $full_result->primas_promedio : 0;
+		if (isset($full_result->primaspromedio) && ($full_result->primaspromedio > $primas_promedio))
+			$primas_promedio = $full_result->primaspromedio;
+		$full_result->primas_promedio = $primas_promedio;
+		$full_result->primaspromedio = $primas_promedio;
+		if (!isset($full_result->prima_total_anual))
+		{
+			if (isset($full_result->primasAfectasInicialesUbicar))
+				$full_result->prima_total_anual = $full_result->primasAfectasInicialesUbicar;
+			elseif (isset($full_result->primasnetasiniciales))
+				$full_result->prima_total_anual = $full_result->primasnetasiniciales;
 			else
-				$data[0]['data']->prima_total_anual = 0;
+				$full_result->prima_total_anual = 0;
 		}
 
 		if ($table == 'meta_new')
 		{
-			$total = (float)$data[0]['data']->prima_total_anual;
+			$total = (float)$full_result->prima_total_anual;
 			for ($i = 1; $i <= 12; $i++)
-				$data[0]['data']->{'mes-' . $i} = round(($data[0]['data']->{'primas-meta-' . $i} / $total * 10000) * 100) / 10000;
+				$full_result->{'mes-' . $i} = round(($full_result->{'primas-meta-' . $i} / $total * 10000) * 100) / 10000;
 		}
 		else
 		{
 			foreach ($this->maybe_array_fields as $field_name)
 			{
-				if (!isset($data[0]['data']->$field_name))
+				if (!isset($full_result->$field_name))
 				{
 					$to_add = array();
 					for ($i = 1; $i <= 4; $i++)
 					{
-						if (isset($data[0]['data']->{$field_name . '_' . $i}))
-							$to_add[$i] = $data[0]['data']->{$field_name . '_' . $i};
+						if (isset($full_result->{$field_name . '_' . $i}))
+							$to_add[$i] = $full_result->{$field_name . '_' . $i};
 					}
-					$data[0]['data']->$field_name = $to_add;
+					$full_result->$field_name = $to_add;
 				}
 			}
 		}
-		return $data;
 	}
 
 // Getting config
@@ -617,6 +657,27 @@ class Simulators extends CI_Model{
 				$this->insertId = $this->db->insert_id();
 				$result = $this->insertId;
 			}
+		}
+		return $result;
+	}
+
+	public function translate_periodo($periodo, $ramo)
+	{
+		$result = 0;
+		switch ($periodo)
+		{
+			case 2: // current trimestre or cuatrimestre depending on ramo
+				if ($ramo == 1)
+					$result = $this->trimestre() + 110;
+				else
+					$result = $this->cuatrimestre() + 120;
+				break;
+			case 1: // current month
+				$result = date('m');
+			case 3: // current year
+			case 4: // should be custom period but this does not exist for meta
+			default:
+				break;
 		}
 		return $result;
 	}
