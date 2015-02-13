@@ -331,9 +331,15 @@ class Simulators extends CI_Model{
 
 		if ($table == 'meta_new')
 		{
-			$total = (float)$full_result->prima_total_anual;
-			for ($i = 1; $i <= 12; $i++)
-				$full_result->{'mes-' . $i} = round(($full_result->{'primas-meta-' . $i} / $total * 10000) * 100) / 10000;
+			if ($full_result->prima_total_anual)
+			{
+				$total = (float)$full_result->prima_total_anual;
+				for ($i = 1; $i <= 12; $i++)
+					$full_result->{'mes-' . $i} = round(($full_result->{'primas-meta-' . $i} / $total * 10000) * 100) / 10000;
+			}
+			else
+				for ($i = 1; $i <= 12; $i++)
+					$full_result->{'mes-' . $i} = 0;
 		}
 		else
 		{
