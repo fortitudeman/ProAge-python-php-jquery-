@@ -39,9 +39,14 @@ $subtotal = 0;
         <div class="span1 offset1"><h6>Prima promedio</h6></div>
         <div class="span1"><input type="text" name="primas_promedio" id="metas-prima-promedio" value="<?php if (isset($data->primas_promedio)) echo $data->primas_promedio; elseif (isset($data->primaspromedio)) echo $data->primaspromedio; else echo 0; ?>" class="input-small" /></div> 
         <div class="span2">
-        <input type="button" <?php if ($is_meta_page) echo ' style="display: none" '; ?> id="open_simulator" value="Ver simulador" class="pull-right btn-save-meta"  />
+          <input type="button" <?php if ($is_meta_page) echo ' style="display: none" '; ?> id="open_simulator" value="Ver simulador" class="pull-right btn-save-meta"  />
+<?php if ($is_meta_page): ?>
+          <input type="button" id="reset-meta" value="Borrar meta" class="btn-save-meta"  /> 
+<?php endif ?>
         </div>
-        <div class="span2"><input type="button" id="save_meta" value="Guardar Meta" class="pull-right btn-save-meta"  /></div>        
+        <div class="span2">
+          <input type="button" id="save_meta" value="Guardar Meta" class="pull-right btn-save-meta"  />
+		</div>
      </div>
     
      <table class="table table-bordered" style="width:100%; padding:0px;">
@@ -49,9 +54,7 @@ $subtotal = 0;
             <tr>
             	<th class="bgblank">Mes</th>
             	<th class="bglight">Estacionalidad
-<?php if ($is_meta_page): ?>
-        <input type="button" id="reset-meta" value="Borrar meta" class="btn-save-meta"  /> 
-<?php endif ?>
+
             	</th>
                 <th class="bglight">Solicitudes Meta</th>
                 <th class="bglight">Solicitudes Logradas</th>

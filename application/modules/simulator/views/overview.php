@@ -127,7 +127,7 @@ if ($is_simulator_page)
                 <option <?php if ($selected_period == '113') echo 'selected'; ?> value="113">Trimestre 3</option>
                 <option <?php if ($selected_period == '114') echo 'selected'; ?> value="114">Trimestre 4</option>
 <?php endif ?>
-                <option <?php if ($selected_period == '0') echo 'selected'; ?> value="0">Annual</option>
+                <option <?php if ($selected_period == '0') echo 'selected'; ?> value="0">Anual</option>
               </select>
               &nbsp;
               <select name="year" id="year" class="input-small auto-submit">
