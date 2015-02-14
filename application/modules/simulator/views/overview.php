@@ -28,9 +28,10 @@ $markup = $is_director_page ? 'h5' : 'h3';
 
 if ($is_simulator_page)
 {
-	$default_month = date('m');
+	$default_month = date('n');
 	$default_year = $selected_year;
 }
+$selected_period = 0;
 ?>
 <?php if (!$for_print && !$is_director_page): ?>
 <div class="row-fluid sortable">		
@@ -115,7 +116,8 @@ if ($is_simulator_page)
           <form action="" method="post" id="form">
 <?php if ($is_simulator_page): ?>
             <div class="row" style="margin: 0 1em; <?php if ($for_print) echo 'display: none' ?>">
-              <select name="period" class="input-medium auto-submit" id="period">
+              <input type="hidden" name="period" id="period" value="0" />
+              <select name="displayed_period" class="input-medium" id="displayed-period">
                 <option <?php if ($selected_period == $default_month) echo 'selected'; ?> value="<?php echo $default_month; ?>">Mensual</option>
 <?php if ($ramo == 'gmm'): ?>
                 <option <?php if ($selected_period == '121') echo 'selected'; ?> value="121">Cuatrimestre 1</option>

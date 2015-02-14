@@ -24,7 +24,7 @@ function stickyFooter(){
 $( document ).ready(function() {
 
 	function selectDefaultYear() {
-		var selectedPeriod = $( '#period option:selected' ).val();
+		var selectedPeriod = $( '#displayed-period option:selected' ).val();
 		var yearToSelect = new Date().getFullYear();
 		if ((selectedPeriod > 10) && (selectedPeriod < 100))
 			yearToSelect++;
@@ -38,8 +38,68 @@ $( document ).ready(function() {
 		})
 	}
 
-	$( '#period' ).on( 'change', function(){
-		selectDefaultYear();
+	$( '#displayed-period' ).on( 'change', function(){
+
+//		selectDefaultYear();
+		var selectedPeriod = $( '#displayed-period option:selected' ).val();
+		if (selectedPeriod == 0) { // whole year selected
+			for (var month = 1; month <= 12; month++) 
+				$( "#month-row-" + month).show();
+			for (var trimestre = 1; trimestre <= 4; trimestre++)
+				$( "#total-trimestre-" + trimestre).show();
+			for (var cuatrimestre = 1; cuatrimestre <= 3; cuatrimestre++)
+				$( "#total-cuatrimestre-" + cuatrimestre).show();
+		} else {
+			for (var month = 1; month <= 12; month++) 
+				$( "#month-row-" + month).hide();
+			for (var trimestre = 1; trimestre <= 4; trimestre++)
+				$( "#total-trimestre-" + trimestre).hide();
+			for (var cuatrimestre = 1; cuatrimestre <= 3; cuatrimestre++)
+				$( "#total-cuatrimestre-" + cuatrimestre).hide();
+			if ((selectedPeriod > 0) && (selectedPeriod <= 12)) { // month selection
+				$( "#month-row-" + selectedPeriod).show();
+			} else { // cuatrimestre or trimestre selection
+				switch (selectedPeriod) {
+					case '121': // Cuatrimestre 1
+						for (var month = 1; month <= 4; month++) 
+							$( "#month-row-" + month).show();
+						$( "#total-cuatrimestre-1").show();
+						break;
+					case '122': // Cuatrimestre 2
+						for (var month = 5; month <= 8; month++) 
+							$( "#month-row-" + month).show();
+						$( "#total-cuatrimestre-2").show();
+						break;
+					case '123': // Cuatrimestre 3
+						for (var month = 9; month <= 12; month++) 
+							$( "#month-row-" + month).show();
+						$( "#total-cuatrimestre-3").show();
+						break;
+					case '111': // Trimestre 1
+						for (var month = 1; month <= 3; month++) 
+							$( "#month-row-" + month).show();
+						$( "#total-trimestre-1").show();
+						break;
+					case '112': // Trimestre 2
+						for (var month = 4; month <= 6; month++) 
+							$( "#month-row-" + month).show();
+						$( "#total-trimestre-2").show();
+						break;
+					case '113': // Trimestre 3
+						for (var month = 7; month <= 9; month++) 
+							$( "#month-row-" + month).show();
+						$( "#total-trimestre-3").show();
+						break;
+					case '114': // Trimestre 4
+						for (var month = 10; month <= 12; month++) 
+							$( "#month-row-" + month).show();
+						$( "#total-trimestre-4").show();
+						break;
+					default:
+						break;
+				}
+			}
+		}
 	});
 
 	$( '.auto-submit' ).bind( 'change', function(){

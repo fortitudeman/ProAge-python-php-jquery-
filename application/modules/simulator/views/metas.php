@@ -103,7 +103,7 @@ $subtotal = 0;
              <?php if( !empty( $config ) ):
 			 foreach( $config as $configs ):
 				$i = $configs['id']; ?> 
-              <tr>
+              <tr id="month-row-<?php echo $i ?>">
             	<td><?php echo $configs['month']; ?></td>
                 <td class="bgestacionalidadlight">
                     <span id="mes-text-<?php echo $i ?>"><?php if( isset( $porcentajes['mes-'.$i] ) ) echo $porcentajes['mes-'.$i]; else echo $configs[$field] ?></span> %
@@ -164,7 +164,7 @@ $subtotal = 0;
            <?php $total += (int)$configs[$field] ?>
            <?php // Space Frst Trimestre and Cuatrimestre ?>
            <?php if( $trimestre != null and $periodo == 3 and $i==3 ): $subtotal++; ?>
-                <tr>
+                <tr id="total-trimestre-1">
                     <td><b>TOTAL 1er <br />trimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
@@ -215,7 +215,7 @@ $subtotal = 0;
            <?php endif; ?>
 		   <?php if( $ramo == 'vida' and $periodo == 12 and $i==3 ): $subtotal++;?>
 
-                <tr>
+                <tr id="total-trimestre-1">
                     <td><b>TOTAL 1er <br />trimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
@@ -267,7 +267,7 @@ $subtotal = 0;
            <?php endif; ?>   
              <?php if( $cuatrimestre != null and $periodo == 4 and $i==4 ): $subtotal++;?>
 
-                <tr>
+                <tr id="total-cuatrimestre-1">
                     <td><b>TOTAL 1er <br />cuatrimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
@@ -319,7 +319,7 @@ $subtotal = 0;
            <?php endif; ?>   
            <?php if( ( $ramo == 'gmm' or $ramo == 'autos' ) and $periodo == 12 and $i==4 ): $subtotal++;?>
 
-                <tr>
+                <tr id="total-cuatrimestre-1">
                     <td><b>TOTAL 1er <br />cuatrimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
@@ -371,7 +371,7 @@ $subtotal = 0;
            <?php // Space Second Trimestre and Cuatrimestre ?>
            <?php if( $trimestre != null and $periodo == 3 and $i==6 ): $subtotal++;?>
 
-                <tr>
+                <tr id="total-trimestre-2">
             	<td><b>TOTAL 2do <br />trimestre</b></td>
                 <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
@@ -421,7 +421,7 @@ $subtotal = 0;
             </tr> 
            <?php endif; ?>
            <?php if( $ramo == 'vida' and $periodo == 12 and $i==6 ): $subtotal++;?>
-               <tr>
+               <tr id="total-trimestre-2">
             	<td><b>TOTAL 2do <br />trimestre</b></td>
                 <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
@@ -473,7 +473,7 @@ $subtotal = 0;
            <?php endif; ?>   
            <?php if( $cuatrimestre != null and $periodo == 4 and $i==8 ): $subtotal++;?>
 
-                <tr>
+                <tr id="total-cuatrimestre-2">
                     <td><b>TOTAL 2do <br />cuatrimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
@@ -524,7 +524,7 @@ $subtotal = 0;
            <?php endif; ?>   
            <?php if( ( $ramo == 'gmm' or $ramo == 'autos' ) and $periodo == 12 and $i==8 ): $subtotal++;?>
 
-                <tr>
+                <tr id="total-cuatrimestre-2">
                     <td><b>TOTAL 2do <br />cuatrimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
@@ -577,7 +577,7 @@ $subtotal = 0;
            <?php // Space Three Trimestre ?>
            <?php if( $trimestre != null and $i==9 ): $subtotal++;?>
 
-              <tr>
+              <tr id="total-trimestre-3">
             	<td><b>TOTAL 3er <br />trimestre</b></td>
                 <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
@@ -627,7 +627,7 @@ $subtotal = 0;
            <?php endif ?> 
            <?php if( ($subtotal < 3) && $ramo == 'vida' and $periodo == 12 and $i==9 ): $subtotal++;?>
 
-              <tr>
+              <tr id="total-trimestre-3">
             	<td><b>TOTAL 3er <br />trimestre</b></td>
                 <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
@@ -679,7 +679,7 @@ $subtotal = 0;
            <?php // Space four Trimestre and three Cuatimestre ?>
            <?php if( $trimestre != null and $periodo == 3 and $i==12 ): $subtotal++;?>
 
-               <tr>
+               <tr id="total-trimestre-4">
             	<td><b>TOTAL 4to <br />trimestre</b></td>
                 <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
@@ -730,7 +730,7 @@ $subtotal = 0;
            <?php endif; ?>    
            <?php if( $ramo == 'vida' and $periodo == 12 and $i==12 ): $subtotal++; ?>
 
-               <tr>
+               <tr id="total-trimestre-4">
             	<td><b>TOTAL 4to <br />trimestre</b></td>
                 <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
@@ -781,8 +781,8 @@ $subtotal = 0;
            <?php endif; ?> 
 
            <?php if( $cuatrimestre != null and $periodo == 4 and $i==12 ): $subtotal++;?>
-                <tr>
-                    <td><b>TOTAL 4to <br />cuatrimestre</b></td>
+                <tr id="total-cuatrimestre-3">
+                    <td><b>TOTAL 3er <br />cuatrimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
                         <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
@@ -832,8 +832,8 @@ $subtotal = 0;
            <?php endif; ?>   
            <?php if( ( $ramo == 'gmm' or $ramo == 'autos' ) and $periodo == 12 and $i==12 ): $subtotal++;?>
 
-                <tr>
-                    <td><b>TOTAL 4to <br />cuatrimestre</b></td>
+                <tr id="total-cuatrimestre-3">
+                    <td><b>TOTAL 3cer <br />cuatrimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
                         <div id="primas-solicitud-meta-tercer-text" style="text-align: center !important"></div>  
