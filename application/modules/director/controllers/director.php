@@ -919,14 +919,8 @@ $( document ).ready( function(){
 				if (isset($datum['agent_id']))
 					$agent_ids[$key] = $datum['agent_id'];
 			}
-			$meta_period = $this->simulators->translate_periodo($filter['periodo'], $filter['query']['ramo']);
-
-			$year = date('Y');
-			if (isset($filter['cust_period_from']))
-				$year = substr($filter['cust_period_from'], 0, 4);
-			$meta_data = $this->simulators->get_rows( 'meta_new', $agent_ids,
-				$filter['query']['ramo'], $meta_period, $year);
-
+			$meta_data = $this->simulators->meta_rows( 'meta_new', $agent_ids, $filter['query']['ramo']);
+			$meta_period = $this->simulators->get_meta_period();
 			$this->work_order->init_operations(null, $filter['periodo'], $filter['query']['ramo']);
 			if ($agent_ids)
 				$this->work_order->add_operation_where(array('policies_vs_users.user_id' => $agent_ids));
@@ -941,13 +935,22 @@ $( document ).ready( function(){
 				{
 					if (isset($meta_data[$data[$key]['agent_id']]))
 					{
-						for ($i = $month_start; $i <= $month_end; $i++)
+						foreach ($meta_data[$data[$key]['agent_id']] as $year => $meta_row)
 						{
-							$prima_promedio = round((float)$meta_data[$data[$key]['agent_id']]->{'primas-meta-' . $i}  / 
-								(float)$meta_data[$data[$key]['agent_id']]->primas_promedio );
-							$data[$key]['solicitudes_meta'] += 100 * $prima_promedio / $meta_data[$data[$key]['agent_id']]->efectividad;
-							$data[$key]['negocios_meta'] += round($prima_promedio);
-							$data[$key]['primas_meta'] += $meta_data[$data[$key]['agent_id']]->{'primas-meta-' . $i};
+							$min_month = 1;
+							$max_month = 12;
+							if ($year == $meta_period['start_year'])
+								$min_month = (int)$meta_period['start_month'];
+							if ($year == $meta_period['end_year'])
+								$max_month = (int)$meta_period['end_month'];
+							for ($i = $min_month; $i <= $max_month; $i++)
+							{
+								$prima_promedio = (float)$meta_data[$data[$key]['agent_id']][$year]->{'primas-meta-' . $i}  / 
+									(float)$meta_data[$data[$key]['agent_id']][$year]->primas_promedio ;
+								$data[$key]['solicitudes_meta'] += 100 * $prima_promedio / $meta_data[$data[$key]['agent_id']][$year]->efectividad;
+								$data[$key]['negocios_meta'] += $prima_promedio;								
+								$data[$key]['primas_meta'] += $meta_data[$data[$key]['agent_id']][$year]->{'primas-meta-' . $i};
+							}
 						}
 					}
 					if (isset($nuevo_negocios[$data[$key]['agent_id']]))

@@ -73,7 +73,7 @@ endif; ?>
       </td>
       <td style="padding-right: 1em; text-align: right"><?php echo number_format($data[$i]['solicitudes_meta'], 0);?></td>
       <td style="padding-right: 1em; text-align: right"><?php echo $data[$i]['solicitudes_ingresadas'];?></td>
-      <td style="padding-right: 1em; text-align: right"><?php echo $data[$i]['negocios_meta'];?></td>
+      <td style="padding-right: 1em; text-align: right"><?php echo number_format($data[$i]['negocios_meta'], 0);?></td>
       <td style="padding-right: 1em; text-align: right"><?php echo $data[$i]['negocios_pagados'];?></td>
       <td style="padding-right: 1em; text-align: right"><?php echo number_format($data[$i]['primas_meta'], 2);?></td>
       <td style="padding-right: 1em; text-align: right"><?php echo number_format($data[$i]['primas_pagadas'], 2);?></td>
@@ -94,7 +94,7 @@ endif; ?>
       <td>TOTALES</td> 
       <td style="padding-right: 1em; text-align: right"><?php echo number_format($totals['solicitudes_meta'], 0);?></td>
       <td style="padding-right: 1em; text-align: right"><?php echo $totals['solicitudes_ingresadas'];?></td>
-      <td style="padding-right: 1em; text-align: right"><?php echo $totals['negocios_meta'];?></td>
+      <td style="padding-right: 1em; text-align: right"><?php echo number_format($totals['negocios_meta'], 0);?></td>
       <td style="padding-right: 1em; text-align: right"><?php echo $totals['negocios_pagados'];?></td>
       <td style="padding-right: 1em; text-align: right"><?php echo number_format($totals['primas_meta'], 2);?></td>
       <td style="padding-right: 1em; text-align: right"><?php echo number_format($totals['primas_pagadas'], 2);?></td>
