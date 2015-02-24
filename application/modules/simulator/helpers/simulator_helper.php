@@ -48,7 +48,7 @@ if ( ! function_exists('simulator_view'))
 			$cuatrimestre = $CI->simulators->cuatrimestre( $month );
 		
 		$SolicitudesLogradas = array();
-		$NegociosLogrados = array();
+		$negociosLogrados = array();
 		$PrimasLogradas = array();
 
 		if( $trimestre == 1 ){			
@@ -57,7 +57,7 @@ if ( ! function_exists('simulator_view'))
 				'02' => $CI->simulators->getSolicitudLograda( $agentid, $product_group_id, '02', $year ),
 				'03' => $CI->simulators->getSolicitudLograda( $agentid, $product_group_id, '03', $year )
 			);			
-			$NegociosLogrados = array(
+			$negociosLogrados = array(
 				'01' => $CI->simulators->getNegociosLograda( $agentid, $product_group_id, '01', $year ),
 				'02' => $CI->simulators->getNegociosLograda( $agentid, $product_group_id, '02', $year ),
 				'03' => $CI->simulators->getNegociosLograda( $agentid, $product_group_id, '03', $year )
@@ -74,7 +74,7 @@ if ( ! function_exists('simulator_view'))
 				'05' => $CI->simulators->getSolicitudLograda( $agentid, $product_group_id, '05', $year ),
 				'06' => $CI->simulators->getSolicitudLograda( $agentid, $product_group_id, '06', $year )
 			);			
-			$NegociosLogrados = array(
+			$negociosLogrados = array(
 				'04' => $CI->simulators->getNegociosLograda( $agentid, $product_group_id, '04', $year ),
 				'05' => $CI->simulators->getNegociosLograda( $agentid, $product_group_id, '05', $year ),
 				'06' => $CI->simulators->getNegociosLograda( $agentid, $product_group_id, '06', $year ),
@@ -91,7 +91,7 @@ if ( ! function_exists('simulator_view'))
 				'08' => $CI->simulators->getSolicitudLograda( $agentid, $product_group_id, '08', $year ),
 				'09' => $CI->simulators->getSolicitudLograda( $agentid, $product_group_id, '09', $year ),
 			);			
-			$NegociosLogrados = array(
+			$negociosLogrados = array(
 				'07' => $CI->simulators->getNegociosLograda( $agentid, $product_group_id, '07', $year ),
 				'08' => $CI->simulators->getNegociosLograda( $agentid, $product_group_id, '08', $year ),
 				'09' => $CI->simulators->getNegociosLograda( $agentid, $product_group_id, '09', $year ),
@@ -108,7 +108,7 @@ if ( ! function_exists('simulator_view'))
 				'11' => $CI->simulators->getSolicitudLograda( $agentid, $product_group_id, '11', $year ),
 				'12' => $CI->simulators->getSolicitudLograda( $agentid, $product_group_id, '12', $year )
 			);
-			$NegociosLogrados = array(
+			$negociosLogrados = array(
 				'10' => $CI->simulators->getNegociosLograda( $agentid, $product_group_id, '10', $year ),
 				'11' => $CI->simulators->getNegociosLograda( $agentid, $product_group_id, '11', $year ),
 				'12' => $CI->simulators->getNegociosLograda( $agentid, $product_group_id, '12', $year )
@@ -211,7 +211,7 @@ $( document ).ready( function(){
 		  'data' =>  $data,		  	  
 		  'config' => $CI->simulators->getConfigMetas( false, $trimestre, null ),		  
 		  'SolicitudesLogradas' => $SolicitudesLogradas,
-		  'NegociosLogrados' => $NegociosLogrados,	
+		  '$negociosLogrados' => $negociosLogrados,	
 		  'PrimasLogradas' => $PrimasLogradas,
 		  'trimestre' => $trimestre,
 		  'cuatrimestre' => $cuatrimestre,
@@ -227,3 +227,254 @@ $( document ).ready( function(){
 	}
 }
 
+/*
+	Helper for bonos - venta inicial (vida)
+*/
+if ( ! function_exists('calc_perc_bono_aplicado'))
+{
+	function calc_perc_bono_aplicado( $prima_afectadas, $negocios, $base = 0 )
+	{
+		$porcentaje = 0;
+		if (($base == 'm89') || ($base == 89))
+			return $porcentaje;
+		switch (TRUE)
+		{
+			case (( $prima_afectadas >= 530000 ) && ( $negocios >= 2 ) && ( $negocios < 4 )):
+				$porcentaje = 15;
+				break;
+			case (( $prima_afectadas >= 530000 ) && ( $negocios >= 4 ) && ( $negocios < 6 )):
+				$porcentaje = 30;
+				break;
+			case (( $prima_afectadas >= 530000 ) && ( $negocios >= 6 ) && ( $negocios < 9 )):		
+				$porcentaje = 35;
+				break;
+			case (( $prima_afectadas >= 530000 ) && ( $negocios >= 9 )):		
+				$porcentaje = 40;
+				break;
+			case (($prima_afectadas >= 420000 ) && ($prima_afectadas < 530000 ) && ( $negocios >= 2 ) && ( $negocios < 4 )):		
+				$porcentaje = 13;
+				break;
+			case (($prima_afectadas >= 420000 ) && ($prima_afectadas < 530000 ) && ( $negocios >= 4 ) && ( $negocios < 6 )):		
+				$porcentaje = 28;
+				break;
+			case (($prima_afectadas >= 420000 ) && ($prima_afectadas < 530000 ) && ( $negocios >= 6 ) && ( $negocios < 9 )):		
+				$porcentaje = 32.5;
+				break;
+			case (($prima_afectadas >= 420000 ) && ($prima_afectadas < 530000 ) && ( $negocios >= 9 )):		
+				$porcentaje = 36;
+				break;
+///////////////////
+			case (($prima_afectadas >= 320000 ) && ($prima_afectadas < 420000 ) && ( $negocios >= 2 ) && ( $negocios < 4 )):		
+				$porcentaje = 11;
+				break;
+			case (($prima_afectadas >= 320000 ) && ($prima_afectadas < 420000 ) && ( $negocios >= 4 ) && ( $negocios < 6 )):		
+				$porcentaje = 26;
+				break;
+			case (($prima_afectadas >= 320000 ) && ($prima_afectadas < 420000 ) && ( $negocios >= 6 ) && ( $negocios < 9 )):		
+				$porcentaje = 30;
+				break;
+			case (($prima_afectadas >= 320000 ) && ($prima_afectadas < 420000 ) && ( $negocios >= 9 )):		
+				$porcentaje = 32.5;
+				break;
+///////////////////
+			case (($prima_afectadas >= 240000 ) && ($prima_afectadas < 320000 ) && ( $negocios >= 2 ) && ( $negocios < 4 )):		
+				$porcentaje = 8;
+				break;
+			case (($prima_afectadas >= 240000 ) && ($prima_afectadas < 320000 ) && ( $negocios >= 4 ) && ( $negocios < 6 )):		
+				$porcentaje = 19;
+				break;
+			case (($prima_afectadas >= 240000 ) && ($prima_afectadas < 320000 ) && ( $negocios >= 6 ) && ( $negocios < 9 )):		
+				$porcentaje = 22.5;
+				break;
+			case (($prima_afectadas >= 240000 ) && ($prima_afectadas < 320000 ) && ( $negocios >= 9 )):		
+				$porcentaje = 25;
+				break;
+///////////////////
+			case (($prima_afectadas >= 190000 ) && ($prima_afectadas < 240000 ) && ( $negocios >= 2 ) && ( $negocios < 4 )):		
+				$porcentaje = 7;
+				break;
+			case (($prima_afectadas >= 190000 ) && ($prima_afectadas < 240000 ) && ( $negocios >= 4 ) && ( $negocios < 6 )):		
+				$porcentaje = 16;
+				break;
+			case (($prima_afectadas >= 190000 ) && ($prima_afectadas < 240000 ) && ( $negocios >= 6 ) && ( $negocios < 9 )):		
+				$porcentaje = 20;
+				break;
+			case (($prima_afectadas >= 190000 ) && ($prima_afectadas < 240000 ) && ( $negocios >= 9 )):		
+				$porcentaje = 22.5;
+				break;
+///////////////////
+			case (($prima_afectadas >= 140000 ) && ($prima_afectadas < 190000 ) && ( $negocios >= 2 ) && ( $negocios < 4 )):		
+				$porcentaje = 6;
+				break;
+			case (($prima_afectadas >= 140000 ) && ($prima_afectadas < 190000 ) && ( $negocios >= 4 ) && ( $negocios < 6 )):		
+				$porcentaje = 13;
+				break;
+			case (($prima_afectadas >= 140000 ) && ($prima_afectadas < 190000 ) && ( $negocios >= 6 ) && ( $negocios < 9 )):		
+				$porcentaje = 17.5;
+				break;
+			case (($prima_afectadas >= 140000 ) && ($prima_afectadas < 190000 ) && ( $negocios >= 9 )):		
+				$porcentaje = 20;
+				break;
+///////////////////
+			case (($prima_afectadas >= 100000 ) && ($prima_afectadas < 140000 ) && ( $negocios >= 2 ) && ( $negocios < 4 )):		
+				$porcentaje = 5;
+				break;
+			case (($prima_afectadas >= 100000 ) && ($prima_afectadas < 140000 ) && ( $negocios >= 4 ) && ( $negocios < 6 )):		
+				$porcentaje = 10;
+				break;
+			case (($prima_afectadas >= 100000 ) && ($prima_afectadas < 140000 ) && ( $negocios >= 6 ) && ( $negocios < 9 )):		
+				$porcentaje = 15;
+				break;
+			case (($prima_afectadas >= 100000 ) && ($prima_afectadas < 140000 ) && ( $negocios >= 9 )):		
+				$porcentaje = 17.5;
+				break;
+		}
+		return $porcentaje;
+	}
+}
+/*
+	Helper for bonos - conservacion (vida)
+*/
+if ( ! function_exists('calc_perc_conservacion'))
+{
+	function calc_perc_conservacion($base, $prima_afectadas)
+	{
+		$porcentaje = 0;
+		if ($base == 'm89')
+			return $porcentaje;
+		switch (true)
+		{
+			case (($base == 0) && ($prima_afectadas >= 470000)):
+				$porcentaje = 11;
+				break;
+			case (($base == 0) && ($prima_afectadas >= 370000) && ($prima_afectadas < 470000)):
+				$porcentaje = 10;
+				break;
+			case (($base == 0) && ($prima_afectadas >= 270000) && ($prima_afectadas < 370000)):
+				$porcentaje = 9;
+				break;
+			case (($base == 0) && ($prima_afectadas >= 220000) && ($prima_afectadas < 270000)):
+				$porcentaje = 7;
+				break;
+			case (($base == 0) && ($prima_afectadas >= 160000) && ($prima_afectadas < 220000)):
+				$porcentaje = 5;
+				break;
+			case (($base == 0) && ($prima_afectadas >= 130000) && ($prima_afectadas < 160000)):
+				$porcentaje = 4;
+				break;
+			case (($base == 0) && ($prima_afectadas >= 100000) && ($prima_afectadas < 130000)):
+				$porcentaje = 2;
+				break;
+//////////////
+			case (($base == 89) && ($prima_afectadas >= 470000)):
+				$porcentaje = 9;
+				break;
+			case (($base == 89) && ($prima_afectadas >= 370000) && ($prima_afectadas < 470000)):
+				$porcentaje = 8;
+				break;
+			case (($base == 89) && ($prima_afectadas >= 270000) && ($prima_afectadas < 370000)):
+				$porcentaje = 7;
+				break;
+			case (($base == 89) && ($prima_afectadas >= 220000) && ($prima_afectadas < 270000)):
+				$porcentaje = 4;
+				break;
+			case (($base == 89) && ($prima_afectadas >= 160000) && ($prima_afectadas < 220000)):
+				$porcentaje = 3;
+				break;
+			case (($base == 89) && ($prima_afectadas >= 130000) && ($prima_afectadas < 160000)):
+				$porcentaje = 2;
+				break;
+			case (($base == 89) && ($prima_afectadas >= 100000) && ($prima_afectadas < 130000)):
+				$porcentaje = 1;
+				break;
+//////////////
+			case (($base == 91) && ($prima_afectadas >= 470000)):
+				$porcentaje = 10;
+				break;
+			case (($base == 91) && ($prima_afectadas >= 370000) && ($prima_afectadas < 470000)):
+				$porcentaje = 9;
+				break;
+			case (($base == 91) && ($prima_afectadas >= 270000) && ($prima_afectadas < 370000)):
+				$porcentaje = 8;
+				break;
+			case (($base == 91) && ($prima_afectadas >= 220000) && ($prima_afectadas < 270000)):
+				$porcentaje = 5;
+				break;
+			case (($base == 91) && ($prima_afectadas >= 160000) && ($prima_afectadas < 220000)):
+				$porcentaje = 4;
+				break;
+			case (($base == 91) && ($prima_afectadas >= 130000) && ($prima_afectadas < 160000)):
+				$porcentaje = 3;
+				break;
+			case (($base == 91) && ($prima_afectadas >= 100000) && ($prima_afectadas < 130000)):
+				$porcentaje = 2;
+				break;
+			case (($base == 91) && ($prima_afectadas >= 470000)):
+				$porcentaje = 10;
+				break;
+			case (($base == 91) && ($prima_afectadas >= 370000) && ($prima_afectadas < 470000)):
+				$porcentaje = 9;
+				break;
+			case (($base == 91) && ($prima_afectadas >= 270000) && ($prima_afectadas < 370000)):
+				$porcentaje = 8;
+				break;
+			case (($base == 91) && ($prima_afectadas >= 220000) && ($prima_afectadas < 270000)):
+				$porcentaje = 5;
+				break;
+			case (($base == 91) && ($prima_afectadas >= 160000) && ($prima_afectadas < 220000)):
+				$porcentaje = 4;
+				break;
+			case (($base == 91) && ($prima_afectadas >= 130000) && ($prima_afectadas < 160000)):
+				$porcentaje = 3;
+				break;
+			case (($base == 91) && ($prima_afectadas >= 100000) && ($prima_afectadas < 130000)):
+				$porcentaje = 2;
+				break;
+//////////////
+			case (($base == 93) && ($prima_afectadas >= 470000)):
+				$porcentaje = 11;
+				break;
+			case (($base == 93) && ($prima_afectadas >= 370000) && ($prima_afectadas < 470000)):
+				$porcentaje = 10;
+				break;
+			case (($base == 93) && ($prima_afectadas >= 270000) && ($prima_afectadas < 370000)):
+				$porcentaje = 9;
+				break;
+			case (($base == 93) && ($prima_afectadas >= 220000) && ($prima_afectadas < 270000)):
+				$porcentaje = 6;
+				break;
+			case (($base == 93) && ($prima_afectadas >= 160000) && ($prima_afectadas < 220000)):
+				$porcentaje = 5;
+				break;
+			case (($base == 93) && ($prima_afectadas >= 130000) && ($prima_afectadas < 160000)):
+				$porcentaje = 4;
+				break;
+			case (($base == 93) && ($prima_afectadas >= 100000) && ($prima_afectadas < 130000)):
+				$porcentaje = 3;
+				break;
+/////////////
+			case (($base == 95) && ($prima_afectadas >= 470000)):
+				$porcentaje = 12;
+				break;
+			case (($base == 95) && ($prima_afectadas >= 370000) && ($prima_afectadas < 470000)):
+				$porcentaje = 11;
+				break;
+			case (($base == 95) && ($prima_afectadas >= 270000) && ($prima_afectadas < 370000)):
+				$porcentaje = 10;
+				break;
+			case (($base == 95) && ($prima_afectadas >= 220000) && ($prima_afectadas < 270000)):
+				$porcentaje = 7;
+				break;
+			case (($base == 95) && ($prima_afectadas >= 160000) && ($prima_afectadas < 220000)):
+				$porcentaje = 6;
+				break;
+			case (($base == 95) && ($prima_afectadas >= 130000) && ($prima_afectadas < 160000)):
+				$porcentaje = 5;
+				break;
+			case (($base == 95) && ($prima_afectadas >= 100000) && ($prima_afectadas < 130000)):
+				$porcentaje = 5;
+				break;
+		}
+		return $porcentaje;
+	}
+}

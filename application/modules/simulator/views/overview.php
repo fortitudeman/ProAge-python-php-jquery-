@@ -22,7 +22,10 @@ $is_director_page = ($uri_segments[1] == 'director');
 $is_simulator_page = ($uri_segments[1] == 'simulator');
 $is_meta_page = $is_simulator_page && isset($uri_segments[2]) &&
 	(($uri_segments[2] == 'index') || ($uri_segments[2] == 'getConfigMeta') ||
-	($uri_segments[2] == 'print_index')) ;
+	($uri_segments[2] == 'print_index'));
+
+$is_simulate_page = $is_simulator_page && isset($uri_segments[2]) &&
+	(($uri_segments[2] == 'simulate') || ($uri_segments[2] == 'print_simulate'));
 
 $markup = $is_director_page ? 'h5' : 'h3';
 
@@ -71,8 +74,11 @@ $selected_period = 0;
 <?php endif; ?>
           <?php
 //			$uri_segments = $this->uri->rsegment_array();
-			$uri_segments[1] = 'simulator';		
-			$uri_segments[2] = 'print_index';
+			$uri_segments[1] = 'simulator';
+			if ($uri_segments[2] == 'index')
+				$uri_segments[2] = 'print_index';
+			elseif ($uri_segments[2] == 'simulate')
+				$uri_segments[2] = 'print_simulate';
 			if (!$for_print) {
 				$link_attributes = 'class="btn btn-primary print-preview" id="print-button" target="_blank"';
 				$link_text = 'Vista previa de impresión';
@@ -117,7 +123,7 @@ $selected_period = 0;
 <?php if ($is_simulator_page): ?>
             <div class="row" style="margin: 0 1em; <?php if ($for_print) echo 'display: none' ?>">
               <input type="hidden" name="period" id="period" value="0" />
-              <select name="displayed_period" class="input-medium" id="displayed-period">
+              <select name="displayed_period" class="input-medium" id="displayed-period" <?php if ($is_simulate_page) echo 'style= "display: none"' ?>>
                 <option <?php if ($selected_period == $default_month) echo 'selected'; ?> value="<?php echo $default_month; ?>">Mensual</option>
 <?php if ($ramo == 'gmm'): ?>
                 <option <?php if ($selected_period == '121') echo 'selected'; ?> value="121">Cuatrimestre 1</option>
@@ -133,7 +139,15 @@ $selected_period = 0;
               </select>
               &nbsp;
               <select name="year" id="year" class="input-small auto-submit">
-<?php for ($i = -15; $i < 15; $i++): 
+<?php
+$min_year = -15;
+$max_year = 15;
+if ($is_simulate_page)
+{
+	$min_year = 0;
+	$max_year = 2;
+}
+for ($i = $min_year; $i < $max_year; $i++): 
 	$year_option = date('Y', mktime(0, 0, 0, date('m'),  date('d'),  date('Y') + $i));
 	$selected = ($year_option == $default_year) ? 'selected' : ''
 ?>
@@ -148,16 +162,25 @@ $selected_period = 0;
             </div>
 <?php endif ?>
           <input type="hidden" id="ramo" name="ramo" value="<?php if( isset( $ramoID ) ) echo $ramoID; else echo 1; ?>" />    
-          
           <input type="hidden" id="userid" name="userid" value="<?php echo $userid ?>" />    
-          
           <input type="hidden" id="agent_id" name="agent_id" value="<?php echo $agentid ?>" />  
-                   
           <input type="hidden" id="id" name="id" value="<?php if( isset( $data[0]['id'] ) ) echo $data[0]['id']; else echo 0; ?>" />    
-         
         <!-- <img src="<?php echo base_url() ?>images/distribucion.png" /> -->
          
          <div class="row" style="margin-right: 3em">
+<?php if ($is_simulate_page) :?>
+         <div class="span12 simulator" id="simulator-section" style="margin-left:2em;">
+            <?php
+				$data_view = array('data' => array(), 'meta_data' => array());
+				if ( isset( $data[0]['data'] ) )
+					$data_view['data'] = $data[0]['data'];
+				if ( isset( $meta_data[0]['data'] ) )
+					$data_view['meta_data'] = $meta_data[0]['data'];
+				$this->load->view( 'simulator_'.$ramo . '_new', $data_view );
+			?>
+         </div>
+
+<?php else: ?>
 <?php if (!$is_meta_page) :?>
 <?php if (!$for_print || !$print_meta) :?>
          <div class="span11 simulator" id="simulator-section" style="margin-left:40px;">
@@ -172,7 +195,6 @@ $selected_period = 0;
          </div>
 <?php endif; ?>
 <?php endif; ?>
-
 <?php if (!$for_print || $print_meta) :?>
           <div class="span12 metas" id="meta-section">
             <?php
@@ -182,6 +204,7 @@ $selected_period = 0;
 				$this->load->view( 'metas', array( $dataview ) );
 			?>
          </div>
+<?php endif; ?>
 <?php endif; ?>
          </div>  
            

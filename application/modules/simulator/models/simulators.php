@@ -313,7 +313,7 @@ class Simulators extends CI_Model{
 		{
 			foreach ($this->computed_meta_fields as $value)
 				$result->$value = 0;
-			for ($i = 1; $i < 12; $i++)
+			for ($i = 1; $i <= 12; $i++)
 			{
 				if ($row->ramo == 1)
 				{
@@ -376,17 +376,17 @@ class Simulators extends CI_Model{
 		// for gmm, some data are expected as arrays
 //		$primas_promedio = ($full_result->primas_promedio >= $full_result->primaspromedio) ?
 //			$full_result->primas_promedio : $full_result->primaspromedio;
-		$primas_promedio = isset($full_result->primas_promedio) ? $full_result->primas_promedio : 0;
+		$primas_promedio = isset($full_result->primas_promedio) ? $full_result->primas_promedio : 0;// only for 'meta_new' ??
 		if (isset($full_result->primaspromedio) && ($full_result->primaspromedio > $primas_promedio))
-			$primas_promedio = $full_result->primaspromedio;
-		$full_result->primas_promedio = $primas_promedio;
-		$full_result->primaspromedio = $primas_promedio;
-		if (!isset($full_result->prima_total_anual))
+			$primas_promedio = $full_result->primaspromedio;// only for 'meta_new' ??
+		$full_result->primas_promedio = $primas_promedio; // only for 'meta_new' ??
+		$full_result->primaspromedio = $primas_promedio;// only for 'meta_new' ??
+		if (!isset($full_result->prima_total_anual)) // only for 'meta_new' ??
 		{
-			if (isset($full_result->primasAfectasInicialesUbicar))
-				$full_result->prima_total_anual = $full_result->primasAfectasInicialesUbicar;
+			if (isset($full_result->primasAfectasInicialesUbicar)) // only for 'meta_new' ??
+				$full_result->prima_total_anual = $full_result->primasAfectasInicialesUbicar; // only for 'meta_new' ??
 			elseif (isset($full_result->primasnetasiniciales))
-				$full_result->prima_total_anual = $full_result->primasnetasiniciales;
+				$full_result->prima_total_anual = $full_result->primasnetasiniciales; // only for 'meta_new' ??
 			else
 				$full_result->prima_total_anual = 0;
 		}
@@ -711,7 +711,7 @@ class Simulators extends CI_Model{
 		if ($query->num_rows() > 0)	// update existing row
 		{
 			$old_row = $query->row();
-			$this->db->where('id', $old_row->id);
+			$this->db->where('id', $old_row->id);  // ??
 			$values['date'] = date( 'Y-m-d H:i:s' ) ;
 			$result = $this->db->update($table, $values);
 			if ($result)
@@ -719,6 +719,7 @@ class Simulators extends CI_Model{
 		}
 		else
 		{
+			unset($values['id']);
 			$result = $this->db->insert( $table, $values );
 			if ($result)
 			{

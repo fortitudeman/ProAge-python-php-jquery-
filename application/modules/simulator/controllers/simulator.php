@@ -57,62 +57,31 @@ class Simulator extends CI_Controller {
 	public $input_simulator_fields = array(
 		'agent_id',
 //'agent_name',
-		'efectividad', 'id', 'ramo', 'year',
-		'bonoAplicado_1', 'bonoAplicado_2', 'bonoAplicado_3', 'bonoAplicado_4',
+		'id', 'ramo', 'period', 'year',
 		'comisionVentaInicial_1', 'comisionVentaInicial_2',
 		'comisionVentaInicial_3', 'comisionVentaInicial_4',
 		'comisionVentaRenovacion_1', 'comisionVentaRenovacion_2',
 		'comisionVentaRenovacion_3', 'comisionVentaRenovacion_4',
-		'ingresoBonoProductividad_1', 'ingresoBonoProductividad_2',
-		'ingresoBonoProductividad_3', 'ingresoBonoProductividad_4',
-		'ingresoBonoRenovacion',
-		'ingresoBonoRenovacion_1', 'ingresoBonoRenovacion_2',
-		'ingresoBonoRenovacion_3', 'ingresoBonoRenovacion_4',
-		'ingresoComisionesVentaInicial_1', 'ingresoComisionesVentaInicial_2',
-		'ingresoComisionesVentaInicial_3', 'ingresoComisionesVentaInicial_4',
-		'ingresoComisionRenovacion_1', 'ingresoComisionRenovacion_2',
-		'ingresoComisionRenovacion_3', 'ingresoComisionRenovacion_4',
-		'noNegocios',
 		'noNegocios_1', 'noNegocios_2',
 		'noNegocios_3', 'noNegocios_4',
 		'periodo',
-		'porAcotamiento',
-		'porbonoGanado_1', 'porbonoGanado_2',
-		'porbonoGanado_3', 'porbonoGanado_4',
 		'porcentajeConservacion_1', 'porcentajeConservacion_2',
 		'porcentajeConservacion_3', 'porcentajeConservacion_4',
-		'porsiniestridad_1', 'porsiniestridad_2',
-		'porsiniestridad_3', 'porsiniestridad_4',
-		'primas_promedio',
-		'primasAfectasInicialesPagar_1', 'primasAfectasInicialesPagar_2',
-		'primasAfectasInicialesPagar_3', 'primasAfectasInicialesPagar_4',
-		'primasAfectasInicialesUbicar',
-		'primasnetasiniciales',
-		'primaspromedio',
+		'porsiniestridad_1', 'porsiniestridad_2', // GMM
+		'porsiniestridad_3', 'porsiniestridad_4', // GMM
 		'primasRenovacion_1', 'primasRenovacion_2',
 		'primasRenovacion_3', 'primasRenovacion_4',
-		'primasRenovacionPagar_1', 'primasRenovacionPagar_2',
-		'primasRenovacionPagar_3', 'primasRenovacionPagar_4',
-		'saves',
-		'simulatoringresoscuartotrimestre', 'simulatorIngresosPeriod_1', 'simulatorIngresosPeriod_2',
-		'simulatorIngresosPeriod_3', 'simulatorIngresosPeriod_4',
-		'simulatoringresosprimertrimestre', 'simulatoringresossegundotrimestre',
-		'simulatoringresostercertrimestre', 'simulatorprimascuartotrimestre',
-		'simulatorPrimasPeriod_1', 'simulatorPrimasPeriod_2',
-		'simulatorPrimasPeriod_3', 'simulatorPrimasPeriod_4',
 		'simulatorprimasprimertrimestre', 'simulatorprimassegundotrimestre',
-		'simulatorprimastercertrimestre',
+		'simulatorprimastercertrimestre', 'simulatorprimascuartotrimestre',
 		'XAcotamiento_1', 'XAcotamiento_2',
 		'XAcotamiento_3', 'XAcotamiento_4',
 	);
 
 	public $maybe_array_fields = array(	// the fields that are arrays for gmm
-		'bonoAplicado',
 		'comisionVentaInicial', 'comisionVentaRenovacion',
-		'ingresoBonoProductividad', 'ingresoBonoRenovacion', 'ingresoComisionesVentaInicial',
-		'ingresoComisionRenovacion', 'noNegocios', 'porsiniestridad',
-		'primasAfectasInicialesPagar', 'primasRenovacion', 'primasRenovacionPagar',
-		'simulatorIngresosPeriod', 'simulatorPrimasPeriod', 'XAcotamiento'
+		'noNegocios', 'porsiniestridad',
+		'primasRenovacion',
+		'XAcotamiento'
 		);
 
 	public $computed_meta_fields = array(
@@ -167,16 +136,13 @@ class Simulator extends CI_Controller {
 				
 		// Get Session
 		$this->sessions = $this->session->userdata('system');
-				
-		
+
 		// Get user rol		
 		$this->user_vs_rol = $this->rol->user_role( $this->sessions['id'] );
 		
 		// Get user rol access
 		$this->roles_vs_access = $this->rol->user_roles_vs_access( $this->user_vs_rol );
-		
-		
-	
+
 		// If exist the module name, the user accessed
 		if( !empty( $this->user_vs_rol )  and !empty( $this->roles_vs_access ) )	
 		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Simulador', $value ) ):
@@ -185,18 +151,14 @@ class Simulator extends CI_Controller {
 			
 		break; endif; endforeach;
 
-
 		// Added Acctions for user, change the bool access
 		if( !empty( $this->user_vs_rol ) and !empty( $this->roles_vs_access ) )	
 		foreach( $this->roles_vs_access  as $value ): if( in_array( 'Simulador', $value ) ):
-			
-			
+
 			if( $value['action_name'] == 'Crear' )
 				$this->access_create = true;
-						
 			if( $value['action_name'] == 'Editar' )
 				$this->access_update = true;
-				
 			if( $value['action_name'] == 'Eliminar' )
 				$this->access_delete = true;	
 
@@ -212,27 +174,7 @@ class Simulator extends CI_Controller {
 	public function index( $userid = null, $ramo = null )
 	{
 		$uri_segments = $this->uri->rsegment_array();
-		if (count($uri_segments) < 3)
-			show_404();
-		$agent_name = '';
-		$agent_posted = $this->input->post('agent_name');
-		if (($agent_posted !== FALSE) && $agent_posted)
-		{
-			$pieces = explode( ' [ID: ', $agent_posted);
-			if (isset($pieces[1]))
-			{
-				$user_id = $this->user->getUserIdByAgentId( (int)$pieces[1] );
-				if ($user_id != $uri_segments[3])
-				{
-					$uri_segments[3] = $user_id;
-					redirect( join('/', $uri_segments), 'refresh' );
-				}
-			}
-		}
-		if (!isset($uri_segments[4]) || ($uri_segments[4] < 1) || ($uri_segments[4] > 3))
-			$ramo = 1;
-		else
-			$ramo = $uri_segments[4];
+		$ramo = $this->_check_submitted_agent($uri_segments);
 		$this->_index_common( $userid, $ramo);
 	}
 
@@ -824,7 +766,15 @@ $( document ).ready( function(){
 		return $logrados;
 	}
 
+	public function save_simulator_new()
+	{
+		$this->_save_new('simulator');
+	}
 	public function save_meta_new()
+	{
+		$this->_save_new('meta');
+	}
+	private function _save_new($page)
 	{
 		if( $this->input->is_ajax_request() == false ){
 			// Set false message		
@@ -851,17 +801,12 @@ $( document ).ready( function(){
 		$this->load->model( array( 'simulators' ) );
 		$to_save = array('year' => date('Y'));
 		$not_processed = $_POST;
-		if ($this->input->post('ingresoBonoRenovacion') !== FALSE)
-		{
-			$page = 'simulator_meta';
-			$expected_fields = array_merge($this->input_meta_fields, $this->input_simulator_fields);
-		}
+		if ($page == 'simulator')
+			$expected_fields = $this->input_simulator_fields;
 		else
-		{
-			$page = 'meta';
 			$expected_fields = $this->input_meta_fields;
-		}
-		foreach ($this->input_meta_fields as $field)
+
+		foreach ($expected_fields as $field)
 		{
 			if (($pos = strpos($field, '_') ) !== FALSE)	// some fields are submitted as array (GMM) or as scalar (Vida)
 			{
@@ -894,7 +839,8 @@ $( document ).ready( function(){
 					!is_array($input))
 				{
 					$input = trim(str_replace('%', '', $input));
-					if (!strlen($input) || is_numeric($input) || ($input == 'NaN'))
+					if (!strlen($input) || is_numeric($input) || ($input == 'NaN') ||
+						(strpos($field, 'porcentajeConservacion') !== FALSE))
 					{
 						$to_save[$field] = ($input == 'NaN') ? 0 : $input;
 						unset($not_processed[$field]);
@@ -910,7 +856,7 @@ $( document ).ready( function(){
 				!is_array($input))
 			{
 				$input = trim(str_replace('%', '', $input));
-				if (is_numeric($input) || ($input == 'NaN'))
+				if (!strlen($input) || is_numeric($input) || ($input == 'NaN'))
 				{
 					$to_save[$field] = ($input == 'NaN') ? 0 : $input;
 					unset($not_processed[$field]);
@@ -924,7 +870,8 @@ $( document ).ready( function(){
 		}
 		if ($page == 'meta')
 			$result = $this->simulators->create_update( 'meta_new', $to_save );
-
+		else
+			$result = $this->simulators->create_update( 'simulator_new', $to_save );
 		if ($result)
 			echo $result;
 		else
@@ -1180,6 +1127,180 @@ $( document ).ready( function(){
 		}
 		echo json_encode('1');
 		exit;
+	}
+
+	public function simulate()
+	{
+		$uri_segments = $this->uri->rsegment_array();
+		$ramo = $this->_check_submitted_agent($uri_segments);
+		$this->_simulate_common( $uri_segments[3], $ramo);
+	}
+
+	public function print_simulate( $userid = null, $ramo = null )
+	{
+		$this->for_print = true;
+		$this->print_meta = false;
+		$this->_simulate_common( $userid, $ramo);
+	}
+
+	private function _simulate_common( $userid = null, $ramo = null )
+	{
+		if ($ramo != 1)
+		{
+			echo 'TODO';
+			exit();
+		}
+		if (!$this->access && ($userid != $this->sessions['id']) )
+		{
+			$this->session->set_flashdata( 'message', array( 
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Simulador" o no tiene permisos ver el simulator de este usuario. Informe a su administrador.'
+			));
+			redirect( 'home', 'refresh' );
+		}
+		$ramo_to_simulator = array(
+			1 => 'vida', 2 => 'gmm', 3 => 'autos');
+		$simulator = isset($ramo_to_simulator[$ramo]) ? $ramo_to_simulator[$ramo] : 'vida';
+
+		$this->load->model( array('simulators' ) );
+
+		$agentid = $this->user->getAgentIdByUser( $userid );
+		$users = $this->user->getForUpdateOrDelete( $userid );
+
+		$period = 0;
+		$year = $this->input->post('year');
+		if ($year === FALSE)
+			$year = $this->uri->rsegment(6);
+		$year = ($year !== FALSE) ? $year : date('Y');
+
+		$data = $this->simulators->getByAgentNew('simulator_new', $agentid, $ramo, $period, $year);
+		$meta_data = $this->simulators->getByAgentNew('meta_new', $agentid, $ramo, $period, $year);
+
+		$js_assets = array(
+			'<script type="text/javascript" src="'.base_url().'scripts/config.js"></script>',
+			'<script type="text/javascript">Config.currentModule = "simulator";</script>',
+			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas_simulator.js"></script>',			
+		);
+
+		if ($this->for_print) {
+			$css = array(
+		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet">',
+		  	'<link href="'. base_url() .'simulator/assets/style/simulator_print.css" rel="stylesheet">',
+		  );
+		  $add_js = '
+<script type="text/javascript">
+$( document ).ready( function(){
+	$("#open_meta").hide();
+	$("#print-button").bind( "click", function(){
+		$(this).hide(); window.print(); window.close(); return false;}
+	);
+	$(".main-menu-span").removeClass("span2");
+	$("#content").removeClass("span10").addClass("span12");
+	$("#meta-footer td").css("font-size", "10px");
+	
+	if (!$("#print-button").hasClass("print-preview"))
+		$("#reset-meta").hide();
+});
+</script>
+';
+			if ($this->print_meta)
+				$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas.js"></script>';
+			else {
+				$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_'.$simulator.'.js"></script>';
+			}
+		} else {
+			$css = array(
+		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet" media="screen">'
+				);
+			$uri_segments_meta = $this->uri->rsegment_array();
+			$uri_segments_meta[5] = $period;
+			$uri_segments_meta[6] = $year;			
+			$uri_segments_simulator = $uri_segments_meta;
+			$uri_segments_meta[2] = 'print_index';
+			$uri_segments_simulator[2] = 'print_index_simulator';
+			
+			$add_js = '
+<script type="text/javascript">
+$( document ).ready( function(){
+	$("#meta-footer td").css("font-size", "18px");
+	$("#print-button").bind( "click", function(){
+		if ($(".simulator:visible").length > 0) {
+			$(this).attr("href", "' . site_url($uri_segments_simulator) . '");
+		} else {
+			$(this).attr("href", "' . site_url($uri_segments_meta) . '");
+		}
+	});
+
+	$( "#tabs" ).tabs();
+});
+</script>
+';
+			$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_'.$simulator.'_new.js"></script>';
+		}
+		$js_assets[] = $add_js;
+
+		$this->load->helper('filter');
+		$this->agent_array = $this->user->getAgents( FALSE );
+		$js_assets[] = get_agent_autocomplete_js($this->agent_array, '#form');
+		$this->other_filters = array(
+			'agent_name' => '',
+		);
+		get_generic_filter($this->other_filters, $this->agent_array);
+
+		$this->view = array(
+		  'title' => 'Simulador',
+		   // Permisions
+		  'user' => $this->sessions,
+		  'user_vs_rol' => $this->user_vs_rol,
+		  'roles_vs_access' => $this->roles_vs_access,
+		  'access_create' => $this->access_create,
+		  'access_update' => $this->access_update,
+		  'access_delete' => $this->access_delete,
+		  'css' => $css,
+		  'scripts' => $js_assets,		  
+		  'content' => 'simulator/overview',
+		  'message' => $this->session->flashdata('message'),
+		  'userid' =>  $userid,
+		  'agentid' =>  $agentid,
+		  'data' => $data,
+		  'meta_data' => $meta_data,
+		  'users' => $users,
+		  'for_print' => $this->for_print,
+		  'print_meta' => $this->print_meta,
+		  'other_filters' => $this->other_filters,
+		  'selected_year' => $year,
+		  'ramo' => $simulator,
+		);
+
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+	}
+
+	private function _check_submitted_agent($uri_segments)
+	{
+		if (count($uri_segments) < 3)
+			show_404();
+
+		$agent_name = '';
+		$agent_posted = $this->input->post('agent_name');
+		if (($agent_posted !== FALSE) && $agent_posted)
+		{
+			$pieces = explode( ' [ID: ', $agent_posted);
+			if (isset($pieces[1]))
+			{
+				$user_id = $this->user->getUserIdByAgentId( (int)$pieces[1] );
+				if ($user_id != $uri_segments[3])
+				{
+					$uri_segments[3] = $user_id;
+					redirect( join('/', $uri_segments), 'refresh' );
+				}
+			}
+		}
+		if (!isset($uri_segments[4]) || ($uri_segments[4] < 1) || ($uri_segments[4] > 3))
+			$ramo = 1;
+		else
+			$ramo = $uri_segments[4];
+		return $ramo;
 	}
 /* End of file simulator.php */
 /* Location: ./application/controllers/simulator.php */
