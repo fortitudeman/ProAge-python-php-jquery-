@@ -538,7 +538,7 @@ function save(){
 			success: function(data){
 				if (data != '0') {
 					resultMessage = 'La meta se ha guardado correctamente.';
-//					$( '#id' ).val(data);
+					$( '#id' ).val(data);
 				} else
 					resultMessage = 'Ocurrio un error. Consulte a su administrador.';
 			}
