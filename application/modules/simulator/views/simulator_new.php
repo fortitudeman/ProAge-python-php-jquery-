@@ -15,6 +15,16 @@
 */
 $this->load->helper('simulator/simulator');
 $period_labels = array(	1 => 'er', 2 => 'o', 3 => 'er', 4 => 'o');
+if ($ramo == 'vida')
+{
+	$period_name = 'trimestre';
+	$period_max = 4;
+}
+else
+{
+	$period_name = 'cuatrimestre';
+	$period_max = 3;
+}
 ?>
 <div class="row-fluid" style="margin: -1em 0">
   <input type="button" id="save-simulator" value="Guardar Simulator" class="pull-right btn-save-meta" />
@@ -31,17 +41,15 @@ $period_labels = array(	1 => 'er', 2 => 'o', 3 => 'er', 4 => 'o');
 
 <div id="tabs">
     <ul id="tabs-ul">
-<?php for ($i = 1; $i <= 4; $i++): ?>
-      <li><a href="#trimestre-<?php echo $i; ?>"><?php echo $i . $period_labels[$i]; ?> Trimestre</a></li>
+<?php for ($i = 1; $i <= $period_max; $i++): ?>
+      <li><a href="#<?php echo $period_name ?>-<?php echo $i; ?>"><?php echo $i . $period_labels[$i] . ' ' . ucfirst($period_name); ?></a></li>
 <?php endfor; ?>
       <li><a href="#anual">Anual</a></li>
     </ul>
 <?php
-$simulator_prima_fields = array(
-	1 => 'simulatorprimasprimertrimestre',
-	2 => 'simulatorprimassegundotrimestre',
-	3 => 'simulatorprimastercertrimestre',
-	4 => 'simulatorprimascuartotrimestre');
+for ($i = 1; $i <= $period_max; $i++)
+	$simulator_prima_fields[$i] = 'simulatorPrimasPeriod_' . $i;
+
 $meta_prima_fields = array(
 	1 => 'primas-meta-primer',
 	2 => 'primas-meta-segund',
@@ -51,6 +59,7 @@ $prima_values = array();
 $prima_renovacion_values = array();
 $negocio_values = array();
 $percent_conservacion_values = array();
+$percent_siniestrad_values = array();
 $ingreso_comm_venta_inicial = array('total' => 0);
 $ingreso_comm_renovacion = array('total' => 0);
 $ingreso_bono_venta_inicial = array('total' => 0);
@@ -63,7 +72,7 @@ $percent_bono_renovacion = array();
 
 $meta_ori = array('prima' => array(), 'negocios' => array());
 $promedio = isset($meta_data->primas_promedio) ? $meta_data->primas_promedio : 0;
-for ($i = 1; $i <= 4; $i++) :
+for ($i = 1; $i <= $period_max; $i++) :
 	$meta_ori['prima'][$i] = '';
 	$meta_ori['negocios'][$i] = '';
 	if (isset($meta_data->{$meta_prima_fields[$i]}))
@@ -94,6 +103,11 @@ for ($i = 1; $i <= 4; $i++) :
 	else
 		$percent_conservacion_values[$i] = 0;
 
+	if ( isset( $data->{'porsiniestridad_' . $i} ))
+		$percent_siniestrad_values[$i] = $data->{'porsiniestridad_' . $i};
+	else
+		$percent_siniestrad_values[$i] = 0;
+
 	if ( isset( $data->{'XAcotamiento_' . $i} ) ) 
 	{
 		$bono_venta_inicial[$i] = $data->{'XAcotamiento_' . $i} * $prima_values[$i] / 100;
@@ -104,10 +118,18 @@ for ($i = 1; $i <= 4; $i++) :
 		$bono_venta_inicial[$i] = 0;
 		$bono_renovacion[$i] = 0;
 	}
-	$percent_bono_venta_inicial[$i] = calc_perc_bono_aplicado($prima_values[$i], $negocio_values[$i], $percent_conservacion_values[$i]);
-	$percent_bono_renovacion[$i] = calc_perc_conservacion($percent_conservacion_values[$i], $prima_renovacion_values[$i]);
+	if ($ramo == 'vida')
+	{
+		$percent_bono_venta_inicial[$i] = get_inicial_gmm_percent($prima_values[$i]);
+		$percent_bono_renovacion[$i] = calc_perc_conservacion($percent_conservacion_values[$i], $prima_renovacion_values[$i]);
+	}
+	else
+	{
+		$percent_bono_venta_inicial[$i] = get_inicial_gmm_percent($prima_values[$i], $negocio_values[$i], $percent_conservacion_values[$i]);
+		$percent_bono_renovacion[$i] = get_renovacion_gmm_percent($prima_renovacion_values[$i], $percent_siniestrad_values[$i]);
+	}
 ?>
-<div class="trimestre" id="trimestre-<?php echo $i?>">
+<div class="<?php echo $period_name ?>" id="<?php echo $period_name . '-' . $i?>">
 <div class="row-fluid">
   <div class="span6 left-column">
   </div>   <!-- END left column -->
@@ -130,12 +152,14 @@ for ($i = 1; $i <= 4; $i++) :
         <div class="span3 smaller">Primas afectas iniciales:</div>
         <div class="span3">
           <span style="display: none" class="meta-ori" id="meta-prima-ori-<?php echo $i ?>"><?php echo $meta_ori['prima'][$i] ?></span>
-          <input type="text" class="span12 smaller simulator-primas-trimestre" name="<?php echo $simulator_prima_fields[$i] ?>" id="<?php echo $simulator_prima_fields[$i] ?>" value="<?php echo $prima_values[$i]; ?>">
+          <input type="text" class="span12 smaller simulator-primas-period" name="<?php echo $simulator_prima_fields[$i] ?>" id="<?php echo $simulator_prima_fields[$i] ?>" value="<?php echo $prima_values[$i]; ?>">
         </div>
-        <div class="span3 smaller">No. de Negocios PAI:</div>
+        <div class="span3 smaller"><?php if ($ramo == 'vida'): ?>No. de Negocios PAI:<?php endif ?></div>
         <div class="span3">
+<?php if ($ramo == 'vida'): ?>
 	       <span style="display: none" class="meta-ori" id="meta-negocio-ori-<?php echo $i ?>"><?php echo $meta_ori['negocios'][$i] ?></span>
            <input type="text" class="span12 smaller noNegocios" name="noNegocios_<?php echo $i ?>" id="noNegocios_<?php echo $i ?>" value="<?php echo $negocio_values[$i]; ?>">
+<?php endif ?>
         </div>
       </div>
 	  
@@ -160,8 +184,9 @@ for ($i = 1; $i <= 4; $i++) :
         <div class="span3">
            <input type="text" class="span12 smaller primasRenovacion" name="primasRenovacion_<?php echo $i ?>" id="primasRenovacion_<?php echo $i ?>" value="<?php echo $prima_renovacion_values[$i]; ?>">
         </div>
-        <div class="span3 smaller">% Conservación:</div>
+        <div class="span3 smaller">% <?php if ($ramo == 'vida'): ?>Conservación<?php else: ?>Siniestralidad<?php endif; ?>:</div>
         <div class="span3">
+<?php if ($ramo == 'vida'): ?>
 		  <select name="porcentajeConservacion_<?php echo $i; ?>" id="porcentajeConservacion_<?php echo $i; ?>" class="span12 smaller conservacion-percent">
              <option value="0" <?php if ($percent_conservacion_values[$i] == 0 ) echo 'selected="selected"'; ?>>Sin base</option>
              <option value="m89" <?php if ($percent_conservacion_values[$i] == "m89" ) echo 'selected="selected"'; ?>>&lt;89%</option>
@@ -169,7 +194,15 @@ for ($i = 1; $i <= 4; $i++) :
              <option value="91" <?php if ($percent_conservacion_values[$i] == 91 ) echo 'selected="selected"'; ?>>91%</option>
              <option value="93" <?php if ($percent_conservacion_values[$i] == 93 ) echo 'selected="selected"'; ?>>93%</option>
              <option value="95" <?php if ($percent_conservacion_values[$i] == 95 ) echo 'selected="selected"'; ?>>95%</option>
-          </select>		  
+          </select>
+<?php else: ?>
+		  <select name="porsiniestridad_<?php echo $i; ?>" id="porsiniestridad_<?php echo $i; ?>" class="span12 smaller siniestridad-percent">
+             <option value="">Seleccione</option>
+             <option value="68" <?php if ($percent_siniestrad_values[$i] == 68 ) echo 'selected="selected"'; ?>>&lt;= 68</option>
+             <option value="64" <?php if ($percent_siniestrad_values[$i] == 64 ) echo 'selected="selected"'; ?>>&lt;= 64</option>
+             <option value="60" <?php if ($percent_siniestrad_values[$i] == 60 ) echo 'selected="selected"'; ?>>&lt;= 60</option>
+          </select>
+<?php endif ?>
         </div>
       </div>
 
@@ -242,7 +275,7 @@ $ingreso_bono_venta_inicial[$i] + $ingreso_bono_renovacion[$i], 2) ?>
 </span>
 
 </h3>
-</div> <!-- END trimestre -->
+</div> <!-- END trimestre / cuatrimestre -->
 <?php
 $ingreso_comm_venta_inicial['total'] += $ingreso_comm_venta_inicial[$i];
 $ingreso_comm_renovacion['total'] += $ingreso_comm_renovacion[$i];
@@ -277,10 +310,10 @@ endfor; ?>
 	      </tr>
 	    </tfoot>			
 	    <tbody>
-<?php for ($i = 1; $i <= 4; $i++):
+<?php for ($i = 1; $i <= $period_max; $i++):
 $row_style = ($i & 1) ? 'odd' : 'even'; ?>
 	      <tr class="simulator-row-<?php echo $row_style?>">
-			<td><?php echo $i . $period_labels[$i]; ?> Trimestre</td>
+			<td><?php echo $i . $period_labels[$i] . ' ' . $period_name; ?></td>
 			<td id="inicial-comm-recap-<?php echo $i; ?>"><?php echo number_format($ingreso_comm_venta_inicial[$i], 2); ?></td>
 			<td id="inicial-bono-recap-<?php echo $i; ?>"><?php echo number_format($ingreso_bono_venta_inicial[$i], 2) ?></td>
 	      </tr>
@@ -312,10 +345,10 @@ $row_style = ($i & 1) ? 'odd' : 'even'; ?>
 	      </tr>
 	    </tfoot>			
 	    <tbody>
-<?php for ($i = 1; $i <= 4; $i++):
+<?php for ($i = 1; $i <= $period_max; $i++):
 $row_style = ($i & 1) ? 'odd' : 'even'; ?>
 	      <tr class="simulator-row-<?php echo $row_style?>">
-			<td><?php echo $i . $period_labels[$i]; ?> Trimestre</td>
+			<td><?php echo $i . $period_labels[$i] . ' ' . $period_name; ?></td>
 			<td id="renovacion-comm-recap-<?php echo $i; ?>"><?php echo number_format($ingreso_comm_renovacion[$i], 2); ?></td>
 			<td id="renovacion-bono-recap-<?php echo $i; ?>"><?php echo number_format($ingreso_bono_renovacion[$i], 2) ?></td>
 	      </tr>

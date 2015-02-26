@@ -176,7 +176,7 @@ for ($i = $min_year; $i < $max_year; $i++):
 					$data_view['data'] = $data[0]['data'];
 				if ( isset( $meta_data[0]['data'] ) )
 					$data_view['meta_data'] = $meta_data[0]['data'];
-				$this->load->view( 'simulator_'.$ramo . '_new', $data_view );
+				$this->load->view( 'simulator_new', $data_view );
 			?>
          </div>
 

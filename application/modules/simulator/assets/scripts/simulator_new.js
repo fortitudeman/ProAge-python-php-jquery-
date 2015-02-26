@@ -18,21 +18,22 @@ $( document ).ready(function() {
 	$( '#considerar-meta').bind( 'click', function(){
 		if ( confirm( "¿Esta seguro que desea cambiar los campos 'Primas afectas iniciales' y 'No. de Negocios PAI' ?" ) ) {
 			if (updateConsiderarMeta() == 'checked') { // reset with data coming from meta
-				$( '.simulator-primas-trimestre').each(function( index ) {
+				$( '.simulator-primas-period').each(function( index ) {
 					$(this).val($(this).siblings('.meta-ori').eq(0).text());
 				});
 				$( '.noNegocios').each(function( index ) {
 					$(this).val($(this).siblings('.meta-ori').eq(0).text());
 				});
 			} else { // reset with blank fields
-				$( '.simulator-primas-trimestre').each(function( index ) {
+				$( '.simulator-primas-period').each(function( index ) {
 					$(this).val('');
 				});
 				$( '.noNegocios').each(function( index ) {
 					$(this).val('');
 				});
 			}
-			for (var i = 1; i <= 4; i++) {
+			var periodCount = $( '.simulator-primas-period').length;
+			for (var i = 1; i <= periodCount; i++) {
 				updateLeftCol(i);
 //				updateRightCol(i);
 			}
@@ -54,7 +55,7 @@ $( document ).ready(function() {
 		});
 	});
 
-	// % Bono Renovacion
+	// % Conservacion (vida)
 	$( ".conservacion-percent" ).bind( 'change', function(){
 		var rank = $(this).attr('id').replace('porcentajeConservacion_', '');
 	// Update data related to Prima Venta Inicial:
@@ -65,7 +66,18 @@ $( document ).ready(function() {
 		updateBottomRecap();
 	});
 
-	$( '.simulator-primas-trimestre').bind( 'keyup', function(){
+	// % Siniestralidad (gmm)
+	$( ".siniestridad-percent" ).bind( 'change', function(){
+		var rank = $(this).attr('id').replace('porsiniestridad_', '');
+	// Update data related to Prima Venta Inicial:
+		updateLeftCol(rank);
+	// Update data related to Prima Renovacion:
+		updateRightCol(rank);
+	// Update recaps:
+		updateBottomRecap();
+	});
+
+	$( '.simulator-primas-period').bind( 'keyup', function(){
 		var rank = getTrimestreRank($(this).attr('id'));
 		if (rank == -1)
 			return false;
@@ -107,8 +119,8 @@ $( document ).ready(function() {
 });
 
 	function getTrimestreRank(currentId) {
-		var primaFields = [ 'simulatorprimasprimertrimestre', 'simulatorprimassegundotrimestre',
-			'simulatorprimastercertrimestre', 'simulatorprimascuartotrimestre'];
+		var primaFields = [ 'simulatorPrimasPeriod_1', 'simulatorPrimasPeriod_2',
+			'simulatorPrimasPeriod_3', 'simulatorPrimasPeriod_4'];
 		var result = jQuery.inArray(currentId, primaFields);
 		if (result > -1)
 			result++;
@@ -116,8 +128,8 @@ $( document ).ready(function() {
 	}
 
 	function getTrimestreId(rank) {
-		var primaFields = [ 'simulatorprimasprimertrimestre', 'simulatorprimassegundotrimestre',
-			'simulatorprimastercertrimestre', 'simulatorprimascuartotrimestre'];
+		var primaFields = [ 'simulatorPrimasPeriod_1', 'simulatorPrimasPeriod_2',
+			'simulatorPrimasPeriod_3', 'simulatorPrimasPeriod_4'];
 		var key = parseInt(rank) - 1;
 		if (primaFields[key] !== undefined)
 			return primaFields[key];
@@ -237,7 +249,10 @@ function updateLeftCol(rank)
 	var negocios = (primaPromedio != 0) ? (primaAfectadas / primaPromedio) : 0;
 	$( '#noNegocios_' + rank ).val( Math.ceil(negocios) );*/
 	var negocios = parseInt( $( '#noNegocios_' + rank ).val() );
-	var porcentaje = CalcPercBonoAplicado(primaAfectadas, negocios);
+	if (Config.currentRamo == 1)
+		var porcentaje = CalcPercBonoAplicado(primaAfectadas, negocios);
+	else
+		var porcentaje = getInicialGmmPercent(primaAfectadas);	
 	$( '#bonoAplicado_' + rank ).val( porcentaje );
 	var totalP = primaAfectadas * parseFloat($( '#XAcotamiento_' + rank ).val().replace( '%', '' )/100);
 	$( '#primasAfectasInicialesPagar_text_'  + rank).html( '$ '+moneyFormat(totalP) );
@@ -261,8 +276,13 @@ function updateRightCol(rank)
 	$( '#primasRenovacionPagar_text_' + rank ).html( '$ '+moneyFormat(totalP) );
 	$( '#primasRenovacionPagar_' + rank ).val( totalP );
 
-	var base = parseInt( $( '#porcentajeConservacion_' + rank ).val() );
-	var porcentaje = CalcPercConservacion(base, primasRenovacion);
+	if (Config.currentRamo == 1) {
+		var base = parseInt( $( '#porcentajeConservacion_' + rank ).val() );
+		var porcentaje = CalcPercConservacion(base, primasRenovacion);
+	} else {
+		var base = parseInt( $( '#porsiniestridad_' + rank ).val() );
+		var porcentaje = getRenovacionGmmPercent(primasRenovacion, base);
+	}
 	$( '#porbonoGanado_' + rank ).val( porcentaje );
 	var totalB = totalP * porcentaje/100;
 	$( '#ingresoBonoRenovacion_text_' + rank ).html( '$ '+moneyFormat(totalB) );
@@ -275,12 +295,14 @@ function updateRightCol(rank)
 // Updates bottom line and year recap
 function updateBottomRecap() {
 
+	var periodCount = $( '.simulator-primas-period').length;
 	var ingresoComisionesVentaInicial = [0, 0, 0, 0, 0];
 	var ingresoComisionesRenovacion = [0, 0, 0, 0, 0];
 	var ingresoBonosVentaInicial = [0, 0, 0, 0, 0];
 	var ingresoBonosRenovacion = [0, 0, 0, 0, 0];
-	var ingresoTotal = [0, 0, 0, 0, 0];	
-	for(  var i = 1; i <= 4; i++ ){	
+	var ingresoTotal = [0, 0, 0, 0, 0];
+
+	for(  var i = 1; i <= periodCount; i++ ){	
 		ingresoComisionesVentaInicial[i] = parseFloat($( '#ingresoComisionesVentaInicial_' + i ).val());
 		ingresoComisionesVentaInicial[0] += ingresoComisionesVentaInicial[i];
 		ingresoComisionesRenovacion[i] = parseFloat($( '#ingresoComisionRenovacion_' + i ).val());
@@ -317,7 +339,7 @@ function updateConsiderarMeta() {
 		$( '.conservacion-percent' ).prop('readonly', false);
 		$( '.comisionVentaInicial' ).prop('readonly', false);
 		$( '.comisionVentaRenovacion' ).prop('readonly', false);
-		$( '.simulator-primas-trimestre' ).prop('readonly', true);
+		$( '.simulator-primas-period' ).prop('readonly', true);
 		$( '.noNegocios' ).prop('readonly', true);
 		return 'checked';
 	} else {
@@ -326,8 +348,106 @@ function updateConsiderarMeta() {
 		$( '.conservacion-percent' ).prop('readonly', false);
 		$( '.comisionVentaInicial' ).prop('readonly', false);
 		$( '.comisionVentaRenovacion' ).prop('readonly', false);
-		$( '.simulator-primas-trimestre' ).prop('readonly', false);
+		$( '.simulator-primas-period' ).prop('readonly', false);
 		$( '.noNegocios' ).prop('readonly', false);
 		return 'unchecked';
 	}
 }
+
+	function getInicialGmmPercent (prima) {
+		var porcentaje = 0;
+		switch (true)
+		{
+			case (prima >= 420000):
+				porcentaje = 15;
+				break;
+			case ((prima >= 310000) && (prima < 420000)):
+				porcentaje = 12;
+				break;
+			case ((prima >= 210000) && (prima < 310000)):
+				porcentaje = 10;
+				break;
+			case ((prima >= 150000) && (prima < 210000)):
+				porcentaje = 7.5;
+				break;
+			case ((prima >= 90000) && (prima < 150000)):
+				porcentaje = 5;
+				break;
+			case (prima < 90000):
+				porcentaje = 0;
+				break;
+			default:
+				break;
+		}
+		return porcentaje;
+	}
+
+	function getRenovacionGmmPercent(prima, sinistrad) {
+		porcentaje = 0;
+		switch (true)
+		{
+			case ((sinistrad == 68) && (prima >= 470000)):
+				porcentaje = 3;
+				break;
+			case ((sinistrad == 64) && (prima >= 470000)):
+				porcentaje = 5;
+				break;
+			case ((sinistrad == 60) && (prima >= 470000)):
+				porcentaje = 8;
+				break;				
+/////////////
+			case ((sinistrad == 68) && (prima >= 370000) && (prima < 470000)):
+				porcentaje = 2;
+				break;
+			case ((sinistrad == 64) && (prima >= 370000) && (prima < 470000)):
+				porcentaje = 4;
+				break;
+			case ((sinistrad == 60) && (prima >= 370000) && (prima < 470000)):
+				porcentaje = 6;
+				break;					
+/////////////
+			case ((sinistrad == 68) && (prima >= 260000) && (prima < 370000)):
+				porcentaje = 1.5;
+				break;
+			case ((sinistrad == 64) && (prima >= 260000) && (prima < 370000)):
+				porcentaje = 3;
+				break;
+			case ((sinistrad == 60) && (prima >= 260000) && (prima < 370000)):
+				porcentaje = 4.5;
+				break;	
+/////////////
+			case ((sinistrad == 68) && (prima >= 190000) && (prima < 260000)):
+				porcentaje = 1;
+				break;
+			case ((sinistrad == 64) && (prima >= 190000) && (prima < 260000)):
+				porcentaje = 2;
+				break;
+			case ((sinistrad == 60) && (prima >= 190000) && (prima < 260000)):
+				porcentaje = 3;
+				break;
+/////////////
+			case ((sinistrad == 68) && (prima >= 140000) && (prima < 190000)):
+				porcentaje = 0.5;
+				break;
+			case ((sinistrad == 64) && (prima >= 140000) && (prima < 190000)):
+				porcentaje = 1;
+				break;
+			case ((sinistrad == 60) && (prima >= 140000) && (prima < 190000)):
+				porcentaje = 2;
+				break;
+/////////////
+/*			case ((sinistrad == 68) && (prima < 140000)):
+				porcentaje = 0;
+				break;
+			case ((sinistrad == 64) && (prima < 140000)):
+				porcentaje = 1;
+				break;
+			case ((sinistrad == 60) && (prima < 140000)):
+				porcentaje = 2;
+				break;*/			
+
+			default:
+				break;
+		}
+		return porcentaje;
+	}

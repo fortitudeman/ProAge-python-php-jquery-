@@ -478,3 +478,111 @@ if ( ! function_exists('calc_perc_conservacion'))
 		return $porcentaje;
 	}
 }
+/*
+	Helper for bonos - primas iniciales (gmm)
+*/
+if ( ! function_exists('get_inicial_gmm_percent'))
+{
+	function get_inicial_gmm_percent ($prima) {
+		$porcentaje = 0;
+		switch (true)
+		{
+			case ($prima >= 420000):
+				$porcentaje = 15;
+				break;
+			case (($prima >= 310000) && ($prima < 420000)):
+				$porcentaje = 12;
+				break;
+			case (($prima >= 210000) && ($prima < 310000)):
+				$porcentaje = 10;
+				break;
+			case (($prima >= 150000) && ($prima < 210000)):
+				$porcentaje = 7.5;
+				break;
+			case (($prima >= 90000) && ($prima < 150000)):
+				$porcentaje = 5;
+				break;
+			case ($prima < 90000):
+				$porcentaje = 0;
+				break;
+			default:
+				break;
+		}
+		return $porcentaje;
+	}
+}
+/*
+	Helper for bonos - primas renovacion (gmm)
+*/
+if ( ! function_exists('get_renovacion_gmm_percent'))
+{
+	function get_renovacion_gmm_percent ($prima, $sinistrad) {
+		$porcentaje = 0;
+		switch (true)
+		{
+			case (($sinistrad == 68) && ($prima >= 470000)):
+				$porcentaje = 3;
+				break;
+			case (($sinistrad == 64) && ($prima >= 470000)):
+				$porcentaje = 5;
+				break;
+			case (($sinistrad == 60) && ($prima >= 470000)):
+				$porcentaje = 8;
+				break;				
+/////////////
+			case (($sinistrad == 68) && ($prima >= 370000) && ($prima < 470000)):
+				$porcentaje = 2;
+				break;
+			case (($sinistrad == 64) && ($prima >= 370000) && ($prima < 470000)):
+				$porcentaje = 4;
+				break;
+			case (($sinistrad == 60) && ($prima >= 370000) && ($prima < 470000)):
+				$porcentaje = 6;
+				break;					
+/////////////
+			case (($sinistrad == 68) && ($prima >= 260000) && ($prima < 370000)):
+				$porcentaje = 1.5;
+				break;
+			case (($sinistrad == 64) && ($prima >= 260000) && ($prima < 370000)):
+				$porcentaje = 3;
+				break;
+			case (($sinistrad == 60) && ($prima >= 260000) && ($prima < 370000)):
+				$porcentaje = 4.5;
+				break;	
+/////////////
+			case (($sinistrad == 68) && ($prima >= 190000) && ($prima < 260000)):
+				$porcentaje = 1;
+				break;
+			case (($sinistrad == 64) && ($prima >= 190000) && ($prima < 260000)):
+				$porcentaje = 2;
+				break;
+			case (($sinistrad == 60) && ($prima >= 190000) && ($prima < 260000)):
+				$porcentaje = 3;
+				break;
+/////////////
+			case (($sinistrad == 68) && ($prima >= 140000) && ($prima < 190000)):
+				$porcentaje = 0.5;
+				break;
+			case (($sinistrad == 64) && ($prima >= 140000) && ($prima < 190000)):
+				$porcentaje = 1;
+				break;
+			case (($sinistrad == 60) && ($prima >= 140000) && ($prima < 190000)):
+				$porcentaje = 2;
+				break;
+/////////////
+/*			case (($sinistrad == 68) && ($prima < 140000)):
+				$porcentaje = 0;
+				break;
+			case (($sinistrad == 64) && ($prima < 140000)):
+				$porcentaje = 1;
+				break;
+			case (($sinistrad == 60) && ($prima < 140000)):
+				$porcentaje = 2;
+				break;					
+*/
+			default:
+				break;
+		}
+		return $porcentaje;
+	}
+}

@@ -159,103 +159,10 @@ class Simulators extends CI_Model{
 				'data' => json_decode( $row->data )
 				
 			);
-			
+
 		//echo "<pre>". print_r($data). "</pre>";		
 		return $data;
 		
-	}
-
-	public function get_rows( $table = 'meta_new', $agent = null, $ramo = null, $period = 0, $year = null)
-	{
-		$data = array();
-		if ( ($agent === null) || !is_array($agent) ||
-			empty($ramo) || ($ramo < 1) || ($ramo > 3))
-			return $data;
-		if (empty($year))
-			$year = date('Y');
-		$this->db->select( $table . '.*' );
-		$this->db->from( $table );
-		$where = array(
-			'ramo' => (int)$ramo,
-			'period' => (int)$period,
-			'year' => (int)$year
-		);
-		$this->db->where($where);	
-		if ($agent)
-			$this->db->where_in('agent_id', $agent);
-		$query = $this->db->get();
-		if ($query->num_rows() == 0)
-			return $data;
-
-		foreach ($query->result() as $row)
-		{
-			$data[$row->agent_id] = $row;
-			$this->_get_computed_fields($data[$row->agent_id], $data[$row->agent_id], $table);
-			$this->_get_complementing_fields($data[$row->agent_id], $table );
-		}
-		return $data;
-	}
-
-	private $meta_period = array();
-	public function get_meta_period()
-	{
-		return $this->meta_period;
-	}
-
-	public function meta_rows( $table = 'meta_new', $agent = null, $ramo = null)
-	{
-		$data = array();
-		if ( ($agent === null) || !is_array($agent) || ($ramo === null) ||
-			 ($ramo < 1) || ($ramo > 3))
-			return $data;
-
-		if (!$this->custom_period_from || !$this->custom_period_to)
-		{
-			$this->meta_period['start_year'] = date('Y');
-			$this->meta_period['end_year'] = $this->meta_period['start_year'];
-			if ($ramo == 1) // ramo = 1 -> defaults to current trimestre
-			{
-				$this->meta_period['end_month'] = 3 * $this->trimestre();
-				$this->meta_period['start_month'] = $this->meta_period['end_month'] - 2;
-			}
-			else // ramo = 2 or 3 -> defaults to current cuatrimestre
-			{
-				$this->meta_period['end_month'] = 4 * $this->cuatrimestre();
-				$this->meta_period['start_month'] = $this->meta_period['end_month'] - 3;
-			}
-		}
-		else
-		{
-			$this->meta_period['start_year'] = substr($this->custom_period_from, 0, 4);
-			$this->meta_period['start_month'] = substr($this->custom_period_from, 5, 2);
-			$this->meta_period['end_year'] = substr($this->custom_period_to, 0, 4);
-			$this->meta_period['end_month'] = substr($this->custom_period_to, 5, 2);
-		}
-		if ($this->meta_period['start_year'] > $this->meta_period['end_year'])
-			$this->meta_period['end_year'] = $this->meta_period['start_year'];
-
-		$this->db->select( $table . '.*' );
-		$this->db->from( $table );
-		$where = array(
-			'ramo' => (int)$ramo,
-			'year >= ' => $this->meta_period['start_year'],
-			'year <= ' => $this->meta_period['end_year'],				
-		);
-		$this->db->where($where);	
-		if ($agent)
-			$this->db->where_in('agent_id', $agent);
-		$query = $this->db->get();
-		if ($query->num_rows() == 0)
-			return $data;
-
-		foreach ($query->result() as $row)
-		{
-			if (isset($data[$row->agent_id]))
-				$data[$row->agent_id][$row->year] = $row;
-			else
-				$data[$row->agent_id] = array($row->year => $row);
-		}
-		return $data;
 	}
 
 // Getting by Agent
@@ -286,6 +193,17 @@ class Simulators extends CI_Model{
 			if ( ($year == date('Y')) && ($period == 0) )  // check 'old' table
 			{
 				$data = $this->getByAgent( $agent, $ramo );
+				$field_name_normalize = array(
+					'simulatorprimasprimertrimestre' => 'simulatorPrimasPeriod_1',
+					'simulatorprimassegundotrimestre' => 'simulatorPrimasPeriod_2',
+					'simulatorprimastercertrimestre' => 'simulatorPrimasPeriod_3',
+					'simulatorprimascuartotrimestre' => 'simulatorPrimasPeriod_4'
+				);
+				foreach ($field_name_normalize as $key => $value)
+				{
+					if (isset($data[0]['data']->$key))
+						$data[0]['data']->$value = $data[0]['data']->$key;
+				}
 //				if (isset($data[0]))
 //					$this->db->delete('simulator', array('id' => $data[0]['id']));
 			}
@@ -373,26 +291,22 @@ class Simulators extends CI_Model{
 
 	private function _get_complementing_fields(&$full_result, $table = 'meta_new' )
 	{
-		// for gmm, some data are expected as arrays
-//		$primas_promedio = ($full_result->primas_promedio >= $full_result->primaspromedio) ?
-//			$full_result->primas_promedio : $full_result->primaspromedio;
-		$primas_promedio = isset($full_result->primas_promedio) ? $full_result->primas_promedio : 0;// only for 'meta_new' ??
-		if (isset($full_result->primaspromedio) && ($full_result->primaspromedio > $primas_promedio))
-			$primas_promedio = $full_result->primaspromedio;// only for 'meta_new' ??
-		$full_result->primas_promedio = $primas_promedio; // only for 'meta_new' ??
-		$full_result->primaspromedio = $primas_promedio;// only for 'meta_new' ??
-		if (!isset($full_result->prima_total_anual)) // only for 'meta_new' ??
-		{
-			if (isset($full_result->primasAfectasInicialesUbicar)) // only for 'meta_new' ??
-				$full_result->prima_total_anual = $full_result->primasAfectasInicialesUbicar; // only for 'meta_new' ??
-			elseif (isset($full_result->primasnetasiniciales))
-				$full_result->prima_total_anual = $full_result->primasnetasiniciales; // only for 'meta_new' ??
-			else
-				$full_result->prima_total_anual = 0;
-		}
-
 		if ($table == 'meta_new')
 		{
+			$primas_promedio = isset($full_result->primas_promedio) ? $full_result->primas_promedio : 0;
+			if (isset($full_result->primaspromedio) && ($full_result->primaspromedio > $primas_promedio))
+				$primas_promedio = $full_result->primaspromedio;
+			$full_result->primas_promedio = $primas_promedio;
+			$full_result->primaspromedio = $primas_promedio;
+			if (!isset($full_result->prima_total_anual))
+			{
+				if (isset($full_result->primasAfectasInicialesUbicar))
+					$full_result->prima_total_anual = $full_result->primasAfectasInicialesUbicar;
+				elseif (isset($full_result->primasnetasiniciales))
+					$full_result->prima_total_anual = $full_result->primasnetasiniciales;
+				else
+					$full_result->prima_total_anual = 0;
+			}
 			if ($full_result->prima_total_anual)
 			{
 				$total = (float)$full_result->prima_total_anual;
@@ -407,16 +321,12 @@ class Simulators extends CI_Model{
 		{
 			foreach ($this->maybe_array_fields as $field_name)
 			{
-				if (!isset($full_result->$field_name))
+				for ($i = 1; $i <= 4; $i++)
 				{
-					$to_add = array();
-					for ($i = 1; $i <= 4; $i++)
-					{
-						if (isset($full_result->{$field_name . '_' . $i}))
-							$to_add[$i] = $full_result->{$field_name . '_' . $i};
-					}
-					$full_result->$field_name = $to_add;
+					if (isset($full_result->$field_name->$i))
+						$full_result->{$field_name . '_' . $i} = $full_result->$field_name->$i;
 				}
+				unset($full_result->$field_name);
 			}
 		}
 	}

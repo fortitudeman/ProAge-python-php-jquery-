@@ -65,14 +65,15 @@ class Simulator extends CI_Controller {
 		'noNegocios_1', 'noNegocios_2',
 		'noNegocios_3', 'noNegocios_4',
 		'periodo',
-		'porcentajeConservacion_1', 'porcentajeConservacion_2',
-		'porcentajeConservacion_3', 'porcentajeConservacion_4',
+		'porcentajeConservacion_1', 'porcentajeConservacion_2', // Vida
+		'porcentajeConservacion_3', 'porcentajeConservacion_4', // Vida
 		'porsiniestridad_1', 'porsiniestridad_2', // GMM
 		'porsiniestridad_3', 'porsiniestridad_4', // GMM
+		'simulatorPrimasPeriod_1', 'simulatorPrimasPeriod_2',
+		'simulatorPrimasPeriod_3', 'simulatorPrimasPeriod_4',
 		'primasRenovacion_1', 'primasRenovacion_2',
 		'primasRenovacion_3', 'primasRenovacion_4',
-		'simulatorprimasprimertrimestre', 'simulatorprimassegundotrimestre',
-		'simulatorprimastercertrimestre', 'simulatorprimascuartotrimestre',
+
 		'XAcotamiento_1', 'XAcotamiento_2',
 		'XAcotamiento_3', 'XAcotamiento_4',
 	);
@@ -80,7 +81,7 @@ class Simulator extends CI_Controller {
 	public $maybe_array_fields = array(	// the fields that are arrays for gmm
 		'comisionVentaInicial', 'comisionVentaRenovacion',
 		'noNegocios', 'porsiniestridad',
-		'primasRenovacion',
+		'simulatorPrimasPeriod', 'primasRenovacion',
 		'XAcotamiento'
 		);
 
@@ -1145,11 +1146,6 @@ $( document ).ready( function(){
 
 	private function _simulate_common( $userid = null, $ramo = null )
 	{
-		if ($ramo != 1)
-		{
-			echo 'TODO';
-			exit();
-		}
 		if (!$this->access && ($userid != $this->sessions['id']) )
 		{
 			$this->session->set_flashdata( 'message', array( 
@@ -1178,7 +1174,7 @@ $( document ).ready( function(){
 
 		$js_assets = array(
 			'<script type="text/javascript" src="'.base_url().'scripts/config.js"></script>',
-			'<script type="text/javascript">Config.currentModule = "simulator";</script>',
+			'<script type="text/javascript">Config.currentModule = "simulator"; Config.currentRamo = "' . $ramo . '";</script>',
 			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas_simulator.js"></script>',			
 		);
 
@@ -1235,7 +1231,7 @@ $( document ).ready( function(){
 });
 </script>
 ';
-			$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_'.$simulator.'_new.js"></script>';
+			$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_new.js"></script>';
 		}
 		$js_assets[] = $add_js;
 
