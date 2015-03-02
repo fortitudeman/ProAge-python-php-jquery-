@@ -13,7 +13,6 @@
 
 */
 $uri_segments = $this->uri->rsegment_array();
-
 $without_ramo = $uri_segments;
 unset($without_ramo[4]);
 $without_ramo = base_url() . implode('/', $without_ramo);
@@ -29,13 +28,27 @@ $is_simulate_page = $is_simulator_page && isset($uri_segments[2]) &&
 
 $markup = $is_director_page ? 'h5' : 'h3';
 
+$switch_url = '';
 if ($is_simulator_page)
 {
 	$default_month = date('n');
 	$default_year = $selected_year;
+	$switch_segments = $uri_segments;
+	if ($switch_segments[2] == 'simulate')
+	{
+		$switch_segments[2] = 'index';
+		$switch_text = 'Ver meta';
+	}
+	else
+	{
+		$switch_segments[2] = 'simulate';
+		$switch_text = 'Ver simulator';
+	}	
+	$switch_url = base_url() . implode('/', $switch_segments) . '.html';
 }
 $selected_period = 0;
 ?>
+
 <?php if (!$for_print && !$is_director_page): ?>
 <div class="row-fluid sortable">		
     <div class="box span12">
@@ -52,6 +65,14 @@ $selected_period = 0;
         <div class="box-content">
 <?php endif; ?>
 <?php if (!$is_director_page): ?>
+
+<?php if ($switch_url): ?>
+<div style="text-align: right; margin-right: 3em"">
+<a href="<?php echo $switch_url; ?>" class="btn btn-primary">
+<?php echo $switch_text ?></a>
+</div>
+<?php endif ?>
+
 		  <?php // Show Messages ?>
 
           <?php if( isset( $message['type'] ) ): ?>

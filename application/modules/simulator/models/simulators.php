@@ -165,6 +165,67 @@ class Simulators extends CI_Model{
 		
 	}
 
+	private $meta_period = array();
+	public function get_meta_period()
+	{
+		return $this->meta_period;
+	}
+	public function meta_rows( $table = 'meta_new', $agent = null, $ramo = null)
+	{
+		$data = array();
+		if ( ($agent === null) || !is_array($agent) || ($ramo === null) ||
+			 ($ramo < 1) || ($ramo > 3))
+			return $data;
+
+		if (!$this->custom_period_from || !$this->custom_period_to)
+		{
+			$this->meta_period['start_year'] = date('Y');
+			$this->meta_period['end_year'] = $this->meta_period['start_year'];
+			if ($ramo == 1) // ramo = 1 -> defaults to current trimestre
+			{
+				$this->meta_period['end_month'] = 3 * $this->trimestre();
+				$this->meta_period['start_month'] = $this->meta_period['end_month'] - 2;
+			}
+			else // ramo = 2 or 3 -> defaults to current cuatrimestre
+			{
+				$this->meta_period['end_month'] = 4 * $this->cuatrimestre();
+				$this->meta_period['start_month'] = $this->meta_period['end_month'] - 3;
+			}
+		}
+		else
+		{
+			$this->meta_period['start_year'] = substr($this->custom_period_from, 0, 4);
+			$this->meta_period['start_month'] = substr($this->custom_period_from, 5, 2);
+			$this->meta_period['end_year'] = substr($this->custom_period_to, 0, 4);
+			$this->meta_period['end_month'] = substr($this->custom_period_to, 5, 2);
+		}
+		if ($this->meta_period['start_year'] > $this->meta_period['end_year'])
+			$this->meta_period['end_year'] = $this->meta_period['start_year'];
+
+		$this->db->select( $table . '.*' );
+		$this->db->from( $table );
+		$where = array(
+			'ramo' => (int)$ramo,
+			'year >= ' => $this->meta_period['start_year'],
+			'year <= ' => $this->meta_period['end_year'],				
+		);
+		$this->db->where($where);	
+		if ($agent)
+			$this->db->where_in('agent_id', $agent);
+		$query = $this->db->get();
+		if ($query->num_rows() == 0)
+			return $data;
+
+		foreach ($query->result() as $row)
+		{
+			if (isset($data[$row->agent_id]))
+				$data[$row->agent_id][$row->year] = $row;
+			else
+				$data[$row->agent_id] = array($row->year => $row);
+		}
+		return $data;
+	}
+
 // Getting by Agent
 	public function getByAgentNew( $table = 'meta_new', $agent = null, $ramo = null, $period = 0, $year = null)
 	{
