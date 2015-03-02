@@ -1196,14 +1196,15 @@ $( document ).ready( function(){
 	
 	if (!$("#print-button").hasClass("print-preview"))
 		$("#reset-meta").hide();
+
+	$(".screen-view").hide();
+	$(".print-view").show();
+	$(":input").prop("readonly", true);
 });
 </script>
 ';
 			if ($this->print_meta)
 				$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas.js"></script>';
-			else {
-				$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_'.$simulator.'.js"></script>';
-			}
 		} else {
 			$css = array(
 		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet" media="screen">'
@@ -1213,7 +1214,7 @@ $( document ).ready( function(){
 			$uri_segments_meta[6] = $year;			
 			$uri_segments_simulator = $uri_segments_meta;
 			$uri_segments_meta[2] = 'print_index';
-			$uri_segments_simulator[2] = 'print_index_simulator';
+			$uri_segments_simulator[2] = 'print_simulate';
 			
 			$add_js = '
 <script type="text/javascript">
@@ -1228,11 +1229,13 @@ $( document ).ready( function(){
 	});
 
 	$( "#tabs" ).tabs();
+	$(".screen-view").show();
+	$(".print-view").hide();
 });
 </script>
 ';
-			$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_new.js"></script>';
 		}
+		$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_new.js"></script>';
 		$js_assets[] = $add_js;
 
 		$this->load->helper('filter');

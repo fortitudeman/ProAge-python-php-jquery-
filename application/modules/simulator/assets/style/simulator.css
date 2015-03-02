@@ -100,7 +100,8 @@
 	text-align: right;
 	padding: 0.5em;
 	border-top: 1px solid #FC0;
-	border-bottom: 1px solid #FC0;	
+	border-bottom: 1px solid #FC0;
+	font-size: 1em;
 }
 .simulator-table tfoot tr td:first-child {
 	background-color: #FC0;

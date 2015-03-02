@@ -87,7 +87,10 @@ $selected_period = 0;
 				$link_attributes = 'class="btn btn-primary" id="print-button"';
 				$link_text = 'Imprimir';
 				if (!$print_meta)
-					$uri_segments[2] = 'print_index_simulator';
+				{
+					if ($uri_segments[2] != 'print_simulate')
+						$uri_segments[2] = 'print_index_simulator';
+				}
 			}
 			if (isset($selected_period) && isset($selected_year))
 			{

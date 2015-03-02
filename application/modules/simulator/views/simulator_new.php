@@ -27,12 +27,12 @@ else
 }
 ?>
 <div class="row-fluid" style="margin: -1em 0">
-  <input type="button" id="save-simulator" value="Guardar Simulator" class="pull-right btn-save-meta" />
+  <input type="button" id="save-simulator" value="Guardar Simulator" class="pull-right btn-save-meta screen-view" />
 </div> 
 <input type="hidden" name="periodo" id="periodo" value="12" />
 
 <div class="row-fluid" id="global">
-  <div class="span6 offset6">
+  <div class="span6 offset6 screen-view">
       <label class="checkbox inline smaller">
         <input id="considerar-meta" type="checkbox"> Considerar Meta (habilitar o deshabilitar)
      </label>
@@ -40,7 +40,7 @@ else
 </div>
 
 <div id="tabs">
-    <ul id="tabs-ul">
+    <ul id="tabs-ul" class="screen-view">
 <?php for ($i = 1; $i <= $period_max; $i++): ?>
       <li><a href="#<?php echo $period_name ?>-<?php echo $i; ?>"><?php echo $i . $period_labels[$i] . ' ' . ucfirst($period_name); ?></a></li>
 <?php endfor; ?>
@@ -55,6 +55,14 @@ $meta_prima_fields = array(
 	2 => 'primas-meta-segund',
 	3 => 'primas-meta-tercer',
 	4 => 'primas-meta-cuarto');
+
+// workaround for fields having non homogenuous field names for GMM and Vida:
+if (isset($meta_data->{'primas-meta-second'}) && isset($meta_data->{'primas-meta-segund'}))
+{
+	$meta_data->{'primas-meta-segund'} = max( $meta_data->{'primas-meta-second'}, $meta_data->{'primas-meta-segund'});
+	$meta_data->{'primas-meta-second'} = $meta_data->{'primas-meta-segund'};
+}
+
 $prima_values = array();
 $prima_renovacion_values = array();
 $negocio_values = array();
@@ -132,6 +140,7 @@ for ($i = 1; $i <= $period_max; $i++) :
 <div class="<?php echo $period_name ?>" id="<?php echo $period_name . '-' . $i?>">
 <div class="row-fluid">
   <div class="span6 left-column">
+    <h4 class="print-view"><br /><?php echo $i . $period_labels[$i] . ' ' . ucfirst($period_name); ?></h4>
   </div>   <!-- END left column -->
   <div class="span6 right-column">
       <div class="row-fluid">
@@ -285,6 +294,7 @@ $ingreso_bono_renovacion['total'] += $ingreso_bono_renovacion[$i];
 endfor; ?>
 
 <div id="anual">
+<h4 class="row-fluid print-view"><br />Anual</h4>
 <div class="row-fluid anual">
   <div class="span6 left-column">
       <h3 class="row-fluid subtitle subtitle-yellow">INFORMACIÓN DE VENTA INICIAL</h3>
@@ -365,4 +375,3 @@ $ingreso_bono_venta_inicial['total'] + $ingreso_bono_renovacion['total'], 2) ?><
 </h3>
 </div> <!-- END anual -->
 </div> <!-- END tabs -->
-</div>
