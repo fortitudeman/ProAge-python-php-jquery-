@@ -82,6 +82,7 @@ $( document ).ready(function() {
 		if (rank == -1)
 			return false;
 		updateLeftCol(rank);
+		updateRightCol(rank);		
 		updateBottomRecap();
 	});
 
@@ -139,47 +140,47 @@ $( document ).ready(function() {
 
 function CalcPercBonoAplicado(primaAfectadas,negocios) {
 	var porcentaje = 0;
-	if( primaAfectadas >= 530000 ){		
-		if( negocios >= 2 && negocios < 4 )	porcentaje = 15;			
-		if( negocios >= 4 && negocios < 6 )	porcentaje = 30;				
-		if( negocios >= 6 && negocios < 9 )	porcentaje = 35;				
+	if( primaAfectadas >= 560000 ){
+		if( negocios >= 3 && negocios < 5 )	porcentaje = 15;
+		if( negocios >= 5 && negocios < 7 )	porcentaje = 30;
+		if( negocios >= 7 && negocios < 9 )	porcentaje = 35;
 		if( negocios >= 9 )	porcentaje = 40;
 	}		
-	if( primaAfectadas >= 420000 && primaAfectadas < 530000 ){		
-		if( negocios >= 2 && negocios < 4 )	porcentaje = 13;			
-		if( negocios >= 4 && negocios < 6 )	porcentaje = 28;				
-		if( negocios >= 6 && negocios < 9 )	porcentaje = 32.5;				
-		if( negocios >= 9 )	porcentaje = 36;			
+	if( primaAfectadas >= 440000 && primaAfectadas < 560000 ){
+		if( negocios >= 3 && negocios < 5 )	porcentaje = 13;
+		if( negocios >= 5 && negocios < 7 )	porcentaje = 28;
+		if( negocios >= 7 && negocios < 9 )	porcentaje = 32.5;
+		if( negocios >= 9 )	porcentaje = 36;
 	}		
-	if( primaAfectadas >= 320000 && primaAfectadas < 420000 ){		
-		if( negocios >= 2 && negocios < 4 )	porcentaje = 11;			
-		if( negocios >= 4 && negocios < 6 )	porcentaje = 26;			
-		if( negocios >= 6 && negocios < 9 )	porcentaje = 30;		
-		if( negocios >= 9 )	porcentaje = 32.5;			
+	if( primaAfectadas >= 340000 && primaAfectadas < 440000 ){
+		if( negocios >= 3 && negocios < 5 )	porcentaje = 11;
+		if( negocios >= 5 && negocios < 7 )	porcentaje = 26;
+		if( negocios >= 7 && negocios < 9 )	porcentaje = 30;
+		if( negocios >= 9 )	porcentaje = 32.5;
 	}		
-	if( primaAfectadas >= 240000 && primaAfectadas < 320000 ){		
-		if( negocios >= 2 && negocios < 4 )	porcentaje = 8;			
-		if( negocios >= 4 && negocios < 6 )	porcentaje = 19;			
-		if( negocios >= 6 && negocios < 9 )	porcentaje = 22.5;				
-		if( negocios >= 9 )	porcentaje = 25;			
+	if( primaAfectadas >= 250000 && primaAfectadas < 340000 ){
+		if( negocios >= 3 && negocios < 5 )	porcentaje = 8;
+		if( negocios >= 5 && negocios < 7 )	porcentaje = 19;
+		if( negocios >= 7 && negocios < 9 )	porcentaje = 22.5;
+		if( negocios >= 9 )	porcentaje = 25;
 	}		
-	if( primaAfectadas >= 190000 && primaAfectadas < 240000 ){		
-		if( negocios >= 2 && negocios < 4 )	porcentaje = 7;			
-		if( negocios >= 4 && negocios < 6 )	porcentaje = 16;				
-		if( negocios >= 6 && negocios < 9 )	porcentaje = 20;			
-		if( negocios >= 9 )	porcentaje = 22.5;			
+	if( primaAfectadas >= 200000 && primaAfectadas < 250000 ){
+		if( negocios >= 3 && negocios < 5 )	porcentaje = 7;
+		if( negocios >= 5 && negocios < 7 )	porcentaje = 16;
+		if( negocios >= 7 && negocios < 9 )	porcentaje = 20;
+		if( negocios >= 9 )	porcentaje = 22.5;
 	}		
-	if( primaAfectadas >= 140000 && primaAfectadas < 190000 ){		
-		if( negocios >= 2 && negocios < 4 )	porcentaje = 6;			
-		if( negocios >= 4 && negocios < 6 )	porcentaje = 13;			
-		if( negocios >= 6 && negocios < 9 )	porcentaje = 17.5;				
-		if( negocios >= 9 )	porcentaje = 20;		
+	if( primaAfectadas >= 150000 && primaAfectadas < 200000 ){
+		if( negocios >= 3 && negocios < 5 )	porcentaje = 6;
+		if( negocios >= 5 && negocios < 7 )	porcentaje = 13;
+		if( negocios >= 7 && negocios < 9 )	porcentaje = 17.5;
+		if( negocios >= 9 )	porcentaje = 20;
 	}		
-	if( primaAfectadas >= 100000 && primaAfectadas < 140000 ){		
-		if( negocios >= 2 && negocios < 4 )	porcentaje = 5;			
-		if( negocios >= 4 && negocios < 6 )	porcentaje = 10;			
-		if( negocios >= 6 && negocios < 9 )	porcentaje = 15;			
-		if( negocios >= 9 )	porcentaje = 17.5;			
+	if( primaAfectadas >= 105000 && primaAfectadas < 150000 ){
+		if( negocios >= 3 && negocios < 5 )	porcentaje = 5;
+		if( negocios >= 5 && negocios < 7 )	porcentaje = 10;
+		if( negocios >= 7 && negocios < 9 )	porcentaje = 15;
+		if( negocios >= 9 )	porcentaje = 17.5;
 	}
 	return porcentaje;
 }
@@ -187,50 +188,50 @@ function CalcPercBonoAplicado(primaAfectadas,negocios) {
 function CalcPercConservacion(base,primaAfectadas) {
 	var porcentaje = 0;
 	if( base == 0 ){						
-		if( primaAfectadas >= 470000 )	porcentaje = 11;			
-		if( primaAfectadas >= 370000 && primaAfectadas < 470000 )	porcentaje = 10;			
-		if( primaAfectadas >= 270000 && primaAfectadas < 370000 )	porcentaje = 9;			
-		if( primaAfectadas >= 220000 && primaAfectadas < 270000 )	porcentaje = 7;			
-		if( primaAfectadas >= 160000 && primaAfectadas < 220000 )	porcentaje = 5;				
-		if( primaAfectadas >= 130000 && primaAfectadas < 160000 )	porcentaje = 4;				
-		if( primaAfectadas >= 100000 && primaAfectadas < 130000 )	porcentaje = 2;	
+		if( primaAfectadas >= 490000 )	porcentaje = 11;			
+		if( primaAfectadas >= 390000 && primaAfectadas < 490000 )	porcentaje = 10;			
+		if( primaAfectadas >= 280000 && primaAfectadas < 390000 )	porcentaje = 9;			
+		if( primaAfectadas >= 230000 && primaAfectadas < 280000 )	porcentaje = 7;			
+		if( primaAfectadas >= 170000 && primaAfectadas < 230000 )	porcentaje = 5;				
+		if( primaAfectadas >= 140000 && primaAfectadas < 170000 )	porcentaje = 4;				
+		if( primaAfectadas >= 105000 && primaAfectadas < 140000 )	porcentaje = 2;	
 	}		
 	if( base != 0 ){						
 		if( base == 89 ){				
-			if( primaAfectadas >= 470000 )	porcentaje = 9;				
-			if( primaAfectadas >= 370000 && primaAfectadas < 470000 )	porcentaje = 8;				
-			if( primaAfectadas >= 270000 && primaAfectadas < 370000 )	porcentaje = 7;				
-			if( primaAfectadas >= 220000 && primaAfectadas < 270000 )	porcentaje = 4;				
-			if( primaAfectadas >= 160000 && primaAfectadas < 220000 )	porcentaje = 3;	
-			if( primaAfectadas >= 130000 && primaAfectadas < 160000 )	porcentaje = 2;				
-			if( primaAfectadas >= 100000 && primaAfectadas < 130000 )	porcentaje = 1;	
+			if( primaAfectadas >= 490000 )	porcentaje = 9;				
+			if( primaAfectadas >= 390000 && primaAfectadas < 490000 )	porcentaje = 8;				
+			if( primaAfectadas >= 280000 && primaAfectadas < 390000 )	porcentaje = 7;				
+			if( primaAfectadas >= 230000 && primaAfectadas < 280000 )	porcentaje = 4;				
+			if( primaAfectadas >= 170000 && primaAfectadas < 230000 )	porcentaje = 3;	
+			if( primaAfectadas >= 140000 && primaAfectadas < 170000 )	porcentaje = 2;				
+			if( primaAfectadas >= 105000 && primaAfectadas < 140000 )	porcentaje = 1;	
 		}			
 		if( base == 91 ){				
-			if( primaAfectadas >= 470000 )	porcentaje = 10;				
-			if( primaAfectadas >= 370000 && primaAfectadas < 470000 )	porcentaje = 9;				
-			if( primaAfectadas >= 270000 && primaAfectadas < 370000 )	porcentaje = 8;				
-			if( primaAfectadas >= 220000 && primaAfectadas < 270000 )	porcentaje = 5;				
-			if( primaAfectadas >= 160000 && primaAfectadas < 220000 )	porcentaje = 4;	
-			if( primaAfectadas >= 130000 && primaAfectadas < 160000 )	porcentaje = 3;					
-			if( primaAfectadas >= 100000 && primaAfectadas < 130000 )	porcentaje = 2;	
+			if( primaAfectadas >= 490000 )	porcentaje = 10;				
+			if( primaAfectadas >= 390000 && primaAfectadas < 490000 )	porcentaje = 9;				
+			if( primaAfectadas >= 280000 && primaAfectadas < 390000 )	porcentaje = 8;				
+			if( primaAfectadas >= 230000 && primaAfectadas < 280000 )	porcentaje = 5;				
+			if( primaAfectadas >= 170000 && primaAfectadas < 230000 )	porcentaje = 4;	
+			if( primaAfectadas >= 140000 && primaAfectadas < 170000 )	porcentaje = 3;					
+			if( primaAfectadas >= 105000 && primaAfectadas < 140000 )	porcentaje = 2;	
 		}			
 		if( base == 93 ){				
-			if( primaAfectadas >= 470000 )	porcentaje = 11;				
-			if( primaAfectadas >= 370000 && primaAfectadas < 470000 )	porcentaje = 10;				
-			if( primaAfectadas >= 270000 && primaAfectadas < 370000 )	porcentaje = 9;				
-			if( primaAfectadas >= 220000 && primaAfectadas < 270000 )	porcentaje = 6;				
-			if( primaAfectadas >= 160000 && primaAfectadas < 220000 )	porcentaje = 5;	
-			if( primaAfectadas >= 130000 && primaAfectadas < 160000 )	porcentaje = 4;	
-			if( primaAfectadas >= 100000 && primaAfectadas < 130000 )	porcentaje = 3;	
+			if( primaAfectadas >= 490000 )	porcentaje = 11;				
+			if( primaAfectadas >= 390000 && primaAfectadas < 490000 )	porcentaje = 10;				
+			if( primaAfectadas >= 280000 && primaAfectadas < 390000 )	porcentaje = 9;				
+			if( primaAfectadas >= 230000 && primaAfectadas < 280000 )	porcentaje = 6;				
+			if( primaAfectadas >= 170000 && primaAfectadas < 230000 )	porcentaje = 5;	
+			if( primaAfectadas >= 140000 && primaAfectadas < 170000 )	porcentaje = 4;	
+			if( primaAfectadas >= 105000 && primaAfectadas < 140000 )	porcentaje = 3;	
 		}			
 		if( base == 95 ){				
-			if( primaAfectadas >= 470000 )	porcentaje = 12;				
-			if( primaAfectadas >= 370000 && primaAfectadas < 470000 )	porcentaje = 11;				
-			if( primaAfectadas >= 270000 && primaAfectadas < 370000 )	porcentaje = 10;				
-			if( primaAfectadas >= 220000 && primaAfectadas < 270000 )	porcentaje = 7;				
-			if( primaAfectadas >= 160000 && primaAfectadas < 220000 )	porcentaje = 6;	
-			if( primaAfectadas >= 130000 && primaAfectadas < 160000 )	porcentaje = 5;
-			if( primaAfectadas >= 100000 && primaAfectadas < 130000 )	porcentaje = 4;
+			if( primaAfectadas >= 490000 )	porcentaje = 12;				
+			if( primaAfectadas >= 390000 && primaAfectadas < 490000 )	porcentaje = 11;				
+			if( primaAfectadas >= 280000 && primaAfectadas < 390000 )	porcentaje = 10;				
+			if( primaAfectadas >= 230000 && primaAfectadas < 280000 )	porcentaje = 7;				
+			if( primaAfectadas >= 170000 && primaAfectadas < 230000 )	porcentaje = 6;	
+			if( primaAfectadas >= 140000 && primaAfectadas < 170000 )	porcentaje = 5;
+			if( primaAfectadas >= 105000 && primaAfectadas < 140000 )	porcentaje = 4;
 		}
 	}							
 	return porcentaje;
@@ -269,6 +270,10 @@ function updateLeftCol(rank)
 // Updates data related to the Primas Renovacion:
 function updateRightCol(rank)
 {
+	var ventaInicialPrimaId = getTrimestreId(rank);
+	if (ventaInicialPrimaId.length == 0)
+		return;
+
 	var primasRenovacion = parseFloat($( '#primasRenovacion_' + rank ).val());
 	if( isNaN( primasRenovacion ) )
 		primasRenovacion = 0;
@@ -276,12 +281,16 @@ function updateRightCol(rank)
 	$( '#primasRenovacionPagar_text_' + rank ).html( '$ '+moneyFormat(totalP) );
 	$( '#primasRenovacionPagar_' + rank ).val( totalP );
 
+	var primaAfectadas = parseFloat( $( '#' + ventaInicialPrimaId ).val() );
+	if( isNaN( primaAfectadas ) )
+		primaAfectadas = 0;
+		
 	if (Config.currentRamo == 1) {
 		var base = parseInt( $( '#porcentajeConservacion_' + rank ).val() );
-		var porcentaje = CalcPercConservacion(base, primasRenovacion);
+		var porcentaje = CalcPercConservacion(base, primaAfectadas);
 	} else {
 		var base = parseInt( $( '#porsiniestridad_' + rank ).val() );
-		var porcentaje = getRenovacionGmmPercent(primasRenovacion, base);
+		var porcentaje = getRenovacionGmmPercent(primaAfectadas, base);
 	}
 	$( '#porbonoGanado_' + rank ).val( porcentaje );
 	var totalB = totalP * porcentaje/100;
@@ -358,22 +367,22 @@ function updateConsiderarMeta() {
 		var porcentaje = 0;
 		switch (true)
 		{
-			case (prima >= 420000):
+			case (prima >= 440000):
 				porcentaje = 15;
 				break;
-			case ((prima >= 310000) && (prima < 420000)):
-				porcentaje = 12;
+			case ((prima >= 330000) && (prima < 440000)):
+				porcentaje = 12.5;
 				break;
-			case ((prima >= 210000) && (prima < 310000)):
+			case ((prima >= 220000) && (prima < 330000)):
 				porcentaje = 10;
 				break;
-			case ((prima >= 150000) && (prima < 210000)):
+			case ((prima >= 160000) && (prima < 220000)):
 				porcentaje = 7.5;
 				break;
-			case ((prima >= 90000) && (prima < 150000)):
+			case ((prima >= 95000) && (prima < 160000)):
 				porcentaje = 5;
 				break;
-			case (prima < 90000):
+			case (prima < 95000):
 				porcentaje = 0;
 				break;
 			default:
@@ -386,63 +395,63 @@ function updateConsiderarMeta() {
 		porcentaje = 0;
 		switch (true)
 		{
-			case ((sinistrad == 68) && (prima >= 470000)):
+			case ((sinistrad == 68) && (prima >= 490000)):
 				porcentaje = 3;
 				break;
-			case ((sinistrad == 64) && (prima >= 470000)):
+			case ((sinistrad == 64) && (prima >= 490000)):
 				porcentaje = 5;
 				break;
-			case ((sinistrad == 60) && (prima >= 470000)):
+			case ((sinistrad == 60) && (prima >= 490000)):
 				porcentaje = 8;
 				break;				
 /////////////
-			case ((sinistrad == 68) && (prima >= 370000) && (prima < 470000)):
+			case ((sinistrad == 68) && (prima >= 390000) && (prima < 490000)):
 				porcentaje = 2;
 				break;
-			case ((sinistrad == 64) && (prima >= 370000) && (prima < 470000)):
+			case ((sinistrad == 64) && (prima >= 390000) && (prima < 490000)):
 				porcentaje = 4;
 				break;
-			case ((sinistrad == 60) && (prima >= 370000) && (prima < 470000)):
+			case ((sinistrad == 60) && (prima >= 390000) && (prima < 490000)):
 				porcentaje = 6;
 				break;					
 /////////////
-			case ((sinistrad == 68) && (prima >= 260000) && (prima < 370000)):
+			case ((sinistrad == 68) && (prima >= 270000) && (prima < 390000)):
 				porcentaje = 1.5;
 				break;
-			case ((sinistrad == 64) && (prima >= 260000) && (prima < 370000)):
+			case ((sinistrad == 64) && (prima >= 270000) && (prima < 390000)):
 				porcentaje = 3;
 				break;
-			case ((sinistrad == 60) && (prima >= 260000) && (prima < 370000)):
+			case ((sinistrad == 60) && (prima >= 270000) && (prima < 390000)):
 				porcentaje = 4.5;
 				break;	
 /////////////
-			case ((sinistrad == 68) && (prima >= 190000) && (prima < 260000)):
+			case ((sinistrad == 68) && (prima >= 200000) && (prima < 270000)):
 				porcentaje = 1;
 				break;
-			case ((sinistrad == 64) && (prima >= 190000) && (prima < 260000)):
+			case ((sinistrad == 64) && (prima >= 200000) && (prima < 270000)):
 				porcentaje = 2;
 				break;
-			case ((sinistrad == 60) && (prima >= 190000) && (prima < 260000)):
+			case ((sinistrad == 60) && (prima >= 200000) && (prima < 270000)):
 				porcentaje = 3;
 				break;
 /////////////
-			case ((sinistrad == 68) && (prima >= 140000) && (prima < 190000)):
+			case ((sinistrad == 68) && (prima >= 150000) && (prima < 200000)):
 				porcentaje = 0.5;
 				break;
-			case ((sinistrad == 64) && (prima >= 140000) && (prima < 190000)):
+			case ((sinistrad == 64) && (prima >= 150000) && (prima < 200000)):
 				porcentaje = 1;
 				break;
-			case ((sinistrad == 60) && (prima >= 140000) && (prima < 190000)):
+			case ((sinistrad == 60) && (prima >= 150000) && (prima < 200000)):
 				porcentaje = 2;
 				break;
 /////////////
-/*			case ((sinistrad == 68) && (prima < 140000)):
+/*			case ((sinistrad == 68) && (prima < 150000)):
 				porcentaje = 0;
 				break;
-			case ((sinistrad == 64) && (prima < 140000)):
+			case ((sinistrad == 64) && (prima < 150000)):
 				porcentaje = 1;
 				break;
-			case ((sinistrad == 60) && (prima < 140000)):
+			case ((sinistrad == 60) && (prima < 150000)):
 				porcentaje = 2;
 				break;*/			
 
