@@ -287,6 +287,8 @@ $ingreso_bono_venta_inicial[$i] + $ingreso_bono_renovacion[$i], 2) ?>
 
 </h3>
 </div> <!-- END trimestre / cuatrimestre -->
+
+<div class="page-break"></div>
 <?php
 $ingreso_comm_venta_inicial['total'] += $ingreso_comm_venta_inicial[$i];
 $ingreso_comm_renovacion['total'] += $ingreso_comm_renovacion[$i];

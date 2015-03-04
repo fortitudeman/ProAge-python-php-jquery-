@@ -189,4 +189,9 @@
 	border-bottom: 3px solid #0000FF;
 	color: #FFFFFF;
 }
-
+@media all {
+	.page-break	{ display: none; }
+}
+@media print {
+	.page-break	{ display: block; page-break-before: always; }
+}

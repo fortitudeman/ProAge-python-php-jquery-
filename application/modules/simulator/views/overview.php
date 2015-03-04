@@ -67,7 +67,7 @@ $selected_period = 0;
 <?php if (!$is_director_page): ?>
 
 <?php if ($switch_url): ?>
-<div style="text-align: right; margin-right: 3em"">
+<div style="text-align: right; margin-right: 3em" class="screen-view">
 <a href="<?php echo $switch_url; ?>" class="btn btn-primary">
 <?php echo $switch_text ?></a>
 </div>
