@@ -27,7 +27,7 @@ $subtotal = 0;
 ?>
 
 <div style="overflow:scroll; width:98%;">
-<div class="box">
+<div class="box" style="overflow:scroll; width:98%;">
 
  <div class="box-content">
 	
@@ -53,9 +53,7 @@ $subtotal = 0;
         <thead>
             <tr>
             	<th class="bgblank">Mes</th>
-            	<th class="bglight">Estacionalidad
-
-            	</th>
+            	<th class="bglight">Estacionalidad</th>
                 <th class="bglight">Solicitudes Meta</th>
                 <th class="bglight">Solicitudes Logradas</th>
                 <th class="bglight">Negocios Meta</th>
@@ -65,7 +63,7 @@ $subtotal = 0;
             </tr>
          </thead>
           <tbody>
-             <?php 
+<?php 
 /*				if( !empty( $trimestre ) and $cuatrimestre == null ){
 					if( $trimestre == 1 ) $i=1; 
 					if( $trimestre == 2 ) $i=4; 
@@ -99,10 +97,11 @@ $subtotal = 0;
 					return $array;
 				}	
 				$porcentajes = object2array($data);
-			 ?> 
-             <?php if( !empty( $config ) ):
+?> 
+<?php if( !empty( $config ) ):
 			 foreach( $config as $configs ):
-				$i = $configs['id']; ?> 
+				$i = $configs['id'];
+?> 
               <tr id="month-row-<?php echo $i ?>">
             	<td><?php echo $configs['month']; ?></td>
                 <td class="bgestacionalidadlight">
@@ -114,7 +113,7 @@ $subtotal = 0;
                    <input type="hidden" name="primas-solicitud-meta-<?php echo $i ?>" id="primas-solicitud-meta-<?php echo $i ?>" value="0" />
                 </td>
                 <td class="bgyelowlight">
-                   <?php 
+<?php 
 						if ( isset($SolicitudesLogradas['0'.$i]) ) {
 					   		echo $SolicitudesLogradas['0'.$i]; 
 							$SolicitudesLogradasTotalTrimestre+=$SolicitudesLogradas['0'.$i]; 
@@ -122,15 +121,14 @@ $subtotal = 0;
 							echo $SolicitudesLogradas[$i];
 							$SolicitudesLogradasTotalTrimestre+=$SolicitudesLogradas[$i]; 
 						}
-						?>
-
+?>
                 </td>
                 <td class="bgorangelight">
                    <div id="primas-negocios-meta-text-<?php echo $i ?>" style="text-align: center !important"></div>  
                    <input type="hidden" name="primas-negocios-meta-<?php echo $i ?>" id="primas-negocios-meta-<?php echo $i ?>" value="0" />
                 </td>
                 <td class="bgorangelight">
-                    <?php
+<?php
 						if ( isset($NegociosLogrados['0'.$i] )) {
 							echo $NegociosLogrados['0'.$i]; 
 						  	$NegociosLogradosTotalTrimestre+=$NegociosLogrados['0'.$i]; 
@@ -138,8 +136,7 @@ $subtotal = 0;
 							echo $NegociosLogrados[$i]; 
 							$NegociosLogradosTotalTrimestre+=$NegociosLogrados[$i]; 
 						}
-					?>
-
+?>
                 </td>
                 <td class="bggreenlight">
 <?php $primas_meta_i = isset($porcentajes['primas-meta-'.$i]) ? $porcentajes['primas-meta-'.$i] : 0; ?>
@@ -149,7 +146,7 @@ $subtotal = 0;
                 	</div>
                 </td>
                 <td class="bggreenlight">$
-                    <?php
+<?php
 						if ( isset($PrimasLogradas['0'.$i] )) {
 						  	echo number_format($PrimasLogradas['0'.$i],2); 
 						  	$PrimasLogradosTotalTrimestre+=$PrimasLogradas['0'.$i]; 
@@ -157,13 +154,12 @@ $subtotal = 0;
 						  	echo number_format($PrimasLogradas[$i],2); 
 						  	$PrimasLogradosTotalTrimestre+=$PrimasLogradas[$i]; 
 						}
-					?> 
-
+?> 
                 </td>
             </tr> 
-           <?php $total += (int)$configs[$field] ?>
-           <?php // Space Frst Trimestre and Cuatrimestre ?>
-           <?php if( $trimestre != null and $periodo == 3 and $i==3 ): $subtotal++; ?>
+<?php $total += (int)$configs[$field] ?>
+<?php // Space Frst Trimestre and Cuatrimestre ?>
+<?php if( $trimestre != null and $periodo == 3 and $i==3 ): $subtotal++; ?>
                 <tr id="total-trimestre-1">
                     <td><b>TOTAL 1er <br />trimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
@@ -175,12 +171,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgyelowbold">
                         <strong>
-                        <?php 
+<?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bgorangebold">
@@ -191,12 +186,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgorangebold">
                         <strong>
-                        <?php 
+<?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bggreenbold">
@@ -204,17 +198,15 @@ $subtotal = 0;
                         <input type="hidden" name="primas-meta-primer" id="primas-meta-primer" value="0" />
                     </td>
                     <td class="bggreenbold">$
-                        <?php 
+<?php 
                             echo number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                     </td>                               
                 </tr> 
-           <?php endif; ?>
-		   <?php if( $ramo == 'vida' and $periodo == 12 and $i==3 ): $subtotal++;?>
-
+<?php endif; ?>
+<?php if( $ramo == 'vida' and $periodo == 12 and $i==3 ): $subtotal++;?>
                 <tr id="total-trimestre-1">
                     <td><b>TOTAL 1er <br />trimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
@@ -226,12 +218,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgyelowbold">
                         <strong>
-                        <?php 
+<?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bgorangebold">
@@ -242,12 +233,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgorangebold">
                         <strong>
-                        <?php 
+<?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bggreenbold">
@@ -255,19 +245,16 @@ $subtotal = 0;
                         <input type="hidden" name="primas-meta-primer" id="primas-meta-primer" value="0" />
                     </td>
                     <td class="bggreenbold">$
-                        <?php 
+<?php 
                             echo  number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                     </td>                               
                 </tr>  
-
-           <?php endif; ?>   
-             <?php if( $cuatrimestre != null and $periodo == 4 and $i==4 ): $subtotal++;?>
-
-                <tr id="total-cuatrimestre-1">
+<?php endif; ?>   
+<?php if( $cuatrimestre != null and $periodo == 4 and $i==4 ): $subtotal++;?>
+            <tr id="total-cuatrimestre-1">
                     <td><b>TOTAL 1er <br />cuatrimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
@@ -278,12 +265,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgyelowbold">
                         <strong>
-                        <?php 
+<?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bgorangebold">
@@ -294,12 +280,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgorangebold">
                         <strong>
-                        <?php 
+<?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bggreenbold">
@@ -307,19 +292,16 @@ $subtotal = 0;
                         <input type="hidden" name="primas-meta-primer" id="primas-meta-primer" value="0" />
                     </td>
                     <td class="bggreenbold">$
-                        <?php 
+<?php 
                             echo  number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                     </td>                               
-                </tr>                 
-
-           <?php endif; ?>   
-           <?php if( ( $ramo == 'gmm' or $ramo == 'autos' ) and $periodo == 12 and $i==4 ): $subtotal++;?>
-
-                <tr id="total-cuatrimestre-1">
+            </tr>                 
+<?php endif; ?>   
+<?php if( ( $ramo == 'gmm' or $ramo == 'autos' ) and $periodo == 12 and $i==4 ): $subtotal++;?>
+            <tr id="total-cuatrimestre-1">
                     <td><b>TOTAL 1er <br />cuatrimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
                     <td class="bgyelowbold">
@@ -330,12 +312,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgyelowbold">
                         <strong>
-                        <?php 
+<?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bgorangebold">
@@ -346,12 +327,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgorangebold">
                         <strong>
-                        <?php 
+<?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bggreenbold">
@@ -359,19 +339,17 @@ $subtotal = 0;
                         <input type="hidden" name="primas-meta-primer" id="primas-meta-primer" value="0" />
                     </td>
                     <td class="bggreenbold">$
-                        <?php 
+<?php 
                             echo  number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                     </td>                               
-                </tr>  
-           <?php endif; ?>   
-           <?php // Space Second Trimestre and Cuatrimestre ?>
-           <?php if( $trimestre != null and $periodo == 3 and $i==6 ): $subtotal++;?>
-
-                <tr id="total-trimestre-2">
+            </tr>  
+<?php endif; ?>   
+<?php // Space Second Trimestre and Cuatrimestre ?>
+<?php if( $trimestre != null and $periodo == 3 and $i==6 ): $subtotal++;?>
+            <tr id="total-trimestre-2">
             	<td><b>TOTAL 2do <br />trimestre</b></td>
                 <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
@@ -382,12 +360,11 @@ $subtotal = 0;
                 </td>
                 <td class="bgyelowbold">
                     <strong>
-                    <?php 
+<?php 
 						echo $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotalTrimestre=0; 
-					?>
-
+?>
                     </strong>
                 </td>
                 <td class="bgorangebold">
@@ -398,12 +375,11 @@ $subtotal = 0;
                 </td>
                 <td class="bgorangebold">
                     <strong>
-                    <?php 
+<?php 
 						echo $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotalTrimestre=0; 
-					?>
-
+?>
                     </strong>
                 </td>
                 <td class="bggreenbold">
@@ -411,17 +387,16 @@ $subtotal = 0;
                     <input type="hidden" name="primas-segund-primer" id="primas-segund-primer" value="0" />
                 </td>
                 <td class="bggreenbold">$
-                    <?php 
+<?php 
 						echo number_format($PrimasLogradosTotalTrimestre,2); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
-					?>
-
+?>
                 </td>                              
             </tr> 
-           <?php endif; ?>
-           <?php if( $ramo == 'vida' and $periodo == 12 and $i==6 ): $subtotal++;?>
-               <tr id="total-trimestre-2">
+<?php endif; ?>
+<?php if( $ramo == 'vida' and $periodo == 12 and $i==6 ): $subtotal++;?>
+            <tr id="total-trimestre-2">
             	<td><b>TOTAL 2do <br />trimestre</b></td>
                 <td class="bgestacionalidadbold">&nbsp;</td>
                 <td class="bgyelowbold">
@@ -432,12 +407,11 @@ $subtotal = 0;
                 </td>
                 <td class="bgyelowbold">
                     <strong>
-                    <?php 
+<?php 
 						echo $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotalTrimestre=0; 
-					?>
-
+?>
                     </strong>
                 </td>
                 <td class="bgorangebold">
@@ -448,12 +422,11 @@ $subtotal = 0;
                 </td>
                 <td class="bgorangebold">
                     <strong>
-                    <?php 
+<?php 
 						echo $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotalTrimestre=0; 
-					?>
-
+?>
                     </strong>
                 </td>
                 <td class="bggreenbold">
@@ -461,18 +434,15 @@ $subtotal = 0;
                     <input type="hidden" name="primas-segund-primer" id="primas-segund-primer" value="0" />
                 </td>
                 <td class="bggreenbold">$
-                    <?php 
+<?php 
 						echo number_format($PrimasLogradosTotalTrimestre,2); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
-					?>
-
+?>
                 </td>                              
             </tr> 
-
-           <?php endif; ?>   
-           <?php if( $cuatrimestre != null and $periodo == 4 and $i==8 ): $subtotal++;?>
-
+<?php endif; ?>   
+<?php if( $cuatrimestre != null and $periodo == 4 and $i==8 ): $subtotal++;?>
                 <tr id="total-cuatrimestre-2">
                     <td><b>TOTAL 2do <br />cuatrimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
@@ -484,12 +454,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgyelowbold">
                         <strong>
-                        <?php 
+<?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bgorangebold">
@@ -500,12 +469,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgorangebold">
                         <strong>
-                        <?php 
+<?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bggreenbold">
@@ -513,17 +481,15 @@ $subtotal = 0;
                         <input type="hidden" name="primas-meta-second" id="primas-meta-second" value="0" />
                     </td>
                     <td class="bggreenbold">$
-                        <?php 
+<?php 
                             echo number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                     </td>                               
                 </tr>                 
-           <?php endif; ?>   
-           <?php if( ( $ramo == 'gmm' or $ramo == 'autos' ) and $periodo == 12 and $i==8 ): $subtotal++;?>
-
+<?php endif; ?>   
+<?php if( ( $ramo == 'gmm' or $ramo == 'autos' ) and $periodo == 12 and $i==8 ): $subtotal++;?>
                 <tr id="total-cuatrimestre-2">
                     <td><b>TOTAL 2do <br />cuatrimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
@@ -535,12 +501,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgyelowbold">
                         <strong>
-                        <?php 
+<?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bgorangebold">
@@ -552,12 +517,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgorangebold">
                         <strong>
-                        <?php 
+<?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bggreenbold">
@@ -565,18 +529,16 @@ $subtotal = 0;
                         <input type="hidden" name="primas-meta-second" id="primas-meta-second" value="0" />
                     </td>
                     <td class="bggreenbold">$
-                        <?php 
+<?php 
                             echo number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                     </td>                               
                 </tr>  
-           <?php endif; ?>   
-           <?php // Space Three Trimestre ?>
-           <?php if( $trimestre != null and $i==9 ): $subtotal++;?>
-
+<?php endif; ?>   
+<?php // Space Three Trimestre ?>
+<?php if( $trimestre != null and $i==9 ): $subtotal++;?>
               <tr id="total-trimestre-3">
             	<td><b>TOTAL 3er <br />trimestre</b></td>
                 <td class="bgestacionalidadbold">&nbsp;</td>
@@ -588,11 +550,11 @@ $subtotal = 0;
                 </td>
                 <td class="bgyelowbold">
                     <strong>
-                    <?php 
+<?php 
 						echo $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotalTrimestre=0; 
-					?>
+?>
                     </strong>
                 </td>
                 <td class="bgorangebold">
@@ -603,12 +565,11 @@ $subtotal = 0;
                 </td>
                 <td class="bgorangebold">
                     <strong>
-                    <?php 
+<?php 
 						echo $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotalTrimestre=0; 
-					?>
-
+?>
                     </strong>
                 </td>
                 <td class="bggreenbold">
@@ -616,17 +577,15 @@ $subtotal = 0;
                     <input type="hidden" name="primas-tercer-primer" id="primas-tercer-primer" value="0" />
                 </td>
                 <td class="bggreenbold">$
-                    <?php 
+<?php 
 						echo number_format($PrimasLogradosTotalTrimestre,2); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
-					?>
-
+?>
                 </td>                               
             </tr> 
-           <?php endif ?> 
-           <?php if( ($subtotal < 3) && $ramo == 'vida' and $periodo == 12 and $i==9 ): $subtotal++;?>
-
+<?php endif ?> 
+<?php if( ($subtotal < 3) && $ramo == 'vida' and $periodo == 12 and $i==9 ): $subtotal++;?>
               <tr id="total-trimestre-3">
             	<td><b>TOTAL 3er <br />trimestre</b></td>
                 <td class="bgestacionalidadbold">&nbsp;</td>
@@ -638,12 +597,11 @@ $subtotal = 0;
                 </td>
                 <td class="bgyelowbold">
                     <strong>
-                    <?php 
+<?php 
 						echo $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotalTrimestre=0; 
-					?>
-
+?>
                     </strong>
                 </td>
                 <td class="bgorangebold">
@@ -654,12 +612,11 @@ $subtotal = 0;
                 </td>
                 <td class="bgorangebold">
                     <strong>
-                    <?php 
+<?php 
 						echo $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotalTrimestre=0; 
-					?>
-
+?>
                     </strong>
                 </td>
                 <td class="bggreenbold">
@@ -667,18 +624,16 @@ $subtotal = 0;
                     <input type="hidden" name="primas-tercer-primer" id="primas-tercer-primer" value="0" />
                 </td>
                 <td class="bggreenbold">$
-                    <?php 
+<?php 
 						echo number_format($PrimasLogradosTotalTrimestre,2); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
-					?>
-
+?>
                 </td>                               
             </tr> 
-           <?php endif; ?> 
-           <?php // Space four Trimestre and three Cuatimestre ?>
-           <?php if( $trimestre != null and $periodo == 3 and $i==12 ): $subtotal++;?>
-
+<?php endif; ?> 
+<?php // Space four Trimestre and three Cuatimestre ?>
+<?php if( $trimestre != null and $periodo == 3 and $i==12 ): $subtotal++;?>
                <tr id="total-trimestre-4">
             	<td><b>TOTAL 4to <br />trimestre</b></td>
                 <td class="bgestacionalidadbold">&nbsp;</td>
@@ -690,12 +645,11 @@ $subtotal = 0;
                 </td>
                 <td class="bgyelowbold">
                     <strong>
-                    <?php 
+<?php 
 						echo $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotalTrimestre=0; 
-					?>
-
+?>
                     </strong>
                 </td>
                 <td class="bgorangebold">
@@ -706,12 +660,11 @@ $subtotal = 0;
                 </td>
                 <td class="bgorangebold">
                     <strong>
-                    <?php 
+<?php 
 						echo $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotalTrimestre=0; 
-					?>
-
+?>
                     </strong>
                 </td>
                 <td class="bggreenbold">
@@ -719,17 +672,15 @@ $subtotal = 0;
                     <input type="hidden" name="primas-cuarto-primer" id="primas-cuarto-primer" value="0" />
                 </td>
                 <td class="bggreenbold">$
-                    <?php 
+<?php 
 						echo number_format($PrimasLogradosTotalTrimestre,2); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
-					?>
-
+?>
                 </td>                               
             </tr>         
-           <?php endif; ?>    
-           <?php if( $ramo == 'vida' and $periodo == 12 and $i==12 ): $subtotal++; ?>
-
+<?php endif; ?>    
+<?php if( $ramo == 'vida' and $periodo == 12 and $i==12 ): $subtotal++; ?>
                <tr id="total-trimestre-4">
             	<td><b>TOTAL 4to <br />trimestre</b></td>
                 <td class="bgestacionalidadbold">&nbsp;</td>
@@ -741,12 +692,11 @@ $subtotal = 0;
                 </td>
                 <td class="bgyelowbold">
                     <strong>
-                    <?php 
+<?php 
 						echo $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
 						$SolicitudesLogradasTotalTrimestre=0; 
-					?>
-
+?>
                     </strong>
                 </td>
                 <td class="bgorangebold">
@@ -757,12 +707,11 @@ $subtotal = 0;
                 </td>
                 <td class="bgorangebold">
                     <strong>
-                    <?php 
+<?php 
 						echo $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
 						$NegociosLogradosTotalTrimestre=0; 
-					?>
-
+?>
                     </strong>
                 </td>
                 <td class="bggreenbold">
@@ -770,17 +719,15 @@ $subtotal = 0;
                     <input type="hidden" name="primas-cuarto-primer" id="primas-cuarto-primer" value="0" />
                 </td>
                 <td class="bggreenbold">$
-                    <?php 
+<?php 
 						echo number_format($PrimasLogradosTotalTrimestre,2); 
 						$PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
 						$PrimasLogradosTotalTrimestre=0; 
-					?>
-
+?>
                 </td>                               
             </tr>         
-           <?php endif; ?> 
-
-           <?php if( $cuatrimestre != null and $periodo == 4 and $i==12 ): $subtotal++;?>
+<?php endif; ?> 
+<?php if( $cuatrimestre != null and $periodo == 4 and $i==12 ): $subtotal++;?>
                 <tr id="total-cuatrimestre-3">
                     <td><b>TOTAL 3er <br />cuatrimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
@@ -792,12 +739,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgyelowbold">
                         <strong>
-                        <?php 
+<?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bgorangebold">
@@ -808,12 +754,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgorangebold">
                         <strong>
-                        <?php 
+<?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bggreenbold">
@@ -821,17 +766,15 @@ $subtotal = 0;
                         <input type="hidden" name="primas-meta-tercer" id="primas-meta-tercer" value="0" />
                     </td>
                     <td class="bggreenbold">$
-                        <?php 
+<?php 
                             echo number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                     </td>                               
                 </tr>
-           <?php endif; ?>   
-           <?php if( ( $ramo == 'gmm' or $ramo == 'autos' ) and $periodo == 12 and $i==12 ): $subtotal++;?>
-
+<?php endif; ?>   
+<?php if( ( $ramo == 'gmm' or $ramo == 'autos' ) and $periodo == 12 and $i==12 ): $subtotal++;?>
                 <tr id="total-cuatrimestre-3">
                     <td><b>TOTAL 3cer <br />cuatrimestre</b></td>
                     <td class="bgestacionalidadbold">&nbsp;</td>
@@ -843,12 +786,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgyelowbold">
                         <strong>
-                        <?php 
+<?php 
                             echo $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotal += $SolicitudesLogradasTotalTrimestre; 
                             $SolicitudesLogradasTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bgorangebold">
@@ -859,12 +801,11 @@ $subtotal = 0;
                     </td>
                     <td class="bgorangebold">
                         <strong>
-                        <?php 
+<?php 
                             echo $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotal += $NegociosLogradosTotalTrimestre; 
                             $NegociosLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                         </strong>
                     </td>
                     <td class="bggreenbold">
@@ -872,17 +813,15 @@ $subtotal = 0;
                         <input type="hidden" name="primas-meta-tercer" id="primas-meta-tercer" value="0" />
                     </td>
                     <td class="bggreenbold">$
-                        <?php 
+<?php 
                             echo number_format($PrimasLogradosTotalTrimestre,2); 
                             $PrimasLogradosTotal += $PrimasLogradosTotalTrimestre; 
                             $PrimasLogradosTotalTrimestre=0; 
-                        ?>
-
+?>
                     </td>                               
                 </tr>  
-           <?php endif; ?>   
-           <?php /*$i++; */ endforeach; endif; ?> 
-
+<?php endif; ?>   
+<?php /*$i++; */ endforeach; endif; ?> 
           </tbody>
            <tr>
             	<td>&nbsp;</td>
@@ -922,7 +861,7 @@ $subtotal = 0;
     </table>
 </div>
 </div>
-
+</div>
 <?php 
 if( !function_exists( 'money_format' ) ){
 function money_format($format, $number) { 
