@@ -77,14 +77,14 @@ class Simulator extends CI_Controller {
 		'XAcotamiento_1', 'XAcotamiento_2',
 		'XAcotamiento_3', 'XAcotamiento_4',
 	);
-
+/*
 	public $maybe_array_fields = array(	// the fields that are arrays for gmm
 		'comisionVentaInicial', 'comisionVentaRenovacion',
 		'noNegocios', 'porsiniestridad',
 		'simulatorPrimasPeriod', 'primasRenovacion',
 		'XAcotamiento'
 		);
-
+*/
 	public $computed_meta_fields = array(
 		'primas-meta-primer', 'primas-meta-segund', 'primas-meta-second', 'primas-meta-tercer', 'primas-meta-cuarto',
 		'primas-meta-total',
@@ -275,7 +275,11 @@ $( document ).ready( function(){
 	$(".main-menu-span").removeClass("span2");
 	$("#content").removeClass("span10").addClass("span12");
 	$("#meta-footer td").css("font-size", "10px");
-	
+
+	$(".screen-view").hide();
+	$(".print-view").show();
+	$(":input").prop("readonly", true);
+
 	if (!$("#print-button").hasClass("print-preview"))
 		$("#reset-meta").hide();
 });
@@ -309,6 +313,9 @@ $( document ).ready( function(){
 			$(this).attr("href", "' . site_url($uri_segments_meta) . '");
 		}
 	});
+
+	$(".screen-view").show();
+	$(".print-view").hide();
 });
 </script>
 ';

@@ -433,25 +433,25 @@ class Director extends CI_Controller {
 	public $print_meta = true;
 	public $show_meta = true;
 
-	public function meta( $userid = null, $ramo = null )
+	public function meta_old( $userid = null, $ramo = null )
 	{
 		$this->_common_simulator($userid, $ramo);
 	}
 
-	public function simulator( $userid = null, $ramo = null )
+	public function simulator_old( $userid = null, $ramo = null )
 	{
 		$this->show_meta = false;
 		$this->_common_simulator($userid, $ramo);
 	}
 
-	public function print_index( $userid = null, $ramo = null )
+	public function print_index_old( $userid = null, $ramo = null )
 	{
 		$segments = $this->uri->rsegment_array();
 		$segments[1] = 'simulator';
 		redirect(implode('/', $segments), 'refresh' );
 	}
 
-	public function print_index_simulator( $userid = null, $ramo = null )
+	public function print_index_simulator_old( $userid = null, $ramo = null )
 	{
 		$segments = $this->uri->rsegment_array();
 		$segments[1] = 'simulator';
@@ -519,7 +519,95 @@ $( document ).ready( function(){
 		// Render view 
 		$this->load->view( 'index', $this->view );	
 	}
+///////////////////
 
+	public function meta( $userid = null, $ramo = null )
+	{
+		$this->_new_common_simulator($userid, $ramo, TRUE);
+	}
+
+	public function simulate( $userid = null, $ramo = null )
+	{
+		$this->show_meta = false;
+		$this->_new_common_simulator($userid, $ramo, FALSE);
+	}
+
+	public function print_index( $userid = null, $ramo = null )
+	{
+		$segments = $this->uri->rsegment_array();
+		$segments[1] = 'simulator';
+		redirect(implode('/', $segments), 'refresh' );
+	}
+
+	public function print_simulate( $userid = null, $ramo = null )
+	{
+		$segments = $this->uri->rsegment_array();
+		$segments[1] = 'simulator';
+		redirect(implode('/', $segments), 'refresh' );
+	}
+
+	private function _new_common_simulator($userid = null, $ramo = null, $is_meta = TRUE)
+	{
+		$this->_init_profile();
+		$agentid = $this->user->getAgentIdByUser( $userid );
+		if (!$this->access || !$agentid)
+		{
+			$this->session->set_flashdata( 'message', array( 
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Simulador" o no tiene permisos ver el simulator de este usuario. Informe a su administrador.'
+			));
+			redirect( 'home', 'refresh' );
+		}
+		$users = $this->user->getForUpdateOrDelete( $userid );
+		
+		$this->load->helper('simulator/simulator');
+		$content_data = meta_simulator_view( $users, $userid, $agentid, $ramo, false, false, $is_meta );
+
+		$sub_page_content = $this->load->view('simulator/overview_new', $content_data, true);
+
+		if ($this->show_meta)
+			$show_hide = '$("#simulator-section").hide(); $("#meta-section").show();';
+		else
+			$show_hide = '$("#meta-section").hide(); $("#simulator-section").show();';		
+
+		$content_data['scripts'][] = '
+<script type="text/javascript">
+$( document ).ready( function(){
+	' . $show_hide . 
+'
+});
+</script>
+';
+		$base_url = base_url();
+		// Config view
+		$this->view = array(
+			'title' => 'Director',
+			'user' => $this->sessions,
+			'user_vs_rol' => $this->user_vs_rol,
+			'roles_vs_access' => $this->roles_vs_access,
+			'css' => array_merge(
+				array(
+					'<link rel="stylesheet" href="'. $base_url .'director/assets/style/director.css">',
+				),
+				$content_data['css']),
+			'scripts' =>  array_merge(
+				array(
+				'<script src="'. $base_url .'scripts/config.js"></script>',
+				'<script type="text/javascript" src="'.$base_url.'director/assets/scripts/director.js"></script>',
+				),
+				$content_data['scripts']),
+			'content' => 'director/director_profile',
+			'message' => $this->session->flashdata('message'),
+			'sub_page_content' => $sub_page_content,
+		);
+
+		// Render view 
+		$this->load->view( 'index', $this->view );	
+	}
+
+
+
+//////////////////
 	public function sales_activities()
 	{
 		$this->_init_profile();

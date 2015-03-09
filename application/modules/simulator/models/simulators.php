@@ -15,16 +15,21 @@
 class Simulators extends CI_Model{
 	
 	private $data = array();
-	
 	private $insertId;
 	
-		
+	private $maybe_array_fields = array(	// the fields that are arrays for gmm
+		'comisionVentaInicial', 'comisionVentaRenovacion',
+		'noNegocios', 'porsiniestridad',
+		'simulatorPrimasPeriod', 'primasRenovacion',
+		'XAcotamiento'
+		);
+
 	public function __construct(){
-		
+
         parent::__construct();
-			
+
     }
-	
+
 
 /*
  *	CRUD Functions, dynamic table.

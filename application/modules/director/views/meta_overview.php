@@ -82,7 +82,7 @@ endif; ?>
       <td colspan="7" style="background-color: #E0E0E0; padding-left: 1.5em">
 <?php if (($ramo == 1) || ($ramo == 2)) :
 		$link_meta = $base_url . 'director/meta/' . $data[$i]['id'] . '/' . $ramo . '.html';
-		$link_simulator = $base_url . 'director/simulator/' . $data[$i]['id'] . '/' . $ramo . '.html';
+		$link_simulator = $base_url . 'director/simulate/' . $data[$i]['id'] . '/' . $ramo . '.html';
 		echo '<a href="' . $link_meta . '">Modificar meta</a> | <a href="' . $link_simulator . '">Simular ingreso</a>';
 endif; ?>
 	  </td>

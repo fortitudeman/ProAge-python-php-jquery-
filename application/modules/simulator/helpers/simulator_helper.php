@@ -227,45 +227,91 @@ $( document ).ready( function(){
 	}
 }
 /*
-	Prepare meta - new version
+	Prepare meta and simulator - new version
 	TODO: adapt this to simulator module (currently made for director module)
 */
-if ( ! function_exists('new_meta_view'))
+if ( ! function_exists('meta_simulator_view'))
 {
-	function new_meta_view( $users, $userid = null, $agentid = null, $ramo = null, $for_print = FALSE, $print_meta = FALSE )
+	function meta_simulator_view( $users, $userid = null, $agentid = null, $ramo = null, $for_print = FALSE, $print_meta = FALSE, $is_meta = TRUE )
 	{
 		if (!$agentid || !$ramo || !$userid)
 			return false;
 
+		$CI =& get_instance();
+/////////////////////
+		$uri_segments = $CI->uri->rsegment_array();
+		if (count($uri_segments) < 3)
+			show_404();
+
+		$agent_name = '';
+		$agent_posted = $CI->input->post('agent_name');
+		if (($agent_posted !== FALSE) && $agent_posted)
+		{
+			$pieces = explode( ' [ID: ', $agent_posted);
+			if (isset($pieces[1]))
+			{
+				$posted_user_id = $CI->user->getUserIdByAgentId( (int)$pieces[1] );
+				if ($posted_user_id != $uri_segments[3])
+				{
+					$uri_segments[3] = $posted_user_id;
+					redirect( join('/', $uri_segments), 'refresh' );
+				}
+			}
+		}
+		if (!isset($uri_segments[4]) || ($uri_segments[4] < 1) || ($uri_segments[4] > 3))
+			$ramo = 1;
+		else
+			$ramo = $uri_segments[4];
+/////////////////////
 		$ramo_simulator = array(
 			1 => 'vida',
 			2 => 'gmm',
 			3 => 'autos');
-		if (isset($ramo_simulator[$ramo]))
-			$simulator = $ramo_simulator[$ramo];
-		else
-			$simulator = 'vida';
+		$simulator = $ramo_simulator[$ramo];
 
-		$CI =& get_instance();
 		$period = 0;
 		$year = $CI->input->post('year');
 		if ($year === FALSE)
 			$year = $CI->uri->rsegment(6);
 		$year = ($year !== FALSE) ? $year : date('Y');
-
-		$data = $CI->simulators->getByAgentNew('meta_new', $agentid, $ramo, $period, $year);
+		if ($is_meta)
+		{
+			$data = $CI->simulators->getByAgentNew('meta_new', $agentid, $ramo, $period, $year);
+			$meta_data = array();
+		}
+		else
+		{
+			$data = $CI->simulators->getByAgentNew('simulator_new', $agentid, $ramo, $period, $year);
+			$meta_data = $CI->simulators->getByAgentNew('meta_new', $agentid, $ramo, $period, $year);
+		}
 ////////////
 		$base_url = base_url();
-		$request_promedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "' .
-			$simulator .
-			'" ); getMetas(); }); </script>';
-
-		if( !empty( $data ) )
+		$request_promedio = '';
+		$add_js = '';
+		if ($is_meta)
 		{
-			$request_promedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "' .
-				$simulator . '" ); $( "#metas-prima-promedio" ).val( '
-				. $data[0]['data']->primas_promedio . 
-				' ); getMetas(); }); </script>'; 
+			if( !empty( $data ) )
+				$request_promedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "' .
+					$simulator . '" ); $( "#metas-prima-promedio" ).val( '
+					. $data[0]['data']->primas_promedio . 
+					' ); getMetas(); }); </script>';
+			else
+				$request_promedio = '<script type="text/javascript">$( document ).ready( function(){ getMetasPeriod( "' .
+					$simulator .
+					'" ); getMetas(); }); </script>';
+			
+		}
+		elseif (!$for_print)
+		{
+			$add_js .= '
+<script type="text/javascript">
+$( document ).ready( function(){
+	$( "#tabs" ).tabs();
+	$(".screen-view").show();
+	$(".print-view").hide();
+}); 
+</script>';
+
 		}
 		$module = $CI->uri->segment(1, 'director');
 
@@ -281,7 +327,7 @@ if ( ! function_exists('new_meta_view'))
 		  	'<link href="' . $base_url . 'simulator/assets/style/simulator.css" rel="stylesheet">',
 		  	'<link href="' . $base_url . 'simulator/assets/style/simulator_print.css" rel="stylesheet">',
 		  );
-		  $add_js = '
+		  $add_js .= '
 <script type="text/javascript">
 $( document ).ready( function(){
 	$("#open_meta").hide();
@@ -294,6 +340,10 @@ $( document ).ready( function(){
 	
 	if (!$("#print-button").hasClass("print-preview"))
 		$("#reset-meta").hide();
+
+	$(".screen-view").hide();
+	$(".print-view").show();
+	$(":input").prop("readonly", true);
 });
 </script>
 ';
@@ -312,9 +362,9 @@ $( document ).ready( function(){
 			$uri_segments_meta[6] = $year;			
 			$uri_segments_simulator = $uri_segments_meta;
 			$uri_segments_meta[2] = 'print_index';
-			$uri_segments_simulator[2] = 'print_index_simulator';
+			$uri_segments_simulator[2] = 'print_simulate';
 			
-			$add_js = '
+			$add_js .= '
 <script type="text/javascript">
 $( document ).ready( function(){
 	$("#meta-footer td").css("font-size", "18px");
@@ -329,8 +379,10 @@ $( document ).ready( function(){
 </script>
 ';
 			$js_assets[] = '<script type="text/javascript" src="' . $base_url . 'simulator/assets/scripts/metas.js"></script>';
-			$js_assets[] = '<script type="text/javascript" src="' . $base_url . 'simulator/assets/scripts/simulator_'.$simulator.'.js"></script>';
+//			$js_assets[] = '<script type="text/javascript" src="' . $base_url . 'simulator/assets/scripts/simulator_'.$simulator.'.js"></script>';
+			$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_new.js"></script>';
 		}
+
 		$js_assets[] = $request_promedio;
 		$js_assets[] = $add_js;
 
@@ -348,7 +400,8 @@ $( document ).ready( function(){
 		  'content' => 'simulator/overview',
 		  'userid' => $userid,
 		  'agentid' => $agentid,
-		  'data' =>  $data,		  	  
+		  'data' =>  $data,
+		  'meta_data' => $meta_data,		  
 		  'config' => $CI->simulators->getConfigMetas( false, null, null ),	
 		  'SolicitudesLogradas' => array(),
 		  '$negociosLogrados' => array(),	
