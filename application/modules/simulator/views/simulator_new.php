@@ -267,14 +267,19 @@ $ingreso_bono_venta_inicial[$i] = $bono_venta_inicial[$i] * $percent_bono_venta_
 $ingreso_bono_renovacion[$i] = $bono_renovacion[$i] * $percent_bono_renovacion[$i] / 100;
 ?>
   <div class="span6 left-column">
-    <span style="color:#547EBD !important; float:right" id="ingresoBonoProductividad_text_<?php echo $i; ?>">$ <?php echo number_format($ingreso_bono_venta_inicial[$i], 2); ?></span>	
-    <input type="hidden" disabled="disabled" name="ingresoBonoProductividad_<?php echo $i; ?>" id="ingresoBonoProductividad_<?php echo $i; ?>" value="<?php echo $ingreso_bono_venta_inicial[$i]; ?>">
-
+    <div style="float:right">
+      <span style="color:#547EBD !important;" id="ingresoBonoProductividad_text_<?php echo $i; ?>">$ <?php echo number_format($ingreso_bono_venta_inicial[$i], 2); ?></span>
+      &nbsp;(<span id="bonoAplicado_<?php echo $i; ?>"><?php echo $percent_bono_venta_inicial[$i]; ?></span> %)
+      <input type="hidden" disabled="disabled" name="ingresoBonoProductividad_<?php echo $i; ?>" id="ingresoBonoProductividad_<?php echo $i; ?>" value="<?php echo $ingreso_bono_venta_inicial[$i]; ?>">
+    </div>
   </div>   <!-- END left column -->
  
   <div class="span6 right-column">
-    <span style="color:#547EBD !important; float:right" id="ingresoBonoRenovacion_text_<?php echo $i; ?>">$ <?php echo number_format($ingreso_bono_renovacion[$i], 2); ?></span>	
-    <input type="hidden" disabled="disabled" name="ingresoBonoRenovacion_<?php echo $i; ?>" id="ingresoBonoRenovacion_<?php echo $i; ?>" value="<?php echo $ingreso_bono_renovacion[$i]; ?>" >
+    <div style="float:right">
+      <span style="color:#547EBD !important" id="ingresoBonoRenovacion_text_<?php echo $i; ?>">$ <?php echo number_format($ingreso_bono_renovacion[$i], 2); ?></span>
+      &nbsp;(<span id="porbonoGanado_<?php echo $i; ?>"><?php echo $percent_bono_renovacion[$i]; ?></span> %)
+      <input type="hidden" disabled="disabled" name="ingresoBonoRenovacion_<?php echo $i; ?>" id="ingresoBonoRenovacion_<?php echo $i; ?>" value="<?php echo $ingreso_bono_renovacion[$i]; ?>" >
+    </div>
   </div>   <!-- END right column -->
 </div>
 

@@ -254,7 +254,8 @@ function updateLeftCol(rank)
 		var porcentaje = CalcPercBonoAplicado(primaAfectadas, negocios);
 	else
 		var porcentaje = getInicialGmmPercent(primaAfectadas);	
-	$( '#bonoAplicado_' + rank ).val( porcentaje );
+//	$( '#bonoAplicado_' + rank ).val( porcentaje );
+	$( '#bonoAplicado_' + rank ).text( porcentaje );
 	var totalP = primaAfectadas * parseFloat($( '#XAcotamiento_' + rank ).val().replace( '%', '' )/100);
 	$( '#primasAfectasInicialesPagar_text_'  + rank).html( '$ '+moneyFormat(totalP) );
 	$( '#primasAfectasInicialesPagar_'  + rank ).val( total );
@@ -292,7 +293,8 @@ function updateRightCol(rank)
 		var base = parseInt( $( '#porsiniestridad_' + rank ).val() );
 		var porcentaje = getRenovacionGmmPercent(primaAfectadas, base);
 	}
-	$( '#porbonoGanado_' + rank ).val( porcentaje );
+//	$( '#porbonoGanado_' + rank ).val( porcentaje );
+	$( '#porbonoGanado_' + rank ).text( porcentaje );
 	var totalB = totalP * porcentaje/100;
 	$( '#ingresoBonoRenovacion_text_' + rank ).html( '$ '+moneyFormat(totalB) );
 	$( '#ingresoBonoRenovacion_' + rank ).val( totalB );
