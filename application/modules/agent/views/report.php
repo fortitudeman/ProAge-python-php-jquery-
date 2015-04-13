@@ -113,6 +113,13 @@ switch ($filter['ramo'])
 			$primas_pendientes_pago = $value['aceptadas'];
 		$negocio = (int)($value['negocio'] + $value['tramite']['count'] + $negocios_pendientes_pago);		
 		$prima = (float)($value['prima'] + $value['tramite']['adjusted_prima'] + $primas_pendientes_pago);
+		if (is_array($value['negociopai']))
+		{
+			foreach ($value['negociopai'] as $negocio_pai)
+				break;
+		}
+		else
+			$negocio_pai = $value['negociopai'];
 	?>
         <tr id="tr_<?php echo $value['id'] ?>">
             <td class="" style="display: none">
@@ -127,7 +134,7 @@ switch ($filter['ramo'])
             </td>
             <td class="celda_gris" style="text-align:right;">
                 <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'negociopai'})">
-                <?php echo $value['negociopai']; ?>
+                <?php echo $negocio_pai; ?>
                 </a>
 				</td>
             <td class="celda_gris" style="text-align:right">

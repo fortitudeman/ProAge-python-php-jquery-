@@ -4,9 +4,11 @@
 <style type="text/css">
 	.payment_table th { width: 150px;}
 	.payment_table td { padding: 0; margin: 0}
+
 </style>
 
 <?php if ($values):
+$is_negocio_pai = !empty($values[0]->negocio_pai);
 $base_url = base_url();
 $additional_form_fields = '';
 if (($for_agent_id = $this->input->post('for_agent_id')) !== FALSE)
@@ -37,6 +39,9 @@ $ignore_image = '
             <?php if ($for_agent_id === FALSE) : ?><th width="200px">Agente</th><?php endif; ?>
             <th>Fecha de pago</th>
             <th>Poliza</th>
+<?php if ($is_negocio_pai): ?>
+            <th>Negocio PAI</th>
+<?php endif ?>
             <th>Asegurado</th>
             <th>Agente importado</th>
             <th>Folio importado</th>
@@ -60,6 +65,17 @@ $ignore_image = '
 <?php endif; ?>
             <td><?php echo $value->payment_date ?></td>
             <td><?php echo $value->policy_number ?></td>
+<?php if ($is_negocio_pai): ?>
+            <td>
+<form class="negocio_pai_field">
+<select class="span1" name="negocio_pai[<?php echo $value->negocio_pai_id ?>]">
+<option value="1" <?php if ($value->negocio_pai == 1) echo 'selected="selected"'; ?>>1</option>
+<option value="2" <?php if ($value->negocio_pai == 2) echo 'selected="selected"'; ?>>2</option>
+<option value="3" <?php if ($value->negocio_pai == 3) echo 'selected="selected"'; ?>>3</option>
+</select>
+</form>
+			</td>
+<?php endif ?>
             <td><?php echo $value->asegurado ? $value->asegurado : 'No disponible'?></td>
             <td><?php echo $value->imported_agent_name ? $value->imported_agent_name : 'No disponible'?></td>
             <td><?php echo $value->imported_folio ? $value->imported_folio : 'No disponible'?></td>

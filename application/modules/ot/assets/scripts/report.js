@@ -344,6 +344,36 @@ $( document ).ready(function() {
 		return false;
 	});
 
+	$(".negocio_pai_field select").on( "change", function( event ) {
+		var formData = $(this).parent().serialize();
+		if ( confirm( '¿Esta seguro que desea cambiar el número de negocios PAI?' ) ) {
+			$.ajax({
+				url: Config.base_url() + 'ot/change_negocio_pai.html',
+				type: 'POST',
+				data: formData,
+				dataType : 'json',
+				success: function(response){
+					switch (response) {
+						case '-1':
+							alert ('No se pudo cambiar el número de negocios PAI. Informe a su administrador.');
+							break;
+						case '0':
+							alert ('Ocurrio un error, no se pudo guardar el pago, consulte a su administrador.');
+							break;
+						case '1':
+						//  refresh the whole page to reflect the change
+							alert ('Se pudo cambiar el número de negocios PAI correctamente. La página web debe ser actualizada para reflejar los cambios.');
+							window.location.reload();
+							break;
+						default:
+							alert ('Hay un error en la respuesta del sitio web, consulte a su administrador.');
+							break;
+					}
+				}
+			});
+		}
+		return false;
+	});
 /////////
 		function explode( val ) {
 			return val.split( /\n\s*/ );

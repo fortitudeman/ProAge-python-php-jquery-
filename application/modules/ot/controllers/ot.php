@@ -2766,6 +2766,33 @@ Display custom filter period
 		echo json_encode($result);
 	}
 
+	public function change_negocio_pai()
+	{
+		if ( !$this->input->is_ajax_request() )
+			redirect( 'ot.html', 'refresh' );
+
+		if ( !$this->access_update )
+		{
+			echo json_encode('-1');
+			exit;
+		}
+		$negocio_pai = $this->input->post('negocio_pai');
+		if (is_array($negocio_pai))
+		{
+			$this->load->model( 'work_order' );
+			foreach ($negocio_pai as $id => $value)
+			{
+				$result = $this->work_order->generic_update(
+					'policy_negocio_pai', array('negocio_pai' => (int) $value), array('id' => (int) $id), 1, 0) ?
+						'1' : '0';
+				echo json_encode($result);
+				exit();
+			}
+		}
+		echo json_encode('2');
+		exit;
+	}
+
 	private function _check_import_file_length($records, $file_name = '')
 	{
 		$max_file_length = $this->config->item('payment_import_max');

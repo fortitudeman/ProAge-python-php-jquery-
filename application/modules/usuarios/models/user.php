@@ -2894,183 +2894,7 @@ class User extends CI_Model{
 		return $this->_getNegocioPai(FALSE, $agent_id, $filter);
 	}
 
-//	private function _getNegocioPai( $count_requested = TRUE, $agent_id = null, $filter = array())
 	private function _getOldNegocioPai( $count_requested = TRUE, $agent_id = null, $filter = array())
-	{
-		$sql_begin = 'SELECT `payments`.*, `users`.`name` AS first_name, `users`.`lastnames` AS last_name, `users`.`company_name` AS company_name
-FROM `payments` 
-JOIN `agents` ON `agents`.`id` = `payments`.`agent_id`
-JOIN `users` ON `users`.`id` = `agents`.`user_id`
-WHERE `policy_number`
-IN ( ';
-
-		$sql_end = ") AND `valid_for_report` = '1' AND `year_prime` = '1' 
-";
-		$sub_sql = "
-SELECT `t_year`.`policy_number` 
-FROM (
-SELECT `payments`.*, SUM( `payments`.`amount` ) AS `sum_payment`, SUM( ABS(`payments`.`business` )) AS `abs_business`
-FROM (
-`payments`
-)
-WHERE `valid_for_report` = '1' AND `year_prime` = '1' 
-";
-
-		if ($agent_id)
-		{
-			$sub_sql .= "
-AND `agent_id` = '$agent_id'";
-			$sql_end .= "
-AND `agent_id` = '$agent_id'";
-		}
-
-		if( !empty( $filter ) )
-		{
-			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) )
-			{
-				$sub_sql .= " AND `product_group` = '" . $filter['query']['ramo'] . "'
-";
-				$sql_end .= " AND `product_group` = '" . $filter['query']['ramo'] . "'
-";
-			}
-			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) )
-			{
-				$year = date( 'Y' );				
-				switch ($filter['query']['periodo'])
-				{
-					case 1: // month
-						$month = date( 'm' );
-						$next_month = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
-						$sql_end .= "
-AND `payments`.`payment_date` >= '$year-$month-01'
-AND `payments`.`payment_date` < '$next_month'";
-						$sub_sql .= "
-AND `payments`.`payment_date` >= '$year-01-01'
-AND `payments`.`payment_date` < '$next_month'";
-					break;
-					case 2: // trimester/cuatrimestre
-						$this->load->helper('tri_cuatrimester');
-						if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 )
-							$begin_end = get_tri_cuatrimester( $this->cuatrimestre(), 'cuatrimestre' ) ;
-						else
-							$begin_end = get_tri_cuatrimester( $this->trimestre(), 'trimestre' );
-
-						if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
-						{
-							$sql_end .= "
-AND `payments`.`payment_date` >= '" . $begin_end['begind'] . "'
-AND `payments`.`payment_date` <= '" . $begin_end['end'] . "'";
-							$sub_sql .= "
-AND `payments`.`payment_date` >= '$year-01-01'
-AND `payments`.`payment_date` <= '" . $begin_end['end'] . "'";
-						}
-					break;
-					case 3: // year
-						$sql_end .= "
-AND `payments`.`payment_date` >= '$year-01-01'
-AND `payments`.`payment_date` <= '$year-12-31 23:59:59'";
-						$sub_sql .= "
-AND `payments`.`payment_date` >= '$year-01-01'
-AND `payments`.`payment_date` <= '$year-12-31 23:59:59'";
-					break;
-					case 4: // custom period
-						$from = $this->custom_period_from;
-						$to = $this->custom_period_to;
-						if ( ( $from === FALSE ) || ( $to === FALSE ) )
-						{
-							$from = date('Y-m-d');
-							$to = $from;
-						}
-						$sql_end .= "
-AND `payments`.`payment_date` >= '$from 00:00:00'
-AND `payments`.`payment_date` <= '$to 23:59:59'";
-						$sub_sql .= "
-AND `payments`.`payment_date` >= '$year-01-01'
-AND `payments`.`payment_date` <= '$to 23:59:59'";
-					break;
-
-				}
-			}
-			if ( !$agent_id && isset( $filter['query']['agent_name'] ) and !empty( $filter['query']['agent_name'] ) )
-			{
-				$this->_get_agent_filter_where($filter['query']['agent_name']);
-				if ($this->agent_name_where_in)
-				{
-					$agent_filter = array();
-					foreach ($this->agent_name_where_in as $agent_key => $agent_value)
-						$agent_filter[$agent_key] = "'$agent_value'";
-					$agent_filter_str = implode(',', $agent_filter);
-					$sub_sql .= "
-AND `agent_id` IN (" . $agent_filter_str . ") ";
-					$sql_end .= "
-AND `agent_id` IN (" . $agent_filter_str . ") ";
-				}
-			}
-		}
-
-		$sub_sql .= "
-GROUP BY `payments`.`policy_number`
-) AS t_year
-WHERE (`sum_payment` > '5000') AND (`abs_business` > 0)
-";
-		$sql_end .= ' ORDER BY `payments`.`payment_date` ASC';
-		$sql = $sql_begin . $sub_sql . $sql_end;
-
-		$query = $this->db->query($sql);
-
-		$temp_result = array();
-		$temp_rows = array();
-		$temp_counts = array();
-		$temp_not_empty = FALSE;
-		if ($query->num_rows() > 0)
-		{
-			$temp_not_empty = TRUE;
-			foreach ($query->result() as $row)
-			{
-				$set = FALSE;
-				if (!isset($temp_result[$row->agent_id]))
-				{
-					$temp_result[$row->agent_id] = array();
-					$temp_counts[$row->agent_id] = 1;
-					$set = TRUE;
-				}
-				elseif (!isset($temp_result[$row->agent_id][$row->policy_number]))
-				{
-					$temp_counts[$row->agent_id]++;
-					$set = TRUE;
-				}
-				if ($set)
-				{
-					$row->asegurado = '';
-					if ($row->policy_number) {
-						$query_policy = $this->db->get_where('policies', array('uid' => $row->policy_number), 1, 0);
-						if ($query_policy->num_rows() > 0)
-							$row->asegurado = $query_policy->row()->name;
-						$query_policy->free_result();
-					}
-					$temp_result[$row->agent_id][$row->policy_number] = $row->policy_number;
-					$temp_rows[] = $row;
-				}
-			}
-		}
-
-		if ($count_requested)
-		{
-			if ($temp_not_empty)
-			{
-				if ($agent_id)
-					return $temp_counts[$agent_id];
-				else
-					return $temp_counts;
-			}
-			else
-				return 0;
-		} else
-			return $temp_rows;
-	}
-
-//	private function _getNewNegocioPai( $count_requested = TRUE, $agent_id = null, $filter = array())
-	private function _getNegocioPai( $count_requested = TRUE, $agent_id = null, $filter = array())
 	{
 		$sql_date_filter = '';
 		$sql_agent_filter = '';
@@ -3250,6 +3074,193 @@ GROUP BY `agent_id`";
 				return 0;
 			else
 				return array();
+		}
+	}
+
+	private function _getNegocioPai( $count_requested = TRUE, $agent_id = null, $filter = array())
+	{
+		$sql_date_filter = '';
+		$sql_agent_filter = '';
+		$sql_plus = "`valid_for_report` = '1' AND `year_prime` = '1' ";
+		if ($agent_id)
+			$sql_agent_filter .= " AND `agent_id` = '$agent_id'";
+
+		if( !empty( $filter ) )
+		{
+			if ( !$agent_id && isset( $filter['query']['agent_name'] ) and !empty( $filter['query']['agent_name'] ) )
+			{
+				$this->_get_agent_filter_where($filter['query']['agent_name']);
+				if ($this->agent_name_where_in)
+				{
+					$agent_filter = array();
+					foreach ($this->agent_name_where_in as $agent_key => $agent_value)
+						$agent_filter[$agent_key] = "'$agent_value'";
+					$sql_agent_filter .= "
+AND `agent_id` IN (" . implode(',', $agent_filter) . ") ";
+				}
+			}
+			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) )
+				$sql_plus .= " AND `product_group` = '" . $filter['query']['ramo'] . "'
+";
+			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) )
+			{
+				$year = date( 'Y' );				
+				switch ($filter['query']['periodo'])
+				{
+					case 1: // month
+						$month = date( 'm' );
+						$next_month = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
+						$sql_date_filter .= "
+WHERE `above_5000` >= '$year-$month-01'
+AND `above_5000` < '$next_month'";
+						$sql_plus .= "
+AND `payments`.`payment_date` >= '$year-01-01'
+AND `payments`.`payment_date` < '$next_month'";
+					break;
+					case 2: // trimester/cuatrimestre
+						$this->load->helper('tri_cuatrimester');
+						if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 )
+							$begin_end = get_tri_cuatrimester( $this->cuatrimestre(), 'cuatrimestre' ) ;
+						else
+							$begin_end = get_tri_cuatrimester( $this->trimestre(), 'trimestre' );
+
+						if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
+						{
+							$sql_date_filter .= "
+WHERE `above_5000` >= '" . $begin_end['begind'] . "'
+AND `above_5000` <= '" . $begin_end['end'] . "'";
+							$sql_plus .= "
+AND `payments`.`payment_date` >= '$year-01-01'
+AND `payments`.`payment_date` <= '" . $begin_end['end'] . "'";
+						}
+					break;
+					case 3: // year
+						$sql_date_filter .= "
+WHERE `above_5000` >= '$year-01-01'
+AND `above_5000` <= '$year-12-31 23:59:59'";
+						$sql_plus .= "
+AND `payments`.`payment_date` >= '$year-01-01'
+AND `payments`.`payment_date` <= '$year-12-31 23:59:59'";
+					break;
+					case 4: // custom period
+						$from = $this->custom_period_from;
+						$to = $this->custom_period_to;
+						if ( ( $from === FALSE ) || ( $to === FALSE ) )
+						{
+							$from = date('Y-m-d');
+							$to = $from;
+						}
+						$sql_date_filter .= "
+WHERE `above_5000` >=  '$from 00:00:00'
+AND `above_5000` <= '$to 23:59:59'";
+						$sql_plus .= "
+AND `payments`.`payment_date` >= '$year-01-01'
+AND `payments`.`payment_date` <= '$to 23:59:59'";
+					break;
+
+				}
+			}
+		}
+
+		$select_plus = '';
+		$join_plus = '';
+		if (!$count_requested)
+		{
+			$select_plus = "`policies`.`name` as `asegurado`, ";
+			$join_plus = ' LEFT OUTER JOIN `policies` ON `policies`.`uid`= `payments`.`policy_number` ';
+		}
+		$sql_str = "SELECT *
+FROM
+(
+SELECT `payments`.*,
+`policy_negocio_pai`.`negocio_pai`, `policy_negocio_pai`.`id` AS `negocio_pai_id`, " . $select_plus . "
+`users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`,
+min( `payment_date` ) AS above_5000
+FROM (
+SELECT * , (
+SELECT sum( `amount` )
+FROM `payments` `t2`
+WHERE `t2`.`agent_id` = `payments`.`agent_id`
+AND (
+`t2`.`policy_number` = `payments`.`policy_number`
+)
+AND `t2`.`payment_date` <= `payments`.`payment_date`
+AND 
+" . $sql_plus . $sql_agent_filter . " 
+AND CONCAT(`agent_id`, '|', `policy_number`)
+IN ( 
+SELECT CONCAT(`t_year`.`agent_id`, '|', `t_year`.`policy_number`)
+FROM (
+SELECT `payments`.*, SUM( ABS(`payments`.`business` )) AS `abs_business`
+FROM (
+`payments`
+)
+WHERE
+" . $sql_plus . $sql_agent_filter  . "
+GROUP BY `payments`.`policy_number`, `payments`.`agent_id`
+) AS `t_year`
+WHERE (`abs_business` > '0')
+)
+) AS `payment_acc`
+FROM `payments`
+) `payments`
+JOIN `agents` ON `agents`.`id`=`payments`.`agent_id`
+JOIN `users` ON `users`.`id`=`agents`.`user_id`
+LEFT OUTER JOIN `policy_negocio_pai` ON `policy_negocio_pai`.`policy_number`= `payments`.`policy_number`
+" . $join_plus . "
+WHERE `payment_acc` >= '5000'
+GROUP BY `agent_id`, `policy_number`
+)
+AS `wrapping_t`
+";
+		if (!$sql_date_filter)
+			$sql_date_filter = " WHERE (above_5000 <= '" . date('Y-m-d') . "') ";
+		$sql_str .= " $sql_date_filter $sql_agent_filter ";
+
+		$query = $this->db->query($sql_str);
+
+		if ($query->num_rows() > 0)
+		{
+			$result = array();
+			foreach ($query->result() as $row)
+			{
+				$this->_create_negocio_pai_rows($row);
+				if (isset($row->asegurado) && ($row->asegurado == NULL))
+					$row->asegurado = '';
+				if ($count_requested)
+				{
+					if (isset($result[$row->agent_id]))
+						$result[$row->agent_id] += $row->negocio_pai;
+					else
+						$result[$row->agent_id] = $row->negocio_pai;
+				}
+				else
+					$result[] = $row;	
+			}
+			$query->free_result();
+			return $result;
+		}
+		else
+		{
+			if ($count_requested)
+				return 0;
+			else
+				return array();
+		}
+	}
+
+	private function _create_negocio_pai_rows(&$row)
+	{
+		if ($row->negocio_pai === NULL)
+		{
+			$to_insert = array(
+				'ramo' => $row->product_group,
+				'policy_number' => $row->policy_number,
+				'negocio_pai' => 1,
+				'creation_date' => date('Y-m-d H:i:s')
+				);
+			$this->db->insert('policy_negocio_pai', $to_insert);
+			$row->negocio_pai = 1;
 		}
 	}
 
