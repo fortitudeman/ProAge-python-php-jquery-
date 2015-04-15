@@ -1545,7 +1545,8 @@ implode(', ', $ramo_tramite_types) . '
 					{
 						$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
 					}
-					elseif( $this->work_order->checkPayment( $item->uid, $item->amount, $item->payment_date, $user_id ) == true )
+//					elseif( $this->work_order->checkPayment( $item->uid, $item->amount, $item->payment_date, $user_id ) == true )
+					else
 					{
 						if( $this->work_order->replace( 'payments', $payment ) == false )
 							$controlSaved = false;
@@ -1561,9 +1562,8 @@ implode(', ', $ramo_tramite_types) . '
 						}
 						if( $controlSaved == false )
 							$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
-					}else{
-						$message['message'] = true;
-						$message['message'][0][$i]['saved'] = 'La linea '.$i.' ya existia y no se ha guardado.';
+//					}else{
+//						$message['message'][0][$i]['saved'] = 'La linea '.$i.' ya existia y no se ha guardado.';
 					}
 					$i++;
 				}
