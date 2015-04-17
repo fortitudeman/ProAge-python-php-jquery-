@@ -317,85 +317,53 @@ class Usuarios extends CI_Controller {
 
 // Create new user
 	public function create(){
-		
+
 		// Check access teh user for create
 		if( $this->access_create == false ){
-				
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No tiene permisos para ingresar en esta sección "Usuarios crear", Informe a su administrador para que le otorge los permisos necesarios.'
-							
 			));	
-			
-			
 			redirect( 'usuarios', 'refresh' );
-		
 		}
-			
-			
-		
+
 		if( !empty( $_POST ) ){
-			
-					
 			// Generals for user what does not agent
 			$this->form_validation->set_rules('group[]', 'Grupo', 'required');
 			$this->form_validation->set_rules('persona', 'Persona', 'required');
 			$this->form_validation->set_rules('username', 'Usuario', 'required|is_unique[users.username]');
 			$this->form_validation->set_rules('password', 'Contraseña', 'required');
 			$this->form_validation->set_rules('email', 'Correo', 'required|valid_email|is_unique[users.email]');
-			
-			
+
 			if( $this->input->post('persona') == 'fisica' ){
 				$this->form_validation->set_rules('lastname', 'Apellido', 'required');
 				//$this->form_validation->set_rules('birthdate', 'Fecha de cumpleaños', 'required');
 			}
-			
 			if( $this->input->post('persona') == 'moral' ){
 				//$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
 			}
-				
-			
 			// User Agent Validations
 			if( in_array( 1, $this->input->post('group') ) ){
-				
 				// General for Agents
 				//$this->form_validation->set_rules('manager_id', 'Gerente', 'required');
-				
 				// If process of conexion == 1 or yes
 				if( $this->input->post( 'type' ) == 'Si' ){
-					
 					// SET validation fields
 					//$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
 					//$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia', 'required');
 				}else{ // Else conexion == 2 or not
-					
 					// SET validation fields
 					$this->form_validation->set_rules('clave', 'Clave', 'required|is_unique[agent_uids.uid]');
 					$this->form_validation->set_rules('folio_nacional[]', 'Folio Nacional', 'required|is_unique[agent_uids.uid]');
 					$this->form_validation->set_rules('folio_provincial[]', 'Folio Provicional', 'required|is_unique[agent_uids.uid]');
 					//$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
 					//$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia', 'required');
-					
 				}
-				
-			
 			}
-		
-			
-					
-			
-						
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
-					
-				
-				
 				$controlSaved = true;
-				
-												
-				
 				// Save User Table							
 				$user = array(
 					'office_id'  => 0,
@@ -408,36 +376,18 @@ class Usuarios extends CI_Controller {
 					'birthdate'  => $this->input->post( 'birthdate' ),					
 					'email'  => $this->input->post( 'email' ),
 				);
-				
 				// Add Manager if is an agent
-				if( in_array( 1, $this->input->post('group') ) ) $user['manager_id'] = $this->input->post( 'manager_id' );  
-				
-				if( $this->input->post( 'disabled' ) == 'Si' ) $user['disabled']  = 1; else $user['disabled'] = 0;
-				
-				// Uploaded a picture
-				if( !empty( $_FILES['imagen']['name'] ) ){
-			
-						$file = $_FILES['imagen']['name'];  
-		 
-						$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-					
-						// replace characters other than letters, numbers and . by _
-						$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
-						
-					 
-						if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) )
-						{
-							$user['picture'] = $file;
-							$this->_resize_image($file);
-						} else {
-							$user['picture'] = "default.png";
-						};
-					
-				}else{
+				if( in_array( 1, $this->input->post('group') ) )
+					$user['manager_id'] = $this->input->post( 'manager_id' );  
+				if( $this->input->post( 'disabled' ) == 'Si' )
+					$user['disabled']  = 1; else $user['disabled'] = 0;
+
+				// Picture upload
+				if( !empty( $_FILES['imagen']['name'] ) )
+					$this->_upload_profile_picture($user);
+				else
 					$user['picture'] = "default.png";
-				}
-				
-								
+
 				if( $this->user->create( 'users', $user ) == false) $controlSaved = false ;
 				
 				if( $controlSaved == false ){
@@ -733,18 +683,6 @@ class Usuarios extends CI_Controller {
 		$this->load->view( 'index', $this->view );	
 	
 	}
-	
-	
-	
-
-
-
-
-
-
-
-
-
 
 
 // Create request new user
@@ -755,41 +693,30 @@ class Usuarios extends CI_Controller {
 				
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No tiene permisos para ingresar en esta sección "Usuarios Crear Petición de nuevo usuario", Informe a su administrador para que le otorge los permisos necesarios.'
-							
 			));	
-			
-			
 			redirect( 'usuarios', 'refresh' );
-		
 		}
-			
-			
-		
+
 		if( !empty( $_POST ) ){
-			
-			
-									
+
 			// Generals for user what does not agent
 			$this->form_validation->set_rules('group[]', 'Grupo', 'required');
 			$this->form_validation->set_rules('persona', 'Persona', 'required');
 			$this->form_validation->set_rules('username', 'Usuario', 'required|is_unique[users.username]');
 			$this->form_validation->set_rules('password', 'Contraseña', 'required');
 			$this->form_validation->set_rules('email', 'Correo', 'required|valid_email|is_unique[users.email]');
-			
-			
+
 			if( $this->input->post('persona') == 'fisica' ){
 				$this->form_validation->set_rules('lastname', 'Apellido', 'required');
 				//$this->form_validation->set_rules('birthdate', 'Fecha de cumpleaños', 'required');
 			}
-			
+
 			if( $this->input->post('persona') == 'moral' ){
 				//$this->form_validation->set_rules('company_name', 'Nombre de compañia', 'required');
 			}
-				
-			
+
 			// User Agent Validations
 			if( in_array( 1, $this->input->post('group') ) ){
 				
@@ -812,23 +739,12 @@ class Usuarios extends CI_Controller {
 					//$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia', 'required');
 					
 				}
-				
-			
 			}
-		
-			
-					
-			
-						
+
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
-					
-				
-				
+
 				$controlSaved = true;
-				
-												
-				
 				// Save User Table							
 				$user = array(
 					'office_id'  => 0,
@@ -846,27 +762,13 @@ class Usuarios extends CI_Controller {
 				if( in_array( 1, $this->input->post('group') ) ) $user['manager_id'] = $this->input->post( 'manager_id' );  
 				
 				if( $this->input->post( 'disabled' ) == 'Si' ) $user['disabled']  = 1; else $user['disabled'] = 0;
-				
-				// Uploaded a picture
-				if( !empty( $_FILES['imagen']['name'] ) ){
-						$file = $_FILES['imagen']['name'];  
-						$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-						// replace characters other than letters, numbers and . by _
-						$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
 
-						if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) )
-						{
-							$user['picture'] = $file;
-							$this->_resize_image($file);
-						} else{
-							$user['picture'] = "default.png";
-						};
-					
-				}else{
+				// Picture upload
+				if( !empty( $_FILES['imagen']['name'] ) )
+					$this->_upload_profile_picture($user);
+				else
 					$user['picture'] = "default.png";
-				}
-				
-								
+
 				if( $this->user->create( 'users', $user ) == false) $controlSaved = false ;
 				
 				if( $controlSaved == false ){
@@ -1880,21 +1782,11 @@ class Usuarios extends CI_Controller {
 	private function _handle_profile_picture( $user, &$usernew ) {
 
 		$delete_previous = FALSE;
-		// Uploaded a picture
-		if( !empty( $_FILES['imagen']['name'] ) ){
-
+		// Picture upload
+		if( !empty( $_FILES['imagen']['name'] ) )
+		{
 			$delete_previous = TRUE;
-			$file = $_FILES['imagen']['name'];  
-			$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-					
-			// replace characters other than letters, numbers and . by _
-			$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
-
-			if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) )
-			{
-				$usernew['picture'] = $file;
-				$this->_resize_image($file);
-			}
+			$this->_upload_profile_picture($usernew);
 		}				
 
 		if( $this->input->post( 'deleteimage' ) == 'true' )
@@ -1952,7 +1844,6 @@ class Usuarios extends CI_Controller {
 
 		if( !empty( $_POST ) ){
 
-			// Generals for user what does not agent
 			if( $user['username'] != $this->input->post( 'username' ) )
 				$this->form_validation->set_rules('username', 'Usuario', 'is_unique[users.username]');
 
@@ -2021,72 +1912,41 @@ class Usuarios extends CI_Controller {
 	
 // Update record	
 	public function update( $id = null ){
-		
-		
+
 		// Check access teh user for delete
 		if( $this->access_update == false ){
-				
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No tiene permisos para ingresar en esta sección "Usuarios Editar", Informe a su administrador para que le otorge los permisos necesarios.'
-							
 			));	
-			
-			
 			redirect( 'usuarios', 'refresh' );
-		
 		}
-		
-		
-		
-		
 		$this->load->model( 'user' );
 		$data = $this->user->getForUpdateOrDelete( $id );
 		
 		// Check Record if exist
 		if( empty( $data ) ){
-			
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No existe el registro. No puede editar este registro.'
-							
 			));	
-			
-			
 			redirect( 'usuarios', 'refresh' );
-			
 		}
-		
-		
-		
-		
 		if( !empty( $_POST ) ){
-			
-			
-			
-			
 			// Generals for user what does not agent
 			$this->form_validation->set_rules('group[]', 'Grupo', 'required');
 			$this->form_validation->set_rules('persona', 'Persona', 'required');
-			
-			
 			if( $data[0]['username'] != $this->input->post('username') )
 				$this->form_validation->set_rules('username', 'Usuario', 'required|is_unique[users.username]');
 			
 			if( $data[0]['email'] != $this->input->post('email') )
 				$this->form_validation->set_rules('email', 'Correo', 'required|valid_email|is_unique[users.email]');
-			
-			
 			if( $this->input->post('persona') == 'fisica' ){
 				$this->form_validation->set_rules('lastname', 'Apellido', 'required');
 				//$this->form_validation->set_rules('birthdate', 'Fecha de cumpleaños', 'required');
 			}
-			
-						
 			// User Agent Validations
 			if( in_array( 1, $this->input->post('group') ) ){
 				
@@ -2107,23 +1967,14 @@ class Usuarios extends CI_Controller {
 					//$this->form_validation->set_rules('folio_provincial[]', 'Folio Provicional', 'required|is_unique[agent_uids.uid]');
 					//$this->form_validation->set_rules('connection_date', 'Fecha de conexión', 'required');
 					//$this->form_validation->set_rules('license_expired_date', 'Expiración de licencia', 'required');
-					
 				}
-				
-			
 			}
 			
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
-					
-				
-				
-				
 				$controlSaved = true;
 				
 				$timestamp = date( 'Y-m-d H:i:s' ) ;
-												
-				
 				// Save User Table							
 				$user = array(
 					'office_id'  => 0,
@@ -2142,29 +1993,18 @@ class Usuarios extends CI_Controller {
 				
 				if( $this->input->post( 'disabled' ) == 'Si' ) $user['disabled']  = 1; else $user['disabled'] = 0;
 				
-				// Uploaded a picture
+				// Picture upload
 				if( !empty( $_FILES['imagen']['name'] ) ){
+					$upload_ok = $this->_upload_profile_picture($user);
 
-					$file = $_FILES['imagen']['name'];  
-					$file = strtr($file, 'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ', 'AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy');
-					// replace characters other than letters, numbers and . by _
-					$file = preg_replace('/([^.a-z0-9]+)/i', '_', $file);
-					if ( move_uploaded_file( $_FILES['imagen']['tmp_name'], APPPATH.'modules/usuarios/assets/profiles/'.$file ) )
-					{
-						$user['picture'] = $file;
-						$this->_resize_image($file);
-					} else {
-						$user['picture'] = "default.png";
-					}
-
-					if( ($data[0]['picture'] != 'default.png') &&
-						( $data[0]['picture'] != $file ) &&
+					if( $upload_ok && ($data[0]['picture'] != 'default.png') &&
+						( $data[0]['picture'] != $user['picture'] ) &&
 						is_file( APPPATH.'modules/usuarios/assets/profiles/'.$data[0]['picture'] ) )
 					{
 						unlink( APPPATH.'modules/usuarios/assets/profiles/'.$data[0]['picture'] );
 						$this->_delete_profile_image($data[0]['picture']);
 					}
-					
+
 				}else{
 					$user['picture'] = $data[0]['picture'];
 				}
@@ -2729,6 +2569,28 @@ class Usuarios extends CI_Controller {
 			foreach ($this->resized_widths as $width)
 				@unlink($this->image_path . $base_fname . "_$width.$fextension");
 		}
+	}
+
+	private function _upload_profile_picture(&$user)
+	{
+		$config['upload_path'] = $this->image_path;
+		$config['allowed_types'] = 'gif|jpg|png|jpeg';
+		$config['max_size'] = 2000;
+		$config['max_width'] = 0;
+		$config['max_height'] = 0;
+		$config['encrypt_name'] = TRUE;		
+		$this->load->library('upload', $config);
+
+		$result = $this->upload->do_upload('imagen');
+		if ($result)
+		{
+			$upload_data = $this->upload->data();
+			$user['picture'] = $upload_data['file_name'];
+			$this->_resize_image($user['picture']);	
+		}
+		else
+			$user['picture'] = "default.png";
+		return $result;
 	}
 /* End of file usuarios.php */
 /* Location: ./application/controllers/usuarios.php */
