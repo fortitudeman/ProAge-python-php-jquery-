@@ -1323,6 +1323,7 @@ implode(', ', $ramo_tramite_types) . '
 				redirect( '/ot/import_payments', 'refresh' );
 			}
 			$process = 'choose-agents';
+			$select_agents = false;
 			$product = (int) $_POST['product'];
 			// Load Model
 
@@ -1347,7 +1348,6 @@ implode(', ', $ramo_tramite_types) . '
 			unset( $_POST['tmp_file'], $_POST['process'], $_POST['product'] );
 
 			$this->load->helper('date');
-
 			$fields_to_import = $this->imported_fields[$product];
 			for( $i=0; $i<=count( $file_array ); $i++ ){
 // Prepare the import
@@ -1432,10 +1432,16 @@ implode(', ', $ramo_tramite_types) . '
 */
 					}
 					$file_array[$i] = array_merge($sometimes_imported, $always_imported);
+					if (!$select_agents &&
+						(strpos($sometimes_imported['agent'], '<select name=') === 0))
+						$select_agents = TRUE;
 				}
 			}
-// Here: $file_array contains an array of arrays - each of these arrays are indexed by the fields to import
 
+			if (!$select_agents) // agent assignment not needed => go directly to preview
+				$process = 'preview';
+
+// Here: $file_array contains an array of arrays - each of these arrays are indexed by the fields to import
 			// Load Model
 			$this->load->model( 'work_order' );
 			$this->work_order->importPaymentsTmp( $file_array );
@@ -1443,6 +1449,7 @@ implode(', ', $ramo_tramite_types) . '
 				unset( $file_array[$i]['agent_id'] );
 		}
 
+// 3: Allow user to assign agents to payments
 		// Change Selects Agents
 		if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'choose-agents' ){
 			// Load Model
@@ -2312,6 +2319,7 @@ alert("changed!");
 				$this->form_validation->set_rules('creation_date', 'Fecha de tramite', 'trim|required|min_length[10]');
 				$this->form_validation->set_rules('agent[]', 'Agente', 'trim|required|is_natural_no_zero');
 				$this->form_validation->set_rules('name', 'Nombre del asegurado / contratante', 'trim|required|xxs_clean');
+				$this->form_validation->set_rules('ot_status', 'Estado', 'trim|required|is_natural_no_zero');				
 				$this->form_validation->set_rules('comments', 'Comentarios', 'trim|xxs_clean');
 				if ($is_nuevo_negocio) {
 					if (in_array($ot[0]['status_id'], array(7, 4, 10)))
@@ -2339,15 +2347,21 @@ alert("changed!");
 				else {
 
 	// 1. update table `work_order`
+					$new_status = $this->input->post( 'ot_status' );
 					$ot_fields = array(
 						'uid' => $this->input->post( 'ot' ),
 						'creation_date' => $this->input->post('creation_date') . ' ' . date( 'H:s:i' ),
 						'comments' => $this->input->post('comments'),
 						'last_updated' => $current_date,
-					);	
+						'work_order_status_id' => $new_status
+					);
+
 					if ( !$this->work_order->update( 'work_order', $ot[0]['id'], $ot_fields) )
 						$error = true;
 					else {
+						// send email notification of status update
+						if (($ot[0]['status_id'] != $new_status) && ($this->input->post( 'email_notification' )))
+							$this->_notify_ot_status_change($ot[0]['id']);
 
 	// 2. update table `policies_vs_users`
 						$posted_agents = $this->input->post('agent');
@@ -2391,6 +2405,7 @@ alert("changed!");
 						else
 							$field_values['uid'] = $this->input->post( 'uid' );						
 					}
+
 				}
 				if ( !$error && isset($field_values) )
 					$error = !$this->work_order->update( 'policies', $ot[0]['policy_id'], $field_values);
@@ -2522,6 +2537,38 @@ alert("changed!");
 		// Render view 
 		$this->load->view( 'index', $this->view );
 	}
+
+	private function _notify_ot_status_change($order_id)
+	{
+		if ( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $order_id), 1))
+			 !== FALSE)
+		{
+			$creator = $this->work_order->generic_get( 'users', array('id' => $updated[0]->user), 1);
+		// Send Email
+			$this->load->library( 'mailer' );
+			$notification = $this->work_order->getNotification( $order_id );
+			$from_reply_to = array();
+			if ($creator)
+			{
+				$recipient = array(
+					'agent_id' => 0,
+					'percentage' => 100,
+					'name' => $creator[0]->name,
+					'lastnames' => $creator[0]->lastnames,
+					'company_name' => $creator[0]->company_name,
+					'email' =>  $creator[0]->email
+				);
+				$notification[0]['agents'][] = $recipient;
+				$from_reply_to = array(
+/*					'from' => $creator[0]->email,
+					'reply-to' =>  $creator[0]->email);*/
+				'from' => $this->sessions['email'],
+				'reply-to' => $this->sessions['email']);
+			}
+			$this->mailer->notifications( $notification, null, null, $from_reply_to);
+		}	
+	}
+
 // mark OT as paid
 	public function mark_paid()
 	{

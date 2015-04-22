@@ -347,6 +347,27 @@ else
                   </div>
 <?php endif ?>
 
+<?php if (($function == 'update') 
+		// && in_array($data['status_id'], array(7, 4, 10))
+		) :?>
+                  <div class="control-group">
+                    <label class="control-label text-error" for="inputError">Estado</label>
+                    <div class="controls">
+                       <select class="input-xlarge focused required" name="ot_status" id="ot-status">
+<option value="5" <?php if ($data['status_id'] == 5) echo 'selected="selected"' ?>>En trámite</option>
+<option value="7" <?php if ($data['status_id'] == 7) echo 'selected="selected"' ?>>Aceptada</option>
+<option value="8" <?php if ($data['status_id'] == 8) echo 'selected="selected"' ?>>Rechazada</option>
+<option value="10" <?php if ($data['status_id'] == 10) echo 'selected="selected"' ?>>Póliza NTU</option>
+<option value="4" <?php if ($data['status_id'] == 4) echo 'selected="selected"' ?>>Pagada</option>
+                       </select>
+
+                       <label class="checkbox">
+                         <input type="checkbox" name="email_notification" id="email-notification" value="1">Con notificacion por correo electrónico
+                       </label>
+                   </div>
+                  </div>
+<?php endif ?>
+
                   <div class="control-group">
                     <label class="control-label" for="inputError">Comentarios</label>
                     <div class="controls">
