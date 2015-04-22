@@ -169,60 +169,62 @@ else
 							/**
 							 *	Check $roles_vs_access for setting or added navigation for an user
 							 **/
-						?>
-												
-						<?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Modulos', $value ) ): ?>
+if( !empty( $roles_vs_access ) ): ?>
+						<?php foreach( $roles_vs_access  as $value ): if( in_array( 'Modulos', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>modulos.html"><i class="icon-th"></i><span class="hidden-tablet">Módulos</span></a></li>
-                        <?php break; endif; endforeach; endif; ?>
-                        
-                        <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Rol', $value ) ): ?>
+                        <?php break; endif; endforeach; ?>
+
+                        <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Rol', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>roles.html"><i class="icon-th"></i><span class="hidden-tablet">Rol</span></a></li>
-                        <?php break; endif; endforeach; endif; ?>
-                        
-                        <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ): ?>
+                        <?php break; endif; endforeach; ?>
+
+                        <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>usuarios.html"><i class="icon-th"></i><span class="hidden-tablet">Usuarios</span></a></li>
-                        <?php break; endif; endforeach; endif; ?>
+                        <?php break; endif; endforeach; ?>
 <!--                       
-                        <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
+                        <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>ot.html"><i class="icon-tablet"></i><span class="hidden-tablet">Orden trabajo</span></a></li>
-                        <?php break; endif; endforeach; endif; ?>
+                        <?php break; endif; endforeach; ?>
 -->
-
-                        <?php if( isset($user) && isset($user['id']) && !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Operations', $value ) ): ?>
+                        <?php if( isset($user) && isset($user['id'])):
+						foreach( $roles_vs_access  as $value ):
+							if( in_array( 'Operations', $value ) ): ?>
                          <li><a href="<?php echo base_url() ?>operations/index/<?php echo $user['id'] ?>.html"><i class="icon-tablet"></i><span class="hidden-tablet">Operaciones</span></a></li>
-                        <?php break; endif; endforeach; endif; ?>
+                        <?php break; endif;
+						endforeach;
+						endif; ?>
 
-                        <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
-                        <?php if( $value['action_name'] == 'Importar payments' ): ?>
+                        <?php  
+						foreach( $roles_vs_access  as $value ):
+							if( in_array( 'Orden de trabajo', $value ) && ( $value['action_name'] == 'Importar payments' )): ?>
                         <li><a href="<?php echo base_url() ?>ot/import_payments.html"><i class="icon-hdd"></i><span class="hidden-tablet">Importar Pagos</span></a></li>
-                        <?php endif; ?>
-                        <?php endif; endforeach; endif; ?>
-                        
-                        <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
-                        <?php if( $value['action_name'] == 'Ver reporte' ): ?>
+                        <?php break; endif; endforeach;?>
+
+                        <?php foreach( $roles_vs_access  as $value ): 
+						if( in_array( 'Orden de trabajo', $value ) && ( $value['action_name'] == 'Ver reporte' )): ?>
                         <li><a href="<?php echo base_url() ?>director"><i class="icon-tasks"></i><span class="hidden-tablet">Reporte directivo</span></a></li>
-                        <?php endif; ?>
-                        <?php endif; endforeach; endif; ?>
-                        
-                        <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Actividades', $value ) ): ?>
-                        <?php if( $value['action_name'] == 'Ver' ): ?>
+                        <?php break; endif; endforeach; ?>
+
+                        <?php foreach( $roles_vs_access  as $value ):
+						if( in_array( 'Actividades', $value ) && ( $value['action_name'] == 'Ver' )): ?>
                         <li><a href="<?php echo base_url() ?>activities.html"><i class="icon-tablet"></i><span class="hidden-tablet">Mis actividades</span></a></li>
-                        <?php endif; ?>
-                        <?php endif; endforeach; endif; ?>
-                       
-                        <?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access  as $value ): if( in_array( 'Actividades', $value ) ): ?>
-                        <?php if( $value['action_name'] == 'Ver reporte' ): ?>
+                        <?php break; endif; endforeach; ?>
+
+                        <?php foreach( $roles_vs_access  as $value ): 
+						if( in_array( 'Actividades', $value ) &&  ( $value['action_name'] == 'Ver reporte' )): ?>
                         <li><a href="<?php echo base_url() ?>activities/report.html"><i class="icon-tasks"></i><span class="hidden-tablet">Reporte actividades</span></a></li>
-                        <?php endif; ?>
-                        <?php if( $value['action_name'] == 'Actividades de ventas' ): ?>						
+                        <?php break; endif; endforeach; ?>
+						
+                        <?php foreach( $roles_vs_access  as $value ): 
+						if( in_array( 'Actividades', $value ) &&  ( $value['action_name'] == 'Actividades de ventas' )): ?>				
                         <li><a href="<?php echo base_url() ?>activities/sales_activities_stats.html"><i class="icon-tasks"></i><span class="hidden-tablet">Actividades de ventas</span></a></li>
-                        <?php endif; ?>
-                        <?php endif; endforeach; endif; ?>
-						<?php if( !empty( $roles_vs_access ) ): foreach( $roles_vs_access as $value ): if( in_array( 'Settings', $value ) ): ?>
-						<?php if( $value['action_name'] == 'Ver' ): ?>
+                        <?php break; endif; endforeach; ?>
+
+						<?php foreach( $roles_vs_access as $value ): 
+						if( in_array( 'Settings', $value ) && ( $value['action_name'] == 'Ver' )): ?>
 						<li><a href="<?php echo base_url() ?>settings.html"><i class="icon-tablet"></i><span class="hidden-tablet">Configuración</span></a></li>
-						<?php endif; ?>
-						<?php endif; endforeach; endif; ?>
+						<?php break; endif; endforeach; ?>
+<?php endif; ?>
 
 						<!--
                         <li><a class="ajax-link" href="form.html"><i class="icon-edit"></i><span class="hidden-tablet"> Forms</span></a></li>
