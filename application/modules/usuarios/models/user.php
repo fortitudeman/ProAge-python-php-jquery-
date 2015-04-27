@@ -2095,9 +2095,15 @@ class User extends CI_Model{
 						unset($policy_filter[$key]);
 				}
 				$policy_filter = array_unique($policy_filter);
-				$this->db->select( 'payments.policy_number' );
+/*				$this->db->select( 'payments.policy_number' );
 				$this->db->join( 'payments', 'payments.agent_id=agents.id' );
+				$this->db->where_in('policy_number', $policy_filter);*/
+				$this->db->select( 'payments.policy_number, policies.uid' );
+				$this->db->join( 'payments', 'payments.agent_id=agents.id' );
+				$this->db->join( 'policies_vs_users', 'policies_vs_users.user_id=agents.id' );				
+				$this->db->join( 'policies', 'policies.id=policies_vs_users.policy_id' );
 				$this->db->where_in('policy_number', $policy_filter);
+				$this->db->or_where_in('uid', $policy_filter);				
 			}
 	}
 	$this->db->order_by('name', 'asc');

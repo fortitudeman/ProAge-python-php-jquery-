@@ -2805,6 +2805,13 @@ Display custom filter period
 		$this->load->model( 'work_order' );		
 		$from_db = $this->work_order->generic_search( 'payments',  'DISTINCT `policy_number`',
 			array('policy_number', $searched, 'after'));
+		$from_db_policies = $this->work_order->generic_search( 'policies',  'DISTINCT `uid` AS `policy_number`',
+			array('uid', $searched, 'after'));
+		if (is_array($from_db) && is_array($from_db_policies))
+			$from_db = array_merge($from_db, $from_db_policies);
+		elseif (!is_array($from_db))
+			$from_db = $from_db_policies;
+
 		if ($from_db)
 		{
 			foreach ($from_db as $value)
