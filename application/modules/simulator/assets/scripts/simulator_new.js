@@ -138,8 +138,10 @@ $( document ).ready(function() {
 			return '';		
 	}
 
-function CalcPercBonoAplicado(primaAfectadas,negocios) {
+function CalcPercBonoAplicado(primaAfectadas, negocios, base) {
 	var porcentaje = 0;
+	if (isNaN(base) || (base == 89))
+		return porcentaje;
 	if( primaAfectadas >= 560000 ){
 		if( negocios >= 3 && negocios < 5 )	porcentaje = 15;
 		if( negocios >= 5 && negocios < 7 )	porcentaje = 30;
@@ -187,6 +189,8 @@ function CalcPercBonoAplicado(primaAfectadas,negocios) {
 
 function CalcPercConservacion(base,primaAfectadas) {
 	var porcentaje = 0;
+	if (isNaN(base))
+		return porcentaje;
 	if( base == 0 ){						
 		if( primaAfectadas >= 490000 )	porcentaje = 11;			
 		if( primaAfectadas >= 390000 && primaAfectadas < 490000 )	porcentaje = 10;			
@@ -197,7 +201,7 @@ function CalcPercConservacion(base,primaAfectadas) {
 		if( primaAfectadas >= 105000 && primaAfectadas < 140000 )	porcentaje = 2;	
 	}		
 	if( base != 0 ){						
-		if( base == 89 ){				
+		if( base == 89 ){
 			if( primaAfectadas >= 490000 )	porcentaje = 9;				
 			if( primaAfectadas >= 390000 && primaAfectadas < 490000 )	porcentaje = 8;				
 			if( primaAfectadas >= 280000 && primaAfectadas < 390000 )	porcentaje = 7;				
@@ -250,8 +254,9 @@ function updateLeftCol(rank)
 	var negocios = (primaPromedio != 0) ? (primaAfectadas / primaPromedio) : 0;
 	$( '#noNegocios_' + rank ).val( Math.ceil(negocios) );*/
 	var negocios = parseInt( $( '#noNegocios_' + rank ).val() );
+	var base = parseInt( $( '#porcentajeConservacion_' + rank ).val() );
 	if (Config.currentRamo == 1)
-		var porcentaje = CalcPercBonoAplicado(primaAfectadas, negocios);
+		var porcentaje = CalcPercBonoAplicado(primaAfectadas, negocios, base);
 	else
 		var porcentaje = getInicialGmmPercent(primaAfectadas);	
 //	$( '#bonoAplicado_' + rank ).val( porcentaje );

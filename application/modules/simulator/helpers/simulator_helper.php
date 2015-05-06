@@ -318,7 +318,7 @@ $( document ).ready( function(){
 		// Config view
 		$js_assets = array(
 			'<script type="text/javascript" src="' . $base_url . 'scripts/config.js"></script>',
-			'<script type="text/javascript">Config.currentModule = "' . $module . '";</script>',
+			'<script type="text/javascript">Config.currentModule = "' . $module . '"; Config.currentRamo = "' . $ramo . '";</script>',
 			'<script type="text/javascript" src="' . $base_url . 'simulator/assets/scripts/metas_simulator.js"></script>',			
 		);
 

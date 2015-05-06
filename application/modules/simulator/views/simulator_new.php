@@ -128,7 +128,8 @@ for ($i = 1; $i <= $period_max; $i++) :
 	}
 	if ($ramo == 'vida')
 	{
-		$percent_bono_venta_inicial[$i] = get_inicial_gmm_percent($prima_values[$i]);
+//		$percent_bono_venta_inicial[$i] = get_inicial_gmm_percent($prima_values[$i]);
+		$percent_bono_venta_inicial[$i] = calc_perc_bono_aplicado($prima_values[$i], $negocio_values[$i], $percent_conservacion_values[$i]);
 //		$percent_bono_renovacion[$i] = calc_perc_conservacion($percent_conservacion_values[$i], $prima_renovacion_values[$i]);
 		$percent_bono_renovacion[$i] = calc_perc_conservacion($percent_conservacion_values[$i], $prima_values[$i]);
 	}
