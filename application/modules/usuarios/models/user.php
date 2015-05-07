@@ -3088,6 +3088,7 @@ GROUP BY `agent_id`";
 		$sql_date_filter = '';
 		$sql_agent_filter = '';
 		$sql_plus = "`valid_for_report` = '1' AND `year_prime` = '1' ";
+		$sql_plus2 = ' 1 ';
 		if ($agent_id)
 			$sql_agent_filter .= " AND `agent_id` = '$agent_id'";
 
@@ -3106,8 +3107,12 @@ AND `agent_id` IN (" . implode(',', $agent_filter) . ") ";
 				}
 			}
 			if( isset( $filter['query']['ramo'] ) and !empty( $filter['query']['ramo'] ) )
+			{
 				$sql_plus .= " AND `product_group` = '" . $filter['query']['ramo'] . "'
 ";
+				$sql_plus2 .= " AND `product_group` = '" . $filter['query']['ramo'] . "'
+";
+			}
 			if( isset( $filter['query']['periodo'] ) and !empty( $filter['query']['periodo'] ) )
 			{
 				$year = date( 'Y' );				
@@ -3120,6 +3125,9 @@ AND `agent_id` IN (" . implode(',', $agent_filter) . ") ";
 WHERE `above_5000` >= '$year-$month-01'
 AND `above_5000` < '$next_month'";
 						$sql_plus .= "
+AND `payments`.`payment_date` >= '$year-01-01'
+AND `payments`.`payment_date` < '$next_month'";
+						$sql_plus2 .= "
 AND `payments`.`payment_date` >= '$year-01-01'
 AND `payments`.`payment_date` < '$next_month'";
 					break;
@@ -3138,6 +3146,9 @@ AND `above_5000` <= '" . $begin_end['end'] . "'";
 							$sql_plus .= "
 AND `payments`.`payment_date` >= '$year-01-01'
 AND `payments`.`payment_date` <= '" . $begin_end['end'] . "'";
+							$sql_plus2 .= "
+AND `payments`.`payment_date` >= '$year-01-01'
+AND `payments`.`payment_date` <= '" . $begin_end['end'] . "'";
 						}
 					break;
 					case 3: // year
@@ -3145,6 +3156,9 @@ AND `payments`.`payment_date` <= '" . $begin_end['end'] . "'";
 WHERE `above_5000` >= '$year-01-01'
 AND `above_5000` <= '$year-12-31 23:59:59'";
 						$sql_plus .= "
+AND `payments`.`payment_date` >= '$year-01-01'
+AND `payments`.`payment_date` <= '$year-12-31 23:59:59'";
+						$sql_plus2 .= "
 AND `payments`.`payment_date` >= '$year-01-01'
 AND `payments`.`payment_date` <= '$year-12-31 23:59:59'";
 					break;
@@ -3160,6 +3174,9 @@ AND `payments`.`payment_date` <= '$year-12-31 23:59:59'";
 WHERE `above_5000` >=  '$from 00:00:00'
 AND `above_5000` <= '$to 23:59:59'";
 						$sql_plus .= "
+AND `payments`.`payment_date` >= '$year-01-01'
+AND `payments`.`payment_date` <= '$to 23:59:59'";
+						$sql_plus2 .= "
 AND `payments`.`payment_date` >= '$year-01-01'
 AND `payments`.`payment_date` <= '$to 23:59:59'";
 					break;
@@ -3209,6 +3226,8 @@ WHERE (`abs_business` > '0')
 )
 ) AS `payment_acc`
 FROM `payments`
+WHERE
+" . $sql_plus2 . $sql_agent_filter  . "
 ) `payments`
 JOIN `agents` ON `agents`.`id`=`payments`.`agent_id`
 JOIN `users` ON `users`.`id`=`agents`.`user_id`
