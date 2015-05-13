@@ -27,7 +27,8 @@ $update_others_editable = $update && !$is_nuevo_negocio;
             <a href="<?php echo base_url() ?>ot.html">Orden de trabajo</a> <span class="divider">/</span>
         </li>
         <li>
-            <?php echo $title ?> número <b><?php echo $data['uid'] ?></b>
+            <?php echo $title ?> número <b><?php echo $data['uid'] ?></b>&nbsp;
+			<?php if ($this->access_update && !$update) echo anchor('ot/update_ot/' . $data['id'], '<i class="icon-pencil" title="Editar OT"></i>', array('title' => 'Editar OT')) ?>
         </li>
     </ul>
 </div>
@@ -100,7 +101,7 @@ $update_others_editable = $update && !$is_nuevo_negocio;
 <?php
 $selected_agents = array();
 foreach ($data['agents'] as $value)
-	$selected_agents[ $value['agent_id'] ] = sprintf("%s %s (percentaje : %s)", $value['name'], $value['lastnames'], $value['percentage']);
+	$selected_agents[ $value['agent_id'] ] = sprintf("%s %s (porcentaje : %s)", $value['name'], $value['lastnames'], $value['percentage']);
 foreach ($agents as $key => $value) {
 	if (isset($selected_agents[$key])) {
 		echo '<option value="' . $key . '" selected="selected">' . $selected_agents[$key] . '</option>';
