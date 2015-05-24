@@ -41,7 +41,6 @@ $is_director_module = ($segments[1] == 'director');
 		$tata = json_encode($tata);
 ?>
 
-
 <table  class="sortable altrowstable tablesorter" id="sorter-report1"  style="width:100%;">
     <thead class="head">
         <tr>
@@ -90,8 +89,8 @@ $is_director_module = ($segments[1] == 'director');
 		else			
 			$primas_pendientes_pago += $value['aceptadas'];
 		$total_primas_pendientes += $primas_pendientes_pago;
-		
-		$negocio += (int)($value['negocio']+$value['tramite']['count']+$negocios_pendientes_pago);		
+
+		$negocio += (int)($value['negociopai']+$value['tramite']['count']+$negocios_pendientes_pago);
 		$prima += (float)($value['prima']+$value['tramite']['adjusted_prima']+$primas_pendientes_pago);
 
 		$total_negocios_proyectados +=$negocio;
