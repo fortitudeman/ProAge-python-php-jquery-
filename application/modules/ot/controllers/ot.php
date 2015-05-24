@@ -1528,6 +1528,15 @@ implode(', ', $ramo_tramite_types) . '
 			}
 			else
 			{
+				$posted_ramo = $this->input->post('product');
+				if (isset($file_array[0]) && isset($file_array[0]->import_date) && $posted_ramo)
+				{
+					$where = array(
+						'import_date' => $file_array[0]->import_date,
+						'product_group' => (int)$posted_ramo
+					);
+					$this->work_order->generic_delete('payments', $where);
+				}
 				foreach( $file_array as $item ){
 				// Verify policy
 				//$policy = $this->work_order->getPolicyByUid( $item->uid );
