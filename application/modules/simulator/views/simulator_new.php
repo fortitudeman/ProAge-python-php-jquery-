@@ -305,10 +305,45 @@ endfor; ?>
 
 <div id="anual">
 <h4 class="row-fluid print-view"><br />Anual</h4>
+
+<div class="row-fluid">
+  <div class="span6 left-column">
+  </div>   <!-- END left column -->
+  <div class="span6 right-column">
+      <div class="row-fluid">
+        <div class="span3 smaller">% de acotamiento:</div>
+        <div class="span3">
+          <span class="span12 smaller XAcotamiento-recap" id="XAcotamiento_recap"></span>
+        </div>
+        <div class="span6">
+        </div>
+      </div> 
+  </div>   <!-- END right column -->
+</div>
+
+<!-- Additions to Anual: end -->
+
 <div class="row-fluid anual">
   <div class="span6 left-column">
       <h3 class="row-fluid subtitle subtitle-yellow">INFORMACIÓN DE VENTA INICIAL</h3>
-
+<!-- Additions to Anual: start 2 -->
+      <div class="row-fluid">
+        <div class="span3 smaller">Primas afectas iniciales:</div>
+        <div class="span3">
+          <span style="display: none" class="meta-ori" id="meta-prima-ori-recap"></span>
+          <span class="span12 smaller simulator-primas-period-recap" id="simulator-primas-period-recap"></span>
+        </div>
+        <div class="span3 smaller"><?php if ($ramo == 'vida'): ?>No. de Negocios PAI:<?php endif ?></div>
+        <div class="span3">
+<?php if ($ramo == 'vida'): ?>
+	       <span style="display: none" class="meta-ori" id="meta-negocio-ori-recap"></span>
+           <span class="span12 smaller noNegocios-recap" id="noNegocios_recap"><span>
+<?php endif ?>
+        </div>
+      </div> 
+<!-- Additions to Anual: end 2 -->	 
+	  
+	  
       <table class="simulator-table">
         <colgroup>
           <col width="42%" />
@@ -343,6 +378,20 @@ $row_style = ($i & 1) ? 'odd' : 'even'; ?>
   </div>   <!-- END left column -->
   <div class="span6 right-column">
       <h3 class="row-fluid subtitle subtitle-orange">INFORMACIÓN DE CARTERA DE RENOVACIÓN</h3>
+
+
+ <!-- Additions to Anual: start 3 -->
+      <div class="row-fluid">
+        <div class="span3 smaller">Primas de renovación:</div>
+        <div class="span3">
+           <span class="span12 smaller primasRenovacion_recap" id="primasRenovacion_recap"></span>
+        </div>
+        <div class="span3 smaller">&nbsp;</div>
+        <div class="span3">&nbsp;
+        </div>
+      </div>	  
+ <!-- Additions to Anual: end 3 -->	  
+
 
       <table class="simulator-table">
         <colgroup>

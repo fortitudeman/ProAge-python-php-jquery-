@@ -110,6 +110,12 @@ $( document ).ready(function() {
 		updateBottomRecap();
 	});
 
+	$( '.noNegocios').bind( 'keyup', function(){
+		var rank = $(this).attr('id').replace('noNegocios_', '');
+		updateLeftCol(rank);
+		updateBottomRecap();
+	});
+
 	$( '.auto-submit' ).bind( 'change', function(){
 		$( "#form").submit();
 		return false;
@@ -346,6 +352,32 @@ function updateBottomRecap() {
 	$( '#renovacion-comm-recap').text(moneyFormat(ingresoComisionesRenovacion[0]));
 	$( '#renovacion-bono-recap' ).text(moneyFormat(ingresoBonosRenovacion[0]));
 	$( '#year-bottom' ).text(moneyFormat(ingresoTotal[0]));
+
+	var recap = 0;
+	$( '.XAcotamiento' ).each(function( index ) {
+		recap += parseFloat($(this).val());
+	});
+	$( '#XAcotamiento_recap').text(parseInt(recap / periodCount));
+
+	recap = 0;
+	$( '.simulator-primas-period' ).each(function( index ) {
+		recap += parseFloat($(this).val());
+	});
+	$( '#simulator-primas-period-recap').text(moneyFormat(recap));
+
+	if (Config.currentRamo == 1) {
+		recap = 0;
+		$( '.noNegocios' ).each(function( index ) {
+			recap += parseFloat($(this).val());
+		});
+		$( '#noNegocios_recap').text(parseInt(recap));	
+	}
+
+	recap = 0;
+	$( '.primasRenovacion' ).each(function( index ) {
+		recap += parseFloat($(this).val());
+	});
+	$( '#primasRenovacion_recap').text(moneyFormat(recap));
 }
 // Updates fields that may come from meta
 function updateConsiderarMeta() {
