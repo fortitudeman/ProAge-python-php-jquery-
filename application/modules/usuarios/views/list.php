@@ -13,6 +13,7 @@
 
   	
 */
+$base_url = base_url();
 ?>
 
 
@@ -198,26 +199,19 @@
                     
                 </div>
             </form> 
-            
-                        
-            
-                        
-                        
-        	
+
             <div id="dialog-form" title="">
   				Que quiere exportar?
                 <br /><br />
                 <a href="javascript:void(0)" class="btn btn-link" id="pagactual">Página Actual</a>
                 <a href="javascript:void(0)" class="btn btn-link" id="busactual">Resultado Actual</a>
 			</div>
-			
-            
-            
+
             <div id="loading"></div>
             
         
         	<?php if( !empty( $data ) ): ?>
-            <table class="table table-striped table-bordered bootstrap-datatable datatable">
+            <table id="tablesorted" class="tablesorter table table-striped table-bordered bootstrap-datatable datatable">
               <thead>
                   <tr>
                       <th>Clave</th>
@@ -229,7 +223,7 @@
                       <th>Tipo</th>
                       <th>Creado</th>
                       <th>Última modificación</th>
-                      <th>Acciones</th>
+                      <th class="sorter-false">Acciones</th>
                   </tr>
               </thead>   
               <tbody id="data">
@@ -264,10 +258,21 @@
                 <?php endforeach;  ?>                
               </tbody>
           </table>    
-          
-          
-          
-          
+<div id="pager" class="pager">
+	<form>
+		<img src="<?php echo $base_url ?>ot/assets/style/icons/first.png" class="first"/>
+		<img src="<?php echo $base_url ?>ot/assets/style/icons/prev.png" class="prev"/>
+		<input type="text" class="pagedisplay" style="margin-top: 8px"/>
+		<img src="<?php echo $base_url ?>ot/assets/style/icons/next.png" class="next"/>
+		<img src="<?php echo $base_url ?>ot/assets/style/icons/last.png" class="last"/>
+		<select class="pagesize input-mini" style="height: 20px; margin-top: 0px; font-size: 0.9em">
+			<option selected="selected" value="10">10</option>
+			<option value="20">20</option>
+			<option value="30">30</option>
+			<option value="40">40</option>
+		</select>
+	</form>
+</div>
           <?php else: ?>
 		  
 		  	<div class="alert alert-block">
@@ -280,21 +285,3 @@
     </div><!--/span-->
 
 </div><!--/row-->
-
-<?php $pagination = $this->pagination->create_links(); // Set Pag ?>
-
-<?php if( !empty( $pagination ) ): ?>
-    
-    <div class="row-fluid sortable">		
-        <div class="box span12">
-            <div class="box-content">
-            
-              <?php echo $pagination?>
-                      
-            </div>
-        </div><!--/span-->
-    
-    </div><!--/row-->
-
-<?php endif; ?>
-

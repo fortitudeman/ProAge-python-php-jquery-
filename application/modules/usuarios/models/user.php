@@ -150,7 +150,7 @@ class User extends CI_Model{
 			
 		}else{
 					
-			$this->db->limit( 150, $start );
+			$this->db->limit( 300, $start );
 		
 		}
 		

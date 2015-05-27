@@ -201,72 +201,24 @@ class Usuarios extends CI_Controller {
 
 // Show all records	
 	public function index( $filter = null ){
-		
-		
-		
 		// Check access teh user for create
 		if( $this->access == false ){
-				
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No tiene permisos para ingresar en esta sección "Usuarios", Informe a su administrador para que le otorge los permisos necesarios.'
-							
 			));	
-			
-			
 			redirect( 'home', 'refresh' );
-		
 		}
-						
-		
 		// Load Model
 		$this->load->model( array( 'user', 'rol' ) );
 		
-		
-		
-		// Pagination config	
-		$this->load->library('pagination');
-		
-		$begin = $this->uri->segment(3);
-		
-		if( empty( $begin ) ) $begin = 0;
-		
-					
-		$config['full_tag_open'] = '<div class="pagination pagination-right"><ul>'; 
-		$config['full_tag_close'] = '</ul></div>';
-		$config['first_link'] = false;
-		$config['last_link'] = false;
-		$config['first_tag_open'] = '<li>';
-		$config['first_tag_close'] = '</li>';
-		$config['prev_link'] = '&larr; Anterior';
-		$config['prev_tag_open'] = '<li class="prev">';
-		$config['prev_tag_close'] = '</li>';
-		$config['next_link'] = 'Siguiente &rarr;';
-		$config['next_tag_open'] = '<li>';
-		$config['next_tag_close'] = '</li>';
-		$config['last_tag_open'] = '<li>';
-		$config['last_tag_close'] = '</li>';
-		$config['cur_tag_open'] =  '<li class="active"><a href="#">';
-		$config['cur_tag_close'] = '</a></li>';
-		$config['num_tag_open'] = '<li>';
-		$config['num_tag_close'] = '</li>';					
-		$config['base_url'] = base_url().'usuarios/index/';
-		$config['total_rows'] = $this->user->record_count( $filter );
-		$config['per_page'] = 150;
-		$config['num_links'] = 5;
-		$config['uri_segment'] = 3;
-		$config['use_page_numbers'] = TRUE;
-		
-		$this->pagination->initialize($config); 
-		
+		$begin = 0;
 		// Setting url for export currently
 		if( $begin  == 0 ) $pag = 'usuarios/exportar.html';	else $pag =  'usuarios/exportar/'.$begin.'.html';
 						 
 		// Config view
 		$this->view = array(
-				
 		  'title' => 'Usuarios',
 		   // Permisions
 		  'user' => $this->sessions,
@@ -278,13 +230,29 @@ class Usuarios extends CI_Controller {
 		  'access_import' => $this->access_import,
 		  'access_export' => $this->access_export,
 		  'access_request_new_user' => $this->access_request_new_user,
+
+		  'css' => array(
+			'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',
+			'<link href="'. base_url() .'ot/assets/style/jquery.tablesorter.pager.css" rel="stylesheet">',			
+			),
+
 		  'scripts' =>  array(
-		  	  
-			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-			  '<script src="'.base_url().'scripts/config.js"></script>',
-			  '<script src="'.base_url().'usuarios/assets/scripts/find.js"></script>'
-			  
-			 
+//			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+			'<script src="'.base_url().'scripts/config.js"></script>',
+			'<script src="'.base_url().'usuarios/assets/scripts/find.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.pager-2.14.5.js"></script>',
+'<script type="text/javascript">
+	$(function() {
+		$("#tablesorted")
+			.tablesorter({theme : "default", widthFixed: true, widgets: ["saveSort", "zebra"]})
+			.tablesorterPager({
+				container: $("#pager"),
+				output: "{startRow} hasta {endRow} de {totalRows} filas"
+				});
+	});
+	</script>'
 		  ),
 		  'content' => 'usuarios/list', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
@@ -292,28 +260,13 @@ class Usuarios extends CI_Controller {
 		  'pag' => $pag,
 		  'rol' => $this->rol->all( 0 ),
 		  'gerentes' => $this->user->getSelectsGerentes()			  	  
-		  		
 		);
-		
-		
 		if( !empty( $filter ) )
 			$this->view['filter'] = $filter;
-				
+
 		// Render view 
 		$this->load->view( 'index', $this->view );	
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 // Create new user
 	public function create(){
@@ -1064,63 +1017,30 @@ class Usuarios extends CI_Controller {
 	
 	}
 
-
-
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 // Find for field name filter	
 	public function find(){  
-		
-		
 		// If is not ajax request redirect
 		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
-		
-		
+
 		// Load MOdel
 		$this->load->model( 'user' );
-		
+
 		//print_r( $this->input->post() );
 		//exit;
 		// Filter method
 		$this->data = $this->user->find(  $this->input->post() );
-				
 		// If empty load all records again
 		if( empty( $this->data ) )
-			
 			echo '<tr><td colspan="10"><div class="alert alert-warning">No se encontrarón registros</div></td></tr>';
-			
 			//$this->data = $this->user->overview( 0 );
-		
-		
+
 		// Load Helper
 		$this->load->helper( 'user' );
-		
-				
 		// Getting table
 		echo renderTable( $this->data, $this->access_update, $this->access_delete );
-		
+
 		exit;
 	}
-	
-	
-	
-	
-	
-
-
 
 // Import	
 	public function importar(){

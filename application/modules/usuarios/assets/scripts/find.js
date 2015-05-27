@@ -24,8 +24,6 @@ $( document ).ready(function() {
 	$( '#license_expired_date' ).datepicker({ dateFormat: "yy-mm-dd", changeYear: true, changeMonth:true, yearRange: "1788:"+toDay });		
 			
 	$( '.filters' ).bind( 'click', function(){ 
-		
-		
 		var checked = [];
 		$("input[name='advanced[]']:checked").each(function ()
 		{
@@ -33,40 +31,25 @@ $( document ).ready(function() {
 										
 			checked.push( [$(this).val(), $( '#'+element ).val() ] );
 		});
-		
-		var Data = { find: $('#find').val(), rol: $( '#rolsearch' ).val(), advanced: checked };
-				
-		
-		$.ajax({
 
+		var Data = { find: $('#find').val(), rol: $( '#rolsearch' ).val(), advanced: checked };
+		$.ajax({
 			url:  Config.base_url()+'usuarios/find.html',
 			type: "POST",
 			data: Data,
 			cache: false,
 			async: false,
 			beforeSend: function(){
-	
-				
 				$( '#loading' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-1.gif">   Cargando...' );
-				
 			},
 			success: function(data){
-					
 				$( '#loading' ).html( '' );	
 				$( '#data' ).html( data );
-												
-				
-			}						
-	
+				$("#tablesorted").trigger("update"); 
+			}
 		});
-		
-		
 	});
-	
-	
-	
-	
-	
+
 	// Advanced find options
 	$( '.advanced' ).hide();
 	$( '.hide' ).hide();
@@ -106,8 +89,7 @@ $( document ).ready(function() {
 	
 	// Rol search
 	$( '.rol-search' ).bind( 'click', function(){
-		
-		
+
 		// Reset Color
 		$( '.rol-search' ).removeClass( 'btn btn-primary' );
 		$(this).addClass( 'btn btn-link' );
@@ -115,40 +97,26 @@ $( document ).ready(function() {
 		// Set Color
 		$(this).addClass( 'btn-primary' );
 		$(this).removeClass( 'btn-link' );	
-		
-		
-		
+
 		$( '#rolsearch' ).val( this.id );
-		
 		var Data = { rol: this.id };
-
-
 		$.ajax({
-
 			url:  Config.base_url()+'usuarios/find.html',
 			type: "POST",
 			data: Data,
 			cache: false,
 			async: false,
 			beforeSend: function(){
-	
-				
 				$( '#loading' ).html( '<img src="'+Config.base_url()+'images/ajax-loaders/ajax-loader-1.gif">   Cargando...' );
-				
 			},
 			success: function(data){
-					
 				$( '#loading' ).html( '' );	
 				$( '#data' ).html( data );
-												
-				
-			}						
-	
+				$("#tablesorted").trigger("update"); 
+			}
 		});
-				
 	});
-	
-	
+
 	// Export Info
 	$( '#pagactual' ).bind( 'click', function(){
 		$('#typeexport').val('pagactual');
@@ -167,9 +135,7 @@ $( document ).ready(function() {
 			alert( 'El campo de busqueda esta vacio' );
 		}
 	});
-	
-	
-	
+
 	 $( "#dialog-form" ).dialog({
 		autoOpen: false,
 		height: 200,
@@ -181,17 +147,16 @@ $( document ).ready(function() {
 		  }
 		},
 		close: function() {
-		  
 		}
 	  });
+
 	   $( "#create-export" )
 		.button()
 		.click(function() {
-		  $( "#dialog-form" ).dialog( "open" );
+//		  $( "#dialog-form" ).dialog( "open" );
+			$('#typeexport').val('pagactual');
+			$( '#search' ).attr( 'action', $( '#pag' ).val() );
+			$( '#search' ).submit();
 		});
 	  $( "#create-export" ).removeClass( " ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" );
-	  
-	
-	
-	
 });
