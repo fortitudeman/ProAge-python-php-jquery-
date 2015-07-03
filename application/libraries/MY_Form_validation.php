@@ -124,6 +124,9 @@ class MY_Form_validation extends CI_Form_validation{
 			$field_unique => $str,
 			"$field_common_name !=" => $field_common_value)
 		);
-		return $query->num_rows() === 0;
+		$result = ($query->num_rows() === 0);
+        if (!$result)
+            $this->set_message('is_unique_but', 'El campo %s no tiene un valor válido. Debe verificar si otro OT tiene el mismo número.');
+		return $result;
     }
 }
