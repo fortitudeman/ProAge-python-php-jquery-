@@ -279,9 +279,7 @@ $is_posted = (count($_POST) > 0);
 				  
 				  endif; 
 			?>
-            
-                        
-            	              
+
             <?php
            		  if( !empty( $file_array ) ):  // Show data
 				  		
@@ -307,27 +305,16 @@ $is_posted = (count($_POST) > 0);
 			?>
             
             </table>
-            
             </div>
             
             <div id="actions-buttons-forms-send" class="form-actions">
               <button type="submit" class="btn btn-primary">Pre Importar</button>
               <input type="button" class="btn" onclick="javascript: history.back()" value="Cancelar">
             </div>
-            
-            
             </form>
-           
+
             <?php endif; ?>
-            
-            
-            
-            
-            
-            
-            
-            
-            
+
             <?php 			
 			/**
              *	Choose Agents
@@ -340,58 +327,47 @@ $is_posted = (count($_POST) > 0);
             </div>
 <?php endif; ?>
             <input type="hidden" id="control" />
-            
-            
-            
+
             <?php if( isset( $tmp_file ) and $process == 'choose-agents' ): // Is is load a file?>
-               
-            
+
             <form action="<?php echo base_url() ?>ot/import_payments.html" id="import-form" method="post">
-            
             <input type="hidden" name="tmp_file" value="<?php echo $tmp_file ?>">
-            
             <input type="hidden" name="process" value="<?php echo $process ?>">
-            
             <input type="hidden" name="product" value="<?php echo $product ?>" />
-            
             <div class="alert alert-info">
             	Verifique los agentes relacionados
             </div>
-            
             <div style="max-width:100%; overflow:scroll; max-height:400px;">
-           
             <table class="table table-rounder">
-            	              
+
             <?php 
-           		  if( !empty( $file_array ) ):  // Show data
-				  		
-						$i=0;				
-						foreach( $file_array as $rows ):
+			if( !empty( $file_array ) ):  // Show data
+				$i=0;				
+				foreach( $file_array as $rows ):
+					if( $i > 0 ) break;
+					if( !empty( $rows ) ): 
+						echo "\n<tr>\n";
+						foreach( $rows as $key => $value ): 
+							if (!in_array($key, $fields_not_shown))
+								echo '<th>' . $head_cells[$key] . '</th>'; 
+						endforeach;
+						echo "\n</tr>"; 
+					endif;
+				  	$i++;
+				endforeach;
 
-							if( $i > 0 ) break;
-							if( !empty( $rows ) ): 
-								echo '<tr>';
-								foreach( $rows as $key => $value ): 
-									if (!in_array($key, $fields_not_shown))
-										echo '<th>' . $head_cells[$key] . '</th>'; 
-								endforeach;
-								echo '</tr>'; 
-							endif;
-				  			$i++;
-				  		endforeach;
-
-						foreach( $file_array as $rows ):
-
-							if( !empty( $rows ) ):
-								echo '<tr>';
-								foreach( $rows as $key => $value ): 
-									if (!in_array($key, $fields_not_shown))
-										echo '<td>'.$value.'</td>'; 
-								endforeach;
-								echo '</tr>'; 
-							endif;
-				  		endforeach;
-				  endif; 
+				foreach( $file_array as $rows ):
+					if( !empty( $rows ) ):
+						$style = (isset($rows['agent']) && (strpos($rows['agent'], '<select name=') === 0)) ? '' : 'style="display: none"';
+						echo "\n<tr $style>\n";
+						foreach( $rows as $key => $value ): 
+							if (!in_array($key, $fields_not_shown))
+								echo '<td>'.$value.'</td>'; 
+						endforeach;
+						echo "\n</tr>"; 
+					endif;
+				endforeach;
+			endif; 
 			?>
             </table>
             </div>
@@ -429,9 +405,8 @@ $is_posted = (count($_POST) > 0);
             </div>
             
             <div style="max-width:100%; overflow:scroll; max-height:400px;">
-           
             <table class="table table-rounder">
-            	              
+
             <?php
            		  if( !empty( $file_array ) ):  // Show data
 						$i=0;				
