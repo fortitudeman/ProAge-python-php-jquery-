@@ -3263,6 +3263,21 @@ AS `wrapping_t`
 					$result[] = $row;	
 			}
 			$query->free_result();
+
+			if (!$count_requested)
+			{
+				$prima_details = $this->getPrimaDetails( $agent_id, $filter );
+				foreach ($result as $pai_key => $pai_value)
+				{
+					$result[$pai_key]->amount = 0;
+					foreach ($prima_details as $prima_detail)
+					{
+						if ($result[$pai_key]->policy_number == $prima_detail->policy_number)
+							$result[$pai_key]->amount += $prima_detail->amount;
+					}
+				}
+			}
+
 			return $result;
 		}
 		else
