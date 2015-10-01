@@ -3228,6 +3228,7 @@ WHERE (`abs_business` > '0')
 FROM `payments`
 WHERE
 " . $sql_plus2 . $sql_agent_filter  . "
+GROUP BY `payments`.`policy_number`, `payments`.`agent_id`
 ) `payments`
 JOIN `agents` ON `agents`.`id`=`payments`.`agent_id`
 JOIN `users` ON `users`.`id`=`agents`.`user_id`
