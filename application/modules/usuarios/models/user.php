@@ -1974,7 +1974,8 @@ class User extends CI_Model{
 	$is_gmm = false;
 	$is_autos = false;
 		
-	if( !empty( $filter ) && is_array($filter['query'])){
+	if( !empty( $filter ) && is_array($filter['query']))
+	{
 		if( isset( $filter['query']['ramo']))
 		{
 			$is_vida = ($filter['query']['ramo'] == 1 );
@@ -1982,129 +1983,55 @@ class User extends CI_Model{
 			$is_autos = ($filter['query']['ramo'] == 3 );
 		}
 		
-		if ($meta)
-		{
-			$with_filter = FALSE;
-			$this->_get_generation_filter($filter, $with_filter);
+		$with_filter = FALSE;
+		$this->_get_generation_filter($filter, $with_filter);
+		
+		if( isset( $filter['query']['gerente'] ) and !empty( $filter['query']['gerente'] ) )
+		{				
+			$this->db->where( 'users.manager_id', $filter['query']['gerente'] ); 				
 		}
-		else
+
+		if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 )
 		{
-			if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) )
-			{
-				/*
-				<option value="">Todas las Generaciónes</option>
-				<option value="2">Consolidado</option>
-				<option value="3">Generación 1</option>
-				<option value="4">Generación 2</option>
-				<option value="5">Generación 3</option>
-				
-				
-				*/
-				
-				//Consolidado: < 3 años  <option value="2">Consolidado</option>														
-				if( $filter['query']['generacion'] == 2 ){
-					
-					$begin = ( date( 'Y' )-3 ).date( '-m-d' );
-					
-					$end = 	date( 'Y-m-d' );
-						
-					$this->db->where( array( 'agents.connection_date <' => $begin, 'agents.connection_date !=' => '0000-00-00' ) ); 	
-					
-					$generacion = 'Consolidado';
-					
-				} 
-				
-				
-				//Generación 1: Fecha de conexión > 1 año < hoy <option value="3">Generación 1</option>
-				if( $filter['query']['generacion'] == 3 ){
-					
-					$begin = ( date( 'Y' )-1 ).date( '-m-d' );
-					
-					$end = 	date( 'Y-m-d' );
-					
-					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end, 'agents.connection_date = ' => "0000-00-00" ) ); 	
-										
-					$this->db->or_where( 'COALESCE(agents.connection_date, "") = "" ' ); 	
-					
-					$generacion = 'Generación 1';
-					
-				} 
-				
-				//Generación 2: fecha de conexión > 1  año y < 2 años <option value="4">Generación 2</option>				
-				if( $filter['query']['generacion'] == 4 ){
-					
-					$begin = ( date( 'Y' )-2 ).date( '-m-d' );
-					
-					$end = 	( date( 'Y' )-1 ).date( '-m-d' );
-						
-					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
-					
-					$generacion = 'Generación 2';
-				} 
-				
-				//Generación 3: fecha de conexión > 2 años y < 3 años <option value="5">Generación 3</option>
-				if( $filter['query']['generacion'] == 5 )
-                                {
-                                    $begin = ( date( 'Y' )-3 ).date( '-m-d' );					
-                                    $end = 	( date( 'Y' )-2 ).date( '-m-d' );						
-                                    $this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 					
-                                    $generacion = 'Generación 3';
-				} 
-				
-			}
-		}
-		
-			if( isset( $filter['query']['gerente'] ) and !empty( $filter['query']['gerente'] ) )
-                        {				
-                            $this->db->where( 'users.manager_id', $filter['query']['gerente'] ); 				
-			}
-		
-		
-			if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 )
-                        {
 				/*
 				<option value="">Seleccione</option>
 				<option value="1">Todos</option>
 				<option value="2">Vigentes</option>
 				<option value="3">Cancelados</option>
 				*/					  
-						
 				if( $filter['query']['agent'] == 2 )
-					
 					$this->db->where( 'users.disabled', 0 ); 
-				
 				if( $filter['query']['agent'] == 3 )
-					
 					$this->db->where( 'users.disabled', 1 ); 	
-			}
+		}
 
-			if ( isset( $filter['query']['agent_name'] ) and !empty( $filter['query']['agent_name'] ) )
+		if ( isset( $filter['query']['agent_name'] ) and !empty( $filter['query']['agent_name'] ) )
+		{
+			$this->_get_agent_filter_where($filter['query']['agent_name']);
+			if ($this->agent_name_where_in)
+				$this->db->where_in('agents.id', $this->agent_name_where_in);
+		}
+	
+		if ( isset( $filter['query']['policy_num'] ) and !empty( $filter['query']['policy_num'] ) )
+		{
+			$policy_filter = explode("\n", $filter['query']['policy_num']);
+			foreach ($policy_filter as $key => $value)
 			{
-				$this->_get_agent_filter_where($filter['query']['agent_name']);
-				if ($this->agent_name_where_in)
-					$this->db->where_in('agents.id', $this->agent_name_where_in);
+				$policy_filter[$key] = trim($policy_filter[$key]);
+				if (!strlen($value))
+					unset($policy_filter[$key]);
 			}
-			
-			if ( isset( $filter['query']['policy_num'] ) and !empty( $filter['query']['policy_num'] ) )
-			{
-				$policy_filter = explode("\n", $filter['query']['policy_num']);
-				foreach ($policy_filter as $key => $value)
-				{
-					$policy_filter[$key] = trim($policy_filter[$key]);
-					if (!strlen($value))
-						unset($policy_filter[$key]);
-				}
-				$policy_filter = array_unique($policy_filter);
+			$policy_filter = array_unique($policy_filter);
 /*				$this->db->select( 'payments.policy_number' );
 				$this->db->join( 'payments', 'payments.agent_id=agents.id' );
 				$this->db->where_in('policy_number', $policy_filter);*/
-				$this->db->select( 'payments.policy_number, policies.uid' );
-				$this->db->join( 'payments', 'payments.agent_id=agents.id' );
-				$this->db->join( 'policies_vs_users', 'policies_vs_users.user_id=agents.id' );				
-				$this->db->join( 'policies', 'policies.id=policies_vs_users.policy_id' );
-				$this->db->where_in('policy_number', $policy_filter);
-				$this->db->or_where_in('uid', $policy_filter);				
-			}
+			$this->db->select( 'payments.policy_number, policies.uid' );
+			$this->db->join( 'payments', 'payments.agent_id=agents.id' );
+			$this->db->join( 'policies_vs_users', 'policies_vs_users.user_id=agents.id' );				
+			$this->db->join( 'policies', 'policies.id=policies_vs_users.policy_id' );
+			$this->db->where_in('policy_number', $policy_filter);
+			$this->db->or_where_in('uid', $policy_filter);				
+		}
 	}
 	$this->db->order_by('name', 'asc');
 	$this->db->order_by('lastnames', 'asc'); 
@@ -2167,31 +2094,8 @@ class User extends CI_Model{
 			else
 				$name =  $row->company_name;
 
-			if ($meta)
-			{
-				$generacion = $this->get_agent_generation($row->connection_date);
-			}
-			else
-			{
-				if( $row->connection_date != '0000-00-00' and $row->connection_date != '' )
-				{
-					$resultado =  date( 'Y', strtotime( $row->connection_date ) );
-					//Consolidado: < 3 años < hoy
-					if( $resultado < ( date( 'Y' )-3 ))
-						$generacion = 'Consolidado';	
-					//Generación 1: Fecha de conexión > 1 año < hoy
-					if( $resultado > ( date( 'Y' )-1 )  )
-						$generacion = 'Generación 1';
-					//Generación 2: fecha de conexión > 1  año y < 2 años
-					if( $resultado >= ( date( 'Y' )-2 ) and $resultado <= ( date( 'Y' )-1 ) )
-						$generacion = 'Generación 2';
-					//Generación 3: fecha de conexión > 2 años y < 3 años <option value="5">Generación 3</option>
-					if( $resultado >= ( date( 'Y' )-3 ) and $resultado <= ( date( 'Y' )-2 ) ) 
-						$generacion = 'Generación 3';
-				}else{
-					$generacion = 'Generación 1';
-				}
-			}
+			$generacion = $this->get_agent_generation($row->connection_date);
+
 			$report_row = array(
 				'id' => $row->id,
 				'name' => $name,
@@ -2292,7 +2196,7 @@ class User extends CI_Model{
 		}
 	}
 	return $report;
- }
+	}
 
 // computes the Negocios and Primas iniciales from the simulator table row
 	private function _get_simulator_data($start_end, $simulator_data)
@@ -2588,60 +2492,24 @@ class User extends CI_Model{
 	 *	SELECT users.*, agents.id as agent_id
 		FROM `agents`
 	 **/
-	
 	if( empty( $userid ) ) return false;
-	
+
 	$this->db->select( 'users.*, agents.connection_date, agents.id as agent_id' );
 	$this->db->from( 'agents' );
 	$this->db->join( 'users', 'users.id=agents.user_id' );
 	$this->db->where( 'users.id', $userid );
-		
-	$generacion = '';
-		
 	$query = $this->db->get(); 
-  	
+
 	if ($query->num_rows() == 0) return false;		
-	
 	$report = array();
-	
-	foreach ($query->result() as $row){
-		
+	foreach ($query->result() as $row)
+	{
 		$name = null;
-		
 		if( empty(  $row->company_name ) )
-			
 			$name =  $row->name. ' ' . $row->lastnames;
-		
 		else
-			
 			$name =  $row->company_name;
-		
-		
-		if( $row->connection_date != '0000-00-00' and $row->connection_date != '' ){
-			
-			$resultado =  date( 'Y', strtotime( $row->connection_date ) );
-			
-			//Consolidado: < 3 años < hoy
-			if( $resultado < ( date( 'Y' )-3 ))
-				$generacion = 'Consolidado';	
-						
-			//Generación 1: Fecha de conexión > 1 año < hoy
-			if( $resultado > ( date( 'Y' )-1 )  )
-				$generacion = 'Generación 1';
-						
-			//Generación 2: fecha de conexión > 1  año y < 2 años
-			if( $resultado >= ( date( 'Y' )-2 ) and $resultado <= ( date( 'Y' )-1 ) )
-				$generacion = 'Generación 2';
-			
-			//Generación 3: fecha de conexión > 2 años y < 3 años <option value="5">Generación 3</option>
-			if( $resultado >= ( date( 'Y' )-3 ) and $resultado <= ( date( 'Y' )-2 ) ) 
-				$generacion = 'Generación 3';
-																			
-			
-		}else{
-			$generacion = 'Generación 1';
-		}
-										
+
 		$report[] = array(
 			
 			'id' => $row->id,
@@ -2657,15 +2525,12 @@ class User extends CI_Model{
 			'aceptadas' => $this->getAceptadas($row->agent_id,$filter),
             'iniciales' => $this->getIniciales( $row->agent_id, $filter ),
 			'renovacion' => $this->getRenovacion( $row->agent_id, $filter ),
-			'generacion' => $generacion			
+			'generacion' => $this->get_agent_generation($row->connection_date)
 		);
 	}
 	return $report;
  }	
- 
- 
- 
- 
+
  public function getAgentsUids( $agent = null ){
 
 
@@ -4023,31 +3888,7 @@ AND
 				$row->agent_name = $row->company_name;
 			else
 				$row->agent_name = $row->name . ' ' . $row->lastnames;
-			$row->generacion = '';
-
-			if( $row->connection_date != '0000-00-00' and $row->connection_date != '' )
-			{
-				$resultado =  date( 'Y', strtotime( $row->connection_date ) );
-
-				//Consolidado: < 3 años < hoy
-				if( $resultado < ( date( 'Y' )-3 ))
-					$row->generacion = 'Consolidado';  
-
-				//Generación 1: Fecha de conexión > 1 año < hoy
-				if( $resultado > ( date( 'Y' )-1 )  )
-					$row->generacion = 'Generación 1';
-            
-				//Generación 2: fecha de conexión > 1  año y < 2 años
-				if( $resultado >= ( date( 'Y' )-2 ) and $resultado <= ( date( 'Y' )-1 ) )
-					$row->generacion = 'Generación 2';
-      
-				//Generación 3: fecha de conexión > 2 años y < 3 años <option value="5">Generación 3</option>
-				if( $resultado >= ( date( 'Y' )-3 ) and $resultado <= ( date( 'Y' )-2 ) ) 
-					$row->generacion = 'Generación 3';
-			}
-			else
-				$row->generacion = 'Generación 1';
-
+			$row->generacion = $this->get_agent_generation($row->connection_date);
 			$row->uids = $this->getAgentsUids( $row->agent_id );
 			return $row;
 		}
@@ -4071,12 +3912,12 @@ AND
 
 	private function _get_generation_filter($filter, &$with_filter)
 	{
-			if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) )
+		if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) )
+		{
+			switch ($filter['query']['generacion'])
 			{
-				switch ($filter['query']['generacion'])
-				{
-					case 2:
-						$with_filter = TRUE;
+				case 2:
+					$with_filter = TRUE;
 				//Consolidado: < 3 años  <option value="2">Consolidado</option>
 					//Consolidado: <option value="2">Consolidado</option>	
 					// Consolidado: Agents with "agents.connection_date" < October 1 of 3 years ago.  <option value="2">Consolidado</option>	
@@ -4084,66 +3925,64 @@ AND
 //						$end = 	date( 'Y-m-d' );
 //						$this->db->where( array( 'agents.connection_date <' => $begin, 'agents.connection_date !=' => '0000-00-00' ) ); 	
 
-						$end = 	( date( 'Y' ) - 3 ) . '-10-01';
-						$this->db->where(
-							"(`agents`.`connection_date` < '$end')
-							AND (`agents`.`connection_date` IS NOT NULL )
-							AND (`agents`.`connection_date` != '0000-00-00') AND (`agents`.`connection_date` != '')",
-							NULL, FALSE);
-						$generacion = 'Consolidado';
-					break;
-					case 3:
-						$with_filter = TRUE;
+					$end = 	( date( 'Y' ) - 3 ) . '-10-01';
+					$this->db->where(
+						"(`agents`.`connection_date` < '$end')
+						AND (`agents`.`connection_date` IS NOT NULL )
+						AND (`agents`.`connection_date` != '0000-00-00') AND (`agents`.`connection_date` != '')",
+						NULL, FALSE);
+					$generacion = 'Consolidado';
+				break;
+				case 3:
+					$with_filter = TRUE;
 				//Generación 1: Fecha de conexión > 1 año < hoy <option value="3">Generación 1</option>
 				//Generación 1: <option value="3">Generación 1</option>
 				// Generación 1: Agents with "agents.connection_date" is between October 1 of 3 years ago and September 30 of 2 years ago. 
 //						$begin = ( date( 'Y' )-1 ).date( '-m-d' );
 //						$end = 	date( 'Y-m-d' );
-						$begin = ( date( 'Y' ) - 3 ) . '-10-01';
-						$end = 	( date( 'Y' ) - 2 ) . '-09-30';
+					$begin = ( date( 'Y' ) - 3 ) . '-10-01';
+					$end = 	( date( 'Y' ) - 2 ) . '-09-30';
 /*						$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end, 'agents.connection_date = ' => "0000-00-00" ) ); 	
 						$this->db->or_where( 'COALESCE(agents.connection_date, "") = "" ' ); */
-						$this->db->where(
-							"(((`agents`.`connection_date` >= '$begin') AND (`agents`.`connection_date` <= '$end'))
-							OR (`agents`.`connection_date` IS NULL )
-							OR (`agents`.`connection_date` = '0000-00-00') OR (`agents`.`connection_date` = ''))",
-							NULL, FALSE);
-						$generacion = 'Generación 1';
-					break;
-					case 4:
-						$with_filter = TRUE;
+					$this->db->where(
+						"(((`agents`.`connection_date` >= '$begin') AND (`agents`.`connection_date` <= '$end'))
+						OR (`agents`.`connection_date` IS NULL )
+						OR (`agents`.`connection_date` = '0000-00-00') OR (`agents`.`connection_date` = ''))",
+						NULL, FALSE);
+					$generacion = 'Generación 1';
+				break;
+				case 4:
+					$with_filter = TRUE;
 				//Generación 2: fecha de conexión > 1  año y < 2 años <option value="4">Generación 2</option>
 				//<option value="4">Generación 2</option>
 				//Generación 2: Agents with "agents.connection_date" is between October 1 of 2 years ago and September 30 of 1 year ago. 				
 //						$begin = ( date( 'Y' )-2 ).date( '-m-d' );
 //						$end = 	( date( 'Y' )-1 ).date( '-m-d' );
-						$begin = ( date( 'Y' ) - 2 ) . '-10-01';
-						$end = 	( date( 'Y' ) - 1 ) . '-09-30';
-						$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
-						$generacion = 'Generación 2';
-					break;
-					case 5:
-						$with_filter = TRUE;
+					$begin = ( date( 'Y' ) - 2 ) . '-10-01';
+					$end = 	( date( 'Y' ) - 1 ) . '-09-30';
+					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
+					$generacion = 'Generación 2';
+				break;
+				case 5:
+					$with_filter = TRUE;
 				//Generación 3: fecha de conexión > 2 años y < 3 años <option value="5">Generación 3</option>
 				//Generación 3: <option value="5">Generación 3</option>
 				//Generación 3: Agents with "agents.connection_date" is after October 1 of 1 year.
 //						$begin = ( date( 'Y' )-3 ).date( '-m-d' );					
 //						$end = 	( date( 'Y' )-2 ).date( '-m-d' );
-						$begin = ( date( 'Y' ) - 1 ) .  '-10-01';
+					$begin = ( date( 'Y' ) - 1 ) .  '-10-01';
 //						$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 
-						$this->db->where( array( 'agents.connection_date >=' => $begin )); 
-						$generacion = 'Generación 3';
-					break;
-					default:
-					break;
-				}
+					$this->db->where( array( 'agents.connection_date >=' => $begin )); 
+					$generacion = 'Generación 3';
+				break;
+				default:
+				break;
 			}
-
+		}
 	}
 
 	public function get_filtered_agents($filter)
 	{
-//		$generacion = '';
 		$with_filter = FALSE;
 		if( !empty( $filter ) && is_array($filter['query']))
 		{
