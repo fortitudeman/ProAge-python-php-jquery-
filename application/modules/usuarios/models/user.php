@@ -1313,30 +1313,20 @@ class User extends CI_Model{
 		return $this->data[0];
 		
 	}	
-	
-	
-	
-	
-	
+
 	// getForUpdateOrDelete
-	public function getForUpdateOrDelete( $id = null ){
-		
+	public function getForUpdateOrDelete( $id = null )
+	{
 		if( empty( $id ) ) return false;
-		
-		
-		
+
 		$this->db->where( array( 'id' => $id ) );
 		$query = $this->db->get( 'users' );
-	
-		
 		if ($query->num_rows() == 0) return false;
-		
-		
+
 		// Clean vars
 		unset( $this->data );
 
 		$this->data = array();
-		
 		// Getting data
 		foreach ($query->result() as $row) {
 
@@ -1350,127 +1340,70 @@ class User extends CI_Model{
 				'birthdate' => $row->birthdate,
 				'email' => $row->email,
 				'disabled' => $row->disabled,
-				'picture' => $row->picture
+				'picture' => $row->picture,
+				'manager_id' => $row->manager_id
 		    );
 
 		}
-		
+
 		unset( $query );
-		
-		
 		// Getting users_vs_user_roles
 		if( !empty( $this->data ) ){
-			
 			$users_vs_user_roles = array();
-			
 			$this->db->where( array( 'user_id' => $id ) );
-		
 			$query = $this->db->get( 'users_vs_user_roles' );
-			
 			if ($query->num_rows() > 0){
-		
 				foreach ($query->result() as $row) {
-		
 					$users_vs_user_roles[] = array( 
 						'user_id' => $row->user_id,
 						'user_role_id' => $row->user_role_id
 					);
-		
 				}
-				
 				$this->data['users_vs_user_roles'] = $users_vs_user_roles;		
 			}
-			
-			
-			
 		}
-		
-		
-		
 		unset( $query );
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+
 		// Get agents info
 		$this->db->where( array( 'user_id' => $id ) );
-		
 		$query = $this->db->get( 'agents' );
-		
 		$agents = array();
-		
-		
 		if ($query->num_rows() > 0){
-		
 			foreach ($query->result() as $row) {
-	
 				$agents[] = array( 
 					'id' => $row->id,
 					'user_id' => $row->user_id,
 					'connection_date' => $row->connection_date,			
 					'license_expired_date' => $row->license_expired_date
 				);
-	
 			}
-			
 			$this->data['agents'] = $agents;		
 		}
-		
-		
-		
-		
-		
+
 		// Getting data for agents
 		if( isset( $this->data['agents'] ) ){
-			
 			$agent_uids=array();
-			
 			$this->db->where( array( 'agent_id' => $this->data['agents'][0]['id'] ) );
-		
 			$query = $this->db->get( 'agent_uids' );
-			
 			if ($query->num_rows() > 0){
-			
-				
 				foreach ($query->result() as $row) {
-		
 					$agent_uids[] = array( 
 						'id' => $row->id,
 						'agent_id' => $row->agent_id,
 						'type' => $row->type,			
 						'uid' => $row->uid
 					);
-		
 				}
-			
 			}
-			
 			$this->data['agent_uids'] = $agent_uids;	
-		
-		
 		}
-		
-		
-		
 		// Getting Representatives
 		if( !empty( $this->data ) ){
-			
 			$representatives=array();
-			
 			$this->db->where( array( 'user_id' => $this->data[0]['id'] ) );
-		
 			$query = $this->db->get( 'representatives' );
-			
 			if ($query->num_rows() > 0){
-				
 				foreach ($query->result() as $row) {
-		
 					$representatives[] = array( 
 						'id' => $row->id,
 						'user_id' => $row->user_id,
@@ -1480,23 +1413,13 @@ class User extends CI_Model{
 						'office_ext' => $row->office_ext,
 						'mobile' => $row->mobile
 					);
-		
 				}
-				
 			}
-			
 			$this->data['representatives'] = $representatives;	
-			
 		}
-		
 		return $this->data;
-		
-		
 	}
-	
-	
-	
-	
+
 // Querys for logins
 	public function setLogin( $data = array() ) {
 		

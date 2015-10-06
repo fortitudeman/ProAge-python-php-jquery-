@@ -1935,96 +1935,54 @@ class Usuarios extends CI_Controller {
 				if( $this->user->update( 'users', $id, $user ) == false) $controlSaved = false ;
 				
 				if( $controlSaved == false ){
-						
 					// Set false message		
 					$this->session->set_flashdata( 'message', array( 
-						
 						'type' => false,	
 						'message' => 'No se pudo guardar el registro, Usuario, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
-									
-					));												
-					
-					
+					));
 					redirect( 'usuarios/update/'.$id, 'refresh' );
-					
 				}
-				
-				
-				
-				
-				
+
 				// Added User roles groups
 				$user_roles = array();				
-				
-				
 				if( !empty( $_POST['group'] ) ){
-					
 					$this->user->delete( 'users_vs_user_roles', 'user_id',  $data[0]['id'] );
-					
-					
 					foreach( $this->input->post( 'group' ) as $group )
 						$user_roles[] = array( 'user_id' => $id , 'user_role_id' => $group );
-				
-					if( $this->user->create_banch( 'users_vs_user_roles', $user_roles ) == false) $controlSaved = false ;
-					
-					
+
+					if( $this->user->create_banch( 'users_vs_user_roles', $user_roles ) == false)
+						$controlSaved = false ;
+
 					if( $controlSaved == false ){
-							
 							// Set false message		
 							$this->session->set_flashdata( 'message', array( 
-								
 								'type' => false,	
 								'message' => 'No se pudo guardar el registro, Asignación de rol, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
-											
 							));												
-							
-							
 							redirect( 'usuarios/update/'.$id, 'refresh' );
-							
 					}
-				
 				}
-				
-				
-				
-				
-							
+
 				/*	
 				// Save values of moral person
 				if( $_POST['persona'] == 'fisica' ){
-					
 					$fisica= array(
-						
 						'user_id'  => $idSaved,
 						'name'  => $this->input->post( 'name' ),
 						'lastnames'  => $this->input->post( 'lastname' ),
 						'birthdate'  => $this->input->post( 'birthdate' )
-						
 					);
-					
-					
 					//if( $this->user->create( 'agents', $fisica ) == false) $controlSaved = false ;
-					
-					
 				}*/
-				
-				
-				
-				
+
 				// Save values of moral person
 				if( $_POST['persona'] == 'moral' ){
-					
-					
 					$this->user->delete( 'representatives', 'user_id',  $data[0]['id'] );
-					
-					
 					$moral= array();
-					
+
 					for( $i=0; $i<=count( $_POST['name_r'] ); $i++ )
-							
 							if( isset( $_POST['name_r'][$i] ) )
 							$moral[] = array(
-								
 								'user_id'  => $id,
 								'name'  => $_POST['name_r'][$i],
 								'lastnames'  =>  $_POST['lastname_r'][$i],
@@ -2033,30 +1991,19 @@ class Usuarios extends CI_Controller {
 								'mobile'  => $_POST['mobile'][$i],
 								'last_updated' => $timestamp,
 								'date' => $timestamp
-								
 							);
-					
-					
-					
-					if( $this->user->create_banch( 'representatives', $moral ) == false) $controlSaved = false ;
-					
+					if( $this->user->create_banch( 'representatives', $moral ) == false)
+						$controlSaved = false ;
+
 					if( $controlSaved == false ){
-						
 						// Set false message		
 						$this->session->set_flashdata( 'message', array( 
-							
 							'type' => false,	
 							'message' => 'No se pudo guardar el registro, Representantes morales ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
-										
 						));												
-						
-						
 						redirect( 'usuarios/update/'.$id, 'refresh' );
-						
 					}
-																
 				}
-
 				if( in_array( 1, $this->input->post('group') ) ){
 /////////
 					$agent = array(
@@ -2086,7 +2033,7 @@ class Usuarios extends CI_Controller {
 					}
 /////////
 					$uids_agens = array();
-				
+
 					// Added Clave
 					$uids_agens[] = array(
 								'agent_id' => $idAgentSaved,
@@ -2095,9 +2042,7 @@ class Usuarios extends CI_Controller {
 								'last_updated' => $timestamp,
 								'date' => $timestamp
 					);
-					
-					
-					
+
 					// added folio nacional
 					if( !empty( $_POST['folio_nacional'] ) )
 						foreach( $this->input->post( 'folio_nacional' ) as $value )
@@ -2108,11 +2053,7 @@ class Usuarios extends CI_Controller {
 								'last_updated' => $timestamp,
 								'date' => $timestamp
 							);
-					
-					
-					
-					
-					
+
 					// Added folio provicional
 					if( !empty( $_POST['folio_provincial'] ) )
 						foreach( $this->input->post( 'folio_provincial' ) as $value )
@@ -2123,60 +2064,46 @@ class Usuarios extends CI_Controller {
 								'last_updated' => $timestamp,
 								'date' => $timestamp
 							);
-					
-					
+
 					$this->user->delete( 'agent_uids', 'agent_id', $idAgentSaved );
-					
-					if( $this->user->create_banch( 'agent_uids', $uids_agens ) == false) $controlSaved = false ;
-					
-										
+					if( $this->user->create_banch( 'agent_uids', $uids_agens ) == false)
+						$controlSaved = false ;
+				
 					if( $controlSaved == false ){
-						
 						// Set false message		
 						$this->session->set_flashdata( 'message', array( 
-							
 							'type' => false,	
 							'message' => 'No se pudo guardar el registro, Folio provicional, Folio Nacional, Clave ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
-										
 						));												
-						
-						
 						redirect( 'usuarios/update/'.$id, 'refresh' );
-						
 					}
-					
 				}
-				
-				
-				
-				
-				
-				
-				
-				
-				
+
 				// Save Record	
 				if( $controlSaved == true ){
-					
-					
 					// Set true message		
 					$this->session->set_flashdata( 'message', array( 
-						
 						'type' => true,	
 						'message' => 'Se guardo el registro correctamente'
-									
 					));												
-					
-					
 					redirect( 'usuarios', 'refresh' );
 				}
 			}	
 		}
-		
+
+		$add_js = '
+<script type="text/javascript">
+	$( document ).ready( function(){ 
+		$("#manager_id option").each(function() {
+			if ($(this).val() == '. $data[0]['manager_id'] . ')
+				$(this).prop("selected", true);
+		});
+	});
+</script>
+';
 		get_default_user_image( $data[0]['picture'] );
 		// Config view
 		$this->view = array(
-				
 		  'title' => 'Editar Usuario',
 		    // Permisions
 		  'user' => $this->sessions,
@@ -2186,34 +2113,24 @@ class Usuarios extends CI_Controller {
 		  'scripts' =>  array(
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+//			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
 			  '<script src="'.base_url().'usuarios/assets/scripts/update.js"></script>',		
-			  '<script src="'.base_url().'scripts/config.js"></script>'
-			  	
+			  '<script src="'.base_url().'scripts/config.js"></script>',
+$add_js
 		  ),
 		  'content' => 'usuarios/update', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-			
-			
+
 		 //Selects	
 		  'group' => $this->rol->checkbox(),
 		  'gerentes' => $this->user->getSelectsGerentes(),
-		  
 		  'data' => $data			
 		); 
-		
-		
+
 		// Render view 
 		$this->load->view( 'index', $this->view );	
-				
 	}
-	
-	
-	
-	
-	
-	
-	
+
 	// Delete Users
 	public function delete( $id = null ){
 
