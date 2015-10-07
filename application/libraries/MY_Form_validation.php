@@ -129,4 +129,31 @@ class MY_Form_validation extends CI_Form_validation{
             $this->set_message('is_unique_but', 'El campo %s no tiene un valor válido. Debe verificar si otro OT tiene el mismo número.');
 		return $result;
     }
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Our version of is_unique() that also compares the length of the fields
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	field
+	 * @return	bool
+	 */
+	public function my_is_unique($str, $field)
+	{
+		list($table, $field)=explode('.', $field);
+		$query = $this->CI->db->limit(1)->get_where($table, array($field => $str));
+
+		if ($query->num_rows() > 0)
+		{
+			$row = $query->row();
+			if (strlen($row->$field) == strlen($str))
+			{
+				$this->set_message('my_is_unique', 'El campo %s debe contener un valor único.');
+				return FALSE;
+			}
+		}
+		return TRUE;
+    }
 }

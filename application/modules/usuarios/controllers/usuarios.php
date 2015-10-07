@@ -287,7 +287,7 @@ class Usuarios extends CI_Controller {
 			$this->form_validation->set_rules('persona', 'Persona', 'required');
 			$this->form_validation->set_rules('username', 'Usuario', 'required|is_unique[users.username]');
 			$this->form_validation->set_rules('password', 'Contraseña', 'required');
-			$this->form_validation->set_rules('email', 'Correo', 'required|valid_email|is_unique[users.email]');
+			$this->form_validation->set_rules('email', 'Correo', 'trim|required|valid_email|my_is_unique[users.email]');
 
 			if( $this->input->post('persona') == 'fisica' ){
 				$this->form_validation->set_rules('lastname', 'Apellido', 'required');
@@ -1826,10 +1826,7 @@ class Usuarios extends CI_Controller {
 		$this->load->view( 'index', $this->view );	
 	
 	}		
-	
-	
-	
-	
+
 // Update record	
 	public function update( $id = null ){
 
@@ -1862,7 +1859,7 @@ class Usuarios extends CI_Controller {
 				$this->form_validation->set_rules('username', 'Usuario', 'required|is_unique[users.username]');
 			
 			if( $data[0]['email'] != $this->input->post('email') )
-				$this->form_validation->set_rules('email', 'Correo', 'required|valid_email|is_unique[users.email]');
+				$this->form_validation->set_rules('email', 'Correo', 'trim|required|valid_email|my_is_unique[users.email]');
 			if( $this->input->post('persona') == 'fisica' ){
 				$this->form_validation->set_rules('lastname', 'Apellido', 'required');
 				//$this->form_validation->set_rules('birthdate', 'Fecha de cumpleaños', 'required');
