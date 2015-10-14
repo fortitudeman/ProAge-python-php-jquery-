@@ -4012,5 +4012,28 @@ AND
 		}
 		return $generacion;
 	}
+
+	public function generic_get( $table = null, $where = null, $limit = null, $offset = 0, $order_by = null )
+	{
+		if ( $table == null )
+			return FALSE;
+        $this->db->select('*')->from($table);
+
+		$where = is_array($where) ? $where : array();
+		foreach ($where as $key => $value)
+			$this->db->where($key, $value);
+
+		//limit
+		if ($limit)
+			$this->db->limit($limit, $offset);
+
+		// orderby
+		if ($order_by)
+			$this->db->order_by($order_by);
+
+		$q = $this->db->get();
+
+		return ($q->num_rows() > 0) ? $q->result() : FALSE;		
+	}
 }
 ?>

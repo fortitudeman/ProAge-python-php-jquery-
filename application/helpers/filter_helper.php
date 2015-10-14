@@ -359,10 +359,9 @@ if ( ! function_exists('get_agent_autocomplete_js'))
 		$inline_js = 
 '
 <script type="text/javascript">
-	$( document ).ready( function(){ 
 		var agentList = [' . implode(',', $agent_multi) . '
 		];
-
+	$( document ).ready( function(){ 
 		function split( val ) {
 			return val.split( /\n\s*/ );
 		}
@@ -417,6 +416,7 @@ alert("changed!");
 		return ($inline_js);
 	}
 }
+
 /*
 Display fields related to period filter selection
 */

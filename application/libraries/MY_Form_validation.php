@@ -156,4 +156,74 @@ class MY_Form_validation extends CI_Form_validation{
 		}
 		return TRUE;
     }
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Exists in database table
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	field
+	 * @return	bool
+	 */
+	public function exists_in_db($str, $field)
+	{
+		list($table, $field)=explode('.', $field);
+		if ($table == 'agents')
+		{
+			$parts = explode('[ID: ', $str);
+			if (count($parts) == 2)
+				$str = str_replace(']', '', $parts[1]);
+		}
+			
+		$query = $this->CI->db->limit(1)->get_where($table, array($field => $str));
+
+		if ($query->num_rows() == 0)
+		{
+			$this->set_message('exists_in_db', 'El campo %s no existe.');
+			return FALSE;
+		}
+		return TRUE;
+    }
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Is date (i.e. can be parsed by strtotime)
+	 *
+	 * @access	public
+	 * @param	string
+	 * @return	bool
+	 */
+	public function is_date($str)
+	{
+		$str_array = explode('-', $str);
+		if ( (count($str_array) == 3) && 
+			checkdate ( $str_array[1], $str_array[2], $str_array[0]))
+			return TRUE;
+
+		$this->set_message('is_date', 'El campo %s debe ser una fecha.');
+		return FALSE;
+    }
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * Absolute value of input <= some value
+	 *
+	 * @access	public
+	 * @param	string
+	 * @param	field
+	 * @return	bool
+	 */
+	public function abs_le($str, $value)
+	{
+		if (abs($str) > $value)
+		{
+			$this->set_message('is_date', 'El campo %s no tiene un valor válido.');
+			return FALSE;
+		}
+		return TRUE;
+    }
 }

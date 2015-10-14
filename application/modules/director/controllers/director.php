@@ -227,6 +227,133 @@ class Director extends CI_Controller {
 		$data = $this->_init_planning_report($page == 'metas');
 
 		$inline_js = get_agent_autocomplete_js($this->agent_array);
+
+		$inline_js .= '
+<script type="text/javascript">
+
+	$( document ).ready( function(){ 
+		$("#payment-date").datepicker( {
+			dateFormat: "yy-mm-dd",
+			changeMonth: true,
+			showOtherMonths: true,
+			selectOtherMonths: true,
+			firstDay:1,
+			closeText: "Cerrar",
+			prevText: "&#x3c;Ant",
+			nextText: "Sig&#x3e;",
+			currentText: "Hoy",
+			monthNames: ["Enero","Febrero","Marzo","Abril","Mayo","Junio",
+				"Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+			monthNamesShort: ["Ene","Feb","Mar","Abr","May","Jun",
+				"Jul","Ago","Sep","Oct","Nov","Dic"],
+			dayNames: ["Domingo","Lunes","Martes","Mi&eacute;rcoles","Jueves","Viernes","S&aacute;bado"],
+			dayNamesShort: ["Dom","Lun","Mar","Mi&eacute;","Juv","Vie","S&aacute;b"],
+			dayNamesMin: ["Do","Lu","Ma","Mi","Ju","Vi","S&aacute;"],
+		});
+
+		$("#add-payment-btn").bind( "click", function(){
+			$( "#add-payment-container" ).dialog( "open" );
+			return false;
+		})
+
+		$("#add-payment-form").find(":input").each(function(index){
+			if ($(this).prop("required")) {
+				var forId = $(this).attr("id");
+				$("#add-payment-form").find("label").each(function(index){
+					if ($(this).attr("for") == forId) {
+						$(this).append("<span style=\'color: #FF0000\'> * </span>")
+						return false;
+					}
+				});
+			}
+		});
+
+		$( "#add-payment-container" ).dialog({
+			autoOpen: false,
+			height: 270,
+			width: 450,
+			modal: true,
+			buttons: {
+				"Guardar": function() {
+					var errorMessage = "";
+					$("#add-payment-form").find(":input").each(function(index){
+						if ($(this).prop("required") && ($.trim($(this).val()).length == 0)) {
+							if (errorMessage.length == 0)
+								errorMessage += "Los campos con una * son obligatorios.";
+						}
+					});
+					var toTest = parseFloat($("#payment-amount").val());
+					if ( !toTest ) {
+						errorMessage += "<br>El campo Pago debe contener un número decimal.";
+					}
+					var regexp = /^[0-9]+$/;
+					toTest = $("#payment-year-prime").val();
+					if ( !( regexp.test( toTest) ) || (toTest == 0)) {
+						errorMessage += "<br>El campo Año prima debe contener un número entero mayor a cero.";
+					}
+
+					toTest = parseInt($("#payment-business").val());
+					if ((toTest < -1) || (toTest > 1))
+						errorMessage += "<br>El campo Es negocio debe ser -1, 0 o 1.";
+
+					if (errorMessage.length > 0) {
+						alert("Campos invalidos!");
+						$("#add-payment-error").html(errorMessage);
+						$("#add-payment-error").show();
+						return false;
+					}
+
+					$.ajax({
+						type: "POST",
+						url: Config.base_url() + "director/add_payment.html",
+						data: $("#add-payment-form").serialize(),
+						success: function(response){
+							switch (response) {
+								case "true":
+									alert("Se guardo el pago correctamente.");
+									if ( confirm( "¿Quiere recargar la página web?" ) ) 
+										window.location.reload();
+								break;
+
+								default:
+									alert("No se pudo guardar el pago.");
+									$("#add-payment-error").html(response);
+									$("#add-payment-error").show();
+								break;
+							}
+						}
+					});
+					$( this ).dialog( "close" );
+					return false;
+				},
+				"Cancelar": function() {
+					$( this ).dialog( "close" );
+					return false;
+				}
+			},
+			close: function() {
+				$("#add-payment-error").html("");
+				$("#add-payment-error").hide();
+			}
+		});
+
+		$("#payment-agent-id").autocomplete({
+			source: agentList
+		});
+
+		$( "#payment-policy-number" ).autocomplete({
+			minLength: 3,
+			source: function( request, response ) {
+				$.getJSON( Config.base_url() + "ot/search_polizas.html", {
+					term: request.term 
+				}, response );
+			},				
+		})
+
+	});
+</script>
+';
+
 		$base_url = base_url();
 
 		$report_lines = '';
@@ -1570,7 +1697,80 @@ implode(', ', $ramo_tramite_types) . '
 		$data = get_ot_data($this->other_filters, $this->access_report);
 		return $data;
 	}
-	
+
+	public function add_payment()
+	{
+		if	( !$this->input->is_ajax_request() )
+			redirect( '/', 'refresh' );
+
+		$this->_init_profile();
+		$this->load->library('form_validation');
+
+		$this->form_validation->set_rules('product_group', 'Ramo', 'trim|required|in_list[1,2]');
+		$this->form_validation->set_rules('agent_id', 'Agente', 'trim|required|exists_in_db[agents.id]');
+		$this->form_validation->set_rules('amount', 'Monto pagado', 'trim|required|decimal_or_integer');
+		$this->form_validation->set_rules('payment_date', 'Fecha de pago', 'trim|required|is_date');
+		$this->form_validation->set_rules('year_prime', 'Año prima', 'trim|required|is_natural_no_zero');
+		$this->form_validation->set_rules('business', '¿Es negocio?', 'trim|required|abs_le[1]');
+
+		$result = $this->form_validation->run();
+		if (!$result)
+		{
+			$result = strtr(validation_errors(), array("\n" => '', "\r" => ''));
+			echo $result;
+			return;
+		}
+
+		$now = date( 'Y-m-d H:i:s' );
+		$product_group = $this->input->post('product_group');
+		$parts = explode('[ID: ', $this->input->post('agent_id'));
+		$agent_id = str_replace(']', '', $parts[1]);
+		$valid_for_report = $this->input->post('valid_for_report');
+		$payment_date = $this->input->post('payment_date');
+		if ($product_group == 1)
+			$type = 'national';
+		else
+			$type = 'provincial';
+		$folio = $this->user->generic_get('agent_uids',
+			array('agent_id' => $agent_id, 'type' => $type),
+				1, 0, 'id asc');
+
+		$payment = array( 
+			'product_group' => $product_group,
+			'agent_id' => $agent_id,
+			'year_prime' => $this->input->post('year_prime'),
+			'currency_id' => 1,
+			'amount' => $this->input->post('amount'),
+			'payment_date' => $payment_date,
+			'business' => (int)$this->input->post('business'),
+			'policy_number' => $this->input->post('policy_number'),
+			'valid_for_report' => $valid_for_report ? 1 : 0,
+			'last_updated' => $now,
+			'date' => $now,
+			'import_date' => $payment_date,
+			'imported_agent_name' => trim($parts[0]),
+			'imported_folio' => isset($folio[0]) ? $folio[0]->uid : '',
+		);
+
+		$user_id = $this->user->getUserIdByAgentId( $agent_id);
+
+		if ($user_id && ($result = $this->work_order->create( 'payments', $payment )))
+		{
+			$policy = $this->work_order->getPolicyByUid(  $payment['policy_number'] );
+			if ($policy && 
+				( (float)$policy[0]['prima'] >= (float)$payment['amount'] ))
+			{
+				$ot = $this->work_order->getWorkOrderByPolicy(  $policy[0]['id'] );
+				if( !empty( $ot ) )
+				{
+					$work_order = array( 'work_order_status_id' => 4 );
+					$this->work_order->update( 'work_order', $ot[0]['id'], $work_order );
+
+				}
+			}
+		}
+		echo 'true';
+	}
 	
 /* End of file director.php */
 /* Location: ./application/modules/director/controllers/director.php */
