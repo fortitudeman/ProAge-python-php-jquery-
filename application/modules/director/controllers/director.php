@@ -1768,8 +1768,11 @@ implode(', ', $ramo_tramite_types) . '
 
 				}
 			}
+			$result = 'true';
 		}
-		echo 'true';
+		else
+			$result = 'Ocurrio un error, consulte a su administrador.';
+		echo $result;
 	}
 	
 /* End of file director.php */
