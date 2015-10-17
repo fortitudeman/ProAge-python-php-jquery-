@@ -79,16 +79,16 @@ if ($is_sales_planning) :?>
             </div>
           </div>
           <div class="control-group">
+            <label class="control-label" for="payment-year-prime">Año prima</label>
+            <div class="controls">
+              <input type="text" required id="payment-year-prime" name="year_prime" placeholder="Año prima">
+            </div>
+          </div>
+          <div class="control-group">
             <div class="controls">
               <label class="checkbox">
                 <input type="checkbox" id="payment-valid-for-report" name="valid_for_report" checked="checked">¿Válido para el reporte?
               </label>
-            </div>
-          </div>
-          <div class="control-group">
-            <label class="control-label" for="payment-year-prime">Año prima</label>
-            <div class="controls">
-              <input type="text" required id="payment-year-prime" name="year_prime" placeholder="Año prima">
             </div>
           </div>
         </form>
