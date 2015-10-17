@@ -3833,77 +3833,6 @@ AND
 		return $result;
 	}
 
-	private function _get_generation_filter($filter, &$with_filter)
-	{
-		if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) )
-		{
-			switch ($filter['query']['generacion'])
-			{
-				case 2:
-					$with_filter = TRUE;
-				//Consolidado: < 3 años  <option value="2">Consolidado</option>
-					//Consolidado: <option value="2">Consolidado</option>	
-					// Consolidado: Agents with "agents.connection_date" < October 1 of 3 years ago.  <option value="2">Consolidado</option>	
-//						$begin = ( date( 'Y' )-3 ).date( '-m-d' );
-//						$end = 	date( 'Y-m-d' );
-//						$this->db->where( array( 'agents.connection_date <' => $begin, 'agents.connection_date !=' => '0000-00-00' ) ); 	
-
-					$end = 	( date( 'Y' ) - 3 ) . '-10-01';
-					$this->db->where(
-						"(`agents`.`connection_date` < '$end')
-						AND (`agents`.`connection_date` IS NOT NULL )
-						AND (`agents`.`connection_date` != '0000-00-00') AND (`agents`.`connection_date` != '')",
-						NULL, FALSE);
-					$generacion = 'Consolidado';
-				break;
-				case 3:
-					$with_filter = TRUE;
-				//Generación 1: Fecha de conexión > 1 año < hoy <option value="3">Generación 1</option>
-				//Generación 1: <option value="3">Generación 1</option>
-				// Generación 1: Agents with "agents.connection_date" is between October 1 of 3 years ago and September 30 of 2 years ago. 
-//						$begin = ( date( 'Y' )-1 ).date( '-m-d' );
-//						$end = 	date( 'Y-m-d' );
-					$begin = ( date( 'Y' ) - 3 ) . '-10-01';
-					$end = 	( date( 'Y' ) - 2 ) . '-09-30';
-/*						$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end, 'agents.connection_date = ' => "0000-00-00" ) ); 	
-						$this->db->or_where( 'COALESCE(agents.connection_date, "") = "" ' ); */
-					$this->db->where(
-						"(((`agents`.`connection_date` >= '$begin') AND (`agents`.`connection_date` <= '$end'))
-						OR (`agents`.`connection_date` IS NULL )
-						OR (`agents`.`connection_date` = '0000-00-00') OR (`agents`.`connection_date` = ''))",
-						NULL, FALSE);
-					$generacion = 'Generación 1';
-				break;
-				case 4:
-					$with_filter = TRUE;
-				//Generación 2: fecha de conexión > 1  año y < 2 años <option value="4">Generación 2</option>
-				//<option value="4">Generación 2</option>
-				//Generación 2: Agents with "agents.connection_date" is between October 1 of 2 years ago and September 30 of 1 year ago. 				
-//						$begin = ( date( 'Y' )-2 ).date( '-m-d' );
-//						$end = 	( date( 'Y' )-1 ).date( '-m-d' );
-					$begin = ( date( 'Y' ) - 2 ) . '-10-01';
-					$end = 	( date( 'Y' ) - 1 ) . '-09-30';
-					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
-					$generacion = 'Generación 2';
-				break;
-				case 5:
-					$with_filter = TRUE;
-				//Generación 3: fecha de conexión > 2 años y < 3 años <option value="5">Generación 3</option>
-				//Generación 3: <option value="5">Generación 3</option>
-				//Generación 3: Agents with "agents.connection_date" is after October 1 of 1 year.
-//						$begin = ( date( 'Y' )-3 ).date( '-m-d' );					
-//						$end = 	( date( 'Y' )-2 ).date( '-m-d' );
-					$begin = ( date( 'Y' ) - 1 ) .  '-10-01';
-//						$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 
-					$this->db->where( array( 'agents.connection_date >=' => $begin )); 
-					$generacion = 'Generación 3';
-				break;
-				default:
-				break;
-			}
-		}
-	}
-
 	public function get_filtered_agents($filter)
 	{
 		$with_filter = FALSE;
@@ -3986,25 +3915,100 @@ AND
 		return ($result);
 	}
 
+	private function _get_generation_filter($filter, &$with_filter)
+	{
+		if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) )
+		{
+			switch ($filter['query']['generacion'])
+			{
+				case 2:
+					$with_filter = TRUE;
+					// Consolidado: <option value="2">Consolidado</option>
+					// Agentes with "fecha de conexion" before 1º October 2011 (4 years ago)
+					$end = 	( date( 'Y' ) - 4 ) . '-10-01';
+					$this->db->where(
+						"(`agents`.`connection_date` < '$end')
+						AND (`agents`.`connection_date` IS NOT NULL )
+						AND (`agents`.`connection_date` != '0000-00-00') AND (`agents`.`connection_date` != '')",
+						NULL, FALSE);
+					$generacion = 'Consolidado';
+				break;
+				case 3:
+					$with_filter = TRUE;
+				// Generación 1: <option value="3">Generación 1</option>
+				// Agentes with "fecha de conexion" between 1º October 2014 and 31 december 2015.
+				// or connection_date = '0000-00-00' or connection_date = ''
+					$begin = ( date( 'Y' ) - 1 ) . '-10-01';
+					$end = 	( date( 'Y' ) ) . '-12-31';
+//					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) );
+					$this->db->where(
+						"((`agents`.`connection_date` <= '$end') AND
+						(`agents`.`connection_date` >= '$begin')) OR
+						(`agents`.`connection_date` IS NULL )
+						OR (`agents`.`connection_date` = '0000-00-00') OR (`agents`.`connection_date` = '')",
+						NULL, FALSE);
+					$generacion = 'Generación 1';
+				break;
+				case 4:
+					$with_filter = TRUE;
+				// Generación 2: <option value="4">Generación 2</option>
+				// Agentes with "fecha de conexion" between 1º October 2013 and 30 september 2014
+					$begin = ( date( 'Y' ) - 2 ) . '-10-01';
+					$end = 	( date( 'Y' ) - 1 ) . '-09-30';
+					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
+					$generacion = 'Generación 2';
+				break;
+				case 5:
+					$with_filter = TRUE;
+					// Generación 3: <option value="5">Generación 3</option>
+					// Agentes with "fecha de conexion" between 1º October 2012 and 30 september 2013
+					$begin = ( date( 'Y' ) - 3 ) . '-10-01';
+					$end = 	( date( 'Y' ) - 2 ) . '-09-30';
+					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
+					$generacion = 'Generación 3';
+				break;
+				case 6:
+					$with_filter = TRUE;
+				// Generación 4: <option value="6">Generación 4</option>
+				// Agentes with "fecha de conexion" between 1º October 2011 and 30 september 2012
+					$begin = ( date( 'Y' ) - 4 ) . '-10-01';
+					$end = 	( date( 'Y' ) - 3 ) . '-09-30';
+					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
+					$generacion = 'Generación 4';
+				default:
+				break;
+			}
+		}
+	}
+
 	public function get_agent_generation($connection_date = '')
 	{
 		$generacion = '';
 		if ( $connection_date != '0000-00-00' && $connection_date)
 		{
-			// Consolidado: "agents.connection_date" < October 1 of 3 years ago
-			if ( $connection_date < (( date( 'Y' )-3 ) . '-10-01'))
+			// Consolidado: "agents.connection_date" < October 1 of 4 years ago
+			if ( $connection_date < (( date( 'Y' )-4 ) . '-10-01'))
 				$generacion = 'Consolidado';	
-			//Generación 1:  "agents.connection_date" is between October 1 of 3 years ago and September 30 of 2 years ago
+			// Generación 4:  "agents.connection_date" is 
+			// between October 1 of 4 years ago and September 30 of 3 years ago
+			elseif (( $connection_date >= (( date( 'Y' ) - 4 ) . '-10-01')) &&
+				( $connection_date < (( date( 'Y' ) - 3 ) . '-09-30')))
+				$generacion = 'Generación 4';
+			// Generación 3: "agents.connection_date" is
+			// between October 1 of 3 years ago and September 30 of 2 years ago
 			elseif (( $connection_date >= (( date( 'Y' ) - 3 ) . '-10-01')) &&
 				( $connection_date < (( date( 'Y' ) - 2 ) . '-09-30')))
-				$generacion = 'Generación 1';
-			//Generación 2: "agents.connection_date" is between October 1 of 2 years ago and September 30 of 1 year ago
+				$generacion = 'Generación 3';
+			// Generación 2: "agents.connection_date" is
+			// between October 1 of 2 years ago and September 30 of 1 year ago
 			elseif (( $connection_date >= (( date( 'Y' ) - 2 ) . '-10-01')) &&
 				( $connection_date < (( date( 'Y' ) - 1 ) . '-09-30')))
 				$generacion = 'Generación 2';
-			//Generación 3: "agents.connection_date" is after October 1 of 1 year
-			elseif ($connection_date >= (( date( 'Y' ) - 1 ) . '-10-01')) 
-				$generacion = 'Generación 3';
+			// Generación 1: "agents.connection_date" is
+			// between October 1 of 1 year ago and September 31 of current year
+			elseif (( $connection_date >= (( date( 'Y' ) - 1 ) . '-10-01')) &&
+				( $connection_date < (( date( 'Y' ) ) . '-12-31')))
+				$generacion = 'Generación 1';
 		}
 		else
 		{

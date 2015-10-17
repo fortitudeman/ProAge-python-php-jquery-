@@ -268,10 +268,14 @@ class Director extends CI_Controller {
 			}
 		});
 
+		var viewportHeight = window.innerHeight-20;
+		if (viewportHeight > 500)
+			viewportHeight = 500;
 		$( "#add-payment-container" ).dialog({
 			autoOpen: false,
-			height: 270,
 			width: 450,
+			height: viewportHeight,
+			resizable: true,
 			modal: true,
 			buttons: {
 				"Guardar": function() {
@@ -390,7 +394,10 @@ class Director extends CI_Controller {
 			'export_xls' => $this->access_export_xls,
 			'page' => $page
 			);
-		$sub_page_content = $this->load->view('director/report', $content_data, true);
+		$filter_view = $this->load->view('filters/report', $content_data, true);
+		
+		$sub_page_content = $this->load->view('director/report',
+			array_merge($content_data, array('filter_view' => $filter_view)), true);
 
 		$base_url = base_url();
 		if ($page == 'sales_planning')
@@ -732,8 +739,6 @@ $( document ).ready( function(){
 		$this->load->view( 'index', $this->view );	
 	}
 
-
-
 //////////////////
 	public function sales_activities()
 	{
@@ -791,7 +796,10 @@ $( document ).ready( function(){
 			'export_xls' => $this->access_export_xls,
 			'page' => 'activity_distribution'
 			);
-		$sub_page_content = $this->load->view('director/report', $content_data, true);
+		$filter_view = $this->load->view('filters/report', $content_data, true);
+
+		$sub_page_content = $this->load->view('director/report',
+			array_merge($content_data, array('filter_view' => $filter_view)), true);
 
 		$base_url = base_url();
 
@@ -1226,7 +1234,7 @@ $( document ).ready( function(){
 			if ( isset($_POST['query']['generacion']) &&
 				(  ($_POST['query']['generacion'] == '') || 
 				( $this->form_validation->is_natural_no_zero($_POST['query']['generacion']) &&
-				($_POST['query']['generacion'] <= 5)) )
+				($_POST['query']['generacion'] <= 6)) )
 				)
 				$filters_to_save['generacion'] = $_POST['query']['generacion'];
 			if ( isset($_POST['query']['agent_name']))

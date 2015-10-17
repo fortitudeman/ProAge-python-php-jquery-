@@ -1754,6 +1754,14 @@ alert("changed!");
 </script>
 ';
 
+		$filter_data = array(
+			'manager' => $this->user->getSelectsGerentes2(),
+			'period_fields' => show_period_fields('ot_reporte', $other_filters['ramo']),
+			'other_filters' => $other_filters,
+			'export_xls' => $this->access_export_xls,
+			);
+		$filter_view = $this->load->view('filters/report', $filter_data, true);
+
 		// Config view
 		$this->view = array(
 				
@@ -1762,7 +1770,7 @@ alert("changed!");
 		  'user' => $this->sessions,
 		  'user_vs_rol' => $this->user_vs_rol,
 		  'roles_vs_access' => $this->roles_vs_access,
-		  'export_xls' => $this->access_export_xls,
+//		  'export_xls' => $this->access_export_xls,
 		  'css' => array(
 //			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',			
 			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
@@ -1806,12 +1814,13 @@ alert("changed!");
 	}
 </script>
 '		  ),
-		  'manager' => $this->user->getSelectsGerentes2(),
+//		  'manager' => $this->user->getSelectsGerentes2(),
 		  'content' => 'ot/report', // View to load
 		  'data' => $data,
 		  'tata' => $_POST,
-		  'period_fields' => show_period_fields('ot_reporte', $other_filters['ramo']),
-		  'other_filters' => $other_filters,
+//		  'period_fields' => show_period_fields('ot_reporte', $other_filters['ramo']),
+//		  'other_filters' => $other_filters,
+		  'filter_view' => $filter_view,
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		);
 		// Render view 
@@ -2224,7 +2233,7 @@ alert("changed!");
 			if ( isset($_POST['query']['generacion']) &&
 				(  ($_POST['query']['generacion'] == '') || 
 				 ( $this->form_validation->is_natural_no_zero($_POST['query']['generacion']) &&
-				($_POST['query']['generacion'] <= 5)) )
+				($_POST['query']['generacion'] <= 6)) )
 				)
 				$filters_to_save['generacion'] = $_POST['query']['generacion'];
 			if ( isset($_POST['query']['agent_name']))
