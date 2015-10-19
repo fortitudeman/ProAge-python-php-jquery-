@@ -269,12 +269,19 @@ class Director extends CI_Controller {
 		});
 
 		var viewportHeight = window.innerHeight-20;
-		if (viewportHeight > 500)
-			viewportHeight = 500;
+		if (viewportHeight > 1000)
+			viewportHeight = 1000;
+		var allRowsHeight = parseInt($("#add-payment-container").css("line-height"), 10);
+		allRowsHeight = Math.floor(allRowsHeight * (8 + 1.2) * 3);
+
 		$( "#add-payment-container" ).dialog({
+/*			open: function (event, ui) {
+				$(this).prepend($(this).parent().find(".ui-dialog-buttonpane"));
+			},*/
 			autoOpen: false,
 			width: 450,
-			height: viewportHeight,
+//			height: viewportHeight,
+			height: allRowsHeight,
 			resizable: true,
 			modal: true,
 			buttons: {
@@ -496,6 +503,7 @@ class Director extends CI_Controller {
 				'<style>
 .fancybox_blanco {color: #CCCCFF;}
 .fancybox_blanco:hover{color: #FFFFFF;}
+.ui-dialog-titlebar-close:after { content: "X"; font-weight:bold; }
 </style>'
 			),
 			'scripts' =>  array(
