@@ -33,6 +33,11 @@ if (($this->roles_vs_access !== FALSE) &&
 }
 else
 	$hide_menu = FALSE;
+
+if ($proages_home = $this->session->userdata('proages_home'))
+	$home = site_url($proages_home);
+else
+	$home = base_url();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -100,7 +105,7 @@ else
 					<span class="icon-bar"></span>
 				</a>
 <?php endif; ?>
- 				<a class="brand" href="<?php echo base_url(); ?>"> <img alt="Charisma Logo" src="<?php echo base_url() . 'images/' . $this->config->item('logo') ?>" /> <span><?php echo $this->config->item('company_name') ?></span></a>
+ 				<a class="brand" href="<?php echo $home; ?>"> <img alt="Charisma Logo" src="<?php echo base_url() . 'images/' . $this->config->item('logo') ?>" /> <span><?php echo $this->config->item('company_name') ?></span></a>
 				
 				<!-- theme selector starts -->
 				<div class="btn-group pull-right theme-container" >
@@ -163,7 +168,7 @@ else
 					<ul class="nav nav-tabs nav-stacked main-menu">
 						<li class="nav-header hidden-tablet">Navegación</li>
 
-						<li><a class="ajax-link" href="<?php echo base_url() ?>"><i class="icon-home"></i><span class="hidden-tablet"><?php echo $this->config->item('company_name') ?></span></a></li>						
+						<li><a class="ajax-link" href="<?php echo $home ?>"><i class="icon-home"></i><span class="hidden-tablet"><?php echo $this->config->item('company_name') ?></span></a></li>						
 
                         <?php 
 							/**

@@ -132,13 +132,10 @@ class Usuarios extends CI_Controller {
 			
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
-
 					// Load Model
 					$this->load->model( 'user' );
-
 					// Getting data for the user
 					$user = $this->user->setLogin( $this->input->post() );
-
 					// Validation for empty user, not exist
 					if( empty( $user ) ){ 
 							// Set true message		
@@ -151,16 +148,15 @@ class Usuarios extends CI_Controller {
 
 					// Save Session:
 					$this->session->set_userdata( array( 'system' => $user[0] ) );
-
 					// Resize profile image if needed:
 					$this->_resize_image($user[0]['picture']);
-
 					// Get user home page depending on role:
 					$home_page = $this->rol->get_user_home_page( $user[0]['id'] );
 					if ( ! $home_page )
 						$redirect_to = 'home';
 					else
 						$redirect_to = $home_page['uri_segments'];
+					$this->session->set_userdata('proages_home', $redirect_to);
 
 					redirect( $redirect_to, 'refresh' );
 				}else{
