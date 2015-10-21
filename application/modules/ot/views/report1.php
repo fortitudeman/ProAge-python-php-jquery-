@@ -41,7 +41,7 @@ $is_director_module = ($segments[1] == 'director');
 		$tata = json_encode($tata);
 ?>
 
-<table  class="sortable altrowstable tablesorter" id="sorter-report1"  style="width:100%;">
+<table class="sortable altrowstable tablesorter" id="sorter-report1"  style="width:100%;">
     <thead class="head">
         <tr>
             <th id="table_agents" class="header_manager" style="width:auto; text-align:center; ">Agentes</th>
@@ -103,42 +103,28 @@ $is_director_module = ($segments[1] == 'director');
                     </div> 
                 </td>            
                 <td class="celda_gris" style="text-align:right;">
-                    <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'negocio'})">
-                    <?php echo $value['negocio'] ; ?>
-				    </a>
+                    <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'negocio'})"><?php echo $value['negocio'] ; ?></a>
                 </td>
                 <td class="celda_gris" style="text-align:right;">
-                    <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'negociopai'})">
-                    <?php echo $value['negociopai']; ?>
-				    </a>
+                    <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'negociopai'})"><?php echo $value['negociopai']; ?></a>
 				</td>
-                <td class="celda_gris" style="text-align:right">
-                    <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'prima'})">
-                        $<?php echo number_format($value['prima'],2) ; ?>
-                    </a>
+                <td class="celda_gris prima" style="text-align:right">
+                    <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'prima'})">$<?php echo number_format($value['prima'],2) ; ?></a>
 				</td>
                 <td class="celda_roja" style="text-align:center;">
-                    <a class="numeros fancybox"   style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>                    
-                        <?php if(isset($value['tramite']['count'])) echo $value['tramite']['count']; else echo 0; ?>
-                    </a>
+                    <a class="numeros fancybox" style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>><?php if(isset($value['tramite']['count'])) echo $value['tramite']['count']; else echo 0; ?></a>
                 </td>
-                <td class="celda_roja" style="text-align:right;" >
-                    <a class="numeros fancybox" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>
-                        $<?php if( isset( $value['tramite']['adjusted_prima'] ) ) echo number_format($value['tramite']['adjusted_prima'],2); else echo number_format ('0',2); ?>
-                    </a>
+                <td class="celda_roja prima" style="text-align:right;" >
+                    <a class="numeros fancybox" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo  $tata; ?>")' <?php }?>>$<?php if( isset( $value['tramite']['adjusted_prima'] ) ) echo number_format($value['tramite']['adjusted_prima'],2); else echo number_format ('0',2); ?></a>
                 </td>
                 <td class="celda_amarilla" style="text-align:center;">
-                    <a class="numeros fancybox"  style="text-align:center;" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo  $tata; ?>")' <?php }?>>
-                        <?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?>
-                    </a>
+                    <a class="numeros fancybox" style="text-align:center;" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo  $tata; ?>")' <?php }?>><?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?></a>
                 </td>
-                <td class="celda_amarilla" style="text-align:right;">
-                    <a class="numeros fancybox"  <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $tata; ?>")' <?php }?>>
-                        $<?php if( isset( $value['aceptadas']['adjusted_prima'] ) ) echo number_format($value['aceptadas']['adjusted_prima'],2); else  echo number_format($value['aceptadas'],2); ?>
-                    </a>
+                <td class="celda_amarilla prima" style="text-align:right;">
+                    <a class="numeros fancybox" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $tata; ?>")' <?php }?>>$<?php if( isset( $value['aceptadas']['adjusted_prima'] ) ) echo number_format($value['aceptadas']['adjusted_prima'],2); else  echo number_format($value['aceptadas'],2); ?></a>
                 </td>
                 <td class="celda_verde"><div class="numeros" style="text-align:center;"><?php echo $negocio ?></div></td>
-                <td class="celda_verde"><div class="numeros" style="text-align:right">$<?php echo number_format($prima,2); ?></div></td>
+                <td class="celda_verde prima"><div class="numeros" style="text-align:right">$<?php echo number_format($prima,2); ?></div></td>
             </tr>
         
         
@@ -237,27 +223,27 @@ $is_director_module = ($segments[1] == 'director');
     <table  class="sortable altrowstable tablesorter" id="Tfoot" style="min-width:100% !important;" >
         <tr>
             <td ><div class="text_total">Totales</div></td>
-            <td style="width:70px; text-align:center;"><div class="numeros">
+            <td class="pagadas-recap" style="width:70px; text-align:center;"><div class="numeros">
             <a class="numeros fancybox_blanco" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({type: 'negocio'})">
               <?php echo $total_negocio?></a>
-            </div>Negocios Pagados
+            </div>Negocios Pagados 
             </td>
-            <td style="width:70px; text-align:center;"><div class="numeros">
+            <td class="pagadas-recap" style="width:70px; text-align:center;"><div class="numeros">
             <a class="numeros fancybox_blanco" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({type: 'negociopai'})">
               <?php echo $total_negocio_pai?></a>
             </div>Negocios PAI
             </td>
-            <td style="width:100px;text-align:right"><div class="numeros">
+            <td class="pagadas-recap" style="width:100px;text-align:right"><div class="numeros">
             <a class="numeros fancybox_blanco" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({type: 'prima'})">
               $<?php echo number_format($total_primas_pagadas,2) ?></a>
             </div>Primas Pagadas
             </td>
-            <td style="width:70px; text-align:center;" class="celda_gris_roja"><div class="numeros"><?php echo $total_negocios_tramite ?></div> Negocios en <br>  Tramite</td>
-            <td style="width:100px;text-align:right" class="celda_gris_roja"><div class="numeros">$<?php echo number_format($total_primas_tramite) ?></div> En Tramite</td>
-            <td style="width:70px; text-align:center;" class="celda_gris_amarilla"><div class="numeros"><?php echo $total_negocio_pendiente ?></div> Negocios Pendientes</td>
-            <td style="width:100px;text-align:right" class="celda_gris_amarilla"><div class="numeros">$<?php echo number_format($total_primas_pendientes)?></div> Pendientes</td>
-            <td  style="width:70px; text-align:center;"class="celda_gris_verde"><div class="numeros"><?php echo $total_negocios_proyectados ?></div> Negocios Proyectados</td>
-            <td  style="width:100px;text-align:right"class="celda_gris_verde"><div class="numeros">$<?php echo number_format($total_primas_proyectados) ?></div> Proyectadas</td>
+            <td style="width:70px; text-align:center;" class="celda_gris_roja tramite-recap"><div class="numeros"><?php echo $total_negocios_tramite ?></div> Negocios en <br>  Tramite</td>
+            <td style="width:100px;text-align:right" class="celda_gris_roja tramite-recap"><div class="numeros">$<?php echo number_format($total_primas_tramite) ?></div> En Tramite</td>
+            <td style="width:70px; text-align:center;" class="celda_gris_amarilla pendientes-recap"><div class="numeros"><?php echo $total_negocio_pendiente ?></div> Negocios Pendientes</td>
+            <td style="width:100px;text-align:right" class="celda_gris_amarilla pendientes-recap"><div class="numeros">$<?php echo number_format($total_primas_pendientes)?></div> Pendientes</td>
+            <td style="width:70px; text-align:center;" class="celda_gris_verde"><div class="numeros" id="negocio-recap"><?php echo $total_negocios_proyectados ?></div> Negocios Proyectados</td>
+            <td style="width:100px;text-align:right" class="celda_gris_verde"><div class="numeros" id="prima-recap">$<?php echo number_format($total_primas_proyectados) ?></div> Proyectadas</td>
         </tr>
     </table>
 </div>  

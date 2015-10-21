@@ -94,6 +94,9 @@ if ($is_sales_planning) :?>
         </form>
 </div>
 <?php endif; ?>
+
+<?php if ($is_sales_planning && ($other_filters['ramo'] != 3)) echo $report_columns; ?>
+
                         <div class="main clearfix">                               
                             <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="vida" <?php if ($other_filters['ramo'] == 1) echo 'style="color:#06F"' ?>>Vida</a>
                             <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" <?php if ($other_filters['ramo'] == 2) echo 'style="color:#06F"' ?>>GMM</a>

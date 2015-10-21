@@ -399,7 +399,8 @@ class Director extends CI_Controller {
 			'other_filters' => $this->other_filters,
 			'report_lines' => $report_lines,
 			'export_xls' => $this->access_export_xls,
-			'page' => $page
+			'page' => $page,
+			'report_columns' => $this->load->view('filters/report_columns', array(), true)
 			);
 		$filter_view = $this->load->view('filters/report', $content_data, true);
 		
@@ -507,6 +508,7 @@ class Director extends CI_Controller {
 </style>'
 			),
 			'scripts' =>  array(
+				'<script type="text/javascript" src="'.$base_url.'scripts/jquery.cookie.js"></script>',
 				'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/jquery.validate.js"></script>',
 				'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/es_validator.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
@@ -519,6 +521,7 @@ class Director extends CI_Controller {
 				'<script type="text/javascript" src="'.$base_url.'ot/assets/scripts/jquery.fancybox.js"></script>',
 				'<script type="text/javascript" src="'.$base_url.'director/assets/scripts/director.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'scripts/report_columns.js"></script>',
 				$inline_js,
 			),
 			'content' => 'director/director_profile',

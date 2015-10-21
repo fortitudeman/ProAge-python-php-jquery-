@@ -1759,6 +1759,7 @@ alert("changed!");
 			'period_fields' => show_period_fields('ot_reporte', $other_filters['ramo']),
 			'other_filters' => $other_filters,
 			'export_xls' => $this->access_export_xls,
+			'report_columns' => $this->load->view('filters/report_columns', array(), true)
 			);
 		$filter_view = $this->load->view('filters/report', $filter_data, true);
 
@@ -1784,6 +1785,7 @@ alert("changed!");
 </style>',
 		),
 		  'scripts' =>  array(
+			'<script type="text/javascript" src="'.base_url().'scripts/jquery.cookie.js"></script>',
 		  	'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
 			//'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
@@ -1798,6 +1800,7 @@ alert("changed!");
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
 			'<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>',
 			'<script type="text/javascript" src="'. base_url() .'scripts/select_period.js"></script>',
+			'<script type="text/javascript" src="'. base_url() .'scripts/report_columns.js"></script>',
 			$inline_js,
 '
 <script type="text/javascript">

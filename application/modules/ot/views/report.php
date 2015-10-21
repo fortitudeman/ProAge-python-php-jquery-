@@ -30,8 +30,6 @@ $selected_period = get_filter_period();
     </ul>
 </div>
 
-
-
 <div class="row-fluid sortable">		
     <div class="box span12">      
         <div class="box-content">
@@ -45,7 +43,6 @@ $selected_period = get_filter_period();
                     </div>
                 <?php endif; ?>
 
-
                 <?php if ($message['type'] == false): ?>
                     <div class="alert alert-error">
                         <button type="button" class="close" data-dismiss="alert">×</button>
@@ -54,7 +51,7 @@ $selected_period = get_filter_period();
                     </div>
                 <?php endif; ?>			
             <?php endif; ?> 
-
+<?php if ($other_filters['ramo'] != 3) echo $report_columns; ?>
 
             <div class="row">
                 <div class="span11" style="margin-left:40px; width:95%">
