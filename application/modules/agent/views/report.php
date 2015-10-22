@@ -17,6 +17,13 @@ $base_url = base_url();
 $selected_filter_period = array(1 => '', 2 => '', 3 => '', 4 => '');
 $selected_filter_period[$filter['periodo']] = ' selected="selected"';
 ?>
+
+<?php if ($filter['ramo'] != 3): ?>
+            <div class="row">
+<?php echo $report_columns; ?>
+            </div>
+<?php endif; ?>
+
             <div class="row">
                 <form id="form" method="post" action="<?php echo current_url() ?>">
                     <button value="1" class="btn-ramo link-ramo <?php if ($filter['ramo'] == 1) echo 'btn-ramo-current' ?>">Vida</button>
@@ -128,58 +135,44 @@ switch ($filter['ramo'])
                 </div> 
             </td>
             <td class="celda_gris" style="text-align:right;">
-                <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'negocio'})">
-                <?php echo $value['negocio'] ; ?>
-                </a>
+                <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'negocio'})"><?php echo $value['negocio'] ; ?></a>
             </td>
             <td class="celda_gris" style="text-align:right;">
-                <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'negociopai'})">
-                <?php echo $negocio_pai; ?>
-                </a>
+                <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'negociopai'})"><?php echo $negocio_pai; ?></a>
 				</td>
-            <td class="celda_gris" style="text-align:right">
-                <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'prima'})">
-                    $<?php echo number_format($value['prima'],2) ; ?>
-                </a>
+            <td class="celda_gris prima" style="text-align:right">
+                <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'prima'})">$<?php echo number_format($value['prima'],2) ; ?></a>
 				</td>
             <td class="celda_roja" style="text-align:center;">
 <?php if (!$value['tramite']): ?>
                 <span class="numeros fancybox">0</span>
 <?php else: ?>
-                <a class="numeros fancybox"   style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo $filter['ramo']; ?>")' <?php }?>>
-                    <?php if(isset($value['tramite']['count'])) echo $value['tramite']['count']; else echo 0; ?>
-                </a>
+                <a class="numeros fancybox" style="text-align:right" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo $filter['ramo']; ?>")' <?php }?>><?php if(isset($value['tramite']['count'])) echo $value['tramite']['count']; else echo 0; ?></a>
 <?php endif; ?>
             </td>
-            <td class="celda_roja" style="text-align:right;" >
+            <td class="celda_roja prima" style="text-align:right;" >
 <?php if (!$value['tramite']): ?>
                 <span class="numeros fancybox">$0.00</span>
 <?php else: ?>
-                <a class="numeros fancybox" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo $filter['ramo']; ?>")' <?php }?>>
-                    $<?php if( isset( $value['tramite']['adjusted_prima'] ) ) echo number_format($value['tramite']['adjusted_prima'],2); else echo number_format ('0',2); ?>
-                </a>
+                <a class="numeros fancybox" <?php if($value['tramite']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['tramite']['work_order_ids']);?>,"no","<?php echo $filter['ramo']; ?>")' <?php }?>>$<?php if( isset( $value['tramite']['adjusted_prima'] ) ) echo number_format($value['tramite']['adjusted_prima'],2); else echo number_format ('0',2); ?></a>
 <?php endif; ?>
             </td>
             <td class="celda_amarilla" style="text-align:center;">
 <?php if (!$value['aceptadas']): ?>
                 <span class="numeros fancybox">0</span>
 <?php else: ?>
-                <a class="numeros fancybox"  style="text-align:center;" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $filter['ramo']; ?>")' <?php }?>>
-                    <?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?>
-                </a>
+                <a class="numeros fancybox" style="text-align:center;" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $filter['ramo']; ?>")' <?php }?>><?php if( isset( $value['aceptadas']['count'] ) ) echo  $value['aceptadas']['count']; else  echo $value['aceptadas'] ?></a>
 <?php endif; ?>
             </td>
-            <td class="celda_amarilla" style="text-align:right;">
+            <td class="celda_amarilla prima" style="text-align:right;">
 <?php if (!$value['aceptadas']): ?>
                 <span class="numeros fancybox">$0.00</span>
 <?php else: ?>
-                <a class="numeros fancybox"  <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $filter['ramo']; ?>")' <?php }?>>
-                    $<?php if( isset( $value['aceptadas']['adjusted_prima'] ) ) echo number_format($value['aceptadas']['adjusted_prima'],2); else  echo number_format($value['aceptadas'],2); ?>
-                </a>
+                <a class="numeros fancybox" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $filter['ramo']; ?>")' <?php }?>>$<?php if( isset( $value['aceptadas']['adjusted_prima'] ) ) echo number_format($value['aceptadas']['adjusted_prima'],2); else  echo number_format($value['aceptadas'],2); ?></a>
 <?php endif; ?>
             </td>
             <td class="celda_verde"><div class="numeros" style="text-align:center;"><?php echo $negocio ?></div></td>
-            <td class="celda_verde"><div class="numeros" style="text-align:right">$<?php echo number_format($prima,2); ?></div></td>
+            <td class="celda_verde prima"><div class="numeros" style="text-align:right">$<?php echo number_format($prima,2); ?></div></td>
         </tr>
     <?php endif; ?>
     </tbody>

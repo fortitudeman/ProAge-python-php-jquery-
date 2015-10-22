@@ -340,6 +340,7 @@ class Agent extends CI_Controller {
 			'filter' => $filter,
 			'value' => $value,
 			'period_form' => show_custom_period(),
+			'report_columns' => $this->load->view('filters/report_columns', array(), true)
 			);
 		$sub_page_content = $this->load->view('report', $content_data, true);
 
@@ -356,6 +357,7 @@ class Agent extends CI_Controller {
 				'<link rel="stylesheet" href="'. $base_url .'ot/assets/style/jquery.fancybox.css">'
 			),
 			'scripts' =>  array(
+				'<script type="text/javascript" src="'.$base_url.'scripts/jquery.cookie.js"></script>',
 				'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/jquery.validate.js"></script>',
 				'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/es_validator.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
@@ -368,6 +370,7 @@ class Agent extends CI_Controller {
 				'<script type="text/javascript" src="'.$base_url.'ot/assets/scripts/jquery.fancybox.js"></script>',
 				'<script type="text/javascript" src="'.$base_url.'agent/assets/scripts/agent.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'scripts/custom-period.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'scripts/report_columns.js"></script>',
 '
 <script type="text/javascript">
 	function payment_popup(params) {
