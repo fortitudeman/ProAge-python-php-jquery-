@@ -2681,7 +2681,7 @@ class User extends CI_Model{
 		return $this->_getCartera( FALSE, $agent_id, $filter);
 	}
 
-	// Common method for getting count of negocios (first param = TRUE) and details of negocios (first param = FALSE) 
+	// Common method for getting count of carteras (first param = TRUE) and details of carteras (first param = FALSE) 
 	private function _getCartera( $count_requested = TRUE, $agent_id = null, $filter = array()) {
 
 		if ( empty( $agent_id ) && $count_requested)
@@ -2734,7 +2734,7 @@ class User extends CI_Model{
 			if ($agent_id && is_array($agent_id))
 				$this->db->where_in('agent_id', $agent_id);
 			$query = $this->db->get();
-log_message('error', "details:\n" . $this->db->last_query());
+
 			$result = array();
 			if ($query->num_rows() > 0) {
 				foreach ($query->result() as $row) {
