@@ -777,7 +777,10 @@ implode(', ', $ramo_tramite_types) . '
 				break;
 			case 'prima':
 				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );
-				break;				
+				break;
+			case 'cartera':
+				$data['values'] = $this->user->getCarteraDetails( $this->input->post('for_agent_id'), $filter );
+				break;		
 			default:
 				exit('Ocurrio un error. Consulte a su administrador.');
 				break;

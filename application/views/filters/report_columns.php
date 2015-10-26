@@ -2,14 +2,14 @@
 <?php
 /*
 
-  Author		Ulises Rodríguez
-  Site:			http://www.ulisesrodriguez.com
-  Twitter:		https://twitter.com/#!/isc_ulises
-  Facebook:		http://www.facebook.com/ISC.Ulises
-  Github:		https://github.com/ulisesrodriguez
-  Email:		ing.ulisesrodriguez@gmail.com
-  Skype:		systemonlinesoftware
-  Location:		Guadalajara Jalisco Mexíco
+  Author		
+  Site:			
+  Twitter:		
+  Facebook:		
+  Github:		
+  Email:		
+  Skype:		
+  Location:		Mexíco
 
  */
 ?>
@@ -21,5 +21,6 @@
      <input type="checkbox" id="box-pagadas" value="pagadas" checked="checked">Primas pagadas
      &nbsp;&nbsp;<input type="checkbox" id="box-tramite" value="tramite" checked="checked">Primas en trámite
      &nbsp;&nbsp;<input type="checkbox" id="box-pendientes" value="pendientes" checked="checked">Primas pendientes de pago
+     &nbsp;&nbsp;<input type="checkbox" id="box-cartera" value="cartera" checked="checked">Carteras
 </div>
 </div>

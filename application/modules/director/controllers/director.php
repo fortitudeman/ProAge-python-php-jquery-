@@ -268,7 +268,7 @@ class Director extends CI_Controller {
 			}
 		});
 
-		var viewportHeight = window.innerHeight-20;
+		var viewportHeight = window.innerHeight - 20;
 		if (viewportHeight > 1000)
 			viewportHeight = 1000;
 		var allRowsHeight = parseInt($("#add-payment-container").css("line-height"), 10);
@@ -931,7 +931,10 @@ $( document ).ready( function(){
 				break;
 			case 'prima':
 				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );
-				break;				
+				break;
+			case 'cartera':
+				$data['values'] = $this->user->getCarteraDetails( $this->input->post('for_agent_id'), $filter );
+				break;		
 			default:
 				exit('Ocurrio un error. Consulte a su administrador.');
 				break;

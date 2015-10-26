@@ -92,10 +92,10 @@ switch ($filter['ramo'])
 	case 1:
 	case 2:
 ?>
-<table class="sortable altrowstable tablesorter" id="sorter-report1" style="width:100%;">
+<table class="sortable altrowstable tablesorter" id="sorter-report1">
     <thead class="head">
         <tr>
-            <th id="table_agents" class="header_manager" style="width:auto; text-align:center; display: none">Agentes</th>
+            <th id="table_agents" class="header_manager" style="text-align:center; display: none">Agentes</th>
             <th id="total_negocio" class="header_manager" style="width:70px; text-align:center; ">Negocios Pagados</th>
             <th id="total_negocio_pai" class="header_manager" style="width:70px; text-align:center; ">Negocios<br>PAI</th>
             <th id="total_primas_pagadas" class="header_manager" style="width:100px; text-align:center; ">Primas<br>Pagadas</th>
@@ -103,6 +103,7 @@ switch ($filter['ramo'])
             <th id="total_primas_tramite" class="header_manager" style="width:100px; text-align:center; ">Primas <br> en Tramite</th>
             <th id="total_negocio_pendiente" class="header_manager" style="width:70px; text-align:center; ">Negocios Pendientes</th>
             <th id="total_primas_pendientes" class="header_manager" style="width:100px; text-align:center; ">Primas <br> Pendientes</th>
+            <th id="total_cartera" class="header_manager" style="width:70px; text-align:center; ">Carteras</th>
             <th id="total_negocios_proyectados" class="header_manager" style="width:70px; text-align:center; ">Negocios Proyectados</th>
             <th id="total_primas_proyectados" class="header_manager" style="width:100px; text-align:center; ">Primas <br> Proyectadas</th>
         </tr>
@@ -118,7 +119,7 @@ switch ($filter['ramo'])
 			$primas_pendientes_pago = $value['aceptadas']['adjusted_prima'];		
 		else			
 			$primas_pendientes_pago = $value['aceptadas'];
-		$negocio = (int)($value['negocio'] + $value['tramite']['count'] + $negocios_pendientes_pago);		
+		$negocio = (int)($value['negocio'] + $value['tramite']['count'] + $negocios_pendientes_pago + $value['cartera']);		
 		$prima = (float)($value['prima'] + $value['tramite']['adjusted_prima'] + $primas_pendientes_pago);
 		if (is_array($value['negociopai']))
 		{
@@ -168,9 +169,12 @@ switch ($filter['ramo'])
 <?php if (!$value['aceptadas']): ?>
                 <span class="numeros fancybox">$0.00</span>
 <?php else: ?>
-                <a class="numeros fancybox" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $filter['ramo']; ?>")' <?php }?>>$<?php if( isset( $value['aceptadas']['adjusted_prima'] ) ) echo number_format($value['aceptadas']['adjusted_prima'],2); else  echo number_format($value['aceptadas'],2); ?></a>
+                <a class="numeros fancybox" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $filter['ramo']; ?>")' <?php }?>>$<?php if( isset( $value['aceptadas']['adjusted_prima'] ) ) echo number_format($value['aceptadas']['adjusted_prima'],2); else  echo number_format($value['aceptadas'],2); ?></a>
 <?php endif; ?>
             </td>
+			<td class="celda_cartera" style="text-align:right;">
+				<a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'cartera'})"><?php echo $value['cartera'] ; ?></a>
+			</td>
             <td class="celda_verde"><div class="numeros" style="text-align:center;"><?php echo $negocio ?></div></td>
             <td class="celda_verde prima"><div class="numeros" style="text-align:right">$<?php echo number_format($prima,2); ?></div></td>
         </tr>
@@ -182,7 +186,7 @@ switch ($filter['ramo'])
 	case 3:
 ?>
 <table class="sortable altrowstable tablesorter" id="sorter-report3" style="width:100%;">
-    <thead  class="head">
+    <thead class="head">
         <tr>
             <th id="table_agents" class="header_manager" style="width:100px; display: none">Agentes</th>
             <th id="total_negocio" class="header_manager" style="width:70px;">Iniciales </th>

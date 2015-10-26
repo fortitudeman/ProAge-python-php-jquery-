@@ -27,31 +27,32 @@ $is_director_module = ($segments[1] == 'director');
 </script>
 
 <?php
-    $total_negocio=0;
-    $total_negocio_pai=0;
-    $total_primas_pagadas=0;
-    $total_negocios_tramite=0;
-    $total_primas_tramite=0;
-    $total_negocio_pendiente=0;
-    $total_primas_pendientes=0;
-    $total_negocios_proyectados=0;
-    $total_primas_proyectados=0;
+    $total_negocio = 0;
+    $total_negocio_pai = 0;
+    $total_primas_pagadas = 0;
+    $total_negocios_tramite = 0;
+    $total_primas_tramite = 0;
+    $total_negocio_pendiente = 0;
+    $total_primas_pendientes = 0;
+    $total_cartera = 0;
+    $total_negocios_proyectados = 0;
+    $total_primas_proyectados = 0;
 //    $tata = json_encode($tata);
 	if (is_array($tata))
 		$tata = json_encode($tata);
 ?>
 
-
-<table  class="sortable altrowstable tablesorter" id="sorter-report2"  style="width:100%;">
+<table class="sortable altrowstable tablesorter" id="sorter-report2">
     <thead class="head">
         <tr>
-            <th id="table_agents" class="header_manager" style="width:auto; text-align:center; ">Agentes</th>
+            <th id="table_agents" class="header_manager" style="text-align:center; ">Agentes</th>
             <th id="total_negocio" class="header_manager" style="width:70px; text-align:center; ">Negocios Pagados</th>
             <th id="total_primas_pagadas" class="header_manager" style="width:100px; text-align:center; ">Primas<br>Pagadas</th>
             <th id="total_negocios_tramite" class="header_manager" style="width:70px; text-align:center; ">Negocios <br> en  Tramite</th>
             <th id="total_primas_tramite" class="header_manager" style="width:100px; text-align:center; ">Primas <br> en Tramite</th>
             <th id="total_negocio_pendiente" class="header_manager" style="width:70px; text-align:center; ">Negocios Pendientes</th>
             <th id="total_primas_pendientes" class="header_manager" style="width:100px; text-align:center; ">Primas <br> Pendientes</th>
+            <th id="total_cartera" class="header_manager" style="width:70px; text-align:center; ">Carteras</th>
             <th id="total_negocios_proyectados" class="header_manager" style="width:70px; text-align:center; ">Negocios Proyectados</th>
             <th id="total_primas_proyectados" class="header_manager" style="width:100px; text-align:center; ">Primas <br> Proyectadas</th>
         </tr>
@@ -61,10 +62,10 @@ $is_director_module = ($segments[1] == 'director');
         <?php  
         if( !empty($data)): ?>
             <?php  
-            foreach( $data as $key=>$value ):  ?>
+            foreach( $data as $key=>$value ): ?>
         
             <?php            
-                $negocio = 0;
+        $negocio = 0;
 		$prima = 0;		
 		$negocio += (int)$value['negocio'];		
 		$negocio += (int)$value['tramite']['count'];		
@@ -79,7 +80,9 @@ $is_director_module = ($segments[1] == 'director');
 			$prima += (float)$value['aceptadas']['adjusted_prima']; 		
 		else			
 			$prima += (float)$value['aceptadas'];		
-		if( $value['disabled'] == 1 ) $value['disabled'] = 'Vigente'; else $value['disabled'] = 'Cancelado';		
+		if( $value['disabled'] == 1 )
+			$value['disabled'] = 'Vigente';
+		else $value['disabled'] = 'Cancelado';		
 		$total_negocio += $value['negocio'];		
 		$total_negocio_pai += $value['negociopai'];		
 		$total_primas_pagadas +=$value['prima'];
@@ -87,18 +90,20 @@ $is_director_module = ($segments[1] == 'director');
 		if (isset($value['tramite']['adjusted_prima']))
 			$total_primas_tramite +=  $value['tramite']['adjusted_prima'];		
 		
-		if(isset($value['aceptadas']['count']))			
-			$total_negocio_pendiente +=  $value['aceptadas']['count']; 		
+		if (isset($value['aceptadas']['count']))			
+			$total_negocio_pendiente += $value['aceptadas']['count']; 		
 		else 			
 			$total_negocio_pendiente += $value['aceptadas'];
 		
-		if( isset( $value['aceptadas']['adjusted_prima'] ) ) 			
+		if ( isset( $value['aceptadas']['adjusted_prima'] ) ) 			
 			$total_primas_pendientes +=  $value['aceptadas']['adjusted_prima'];		
 		else			
-			$total_primas_pendientes += $value['aceptadas'];	
-		$total_negocios_proyectados +=$negocio;
-		$total_primas_proyectados +=$prima;          
-            ?>															
+			$total_primas_pendientes += $value['aceptadas'];
+
+		$total_cartera += $value['cartera'];
+		$total_negocios_proyectados += $negocio + $value['cartera'];
+		$total_primas_proyectados += $prima;
+            ?>
             <tr id="tr_<?php echo $value['id'] ?>">
                 <td class="">                
                     <div class="text_azulado" id="<?php echo $value['id'] ?>">
@@ -118,6 +123,9 @@ $is_director_module = ($segments[1] == 'director');
                     <a class="numeros fancybox" style="text-align:center;" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles"  onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo  $tata; ?>")' <?php }?>><?php if( isset( $value['aceptadas']['count'] ) ) echo $value['aceptadas']['count']; else  echo $value['aceptadas'] ?></a>
                 </td>
                 <td class="celda_amarilla prima" style="text-align:right;"><a class="numeros fancybox" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $tata; ?>")' <?php }?>>$<?php if( isset( $value['aceptadas']['adjusted_prima'] ) ) echo number_format($value['aceptadas']['adjusted_prima'],2); else  echo number_format($value['aceptadas'],2); ?></a>
+                </td>
+                <td class="celda_cartera" style="text-align:right;">
+                    <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'cartera'})"><?php echo $value['cartera'] ; ?></a>
                 </td>
                 <td class="celda_verde"><div class="numeros" style="text-align:center;"><?php echo $negocio ?></div></td>
                 <td class="celda_verde prima"><div class="numeros" style="text-align:right">$<?php echo number_format($prima,2); ?></div></td>
@@ -212,11 +220,10 @@ $is_director_module = ($segments[1] == 'director');
     </tbody>
 </table>
 
-
 <div id="contentFoot" style="width:77% !important;">
     <table class="sortable altrowstable tablesorter" id="Tfoot" style="min-width:100% !important;" >
         <tr>
-            <td ><div class="text_total">Totales</div></td>
+            <td id="id-total"><div class="text_total">Totales</div></td>
             <td class="pagadas-recap" style="width:70px; text-align:center;"><div class="numeros">
             <a class="numeros fancybox_blanco" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({type: 'negocio'})">
               <?php echo $total_negocio?></a>
@@ -231,6 +238,7 @@ $is_director_module = ($segments[1] == 'director');
             <td style="width:100px;text-align:right" class="celda_gris_roja tramite-recap"><div class="numeros">$<?php echo number_format($total_primas_tramite) ?></div> En Tramite</td>
             <td style="width:70px; text-align:center;" class="celda_gris_amarilla pendientes-recap"><div class="numeros"><?php echo $total_negocio_pendiente ?></div> Negocios Pendientes</td>
             <td style="width:100px;text-align:right" class="celda_gris_amarilla pendientes-recap"><div class="numeros">$<?php echo number_format($total_primas_pendientes)?></div> Pendientes</td>
+            <td class="cartera-recap" style="width:70px; text-align:center;"><div class="numeros"><?php echo $total_cartera ?></div>Carteras</td>
             <td style="width:70px; text-align:center;" class="celda_gris_verde"><div class="numeros" id="negocio-recap"><?php echo $total_negocios_proyectados ?></div> Negocios Proyectados</td>
             <td style="width:100px;text-align:right" class="celda_gris_verde"><div class="numeros" id="prima-recap">$<?php echo number_format($total_primas_proyectados) ?></div> Proyectadas</td>
         </tr>

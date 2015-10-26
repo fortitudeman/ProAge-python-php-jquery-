@@ -16,23 +16,27 @@ $( document ).ready(function() {
 	var showPagadas = true;
 	var showTramite = true;
 	var showPendientes = true;
+	var showCartera = true;
 
 	function initShowCols() {
 		var colToShow = $.cookie('colToShow');
 		if ((typeof colToShow !== "undefined") && (colToShow != null)) {
 			var showArray = colToShow.split('_');
-			if (showArray.length >= 3) {
+			if (showArray.length >= 4) {
 				showPagadas = (showArray[0] === 'true');
 				showTramite = (showArray[1] === 'true');
 				showPendientes = (showArray[2] === 'true');
+				showCartera = (showArray[3] === 'true');
 				if (!showPagadas)
 					$('#box-pagadas').prop('checked', false);
 				if (!showTramite)
 					$('#box-tramite').prop('checked', false);
 				if (!showPendientes)
 					$('#box-pendientes').prop('checked', false);
+				if (!showCartera)
+					$('#box-cartera').prop('checked', false);
 			}
-		} else {
+//		} else {
 		}
 	}
 	function showHideCols() {
@@ -82,12 +86,25 @@ $( document ).ready(function() {
 						$('.pendientes-recap').hide();
 					}
 					break;
+				case 'cartera':
+					showCartera = $(this).is(':checked');
+					if (showCartera) {
+						$('#total_cartera').show();
+						$('.celda_cartera').show();
+						$('.cartera-recap').show();
+					} else {
+						$('#total_cartera').hide();
+						$('.celda_cartera').hide();
+						$('.cartera-recap').hide();
+					}
+					break;
 				default:
 					break;
 			}
 		});
 		var colToShow = showPagadas.toString() + '_' + 
-			showTramite.toString() + '_' + showPendientes.toString();
+			showTramite.toString() + '_' + showPendientes.toString() + '_' +
+			showCartera.toString();
 //		$.cookie('colToShow', colToShow);
 		$.cookie('colToShow', colToShow , { expires: 7 });
 
@@ -142,6 +159,19 @@ $( document ).ready(function() {
 					}
 				}
 
+				if (showCartera) {
+					if ($(this).hasClass('celda_cartera')) {
+						if ($(this).hasClass('prima')) {
+							currentValue = parseFloat(currentValue.replace(/\$|\,/g, ''));
+							primasProyectadas += currentValue;
+						} else {
+							currentValue = parseInt(currentValue, 10);
+							if (currentValue)
+								negociosProyectados += currentValue;
+						}
+					}
+				}
+
 				if ($(this).hasClass('celda_verde')) {
 					if ($(this).hasClass('prima')) {	
 						$(this).children('.numeros').eq(0).text('$' + primasProyectadas.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
@@ -156,6 +186,15 @@ $( document ).ready(function() {
 // totals:
 		$('#negocio-recap').text(negociosTotal);
 		$('#prima-recap').text('$' + primasTotal.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,"));
+// Tables and Column widths
+		if (agentColWidth)
+			$('#table_agents').width(agentColWidth);
+		if (resultTableWidth) {
+			$('#sorter-report1').width(resultTableWidth);
+			$('#sorter-report2').width(resultTableWidth);
+		}
+		if (idTotal)
+			$("#id-total").width(idTotal);
 	}
 
 	$('#select-columns-display :checkbox').change(function() {
@@ -168,5 +207,13 @@ $( document ).ready(function() {
 	});
 
 	initShowCols();
+
+	var resultTableWidth = $('#sorter-report1').width();
+	if (!resultTableWidth)
+		resultTableWidth = $('#sorter-report2').width();
+	var agentColWidth = $('#table_agents').width();
+	var idTotal = $('#id-total').width();
+
 	showHideCols();
+
 });
