@@ -157,7 +157,6 @@ class Usuarios extends CI_Controller {
 					else
 						$redirect_to = $home_page['uri_segments'];
 					$this->session->set_userdata('proages_home', $redirect_to);
-
 					redirect( $redirect_to, 'refresh' );
 				}else{
 					// Set false message		
@@ -184,6 +183,21 @@ class Usuarios extends CI_Controller {
 		);
 		// Render view 
 		$this->load->view( 'login', $this->view );	
+	}
+
+	public function populate_policy_primas()
+	{
+		$this->benchmark->mark('code_start');
+		$inserted_rows = $this->_populate_policy_primas();
+		$this->benchmark->mark('code_end');
+		$elapsed = $this->benchmark->elapsed_time('code_start', 'code_end');
+		echo "$inserted_rows inserted in the new table in $elapsed sec..";
+	}
+
+	private function _populate_policy_primas()
+	{
+		$this->load->model( 'policy_model' );
+		return $this->policy_model->populate_adjusted_primas();
 	}
 
 // User logout	

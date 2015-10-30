@@ -1884,6 +1884,9 @@ class User extends CI_Model{
 
 	public function getReport( $filter = array(), $meta = false )
 	{
+		$agent_id = null;
+		$this->getPrimasDueDates( $agent_id, $filter);
+
 	/**
 	 *	SELECT users.*, agents.id as agent_id
 		FROM `agents`
@@ -2436,10 +2439,13 @@ class User extends CI_Model{
 	$this->db->where( 'users.id', $userid );
 	$query = $this->db->get(); 
 
-	if ($query->num_rows() == 0) return false;		
+	if ($query->num_rows() == 0)
+		return false;
 	$report = array();
 	foreach ($query->result() as $row)
 	{
+//		$this->getPrimasDueDates( $row->agent_id, $filter); // This does not seem a good idea here
+
 		$name = null;
 		if( empty(  $row->company_name ) )
 			$name =  $row->name. ' ' . $row->lastnames;
@@ -3607,6 +3613,7 @@ AND
 					'count' => 0,
 					'adjusted_prima' => 0);
 			}
+
 			foreach ($query->result() as $row)
 			{
 				$tramite[$row->user_id]['count']++;
@@ -3668,7 +3675,11 @@ AND
 			$aceptadas['count'] = 0;		
 			foreach ($query->result() as $row)
 			{
-				$aceptadas['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period) * $row->percentage / 100;
+				if (isset($this->primasDueDates[$row->policy_id]['adjusted_prima']))
+					$adjusted_prima = $this->primasDueDates[$row->policy_id]['adjusted_prima'];
+				else
+					$adjusted_prima = $this->get_adjusted_prima($row->policy_id, $ramo, $period);
+				$aceptadas['adjusted_prima'] += $adjusted_prima * $row->percentage / 100;
 		/*
 		SELECT SUM( prima )
 		FROM policies
@@ -3701,7 +3712,11 @@ AND
 			}
 			foreach ($query->result() as $row)
 			{
-				$aceptadas[$row->user_id]['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period) * $row->percentage / 100;
+				if (isset($this->primasDueDates[$row->policy_id]['adjusted_prima']))
+					$adjusted_prima = $this->primasDueDates[$row->policy_id]['adjusted_prima'];
+				else
+					$adjusted_prima = $this->get_adjusted_prima($row->policy_id, $ramo, $period);
+				$aceptadas[$row->user_id]['adjusted_prima'] += $adjusted_prima * $row->percentage / 100;
 				$aceptadas[$row->user_id]['work_order_ids'][] = $row->work_order_id;
 				$aceptadas[$row->user_id]['count']++;
 			}
@@ -4186,6 +4201,123 @@ AND
 					$this->db->where_in('agent_id', $this->agent_name_where_in);
 			}
 		}
+	}
+
+	public $primasDueDates = array();
+
+	public function getPrimasDueDatesCached()
+	{
+		return $this->primasDueDates;
+	}
+
+	// Adjusted Primas and due dates
+	public function getPrimasDueDates( $agent_id = null, $filter = array()) 
+	{
+		$result = array();
+		$this->db->select( 'policy_adjusted_primas.*, policies_vs_users.user_id as agent_ident, users.disabled' );
+		$this->db->from( 'policy_adjusted_primas' );
+		$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policy_adjusted_primas.policy_id' );
+		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );	
+		$this->db->join( 'users', 'users.id=agents.user_id' );				
+
+		if ( !empty( $filter ) && !empty( $filter['query']['periodo']))
+		{
+			/*
+			<option value="1">Mes</option>
+			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+			<option value="3">Año</option>
+			*/
+			switch ( $filter['query']['periodo'])
+			{
+				case 1:
+					$year = date( 'Y' );
+					$month = date( 'm' );
+					$next_month = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
+					$this->db->where( array(
+						'policy_adjusted_primas.due_date >= ' => $year . '-' . $month . '-01',
+						'policy_adjusted_primas.due_date < ' => $next_month,
+						)); 
+					break;
+				case 2:
+					$this->load->helper('tri_cuatrimester');
+					if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 )
+						$begin_end = get_tri_cuatrimester( $this->cuatrimestre(), 'cuatrimestre' ) ;
+					else
+						$begin_end = get_tri_cuatrimester( $this->trimestre(), 'trimestre' );
+
+					if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
+						$this->db->where( array(
+							'policy_adjusted_primas.due_date >= ' => $begin_end['begind'],
+							'policy_adjusted_primas.due_date <=' =>  $begin_end['end']) );
+					break;
+				case 3:
+					$year = date( 'Y' );
+					$this->db->where( array(
+						'policy_adjusted_primas.due_date >= ' => $year . '-01-01',
+						'policy_adjusted_primas.due_date <= ' => $year . '-12-31 23:59:59'
+						)); 
+					break;
+				case 4:
+					$from = $this->custom_period_from;
+					$to = $this->custom_period_to;
+					if ( ( $from === FALSE ) || ( $to === FALSE ) )
+					{
+						$from = date('Y-m-d');
+						$to = $from;
+					}
+					$this->db->where( array(
+						'policy_adjusted_primas.due_date >= ' => $from . ' 00:00:00',
+						'policy_adjusted_primas.due_date <=' => $to . ' 23:59:59') );
+					break;
+				default:
+					break;
+			}
+		}
+		/*
+			<option value="">Seleccione</option>
+			<option value="1">Todos</option>
+			<option value="2">Vigentes</option>
+			<option value="3">Cancelados</option>
+		*/	
+		if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 )
+		{
+				  
+				if( $filter['query']['agent'] == 2 )
+					$this->db->where( 'users.disabled', 0 ); 
+				elseif( $filter['query']['agent'] == 3 )
+					$this->db->where( 'users.disabled', 1 ); 	
+		}
+
+		if ( isset( $filter['query']['agent_name'] ) and !empty( $filter['query']['agent_name'] ) )
+		{
+			$this->_get_agent_filter_where($filter['query']['agent_name']);
+			if ($this->agent_name_where_in)
+				$this->db->where_in('`policies_vs_users`.`user_id`', $this->agent_name_where_in);
+		}
+
+		if ($agent_id)
+			$this->db->where('`policies_vs_users`.`user_id`', $agent_id);
+
+		$with_filter = FALSE;
+		$this->_get_generation_filter($filter, $with_filter);
+
+		$query = $this->db->get();
+
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				if (!isset($this->primasDueDates[$row->policy_id]))
+					$this->primasDueDates[$row->policy_id] = array(
+						'adjusted_prima' => $row->adjusted_prima,
+						'due_date' => array($row->due_date),
+						'agent_id' => $row->agent_ident
+					);
+				else
+					$this->primasDueDates[$row->policy_id]['due_date'][] = $row->due_date;
+			}
+		}
+		$query->free_result();
 	}
 }
 ?>

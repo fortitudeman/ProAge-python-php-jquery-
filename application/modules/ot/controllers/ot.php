@@ -944,14 +944,18 @@ implode(', ', $ramo_tramite_types) . '
 			'work_order_status_id' => 7,
 			'last_updated' => date( 'd-m-Y H:i:s' )
 		);
-		if( $pago == "true" ) $work_order['work_order_status_id']=4;
+		if ( $pago == "true" )
+			$work_order['work_order_status_id'] = 4;
 
 		$this->work_order->setPolicy( $ot, $poliza );
+		
 		if ( $this->work_order->update( 'work_order', $ot, $work_order ) &&
 			( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
 			 !== FALSE)
 			)
 		{
+			$this->load->model('policy_model');
+			$this->policy_model->add_adjusted_primas($ot);
 			// Send Email
 			if ($send_notification == 1)
 				$this->_send_notification($ot, $updated);
@@ -1873,6 +1877,10 @@ alert("changed!");
 			if (isset($prev_post['periodo']))
 				$period = $prev_post['periodo'];
 		}
+
+		$this->load->model('policy_model');
+		$primas_cached = $this->policy_model->get_ot_adjusted_primas($this->input->post('wrk_ord_ids'));
+
 		$results = array();
 		$row_result = array_merge($data, array('access_update' => $this->access_update));
 		$data['values'] = array();
@@ -1886,9 +1894,17 @@ alert("changed!");
 				($row_result['value']['general'][0]->work_order_status_id == 9) ||
 				($row_result['value']['general'][0]->work_order_status_id == 7) )
 			{
+				if (isset($primas_cached[$work_order_id]) && 
+					isset($primas_cached[$work_order_id]['adjusted_prima']))
+				{
+					$ot_adjusted = $primas_cached[$work_order_id]['adjusted_prima'];
+				}
+				else
+					$ot_adjusted = $this->user->get_adjusted_prima($row_result['value']['general'][0]->policy_id,
+						$ramo, $period);
+	
 				$row_result['value']['general'][0]->adjusted_prima = 
-					$this->user->get_adjusted_prima($row_result['value']['general'][0]->policy_id,
-					$ramo, $period) * ($row_result['value']['general'][0]->p_percentage / 100);
+					$ot_adjusted * ($row_result['value']['general'][0]->p_percentage / 100);
 			}
 			$data['values'][$work_order_id]['main'] = $this->load->view('popup_report_main_row', $row_result, TRUE);
 			$data['values'][$work_order_id]['menu'] = $this->load->view('popup_report_menu_row', $row_result, TRUE);

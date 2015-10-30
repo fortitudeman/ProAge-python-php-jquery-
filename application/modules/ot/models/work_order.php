@@ -1560,25 +1560,19 @@ class Work_order extends CI_Model{
 		
 	}
 
-
-
-
 /**
  *	Activate / Desactivate
  **/	
  	public function getOtActivateDesactivate( $ot = null ){
 		
-		if( empty( $ot ) ) return false;
-		
-		
+		if( empty( $ot ) )
+			return false;
+
 		$this->db->where( 'id', $ot );		
 		$query = $this->db->get( 'work_order' );	
-					
-				
 		$ot = array();
-		
-		foreach ($query->result() as $row) {
-
+		foreach ($query->result() as $row)
+		{
 			$ot[] = array( 
 		    	'id' => $row->id,
 		    	'product_group_id' => $row->product_group_id,
@@ -1587,54 +1581,31 @@ class Work_order extends CI_Model{
 		    	'work_order_responsible_id' =>  $row->work_order_responsible_id,
 				'comments' =>  $row->comments
 		    );
-
 		}
-		
 		return $ot;
-		
 	}
-	
-	
-	public function setPolicy( $ot = null, $policy = null ){
-		
-		if( empty( $ot ) or empty( $policy ) ) return false;
-		
+
+	public function setPolicy( $ot = null, $policy = null )
+	{
+
+		if ( empty( $ot ) or empty( $policy ) )
+			return false;
+
 		$this->db->select( 'policy_id' );
 		$this->db->where( 'id', $ot );		
 		$this->db->limit(1);
 		$query = $this->db->get( 'work_order' );	
-		
-		
-		if ($query->num_rows() == 0) return false;
-		
-		
-		$policies = array();
-		
-		foreach ($query->result() as $row) {
+		if ($query->num_rows() == 0)
+			return false;
 
+		$policies = array();
+		foreach ($query->result() as $row)
 			$policies[] = array( 
 		    	'policy_id' => $row->policy_id
 		    );
 
-		}
-		
 		$updatepolicy = array( 'uid' =>  $policy );
-		
-		
-		
-		if( $this->db->update( 'policies', $updatepolicy, array( 'id' => $policies[0]['policy_id'] ) ) )
-			
-			return true;
-        
-		else
-        	
-			return false;
-		
-		
-		
-		
-		
-		
+		return $this->db->update( 'policies', $updatepolicy, array( 'id' => $policies[0]['policy_id'] ) );
 	}
 	
  

@@ -827,6 +827,10 @@ implode(', ', $ramo_tramite_types) . '
 			if (isset($prev_post['periodo']))
 				$period = $prev_post['periodo'];
 		}
+
+		$this->load->model('policy_model');
+		$primas_cached = $this->policy_model->get_ot_adjusted_primas($this->input->post('wrk_ord_ids'));
+
 		$results = array();
 		$row_result = array_merge($data, array('access_update' => $this->access_update));
 		$data['values'] = array();
@@ -840,9 +844,17 @@ implode(', ', $ramo_tramite_types) . '
 				($row_result['value']['general'][0]->work_order_status_id == 9) ||
 				($row_result['value']['general'][0]->work_order_status_id == 7) )
 			{
+				if (isset($primas_cached[$work_order_id]) && 
+					isset($primas_cached[$work_order_id]['adjusted_prima']))
+				{
+					$ot_adjusted = $primas_cached[$work_order_id]['adjusted_prima'];
+				}
+				else
+					$ot_adjusted = $this->user->get_adjusted_prima($row_result['value']['general'][0]->policy_id,
+						$ramo, $period);
+	
 				$row_result['value']['general'][0]->adjusted_prima = 
-					$this->user->get_adjusted_prima($row_result['value']['general'][0]->policy_id,
-					$ramo, $period) * ($row_result['value']['general'][0]->p_percentage / 100);
+					$ot_adjusted * ($row_result['value']['general'][0]->p_percentage / 100);
 			}
 			$data['values'][$work_order_id]['main'] = $this->load->view('ot/popup_report_main_row', $row_result, TRUE);
 			$data['values'][$work_order_id]['menu'] = $this->load->view('ot/popup_report_menu_row', $row_result, TRUE);
