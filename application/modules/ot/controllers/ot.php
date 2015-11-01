@@ -2108,7 +2108,7 @@ alert("changed!");
 							'tramite_prima' => 'Primas en Tramite',	//	(not in $data)
 							'pendientes' => 'Negocios Pendientes',
 							'pendientes_primas' => 'Primas Pendientes', //  (not in $data)
-							'cartera' => 'Carteras',
+							'cartera' => 'Cartera',
 							'negocios_proyectados' => 'Negocios Proyectados',
 							'negocios_proyectados_primas' => 'Primas Proyectadas',
 						);
@@ -2134,10 +2134,10 @@ alert("changed!");
 							$data_row['cartera'] = $value['cartera'];
 
 						$data_row['negocios_proyectados'] = (int)$data_row['pendientes'] + 
-							(int)$data_row['cartera'] + 
 							(int)$data_row['tramite'] + (int)$data_row['negociopai'] + (int)$data_row['negocio'];
 //							(int)$data_row['tramite'] + (int)$data_row['negocio']; // to make consistent with report on screen
-						$data_row['negocios_proyectados_primas'] = (float)$data_row['prima'] + 
+						$data_row['negocios_proyectados_primas'] = 
+							(float)$data_row['cartera'] + (float)$data_row['prima'] + 
 							(float)$data_row['pendientes_primas'] + (float)$data_row['tramite_prima'];
 						$total_negocio += (int)$data_row['negocio'];
 						$total_negocio_pai += (int)$data_row['negociopai'];
@@ -2148,10 +2148,11 @@ alert("changed!");
 						$total_primas_pendientes += (float)$data_row['pendientes_primas'];
 						$total_negocios_proyectados += (int)$data_row['negocios_proyectados'];
 						$total_primas_proyectados += (float)$data_row['negocios_proyectados_primas'];
-						$total_cartera += (int)$data_row['cartera'];
+						$total_cartera += (float)$data_row['cartera'];
 
 						$data_row['prima'] = '$ '.$data_row['prima'];
 						$data_row['tramite_prima'] = '$ '.$data_row['tramite_prima'];
+						$data_row['cartera'] = '$ '.$data_row['cartera'];
 						$data_row['pendientes_primas'] = '$ '.$data_row['pendientes_primas'];
 						$data_row['negocios_proyectados_primas'] = '$ '.$data_row['negocios_proyectados_primas'];
 						$data_report[] = $data_row;
@@ -2169,7 +2170,7 @@ alert("changed!");
 					'tramite_prima' => '$ '.$total_primas_tramite,
 					'pendientes' => $total_negocio_pendiente,
 					'pendientes_primas' => '$ '.$total_primas_pendientes,
-					'cartera' => $total_cartera,
+					'cartera' => '$ '.$total_cartera,
 					'negocios_proyectados' => $total_negocios_proyectados,
 					'negocios_proyectados_primas' => '$ '.$total_primas_proyectados,
 				);

@@ -1995,7 +1995,7 @@ class User extends CI_Model{
 		'tramite_prima' => 'Primas en Tramite',
 		'pendientes' => 'Negocios Pendientes',
 		'pendientes_primas' => 'Primas Pendientes',
-		'cartera' => 'Carteras',
+		'cartera' => 'Cartera',
 		'negocios_proyectados' => 'Negocios Proyectados',
 		'negocios_proyectados_primas' => 'Primas Proyectadas',
 		'iniciales' => 'Iniciales',
@@ -2269,7 +2269,7 @@ class User extends CI_Model{
 							'tramite_prima' => 'Primas en Tramite',	//	(not in $data)
 							'pendientes' => 'Negocios Pendientes',
 							'pendientes_primas' => 'Primas Pendientes', //  (not in $data)
-							'cartera' => 'Carteras',
+							'cartera' => 'Cartera',
 							'negocios_proyectados' => 'Negocios Proyectados',
 							'negocios_proyectados_primas' => 'Primas Proyectadas',
 						);
@@ -2295,10 +2295,10 @@ class User extends CI_Model{
 							$data_row['cartera'] = $value['cartera'];
 
 						$data_row['negocios_proyectados'] = (int)$data_row['pendientes'] + 
-							(int)$data_row['cartera'] + 
 							(int)$data_row['tramite'] + (int)$data_row['negociopai'] + (int)$data_row['negocio'];
 //							(int)$data_row['tramite'] + (int)$data_row['negocio']; // to make consistent with report on screen
-						$data_row['negocios_proyectados_primas'] = (float)$data_row['prima'] + 
+						$data_row['negocios_proyectados_primas'] = 
+							(float)$data_row['cartera'] + (float)$data_row['prima'] + 
 							(float)$data_row['pendientes_primas'] + (float)$data_row['tramite_prima'];
 						$total_negocio += (int)$data_row['negocio'];
 						$total_negocio_pai += (int)$data_row['negociopai'];
@@ -2309,7 +2309,7 @@ class User extends CI_Model{
 						$total_primas_pendientes += (float)$data_row['pendientes_primas'];
 						$total_negocios_proyectados += (int)$data_row['negocios_proyectados'];
 						$total_primas_proyectados += (float)$data_row['negocios_proyectados_primas'];
-						$total_cartera += (int)$data_row['cartera'];
+						$total_cartera += (float)$data_row['cartera'];
 
 						$data_row['prima'] = '$ '.$data_row['prima'];
 						$data_row['tramite_prima'] = '$ '.$data_row['tramite_prima'];
@@ -2687,7 +2687,7 @@ class User extends CI_Model{
 		return $this->_getCartera( FALSE, $agent_id, $filter);
 	}
 
-	// Common method for getting count of carteras (first param = TRUE) and details of carteras (first param = FALSE) 
+	// Common method for getting count + sum of carteras (first param = TRUE) and details of carteras (first param = FALSE) 
 	private function _getCartera( $count_requested = TRUE, $agent_id = null, $filter = array()) {
 
 		if ( empty( $agent_id ) && $count_requested)
@@ -2696,9 +2696,9 @@ class User extends CI_Model{
 		if ($count_requested)
 		{
 			if ($agent_id && is_array($agent_id))
-				$this->db->select( 'COUNT(*) as count, payments.agent_id as n_agent_id' );
+				$this->db->select( 'COUNT(*) as count, SUM(payments.amount) as total_amount, payments.agent_id as n_agent_id' );
 			else
-				$this->db->select( 'COUNT(*) as count' );
+				$this->db->select( 'COUNT(*) as count, SUM(payments.amount) as total_amount' );
 		}
 		else
 			$this->db->select( 'payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name' );    
@@ -2725,12 +2725,14 @@ class User extends CI_Model{
 			if ($query->num_rows() > 0)
 			{
 				if ($agent_id && !is_array($agent_id))
-					$result = (int)$query->row()->count;
+//					$result = (int)$query->row()->count;
+					$result = $query->row()->total_amount;
 				else
 				{
 					$result = array();
 					foreach ($query->result() as $row)
-						$result[$row->n_agent_id] = $row->count;
+//						$result[$row->n_agent_id] = $row->count;
+						$result[$row->n_agent_id] = $row->total_amount;
 				}
 			}
 			$query->free_result();
