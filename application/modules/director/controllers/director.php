@@ -496,11 +496,11 @@ class Director extends CI_Controller {
 			'user_vs_rol' => $this->user_vs_rol,
 			'roles_vs_access' => $this->roles_vs_access,
 			'css' => array(
+				'<link href="'. $base_url .'ot/assets/style/theme.default.css" rel="stylesheet">',
 				'<link rel="stylesheet" href="'. $base_url .'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'director/assets/style/director.css">',
 				'<link rel="stylesheet" href="'. $base_url .'ot/assets/style/jquery.fancybox.css">',
 				'<link href="'. $base_url .'ot/assets/style/report.css" rel="stylesheet">',
-				'<link href="'. $base_url .'ot/assets/style/theme.default.css" rel="stylesheet">',
 				'<style>
 .fancybox_blanco {color: #CCCCFF;}
 .fancybox_blanco:hover{color: #FFFFFF;}
@@ -862,10 +862,10 @@ $( document ).ready( function(){
 			'user_vs_rol' => $this->user_vs_rol,
 			'roles_vs_access' => $this->roles_vs_access,
 			'css' => array(
+				'<link href="'. $base_url .'ot/assets/style/theme.default.css" rel="stylesheet">',
 				'<link rel="stylesheet" href="'. $base_url .'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'director/assets/style/director.css">',
 				'<link href="'. $base_url .'ot/assets/style/report.css" rel="stylesheet">',
-				'<link href="'. $base_url .'ot/assets/style/theme.default.css" rel="stylesheet">',
 			),
 			'scripts' =>  array(
 				'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/jquery.validate.js"></script>',
@@ -1556,8 +1556,8 @@ $( document ).ready( function(){
 			'user_vs_rol' => $this->user_vs_rol,
 			'roles_vs_access' => $this->roles_vs_access,
 			'css' => array(
-				'<link href="' . $base_url . 'ot/assets/style/report.css" rel="stylesheet">',
 				'<link href="' . $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
+				'<link href="' . $base_url . 'ot/assets/style/report.css" rel="stylesheet">',
 				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">', // TO CHECK
 				'<link rel="stylesheet" href="'. $base_url .'operations/assets/style/operations.css">',
@@ -1656,8 +1656,8 @@ implode(', ', $ramo_tramite_types) . '
 			'user_vs_rol' => $this->user_vs_rol,
 			'roles_vs_access' => $this->roles_vs_access,
 			'css' => array(
-				'<link href="' . $base_url . 'ot/assets/style/report.css" rel="stylesheet">',
 				'<link href="' . $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
+				'<link href="' . $base_url . 'ot/assets/style/report.css" rel="stylesheet">',
 				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">', // TO CHECK
 				'

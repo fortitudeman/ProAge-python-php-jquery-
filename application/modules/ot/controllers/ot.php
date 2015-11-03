@@ -198,8 +198,8 @@ implode(', ', $ramo_tramite_types) . '
 		  'access_delete' => $this->access_delete,
 		  'access_all' => $this->access_all,
 		  'css' => array(
-			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">', 		  
 			'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',      
+			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">', 		  
 			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
 			'
 <style>
@@ -1777,12 +1777,12 @@ alert("changed!");
 		  'roles_vs_access' => $this->roles_vs_access,
 //		  'export_xls' => $this->access_export_xls,
 		  'css' => array(
-//			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',			
-			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
-			<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
+//			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
+			'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',
+			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->',
 			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">',
 			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
-			'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',
+			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
 			'<style>
 .fancybox_blanco {color: #CCCCFF;}
 .fancybox_blanco:hover{color: #FFFFFF;}

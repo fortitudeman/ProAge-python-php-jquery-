@@ -454,8 +454,8 @@ implode(', ', $ramo_tramite_types) . '
 			'user_vs_rol' => $this->user_vs_rol,
 			'roles_vs_access' => $this->roles_vs_access,
 			'css' => array(
-				'<link href="' . $base_url . 'ot/assets/style/report.css" rel="stylesheet">',
 				'<link href="' . $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
+				'<link href="' . $base_url . 'ot/assets/style/report.css" rel="stylesheet">',
 				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">',
 				'

@@ -102,8 +102,8 @@ switch ($filter['ramo'])
             <th id="total_primas_tramite" class="header_manager" style="width:100px; text-align:center; ">Primas <br> en Tramite</th>
             <th id="total_negocio_pendiente" class="header_manager" style="width:70px; text-align:center; ">Negocios Pendientes</th>
             <th id="total_primas_pendientes" class="header_manager" style="width:100px; text-align:center; ">Primas <br> Pendientes</th>
-            <th id="total_cartera" class="header_manager" style="width:70px; text-align:center; ">Cartera</th>
             <th id="total_negocios_proyectados" class="header_manager" style="width:70px; text-align:center; ">Negocios Proyectados</th>
+            <th id="total_cartera" class="header_manager" style="width:70px; text-align:center; ">Cartera</th>
             <th id="total_primas_proyectados" class="header_manager" style="width:100px; text-align:center; ">Primas <br> Proyectadas</th>
         </tr>
     </thead>
@@ -171,10 +171,10 @@ switch ($filter['ramo'])
                 <a class="numeros fancybox" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $filter['ramo']; ?>")' <?php }?>>$<?php if( isset( $value['aceptadas']['adjusted_prima'] ) ) echo number_format($value['aceptadas']['adjusted_prima'],2); else  echo number_format($value['aceptadas'],2); ?></a>
 <?php endif; ?>
             </td>
+            <td class="celda_verde"><div class="numeros" style="text-align:center;"><?php echo $negocio ?></div></td>
 			<td class="celda_cartera prima" style="text-align:right;">
 				<a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'cartera'})">$<?php echo number_format($value['cartera'], 2) ; ?></a>
 			</td>
-            <td class="celda_verde"><div class="numeros" style="text-align:center;"><?php echo $negocio ?></div></td>
             <td class="celda_verde prima"><div class="numeros" style="text-align:right">$<?php echo number_format($prima,2); ?></div></td>
         </tr>
     <?php endif; ?>
