@@ -1996,6 +1996,7 @@ class User extends CI_Model{
 		'pendientes' => 'Negocios Pendientes',
 		'pendientes_primas' => 'Primas Pendientes',
 		'cartera' => 'Cartera',
+		'cobranza' => 'Cobranza instalada',
 		'negocios_proyectados' => 'Negocios Proyectados',
 		'negocios_proyectados_primas' => 'Primas Proyectadas',
 		'iniciales' => 'Iniciales',
@@ -2055,6 +2056,7 @@ class User extends CI_Model{
 					'tramite' => array('work_order_ids' => array(), 'count' => 0, 'adjusted_prima' => 0),
 					'aceptadas' => array('work_order_ids' => array(), 'count' => 0, 'adjusted_prima' => 0),
 					'cartera' => 0,
+					'cobranza' => 0,
 					'iniciales' => 0,
 					'renovacion' => 0,
 					'uids' => array(),
@@ -2085,6 +2087,8 @@ class User extends CI_Model{
 			$tramites = $this->getTramite($agent_ids, $filter);
 			$aceptadas = $this->getAceptadas($agent_ids, $filter);
 			$carteras = $this->getCartera( $agent_ids, $filter);
+			$cobranzas = $this->getCobranza( $agent_ids, $filter);
+
 		}
 		if ($meta)
 		{
@@ -2123,6 +2127,8 @@ class User extends CI_Model{
 					$report[$value]['aceptadas'] = $aceptadas[$key];
 				if (is_array($carteras) && isset($carteras[$key]))
 					$report[$value]['cartera'] = $carteras[$key];
+				if (is_array($cobranzas) && isset($cobranzas[$key]))
+					$report[$value]['cobranza'] = $cobranzas[$key];
 			}
 		}
 	}
@@ -2209,9 +2215,10 @@ class User extends CI_Model{
 				'tramite_prima' => 0,
 				'pendientes' => 0,
 				'pendientes_primas' => 0,
-				'cartera' => 0,
+				'cobranza' => 0,
 				'negocios_proyectados' => 0,
 				'negocios_proyectados_primas' => 0,
+				'cartera' => 0,
 				);
 		else
 			$data_row = array(
@@ -2253,6 +2260,7 @@ class User extends CI_Model{
 			$total_negocios_proyectados = 0;
 			$total_primas_proyectados = 0;
 			$total_cartera = 0;
+			$total_cobranza = 0;
 			if( !empty( $data ) )
 			{
 				foreach ( $data as $key => $value )
@@ -2269,9 +2277,10 @@ class User extends CI_Model{
 							'tramite_prima' => 'Primas en Tramite',	//	(not in $data)
 							'pendientes' => 'Negocios Pendientes',
 							'pendientes_primas' => 'Primas Pendientes', //  (not in $data)
-							'cartera' => 'Cartera',
+							'cobranza' => 'Cobranza instalada',
 							'negocios_proyectados' => 'Negocios Proyectados',
 							'negocios_proyectados_primas' => 'Primas Proyectadas',
+							'cartera' => 'Cartera',
 						);
 					else
 					{
@@ -2293,13 +2302,24 @@ class User extends CI_Model{
 						}
 						if ( isset( $value['cartera'] ) )
 							$data_row['cartera'] = $value['cartera'];
+						if ( isset( $value['cobranza']) && isset($value['cobranza']['total_due']) 
+							&& isset($value['cobranza']['total_paid']) )
+							$data_row['cobranza'] = $value['cobranza']['total_due'] - $value['cobranza']['total_paid'];
 
 						$data_row['negocios_proyectados'] = (int)$data_row['pendientes'] + 
 							(int)$data_row['tramite'] + (int)$data_row['negociopai'] + (int)$data_row['negocio'];
+
+						$data_row['negocios_proyectados'] = (int)$data_row['pendientes'] + 
+							(int)$data_row['tramite'];
+						if ($ramo == 1)
+							$data_row['negocios_proyectados'] += (int)$data_row['negociopai'];
+						else
+							$data_row['negocios_proyectados'] += (int)$data_row['negocio'];
 //							(int)$data_row['tramite'] + (int)$data_row['negocio']; // to make consistent with report on screen
 						$data_row['negocios_proyectados_primas'] = 
-							(float)$data_row['cartera'] + (float)$data_row['prima'] + 
-							(float)$data_row['pendientes_primas'] + (float)$data_row['tramite_prima'];
+							(float)$data_row['prima'] + 
+							(float)$data_row['pendientes_primas'] + (float)$data_row['tramite_prima'] +
+							(float)$data_row['cobranza'];
 						$total_negocio += (int)$data_row['negocio'];
 						$total_negocio_pai += (int)$data_row['negociopai'];
 						$total_primas_pagadas += (float)$data_row['prima'];
@@ -2310,11 +2330,14 @@ class User extends CI_Model{
 						$total_negocios_proyectados += (int)$data_row['negocios_proyectados'];
 						$total_primas_proyectados += (float)$data_row['negocios_proyectados_primas'];
 						$total_cartera += (float)$data_row['cartera'];
+						$total_cobranza += (float)$data_row['cobranza'];
 
-						$data_row['prima'] = '$ '.$data_row['prima'];
-						$data_row['tramite_prima'] = '$ '.$data_row['tramite_prima'];
-						$data_row['pendientes_primas'] = '$ '.$data_row['pendientes_primas'];
-						$data_row['negocios_proyectados_primas'] = '$ '.$data_row['negocios_proyectados_primas'];
+						$data_row['prima'] = '$ '. number_format($data_row['prima']);
+						$data_row['tramite_prima'] = '$ '. number_format($data_row['tramite_prima']);
+						$data_row['pendientes_primas'] = '$ '. number_format($data_row['pendientes_primas']);
+						$data_row['negocios_proyectados_primas'] = '$ '. number_format($data_row['negocios_proyectados_primas']);
+						$data_row['cartera'] = '$ '. number_format($data_row['cartera']);
+						$data_row['cobranza'] = '$ '. number_format($data_row['cobranza']);
 
 						$data_report[] = $data_row;
 					}
@@ -2326,14 +2349,15 @@ class User extends CI_Model{
 					'connection_date' => '',
 					'negocio' => $total_negocio,
 					'negociopai' => $total_negocio_pai,
-					'prima' => '$ '.$total_primas_pagadas,
+					'prima' => '$ ' . number_format($total_primas_pagadas),
 					'tramite' => $total_negocios_tramite,
-					'tramite_prima' => '$ '.$total_primas_tramite,
+					'tramite_prima' => '$ ' . number_format($total_primas_tramite),
 					'pendientes' => $total_negocio_pendiente,
-					'pendientes_primas' => '$ '.$total_primas_pendientes,
-					'cartera' => $total_cartera,
+					'pendientes_primas' => '$ ' . number_format($total_primas_pendientes),
+					'cobranza' => '$ ' . number_format($total_cobranza),
 					'negocios_proyectados' => $total_negocios_proyectados,
-					'negocios_proyectados_primas' => '$ '.$total_primas_proyectados,
+					'negocios_proyectados_primas' => '$ ' . number_format($total_primas_proyectados),
+					'cartera' => '$ ' . number_format($total_cartera),
 				);
 			}
 		} else
@@ -2464,6 +2488,7 @@ class User extends CI_Model{
 			'negociopai' => $this->_getNegocioPai(TRUE, $row->agent_id, $filter),
 			'prima' => $this->getPrima( $row->agent_id, $filter ),
 			'cartera' => $this->getCartera( $row->agent_id, $filter ),
+			'cobranza' => $this->getCobranza( $row->agent_id, $filter ),
 			'tramite'=>$this->getTramite($row->agent_id,$filter),
 			'aceptadas' => $this->getAceptadas($row->agent_id,$filter),
             'iniciales' => $this->getIniciales( $row->agent_id, $filter ),
@@ -2525,7 +2550,9 @@ class User extends CI_Model{
  		return array(
 			'negocios' => $this->_getNegocios( TRUE, $agent_id, $filter),
 			'primas' => $this->_getPrima( TRUE, $agent_id, $filter),
-			'carteras' => $this->_getCartera( TRUE, $agent_id, $filter) );
+			'carteras' => $this->_getCartera( TRUE, $agent_id, $filter),
+			'cobranzas' => $this->_getCobranza( TRUE, $agent_id, $filter),
+		);
 	}
 
 	public function getCountNegocio( $agent_id = null, $filter = array() ){
@@ -2761,6 +2788,233 @@ class User extends CI_Model{
 		}
 	}
 
+	public function getCobranza( $agent_id = null, $filter = array() ){
+
+		return $this->_getCobranza( TRUE, $agent_id, $filter);
+	}
+
+	public function getCobranzaDetails( $agent_id = null, $filter = array() ){
+
+		return $this->_getCobranza( FALSE, $agent_id, $filter);
+	}
+
+	// Common method for getting sum of cobranza (first param = TRUE) and details of cobranza (first param = FALSE) 
+	private function _getCobranza( $sum_requested = TRUE, $agent_id = null, $filter = array()) {
+
+		$result = array();
+		$dues = array();
+		$policy_uids = array();
+		$this->db->select( 'policy_adjusted_primas.*, policies.payment_interval_id, policies.uid, policies.name as asegurado, products.name as product_name, work_order.work_order_status_id, work_order.creation_date, policies_vs_users.user_id as agent_ident, users.disabled' );
+		$this->db->from( 'policy_adjusted_primas' );
+		$this->db->join( 'work_order', 'work_order.policy_id=policy_adjusted_primas.policy_id' );
+		$this->db->join( 'policies', 'policies.id=policy_adjusted_primas.policy_id' );
+		$this->db->join( 'policies_vs_users', 'policies_vs_users.policy_id=policy_adjusted_primas.policy_id' );
+		$this->db->join( 'agents', 'agents.id=policies_vs_users.user_id' );	
+		$this->db->join( 'users', 'users.id=agents.user_id' );
+		$this->db->join( 'products', 'products.id=policies.product_id' );
+
+		$payment_where = array();
+		$payment_where_in = array();
+		if ( !empty( $filter ) && !empty( $filter['query']['periodo']))
+		{
+			/*
+			<option value="1">Mes</option>
+			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+			<option value="3">Año</option>
+			*/
+			switch ( $filter['query']['periodo'])
+			{
+				case 1:
+					$year = date( 'Y' );
+					$month = date( 'm' );
+					$next_month = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
+					$this->db->where( array(
+						'policy_adjusted_primas.due_date >= ' => $year . '-' . $month . '-01',
+						'policy_adjusted_primas.due_date < ' => $next_month,
+						)); 
+					$payment_where['payment_date >= '] = $year . '-' . $month . '-01';
+					$payment_where['payment_date < '] = $next_month;
+					break;
+				case 2:
+					$this->load->helper('tri_cuatrimester');
+					if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 )
+						$begin_end = get_tri_cuatrimester( $this->cuatrimestre(), 'cuatrimestre' ) ;
+					else
+						$begin_end = get_tri_cuatrimester( $this->trimestre(), 'trimestre' );
+
+					if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
+					{
+						$this->db->where( array(
+							'policy_adjusted_primas.due_date >= ' => $begin_end['begind'],
+							'policy_adjusted_primas.due_date <=' =>  $begin_end['end']) );
+						$payment_where['payment_date >= '] = $begin_end['begind'];
+						$payment_where['payment_date <= '] = $begin_end['end'];
+					}
+					break;
+				case 3:
+					$year = date( 'Y' );
+					$this->db->where( array(
+						'policy_adjusted_primas.due_date >= ' => $year . '-01-01',
+						'policy_adjusted_primas.due_date <= ' => $year . '-12-31 23:59:59'
+						)); 
+					$payment_where['payment_date >= '] = $year . '-01-01';
+					$payment_where['payment_date <= '] = $year . '-12-31 23:59:59';
+					break;
+				case 4:
+					$from = $this->custom_period_from;
+					$to = $this->custom_period_to;
+					if ( ( $from === FALSE ) || ( $to === FALSE ) )
+					{
+						$from = date('Y-m-d');
+						$to = $from;
+					}
+					$this->db->where( array(
+						'policy_adjusted_primas.due_date >= ' => $from . ' 00:00:00',
+						'policy_adjusted_primas.due_date <=' => $to . ' 23:59:59') );
+					$payment_where['payment_date >= '] = $from . ' 00:00:00';
+					$payment_where['payment_date <= '] = $to . ' 23:59:59';
+					break;
+				default:
+					break;
+			}
+		}
+		/*
+			<option value="">Seleccione</option>
+			<option value="1">Todos</option>
+			<option value="2">Vigentes</option>
+			<option value="3">Cancelados</option>
+		*/	
+		if( isset( $filter['query']['agent'] ) and !empty( $filter['query']['agent'] ) and $filter['query']['agent'] != 1 )
+		{	  
+			if( $filter['query']['agent'] == 2 )
+			{
+				$this->db->where( 'users.disabled', 0 ); 
+				$payment_where['users.disabled'] = 0;
+			}
+			elseif( $filter['query']['agent'] == 3 ) {
+				$this->db->where( 'users.disabled', 1 );
+				$payment_where['users.disabled'] = 1;
+			}
+		}
+		if ( isset( $filter['query']['agent_name'] ) and !empty( $filter['query']['agent_name'] ) )
+		{
+			$this->_get_agent_filter_where($filter['query']['agent_name']);
+			if ($this->agent_name_where_in)
+			{
+				$this->db->where_in('`policies_vs_users`.`user_id`', $this->agent_name_where_in);
+				$payment_where_in['agent_id'] = $this->agent_name_where_in;
+			}
+		}
+		else if ($agent_id)
+		{
+			if (is_array($agent_id))
+			{
+				$this->db->where_in('`policies_vs_users`.`user_id`', $agent_id);
+				$payment_where_in['agent_id'] = $agent_id;
+			}
+			else
+			{
+				$this->db->where('`policies_vs_users`.`user_id`', $agent_id);
+				$payment_where['agent_id'] = $agent_id;
+			}
+		}
+
+		$this->db->where(array(
+			'`work_order`.`work_order_status_id`' => 4,
+			'`policies`.`payment_interval_id` != '=> 4));
+
+		$with_filter = FALSE;
+		$this->_get_generation_filter($filter, $with_filter);
+
+		$query = $this->db->get();
+
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				if (!isset($dues[$row->agent_ident]))
+				{
+					$dues[$row->agent_ident] = array(
+						'policy_uid' => array(),
+						'total_due' => $row->adjusted_prima,
+						'total_paid' => 0);
+					$dues[$row->agent_ident]['policy_uid'][$row->uid] = array(
+						'policy_id' => $row->policy_id,
+						'payment_interval_id' => $row->payment_interval_id,
+						'product_name' => $row->product_name,
+						'asegurado' => $row->asegurado,
+						'paid' => 0,
+						'adjusted_prima' => $row->adjusted_prima,
+						'prima_due' => $row->adjusted_prima,
+					);
+				}
+				else
+				{
+					$dues[$row->agent_ident]['total_due'] += $row->adjusted_prima;
+					if (!isset($dues[$row->agent_ident]['policy_uid'][$row->uid]))
+						$dues[$row->agent_ident]['policy_uid'][$row->uid] = array(
+							'policy_id' => $row->policy_id,
+							'payment_interval_id' => $row->payment_interval_id,
+							'product_name' => $row->product_name,
+							'asegurado' => $row->asegurado,
+							'paid' => 0,
+							'adjusted_prima' => $row->adjusted_prima,
+							'prima_due' => $row->adjusted_prima,
+						);
+					else
+						$dues[$row->agent_ident]['policy_uid'][$row->uid]['prima_due'] += $row->adjusted_prima;
+				}
+				$policy_uids[$row->uid][] = $row->policy_id . '_' . $row->agent_ident;
+			}
+		}
+		$query->free_result();
+/*echo "\n<br>\n" . $this->db->last_query() . "\n<br>\n";
+
+echo "\n<br>\n Policy uids \n<br>\n";
+var_dump($policy_uids);*/
+
+		if ($policy_uids)
+			$payment_where_in['payments.policy_number'] = array_keys($policy_uids);
+
+		$this->db->select( 'SUM(`amount`) as total_paid, `payments`.`policy_number`, `payments`.`agent_id`');    
+//		$this->db->select( 'payments.*');    
+		$this->db->from( 'payments' );
+		$this->db->join( 'agents', 'agents.id=payments.agent_id' );
+		$this->db->join( 'users', 'users.id=agents.user_id' );
+
+		$payment_where = array_merge($payment_where, 
+			array( 'year_prime' => 1, 'valid_for_report' => 1));
+		if ( isset( $filter['query'] ) and isset( $filter['query']['ramo'] ))
+			$payment_where['product_group'] = $filter['query']['ramo'];
+
+		$this->db->where($payment_where);
+		if ($payment_where_in)
+		{
+			foreach ($payment_where_in as $field_name => $field_value)
+				$this->db->where_in($field_name, $field_value);
+		}
+
+		$this->_get_generation_filter($filter, $with_filter);
+		$this->db->group_by(array( 'policy_number', 'agent_id')); 
+		$query = $this->db->get();
+
+		$made = array();
+		if ($query->num_rows() > 0)
+		{
+			foreach ($query->result() as $row)
+			{
+				$made[] = $row;
+				if (isset($dues[$row->agent_id]))
+				{
+					$dues[$row->agent_id]['total_paid'] += $row->total_paid;
+					if (isset($dues[$row->agent_id]['policy_uid'][$row->policy_number]))
+						$dues[$row->agent_id]['policy_uid'][$row->policy_number]['paid'] = $row->total_paid;
+				}
+			}
+		}
+		$query->free_result();
+	 	return $dues;
+	}
 
 	public function getCountNegocioPai( $agent_id = null, $filter = array() )
 	{
@@ -3438,6 +3692,7 @@ AS `wrapping_t`
 		} else {
 //			if ($agent_id && is_array($agent_id))
 //				$this->db->where_in('agent_id', $agent_id);
+
 			$result = array();
 			if ($query->num_rows() > 0) {
 				foreach ($query->result() as $row) {

@@ -17,6 +17,7 @@ $( document ).ready(function() {
 	var showTramite = true;
 	var showPendientes = true;
 	var showCartera = true;
+	var showCobranza = true;
 
 	function initShowCols() {
 		var colToShow = $.cookie('colToShow');
@@ -27,6 +28,7 @@ $( document ).ready(function() {
 				showTramite = (showArray[1] === 'true');
 				showPendientes = (showArray[2] === 'true');
 				showCartera = (showArray[3] === 'true');
+				showCobranza = (showArray[4] === 'true');
 				if (!showPagadas)
 					$('#box-pagadas').prop('checked', false);
 				if (!showTramite)
@@ -35,8 +37,9 @@ $( document ).ready(function() {
 					$('#box-pendientes').prop('checked', false);
 				if (!showCartera)
 					$('#box-cartera').prop('checked', false);
+				if (!showCobranza)
+					$('#box-cobranza').prop('checked', false);
 			}
-//		} else {
 		}
 	}
 	function showHideCols() {
@@ -98,13 +101,25 @@ $( document ).ready(function() {
 						$('.cartera-recap').hide();
 					}
 					break;
+				case 'cobranza':
+					showCobranza = $(this).is(':checked');
+					if (showCobranza) {
+						$('#total_cobranza').show();
+						$('.celda_cobranza').show();
+						$('.cobranza-recap').show();
+					} else {
+						$('#total_cobranza').hide();
+						$('.celda_cobranza').hide();
+						$('.cobranza-recap').hide();
+					}
+					break;
 				default:
 					break;
 			}
 		});
 		var colToShow = showPagadas.toString() + '_' + 
 			showTramite.toString() + '_' + showPendientes.toString() + '_' +
-			showCartera.toString();
+			showCartera.toString() + '_' + showCobranza.toString();
 //		$.cookie('colToShow', colToShow);
 		$.cookie('colToShow', colToShow , { expires: 7 });
 
@@ -127,7 +142,7 @@ $( document ).ready(function() {
 							primasProyectadas += currentValue;
 						} else {
 							currentValue = parseInt(currentValue, 10);
-							if (currentValue)
+							if (currentValue && !$(this).hasClass('not-in-proyectados'))
 								negociosProyectados += currentValue;
 						}
 					}
@@ -161,6 +176,20 @@ $( document ).ready(function() {
 
 				if (showCartera) {
 					if ($(this).hasClass('celda_cartera')) {
+						if ($(this).hasClass('prima')) {
+							currentValue = parseFloat(currentValue.replace(/\$|\,/g, ''));
+/*							primasProyectadas += currentValue;
+						} else {
+							currentValue = parseInt(currentValue, 10);
+							if (currentValue)
+								negociosProyectados += currentValue;
+*/
+						}
+					}
+				}
+
+				if (showCobranza) {
+					if ($(this).hasClass('celda_cobranza')) {
 						if ($(this).hasClass('prima')) {
 							currentValue = parseFloat(currentValue.replace(/\$|\,/g, ''));
 							primasProyectadas += currentValue;

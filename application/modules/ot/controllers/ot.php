@@ -1939,7 +1939,12 @@ alert("changed!");
 				break;
 			case 'cartera':
 				$data['values'] = $this->user->getCarteraDetails( $this->input->post('for_agent_id'), $filter );
-				break;			
+				break;
+			case 'cobranza':
+				$data['values'] = $this->user->getCobranzaDetails( $this->input->post('for_agent_id'), $filter );
+				$this->load->view('popup_cobranza', $data);
+				return;
+				break;
 			default:
 				exit('Ocurrio un error. Consulte a su administrador.');
 				break;

@@ -21,6 +21,7 @@
      <input type="checkbox" id="box-pagadas" value="pagadas" checked="checked">Primas pagadas
      &nbsp;&nbsp;<input type="checkbox" id="box-tramite" value="tramite" checked="checked">Primas en trámite
      &nbsp;&nbsp;<input type="checkbox" id="box-pendientes" value="pendientes" checked="checked">Primas pendientes de pago
+     <br><input type="checkbox" id="box-cobranza" value="cobranza" checked="checked">Cobranza instalada
      &nbsp;&nbsp;<input type="checkbox" id="box-cartera" value="cartera" checked="checked">Cartera
 </div>
 </div>

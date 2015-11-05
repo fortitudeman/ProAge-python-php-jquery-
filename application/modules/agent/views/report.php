@@ -96,15 +96,18 @@ switch ($filter['ramo'])
         <tr>
             <th id="table_agents" class="header_manager" style="text-align:center; display: none">Agentes</th>
             <th id="total_negocio" class="header_manager" style="width:70px; text-align:center; ">Negocios Pagados</th>
+<?php if ($filter['ramo'] == 1): ?>
             <th id="total_negocio_pai" class="header_manager" style="width:70px; text-align:center; ">Negocios<br>PAI</th>
+<?php endif; ?>
             <th id="total_primas_pagadas" class="header_manager" style="width:100px; text-align:center; ">Primas<br>Pagadas</th>
             <th id="total_negocios_tramite" class="header_manager" style="width:70px; text-align:center; ">Negocios <br> en  Tramite</th>
             <th id="total_primas_tramite" class="header_manager" style="width:100px; text-align:center; ">Primas <br> en Tramite</th>
             <th id="total_negocio_pendiente" class="header_manager" style="width:70px; text-align:center; ">Negocios Pendientes</th>
             <th id="total_primas_pendientes" class="header_manager" style="width:100px; text-align:center; ">Primas <br> Pendientes</th>
+            <th id="total_cobranza" class="header_manager" style="width:70px; text-align:center; ">Cobranza instalada</th>
             <th id="total_negocios_proyectados" class="header_manager" style="width:70px; text-align:center; ">Negocios Proyectados</th>
-            <th id="total_cartera" class="header_manager" style="width:70px; text-align:center; ">Cartera</th>
             <th id="total_primas_proyectados" class="header_manager" style="width:100px; text-align:center; ">Primas <br> Proyectadas</th>
+            <th id="total_cartera" class="header_manager" style="width:70px; text-align:center; ">Cartera</th>
         </tr>
     </thead>
     
@@ -134,12 +137,14 @@ switch ($filter['ramo'])
                     <?php echo $value['name'] ?>
                 </div> 
             </td>
-            <td class="celda_gris" style="text-align:right;">
+            <td class="celda_gris<?php if ($filter['ramo'] == 1) echo ' not-in-proyectados'; ?>" style="text-align:right;">
                 <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'negocio'})"><?php echo $value['negocio'] ; ?></a>
             </td>
+<?php if ($filter['ramo'] == 1): ?>
             <td class="celda_gris" style="text-align:right;">
                 <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'negociopai'})"><?php echo $negocio_pai; ?></a>
-				</td>
+            </td>
+<?php endif; ?>
             <td class="celda_gris prima" style="text-align:right">
                 <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'prima'})">$<?php echo number_format($value['prima'],2) ; ?></a>
 				</td>
@@ -171,11 +176,23 @@ switch ($filter['ramo'])
                 <a class="numeros fancybox" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $filter['ramo']; ?>")' <?php }?>>$<?php if( isset( $value['aceptadas']['adjusted_prima'] ) ) echo number_format($value['aceptadas']['adjusted_prima'],2); else  echo number_format($value['aceptadas'],2); ?></a>
 <?php endif; ?>
             </td>
+            <td class="celda_cobranza prima" style="text-align:right;">
+
+<?php
+$cobranza_v = 0;
+foreach ($value['cobranza'] as $k_cobranza => $v_cobranza)
+{
+	$cobranza_v = $v_cobranza['total_due'] - $v_cobranza['total_paid'];
+	break;
+}
+?>
+               <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'cobranza'})">$<?php echo number_format($cobranza_v, 2) ; ?></a>
+            </td>
             <td class="celda_verde"><div class="numeros" style="text-align:center;"><?php echo $negocio ?></div></td>
+            <td class="celda_verde prima"><div class="numeros" style="text-align:right">$<?php echo number_format($prima,2); ?></div></td>
 			<td class="celda_cartera prima" style="text-align:right;">
 				<a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'cartera'})">$<?php echo number_format($value['cartera'], 2) ; ?></a>
 			</td>
-            <td class="celda_verde prima"><div class="numeros" style="text-align:right">$<?php echo number_format($prima,2); ?></div></td>
         </tr>
     <?php endif; ?>
     </tbody>
