@@ -2968,16 +2968,11 @@ class User extends CI_Model{
 			}
 		}
 		$query->free_result();
-/*echo "\n<br>\n" . $this->db->last_query() . "\n<br>\n";
-
-echo "\n<br>\n Policy uids \n<br>\n";
-var_dump($policy_uids);*/
 
 		if ($policy_uids)
 			$payment_where_in['payments.policy_number'] = array_keys($policy_uids);
 
 		$this->db->select( 'SUM(`amount`) as total_paid, `payments`.`policy_number`, `payments`.`agent_id`');    
-//		$this->db->select( 'payments.*');    
 		$this->db->from( 'payments' );
 		$this->db->join( 'agents', 'agents.id=payments.agent_id' );
 		$this->db->join( 'users', 'users.id=agents.user_id' );

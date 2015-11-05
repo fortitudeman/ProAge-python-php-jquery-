@@ -99,10 +99,10 @@ $is_director_module = ($segments[1] == 'director');
 
 		$negocio += (int)($value['negociopai']+$value['tramite']['count']+$negocios_pendientes_pago);
 		$prima += (float)($value['prima']+$value['tramite']['adjusted_prima']+$primas_pendientes_pago);
-
+		$prima += (float)($value['cobranza']['total_due'] - $value['cobranza']['total_paid']);
 		$total_cartera += $value['cartera'];
 		$total_negocios_proyectados += $negocio;
-		$total_primas_proyectados += $prima + $value['cartera'];
+		$total_primas_proyectados += $prima;
 		$total_cobranza += ($value['cobranza']['total_due'] - $value['cobranza']['total_paid']);
             ?>															
             <tr id="tr_<?php echo $value['id'] ?>">

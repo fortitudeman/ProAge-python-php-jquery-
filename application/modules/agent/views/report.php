@@ -121,8 +121,14 @@ switch ($filter['ramo'])
 			$primas_pendientes_pago = $value['aceptadas']['adjusted_prima'];		
 		else			
 			$primas_pendientes_pago = $value['aceptadas'];
-		$negocio = (int)($value['negocio'] + $value['tramite']['count'] + $negocios_pendientes_pago);		
-		$prima = (float)($value['prima'] + $value['tramite']['adjusted_prima'] + $primas_pendientes_pago + $value['cartera']);
+
+		$cobranza_v = 0;
+		foreach ($value['cobranza'] as $k_cobranza => $v_cobranza)
+		{
+			$cobranza_v = $v_cobranza['total_due'] - $v_cobranza['total_paid'];
+			break;
+		}
+
 		if (is_array($value['negociopai']))
 		{
 			foreach ($value['negociopai'] as $negocio_pai)
@@ -130,6 +136,13 @@ switch ($filter['ramo'])
 		}
 		else
 			$negocio_pai = $value['negociopai'];
+		if ($filter['ramo'] == 1)
+			$negocio = (int)($negocio_pai + $value['tramite']['count'] + $negocios_pendientes_pago);
+		else
+			$negocio = (int)($value['negocio'] + $value['tramite']['count'] + $negocios_pendientes_pago);
+
+		$prima = (float)($value['prima'] + $value['tramite']['adjusted_prima'] + $primas_pendientes_pago + $cobranza_v);
+
 	?>
         <tr id="tr_<?php echo $value['id'] ?>">
             <td class="" style="display: none">
@@ -177,15 +190,6 @@ switch ($filter['ramo'])
 <?php endif; ?>
             </td>
             <td class="celda_cobranza prima" style="text-align:right;">
-
-<?php
-$cobranza_v = 0;
-foreach ($value['cobranza'] as $k_cobranza => $v_cobranza)
-{
-	$cobranza_v = $v_cobranza['total_due'] - $v_cobranza['total_paid'];
-	break;
-}
-?>
                <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'cobranza'})">$<?php echo number_format($cobranza_v, 2) ; ?></a>
             </td>
             <td class="celda_verde"><div class="numeros" style="text-align:center;"><?php echo $negocio ?></div></td>

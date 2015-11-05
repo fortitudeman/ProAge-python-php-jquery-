@@ -81,10 +81,12 @@ $is_director_module = ($segments[1] == 'director');
 		if (isset($value['aceptadas']['adjusted_prima'])) 			
 			$prima += (float)$value['aceptadas']['adjusted_prima']; 		
 		else			
-			$prima += (float)$value['aceptadas'];		
+			$prima += (float)$value['aceptadas'];
+		$prima += (float)($value['cobranza']['total_due'] - $value['cobranza']['total_paid']);
 		if( $value['disabled'] == 1 )
 			$value['disabled'] = 'Vigente';
-		else $value['disabled'] = 'Cancelado';		
+		else
+			$value['disabled'] = 'Cancelado';		
 		$total_negocio += $value['negocio'];		
 		$total_negocio_pai += $value['negociopai'];		
 		$total_primas_pagadas +=$value['prima'];
@@ -104,7 +106,7 @@ $is_director_module = ($segments[1] == 'director');
 
 		$total_cartera += $value['cartera'];
 		$total_negocios_proyectados += $negocio;
-		$total_primas_proyectados += $prima + $value['cartera'];
+		$total_primas_proyectados += $prima;
 		$total_cobranza += ($value['cobranza']['total_due'] - $value['cobranza']['total_paid']);
             ?>
             <tr id="tr_<?php echo $value['id'] ?>">
