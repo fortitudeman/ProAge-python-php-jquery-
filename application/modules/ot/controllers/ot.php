@@ -2148,8 +2148,11 @@ alert("changed!");
 								$value['cobranza']['total_paid'];
 
 						$data_row['negocios_proyectados'] = (int)$data_row['pendientes'] + 
-							(int)$data_row['tramite'] + (int)$data_row['negociopai'] + (int)$data_row['negocio'];
-//							(int)$data_row['tramite'] + (int)$data_row['negocio']; // to make consistent with report on screen
+							(int)$data_row['tramite'];
+						if ($_POST['query']['ramo'] == 1)
+							$data_row['negocios_proyectados'] += (int)$data_row['negociopai'];
+						else
+							$data_row['negocios_proyectados'] += (int)$data_row['negocio'];
 
 						$data_row['negocios_proyectados_primas'] = 
 							(float)$data_row['prima'] + 
