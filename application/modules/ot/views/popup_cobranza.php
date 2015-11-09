@@ -8,8 +8,10 @@ $base_url = base_url();
 <script type="text/javascript">
 	$( document ).ready(function() {
 
-		$(".show-hide-due").bind( "click", function(){
-			$(this).siblings().not('.detailed_dates').toggle();
+		$('.show-hide-due').bind( 'click', function(){
+//			$(this).siblings().not('.detailed_dates').toggle();
+			$(this).siblings().toggle();
+			$('.paid').hide();
 			return false;
 		});
 	});
@@ -59,7 +61,7 @@ $semaphores = array(
     </thead>
     <tbody>
 <?php foreach ($policies as $key => $value):
-	$relative_paid = (int)(($value['paid'] / $value['prima_due_past']) * 100);
+	$relative_paid = ((int)$value['paid'] / (int)$value['prima_due_past']) * 100;
 	if ($relative_paid > 99)
 		$semaphore = $semaphores['green'];
 	elseif ($relative_paid > 90)
@@ -89,9 +91,9 @@ $adjusted_prima = (int)$value['adjusted_prima'];
 <?php foreach($past_due_dates_arr as $date_value) :
 if ($date_value) :
 	if ($paid_v >= $adjusted_prima)
-		$style = 'style="color: #0C0"';
+		$style = 'style="color: #0C0" class="paid"';
 	else
-		$style = 'style="color: #F30"';
+		$style = 'style="color: #F30" class="unpaid"';
 	$paid_v = $paid_v - $adjusted_prima;
 ?>
 					<li <?php echo $style; ?>><?php echo $date_value ?></li>
@@ -100,9 +102,9 @@ if ($date_value) :
 <?php foreach($future_due_dates_arr as $date_value) :
 if ($date_value) :
 	if ($paid_v >= $adjusted_prima)
-		$style = 'style="color: #0C0"';
+		$style = 'style="color: #0C0" class="paid"';
 	else
-		$style = 'style="color: #F30"';
+		$style = 'style="color: #F30" class="unpaid"';
 	$paid_v = $paid_v - $adjusted_prima;
 ?>
 					<li <?php echo $style; ?>><?php echo $date_value ?></li>
