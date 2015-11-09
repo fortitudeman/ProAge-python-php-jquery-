@@ -82,7 +82,8 @@ $is_director_module = ($segments[1] == 'director');
 			$prima += (float)$value['aceptadas']['adjusted_prima']; 		
 		else			
 			$prima += (float)$value['aceptadas'];
-		$prima += (float)($value['cobranza']['total_due'] - $value['cobranza']['total_paid']);
+		$prima += (float)($value['cobranza']['total_due_past'] + $value['cobranza']['total_due_future'] 
+			- $value['cobranza']['total_paid']);
 		if( $value['disabled'] == 1 )
 			$value['disabled'] = 'Vigente';
 		else
@@ -107,7 +108,8 @@ $is_director_module = ($segments[1] == 'director');
 		$total_cartera += $value['cartera'];
 		$total_negocios_proyectados += $negocio;
 		$total_primas_proyectados += $prima;
-		$total_cobranza += ($value['cobranza']['total_due'] - $value['cobranza']['total_paid']);
+		$total_cobranza += ($value['cobranza']['total_due_past'] + $value['cobranza']['total_due_future'] 
+			- $value['cobranza']['total_paid']);
             ?>
             <tr id="tr_<?php echo $value['id'] ?>">
                 <td class="">                
@@ -130,7 +132,7 @@ $is_director_module = ($segments[1] == 'director');
                 <td class="celda_amarilla prima" style="text-align:right;"><a class="numeros fancybox" <?php if($value['aceptadas']['work_order_ids']){?> href="javascript:void" title="Haga click aqui para ver los detalles" onclick='report_popup(<?php echo $value['id'] ?>, <?php echo json_encode($value['aceptadas']['work_order_ids']);?>,"yes","<?php echo $tata; ?>")' <?php }?>>$<?php if( isset( $value['aceptadas']['adjusted_prima'] ) ) echo number_format($value['aceptadas']['adjusted_prima'],2); else  echo number_format($value['aceptadas'],2); ?></a>
                 </td>
                 <td class="celda_cobranza prima" style="text-align:right;">
-                    <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'cobranza'})">$<?php echo number_format(($value['cobranza']['total_due'] - $value['cobranza']['total_paid']), 2) ; ?></a>
+                    <a class="numeros fancybox_gris" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({for_agent_id: <?php echo (int)$value['agent_id'] ?>, type: 'cobranza'})">$<?php echo number_format(($value['cobranza']['total_due_past'] + $value['cobranza']['total_due_future'] - $value['cobranza']['total_paid']), 2) ; ?></a>
                 </td>
                 <td class="celda_verde"><div class="numeros" style="text-align:center;"><?php echo $negocio ?></div></td>
                 <td class="celda_verde prima"><div class="numeros" style="text-align:right">$<?php echo number_format($prima,2); ?></div></td>

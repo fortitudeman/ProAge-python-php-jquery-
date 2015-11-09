@@ -2302,9 +2302,12 @@ class User extends CI_Model{
 						}
 						if ( isset( $value['cartera'] ) )
 							$data_row['cartera'] = $value['cartera'];
-						if ( isset( $value['cobranza']) && isset($value['cobranza']['total_due']) 
+						if ( isset( $value['cobranza']) && isset($value['cobranza']['total_due_past']) 
+							&& isset($value['cobranza']['total_due_future'])
 							&& isset($value['cobranza']['total_paid']) )
-							$data_row['cobranza'] = $value['cobranza']['total_due'] - $value['cobranza']['total_paid'];
+							$data_row['cobranza'] = $value['cobranza']['total_due_past'] +
+								$value['cobranza']['total_due_future'] -
+								$value['cobranza']['total_paid'];
 
 						$data_row['negocios_proyectados'] = (int)$data_row['pendientes'] + 
 							(int)$data_row['tramite'] + (int)$data_row['negociopai'] + (int)$data_row['negocio'];
@@ -2799,11 +2802,14 @@ class User extends CI_Model{
 	}
 
 	// Common method for getting sum of cobranza (first param = TRUE) and details of cobranza (first param = FALSE) 
-	private function _getCobranza( $sum_requested = TRUE, $agent_id = null, $filter = array()) {
-
+	private function _getCobranza( $sum_requested = TRUE, $agent_id = null, $filter = array())
+	{
 		$result = array();
 		$dues = array();
 		$policy_uids = array();
+		$policy_ids = array();
+
+// 1. Get policy numbers that have a payment due in the period selected
 		$this->db->select( 'policy_adjusted_primas.*, policies.payment_interval_id, policies.uid, policies.name as asegurado, products.name as product_name, work_order.work_order_status_id, work_order.creation_date, policies_vs_users.user_id as agent_ident, users.disabled' );
 		$this->db->from( 'policy_adjusted_primas' );
 		$this->db->join( 'work_order', 'work_order.policy_id=policy_adjusted_primas.policy_id' );
@@ -2815,8 +2821,7 @@ class User extends CI_Model{
 
 		$payment_where = array();
 		$payment_where_in = array();
-		$now_sql = date( 'Y-m-d' ) . ' 23:59:59';
-		$now_ts = time();
+
 		if ( !empty( $filter ) && !empty( $filter['query']['periodo']))
 		{
 			/*
@@ -2829,21 +2834,12 @@ class User extends CI_Model{
 				case 1:
 					$year = date( 'Y' );
 					$month = date( 'm' );
-					$selected_end_ts = mktime(0, 0, 0, date("m") + 1, date("d"), date("Y")); 
-					if ($selected_end_ts > $now_ts)
-						$period_end = date('Y-m-d', mktime(0, 0, 0, date("m"), date("d") + 1, date("Y")));
-					else
-						$period_end = date('Y-m', $selected_end_ts) . '-01';
-//					$next_month = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
+					$next_month = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
 
 					$this->db->where( array(
 						'policy_adjusted_primas.due_date >= ' => $year . '-' . $month . '-01',
-//						'policy_adjusted_primas.due_date < ' => $next_month,
-						'policy_adjusted_primas.due_date < ' => $period_end,
+						'policy_adjusted_primas.due_date < ' => $next_month,
 						)); 
-					$payment_where['payment_date >= '] = $year . '-' . $month . '-01';
-//					$payment_where['payment_date < '] = $next_month;
-					$payment_where['payment_date < '] = $period_end;
 					break;
 				case 2:
 					$this->load->helper('tri_cuatrimester');
@@ -2854,31 +2850,17 @@ class User extends CI_Model{
 
 					if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
 					{
-						$parts = explode('-', substr($begin_end['end'], 0, 10));
-						$selected_end_ts = mktime(0, 0, 0, $parts[1], $parts[2], $parts[0]); 
-						if ($selected_end_ts > $now_ts)
-							$period_end = $now_sql;
-						else
-							$period_end = $begin_end['end'];
 						$this->db->where( array(
 							'policy_adjusted_primas.due_date >= ' => $begin_end['begind'],
-//							'policy_adjusted_primas.due_date <=' => $begin_end['end']) );
-							'policy_adjusted_primas.due_date <=' => $period_end) );
-						$payment_where['payment_date >= '] = $begin_end['begind'];
-//						$payment_where['payment_date <= '] = $begin_end['end'];
-						$payment_where['payment_date <= '] = $period_end;
+							'policy_adjusted_primas.due_date <=' => $begin_end['end']) );
 					}
 					break;
 				case 3:
 					$year = date( 'Y' );
 					$this->db->where( array(
 						'policy_adjusted_primas.due_date >= ' => $year . '-01-01',
-//						'policy_adjusted_primas.due_date <= ' => $year . '-12-31 23:59:59'
-						'policy_adjusted_primas.due_date <= ' => $now_sql
+						'policy_adjusted_primas.due_date <= ' => $year . '-12-31 23:59:59'
 						)); 
-					$payment_where['payment_date >= '] = $year . '-01-01';
-//					$payment_where['payment_date <= '] = $year . '-12-31 23:59:59';
-					$payment_where['payment_date <= '] = $now_sql;
 					break;
 				case 4:
 					$from = $this->custom_period_from;
@@ -2888,20 +2870,9 @@ class User extends CI_Model{
 						$from = date('Y-m-d');
 						$to = $from;
 					}
-					$parts = explode('-', substr($to, 0, 10));
-					$selected_end_ts = mktime(0, 0, 0, $parts[1], $parts[2], $parts[0]); 
-					if ($selected_end_ts > $now_ts)
-						$period_end = $now_sql;
-					else
-						$period_end =  $to . ' 23:59:59';
-
 					$this->db->where( array(
 						'policy_adjusted_primas.due_date >= ' => $from . ' 00:00:00',
-//						'policy_adjusted_primas.due_date <=' => $to . ' 23:59:59') );
-						'policy_adjusted_primas.due_date <=' => $period_end) );
-					$payment_where['payment_date >= '] = $from . ' 00:00:00';
-//					$payment_where['payment_date <= '] = $to . ' 23:59:59';
-					$payment_where['payment_date <= '] = $period_end;
+						'policy_adjusted_primas.due_date <=' => $to . ' 23:59:59') );
 					break;
 				default:
 					break;
@@ -2925,16 +2896,8 @@ class User extends CI_Model{
 				$payment_where['users.disabled'] = 1;
 			}
 		}
-		if ( isset( $filter['query']['agent_name'] ) and !empty( $filter['query']['agent_name'] ) )
-		{
-			$this->_get_agent_filter_where($filter['query']['agent_name']);
-			if ($this->agent_name_where_in)
-			{
-				$this->db->where_in('`policies_vs_users`.`user_id`', $this->agent_name_where_in);
-				$payment_where_in['agent_id'] = $this->agent_name_where_in;
-			}
-		}
-		else if ($agent_id)
+
+		if ($agent_id)
 		{
 			if (is_array($agent_id))
 			{
@@ -2945,6 +2908,15 @@ class User extends CI_Model{
 			{
 				$this->db->where('`policies_vs_users`.`user_id`', $agent_id);
 				$payment_where['agent_id'] = $agent_id;
+			}
+		}
+		else if ( isset( $filter['query']['agent_name'] ) and !empty( $filter['query']['agent_name'] ) )
+		{
+			$this->_get_agent_filter_where($filter['query']['agent_name']);
+			if ($this->agent_name_where_in)
+			{
+				$this->db->where_in('`policies_vs_users`.`user_id`', $this->agent_name_where_in);
+				$payment_where_in['agent_id'] = $this->agent_name_where_in;
 			}
 		}
 
@@ -2965,7 +2937,8 @@ class User extends CI_Model{
 				{
 					$dues[$row->agent_ident] = array(
 						'policy_uid' => array(),
-						'total_due' => $row->adjusted_prima,
+						'total_due_past' => 0,
+						'total_due_future' => 0,
 						'total_paid' => 0);
 					$dues[$row->agent_ident]['policy_uid'][$row->uid] = array(
 						'policy_id' => $row->policy_id,
@@ -2974,13 +2947,14 @@ class User extends CI_Model{
 						'asegurado' => $row->asegurado,
 						'paid' => 0,
 						'adjusted_prima' => $row->adjusted_prima,
-						'prima_due' => $row->adjusted_prima,
-						'due_dates' => $row->due_date
+						'prima_due_future' => 0,
+						'prima_due_past' => 0,
+						'due_dates_future' => '',
+						'due_dates_past' => '',
 					);
 				}
 				else
 				{
-					$dues[$row->agent_ident]['total_due'] += $row->adjusted_prima;
 					if (!isset($dues[$row->agent_ident]['policy_uid'][$row->uid]))
 						$dues[$row->agent_ident]['policy_uid'][$row->uid] = array(
 							'policy_id' => $row->policy_id,
@@ -2989,23 +2963,69 @@ class User extends CI_Model{
 							'asegurado' => $row->asegurado,
 							'paid' => 0,
 							'adjusted_prima' => $row->adjusted_prima,
-							'prima_due' => $row->adjusted_prima,
-							'due_dates' => $row->due_date
+							'prima_due_future' => 0,
+							'prima_due_past' => 0,
+							'due_dates_future' => '',
+							'due_dates_past' => '',
 						);
-					else
-					{
-						$dues[$row->agent_ident]['policy_uid'][$row->uid]['prima_due'] += $row->adjusted_prima;
-						$dues[$row->agent_ident]['policy_uid'][$row->uid]['due_dates'] .= '|' . $row->due_date;
-					}
 				}
+
 				$policy_uids[$row->uid][] = $row->policy_id . '_' . $row->agent_ident;
+				if (!isset($policy_ids[$row->policy_id]))
+					$policy_ids[$row->policy_id] = array();
+				if (!in_array($row->uid . '_' . $row->agent_ident, $policy_ids[$row->policy_id]))
+					$policy_ids[$row->policy_id][] = $row->uid . '_' . $row->agent_ident;
 			}
 		}
+		else
+			return $dues;
+			
 		$query->free_result();
 
 		if ($policy_uids)
 			$payment_where_in['payments.policy_number'] = array_keys($policy_uids);
 
+// 2. Get all the due dates for the policies found previouly	
+		$this->db->select( 'policy_adjusted_primas.*' );
+		$this->db->from( 'policy_adjusted_primas' );
+		if ($policy_ids)
+			$this->db->where_in('policy_id', array_keys($policy_ids));
+
+		$query = $this->db->get();
+		if ($query->num_rows() > 0)
+		{
+			$today = date( 'Y-m-d' );
+
+			foreach ($query->result() as $row)
+			{
+				foreach ($policy_ids[$row->policy_id] as $value1)
+				{
+					$uid_agent = explode('_', $value1);
+					if (isset($dues[$uid_agent[1]]))
+					{
+						if ($row->due_date <= $today)
+							$dues[$uid_agent[1]]['total_due_past'] += $row->adjusted_prima;
+						else
+							$dues[$uid_agent[1]]['total_due_future'] += $row->adjusted_prima;
+						if (isset($dues[$uid_agent[1]]['policy_uid'][$uid_agent[0]]))
+						{
+							if ($row->due_date <= $today)
+							{
+								$dues[$uid_agent[1]]['policy_uid'][$uid_agent[0]]['due_dates_past'] .= '|' . $row->due_date;
+								$dues[$uid_agent[1]]['policy_uid'][$uid_agent[0]]['prima_due_past'] += $row->adjusted_prima;
+							}
+							else
+							{
+								$dues[$uid_agent[1]]['policy_uid'][$uid_agent[0]]['due_dates_future'] .= '|' . $row->due_date;
+								$dues[$uid_agent[1]]['policy_uid'][$uid_agent[0]]['prima_due_future'] += $row->adjusted_prima;
+							}
+						}
+					}
+				}
+			}
+		}
+
+// 3. Get payments for the policies retrieved in 1.
 		$this->db->select( 'SUM(`amount`) as total_paid, `payments`.`policy_number`, `payments`.`agent_id`');    
 		$this->db->from( 'payments' );
 		$this->db->join( 'agents', 'agents.id=payments.agent_id' );
@@ -3041,7 +3061,6 @@ class User extends CI_Model{
 				}
 			}
 		}
-
 		$query->free_result();
 	 	return $dues;
 	}

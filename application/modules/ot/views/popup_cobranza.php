@@ -9,7 +9,7 @@ $base_url = base_url();
 	$( document ).ready(function() {
 
 		$(".show-hide-due").bind( "click", function(){
-			$(this).siblings().toggle();
+			$(this).siblings().not('.detailed_dates').toggle();
 			return false;
 		});
 	});
@@ -22,10 +22,15 @@ $base_url = base_url();
 </style>
 
 <?php if ($values):
+$policies = array();
+$posted = $this->input->post('for_agent_id');
 foreach ($values as $key => $value)
 {
-	$policies = $value['policy_uid'];
-	break;
+	if ($posted == $key)
+	{
+		$policies = $value['policy_uid'];
+		break;
+	}
 }
 $payment_interval_translate = array(
 	1 => 'Mensual',
@@ -54,18 +59,19 @@ $semaphores = array(
     </thead>
     <tbody>
 <?php foreach ($policies as $key => $value):
-	$relative_paid = (int)(($value['paid'] / $value['prima_due']) * 100);
+	$relative_paid = (int)(($value['paid'] / $value['prima_due_past']) * 100);
 	if ($relative_paid > 99)
 		$semaphore = $semaphores['green'];
 	elseif ($relative_paid > 90)
 		$semaphore = $semaphores['yellow'];
 	else
 		$semaphore = $semaphores['red'];
+		$policy_cobranza = $value['prima_due_future'] + $value['prima_due_past'] - $value['paid'];
 ?>
         <tr class="payment_row" >
             <td><?php echo $semaphore ?></td>
             <td><?php echo $key ?></td>
-			<td style="text-align: right; padding-right: 2.5em">$ <?php echo number_format(($value['prima_due'] - $value['paid']) , 2) /* . '' . $value['prima_due'] . ' __ ' . $value['paid'] */; ?></td>
+			<td style="text-align: right; padding-right: 2.5em">$ <?php echo number_format($policy_cobranza , 2); ?></td>
             <td><?php echo $value['product_name']; ?></td>
             <td><?php if ($value['asegurado']) echo $value['asegurado'] ; else echo 'No disponible'; ?></td>
             <td>
@@ -74,19 +80,33 @@ if (isset($payment_interval_translate[$value['payment_interval_id']]))
 	echo '<a href="javascript: void(0);" class="show-hide-due">' . $payment_interval_translate[$value['payment_interval_id']] . '</a>';
 else echo '-';
 echo '<span style="display: none"> ($&nbsp;' . number_format($value['adjusted_prima'], 2) . ')</span>';
-$due_dates_arr = explode('|', $value['due_dates']);
+$past_due_dates_arr = explode('|', $value['due_dates_past']);
+$future_due_dates_arr = explode('|', $value['due_dates_future']);
 $paid_v = (int)$value['paid'];
 $adjusted_prima = (int)$value['adjusted_prima'];
 ?>
-				<ul style="display: none">
-<?php foreach($due_dates_arr as $date_value) :
-if ($paid_v >= $adjusted_prima)
-	$style = 'style="color: #0C0"';
-else
-	$style = 'style="color: #F30"';
-$paid_v = $paid_v - $adjusted_prima;
+				<ul class="detailed_dates" style="display: none">
+<?php foreach($past_due_dates_arr as $date_value) :
+if ($date_value) :
+	if ($paid_v >= $adjusted_prima)
+		$style = 'style="color: #0C0"';
+	else
+		$style = 'style="color: #F30"';
+	$paid_v = $paid_v - $adjusted_prima;
 ?>
 					<li <?php echo $style; ?>><?php echo $date_value ?></li>
+<?php endif; ?>
+<?php endforeach; ?>
+<?php foreach($future_due_dates_arr as $date_value) :
+if ($date_value) :
+	if ($paid_v >= $adjusted_prima)
+		$style = 'style="color: #0C0"';
+	else
+		$style = 'style="color: #F30"';
+	$paid_v = $paid_v - $adjusted_prima;
+?>
+					<li <?php echo $style; ?>><?php echo $date_value ?></li>
+<?php endif; ?>
 <?php endforeach; ?>
 				</ul>
 			</td>

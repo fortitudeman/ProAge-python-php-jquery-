@@ -2048,9 +2048,10 @@ alert("changed!");
 				'tramite_prima' => 0,
 				'pendientes' => 0,
 				'pendientes_primas' => 0,
-				'cartera' => 0,
+				'cobranza' => 0,
 				'negocios_proyectados' => 0,
 				'negocios_proyectados_primas' => 0,
+				'cartera' => 0,
 				);
 		else
 			$data_row = array(
@@ -2096,6 +2097,7 @@ alert("changed!");
 			$total_cartera = 0;
 			$total_negocios_proyectados=0;
 			$total_primas_proyectados=0;
+			$total_cobranza = 0;
 
 			if( !empty( $data ) )
 			{
@@ -2113,9 +2115,10 @@ alert("changed!");
 							'tramite_prima' => 'Primas en Tramite',	//	(not in $data)
 							'pendientes' => 'Negocios Pendientes',
 							'pendientes_primas' => 'Primas Pendientes', //  (not in $data)
-							'cartera' => 'Cartera',
+							'cobranza' => 'Cobranza instalada',
 							'negocios_proyectados' => 'Negocios Proyectados',
 							'negocios_proyectados_primas' => 'Primas Proyectadas',
+							'cartera' => 'Cartera',
 						);
 					else
 					{
@@ -2137,13 +2140,22 @@ alert("changed!");
 						}
 						if ( isset( $value['cartera'] ) )
 							$data_row['cartera'] = $value['cartera'];
+						if ( isset( $value['cobranza']) && isset($value['cobranza']['total_due_past']) 
+							&& isset($value['cobranza']['total_due_future'])
+							&& isset($value['cobranza']['total_paid']) )
+							$data_row['cobranza'] = $value['cobranza']['total_due_past'] +
+								$value['cobranza']['total_due_future'] -
+								$value['cobranza']['total_paid'];
 
 						$data_row['negocios_proyectados'] = (int)$data_row['pendientes'] + 
 							(int)$data_row['tramite'] + (int)$data_row['negociopai'] + (int)$data_row['negocio'];
 //							(int)$data_row['tramite'] + (int)$data_row['negocio']; // to make consistent with report on screen
+
 						$data_row['negocios_proyectados_primas'] = 
-							(float)$data_row['cartera'] + (float)$data_row['prima'] + 
-							(float)$data_row['pendientes_primas'] + (float)$data_row['tramite_prima'];
+							(float)$data_row['prima'] + 
+							(float)$data_row['pendientes_primas'] + (float)$data_row['tramite_prima'] +
+							(float)$data_row['cobranza'];
+
 						$total_negocio += (int)$data_row['negocio'];
 						$total_negocio_pai += (int)$data_row['negociopai'];
 						$total_primas_pagadas += (float)$data_row['prima'];
@@ -2154,10 +2166,13 @@ alert("changed!");
 						$total_negocios_proyectados += (int)$data_row['negocios_proyectados'];
 						$total_primas_proyectados += (float)$data_row['negocios_proyectados_primas'];
 						$total_cartera += (float)$data_row['cartera'];
+						$total_cobranza += (float)$data_row['cobranza'];
 
 						$data_row['prima'] = '$ '.$data_row['prima'];
 						$data_row['tramite_prima'] = '$ '.$data_row['tramite_prima'];
 						$data_row['cartera'] = '$ '.$data_row['cartera'];
+						$data_row['cobranza'] = '$ '. number_format($data_row['cobranza']);
+
 						$data_row['pendientes_primas'] = '$ '.$data_row['pendientes_primas'];
 						$data_row['negocios_proyectados_primas'] = '$ '.$data_row['negocios_proyectados_primas'];
 						$data_report[] = $data_row;
@@ -2175,9 +2190,10 @@ alert("changed!");
 					'tramite_prima' => '$ '.$total_primas_tramite,
 					'pendientes' => $total_negocio_pendiente,
 					'pendientes_primas' => '$ '.$total_primas_pendientes,
-					'cartera' => '$ '.$total_cartera,
+					'cobranza' => '$ ' . number_format($total_cobranza),
 					'negocios_proyectados' => $total_negocios_proyectados,
-					'negocios_proyectados_primas' => '$ '.$total_primas_proyectados,
+					'negocios_proyectados_primas' => '$ ' . number_format($total_primas_proyectados),
+					'cartera' => '$ ' . number_format($total_cartera),
 				);
 			}
 		} else

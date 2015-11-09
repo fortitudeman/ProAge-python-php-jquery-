@@ -125,7 +125,8 @@ switch ($filter['ramo'])
 		$cobranza_v = 0;
 		foreach ($value['cobranza'] as $k_cobranza => $v_cobranza)
 		{
-			$cobranza_v = $v_cobranza['total_due'] - $v_cobranza['total_paid'];
+			$cobranza_v = $v_cobranza['total_due_past'] + 
+				$v_cobranza['total_due_future'] - $v_cobranza['total_paid'];
 			break;
 		}
 
