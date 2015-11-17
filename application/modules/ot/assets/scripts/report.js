@@ -460,15 +460,16 @@ $( document ).ready(function() {
 						//  refresh the whole page to reflect the change
 							if ( confirm( 'Se pudo cambiar el número de negocios PAI correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?' ) )
 								window.location.reload();
-							current.prop("disabled", false);
-							$(".action_option").show();
-							$("#wait-response").hide();
-							$("#payment-table").show();
+
 							break;
 						default:
 							alert ('Hay un error en la respuesta del sitio web, consulte a su administrador.');
 							break;
 					}
+					$("#wait-response").hide();
+					$(".action_option").show();
+					$("#payment-table").show();
+					current.prop("disabled", false);
 				}
 			});
 		}

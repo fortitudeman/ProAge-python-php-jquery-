@@ -10,10 +10,7 @@
   Skype:		systemonlinesoftware
   Location:		Guadalajara Jalisco Mexíco
 
-  	
 */
-
-
 
 // Render table for user
 function renderTable( $data = array(), $access_activate = false, $access_update = false, $access_delete = false ){
@@ -450,7 +447,7 @@ if ( ! function_exists('reporte_popup'))
 			$data['values'][$work_order_id]['main'] = $CI->load->view('ot/popup_report_main_row', $row_result, TRUE);
 			$data['values'][$work_order_id]['menu'] = $CI->load->view('ot/popup_report_menu_row', $row_result, TRUE);
 		}
-		$CI->load->view('popup_report', $data);	
+		$CI->load->view('ot/popup_report', $data);	
 	}
 }
 ?>

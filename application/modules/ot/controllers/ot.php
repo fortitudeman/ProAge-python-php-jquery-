@@ -1810,7 +1810,8 @@ alert("changed!");
 <script type="text/javascript">
 	function payment_popup(params) {
 		$.fancybox.showLoading();
-		$.post("ot/payment_popup", jQuery.param(params) + "&" + $("#form").serialize(), function(data) { 
+		$.post("' . base_url() . 'ot/payment_popup.html", jQuery.param(params) + "&" + $("#form").serialize(), function(data) { 
+
 			if (data) {
 				$.fancybox({
 					content:data
