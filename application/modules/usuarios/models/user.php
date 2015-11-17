@@ -3646,9 +3646,9 @@ AS `wrapping_t`
 		if ($sum_requested)
 		{
 			if ($agent_id && is_array($agent_id))
-				$this->db->select( 'SUM(amount) AS primas, payments.agent_id as n_agent_id' );
+				$this->db->select( 'SUM(amount) AS primas, SUM(amount * add_perc / 100 ) AS primas_plus, payments.agent_id as n_agent_id' );
 			else
-				$this->db->select( 'SUM(amount) AS primas' );
+				$this->db->select( 'SUM(amount) AS primas, SUM(amount * add_perc / 100 ) AS primas_plus' );
 		}			
 		else
 			$this->db->select( 'payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name' );    
@@ -3741,13 +3741,17 @@ AS `wrapping_t`
 			if ($agent_id && !is_array($agent_id))
 			{
 				foreach ($query->result() as $row)
-					$prima = (float)$row->primas;	
+				{
+					$prima = (float)$row->primas + (float)$row->primas_plus;
+				}
 			}
 			else
 			{
 				$prima = array();
 				foreach ($query->result() as $row)
-					$prima[$row->n_agent_id] = (float)$row->primas;
+				{
+					$prima[$row->n_agent_id] = (float)$row->primas  + (float)$row->primas_plus;
+				}
 			}
 			$query->free_result();
 			return $prima;

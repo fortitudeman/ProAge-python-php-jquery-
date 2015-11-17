@@ -1840,76 +1840,8 @@ alert("changed!");
 // Copied and pasted to the code of agent/reporte_popup.html:
 	public function reporte_popup()
 	{
-		$work_order_ids = $this->input->post('wrk_ord_ids');  
-		$data['is_poliza'] = $this->input->post('is_poliza');
-		$data['gmm'] = $this->input->post('gmm');
-
-		$this->load->model( array( 'work_order', 'usuarios/user' ) );
-		$this->view = array(
-			'css' => array(
-			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',			
-			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
-			<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
-			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
-			),
-			'scripts' =>  array(
-		  	'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
-			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-			//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',			
-			'<script src="'. base_url() .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
-			'<script>window.jQuery || document.write ("<script src='. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js><\/script>");</script>',
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.ddslick.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',			
-			'<script src="'.base_url().'scripts/config.js"></script>'	,	
-			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
-			'<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
-		  ));
-
-		$ramo = 1;
-		$period = 2;
-		$prev_post = $this->input->post('prev_post');
-		if (($prev_post !== FALSE) && is_array($prev_post))
-		{
-			if (isset($prev_post['ramo']))
-				$ramo = (int) $prev_post['ramo'];
-			if (isset($prev_post['periodo']))
-				$period = $prev_post['periodo'];
-		}
-
-		$this->load->model('policy_model');
-		$primas_cached = $this->policy_model->get_ot_adjusted_primas($this->input->post('wrk_ord_ids'));
-
-		$results = array();
-		$row_result = array_merge($data, array('access_update' => $this->access_update));
-		$data['values'] = array();
-		foreach($work_order_ids as $work_order_id)
-		{
-			$row_result['value'] = $this->work_order->pop_up_data($work_order_id, (int)$this->input->post('agent_id'));
-			$row_result['value']['general'][0]->adjusted_prima = $row_result['value']['general'][0]->prima;
-
-			// For OTs en tramite and pendientes, adjust prima:
-			if (($row_result['value']['general'][0]->work_order_status_id == 5) ||
-				($row_result['value']['general'][0]->work_order_status_id == 9) ||
-				($row_result['value']['general'][0]->work_order_status_id == 7) )
-			{
-				if (isset($primas_cached[$work_order_id]) && 
-					isset($primas_cached[$work_order_id]['adjusted_prima']))
-				{
-					$ot_adjusted = $primas_cached[$work_order_id]['adjusted_prima'];
-				}
-				else
-					$ot_adjusted = $this->user->get_adjusted_prima($row_result['value']['general'][0]->policy_id,
-						$ramo, $period);
-	
-				$row_result['value']['general'][0]->adjusted_prima = 
-					$ot_adjusted * ($row_result['value']['general'][0]->p_percentage / 100);
-			}
-			$data['values'][$work_order_id]['main'] = $this->load->view('popup_report_main_row', $row_result, TRUE);
-			$data['values'][$work_order_id]['menu'] = $this->load->view('popup_report_menu_row', $row_result, TRUE);
-		}
-		$this->load->view('popup_report', $data);	
+		$this->load->helper('ot/ot');
+		reporte_popup('ot');
 	}
 
 // Popup pertaining to payments (NOTE: copied and pasted of agent/.../payment_popup.html code)
@@ -2655,6 +2587,7 @@ alert("changed!");
 		$this->_change_ot_status(10);
 	}
 
+
 // Handle ajax request to change OT status
 	private function _change_ot_status($new_status)
 	{
@@ -2761,67 +2694,8 @@ Display custom filter period
 // actions on payment (ignore, delete)
 	public function payment_actions()
 	{
-		if ( !$this->input->is_ajax_request() )
-			redirect( 'ot.html', 'refresh' );
-
-		$action = $this->input->post('payment_action');
-		switch ($action)
-		{
-			case 'mark_ignored':
-				if ( !$this->access_update ){
-					echo json_encode('-1');
-					exit;
-				}
-				break;
-			case 'payment_delete':
-				if ( !$this->access_delete ){
-					echo json_encode('-1');
-					exit;
-				}
-				break;
-			default:
-				echo json_encode('0');
-				exit;
-				break;
-		}
-		$result = json_encode('0');
-		$agent_id = $this->input->post('for_agent_id');
-		$amount = $this->input->post('amount');
-		$payment_date = $this->input->post('payment_date');
-		$policy_number = $this->input->post('policy_number');
-
-		if (($agent_id !== FALSE) && strlen($agent_id = trim($agent_id)) &&
-			($amount !== FALSE) && strlen($amount = trim($amount)) && $this->form_validation->decimal_or_integer($amount) &&
-			($payment_date !== FALSE) && (strlen($payment_date = trim($payment_date)) == 10) &&
-			($policy_number !== FALSE) && (strlen($policy_number = trim($policy_number)) >=  0)
-			)
-		{
-			$this->load->model( 'work_order' );
-			$compare_amount = floor($amount * 100);
-			$where = array(
-				'agent_id' => (int)$agent_id,
-				"ABS((amount * 100) - ($compare_amount) ) <= " => 1,
-				'payment_date' => $payment_date,
-				'policy_number' => $policy_number
-			);
-			switch ($action) 
-			{
-				case 'mark_ignored':
-					$db_result = $this->work_order->generic_update('payments', array('valid_for_report' => 0), $where, 1, 0);
-					break;
-				case 'payment_delete':
-					$db_result = $this->work_order->generic_delete('payments', $where, 1, 0);
-					break;
-				break;
-				default:
-					$db_result = FALSE;
-					break;
-			}
-			if ( $db_result )
-				$result = json_encode('1');
-		}
-		echo $result;
-		exit;
+		$this->load->helper('ot');
+		payment_actions('ot');
 	}
 
 	// delete (imported) payments of given month/year
@@ -2912,6 +2786,34 @@ Display custom filter period
 			{
 				$result = $this->work_order->generic_update(
 					'policy_negocio_pai', array('negocio_pai' => (int) $value), array('id' => (int) $id), 1, 0) ?
+						'1' : '0';
+				echo json_encode($result);
+				exit();
+			}
+		}
+		echo json_encode('2');
+		exit;
+	}
+
+	public function change_add_perc()
+	{
+		if ( !$this->input->is_ajax_request() )
+			redirect( 'ot.html', 'refresh' );
+
+		if ( !$this->access_update )
+		{
+			echo json_encode('-1');
+			exit;
+		}
+		$add_perc = $this->input->post('add_perc');
+
+		if (is_array($add_perc))
+		{
+			$this->load->model( 'work_order' );
+			foreach ($add_perc as $id => $value)
+			{
+				$result = $this->work_order->generic_update(
+					'payments', array('add_perc' => (int) $value), array('pay_tbl_id' => (int) $id), 1, 0) ?
 						'1' : '0';
 				echo json_encode($result);
 				exit();

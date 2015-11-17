@@ -220,6 +220,10 @@ $( document ).ready(function() {
 
 	$(".ot-action").on( "click", function( event ) {
 		var current = $(this);
+//		var parentRow = current.parent().parent('.tr_pop_class');
+//		var parentRowSibling = parentRow.siblings().eq(0);
+		var otStatusCell = current.parent().siblings('.ot-status-container').children('.ot-status');
+		var newStatus = '';
 		var allParams = current.attr('id').split('-');
 		if (allParams.length < 5) {
 			alert ('Ocurrio un error con los parámetros. Consulte a su administrador.');
@@ -233,17 +237,19 @@ $( document ).ready(function() {
 		var url = '';
 // allParams[1] contains OT id, allParams[2] contains something called 'gmm', allParams[2] contains something called 'is_poliza'		
 		if (current.hasClass('mark-ntu')) {
+			newStatus = 'Póliza NTU';
 			otAction = 'mark_ntu';
 			confirmMessage = '¿Esta seguro que quiere marcar la OT como NTU?';
 			errorMessage_1 = 'No se pudo marcar la OT como NTU. Informe a su administrador.';
-			errorMessageOK = 'Se marco la OT como NTU correctamente. La página web debe ser actualizada para reflejar los cambios.';
-			url = Config.base_url() + 'ot/mark_ntu.html';
+			errorMessageOK = 'Se marco la OT como NTU correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?';
+			url = Config.base_url() + currentModule + '/mark_ntu.html';
 		} else if (current.hasClass('mark-pagada')) {
 			otAction = 'mark-pagada';
+			newStatus = 'pagada';
 			confirmMessage = '¿Esta seguro que quiere marcar la OT como pagada?';
 			errorMessage_1 = 'No se pudo marcar la OT como pagada. Informe a su administrador.';
-			errorMessageOK = 'Se marco la OT como pagada correctamente. La página web debe ser actualizada para reflejar los cambios.';
-			url = Config.base_url() + 'ot/mark_paid.html';			
+			errorMessageOK = 'Se marco la OT como pagada correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?';
+			url = Config.base_url() + currentModule + '/mark_paid.html';
 		} else
 			return false;
 
@@ -256,6 +262,8 @@ $( document ).ready(function() {
 				dataType : 'json',
 				beforeSend: function(){
 					current.hide();
+					$("#wait-response").show();
+					$("#popup_table").hide();
 				},
 				success: function(response){
 					switch (response) {
@@ -275,18 +283,93 @@ $( document ).ready(function() {
 							if ((response.main !== undefined) && (response.menu !== undefined)) {
 								$('#tr_' + allParams[1]).html(response.main);
 								$('#hide_' + allParams[1]).html(response.menu);
-								alert (errorMessageOK);
+//								alert (errorMessageOK);
 						//  refresh the whole page to reflect the change
-							    window.location.reload();
+								if ( confirm( errorMessageOK ) ) {
+									window.location.reload();
+								}
+//								parentRow.hide();
+//								parentRowSibling.hide();
+								otStatusCell.text(newStatus);
 							} else {
 								alert ('Hay un error en la respuesta del sitio web, consulte a su administrador.');
 							}
 							break;
 					}
+					$("#wait-response").hide();
+					$("#popup_table").show();
+					current.show();
 				}
 			});
 		}
 		return false;
+	});
+
+	$(".add-perc-edit").hide();
+	var addPerc = 0;
+
+	$(".add-perc-show").on( "click", function( event ) {
+		var current = $(this);
+		current.siblings(".add-perc-display").hide();
+		current.siblings(".add-perc-edit").show();
+//		current.siblings(".add-perc-ok").show();
+		current.hide();
+		addPerc = current.siblings(".add-perc-edit").children().eq(0).val();
+		return false;
+	});
+
+	$(".add-perc-ok").on( "click", function( event ) {
+		var current = $(this).parent(".add-perc-edit");
+		var entered = 0;
+		current.children(".perc-value").each(function() {
+			entered = $(this).val();
+			return false;
+		});
+		if ((addPerc !== entered) && !isNaN(parseInt(entered, 10))) {
+			$.ajax({
+				url: Config.base_url() + currentModule + '/change_add_perc.html',
+				type: 'POST',
+				data: current.serialize(),
+				dataType : 'json',
+				beforeSend: function(){
+					$("#wait-response").show();
+					$("#payment-table").hide();
+				},
+				success: function(response) {
+					switch (response) {
+						case '-1':
+							alert ('No se pudo cambiar el % adicional para pago de bono. Informe a su administrador.');
+							break;
+						case '0':
+							alert ('Ocurrio un error, no se pudo guardar el pago, consulte a su administrador.');
+							break;
+						case '1':
+						//  refresh the whole page to reflect the change
+							if ( confirm( 'Se pudo cambiar el % adicional para pago de bono correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?' ) )
+								window.location.reload();
+							current.siblings(".add-perc-display").text(entered);
+							var newPrima = parseFloat(current.siblings(".ori-prima").text());
+							newPrima = (newPrima * (1 + (entered / 100))).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");
+							current.parent().siblings(".prima-value").text(newPrima);
+							break;
+						default:
+							alert ('Hay un error en la respuesta del sitio web, consulte a su administrador.');
+							break;
+					}
+					$("#wait-response").hide();
+					$("#payment-table").show();
+					current.siblings(".add-perc-show").show();
+					current.siblings(".add-perc-display").show();
+					current.hide();
+					return false;
+				}
+			});
+		} else {
+			current.siblings(".add-perc-show").show();
+			current.siblings(".add-perc-display").show();
+			current.hide();
+			return false;
+		}
 	});
 
 	$(".action_option").on( "click", function( event ) {
@@ -301,25 +384,27 @@ $( document ).ready(function() {
 			confirmMessage = '¿Esta seguro que desea ignorar el pago ?';
 			errorMessage_1 = 'No se pudo marcar el pago como ignorado. Informe a su administrador.';
 			errorMessage0 = 'Ocurrio un error, no se pudo guardar el pago, consulte a su administrador.';
-			errorMessageOK = 'Se marco el pago como ignorado correctamente. La página web debe ser actualizada para reflejar los cambios.';
+			errorMessageOK = 'Se marco el pago como ignorado correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?';
 		} else if (current.hasClass('payment_delete')) {
 			paymentAction = 'payment_delete';
 			confirmMessage = '¿Esta seguro que desea borrar el pago ?';
 			errorMessage_1 = 'No se pudo borrar el pago. Informe a su administrador.';
 			errorMessage0 = 'Ocurrio un error, no se pudo borrar el pago, consulte a su administrador.';
-			errorMessageOK = 'Se pudo borrar el pago correctamente. La página web debe ser actualizada para reflejar los cambios.';
+			errorMessageOK = 'Se pudo borrar el pago correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?';
 		} else
 			return false;
 		if ( confirm( confirmMessage ) ) {
 			var form = $(this).siblings(".payment_detail_form");
 			form.children(".payment_action").val(paymentAction);
 			$.ajax({
-				url: Config.base_url() + 'ot/payment_actions.html',
+				url: Config.base_url() + currentModule + '/payment_actions.html',
 				type: 'POST',
 				data: form.serialize(),
 				dataType : 'json',
 				beforeSend: function(){
 					$(".action_option").hide();
+					$("#payment-table").hide();
+					$("#wait-response").show();
 				},
 				success: function(response){
 					switch (response) {
@@ -331,13 +416,17 @@ $( document ).ready(function() {
 							break;
 						case '1':
 						//  refresh the whole page to reflect the change
-							alert (errorMessageOK);
-							window.location.reload();
+							if ( confirm( errorMessageOK ) )
+								window.location.reload();
 							break;
 						default:
 							alert ('Hay un error en la respuesta del sitio web, consulte a su administrador.');
 							break;
 					}
+					current.parent().parent(".payment_row").hide();
+					$("#wait-response").hide();
+					$(".action_option").show();
+					$("#payment-table").show();
 				}
 			});
 		}
@@ -345,13 +434,20 @@ $( document ).ready(function() {
 	});
 
 	$(".negocio_pai_field select").on( "change", function( event ) {
+		var current = $(this);
 		var formData = $(this).parent().serialize();
 		if ( confirm( '¿Esta seguro que desea cambiar el número de negocios PAI?' ) ) {
 			$.ajax({
-				url: Config.base_url() + 'ot/change_negocio_pai.html',
+				url: Config.base_url() + currentModule + '/change_negocio_pai.html',
 				type: 'POST',
 				data: formData,
 				dataType : 'json',
+				beforeSend: function(){
+					current.prop("disabled", true);
+					$(".action_option").hide();
+					$("#wait-response").show();
+					$("#payment-table").hide();
+				},
 				success: function(response){
 					switch (response) {
 						case '-1':
@@ -362,8 +458,12 @@ $( document ).ready(function() {
 							break;
 						case '1':
 						//  refresh the whole page to reflect the change
-							alert ('Se pudo cambiar el número de negocios PAI correctamente. La página web debe ser actualizada para reflejar los cambios.');
-							window.location.reload();
+							if ( confirm( 'Se pudo cambiar el número de negocios PAI correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?' ) )
+								window.location.reload();
+							current.prop("disabled", false);
+							$(".action_option").show();
+							$("#wait-response").hide();
+							$("#payment-table").show();
 							break;
 						default:
 							alert ('Hay un error en la respuesta del sitio web, consulte a su administrador.');

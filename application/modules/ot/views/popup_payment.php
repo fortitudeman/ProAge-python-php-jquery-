@@ -1,10 +1,20 @@
 <link rel="stylesheet" href="<?php echo base_url();?>ot/assets/style/main.css">
 <link href="<?php echo base_url();?>ot/assets/style/report.css" rel="stylesheet">
-<script src="<?php echo base_url();?>ot/assets/scripts/report.js"></script>
+
+<script type="text/javascript">
+	var currentModule = "";
+<?php
+	$segments = $this->uri->rsegment_array();
+	if (isset($segments[1]))
+		echo 'var currentModule = "' . $segments[1] . '";';
+
+?>
+</script>
+<script type="text/javascript" src="<?php echo base_url();?>ot/assets/scripts/report.js"></script>
 <style type="text/css">
 	.payment_table th { width: 150px;}
 	.payment_table td { padding: 0; margin: 0}
-
+	.add-perc-show, add-perc-ok, .add-perc-show:hover, add-perc-ok:hover {text-decoration: none;}
 </style>
 
 <?php if ($values):
@@ -35,7 +45,8 @@ if ( $access_delete )
 $ignore_image = '
 <img style="cursor: pointer" class="mark_ignored action_option" alt="Ignorar" title="Ignorar" src="' . $base_url . 'images/payment_ignore.jpg" />';
 ?>
-<table class="altrowstable payment_table">
+<div id="wait-response" style="display: none; text-align: center">Espere usted un momento, por favor...</div>
+<table class="altrowstable payment_table" id="payment-table">
     <thead>
         <tr id="popup_tr">
             <?php if ($for_agent_id === FALSE) : ?><th width="200px">Agente</th><?php endif; ?>
@@ -51,6 +62,7 @@ $ignore_image = '
             <th>Año</th>
 <?php endif ?>
             <th style="text-align: right; padding-right: 3em">Prima (en $)</th>
+            <th style="text-align: right; padding-right: 3em">% adicional para pago de bono (en %)</th>
             <th style="text-align: right; padding-right: 7em">Negocio</th>
         </tr>
     </thead>
@@ -89,7 +101,17 @@ $ignore_image = '
             <td style="text-align: right; padding-right: 2.5em"><?php echo $value->year_prime ?></td>
 <?php endif ?>
 
-			<td style="text-align: right; padding-right: 2.5em"><?php echo number_format($value->amount, 2);?></td>
+			<td class="prima-value" style="text-align: right; padding-right: 2.5em"><?php echo number_format($value->amount * (1 + ($value->add_perc / 100)), 2);?></td>
+			<td style="text-align: right; padding-right: 2.5em">
+<span style="display: none" class="ori-prima"><?php echo $value->amount; ?></span>
+<span class="add-perc-display"><?php echo $value->add_perc;?></span>
+&nbsp;
+<a href="javascript: void(0);" class="add-perc-show"><i class="icon-edit" title="Editar"></i></a>
+<form class="add-perc-edit" style="display: inline; white-space: nowrap;">
+<input name="add_perc[<?php echo $value->pay_tbl_id ?>]" class="form-control input-sm perc-value" max="999" step="1" type="number" maxlength="3" style="font-size: 1em; width: 3.5em;" value="<?php echo $value->add_perc;?>">
+<a href="javascript: void(0);" class="add-perc-ok"><i class="icon-ok" title="OK"></i></a>
+</form>
+			</td>
 			<td style="width: 110px; text-align: right; padding-right: 2.5em">
 <span style="padding-left: 2.5em; padding-right: 1.5em; text-align: right;"><?php echo $value->business;?></span>
 <?php

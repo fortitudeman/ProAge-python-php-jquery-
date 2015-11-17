@@ -1,5 +1,14 @@
 ﻿<link rel="stylesheet" href="<?php echo base_url();?>ot/assets/style/main.css">
 <link href="<?php echo base_url();?>ot/assets/style/report.css" rel="stylesheet">
+<script type="text/javascript">
+	var currentModule = "";
+<?php
+	$segments = $this->uri->rsegment_array();
+	if (isset($segments[1]))
+		echo 'var currentModule = "' . $segments[1] . '";';
+
+?>
+</script>
 <script src="<?php echo base_url();?>ot/assets/scripts/report.js"></script>
 
 <!--<script src="<?php echo base_url();?>ot/assets/scripts/vendor/jquery-1.10.1.min.js"></script>-->
@@ -11,6 +20,7 @@
     
 </style>
 
+<div id="wait-response" style="display: none; text-align: center">Espere usted un momento, por favor...</div>
 <table border="0" cellspacing="0" cellpadding="0" class="sortable altrowstable tablesorter" id="popup_table">
     <thead>
         <tr id="popup_tr">

@@ -3,6 +3,7 @@ $post_data = isset($_POST['query']) ? ',prev_post:'. json_encode($_POST['query']
 $base_url = base_url();
 $segments = $this->uri->rsegment_array();
 $is_director_module = ($segments[1] == 'director');
+$popup_segment = $is_director_module ? 'director' : 'ot';
 ?>
 <script type="text/javascript">
 
@@ -10,7 +11,7 @@ $is_director_module = ($segments[1] == 'director');
     {
 		$.fancybox.showLoading();
 
-		$.post("<?php echo $base_url ?>ot/reporte_popup",
+		$.post("<?php echo $base_url . $popup_segment ?>/reporte_popup",
 			{agent_id: agent_id, wrk_ord_ids:wrk_ord_ids,is_poliza:poliza,gmm:gmm<?php echo $post_data ?>},function(data)
         { 
             if(data)

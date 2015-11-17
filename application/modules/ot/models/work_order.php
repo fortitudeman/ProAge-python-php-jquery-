@@ -597,12 +597,13 @@ class Work_order extends CI_Model{
 		$query_parent_type_name->free_result();
 
 		$agents = array();		
-		$this->db->select( ' policies_vs_users.policy_id as id_of_policy, policies_vs_users.percentage, policies_vs_users.user_id AS agent_id, users.name, users.lastnames, users.company_name, users.email, users.id as user_id ' )
+		$this->db->select( ' policies_vs_users.policy_id as id_of_policy, policies_vs_users.percentage, policies_vs_users.user_id AS agent_id, users.name, users.lastnames, users.company_name, users.email, users.id as user_id, users.manager_id ' )
 			->from( 'policies_vs_users' )
 			->join( 'agents', 'agents.id=policies_vs_users.user_id' )
 			->join( 'users', 'users.id=agents.user_id ' )
 			->where_in('policies_vs_users.policy_id', array_values($policy_ids));
 		$query = $this->db->get();
+
 		if ($query->num_rows() > 0)
 		{
 			foreach ($query->result() as $row)
@@ -617,6 +618,7 @@ class Work_order extends CI_Model{
 					'company_name' => $row->company_name,
 					'email' => $row->email,
 					'user_id' => $row->user_id,
+					'manager_id' => $row->manager_id,
 				);
 			}
 		}

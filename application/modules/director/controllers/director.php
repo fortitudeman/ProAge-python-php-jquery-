@@ -114,6 +114,12 @@ class Director extends CI_Controller {
 							case 'Export xls':
 								$this->access_export_xls = TRUE;
 								break;
+							case 'Editar':
+								$this->access_update = TRUE;
+								break;
+							case 'Eliminar':
+								$this->access_delete = TRUE;
+								break;
 							default:
 								break;
 						}
@@ -1801,7 +1807,90 @@ implode(', ', $ramo_tramite_types) . '
 			$result = 'Ocurrio un error, consulte a su administrador.';
 		echo $result;
 	}
-	
+
+//////// Below are page duplicated in ot, agent and director modules
+	public function change_negocio_pai()
+	{
+		if ( !$this->input->is_ajax_request() )
+			redirect( 'director.html', 'refresh' );
+
+		if ( !$this->access_update )
+		{
+			echo json_encode('-1');
+			exit;
+		}
+		$negocio_pai = $this->input->post('negocio_pai');
+		if (is_array($negocio_pai))
+		{
+			$this->load->model( 'ot/work_order' );
+			foreach ($negocio_pai as $id => $value)
+			{
+				$result = $this->work_order->generic_update(
+					'policy_negocio_pai', array('negocio_pai' => (int) $value), array('id' => (int) $id), 1, 0) ?
+						'1' : '0';
+				echo json_encode($result);
+				exit();
+			}
+		}
+		echo json_encode('2');
+		exit;
+	}
+
+	public function change_add_perc()
+	{
+		if ( !$this->input->is_ajax_request() )
+			redirect( 'director.html', 'refresh' );
+
+		if ( !$this->access_update )
+		{
+			echo json_encode('-1');
+			exit;
+		}
+		$add_perc = $this->input->post('add_perc');
+
+		if (is_array($add_perc))
+		{
+			$this->load->model( 'ot/work_order' );
+			foreach ($add_perc as $id => $value)
+			{
+				$result = $this->work_order->generic_update(
+					'payments', array('add_perc' => (int) $value), array('pay_tbl_id' => (int) $id), 1, 0) ?
+						'1' : '0';
+				echo json_encode($result);
+				exit();
+			}
+		}
+		echo json_encode('2');
+		exit;
+	}
+
+// mark OT as paid
+	public function mark_paid()
+	{
+		$this->load->helper('ot/ot');
+		change_ot_status(4, 'director');
+	}
+
+// mark OT as ntu
+	public function mark_ntu()
+	{
+		$this->load->helper('ot/ot');
+		change_ot_status(10, 'director');
+	}
+
+// actions on payment (ignore, delete)
+	public function payment_actions()
+	{
+		$this->load->helper('ot/ot');
+		payment_actions('director');
+	}
+
+	public function reporte_popup()
+	{
+		$this->load->helper('ot/ot');
+		reporte_popup('director');
+	}
+//////// Above are page duplicated in ot, agent and director modules
 /* End of file director.php */
 /* Location: ./application/modules/director/controllers/director.php */
 }

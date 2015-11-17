@@ -94,8 +94,8 @@ class Agent extends CI_Controller {
 			if( $value['action_name'] == 'Editar' )
 				$this->access_update = true;
 				
-/*			if( $value['action_name'] == 'Eliminar' )
-				$this->access_delete = true;*/
+			if( $value['action_name'] == 'Eliminar' )
+				$this->access_delete = true;
 		endif; endforeach;
 
 		// Added Acctions for user, change the bool access
@@ -757,8 +757,10 @@ implode(', ', $ramo_tramite_types) . '
 	public function payment_popup()
 	{
 		$data = array('values' => FALSE,
-			'access_update' => $this->access_update_ot,
-			'access_delete' => $this->access_delete_ot,
+//			'access_update' => $this->access_update_ot,
+//			'access_delete' => $this->access_delete_ot,
+			'access_update' => $this->access_update,
+			'access_delete' => $this->access_delete,
 		);
 		$this->load->model('usuarios/user');
 		$filter = array();
@@ -950,6 +952,84 @@ implode(', ', $ramo_tramite_types) . '
 
 		return $data;
 	}
+
+//////// Below are page duplicated in ot, agent and director modules
+	public function change_negocio_pai()
+	{
+		if ( !$this->input->is_ajax_request() )
+			redirect( 'agent.html', 'refresh' );
+
+		if ( !$this->access_update )
+		{
+			echo json_encode('-1');
+			exit;
+		}
+		$negocio_pai = $this->input->post('negocio_pai');
+		if (is_array($negocio_pai))
+		{
+			$this->load->model( 'ot/work_order' );
+			foreach ($negocio_pai as $id => $value)
+			{
+				$result = $this->work_order->generic_update(
+					'policy_negocio_pai', array('negocio_pai' => (int) $value), array('id' => (int) $id), 1, 0) ?
+						'1' : '0';
+				echo json_encode($result);
+				exit();
+			}
+		}
+		echo json_encode('2');
+		exit;
+	}
+
+	public function change_add_perc()
+	{
+		if ( !$this->input->is_ajax_request() )
+			redirect( 'agent.html', 'refresh' );
+
+		if ( !$this->access_update )
+		{
+			echo json_encode('-1');
+			exit;
+		}
+		$add_perc = $this->input->post('add_perc');
+
+		if (is_array($add_perc))
+		{
+			$this->load->model( 'ot/work_order' );
+			foreach ($add_perc as $id => $value)
+			{
+				$result = $this->work_order->generic_update(
+					'payments', array('add_perc' => (int) $value), array('pay_tbl_id' => (int) $id), 1, 0) ?
+						'1' : '0';
+				echo json_encode($result);
+				exit();
+			}
+		}
+		echo json_encode('2');
+		exit;
+	}
+
+// mark OT as paid
+	public function mark_paid()
+	{
+		$this->load->helper('ot/ot');
+		change_ot_status(4, 'agent');
+	}
+
+// mark OT as ntu
+	public function mark_ntu()
+	{
+		$this->load->helper('ot/ot');
+		change_ot_status(10, 'agent');
+	}
+
+// actions on payment (ignore, delete)
+	public function payment_actions()
+	{
+		$this->load->helper('ot/ot');
+		payment_actions('agent');
+	}
+//////// Above are page duplicated in ot, agent and director modules
 
 /* End of file agent.php */
 /* Location: ./application/modules/agent/controllers/agent.php */

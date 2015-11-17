@@ -47,7 +47,7 @@ else
 ?>
 </div></td>
                         <td style="width:110px;"><div><?php echo $value['general'][0]->creation_date;?></div></td>
-                        <td style="width:90px;"><div><?php echo $value['general'][0]->work_order_status_name;?></div></td>
+                        <td class="ot-status-container" style="width:90px;"><div class="ot-status"><?php echo $value['general'][0]->work_order_status_name;?></div></td>
                         <?php if($is_poliza == 'yes'){ ?>
                         <td style="width:90px;"><div><?php echo $value['general'][0]->policies_uid;?></div></td>
                         <?php }?>
