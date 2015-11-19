@@ -538,7 +538,26 @@ if ( ! function_exists('get_ot_data'))
 		}
 
 		$query = array_merge($other_filters, array('periodo' => $CI->default_period_filter));
-		$data = $CI->work_order->find_new( $query, $access_all );	
+		$data = $CI->work_order->find_new( $query, $access_all );
+		if ($data)
+		{
+			$gerentes = $CI->user->getSelectsGerentes2();
+			$gerente_array = array();
+			foreach ($gerentes as $gerente)
+				$gerente_array[$gerente['id']] = $gerente['name'];
+
+			foreach ($data as $key1 => $value1)
+			{
+				foreach ($value1['agents'] as $key2 => $value2)
+				{
+					if (isset($gerente_array[$value2['manager_id']]))
+						$data[$key1]['agents'][$key2]['manager_name'] = 
+							$gerente_array[$value2['manager_id']];
+					else
+						$data[$key1]['agents'][$key2]['manager_name'] = '';
+				}
+			}
+		}
 		return $data;
 	}
 }

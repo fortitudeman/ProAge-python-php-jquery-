@@ -135,8 +135,6 @@ if (!$agent_profile_page && !$operation_profile_page && !$director_profile_page)
                     <thead>
                       <tr>
 					    <th colspan="6">
-
-						
 <?php if ($operation_profile_page || $director_profile_page): ?>
 					    <input type="hidden" value="" id="export-xls-input" name="export_xls_input" disabled="disabled" />
 <?php if (isset($coordinator_select)): ?>
@@ -256,9 +254,16 @@ Período :<br />
 <div id="ot-list">
             <table class="sortable altrowstable tablesorter" id="sorter" style="width:100%;">
               <colgroup>
+<?php if ($operation_profile_page): ?> 
+				<col width="14%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+<?php else: ?> 
 				<col width="14%" />
 				<col width="15%" />
 				<col width="15%" />
+<?php endif ?> 
 				<col width="6%" />
 				<col width="17%" />
 				<col width="15%" />
@@ -270,6 +275,9 @@ Período :<br />
                       <th>Número de OT&nbsp;</th>
                       <th>Fecha de alta de la OT&nbsp;</th> 
                       <th>Agente - %&nbsp;</th>
+<?php if ($operation_profile_page): ?>
+                      <th>Gerente%&nbsp;</th>
+<?php endif ?>
                       <th>Ramo&nbsp;</th>
                       <th>Tipo de trámite&nbsp;</th>
                       <th>Nombre del asegurado&nbsp;</th>

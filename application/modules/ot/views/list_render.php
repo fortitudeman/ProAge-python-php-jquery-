@@ -14,6 +14,7 @@
   	
 */
 $agent_profile_page = ($this->uri->segment(1) == 'agent');
+$operation_page = ($this->uri->segment(1) == 'operations');
 ?>
                 <?php  if( !empty( $data ) ): ?>
                 <?php  foreach( $data as $value ):  ?>
@@ -72,16 +73,32 @@ $agent_profile_page = ($this->uri->segment(1) == 'agent');
                     </td>
                     <td class="center"><?php if( $value['creation_date'] != '0000-00-00 00:00:00' ) echo $value['creation_date'] ?></td>
                     <td class="center">
-						<?php 
-							if( !empty( $value['agents'] ) )
-								foreach( $value['agents'] as $agent ) 
-									
-									if( !empty( $agent['company_name'] ) )
-										echo $agent['company_name'] . ' '. $agent['percentage'] . '% <br>';
-									else
-										echo $agent['name']. ' '. $agent['lastnames']. ' '. $agent['percentage'] . '% <br>'
-						?>
+<?php 
+	if( !empty( $value['agents'] ) )
+	{
+		foreach( $value['agents'] as $agent ) 
+		{
+			if( !empty( $agent['company_name'] ) )
+				echo $agent['company_name'] . ' '. $agent['percentage'] . '% <br>';
+			else
+				echo $agent['name']. ' '. $agent['lastnames']. ' '. $agent['percentage'] . '% <br>';
+		}
+	}
+?>
                     </td>
+<?php if ($operation_page):
+	$agent_gerente_arr = array();
+	foreach( $value['agents'] as $agent ) 
+	{
+		if (!empty($agent['manager_name']))
+			$agent_gerente_arr[] = $agent['manager_name'];
+		else
+			$agent_gerente_arr[] = '-';
+	}
+	$agent_gerente = implode('<br>', $agent_gerente_arr);
+?>
+                    <td style="text-align: center"><?php echo implode('<br>', $agent_gerente_arr); ?></td>
+<?php endif ?>
                     <td class="center"><?php echo $value['group_name'] ?></td>
                     <td class="center"><?php echo $value['parent_type_name'] ?></td>
                     <td class="center"><?php echo $value['asegurado'] ?></td>

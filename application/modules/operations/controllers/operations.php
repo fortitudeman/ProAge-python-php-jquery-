@@ -282,6 +282,7 @@ implode(', ', $ramo_tramite_types) . '
 				"Número de OT",
 				"Fecha de alta de la OT",
 				"Agente - %",
+				"Gerente",
 				"Ramo",
 				"Tipo de trámite",
 				"Nombre del asegurado",
@@ -293,15 +294,20 @@ implode(', ', $ramo_tramite_types) . '
 		foreach ($data as $value)
 		{
 			$agents = array();
+			$agent_gerentes = array();
 			if( !empty( $value['agents'] ) )
 			{
 				foreach( $value['agents'] as $agent ) 
+				{
 					if( !empty( $agent['company_name'] ) )
 						$agents[] = $agent['company_name'] . ' - '. $agent['percentage'];
 					else
 						$agents[] = $agent['name'] . ' '. $agent['lastnames']. ' - '. $agent['percentage'];
+					$agent_gerentes[] = (!empty($agent['manager_name'])) ? $agent['manager_name'] : '_';
+				}
 			}
 			$agent_value = implode('|', $agents);
+			$agent_gerente_value = implode('|', $agent_gerentes);
 			$prima = '_';
 			if ($value['is_nuevo_negocio'] && ($value['policy_prima'] != 'NULL'))
 				$prima = number_format($value['policy_prima'], 2);
@@ -309,6 +315,7 @@ implode(', ', $ramo_tramite_types) . '
 				$value['uid'],
 				$value['creation_date'],
 				$agent_value,
+				$agent_gerente_value,
 				$value['group_name'],
 				$value['parent_type_name'],
 				$value['asegurado'],
@@ -316,6 +323,7 @@ implode(', ', $ramo_tramite_types) . '
 				$prima
 			);
 		}
+
 		// Export
 		$this->load->helper('usuarios/csv');
 		$filename = 'operaciones_ot.csv';
