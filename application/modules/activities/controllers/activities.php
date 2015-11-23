@@ -220,132 +220,35 @@ class Activities extends CI_Controller {
 		  'usersupdate' => $user[0]		  	   	  		
 		);
 	
-		
 		// Render view 
 		$this->load->view( 'index', $this->view );	
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 // Create new user
 	public function create( $userid = null ){
 // Copied / pasted to the code of agent/create_activity.html
 
+		$redirect_page = !empty( $userid ) ?  'activities/index/'.$userid : 'activities';
 		// Check access the user for create
 		if( $this->access_create == false ){
-				
 			// Set false message		
 			$this->session->set_flashdata( 'message', array( 
-				
 				'type' => false,	
 				'message' => 'No tiene permisos para ingresar en esta sección "Actividad crear", Informe a su administrador para que le otorge los permisos necesarios.'
-							
 			));	
-			
-			
-			if( !empty( $userid ) )				
-				redirect( 'activities/index/'.$userid, 'refresh' );
-			else
-				redirect( 'activities', 'refresh' );
-			
-		
+			redirect($redirect_page, 'refresh');
 		}
-			
-			
-		
-		if( !empty( $_POST ) ){
-										
-			// Generals validations
-			$this->form_validation->set_rules('begin', 'Semana', 'required');
-			$this->form_validation->set_rules('cita', 'Cita', 'required|numeric');
-			$this->form_validation->set_rules('prospectus', 'Prospecto', 'required|numeric');
-			$this->form_validation->set_rules('interview', 'Entrevista', 'required|numeric');
-					
-			// Run Validation
-			if ( $this->form_validation->run() == TRUE ){
-				
-				//Load Model
-				$this->load->model( array( 'activity', 'user' ) );
-			
-				if( !empty( $userid ) )	
-					$_POST['agent_id'] =  $this->user->getAgentIdByUser( $userid );
-				else					
-					$_POST['agent_id'] = $this->user->getAgentIdByUser( $this->sessions['id'] );
-			
-				
-				if( $this->activity->exist( 'agents_activity', $_POST ) == true )
-								
-					if( $this->activity->create( 'agents_activity', $_POST ) == true ){
-						
-						// Set false message		
-						$this->session->set_flashdata( 'message', array( 
-							
-							'type' => true,	
-							'message' => 'Se creó la actividad correctamente.'
-										
-						));	
-						
-						
-						if( !empty( $userid ) )				
-							redirect( 'activities/index/'.$userid, 'refresh' );
-						else
-							redirect( 'activities', 'refresh' );
-						
-					}else{
-						
-						// Set false message		
-						$this->session->set_flashdata( 'message', array( 
-							
-							'type' => false,	
-							'message' => 'No se puede crear la actividad, consulte a su administrador.'
-										
-						));	
-						
-						
-						if( !empty( $userid ) )				
-							redirect( 'activities/index/'.$userid, 'refresh' );
-						else
-							redirect( 'activities', 'refresh' );
-						
-					}
-				
-				else{
-					// Set false message		
-					$this->session->set_flashdata( 'message', array( 
-						
-						'type' => false,	
-						'message' => 'No se puede crear la actividad ya existe.'
-									
-					));	
-					
-					
-					if( !empty( $userid ) )				
-						redirect( 'activities/index/'.$userid, 'refresh' );
-					else
-						redirect( 'activities', 'refresh' );
-				}
-			}	
-			
-						
-		}
-		
-		
+		$period_fields = $this->_common_create_update(null, $redirect_page);
+
 		if( !empty( $userid ) )	
 			$user = $this->user->getForUpdateOrDelete($userid);
 		else
 			$user = $this->user->getForUpdateOrDelete($this->sessions['id']);
 
+		$base_url = base_url();
+		$js = activity_create_update_js();
 		// Config view
 		$this->view = array(
-				
 		  'title' => 'Crear Actividad',
 		    // Permisions
 		  'user' => $this->sessions,
@@ -357,28 +260,23 @@ class Activities extends CI_Controller {
 		  'access_report' => $this->access_report,
 		  'access_viewall' => $this->access_viewall,
 		  'css' => array(
-		  	'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet" media="screen">'
+		  	'<link href="'. $base_url .'activities/assets/style/create.css" rel="stylesheet" media="screen">'
 		  ),
-		  'scripts' =>  array(
-			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
-			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-			  '<script src="'.base_url().'scripts/config.js"></script>',
-			  '<script src="'.base_url().'activities/assets/scripts/activities.js"></script>'
-			  	
+		  'scripts' => array(
+			'<script src="'.$base_url.'scripts/config.js"></script>',
+			'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
+			$js,
 		  ),
-		  'content' => 'activities/create', // View to load
-		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'userid' => $userid,
-		  'usersupdate' => $user[0]
+			'period_fields' => $period_fields,
+			'content' => 'activities/create', // View to load
+			'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+			'userid' => $userid,
+			'usersupdate' => $user[0]
 		);
-		
-		
 		// Render view 
 		$this->load->view( 'index', $this->view );	
-	
 	}
-	
+
 
 //Report of Activities
 	public function report( $userid = null ){
@@ -616,70 +514,58 @@ class Activities extends CI_Controller {
 			redirect( $redirect_page, 'refresh' );
 		}
 
-		if( !empty( $_POST ) ){
+		$period_fields = $this->_common_create_update($activity_id, $redirect_page);
 
-			// Generals validations
-			$this->form_validation->set_rules('begin', 'Semana', 'trim|required');
-			$this->form_validation->set_rules('end', 'Semana', 'trim|required');
-			$this->form_validation->set_rules('cita', 'Cita', 'trim|required|numeric');
-			$this->form_validation->set_rules('prospectus', 'Prospecto', 'trim|required|numeric');
-			$this->form_validation->set_rules('interview', 'Entrevista', 'trim|required|numeric');
-			$this->form_validation->set_rules('vida_requests', 'Solicitudes Vida', 'trim|required|numeric');			
-			$this->form_validation->set_rules('vida_businesses', 'Negocios Vida', 'trim|required|numeric');			
-			$this->form_validation->set_rules('gmm_requests', 'Solicitudes GMM', 'trim|required|numeric');			
-			$this->form_validation->set_rules('gmm_businesses', 'Negocios GMM', 'trim|required|numeric');			
-			$this->form_validation->set_rules('autos_businesses', 'Negocios Autos', 'trim|required|numeric');			
-			$this->form_validation->set_rules('comments', 'Comentarios', 'trim');
+		$begin = $_POST ? $this->input->post('begin') : $data->begin;
+		$end =  $_POST ? $this->input->post('end') : $data->end;
 
-			// Run Validation
-			if ( $this->form_validation->run() == TRUE ){
-
-				$field_values = array();
-				foreach ( $_POST as $key => $value ) {
-
-					$field_values[$key] = $this->input->post( $key );
-				}
-				if ( $this->activity->update( 'agents_activity', $activity_id, $field_values) )
-					$this->session->set_flashdata( 'message', array( 
-
-						'type' => true,  
-						'message' => 'Se guardo la actividad correctamente.'
-					));
-				else
-					$this->session->set_flashdata( 'message', array( 
-
-						'type' => false,  
-						'message' => 'No se pudo guardar el registro, Actividad, ocurrio un error en la base de datos. Pongase en contacto con el desarrollador'
-					));				
-				redirect( $redirect_page, 'refresh' );
-			}
-		}
+		$base_url = base_url();
+		$js = activity_create_update_js();
 
 		// Config view
 		$this->view = array(
-				
 		  'title' => 'Editar Actividad',
 		    // Permisions
 		  'user' => $this->sessions,
 		  'user_vs_rol' => $this->user_vs_rol,
 		  'roles_vs_access' => $this->roles_vs_access,
 		  'css' => array(
-			  '<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet" media="screen">'
+			  '<link href="'. $base_url .'activities/assets/style/create.css" rel="stylesheet" media="screen">'
 		  ),
 		  'scripts' =>  array(
-			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
-			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-//			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-			  '<script src="'.base_url().'activities/assets/scripts/activities.js"></script>'
+				'<script src="'.$base_url.'scripts/config.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
+			$js,
+'
+<script type="text/javascript">
+	$( document ).ready( function(){ 
+		$( "#cust_period_from").val("' . $begin . '");
+		$( "#cust_period_to").val("' . $end . '");
+		$( "#periodo_form").children().text("' . $begin . ' - ' . $end . '");
+	});
+</script>',
+
 		  ),
 		  'content' => 'activities/update', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  'userid' => $userid,
-		  'data' => $data		  
+		  'data' => $data,
+			'period_fields' => $period_fields,
 		); 
 
 		// Render view 
 		$this->load->view( 'index', $this->view );	
+	}
+
+	// Common to create and update activity
+	private function _common_create_update($activity_id, $redirect_page = 'activities')
+	{
+		$this->load->helper( array('filter', 'activity' ));
+		$this->load->model('activity');
+		create_update_activity($activity_id, $redirect_page);
+		$ramo = 1;
+		$period_fields = show_period_fields('ot_reporte', $ramo);
+		return $period_fields;
 	}
 
 	// Delete Activity

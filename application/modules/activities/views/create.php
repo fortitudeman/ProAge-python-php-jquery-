@@ -14,6 +14,9 @@
   	
 */
 $base_url = base_url();
+
+$selected_period = get_filter_period();
+
 $agent_profile_page = ($this->uri->segment(1) == 'agent');
 if (!$agent_profile_page):
 ?>
@@ -85,6 +88,19 @@ endif;
 
             <form id="form" action="<?php echo current_url() ?>" class="form-horizontal" method="post">
                 <fieldset>
+
+                  <div class="control-group">
+                    <label class="control-label text-error" for="inputError">Periodo</label>
+                    <div class="controls">
+<?php echo $period_fields ?>
+<select id="periodo_form" name="periodo" style="width: 175px" title="Período">
+	  <option value="<?php echo $selected_period ?>"></option>
+</select>
+<input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
+                    </div>
+                  </div>
+
+<!--
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Semana</label>
                     <div class="controls">
@@ -94,6 +110,7 @@ endif;
                        <input id="end" name="end" type="hidden" readonly="readonly" value="<?php echo set_value('end')  ?>">
                     </div>
                   </div>
+-->
 
                   <div class="row">
                     <div class="span2">
@@ -102,15 +119,15 @@ endif;
           	                   	<div id="container">
 								    <div id="left">
 								        <label class="text-error" for="inputError">Citas</label>
-								        <input style="width:20px" class="focused required number" id="cita" name="cita" type="text" value="<?php echo set_value('cita')  ?>" maxlength="3">
+								        <input style="width:50px" type="number" min="0" step="1" required class="focused required number" id="cita" name="cita" value="<?php echo set_value('cita')  ?>" maxlength="3">
 								    </div>
 								    <div id="middle">
 								        <label class="text-error" for="inputError">Entrevistas</label>
-								        <input style="width:20px"  maxlength="3" class="focused required number" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
+								        <input style="width:50px" type="number" min="0" step="1" required maxlength="3" class="focused required number" id="interview" name="interview" type="text" value="<?php echo set_value('interview')  ?>">
 								    </div>
 								    <div id="right">
 								        <label class="text-error" for="inputError">Prospectos</label>
-								        <input style="width:20px"  maxlength="3" class="focused required number" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
+								        <input style="width:50px" type="number" min="0" step="1" required maxlength="3" class="focused required number" id="prospectus" name="prospectus" type="text" value="<?php echo set_value('prospectus')  ?>">
 								    </div>
 								</div>
                           </div>
@@ -125,13 +142,13 @@ endif;
           	                   	<div id="container">
 								    <div id="left">
 								        <label class="text-error" for="inputError">Solicitudes Vida</label>
-								        <input style="width:20px" class="focused required number" id="vida_requests" name="vida_requests" type="text" value="<?php echo set_value('vida_requests')  ?>" maxlength="3">
+								        <input style="width:50px" type="number" min="0" step="1" required class="focused required number" id="vida_requests" name="vida_requests" type="text" value="<?php echo set_value('vida_requests')  ?>" maxlength="3">
 								    </div>
 								    <div id="middle">
 								    </div>
 								    <div id="right">
 								        <label class="text-error" for="inputError">Negocios Vida</label>
-								        <input style="width:20px"  maxlength="3" class="focused required number" id="vida_businesses" name="vida_businesses" type="text" value="<?php echo set_value('vida_businesses')  ?>">
+								        <input style="width:50px" type="number" min="0" step="1" required maxlength="3" class="focused required number" id="vida_businesses" name="vida_businesses" type="text" value="<?php echo set_value('vida_businesses')  ?>">
 								    </div>
 								</div>
                           </div>
@@ -146,13 +163,13 @@ endif;
           	                   	<div id="container">
 								    <div id="left">
 								        <label class="text-error" for="inputError">Solicitudes GMM</label>
-								        <input style="width:20px" class="focused required number" id="gmm_requests" name="gmm_requests" type="text" value="<?php echo set_value('gmm_requests')  ?>" maxlength="3">
+								        <input style="width:50px" type="number" min="0" step="1" required class="focused required number" id="gmm_requests" name="gmm_requests" type="text" value="<?php echo set_value('gmm_requests')  ?>" maxlength="3">
 								    </div>
 								    <div id="middle">
 								    </div>
 								    <div id="right">
 								        <label class="text-error" for="inputError">Negocios GMM</label>
-								        <input style="width:20px"  maxlength="3" class="focused required number" id="gmm_businesses" name="gmm_businesses" type="text" value="<?php echo set_value('gmm_businesses')  ?>">
+								        <input style="width:50px" type="number" min="0" step="1" required maxlength="3" class="focused required number" id="gmm_businesses" name="gmm_businesses" type="text" value="<?php echo set_value('gmm_businesses')  ?>">
 								    </div>
 								</div>
                           </div>
@@ -169,7 +186,7 @@ endif;
 								    </div>
 								    <div id="middle">
 								        <label class="text-error" for="inputError">Negocios Autos</label>
-								        <input style="width:20px"  maxlength="3" class="focused required number" id="autos_businesses" name="autos_businesses" type="text" value="<?php echo set_value('autos_businesses')  ?>">
+								        <input style="width:50px" type="number" min="0" step="1" required maxlength="3" class="focused required number" id="autos_businesses" name="autos_businesses" type="text" value="<?php echo set_value('autos_businesses')  ?>">
 								    </div>
 								    <div id="right">
 								    </div>
@@ -189,7 +206,7 @@ endif;
                   <?php endif; ?>
 
                   <div id="actions-buttons-forms" class="form-actions">
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" id="save-activity" class="btn btn-primary">Guardar</button>
                     <button class="btn" onclick="history.back()">Cancelar</button>
                   </div>
                 </fieldset>

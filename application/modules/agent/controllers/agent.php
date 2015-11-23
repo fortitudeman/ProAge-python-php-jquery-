@@ -570,62 +570,17 @@ implode(', ', $ramo_tramite_types) . '
 			));
 			redirect( 'agent/agent_sales_activity/' . $this->user_id, 'refresh' );
 		}
+		$period_fields = $this->_common_create_update(null, null);
 
-		if( !empty( $_POST ) )
-		{
-			// General validations
-			$this->form_validation->set_rules('begin', 'Semana', 'required');
-			$this->form_validation->set_rules('end', 'Semana', 'required');
-			$this->form_validation->set_rules('cita', 'Citas', 'required|numeric');
-			$this->form_validation->set_rules('prospectus', 'Prospectos', 'required|numeric');
-			$this->form_validation->set_rules('interview', 'Entrevistas', 'required|numeric');
-			$this->form_validation->set_rules('vida_requests', 'Solicitudes Vida', 'required|numeric');
-			$this->form_validation->set_rules('vida_businesses', ' Negocios Vida', 'required|numeric');
-			$this->form_validation->set_rules('gmm_requests', 'Solicitudes GMM', 'required|numeric');
-			$this->form_validation->set_rules('gmm_businesses', ' Negocios GMM', 'required|numeric');
-			$this->form_validation->set_rules('autos_businesses', ' Negocios AUtos', 'required|numeric');
-
-			// Run Validation
-			if ( $this->form_validation->run() == TRUE )
-			{
-				$values = array_merge($_POST, array('agent_id' => $this->agent->agent_id));
-				if ( $this->activity->exist( 'agents_activity', $values ))
-					if ( $this->activity->create( 'agents_activity', $values ) )
-					{
-						$this->session->set_flashdata( 'message', array( 
-							'type' => true,	
-							'message' => 'Se creó la actividad correctamente.'
-						));	
-						redirect( 'agent/agent_sales_activity/' . $this->user_id, 'refresh' );
-
-					}
-					else
-					{
-						$this->session->set_flashdata( 'message', array( 
-							'type' => false,	
-							'message' => 'No se puede crear la actividad, consulte a su administrador.'
-						));	
-						redirect( 'agent/agent_sales_activity/' . $this->user_id, 'refresh' );
-					}
-
-				else
-				{
-					$this->session->set_flashdata( 'message', array( 
-						'type' => false,	
-						'message' => 'No se puede crear la actividad ya existe.'
-					));	
-					redirect( 'agent/agent_sales_activity/' . $this->user_id, 'refresh' );
-				}
-			}
-		}
-		
 		$content_data = array(
-			'access_update' => $this->access_update_activity
+			'access_update' => $this->access_update_activity,
+			'period_fields' => $period_fields,
 			);
 		$sub_page_content = $this->load->view('activities/create', $content_data, true);
 
 		// Config view
 		$base_url = base_url();
+		$js = activity_create_update_js();
 		$this->view = array(
 			'title' => 'Perfil de agente',
 			  // Permisions
@@ -633,14 +588,13 @@ implode(', ', $ramo_tramite_types) . '
 			'user_vs_rol' => $this->user_vs_rol,
 			'roles_vs_access' => $this->roles_vs_access,
 			'css' => array(
-				'<link href="'. base_url() .'activities/assets/style/create.css" rel="stylesheet" media="screen">',
+				'<link href="'. $base_url .'activities/assets/style/create.css" rel="stylesheet" media="screen">',
 				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">',
 			),
 			'scripts' =>  array(
-				'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
-				'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-				'<script src="'.base_url().'scripts/config.js"></script>',
-				'<script src="'.base_url().'activities/assets/scripts/activities.js"></script>'
+				'<script src="'.$base_url.'scripts/config.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
+				$js,
 			),
 			'content' => 'agent/agent_profile', // View to load
 			'message' => $this->session->flashdata('message'),
@@ -650,6 +604,20 @@ implode(', ', $ramo_tramite_types) . '
 
 		// Render view 
 		$this->load->view( 'index', $this->view );	
+	}
+
+	// Common to create and update activity
+	private function _common_create_update($activity_id, $redirect_page = null)
+	{
+		if ($redirect_page === null)
+			$redirect_page = 'agent/agent_sales_activity/' . $this->user_id;
+
+		$this->load->helper( array('filter', 'activities/activity' ));
+		$this->load->model('activities/activity');
+		create_update_activity($activity_id, $redirect_page);
+		$ramo = 1;
+		$period_fields = show_period_fields('ot_reporte', $ramo);
+		return $period_fields;
 	}
 
 	public function activity_details()
