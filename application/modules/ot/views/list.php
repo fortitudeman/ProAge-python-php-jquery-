@@ -16,7 +16,6 @@
 $base_url = base_url();
 $agents = str_replace('<option value="">Seleccione</option>', '<option value="">Todos</option>', $agents);
 $this->load->helper('filter');
-$selected_filter_period = get_selected_filter_period();
 $estado_selected = array(
 	'activadas' => '',
 	'tramite' => '',
@@ -39,15 +38,12 @@ if (!$agent_profile_page && !$operation_profile_page && !$director_profile_page)
 ?>
 <div>
     <ul class="breadcrumb">
-       
-		
         <li>
             <a href="<?php echo base_url() ?>">Admin</a> <span class="divider">/</span>
         </li>
         <li>
            <a href="<?php echo base_url() ?>ot.html">Orden de trabajo</a> <span class="divider">/</span>
         </li>
-               
         <li>
             Overview
         </li>
@@ -63,14 +59,9 @@ if (!$agent_profile_page && !$operation_profile_page && !$director_profile_page)
             </div>
         </div>
         <div class="box-content">
-        
-        	
-            
+
             <?php // Show Messages ?>
-            
             <?php if( isset( $message['type'] ) ): ?>
-               
-               
                 <?php if( $message['type'] == true ): ?>
                     <div class="alert alert-success">
                           <button type="button" class="close" data-dismiss="alert">×</button>
@@ -78,8 +69,6 @@ if (!$agent_profile_page && !$operation_profile_page && !$director_profile_page)
                           <strong>Listo: </strong> <?php  echo $message['message']; // Show Dinamical message Success ?>
                     </div>
                 <?php endif; ?>
-               
-                
                 <?php if( $message['type'] == false ): ?>
                     <div class="alert alert-error">
                           <button type="button" class="close" data-dismiss="alert">×</button>
@@ -87,12 +76,8 @@ if (!$agent_profile_page && !$operation_profile_page && !$director_profile_page)
                           <strong>Error: </strong> <?php  echo $message['message']; // Show Dinamical message error ?>
                     </div>
                 <?php endif; ?>
-            
-			
-			
 			<?php endif; ?>
-            
-                                   
+               
             <div class="row">
             	<div class="span1"></div>
             	<div class="span7">
@@ -180,23 +165,13 @@ Coordinadores&nbsp;:
                       </tr>
                       <tr>					  
 					    <th>
-<?php if (!$agent_profile_page): ?>
 Período :<br />
 <?php echo $period_fields ?>
 <select id="periodo_form" name="periodo" style="width: 175px" title="Período">
 	  <option value="<?php echo $selected_period ?>"></option>
 </select>
 <input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
-<?php else: ?>
-                          Período :&nbsp;<i class="icon-calendar" id="cust_update-period" title="Click para editar el período personalizado"></i><br />
-                          <select class="filter-field" id="periodo" name="periodo" style="width: 9.5em">
-                            <option value="1" <?php echo $selected_filter_period[1] ?>>Mes</option>
-                            <option value="2" <?php echo $selected_filter_period[2] ?>>Trimestre</option>
-                            <option value="3" <?php echo $selected_filter_period[3] ?>>Año</option>
-                            <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
-                          </select>
 					    </th>
-<?php endif; ?>
 					    <th>Ramo :<br />
 						  <select class="filter-field" id="ramo" name="ramo">
 <?php
@@ -297,11 +272,4 @@ Período :<br />
     </div><!--/span-->
 
 </div><!--/row-->
-<?php endif ?>
-
-<?php if ($agent_profile_page): ?>
-<div style="margin-top: 10em">
-<?php echo $period_form ?>
-
-</div>
 <?php endif ?>

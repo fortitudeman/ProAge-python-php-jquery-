@@ -301,7 +301,7 @@ class Agent extends CI_Controller {
 	{
 		$this->_init_profile();
 		if ( $this->access_ot_report == false )
-		{	
+		{
 			// Set false message		
 			$this->session->set_flashdata( 'message', array
 			( 
@@ -311,25 +311,9 @@ class Agent extends CI_Controller {
 			redirect( 'home', 'refresh' );
 		}
 
-		$filter = array('ramo' => 1, 'periodo' => get_filter_period());
-		if (count($_POST))
-		{
-			$query = $this->input->post('query');
-			if ($query !== FALSE)
-			{
-				if (isset($query['ramo']) && 
-					( $query['ramo'] >= 1) && ( $query['ramo'] <= 3))
-					$filter['ramo'] = $query['ramo'];
+		$filter = $this->_init_filter();
+		$value = $this->user->getReportAgent( $this->user_id, $filter );
 
-				if (isset($query['periodo']) && 
-					( $query['periodo'] >= 1) && ( $query['periodo'] <= 4))
-				{
-					$filter['periodo'] = $query['periodo'];
-					set_filter_period($query['periodo']);
-				}
-			}
-		}
-		$value = $this->user->getReportAgent( $this->user_id, array('query' => $filter ));
 		if ($value)
 		{
 			$value = $value[0];
@@ -340,6 +324,7 @@ class Agent extends CI_Controller {
 			'filter' => $filter,
 			'value' => $value,
 			'period_form' => show_custom_period(),
+			'period_fields' => show_period_fields('ot_reporte', $filter['ramo']),
 			'report_columns' => $this->load->view('filters/report_columns', array(), true)
 			);
 		$sub_page_content = $this->load->view('report', $content_data, true);
@@ -369,7 +354,8 @@ class Agent extends CI_Controller {
 				'<script type="text/javascript" src="'.$base_url.'ot/assets/scripts/report.js"></script>',
 				'<script type="text/javascript" src="'.$base_url.'ot/assets/scripts/jquery.fancybox.js"></script>',
 				'<script type="text/javascript" src="'.$base_url.'agent/assets/scripts/agent.js"></script>',
-				'<script type="text/javascript" src="'. $base_url .'scripts/custom-period.js"></script>',
+//				'<script type="text/javascript" src="'. $base_url .'scripts/custom-period.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'scripts/report_columns.js"></script>',
 '
 <script type="text/javascript">
@@ -384,18 +370,6 @@ class Agent extends CI_Controller {
 			}
 		});
 	}
-	$( document ).ready(function() {
-		$("#periodo").bind( "click", function(){
-			var parentForm = $(this).parents("form");
-			$("#periodo option:selected").each(function () {
-				if ($(this).val() == 4) {
-					$( "#cust_period-form" ).dialog( "open" );
-				} else
-					parentForm.submit();
-				return false;
-			});
-		})
-	});
 </script>
 '
 			),
@@ -413,8 +387,10 @@ class Agent extends CI_Controller {
 	{
 		$this->_init_profile();
 
+		$filter = $this->_init_filter();
 		$content_data = array(
 			'period_form' => show_custom_period(),
+			'period_fields' => show_period_fields('ot_reporte', $filter['ramo']),
 			'agents' => '<option selected="selected" value="' . $this->agent->agent_id . '">' . $this->agent->agent_name . '</option>',
 			'gerentes' => '',
 			);
@@ -476,7 +452,8 @@ implode(', ', $ramo_tramite_types) . '
 				'<script src="' . $base_url . 'ot/assets/scripts/list_js.js"></script>',
 				'<script src="' . $base_url . 'scripts/config.js"></script>',
 				'<script src="' . $base_url . 'ot/assets/scripts/overview.js"></script>',
-				'<script type="text/javascript" src="' . $base_url . 'scripts/custom-period.js"></script>',	
+				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
+
 				$add_js,
 			),
 			'content' => 'agent/agent_profile', // View to load
@@ -498,26 +475,26 @@ implode(', ', $ramo_tramite_types) . '
 		$agent_array = array();
 		$other_filters = array();
 		$default_week = array();
-		$data = $this->_init_report($agent_array, $other_filters, $default_week);
 
-		switch ($other_filters['periodo'])
-		{
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-				$report_period = ' desde ' . $other_filters['begin'] . ' hasta ' . $other_filters['end'];
-				break;
-			default:
-				$report_period = '';
-				break;
-		}
+		$filter = $this->_init_filter();
+
+		$this->load->helper('tri_cuatrimester');
+		$selection_filters = array(
+			'periodo' => $filter['query']['periodo'],
+			'begin' => '', 'end' => '',
+			'agent_name' => $this->agent->agent_name . ' [ID: ' . $this->agent->agent_id . ']'
+		);
+
+		get_new_period_start_end($selection_filters);
+		$data = $this->activity->sales_activity($selection_filters, TRUE);
 		$content_data = array(
 			'data' => $data,
 			'period_form' => show_custom_period(), // custom period configuration form
+			'period_fields' => show_period_fields('ot_reporte', $filter['ramo']),
 			'other_filters' => $other_filters,
-			'report_period' => $report_period,
+			'report_period' => '',
 			'default_week' => $default_week,
+			'selection_filters' => $selection_filters,
 			);
 
 		$sub_page_content = $this->load->view('activities/sales_activities', $content_data, true);
@@ -545,7 +522,8 @@ implode(', ', $ramo_tramite_types) . '
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
 				'<script src="' . $base_url . 'activities/assets/scripts/sales_activity_report.js"></script>',
 				'<script src="' . $base_url . 'ot/assets/scripts/jquery.fancybox.js"></script>',
-				'<script type="text/javascript" src="'. $base_url .'scripts/custom-period.js"></script>',
+//				'<script type="text/javascript" src="'. $base_url .'scripts/custom-period.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
 			),
 			'content' => 'agent/agent_profile', // View to load
 			'message' => $this->session->flashdata('message'),
@@ -641,27 +619,27 @@ implode(', ', $ramo_tramite_types) . '
 		$agent_array = array();
 		$other_filters = array();
 		$default_week = array();
-		$data = $this->_init_report($agent_array, $other_filters, $default_week, TRUE);
-		switch ($other_filters['periodo'])
-		{
-			case 1:
-			case 2:
-			case 3:
-			case 4:
-				$report_period = ' desde ' . $other_filters['begin'] . ' hasta ' . $other_filters['end'];
-				break;
-			default:
-				$report_period = '';
-				break;
-		}
+		$filter = $this->_init_filter();
+
+		$this->load->helper('tri_cuatrimester');
+		$selection_filters = array(
+			'periodo' => $filter['query']['periodo'],
+			'begin' => '', 'end' => '',
+			'agent_name' => $this->agent->agent_name . ' [ID: ' . $this->agent->agent_id . ']'
+		);
+		get_new_period_start_end($selection_filters);
+
+		$data = $this->activity->overview(0, $this->agent->agent_id, $selection_filters);
 		$content_data = array(
 			'data' => $data,
 			'period_form' => show_custom_period(), // custom period configuration form
+			'period_fields' => show_period_fields('ot_reporte', $filter['ramo']),
 			'other_filters' => $other_filters,
-			'report_period' => $report_period,
+			'report_period' => '',
 			'access_update' => $this->access_update_activity,
 			'access_delete' => $this->access_delete_activity,
 			'userid' => $this->user_id,
+			'selection_filters' => $selection_filters,
 			);
 
 		$sub_page_content = $this->load->view('activities/list', $content_data, true);
@@ -685,7 +663,8 @@ implode(', ', $ramo_tramite_types) . '
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
 				'<script src="' . $base_url . 'activities/assets/scripts/sales_activity_report.js"></script>',
-				'<script type="text/javascript" src="'. $base_url .'scripts/custom-period.js"></script>'
+//				'<script type="text/javascript" src="'. $base_url .'scripts/custom-period.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
 			),
 			'content' => 'agent/agent_profile', // View to load
 			'message' => $this->session->flashdata('message'),
@@ -861,66 +840,6 @@ implode(', ', $ramo_tramite_types) . '
 		$this->load->view('ot/list_render', $view_data);
 	}
 
-	// Init actividades de venta report processing
-// Copied / pasted to the code of agent/agent_sales_activity/89.html
-	private function _init_report(&$agent_array, &$other_filters, &$default_week, $details = FALSE)
-	{
-		$data = array();
-		$agent_array = array($this->agent->agent_id => $this->agent->agent_name);
-		$this->load->helper(array('filter', 'activities/date_report'));
-		$default_filter = get_filter_period();
-		$default_week = get_calendar_week();
-
-		$other_filters = array(
-			'agent_name' => '',
-			'activity_view' => 'normal',
-			'begin' => $default_week['start'],
-			'end' => $default_week['end']
-		);
-		get_generic_filter($other_filters, $agent_array);
-
-		if ( count( $_POST ) && (($periodo = $this->input->post('periodo')) !== FALSE) &&
-			(($agent_name = $this->input->post('agent_name')) !== FALSE) && 
-			(($activity_view = $this->input->post('activity_view')) !== FALSE) &&
-			(($begin = $this->input->post('begin')) !== FALSE) &&
-			(($end = $this->input->post('end')) !== FALSE))
-		{
-			$default_week = array('start' => $begin, 'end' => $end);
-			if ( $this->form_validation->is_natural_no_zero($periodo) &&
-				($periodo <= 4))
-				set_filter_period($periodo);
-
-			if (($activity_view != 'normal') && ($activity_view != 'efectividad'))
-				$activity_view = 'normal';
-
-			$other_filters['agent_name'] = $agent_name;				
-			$other_filters['periodo'] = $periodo;
-			$other_filters['begin'] = $begin;
-			$other_filters['end'] = $end;			
-			get_period_start_end($other_filters);
-
-			$filters_to_save = array(
-				'agent_name' => $agent_name,
-				'activity_view' => $activity_view,
-				'begin' => $other_filters['begin'],
-				'end' => $other_filters['end']
-				);
-			generic_set_report_filter( $filters_to_save, $agent_array );
-		}
-		else
-		{
-			$other_filters = array_merge(
-				$other_filters, array('periodo' => $default_filter));
-			get_period_start_end($other_filters);
-		}
-		if (!$details)
-			$data = $this->activity->sales_activity($other_filters);
-		else
-			$data = $this->activity->overview(0, $this->agent->agent_id, $other_filters);
-
-		return $data;
-	}
-
 //////// Below are page duplicated in ot, agent and director modules
 	public function change_negocio_pai()
 	{
@@ -998,6 +917,42 @@ implode(', ', $ramo_tramite_types) . '
 		payment_actions('agent');
 	}
 //////// Above are page duplicated in ot, agent and director modules
+
+	private function _init_filter()
+	{
+		$default_filter = get_filter_period();
+		$this->other_filters = array(
+			'ramo' => 1);
+		get_generic_filter($this->other_filters, array());
+		$filter = array('ramo' => 1, 'periodo' => get_filter_period());
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+
+			if ( isset($_POST['query']['periodo']) && $this->form_validation->is_natural_no_zero($_POST['query']['periodo']) &&
+				($_POST['query']['periodo'] <= 4) )
+			{
+				set_filter_period($_POST['query']['periodo']);
+				$filter['periodo'] = $_POST['query']['periodo'];
+			}
+			$filters_to_save = array();
+			if ( isset($_POST['query']['ramo']) && $this->form_validation->is_natural_no_zero($_POST['query']['ramo']) &&
+				($_POST['query']['ramo'] <= 3) )
+			{
+				$filters_to_save['ramo'] = $_POST['query']['ramo'];
+				$filter['ramo'] = $_POST['query']['ramo'];
+			}
+			generic_set_report_filter( $filters_to_save, array() );
+			foreach ($filters_to_save as $key => $value)
+				$this->other_filters[$key] = $value;
+		}
+		else
+			$filter = array_merge($this->other_filters, array('periodo' => $default_filter)) ;
+		
+		$filter['query'] = $filter;
+		return $filter;
+	}
 
 /* End of file agent.php */
 /* Location: ./application/modules/agent/controllers/agent.php */

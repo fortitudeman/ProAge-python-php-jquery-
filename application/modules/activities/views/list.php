@@ -14,6 +14,7 @@
   	
 */
 $base_url = base_url();
+$selected_period = get_filter_period();
 $agent_profile_page = ($this->uri->segment(1) == 'agent');
 if (!$agent_profile_page):
 ?>
@@ -41,22 +42,16 @@ if (!$agent_profile_page):
         <div class="box-header well" data-original-title>
             <h2></h2>
             <div class="box-icon">
-                  
+
                    <?php if( $access_create == true ): ?>
                    		<a href="<?php echo base_url() ?>activities/create<?php if( !empty( $userid ) ) echo '/'.$userid  ?>.html" class="btn btn-link" title="Crear"><i class="icon-plus"></i></a>
 				   <?php endif; ?>
-                                                 
+
             </div>
         </div>
         <div class="box-content">
-        
-        	
-            
             <?php // Show Messages ?>
-            
             <?php if( isset( $message['type'] ) ): ?>
-               
-               
                 <?php if( $message['type'] == true ): ?>
                     <div class="alert alert-success">
                           <button type="button" class="close" data-dismiss="alert">×</button>
@@ -116,6 +111,18 @@ endif;
                           <input type="hidden" id="activity-view" name="activity_view" value="normal" />
                           <div class="row">
                             <div class="span5 offset1">
+
+<?php if ($agent_profile_page): ?>
+<?php echo $period_fields ?>
+<select id="periodo_form" name="periodo" style="width: 175px" title="Período">
+	  <option value="<?php echo $selected_period ?>"></option>
+</select>
+<input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
+<input type="hidden" value="<?php echo $selection_filters['begin'] ?>" id="start-d" name="start_d" />
+<input type="hidden" value="<?php echo $selection_filters['end'] ?>" id="end-d" name="end_d" />
+
+<?php else: ?>
+
                               <div>
                                 <select id="periodo" name="periodo" title="Período" >
                                   <option value="2" <?php echo $selected_filter_period[2] ?>>Una Semana</option>
@@ -134,10 +141,15 @@ endif;
                                  <input id="begin" name="begin" type="hidden" readonly="readonly" value="<?php echo set_value('begin', isset($other_filters['begin']) ? $other_filters['begin'] : '')  ?>">
                                  <input id="end" name="end" type="hidden" readonly="readonly" value="<?php echo set_value('end', isset($other_filters['end']) ? $other_filters['end'] : '')  ?>">
                               </div>
+<?php endif; ?>
                             </div>
 
                             <div class="span6">
+<?php if (!$agent_profile_page): ?>
 			                  <input type="hidden" id="agent-name" name="agent_name" value="<?php echo $other_filters['agent_name']; ?>" />
+<?php else: ?>
+			                  <input type="hidden" id="agent-name" name="agent_name" value="<?php echo $selection_filters['agent_name']; ?>" />
+<?php endif; ?>
                           </div>
                       </fieldset>
                     </form>
@@ -231,8 +243,9 @@ endif;
 <?php endif; ?>
 <?php else: ?>
 <div style="margin-top: 10em">
+<?php if (!$agent_profile_page): ?>
 <?php echo $period_form ?>
-
+<?php endif; ?>
 </div>
 <?php endif;?>
 

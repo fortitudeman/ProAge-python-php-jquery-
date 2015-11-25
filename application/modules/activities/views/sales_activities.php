@@ -14,6 +14,7 @@
 
  */
 $base_url = base_url();
+$selected_period = get_filter_period();
 if ( isset($_POST['periodo']) &&
 	($_POST['periodo'] >= 1) && ($_POST['periodo'] <= 4) )
 {
@@ -108,7 +109,18 @@ endif;
 <?php endif; ?>
 
                           <div class="row">
-                            <div class="span5 offset1">
+                            <div class="span<?php echo $span_count?> offset1">
+
+<?php if ($agent_profile_page): ?>
+<?php echo $period_fields ?>
+<select id="periodo_form" name="periodo" style="width: 175px" title="Período">
+	  <option value="<?php echo $selected_period ?>"></option>
+</select>
+<input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
+<input type="hidden" value="<?php echo $selection_filters['begin'] ?>" id="start-d" name="start_d" />
+<input type="hidden" value="<?php echo $selection_filters['end'] ?>" id="end-d" name="end_d" />
+
+<?php else: ?>
                               <div>
                                 <select id="periodo" name="periodo" title="Período" >
                                   <option value="2" <?php echo $selected_filter_period[2] ?>>Una Semana</option>
@@ -127,6 +139,8 @@ endif;
                                  <input id="begin" name="begin" type="hidden" readonly="readonly" value="<?php echo set_value('begin', isset($other_filters['begin']) ? $other_filters['begin'] : '')  ?>">
                                  <input id="end" name="end" type="hidden" readonly="readonly" value="<?php echo set_value('end', isset($other_filters['end']) ? $other_filters['end'] : '')  ?>">
                               </div>
+<?php endif; ?>
+
                             </div>
 
                             <div class="span6">
@@ -138,7 +152,7 @@ endif;
                               </span>
 <?php else: ?>
 
-			                  <input type="hidden" id="agent-name" name="agent_name" value="<?php echo $other_filters['agent_name']; ?>" />
+			                  <input type="hidden" id="agent-name" name="agent_name" value="<?php echo $selection_filters['agent_name']; ?>" />
 <?php endif; ?>
 
                             </div>
@@ -348,7 +362,9 @@ echo '<p class="sales-activity-results">No hay datos</p>';
 </div><!--/row-->
 <?php endif ?>
 
+<?php if (!$agent_profile_page): ?>
 <div style="margin-top: 10em">
 <?php echo $period_form ?>
 
 </div>
+<?php endif ?>

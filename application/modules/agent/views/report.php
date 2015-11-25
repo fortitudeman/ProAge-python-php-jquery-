@@ -11,11 +11,9 @@
   Skype:		systemonlinesoftware
   Location:		Guadalajara Jalisco Mexíco
 
-
  */
 $base_url = base_url();
-$selected_filter_period = array(1 => '', 2 => '', 3 => '', 4 => '');
-$selected_filter_period[$filter['periodo']] = ' selected="selected"';
+$selected_period = get_filter_period();
 ?>
 
 <?php if ($filter['ramo'] != 3): ?>
@@ -26,23 +24,17 @@ $selected_filter_period[$filter['periodo']] = ' selected="selected"';
 
             <div class="row">
                 <form id="form" method="post" action="<?php echo current_url() ?>">
-                    <button value="1" class="btn-ramo link-ramo <?php if ($filter['ramo'] == 1) echo 'btn-ramo-current' ?>">Vida</button>
-                    <button value="2" class="btn-ramo link-ramo <?php if ($filter['ramo'] == 2) echo 'btn-ramo-current' ?>">GMM</button>
-                    <button value="3" class="btn-ramo link-ramo <?php if ($filter['ramo'] == 3) echo 'btn-ramo-current' ?>">Autos</button>
+                    <button value="1" class="btn-ramo link-ramo <?php if (($filter['ramo'] == 1) || ($filter['query']['ramo'] == 1)) echo 'btn-ramo-current' ?>">Vida</button>
+                    <button value="2" class="btn-ramo link-ramo <?php if (($filter['ramo'] == 2) || ($filter['query']['ramo'] == 3))  echo 'btn-ramo-current' ?>">GMM</button>
+                    <button value="3" class="btn-ramo link-ramo <?php if (($filter['ramo'] == 3) || ($filter['query']['ramo'] == 3))  echo 'btn-ramo-current' ?>">Autos</button>
                     <input type="hidden" name="query[ramo]" id="hidden-ramo" value="<?php echo $filter['ramo'] ?>" />
                     <p class="line">&nbsp;</p>
-                    <div>&nbsp;&nbsp;<i style="cursor: pointer" class="icon-calendar" id="cust_update-period" title="Click para editar el período personalizado"></i></div>
-         	
-                    <select id="periodo" name="query[periodo]">
-                        <option value="1" <?php echo $selected_filter_period[1] ?>>Mes</option>
-<?php if (($filter['ramo'] == 1) || ($filter['ramo'] == 3)): ?> 
-                        <option value="2" <?php echo $selected_filter_period[2] ?> class="set_periodo">Trimestre</option>
-<?php else: ?>
-                        <option value="2" <?php echo $selected_filter_period[2] ?> class="set_periodo">Cuatrimestre</option>
-<?php endif; ?>
-                        <option value="3" <?php echo $selected_filter_period[3] ?>>Año</option>
-                        <option value="4" id="period_opt4" <?php echo $selected_filter_period[4] ?>>Período personalizado</option>
-                    </select>
+
+<?php echo $period_fields ?>
+<select id="periodo_form" name="periodo" style="width: 175px" title="Período">
+	  <option value="<?php echo $selected_period ?>"></option>
+</select>
+<input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
 <?php
 //if ($this->access_simulator):
 if (TRUE):
@@ -237,8 +229,4 @@ switch ($filter['ramo'])
 	break;
 }
 ?>
-<div style="margin-top: 10em">
-<?php echo $period_form ?>
-
-</div>
             </div>

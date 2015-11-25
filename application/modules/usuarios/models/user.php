@@ -2929,7 +2929,9 @@ class User extends CI_Model{
 			}
 		}
 
-		if( isset( $filter['query']['ramo'] ) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3 )
+		if ( isset( $filter['query']['ramo'] ) and 
+			(($filter['query']['ramo'] == 2) or (
+			$filter['query']['ramo'] == 3 )))
 			$this->db->where( 'work_order.product_group_id', $filter['query']['ramo'] );
 		else
 			$this->db->where( 'work_order.product_group_id', 1 );
