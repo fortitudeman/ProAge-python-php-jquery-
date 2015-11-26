@@ -251,7 +251,7 @@ Período :<br />
                       <th>Fecha de alta de la OT&nbsp;</th> 
                       <th>Agente - %&nbsp;</th>
 <?php if ($operation_profile_page): ?>
-                      <th>Gerente%&nbsp;</th>
+                      <th>Gerente&nbsp;</th>
 <?php endif ?>
                       <th>Ramo&nbsp;</th>
                       <th>Tipo de trámite&nbsp;</th>
