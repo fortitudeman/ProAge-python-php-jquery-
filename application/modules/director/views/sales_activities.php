@@ -13,7 +13,6 @@
 
 
  */
-$selected_period = get_filter_period();
 $base_url = base_url();
 $divided_by_zero = 'N/D';
 
@@ -48,25 +47,11 @@ $gmm_negocios_link = $data['totals']['GMM_negocios'] ?
 <?php endif; ?>
 
                           <div class="row">
-                            <div class="span5 offset1">
-<?php echo $period_fields ?>
-<select id="periodo_form" name="periodo" style="width: 175px" title="Período">
-	  <option value="<?php echo $selected_period ?>"></option>
-</select>
-<input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
-
-<input type="hidden" value="<?php echo $selection_filters['begin'] ?>" id="start-d" name="start_d" />
-<input type="hidden" value="<?php echo $selection_filters['end'] ?>" id="end-d" name="end_d" />
-                            </div>
-
-                            <div class="span6">
-                              <textarea placeholder="AGENTES" id="agent-name" name="query[agent_name]" rows="1" class="input-xlarge select4" style="min-width: 250px; max-width: 300px; height: 1.5em"><?php echo $other_filters['agent_name']; ?></textarea>
-			                  <span>
-                                  <i style="cursor: pointer; vertical-align: top" class="icon-filter submit-form" id="submit-form1" title="Filtrar"></i>
-                                  <i style="cursor: pointer; vertical-align: top" class="icon-list-alt" id="clear-agent-filter" title="Ver total"></i>
-                              </span>
+                            <div class="span12" style="margin-left: 4em">
+<?php echo $filter_view ?>
                             </div>
                           </div>
+
                       </fieldset>
                     </form>
 

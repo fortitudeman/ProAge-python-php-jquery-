@@ -4347,9 +4347,9 @@ AND
 					// Agentes with "fecha de conexion" before 1º October 2011 (4 years ago)
 					$end = 	( date( 'Y' ) - 4 ) . '-10-01';
 					$this->db->where(
-						"(`agents`.`connection_date` < '$end')
+						"((`agents`.`connection_date` < '$end')
 						AND (`agents`.`connection_date` IS NOT NULL )
-						AND (`agents`.`connection_date` != '0000-00-00') AND (`agents`.`connection_date` != '')",
+						AND (`agents`.`connection_date` != '0000-00-00') AND (`agents`.`connection_date` != ''))",
 						NULL, FALSE);
 					$generacion = 'Consolidado';
 				break;
@@ -4362,10 +4362,10 @@ AND
 					$end = 	( date( 'Y' ) ) . '-12-31';
 //					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) );
 					$this->db->where(
-						"((`agents`.`connection_date` <= '$end') AND
+						"(((`agents`.`connection_date` <= '$end') AND
 						(`agents`.`connection_date` >= '$begin')) OR
 						(`agents`.`connection_date` IS NULL )
-						OR (`agents`.`connection_date` = '0000-00-00') OR (`agents`.`connection_date` = '')",
+						OR (`agents`.`connection_date` = '0000-00-00') OR (`agents`.`connection_date` = ''))",
 						NULL, FALSE);
 					$generacion = 'Generación 1';
 				break;

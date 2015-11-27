@@ -26,6 +26,11 @@ $base_url = base_url();
 	  <option value="<?php echo $selected_period ?>"></option>
 </select>
 <input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
+<?php if (isset($selection_filters) && isset($selection_filters['begin']) && isset($selection_filters['end'])): ?>
+<input type="hidden" value="<?php echo $selection_filters['begin'] ?>" id="start-d" name="start_d" />
+<input type="hidden" value="<?php echo $selection_filters['end'] ?>" id="end-d" name="end_d" />
+<?php endif; ?>
+
                                             </th>
                                             <th>
                                                 <input type="hidden" id="gerente_value" value="<?php echo $other_filters['gerente']; ?>" />

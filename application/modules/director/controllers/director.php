@@ -1362,18 +1362,52 @@ $( document ).ready( function(){
 			update_custom_period($this->input->post('cust_period_from'),
 				$this->input->post('cust_period_to'), FALSE);
 		}
+
 		$this->load->helper('tri_cuatrimester');
 		$selection_filters = array(
 			'periodo' => $this->query_filters['query']['periodo'],
-			'begin' => '', 'end' => '',
-			'agent_name' => $this->query_filters['query']['agent_name']);
+			'begin' => '', 'end' => '');
 		get_new_period_start_end($selection_filters);
 
-		$data = $this->activity->sales_activity($selection_filters, TRUE);
-		$content_data = array(
+		$filter_data = array(
+			'manager' => $this->user->getSelectsGerentes2(),
+			'period_form' => show_custom_period(),
 			'period_fields' => show_period_fields('director', $this->other_filters['ramo']),
 			'other_filters' => $this->other_filters,
 			'selection_filters' => $selection_filters,
+//			'report_lines' => '',
+			'export_xls' => false,
+//			'page' => 'activity_distribution'
+			);
+		$filter_view = $this->load->view('filters/report', $filter_data, true);
+		$data = array('totals' => 
+			array('VIDA_negocios' => 0,
+				'GMM_negocios' => 0));
+
+		$user_string = '';
+		$filter_on_users = $this->query_filters['query']['gerente'] ||
+			$this->query_filters['query']['agent'] ||
+			$this->query_filters['query']['generacion'] ||
+			$this->query_filters['query']['agent_name'] ||
+			$this->query_filters['query']['policy_num'];
+		if ($filter_on_users)
+		{
+			$users = $this->user->get_filtered_agents($this->query_filters);
+			if ($users)
+			{
+				foreach ($users as $u_key => $u_value)
+					$user_string .= sprintf("A N [ID: %d]\n", $u_key);
+			}
+		}
+		if (!$filter_on_users || $user_string)
+		{
+			$selection_filters['agent_name'] = $user_string;
+			$data = $this->activity->sales_activity($selection_filters, TRUE);
+		}
+
+		$content_data = array(
+			'other_filters' => $this->other_filters,
+			'filter_view' => $filter_view,
 			'data' => $data,
 		);
 		$sub_page_content = $this->load->view('sales_activities', $content_data, true);
