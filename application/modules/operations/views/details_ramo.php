@@ -11,7 +11,6 @@
   Skype:		systemonlinesoftware
   Location:		Guadalajara Jalisco Mexíco
 
-  	
 */
 $base_url = base_url();
 $na_value = 'N/D';
@@ -20,7 +19,33 @@ $with_primas = (($segments[1] == 'director') && isset($segments[2]) && ($segment
 $segments[2] = 'stat_detail_export';
 if ($with_primas)
 	$segments[5] = 'full';
+
+$ot_url = $base_url . "operations/ot_per_prod/$stat_type/$status/";
+$user = $this->user_id ? $this->user_id : '';
+
 ?>
+
+<script type="text/javascript">
+	$( document ).ready( function(){
+		$(".detailed").on( "click", function(){
+			var linkId = $(this).attr("id");
+			linkId = linkId.replace(/detailed-/, "");
+			var detailUrl = "<?php echo $ot_url ?>" + linkId  + "/" + "<?php echo $user ?>" + ".html";
+
+			$.fancybox.showLoading();
+			$.post(detailUrl, function(data) {
+				if (data) {
+					$.fancybox({
+						content:data
+					});
+					return false;
+				}
+			});
+		});
+	})
+
+</script>
+
                   <p>
 <?php if ($this->access_export_xls) :?>
                     <a href="<?php echo $base_url . implode('/', $segments); ?>.html" id="detail_detail-export-xls" title="Exportar" style="font-size: larger;">
@@ -43,7 +68,7 @@ if ($with_primas)
 <?php foreach ($stats as $key => $value) :
 	if ($key && $value['value']):?>
                       <tr>
-                        <td style="border: 0px;"><?php echo $value['label'] ?></td>
+                        <td style="border: 0px;"><a class="detailed" id="detailed-<?php echo $key ?>" href="javascript:void(0)"><?php echo $value['label'] ?></a></td>
                         <td style="border: 0px;"><?php echo $value['value'] ?></td>
                         <td style="border: 0px;"><?php $percent = $stats[0]['value'] ? round(100 * $value['value'] / $stats[0]['value']) . '%' : $na_value; echo $percent; ?></td>
 <?php if ($with_primas):?>
@@ -55,7 +80,7 @@ if ($with_primas)
 <?php endif;
 endforeach;?>	
                       <tr style="background-color: yellow">
-                        <td style="border: 0px;">Total</td>
+                        <td style="border: 0px;"><a class="detailed" id="detailed-total" href="javascript:void(0)">Total</a></td>
                         <td style="border: 0px;"><?php echo $stats[0]['value'] ?></td>
                         <td style="border: 0px;"><?php $percent = $stats[0]['value'] ? '100%' : $na_value; echo $percent; ?></td>
 <?php if ($with_primas):?>

@@ -2267,7 +2267,7 @@ class Work_order extends CI_Model{
 		return $ot;
 	}
 
-	public function operation_detailed( $ramo = NULL, $ot_status = NULL, $full = FALSE )
+	public function operation_detailed( $ramo = NULL, $ot_status = NULL, $full = FALSE, $get_ot_list = FALSE )
 	{
 		if (($ramo === NULL) || ($ot_status === NULL))
 			return FALSE;
@@ -2313,7 +2313,10 @@ class Work_order extends CI_Model{
 				break;
 		}
 
-		$ot = $this->init_operation_result($ramo, FALSE, $full);
+		if ($get_ot_list)
+			$ot = array();
+		else
+			$ot = $this->init_operation_result($ramo, FALSE, $full);
 		foreach ($this->operation_where_in as $key_c => $key_v)
 			$this->db->where_in($key_c , $key_v);
 		if ($full)
@@ -2324,31 +2327,82 @@ class Work_order extends CI_Model{
 					->join('policies_vs_users', 'policies_vs_users.policy_id = policies.id')
 					->where($this->operation_where);
 		else
-//		$this->db->select('COUNT(*) AS count, products.id AS prod_id, products.name AS product_name')
-
-			$this->db->select('COUNT(*) AS count, SUM(prima) AS sum_prima, products.id AS prod_id, products.name AS product_name')
+		{
+			if (!$get_ot_list)
+				$this->db->select('COUNT(*) AS count, SUM(prima) AS sum_prima, products.id AS prod_id, products.name AS product_name')
 					->from('work_order' )
 					->join('policies', 'policies.id = work_order.policy_id')
 					->join('products', 'products.id = policies.product_id')
 					->where($this->operation_where);
+			else
+				$this->db->select('policies_vs_users.percentage, policies_vs_users.user_id AS agent_id, users.name, users.lastnames, users.company_name, users.email, users.manager_id, users.id as user_id , policies.name as asegurado, policies.prima as policy_prima, work_order_types.patent_id as tramite_type, product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*, products.id AS prod_id, products.name AS product_name')
+					->from('work_order' )
+					->join( 'product_group', 'product_group.id=work_order.product_group_id' )
+					->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' )
+					->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' )
+					->join( 'policies', 'policies.id = work_order.policy_id')
+
+					->join( 'policies_vs_users', 'policies_vs_users.policy_id = work_order.policy_id')
+					->join( 'agents', 'agents.id=policies_vs_users.user_id' )
+					->join( 'users', 'users.id=agents.user_id ' )
+					->join('products', 'products.id = policies.product_id')
+					->where($this->operation_where);
+
+		}
 		if ($status_where)
 			$this->db->where_in('work_order_status_id', $status_where);
-		$query = $this->db->group_by('products.id')
-				->get();
+		if (!$get_ot_list)
+			$this->db->group_by('products.id');
+		$query = $this->db->get();
 
 		if ($query->num_rows() == 0)
 			return $ot;
 
-		foreach ($query->result() as $row)
+		if ($get_ot_list)
 		{
-			$ot[$row->prod_id]['value'] = $row->count;
-			$ot[0]['value'] += $row->count;
-			if ($full)
+			foreach ($query->result_array() as $row)
 			{
-				$ot[$row->prod_id]['prima'] = $row->sum_prima;
-				$ot[0]['prima'] += $row->sum_prima;
+				if (!isset($ot[$row['id']]))
+				{
+					$ot[$row['id']] = $row;
+					$ot[$row['id']]['agents'] = array();
+				}
+				$ot[$row['id']]['agents'][] = array(
+					'percentage' => $row['percentage'],
+					'agent_id' => $row['agent_id'],
+					'name' => $row['name'],
+					'lastnames' => $row['lastnames'],
+					'company_name' => $row['company_name'],
+					'email' => $row['email'],
+					'user_id' => $row['user_id'],
+					'manager_id' => $row['manager_id'],
+				);
+			}
+			$ramo_tramite_types = $this->get_tramite_types_arr();
+			foreach ($ot as $key => $value)
+			{
+				if (!empty( $ramo_tramite_types[$ramo][$value['tramite_type']]))
+					$ot[$key]['parent_type_name'] = $ramo_tramite_types[$ramo][$value['tramite_type']];
+				else
+					$ot[$key]['parent_type_name'] = '';
+				$ot[$key]['is_editable'] = $this->is_editable( $value['product_group_id'], $value['tramite_type'], $value['work_order_status_id'] );
+				$ot[$key]['is_nuevo_negocio'] = $this->is_nuevo_negocio( $value['product_group_id'], $value['tramite_type']);
+			}
+		} 
+		else
+		{
+			foreach ($query->result() as $row)
+			{
+				$ot[$row->prod_id]['value'] = $row->count;
+				$ot[0]['value'] += $row->count;
+				if ($full)
+				{
+					$ot[$row->prod_id]['prima'] = $row->sum_prima;
+					$ot[0]['prima'] += $row->sum_prima;
+				}
 			}
 		}
+		$query->free_result();
 		return $ot;
 	}
 

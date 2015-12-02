@@ -68,7 +68,7 @@ Período&nbsp;:
                       <img src="<?php echo $base_url ?>ot/assets/images/down.png" title="Exportar" />
 				  </a>
 <?php endif; ?>
-                  <table>
+                  <table class="head">
                       <tr>
                         <td>
                           <a class="stat-link" id="tramite_link" href="javascript:void(0);" class="btn btn-link" title="Ver Detalles">

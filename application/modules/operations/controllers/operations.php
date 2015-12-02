@@ -250,9 +250,9 @@ implode(', ', $ramo_tramite_types) . '
 	{
 		$base_url = base_url();
 		$result = array(
-				$base_url . 'operations/ot.html',
-				$base_url . 'operations/statistics/recap.html',					
-				);
+			$base_url . 'operations/ot.html',
+			$base_url . 'operations/statistics/recap.html',					
+			);
 		$coordinator_name = $this->input->post('coordinator_name');
 		if ($coordinator_name)
 		{
@@ -418,6 +418,7 @@ implode(', ', $ramo_tramite_types) . '
 			'user_vs_rol' => $this->user_vs_rol,
 			'roles_vs_access' => $this->roles_vs_access,
 			'css' => array(
+				'<link rel="stylesheet" href="'.$base_url .'ot/assets/style/jquery.fancybox.css">',
 				'<link href="' . $base_url . 'ot/assets/style/report.css" rel="stylesheet">',
 				'<link href="' . $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
 				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
@@ -425,6 +426,19 @@ implode(', ', $ramo_tramite_types) . '
 				'<link rel="stylesheet" href="'. $base_url .'operations/assets/style/operations.css">',
 			),
 			'scripts' => array(
+
+				'<script type="text/javascript" src="'. $base_url .'scripts/jquery.cookie.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'plugins/jquery-validation/jquery.validate.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'plugins/jquery-validation/es_validator.js"></script>',
+				'<script src="'. $base_url .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.ddslick.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',			
+				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/main.js"></script>',			
+				'<script src="'. $base_url .'scripts/config.js"></script>'	,	
+				'<script src="'. $base_url .'ot/assets/scripts/report.js"></script>',
+				'<script src="'. $base_url .'ot/assets/scripts/jquery.fancybox.js"></script>',
+
 				'<script src="' . $base_url . 'scripts/config.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/operations.js"></script>',
@@ -443,6 +457,44 @@ implode(', ', $ramo_tramite_types) . '
 
 	public function stat_details()
 	{
+		$stat_type = '';
+		$status = '';
+		$this->_check_request_for_details($stat_type, $status, 5);
+		
+		$stats = $this->_read_details($stat_type, $status);
+		if (!$stats)
+		{
+			echo 'Ocurrio un error.';
+			exit();
+		}
+		$data = array('stats' => $stats, 'stat_type' => $stat_type, 'status' => $status);
+		$this->load->view( 'details_ramo', $data );
+	}
+
+	public function ot_per_prod()
+	{
+		$stat_type = '';
+		$status = '';
+		$this->_check_request_for_details($stat_type, $status, 6);
+		$prod_segment = $this->uri->segment(5, 0);
+		if ($prod_segment && ($prod_segment != 'total'))
+			$prod_id = array('products.id' => (int) $prod_segment);
+		else
+			$prod_id = array();
+
+		$ots = $this->_read_details($stat_type, $status, true, $prod_id);
+		$gerente_array = array();
+		if ($ots)
+		{
+			$gerentes = $this->user->getSelectsGerentes2();
+			foreach ($gerentes as $gerente)
+				$gerente_array[$gerente['id']] = $gerente['name'];
+		}
+		$this->load->view( 'ot_list', array('data' => $ots, 'gerentes' => $gerente_array) );
+	}
+
+	private function _check_request_for_details(&$stat_type, &$status, $user_seg_num)
+	{
 		$valid_stat_types = array(1 => 1, 2 => 2, 3 => 3);
 		$valid_status = array(
 			'tramite' => 'tramite', 'pagada' => 'pagada',
@@ -457,22 +509,14 @@ implode(', ', $ramo_tramite_types) . '
 			exit();
 		}
 
-		$this->_init_profile(5);
+		$this->_init_profile($user_seg_num);
 		if ( !$this->access_report )
 		{
 			echo 'No tiene permisos para ver el reporte "Estadística operativa" en la sección "Perfil de operaciones", informe a su administrador para que le otorge los permisos necesarios.';
 			exit();
 		}
-		$stats = $this->_read_details($stat_type, $status);
-		if (!$stats)
-		{
-			echo 'Ocurrio un error.';
-			exit();
-		}
-		$data = array('stats' => $stats);
-		$this->load->view( 'details_ramo', $data );
 	}
-	
+
 // Export stat recap
 	public function stat_recap_export()
 	{
@@ -881,12 +925,14 @@ implode(', ', $ramo_tramite_types) . '
 		return $result;
 	}
 
-	private function _read_details($ramo = NULL, $status = NULL)
+	private function _read_details($ramo = NULL, $status = NULL, $get_ot_list = FALSE, $prod_id = array())
 	{
 		$this->load->helper('filter');
 		$periodo = get_filter_period();
 		$this->work_order->init_operations($this->user_id, $periodo, $ramo);
-		$result = $this->work_order->operation_detailed($ramo, $status);
+		if ($prod_id)
+			$this->work_order->add_operation_where($prod_id);
+		$result = $this->work_order->operation_detailed($ramo, $status, false, $get_ot_list);
 		return $result;		
 	}
 }
