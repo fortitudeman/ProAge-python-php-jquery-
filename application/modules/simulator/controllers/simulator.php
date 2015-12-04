@@ -56,7 +56,6 @@ class Simulator extends CI_Controller {
 
 	public $input_simulator_fields = array(
 		'agent_id',
-//'agent_name',
 		'id', 'ramo', 'period', 'year',
 		'comisionVentaInicial_1', 'comisionVentaInicial_2',
 		'comisionVentaInicial_3', 'comisionVentaInicial_4',
@@ -77,14 +76,7 @@ class Simulator extends CI_Controller {
 		'XAcotamiento_1', 'XAcotamiento_2',
 		'XAcotamiento_3', 'XAcotamiento_4',
 	);
-/*
-	public $maybe_array_fields = array(	// the fields that are arrays for gmm
-		'comisionVentaInicial', 'comisionVentaRenovacion',
-		'noNegocios', 'porsiniestridad',
-		'simulatorPrimasPeriod', 'primasRenovacion',
-		'XAcotamiento'
-		);
-*/
+
 	public $computed_meta_fields = array(
 		'primas-meta-primer', 'primas-meta-segund', 'primas-meta-second', 'primas-meta-tercer', 'primas-meta-cuarto',
 		'primas-meta-total',
@@ -124,6 +116,8 @@ class Simulator extends CI_Controller {
 	public $misc_filters = FALSE;
 	public $agent_array = array();
 	public $other_filters = array();
+
+	private $is_agent_only = TRUE;
 /** Construct Function **/
 /** Setting Load perms **/
 	
@@ -140,7 +134,10 @@ class Simulator extends CI_Controller {
 
 		// Get user rol		
 		$this->user_vs_rol = $this->rol->user_role( $this->sessions['id'] );
-		
+
+		$this->is_agent_only = (count($this->user_vs_rol) == 1) &&
+			($this->user_vs_rol[0]['user_role_id'] == 1);
+
 		// Get user rol access
 		$this->roles_vs_access = $this->rol->user_roles_vs_access( $this->user_vs_rol );
 
@@ -260,7 +257,8 @@ class Simulator extends CI_Controller {
 			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas_simulator.js"></script>',			
 		);
 
-		if ($this->for_print) {
+		if ($this->for_print)
+		{
 			$css = array(
 		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet">',
 		  	'<link href="'. base_url() .'simulator/assets/style/simulator_print.css" rel="stylesheet">',
@@ -291,7 +289,9 @@ $( document ).ready( function(){
 				$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_'.$simulator.'.js"></script>';
 				$requestPromedio = '';
 			}
-		} else {
+		}
+		else
+		{
 			$css = array(
 		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet" media="screen">'
 				);
@@ -319,6 +319,20 @@ $( document ).ready( function(){
 });
 </script>
 ';
+
+			$allow_simulator = $this->config->item('allow_simulator');
+			if (($allow_simulator !== FALSE) && !$allow_simulator
+				&& $this->is_agent_only)
+				$add_js .= '
+<script type="text/javascript">
+$( document ).ready( function(){
+	$("#save_meta").hide();
+	$("#reset-meta").hide();
+	$("#meta-section :input").prop("disabled", true);
+});
+</script>
+';
+
 			$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas.js"></script>';
 			$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/simulator_'.$simulator.'.js"></script>';
 		}
@@ -793,19 +807,23 @@ $( document ).ready( function(){
 			redirect( 'home', 'refresh' );
 		}
 
-		if( $this->access_create == false ){
-			$this->session->set_flashdata( 'message', array( 
-				'type' => false,	
-				'message' => 'No tiene permisos para ingresar en esta sección "Simulador Crear", Informe a su administrador para que le otorgue los permisos necesarios.'
-			));	
-			redirect( 'home', 'refresh' );
-		}
-		if( count( $_POST ) == 0)
+		if( !$this->access_create )
 		{
 			echo '0';
 			exit();
 		}
-
+		if ( count( $_POST ) == 0)
+		{
+			echo '0';
+			exit();
+		}
+		$allow_simulator = $this->config->item('allow_simulator');
+		if (($allow_simulator !== FALSE) && !$allow_simulator
+				&& $this->is_agent_only)
+		{
+			echo '0';
+			exit();
+		}
 		$this->load->model( array( 'simulators' ) );
 		$to_save = array('year' => date('Y'));
 		$not_processed = $_POST;
@@ -1093,6 +1111,13 @@ $( document ).ready( function(){
 			echo json_encode('-1');
 			exit;
 		}
+		$allow_simulator = $this->config->item('allow_simulator');
+		if (($allow_simulator !== FALSE) && !$allow_simulator
+				&& $this->is_agent_only)
+		{
+			echo json_encode('-1');
+			exit();
+		}
 		$result = json_encode('0');
 		
 		$key_fields = array(
@@ -1185,7 +1210,8 @@ $( document ).ready( function(){
 			'<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas_simulator.js"></script>',			
 		);
 
-		if ($this->for_print) {
+		if ($this->for_print)
+		{
 			$css = array(
 		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet">',
 		  	'<link href="'. base_url() .'simulator/assets/style/simulator_print.css" rel="stylesheet">',
@@ -1212,7 +1238,9 @@ $( document ).ready( function(){
 ';
 			if ($this->print_meta)
 				$js_assets[] = '<script type="text/javascript" src="'.base_url().'simulator/assets/scripts/metas.js"></script>';
-		} else {
+		}
+		else
+		{
 			$css = array(
 		  	'<link href="'. base_url() .'simulator/assets/style/simulator.css" rel="stylesheet" media="screen">'
 				);
@@ -1238,6 +1266,18 @@ $( document ).ready( function(){
 	$( "#tabs" ).tabs();
 	$(".screen-view").show();
 	$(".print-view").hide();
+});
+</script>
+';
+
+			$allow_simulator = $this->config->item('allow_simulator');
+			if (($allow_simulator !== FALSE) && !$allow_simulator
+				&& $this->is_agent_only)
+				$add_js .= '
+<script type="text/javascript">
+$( document ).ready( function(){
+	$("#save-simulator").hide();
+	$("#simulator-section :input").prop("disabled", true);
 });
 </script>
 ';

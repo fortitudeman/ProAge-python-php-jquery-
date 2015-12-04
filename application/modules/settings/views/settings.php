@@ -82,6 +82,9 @@ $is_update_page = ($this->uri->segment(2, '') == 'update');
 				echo '<img src="' . $base_url . 'images/' . $field_value->value . '" ' . $image_size[3] . ' />';
 		}
 	break;
+	case 'checkbox': ?>
+                      <input class="input-xlarge focused <?php if (in_array('required', $field_value->validation_arr)) echo 'required' ?>" id="<?php echo $field_name ?>" name="<?php echo $field_name ?>" type="checkbox" value="1" <?php echo set_checkbox($field_name, '1', (bool) $field_value->value); ?>  title="<?php echo $field_value->tooltip ?>"  <?php if (!$is_update_page) echo 'readonly="readonly"' ?> />
+<?php 	break;
 	default: ?>					  
                       <input class="input-xlarge focused <?php if (in_array('required', $field_value->validation_arr)) echo 'required' ?>" id="<?php echo $field_name ?>" name="<?php echo $field_name ?>" type="text" value="<?php echo set_value($field_name, $field_value->value) ?>" title="<?php echo $field_value->tooltip ?>"  <?php if (!$is_update_page) echo 'readonly="readonly"' ?> />
 <?php endswitch; ?>	
