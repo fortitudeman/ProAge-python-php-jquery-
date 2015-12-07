@@ -1924,6 +1924,14 @@ implode(', ', $ramo_tramite_types) . '
 		$this->load->helper('ot/ot');
 		reporte_popup('director');
 	}
+
+// Delete cobranza payments
+	public function delete_cobranza()
+	{
+		$this->load->helper('ot/ot');
+		delete_cobranza('director');
+	}
+
 //////// Above are page duplicated in ot, agent and director modules
 /* End of file director.php */
 /* Location: ./application/modules/director/controllers/director.php */

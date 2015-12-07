@@ -372,7 +372,7 @@ if ( ! function_exists('payment_actions'))
 }
 //////
 //////////////
-// actions on payment (ignore, delete)
+// show report popup
 if ( ! function_exists('reporte_popup'))
 {
 	function reporte_popup($module = 'ot')
@@ -448,6 +448,39 @@ if ( ! function_exists('reporte_popup'))
 			$data['values'][$work_order_id]['menu'] = $CI->load->view('ot/popup_report_menu_row', $row_result, TRUE);
 		}
 		$CI->load->view('ot/popup_report', $data);	
+	}
+}
+
+/*
+	Delete cobranza
+*/
+if ( ! function_exists('delete_cobranza'))
+{
+	function delete_cobranza($module = 'ot')
+	{
+		$CI =& get_instance();
+		if ( !$CI->input->is_ajax_request() )
+			redirect( "$module.html", 'refresh' );
+
+		if ( !$CI->access_delete )
+		{
+			echo json_encode('-1');
+			exit;
+		}
+
+		$result = json_encode('0');
+		$ids = $CI->input->post('ids');
+		if (!$ids || !is_array($ids))
+		{
+			echo $result;
+			exit;
+		}
+		$CI->load->model('policy_model');
+		if ($CI->policy_model->delete_adjusted_primas($ids))
+			$result = json_encode('1');
+
+		echo $result;
+		exit;
 	}
 }
 ?>

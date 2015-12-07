@@ -916,6 +916,13 @@ implode(', ', $ramo_tramite_types) . '
 		$this->load->helper('ot/ot');
 		payment_actions('agent');
 	}
+
+// Delete cobranza payments
+	public function delete_cobranza()
+	{
+		$this->load->helper('ot/ot');
+		delete_cobranza('agent');
+	}
 //////// Above are page duplicated in ot, agent and director modules
 
 	private function _init_filter()

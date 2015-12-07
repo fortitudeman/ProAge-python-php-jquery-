@@ -199,6 +199,27 @@ AND
 		return $result;
 	}
 
+/**
+  Deletes rows of table policy_adjusted_prima for a given policy and given dates
+ **/
+    public function delete_adjusted_primas($policy_dates = array())
+	{
+		$deleted = 0;
+		$to_delete = count($policy_dates);
+		foreach ($policy_dates as $policy_date)	
+		{
+			$policy_date_arr = explode('_', $policy_date);
+			if (isset($policy_date_arr[0]) && isset($policy_date_arr[1]))
+			{
+				$where = array('policy_id' => $policy_date_arr[0], 'due_date' => $policy_date_arr[1]);
+				$this->db->delete('policy_adjusted_primas', $where);
+				if ($this->db->affected_rows())
+					$deleted++;
+			}
+		}
+		return ($deleted >= $to_delete);
+	}
+
 }
-/* End of file settings_model.php */
-/* Location: ./application/models/settings_model.php */
+/* End of file policy_model.php */
+/* Location: ./application/models/policy_model.php */

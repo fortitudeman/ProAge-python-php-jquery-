@@ -2699,6 +2699,13 @@ Display custom filter period
 		payment_actions('ot');
 	}
 
+// Delete cobranza payments
+	public function delete_cobranza()
+	{
+		$this->load->helper('ot/ot');
+		delete_cobranza('ot');
+	}
+
 	// delete (imported) payments of given month/year
 	public function delete_payments()
 	{
