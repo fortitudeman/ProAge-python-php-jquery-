@@ -452,7 +452,7 @@ class Work_order extends CI_Model{
 				$patent_work_order_types[] = $row->id;
 		}
 
-		$this->db->select( 'policies.name as asegurado, policies.prima as policy_prima, work_order_types.patent_id as tramite_type, product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
+		$this->db->select( 'policies.name as asegurado, policies.prima as policy_prima, policies.uid as poliza_number, work_order_types.patent_id as tramite_type, product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
 		$this->db->from( 'work_order' );
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );

@@ -224,6 +224,10 @@ $( document ).ready(function() {
 		}
 		if (idTotal)
 			$("#id-total").width(idTotal);
+
+// resort the table
+		$("#sorter-report1").trigger("update", [resort]);
+		$("#sorter-report2").trigger("update", [resort]);
 	}
 
 	$('#select-columns-display :checkbox').change(function() {

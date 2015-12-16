@@ -287,7 +287,8 @@ implode(', ', $ramo_tramite_types) . '
 				"Tipo de trámite",
 				"Nombre del asegurado",
 				"Estado",
-				"Prima")
+				"Prima",
+				"Poliza")
 		);
 
 		$data = $this->_read_ots();
@@ -320,7 +321,8 @@ implode(', ', $ramo_tramite_types) . '
 				$value['parent_type_name'],
 				$value['asegurado'],
 				ucwords(str_replace( 'desactivada', 'en trámite', $value['status_name'])),
-				$prima
+				$prima,
+				$value['poliza_number'],
 			);
 		}
 
