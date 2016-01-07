@@ -3375,14 +3375,15 @@ AND `payments`.`payment_date` <= '$year-12-31 23:59:59'";
 							$from = date('Y-m-d');
 							$to = $from;
 						}
+						$from_year = substr($from, 0, 4);
 						$sql_date_filter .= "
 WHERE `above_5000` >=  '$from 00:00:00'
 AND `above_5000` <= '$to 23:59:59'";
 						$sql_plus .= "
-AND `payments`.`payment_date` >= '$year-01-01'
+AND `payments`.`payment_date` >= '$from_year-01-01'
 AND `payments`.`payment_date` <= '$to 23:59:59'";
 						$sql_plus2 .= "
-AND `payments`.`payment_date` >= '$year-01-01'
+AND `payments`.`payment_date` >= '$from_year-01-01'
 AND `payments`.`payment_date` <= '$to 23:59:59'";
 					break;
 
