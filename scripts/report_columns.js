@@ -226,8 +226,8 @@ $( document ).ready(function() {
 			$("#id-total").width(idTotal);
 
 // resort the table
-		$("#sorter-report1").trigger("update", [resort]);
-		$("#sorter-report2").trigger("update", [resort]);
+		$("#sorter-report1").trigger("update");
+		$("#sorter-report2").trigger("update");
 	}
 
 	$('#select-columns-display :checkbox').change(function() {
