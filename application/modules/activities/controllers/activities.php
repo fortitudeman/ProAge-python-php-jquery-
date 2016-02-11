@@ -243,6 +243,16 @@ class Activities extends CI_Controller {
 			$user = $this->user->getForUpdateOrDelete($userid);
 		else
 			$user = $this->user->getForUpdateOrDelete($this->sessions['id']);
+
+		if (!$user || !isset($user[0]['id']))
+		{
+		// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Actividad crear", Informe a su administrador para que le otorge los permisos necesarios.'
+			));	
+			redirect($redirect_page, 'refresh');
+		}
 		$period_fields = $this->_common_create_update(null, $redirect_page, $user[0]['id']);
 
 		$base_url = base_url();
