@@ -592,7 +592,7 @@ implode(', ', $ramo_tramite_types) . '
 
 		$this->load->helper( array('filter', 'activities/activity' ));
 		$this->load->model('activities/activity');
-		create_update_activity($activity_id, $redirect_page);
+		create_update_activity($activity_id, $redirect_page, $this->user_id);
 		$ramo = 1;
 		$period_fields = show_period_fields('ot_reporte', $ramo);
 		return $period_fields;

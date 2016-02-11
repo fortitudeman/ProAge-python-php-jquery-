@@ -7,7 +7,7 @@
 
 if ( ! function_exists('create_update_activity'))
 {
-	function create_update_activity($activity_id, $redirect_page = 'activities')
+	function create_update_activity($activity_id, $redirect_page = 'activities', $userid = null)
 	{
 		$CI =& get_instance();
 		if ($_POST)
@@ -38,6 +38,7 @@ if ( ! function_exists('create_update_activity'))
 					$values['agent_id'] =  $CI->user->getAgentIdByUser( $userid );
 				else					
 					$values['agent_id'] = $CI->user->getAgentIdByUser( $CI->sessions['id'] );
+
 				$values['begin'] = $CI->input->post('cust_period_from');
 				$values['end'] = $CI->input->post('cust_period_to');
 

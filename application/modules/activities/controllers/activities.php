@@ -238,12 +238,12 @@ class Activities extends CI_Controller {
 			));	
 			redirect($redirect_page, 'refresh');
 		}
-		$period_fields = $this->_common_create_update(null, $redirect_page);
 
 		if( !empty( $userid ) )	
 			$user = $this->user->getForUpdateOrDelete($userid);
 		else
 			$user = $this->user->getForUpdateOrDelete($this->sessions['id']);
+		$period_fields = $this->_common_create_update(null, $redirect_page, $user[0]['id']);
 
 		$base_url = base_url();
 		$js = activity_create_update_js();
@@ -558,11 +558,11 @@ class Activities extends CI_Controller {
 	}
 
 	// Common to create and update activity
-	private function _common_create_update($activity_id, $redirect_page = 'activities')
+	private function _common_create_update($activity_id, $redirect_page = 'activities', $user = null)
 	{
 		$this->load->helper( array('filter', 'activity' ));
 		$this->load->model('activity');
-		create_update_activity($activity_id, $redirect_page);
+		create_update_activity($activity_id, $redirect_page, $user);
 		$ramo = 1;
 		$period_fields = show_period_fields('ot_reporte', $ramo);
 		return $period_fields;
