@@ -18,6 +18,8 @@ class User extends CI_Model{
 	
 	private $insertId;
 	private $agent_name_where_in = null;
+
+	private $year_filter = null;
 		
 	public function __construct(){
 		
@@ -2200,7 +2202,39 @@ class User extends CI_Model{
 		return $start_end;
 	}
 
-	
+	private function _set_year_filter($filter)
+	{
+		if ( !isset( $filter['query']['periodo'] )  || empty( $filter['query']['periodo'] ) )
+			return;
+		if ($this->year_filter)
+			return;
+		switch ($filter['query']['periodo'])
+		{
+			case 1:
+			case 2:
+			case 3:
+				$year = date('Y');
+				$this->year_filter = array('start' => $year, 'end' => $year);
+				return;
+				break;
+			case 4:
+				$from = $this->custom_period_from;
+				$to = $this->custom_period_to;
+				if ( ( $from === FALSE ) || ( $to === FALSE ) )
+				{
+					$year = date('Y');
+					$this->year_filter = array('start' => $year, 'end' => $year);
+					return;
+				}
+				$from_parts = explode('-', $from);
+				$to_parts = explode('-', $to);
+				$this->year_filter = array('start' => $from_parts[0], 'end' => $to_parts[0]);
+				break;
+			default:
+				break;
+		}
+	}
+
 	private function _row_export_generic($value, $ramo = 'vida_gmm')
 	{
 		if ($ramo == 'vida_gmm')
@@ -3057,7 +3091,6 @@ class User extends CI_Model{
 			foreach ($payment_where_in as $field_name => $field_value)
 				$this->db->where_in($field_name, $field_value);
 		}
-
 		$this->_get_generation_filter($filter, $with_filter);
 		$this->db->group_by(array( 'policy_number', 'agent_id')); 
 		$query = $this->db->get();
@@ -4338,6 +4371,9 @@ AND
 
 	private function _get_generation_filter($filter, &$with_filter)
 	{
+		$this->_set_year_filter($filter);
+		$generacion_year = isset($this->year_filter['start']) ?
+			$this->year_filter['start'] : date( 'Y' );
 		if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) )
 		{
 			switch ($filter['query']['generacion'])
@@ -4345,8 +4381,7 @@ AND
 				case 2:
 					$with_filter = TRUE;
 					// Consolidado: <option value="2">Consolidado</option>
-					// Agentes with "fecha de conexion" before 1º October 2011 (4 years ago)
-					$end = 	( date( 'Y' ) - 4 ) . '-10-01';
+					$end = 	( $generacion_year - 4 ) . '-10-01';
 					$this->db->where(
 						"((`agents`.`connection_date` < '$end')
 						AND (`agents`.`connection_date` IS NOT NULL )
@@ -4357,10 +4392,10 @@ AND
 				case 3:
 					$with_filter = TRUE;
 				// Generación 1: <option value="3">Generación 1</option>
-				// Agentes with "fecha de conexion" between 1º October 2014 and 31 december 2015.
+				// Agentes with "fecha de conexion" between 1º October (filter_year - 1) and 31 december filter_year.
 				// or connection_date = '0000-00-00' or connection_date = ''
-					$begin = ( date( 'Y' ) - 1 ) . '-10-01';
-					$end = 	( date( 'Y' ) ) . '-12-31';
+					$begin = ( $generacion_year - 1 ) . '-10-01';
+					$end = 	( $generacion_year ) . '-12-31';
 //					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) );
 					$this->db->where(
 						"(((`agents`.`connection_date` <= '$end') AND
@@ -4373,27 +4408,27 @@ AND
 				case 4:
 					$with_filter = TRUE;
 				// Generación 2: <option value="4">Generación 2</option>
-				// Agentes with "fecha de conexion" between 1º October 2013 and 30 september 2014
-					$begin = ( date( 'Y' ) - 2 ) . '-10-01';
-					$end = 	( date( 'Y' ) - 1 ) . '-09-30';
+				// Agentes with "fecha de conexion" between 1º (filter_year - 2) and 30 september (filter_year - 1)
+					$begin = ( $generacion_year - 2 ) . '-10-01';
+					$end = 	( $generacion_year - 1 ) . '-09-30';
 					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
 					$generacion = 'Generación 2';
 				break;
 				case 5:
 					$with_filter = TRUE;
 					// Generación 3: <option value="5">Generación 3</option>
-					// Agentes with "fecha de conexion" between 1º October 2012 and 30 september 2013
-					$begin = ( date( 'Y' ) - 3 ) . '-10-01';
-					$end = 	( date( 'Y' ) - 2 ) . '-09-30';
+					// Agentes with "fecha de conexion" between 1º October (filter_year - 3) and 30 september (filter_year - 2)
+					$begin = ( $generacion_year - 3 ) . '-10-01';
+					$end = 	( $generacion_year - 2 ) . '-09-30';
 					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
 					$generacion = 'Generación 3';
 				break;
 				case 6:
 					$with_filter = TRUE;
 				// Generación 4: <option value="6">Generación 4</option>
-				// Agentes with "fecha de conexion" between 1º October 2011 and 30 september 2012
-					$begin = ( date( 'Y' ) - 4 ) . '-10-01';
-					$end = 	( date( 'Y' ) - 3 ) . '-09-30';
+				// Agentes with "fecha de conexion" between 1º October (filter_year - 4) and 30 september (filter_year - 3)
+					$begin = ( $generacion_year - 4 ) . '-10-01';
+					$end = 	( $generacion_year - 3 ) . '-09-30';
 					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) ); 	
 					$generacion = 'Generación 4';
 				default:
@@ -4628,7 +4663,6 @@ AND
 		$this->_get_generation_filter($filter, $with_filter);
 
 		$query = $this->db->get();
-
 		if ($query->num_rows() > 0)
 		{
 			foreach ($query->result() as $row)
