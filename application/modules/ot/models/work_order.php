@@ -1080,40 +1080,32 @@ class Work_order extends CI_Model{
 
 
 // Getting policy by uid
-	public function getPolicyByUid( $uid = null ){
-		
-		if( empty( $uid ) ) return false;
-		/*
-			
-			SELECT id
+	public function getPolicyByUid( $uid = null, $strict = true)
+	{
+		if( empty( $uid ) )
+			return false;
+		/*	SELECT id
 			FROM policies
 			WHERE uid='';
-
-			
 		*/
-				
-		$this->db->select( 'id, prima' );		
-		$this->db->where( 'policies.uid', $uid );
+		$this->db->select( 'id, prima' );
+		if ($strict)
+			$this->db->where( 'policies.uid', $uid );
+		else
+			$this->db->where("`policies`.`uid` REGEXP '0*$uid' ", NULL, FALSE);
 		$this->db->limit(1);
 		$query = $this->db->get('policies');
-		
-		
-		if ($query->num_rows() == 0) return false;
-		
+		if ($query->num_rows() == 0)
+			return false;
 		
 		$policy = array();
-		
 		foreach ($query->result() as $row) {
-			
 			$policy[] = array( 
 		    	'id' => $row->id,
 				'prima' => $row->prima
 		    );
-
 		}
-		
 		return $policy;
-		
 	}
 
 	public function getByPolicyUid( $policy_uid = null ){

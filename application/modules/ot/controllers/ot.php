@@ -1571,15 +1571,17 @@ implode(', ', $ramo_tramite_types) . '
 						if( $this->work_order->replace( 'payments', $payment ) == false )
 							$controlSaved = false;
 
-						$policy = $this->work_order->getPolicyByUid( $item->uid );
+						$policy = $this->work_order->getPolicyByUid( $item->uid, false );
 						if ($controlSaved && $policy && 
-							( (float)$policy[0]['prima'] >= (float)$item->amount )){
+							( (int) ($policy[0]['prima'] * 100) <= (int) ($item->amount * 100)))
+						{
 							$ot = $this->work_order->getWorkOrderByPolicy(  $policy[0]['id'] );
-							if( !empty( $ot ) ){
+							if( !empty( $ot ) )
+							{
 								$work_order = array( 'work_order_status_id' => 4 );
 								$this->work_order->update( 'work_order', $ot[0]['id'], $work_order );
 							}
-						}
+						} 
 						if( $controlSaved == false )
 							$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
 //					}else{
