@@ -24,7 +24,7 @@ if ( isset($_POST['periodo']) &&
 else
 	$selected_filter_period = get_selected_filter_period();
 $divided_by_zero = 'N/D';
-
+$span_count = 0;
 $agent_profile_page = ($this->uri->segment(1) == 'agent');
 if (!$agent_profile_page):
 ?>
@@ -109,7 +109,11 @@ endif;
 <?php endif; ?>
 
                           <div class="row">
+<?php if ($span_count): ?>
                             <div class="span<?php echo $span_count?> offset1">
+<?php else: ?>
+                            <div class="span5 offset1">
+<?php endif; ?>
 
 <?php if ($agent_profile_page): ?>
 <?php echo $period_fields ?>

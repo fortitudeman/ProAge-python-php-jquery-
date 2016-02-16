@@ -524,7 +524,7 @@ class Activities extends CI_Controller {
 			redirect( $redirect_page, 'refresh' );
 		}
 
-		$period_fields = $this->_common_create_update($activity_id, $redirect_page);
+		$period_fields = $this->_common_create_update($activity_id, $redirect_page, $userid);
 
 		$begin = $_POST ? $this->input->post('begin') : $data->begin;
 		$end =  $_POST ? $this->input->post('end') : $data->end;
