@@ -384,6 +384,14 @@ COUNT( `agents_activity`.`agent_id` ) AS `weeks_reported` ,
 SUM( `agents_activity`.`cita` ) AS `cita` , 
 SUM( `agents_activity`.`prospectus` )  AS `prospectus`, 
 SUM( `agents_activity`.`interview` )  AS `interview`';
+
+			$fields_selected = '`agents_activity`.`agent_id` ,
+( SUM(1 + DATEDIFF(`end`, `begin`)) / 7 ) AS `weeks_reported`,
+SUM( `agents_activity`.`cita` ) AS `cita` , 
+SUM( `agents_activity`.`prospectus` )  AS `prospectus`, 
+SUM( `agents_activity`.`interview` )  AS `interview`';
+
+
 			$this->db->select($fields_selected, FALSE);
 			$this->db->group_by('agent_id');
 		}

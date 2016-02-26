@@ -1,3 +1,11 @@
+select {
+	background: #DFDFDF;
+	color:#636363;
+	width:100px;
+	height:40px;
+	border:none;
+	font-size:12px;
+}
 .sales-activity-results {
 	margin-left: 1em
 }

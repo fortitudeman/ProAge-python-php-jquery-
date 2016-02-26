@@ -23,9 +23,12 @@ if ( isset($_POST['periodo']) &&
 }
 else
 	$selected_filter_period = get_selected_filter_period();
+
 $divided_by_zero = 'N/D';
 $span_count = 0;
-$agent_profile_page = ($this->uri->segment(1) == 'agent');
+$segment1 = $this->uri->segment(1);
+$agent_profile_page = ($segment1 === 'agent');
+$activity_page =  ($segment1 === 'activities');
 if (!$agent_profile_page):
 ?>
 
@@ -115,7 +118,7 @@ endif;
                             <div class="span5 offset1">
 <?php endif; ?>
 
-<?php if ($agent_profile_page): ?>
+<?php if ($agent_profile_page || $activity_page): ?>
 <?php echo $period_fields ?>
 <select id="periodo_form" name="periodo" style="width: 175px" title="Período">
 	  <option value="<?php echo $selected_period ?>"></option>
@@ -215,7 +218,7 @@ endif;
 			if ($agent_profile_page)
 				echo ' style="display: none"';
 			echo '><a href="#" class="toggle">' . $value['name'] . '</a></td>
-	<td class="sales-activity-numeric">' . $value['weeks_reported'] . '</td>
+	<td class="sales-activity-numeric">' . number_format($value['weeks_reported'], 2) . '</td>
 	<td class="medium-grey-body sales-activity-numeric">' . $value['citaT'] . '</td>
 	<td class="medium-grey-body sales-activity-numeric">' . number_format($value['citaP'], 2) . '</td>
 	<td class="light-grey-body sales-activity-numeric">' . $value['interviewT'] . '</td>
@@ -315,7 +318,7 @@ endif;
 			if ($agent_profile_page)
 				echo ' style="display: none"';
 			echo '><a href="#" class="toggle">' . $value['name'] . '</a></td>
-	<td class="sales-activity-numeric">' . $value['weeks_reported'] . '</td>
+	<td class="sales-activity-numeric">' . number_format($value['weeks_reported'], 2) . '</td>
 	<td class="medium-grey-body sales-activity-numeric">' . $value['citaT'] . '</td>
 	<td class="light-grey-body sales-activity-numeric">' . $value['interviewT'] . '</td>
 	<td class="sales-activity-numeric">' . $efectividad_1 . '</td>	
@@ -366,7 +369,7 @@ echo '<p class="sales-activity-results">No hay datos</p>';
 </div><!--/row-->
 <?php endif ?>
 
-<?php if (!$agent_profile_page): ?>
+<?php if (!$agent_profile_page && !$activity_page): ?>
 <div style="margin-top: 10em">
 <?php echo $period_form ?>
 

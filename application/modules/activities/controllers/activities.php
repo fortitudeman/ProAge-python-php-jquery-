@@ -687,7 +687,10 @@ class Activities extends CI_Controller {
 		$inline_js .=
 '
 <script type="text/javascript">
-	$( document ).ready( function(){ 
+	$( document ).ready( function(){
+
+//$("#sorter").tablesorter(); 
+
 		$("#sales-activity-normal").show();
 		$("#sales-activity-efectividad").hide();
 		$("#view-normal").bind( "click", function(){
@@ -714,7 +717,6 @@ class Activities extends CI_Controller {
 				$report_period = '';
 				break;
 		}
-
 		$base_url = base_url();
 		$this->view = array(
 		  'title' => 'Actividad de ventas',
@@ -738,20 +740,23 @@ class Activities extends CI_Controller {
 			'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/jquery.validate.js"></script>',
 			'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/es_validator.js"></script>',
 			'<script src="'.$base_url.'scripts/config.js"></script>',
-			'<script src="'.$base_url.'activities/assets/scripts/activities.js"></script>',
+//			'<script src="'.$base_url.'activities/assets/scripts/activities.js"></script>',
 			'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
 			'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
 			'<script src="' . $base_url . 'activities/assets/scripts/sales_activity_report.js"></script>',
 			'<script src="' . $base_url . 'ot/assets/scripts/jquery.fancybox.js"></script>',
-			'<script type="text/javascript" src="'. $base_url .'scripts/custom-period.js"></script>',
+//			'<script type="text/javascript" src="'. $base_url .'scripts/custom-period.js"></script>',
+			'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
 			$inline_js,
 		  ),
 		  'content' => 'activities/sales_activities',
 		  'data' => $data,
 		  'period_form' => show_custom_period(), // custom period configuration form
 		  'other_filters' => $other_filters,
+		  'selection_filters' => $other_filters,
 		  'report_period' => $report_period,
 		  'default_week' => $default_week,
+		  'period_fields' => show_period_fields('ot_reporte', 1),
 		  'message' => $this->session->flashdata('message')
 		);
 
@@ -767,7 +772,7 @@ class Activities extends CI_Controller {
 		$data = array();
 		$agent_array = $this->user->getAgents( FALSE );
 
-		$this->load->helper(array('filter', 'date_report'));
+		$this->load->helper(array('filter', 'date_report', 'tri_cuatrimester'));
 		$default_filter = get_filter_period();
 		$default_week = get_calendar_week();
 
@@ -779,12 +784,27 @@ class Activities extends CI_Controller {
 		);
 		get_generic_filter($other_filters, $agent_array);
 
-		if ( count( $_POST ) && (($periodo = $this->input->post('periodo')) !== FALSE) &&
+		if ( count( $_POST ) && 
+//(($periodo = $this->input->post('periodo')) !== FALSE) &&
+			((($periodo = $this->input->post('periodo')) !== FALSE) ||
+			(($periodo = $this->input->post("query['periodo']")) !== FALSE)
+			) &&
 			(($agent_name = $this->input->post('agent_name')) !== FALSE) && 
 			(($activity_view = $this->input->post('activity_view')) !== FALSE) &&
-			(($begin = $this->input->post('begin')) !== FALSE) &&
-			(($end = $this->input->post('end')) !== FALSE))
+//			(($begin = $this->input->post('begin')) !== FALSE) &&
+			((($begin = $this->input->post('begin')) !== FALSE) ||
+			(($begin = $this->input->post('start_d')) !== FALSE)
+			) &&
+//			(($end = $this->input->post('end')) !== FALSE)
+			((($end = $this->input->post('end')) !== FALSE) ||
+			(($end = $this->input->post('end_d')) !== FALSE)
+			)
+			)
 		{
+
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+
 			$default_week = array('start' => $begin, 'end' => $end);
 			if ( $this->form_validation->is_natural_no_zero($periodo) &&
 				($periodo <= 4))
@@ -796,9 +816,9 @@ class Activities extends CI_Controller {
 			$other_filters['agent_name'] = $agent_name;				
 			$other_filters['periodo'] = $periodo;
 			$other_filters['begin'] = $begin;
-			$other_filters['end'] = $end;			
-			get_period_start_end($other_filters);
-
+			$other_filters['end'] = $end;
+//			get_period_start_end($other_filters);
+			get_new_period_start_end($other_filters);
 			$filters_to_save = array(
 				'agent_name' => $agent_name,
 				'activity_view' => $activity_view,
@@ -808,14 +828,15 @@ class Activities extends CI_Controller {
 			generic_set_report_filter( $filters_to_save, $agent_array );
 //			foreach ($filters_to_save as $key => $value)
 //				$other_filters[$key] = $value;
-			$data = $this->activity->sales_activity($other_filters);
+			$data = $this->activity->sales_activity($other_filters, TRUE);
 		}
 		else
 		{
 			$other_filters = array_merge(
 				$other_filters, array('periodo' => $default_filter));
-			get_period_start_end($other_filters);
-			$data = $this->activity->sales_activity($other_filters);
+//			get_period_start_end($other_filters);
+			get_new_period_start_end($other_filters);
+			$data = $this->activity->sales_activity($other_filters, TRUE);
 		}
 		return $data;
 	}
