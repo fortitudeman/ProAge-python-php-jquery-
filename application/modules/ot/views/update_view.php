@@ -261,7 +261,7 @@ $display[ $data['product_group_id'] ] = '';
                   </div>
 
                   <div class="control-group hide-update-others">
-                    <label class="control-label text-error" for="inputError">Prima anual</label>
+                    <label class="control-label text-error" for="inputError">Prima anual<br>en pesos M.N.</label>
                     <div class="controls">
                       <input <?php if (($function == 'ver') || ($update && !$is_nuevo_negocio)) echo 'readonly="readonly"' ?> style="height: 1.7em" type="number" pattern="[0-9]+([\.][0-9]+)?" step="0.01" value="<?php echo set_value('prima', $data['policy'][0]['prima']); ?>" class="input-xlarge focused required" id="prima" name="prima" />
                       <span id="prima-error" style="display: none">Campo invalido</span>

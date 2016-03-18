@@ -163,7 +163,7 @@
                   </div>
 
                   <div class="control-group">
-                    <label class="control-label text-error" for="inputError">Prima anual</label>
+                    <label class="control-label text-error" for="inputError">Prima anual<br>en pesos M.N.</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="prima" name="prima" type="text">
                     </div>
