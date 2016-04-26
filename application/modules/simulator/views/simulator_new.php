@@ -200,19 +200,19 @@ for ($i = 1; $i <= $period_max; $i++) :
         <div class="span3">
 <?php if ($ramo == 'vida'): ?>
 		  <select name="porcentajeConservacion_<?php echo $i; ?>" id="porcentajeConservacion_<?php echo $i; ?>" class="span12 smaller conservacion-percent">
-             <option value="0" <?php if ($percent_conservacion_values[$i] == 0 ) echo 'selected="selected"'; ?>>Sin base</option>
+<!--            <option value="0" <?php if ($percent_conservacion_values[$i] == 0 ) echo 'selected="selected"'; ?>>Sin base</option>
              <option value="m89" <?php if ($percent_conservacion_values[$i] == "m89" ) echo 'selected="selected"'; ?>>&lt;89%</option>
-             <option value="89" <?php if ($percent_conservacion_values[$i] == 89 ) echo 'selected="selected"'; ?>>89%</option>
-             <option value="91" <?php if ($percent_conservacion_values[$i] == 91 ) echo 'selected="selected"'; ?>>91%</option>
+             <option value="89" <?php if ($percent_conservacion_values[$i] == 89 ) echo 'selected="selected"'; ?>>89%</option>-->
+             <option value="90" <?php if ($percent_conservacion_values[$i] == 90 ) echo 'selected="selected"'; ?>>90%</option>
              <option value="93" <?php if ($percent_conservacion_values[$i] == 93 ) echo 'selected="selected"'; ?>>93%</option>
              <option value="95" <?php if ($percent_conservacion_values[$i] == 95 ) echo 'selected="selected"'; ?>>95%</option>
           </select>
 <?php else: ?>
 		  <select name="porsiniestridad_<?php echo $i; ?>" id="porsiniestridad_<?php echo $i; ?>" class="span12 smaller siniestridad-percent">
              <option value="">Seleccione</option>
-             <option value="68" <?php if ($percent_siniestrad_values[$i] == 68 ) echo 'selected="selected"'; ?>>&lt;= 68</option>
-             <option value="64" <?php if ($percent_siniestrad_values[$i] == 64 ) echo 'selected="selected"'; ?>>&lt;= 64</option>
-             <option value="60" <?php if ($percent_siniestrad_values[$i] == 60 ) echo 'selected="selected"'; ?>>&lt;= 60</option>
+             <option value="66" <?php if ($percent_siniestrad_values[$i] == 66 ) echo 'selected="selected"'; ?>>&lt;= 66</option>
+             <option value="62" <?php if ($percent_siniestrad_values[$i] == 62 ) echo 'selected="selected"'; ?>>&lt;= 62</option>
+             <option value="58" <?php if ($percent_siniestrad_values[$i] == 58 ) echo 'selected="selected"'; ?>>&lt;= 58</option>
           </select>
 <?php endif ?>
         </div>
