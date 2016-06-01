@@ -2,12 +2,12 @@
 
 $config = array(
 // 1. With the mail protocol:
-	'protocol' => 'smtp',
+	'protocol' => 'mail',
 // 2. With SMTP (Gmail):
 	'protocol' => 'smtp',
-	'smtp_host' => 'smtp.gmail.com',
-	'smtp_user' => 'admin.proages@isinet.ws',
-	'smtp_pass' => 'AH@YQLxj',
+	'smtp_host' => 'email-smtp.us-east-1.amazonaws.com',
+	'smtp_user' => 'AKIAIQGIZYWP7D2LUMKQ',
+	'smtp_pass' => 'AtC0Aug2Hz0zY4gciqEzXXg+QZRcKhWbMY7YFAgRtEnI',
 	'smtp_port' => '465',
 	'newline' => "\r\n",
 );
