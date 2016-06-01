@@ -2,7 +2,7 @@
 
 $config = array(
 // 1. With the mail protocol:
-	'protocol' => 'mail',
+	'protocol' => 'smtp',
 // 2. With SMTP (Gmail):
 	'protocol' => 'smtp',
 	'smtp_host' => 'smtp.gmail.com',
