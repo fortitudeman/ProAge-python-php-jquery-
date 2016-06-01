@@ -232,7 +232,7 @@ $CI->email->mailtype = 'html';
 $result = $CI->email->send();
 if (!$result)
 {
-	echo $CI->email->print_debugger();
+	// echo $CI->email->print_debugger();
 }
 //			@mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
 			/*
