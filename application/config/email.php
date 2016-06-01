@@ -5,7 +5,7 @@ $config = array(
 	'protocol' => 'mail',
 // 2. With SMTP (Gmail):
 	'protocol' => 'smtp',
-	'smtp_host' => 'ssl://smtp.gmail.com',
+	'smtp_host' => 'smtp.gmail.com',
 	'smtp_user' => 'admin.proages@isinet.ws',
 	'smtp_pass' => 'AH@YQLxj',
 	'smtp_port' => '465',
