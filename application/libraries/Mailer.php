@@ -19,7 +19,7 @@ class Mailer{
         $this->mail->SMTPAuth   = true;                  // enable SMTP authentication
         $this->mail->CharSet = "utf-8";                  // 一定要設定 CharSet 才能正確處理中文
         $this->mail->SMTPSecure = "tls";                 // sets the prefix to the servier
-        //$this->mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
+        $this->mail->Host       = "email-smtp.us-east-1.amazonaws.com";      // sets GMAIL as the SMTP server
         $this->mail->Port       = 465;                   // set the SMTP port for the GMAIL server
 
         $CI =& get_instance();
