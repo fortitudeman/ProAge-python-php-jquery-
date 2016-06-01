@@ -19,8 +19,8 @@ class Mailer{
         $this->mail->SMTPAuth   = true;                  // enable SMTP authentication
         $this->mail->CharSet = "utf-8";                  // 一定要設定 CharSet 才能正確處理中文
         $this->mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
-        // $this->mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
-        // $this->mail->Port       = 465;                   // set the SMTP port for the GMAIL server
+        $this->mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
+        $this->mail->Port       = 465;                   // set the SMTP port for the GMAIL server
 
         $CI =& get_instance();
 		$this->email_from = $CI->config->item('email_sender');
