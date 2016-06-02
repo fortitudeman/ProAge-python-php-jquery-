@@ -217,6 +217,7 @@ class Mailer{
 $CI =& get_instance();
 $CI->load->library('email');
 $CI->email->clear();
+$CI->email->headers($headers);
 $CI->email->to($value['email']);
 $CI->email->subject($status_name. ' de la Orden de Trabajo '.$notification[0]['uid']);
 $CI->email->message($body);
