@@ -218,7 +218,7 @@ $CI->email->clear();
 $CI->email->to($value['email']);
 $CI->email->subject($status_name. ' de la Orden de Trabajo '.$notification[0]['uid']);
 $CI->email->message($body);
-$email_from = $CI->config->item('email_sender');
+$email_from = "admin.proages@isinet.ws";//$CI->config->item('email_sender');
 $sender_company = $CI->config->item('company_name');
 $CI->email->from($email_from
 //, $sender_company
