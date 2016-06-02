@@ -25,8 +25,9 @@ class Mailer{
         $CI =& get_instance();
 		$this->email_from = "admin.proages@isinet.ws";//$CI->config->item('email_sender');
 		$this->company = $CI->config->item('company_name');
-		$this->mail->AddReplyTo($this->email_from, $this->company);
-		$this->mail->SetFrom($this->email_from, $this->company);
+		$this->mail->AddReplyTo("admin.proages@isinet.ws");
+		//$this->mail->AddReplyTo($this->email_from, $this->company);
+		//$this->mail->SetFrom($this->email_from, $this->company);
 //        $this->mail->AddReplyTo('info+proages@isinet.mx', 'Isinet');
 //        $this->mail->SetFrom('info+proages@isinet.mx', 'Isinet');
     }
@@ -205,9 +206,9 @@ class Mailer{
 				$headers = "From: " . $this->email_from . "\r\n";
 
 			if (isset($from_reply_to['reply-to']))
-				$headers .= "Reply-To: " . $from_reply_to['reply-to'] . "\r\n";
+				$headers .= "Reply-To: admin.proages@isinet.ws\r\n";
 			else
-				$headers .= "Reply-To: " . $this->email_from . "\r\n";
+				$headers .= "Reply-To: admin.proages@isinet.ws\r\n";
 
 			$headers .= "MIME-Version: 1.0\r\n";
 			$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
@@ -220,13 +221,11 @@ $CI->email->subject($status_name. ' de la Orden de Trabajo '.$notification[0]['u
 $CI->email->message($body);
 $email_from = "admin.proages@isinet.ws";//$CI->config->item('email_sender');
 $sender_company = $CI->config->item('company_name');
-$CI->email->from($email_from
-//, $sender_company
-);
+$CI->email->from("admin.proages@isinet.ws");
 if (isset($from_reply_to['reply-to']))
-	$CI->email->reply_to($from_reply_to['reply-to']);
+	$CI->email->reply_to("admin.proages@isinet.ws");
 else
-	$CI->email->reply_to($email_from);
+	$CI->email->reply_to("admin.proages@isinet.ws");
 $CI->email->mailtype = 'html';
 
 $result = $CI->email->send();
