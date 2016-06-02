@@ -16,18 +16,18 @@ class Mailer{
         $this->mail = new PHPMailer(); 
         $this->mail->IsSMTP(); // telling the class to use SMTP
  	    $this->mail->SMTPDebug  = 0;                     // enables SMTP debug information
-        $this->mail->SMTPAuth   = true;                  // enable SMTP authentication
+        $this->mail->SMTPAuth   = false;                  // enable SMTP authentication
         $this->mail->CharSet = "utf-8";                  // 一定要設定 CharSet 才能正確處理中文
-        $this->mail->SMTPSecure = "tls";                 // sets the prefix to the servier
-        $this->mail->Host       = "email-smtp.us-east-1.amazonaws.com";      // sets GMAIL as the SMTP server
-        $this->mail->Port       = 465;                   // set the SMTP port for the GMAIL server
+       // $this->mail->SMTPDebug  = 0;                     // enables SMTP debug information
+        // $this->mail->SMTPSecure = "ssl";                 // sets the prefix to the servier
+        // $this->mail->Host       = "smtp.gmail.com";      // sets GMAIL as the SMTP server
+        // $this->mail->Port       = 465;                   // set the SMTP port for the GMAIL server
 
         $CI =& get_instance();
-		$this->email_from = "admin.proages@isinet.ws";//$CI->config->item('email_sender');
+		$this->email_from = $CI->config->item('email_sender');
 		$this->company = $CI->config->item('company_name');
-		$this->mail->AddReplyTo("admin.proages@isinet.ws");
-		//$this->mail->AddReplyTo($this->email_from, $this->company);
-		//$this->mail->SetFrom($this->email_from, $this->company);
+		$this->mail->AddReplyTo($this->email_from, $this->company);
+		$this->mail->SetFrom($this->email_from, $this->company);
 //        $this->mail->AddReplyTo('info+proages@isinet.mx', 'Isinet');
 //        $this->mail->SetFrom('info+proages@isinet.mx', 'Isinet');
     }
@@ -206,34 +206,16 @@ class Mailer{
 				$headers = "From: " . $this->email_from . "\r\n";
 
 			if (isset($from_reply_to['reply-to']))
-				$headers .= "Reply-To: admin.proages@isinet.ws\r\n";
+				$headers .= "Reply-To: " . $from_reply_to['reply-to'] . "\r\n";
 			else
-				$headers .= "Reply-To: admin.proages@isinet.ws\r\n";
+				$headers .= "Reply-To: " . $this->email_from . "\r\n";
 
 			$headers .= "MIME-Version: 1.0\r\n";
 			$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-$CI =& get_instance();
-$CI->load->library('email');
-$CI->email->clear();
-$CI->email->to($value['email']);
-$CI->email->subject($status_name. ' de la Orden de Trabajo '.$notification[0]['uid']);
-$CI->email->message($body);
-$email_from = "admin.proages@isinet.ws";//$CI->config->item('email_sender');
-$sender_company = $CI->config->item('company_name');
-$CI->email->from("admin.proages@isinet.ws");
-if (isset($from_reply_to['reply-to']))
-	$CI->email->reply_to("admin.proages@isinet.ws");
-else
-	$CI->email->reply_to("admin.proages@isinet.ws");
-$CI->email->mailtype = 'html';
-
-$result = $CI->email->send();
-if (!$result)
-{
-	 echo $CI->email->print_debugger();
-}
-//			@mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
+			@mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
+			
+			
 			/*
 						
 				try{
