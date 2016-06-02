@@ -213,9 +213,29 @@ class Mailer{
 			$headers .= "MIME-Version: 1.0\r\n";
 			$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-			@mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
-			
-			
+$CI =& get_instance();
+$CI->load->library('email');
+$CI->email->clear();
+$CI->email->to($value['email']);
+$CI->email->subject($status_name. ' de la Orden de Trabajo '.$notification[0]['uid']);
+$CI->email->message($body);
+$email_from = $CI->config->item('email_sender');
+$sender_company = $CI->config->item('company_name');
+$CI->email->from($email_from
+//, $sender_company
+);
+if (isset($from_reply_to['reply-to']))
+	$CI->email->reply_to($from_reply_to['reply-to']);
+else
+	$CI->email->reply_to($email_from);
+$CI->email->mailtype = 'html';
+
+$result = $CI->email->send();
+if (!$result)
+{
+	echo $CI->email->print_debugger();
+}
+//			@mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
 			/*
 						
 				try{
