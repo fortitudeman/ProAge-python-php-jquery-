@@ -23,7 +23,7 @@ class Mailer{
         $this->mail->Port       = 465;                   // set the SMTP port for the GMAIL server
 
         $CI =& get_instance();
-		$this->email_from = $CI->config->item('email_sender');
+		$this->email_from = "admin.proages@isinet.ws";//$CI->config->item('email_sender');
 		$this->company = $CI->config->item('company_name');
 		$this->mail->AddReplyTo($this->email_from, $this->company);
 		$this->mail->SetFrom($this->email_from, $this->company);
