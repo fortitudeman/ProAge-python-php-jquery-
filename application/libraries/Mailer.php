@@ -203,13 +203,14 @@ class Mailer{
 //			if (isset($from_reply_to['from']))
 //				$headers = "From: " . $from_reply_to['from'] . "\r\n";
 //			else
-				$headers = "From: " . $this->email_from . "\r\n";
+//				$headers = "From: " . $this->email_from . "\r\n";
 
-			if (isset($from_reply_to['reply-to']))
-				$headers .= "Reply-To: " . $from_reply_to['reply-to'] . "\r\n";
-			else
-				$headers .= "Reply-To: " . $this->email_from . "\r\n";
-
+//			if (isset($from_reply_to['reply-to']))
+//				$headers .= "Reply-To: " . $from_reply_to['reply-to'] . "\r\n";
+//			else
+//				$headers .= "Reply-To: " . $this->email_from . "\r\n";
+			$headers = "From: admin.proages@isinet.ws\r\n";
+			$headers .= "Reply-To: admin.proages@isinet.ws\r\n";
 			$headers .= "MIME-Version: 1.0\r\n";
 			$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
@@ -219,9 +220,9 @@ $CI->email->clear();
 $CI->email->to($value['email']);
 $CI->email->subject($status_name. ' de la Orden de Trabajo '.$notification[0]['uid']);
 $CI->email->message($body);
-$email_from = $CI->config->item('email_sender');
+//$email_from = $CI->config->item('email_sender');
 $sender_company = $CI->config->item('company_name');
-$CI->email->from($email_from);
+//$CI->email->from($email_from);
 //if (isset($from_reply_to['reply-to']))
 //	$CI->email->reply_to($from_reply_to['reply-to']);
 //else
