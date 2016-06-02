@@ -221,13 +221,12 @@ $CI->email->subject($status_name. ' de la Orden de Trabajo '.$notification[0]['u
 $CI->email->message($body);
 $email_from = $CI->config->item('email_sender');
 $sender_company = $CI->config->item('company_name');
-$CI->email->from($email_from
-//, $sender_company
-);
-if (isset($from_reply_to['reply-to']))
-	$CI->email->reply_to($from_reply_to['reply-to']);
-else
-	$CI->email->reply_to($email_from);
+$CI->email->from($email_from);
+//if (isset($from_reply_to['reply-to']))
+//	$CI->email->reply_to($from_reply_to['reply-to']);
+//else
+//	$CI->email->reply_to($email_from);
+$CI->email->reply_to($email_from);
 $CI->email->mailtype = 'html';
 
 $result = $CI->email->send();
