@@ -150,6 +150,11 @@ class Usuarios extends CI_Controller {
 					$this->session->set_userdata( array( 'system' => $user[0] ) );
 					// Resize profile image if needed:
 					$this->_resize_image($user[0]['picture']);
+
+					// Compute policy primas
+//					$this->load->helper('prima');
+//					init_policy_prima_entered();
+
 					// Get user home page depending on role:
 					$home_page = $this->rol->get_user_home_page( $user[0]['id'] );
 					if ( ! $home_page )
@@ -2436,6 +2441,15 @@ $add_js
 			$user['picture'] = "default.png";
 		return $result;
 	}
+
+	public function policy_primas()
+	{
+		$this->load->helper('prima');
+		$result = init_policy_prima_entered();
+		echo sprintf("\nPolizas procesadas: %s primas en MXN ; %s primas en USD\n",
+			$result['mxn'], $result['usd']);
+	}
+
 /* End of file usuarios.php */
 /* Location: ./application/controllers/usuarios.php */
 }
