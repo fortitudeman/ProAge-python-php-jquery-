@@ -147,6 +147,8 @@ class Ot extends CI_Controller {
 		}
 		$this->ot_r_misc_filter = $this->session->userdata('ot_r_misc_filter');
 
+		$this->load->model('exchange_rate_model');
+		$response = $this->exchange_rate_model->get_from_banxico();
 	}
 
 // Show all records	
@@ -1250,7 +1252,6 @@ implode(', ', $ramo_tramite_types) . '
  **/
 	public function import_payments()
 	{
-
 		// Check access teh for import
 		if( $this->access_import_payments == false ){
 			// Set false message		
