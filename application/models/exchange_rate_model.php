@@ -50,8 +50,8 @@ class Exchange_rate_model extends CI_Model
 			$this->handle_error('No respuesta del sitio www.banxico.org.mx. Informe al administrador.');
 			return $result;
 		}
-		$getContents = str_replace(["rdf:", "dc:", "cb:" ], ["", "", ""],
-			$getContents);  // to be able to parse the xml
+		$getContents = str_replace(array("rdf:", "dc:", "cb:"),
+			array("", "", ""), $getContents);  // to be able to parse the xml
 		$xml = (array) simplexml_load_string($getContents, null, LIBXML_NOCDATA);
 		if (!$xml)
 		{
