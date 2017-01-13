@@ -2450,6 +2450,14 @@ $add_js
 			$result['mxn'], $result['usd']);
 	}
 
+	public function reset_policy_prima_entered()
+	{
+		$this->load->helper('prima');
+		$result = reset_policy_prima_entered();
+		echo sprintf("\nPolizas procesadas: %s primas en MXN ; %s primas en USD\n",
+			$result['mxn'], $result['usd']);
+	}
+
 /* End of file usuarios.php */
 /* Location: ./application/controllers/usuarios.php */
 }

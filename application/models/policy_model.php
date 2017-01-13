@@ -18,21 +18,21 @@ class Policy_model extends CI_Model
 
 	public function __construct()
 	{
-        parent::__construct();
-    }
+		parent::__construct();
+	}
 
 /**
   Set table
  **/
-    public function set_table( $table )
+	public function set_table( $table )
 	{
 		$this->table = $table;
-    }	
+	}	
 
 /**
   Initialize the table `policy_adjusted_primas`
  **/
-    public function populate_adjusted_primas()
+	public function populate_adjusted_primas()
 	{
 		$result = 0;
 		if ($this->db->table_exists('policy_adjusted_primas'))
@@ -82,12 +82,12 @@ OR
 			$result = $this->db->count_all('policy_adjusted_primas');
 		}
 		return $result;
-    }
+	}
 
 /**
   Insert rows in `policy_adjusted_primas` for one given OT
  **/
-    public function add_adjusted_primas($ot_id = null)
+	public function add_adjusted_primas($ot_id = null)
 	{
 		if (!$ot_id)
 			return FALSE;
@@ -124,7 +124,7 @@ AND
 /**
   Update adjusted prima in `policy_adjusted_primas` for one given OT
  **/
-    public function update_adjusted_primas($ot_id = FALSE, $policy_id = FALSE, $new_prima = FALSE)
+	public function update_adjusted_primas($ot_id = FALSE, $policy_id = FALSE, $new_prima = FALSE)
 	{
 		return TRUE;
 		if (!$ot_id || !$policy_id || ($new_prima === FALSE))
@@ -195,7 +195,7 @@ log_message('error', $this->db->last_query());
 /**
   Insert rows in `policy_adjusted_primas` for one given OT
  **/
-    private function _prepare_adjusted_primas($row, &$new_rows)
+	private function _prepare_adjusted_primas($row, &$new_rows)
 	{
 		list($year, $month, $day_time) = explode('-', $row['date']);
 		list($day, $time) = explode(' ', $day_time);
@@ -242,7 +242,7 @@ log_message('error', $this->db->last_query());
 /**
   Get rows in `policy_adjusted_primas` for given OTs
  **/
-    public function get_ot_adjusted_primas($ots = null)
+	public function get_ot_adjusted_primas($ots = null)
 	{
 		$result = array();
 		if (!$ots)
@@ -273,7 +273,7 @@ log_message('error', $this->db->last_query());
 /**
   Deletes rows of table policy_adjusted_prima for a given policy and given dates
  **/
-    public function delete_adjusted_primas($policy_dates = array())
+	public function delete_adjusted_primas($policy_dates = array())
 	{
 		$deleted = 0;
 		$to_delete = count($policy_dates);
@@ -295,7 +295,7 @@ log_message('error', $this->db->last_query());
   Script to compute (initialize) `policies`.`prima_entered`
   (special attention to rows with currency_id USD)
  **/
-    public function init_policy_prima_entered()
+	public function init_policy_prima_entered()
 	{
 		$result = array('mxn' => 0, 'usd' => 0);
 // 1. process policies entered in MXN if any: just copy `prima` into `prima_entered'
@@ -363,7 +363,7 @@ log_message('error', $this->db->last_query());
 				$this->db->order_by('date', 'DESC');
 				$rate_query = $this->db->get_where('exchange_rates',
 					"date < '" . $ne_rate->date . "' and rate != 'N/E'", 1);
-				if ($query->num_rows() > 0)
+				if ($rate_query->num_rows() > 0)
 				{
 					$rate_row = $rate_query->row();
 					$to_update[] = array(
@@ -390,7 +390,7 @@ log_message('error', $this->db->last_query());
 /**
   Update batch - workaround for the CI method not working
  **/
-    public function update_batch($table, $to_update, $id)
+	public function update_batch($table, $to_update, $id)
 	{
 		$this->db->flush_cache();
 		$where_array = array();
@@ -409,7 +409,16 @@ WHERE `id` IN (" . implode(',', $where_array) . ")";
 			return $this->db->affected_rows();
 		}
 		return 0;
-    }
+	}
+
+/**
+  Rest `prima_entered`
+ **/
+	public function reset_prima_entered()
+	{
+		$this->db->flush_cache();
+		$this->db->query("UPDATE `policies` SET `prima_entered` = NULL");
+	}
 
 }
 /* End of file policy_model.php */
