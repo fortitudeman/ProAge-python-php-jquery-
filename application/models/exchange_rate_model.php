@@ -69,10 +69,23 @@ class Exchange_rate_model extends CI_Model
 			return $result;
 		}
 		$response_date = substr($json_decoded['item']['date'], 0, 10);
-		if (($response_date != $yesterday) && ($response_date != date('Y-m-d')))
+		$matched = array();
+		$regexp = preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",
+			$response_date, $matched);
+		if (!$regexp || 
+			(count($matched) < 3) || 
+			!checkdate($matched[1], $matched[2], 
+				substr($matched[0], 0, 4)))
 		{
 			$this->handle_error('No se pudo leer el campo &lt;date/&gt; en la respuesta del sitio www.banxico.org.mx. Informe al administrador.');	
 			return $result;
+		}
+
+		$query = $this->db->get_where('exchange_rates', 
+			"date = '$response_date'");
+		if ($query->num_rows() > 0)
+		{
+			return NULL;
 		}
 
 		$response_value = $json_decoded['item']['statistics']['exchangeRate']['value'];
@@ -100,6 +113,37 @@ class Exchange_rate_model extends CI_Model
 	private function handle_error($message)
 	{
 		echo $message;
+	}
+
+/**
+  Converts prima
+ **/
+	public function convert_prima($prima, $currency_from, $currency_to)
+	{
+		$this->db->select( 'rate' );
+		$this->db->order_by('date', 'DESC');
+		$rate_query = $this->db->get_where('exchange_rates',
+			"rate != 'N/E'", 1);
+		if ($rate_query->num_rows() > 0)
+		{
+			$rate_row = $rate_query->row();
+		}
+		else
+		{
+			return FALSE;
+		}
+		if (($currency_from == '2') && ($currency_to == '1'))
+			// converts from USD to MXN
+		{
+			return $rate_row->rate * $prima;
+		}
+		elseif  (($currency_from == '1') && ($currency_to == '2'))
+		{
+			// converts from MXN to USD
+			return $prima / $rate_row->rate;
+		}
+		else
+			return FALSE;
 	}
 }
 /* End of file exchange_rate_model.php */
