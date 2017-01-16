@@ -200,7 +200,7 @@ implode(', ', $ramo_tramite_types) . '
 		  'access_delete' => $this->access_delete,
 		  'access_all' => $this->access_all,
 		  'css' => array(
-			'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',      
+			'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',
 			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">', 		  
 			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
 			'
@@ -1620,7 +1620,7 @@ implode(', ', $ramo_tramite_types) . '
 
 		@ini_set('auto_detect_line_endings', $save_setting);
 
-                // Load Model
+		// Load Model
 		$this->load->model( 'work_order' );
 		$products = $this->work_order->getProductsGroupsOptions();
 
@@ -1659,7 +1659,7 @@ implode(', ', $ramo_tramite_types) . '
 		if( isset( $product ) and !empty( $product ) )
 			$this->view['product'] = $product;		
 		if( isset( $file_array ) and !empty( $file_array ) )
-			$this->view['file_array'] = $file_array;                
+			$this->view['file_array'] = $file_array;
 		// Render view 
 		$this->load->view('index',$this->view );
 	}
@@ -1921,22 +1921,22 @@ alert("changed!");
 		$results = array();  
 		foreach($work_ids as $work_order_id)
 		{
-			$results[] = $this->work_order->pop_up_data($work_order_id);                
+			$results[] = $this->work_order->pop_up_data($work_order_id);
 		}
 		$data['values'] = $results;
 		$this->load->view('popup_report',$data);	
 	}
-        
+
  /**
  *	Reports Popup
  **/	
 	public function reporte_popup_later()
 	{
-            //$data['value'] = $this->uri->segment(3);
-            $this->load->model(array('work_order'));            
-            $data['values'] = $this->work_order->pop_up_data(); 
-            $result = $this->load->view('popup_report',$data);
-            echo json_encode($result);
+		//$data['value'] = $this->uri->segment(3);
+		$this->load->model(array('work_order'));
+		$data['values'] = $this->work_order->pop_up_data(); 
+		$result = $this->load->view('popup_report',$data);
+		echo json_encode($result);
 	}
 
 /**
@@ -1957,8 +1957,8 @@ alert("changed!");
  **/	
 	public function send_email()
 	{
-		$email_address = $this->input->post('email_address');            
-		$email_body = $this->input->post('email_body');            
+		$email_address = $this->input->post('email_address');
+		$email_body = $this->input->post('email_body');
 		$this->load->library('email');
 		$this->email->set_mailtype("html");
 		$this->email->from('proAges@example.com','proAges');
@@ -1968,7 +1968,7 @@ alert("changed!");
 
 		$result = $this->email->send(); 
 		echo json_encode($result); 
-	}         
+	}
 
 	private function _report_export_helper($value, $ramo = 'vida_gmm')
 	{
@@ -2319,11 +2319,15 @@ alert("changed!");
 
 		$is_nuevo_negocio = ($ot[0]['parent_type_name']['id'] == 47) || ($ot[0]['parent_type_name']['id'] == 90);
 
-		if ( (($function == 'editar') || ($function == 'update') ) && !empty( $_POST ) ) {
-
+		if ( (($function == 'editar') || ($function == 'update') ) && !empty( $_POST ) )
+		{
 			if ($function == 'editar') {
-				$this->form_validation->set_rules('prima', ' Prima anual', 'trim|required|decimal_or_integer');
-				$this->form_validation->set_rules('payment_interval_id', ' Forma de pago', 'trim|required|is_natural_no_zero|less_than[5]');
+				$this->form_validation->set_rules('prima', ' Prima anual',
+					'trim|required|decimal_or_integer');
+				$this->form_validation->set_rules('currency_id', ' Moneda',
+					'trim|required|is_natural_no_zero|less_than[3]');
+				$this->form_validation->set_rules('payment_interval_id', ' Forma de pago', 
+					'trim|required|is_natural_no_zero|less_than[5]');
 			} else {
 				$this->form_validation->set_rules('ot', 'Número de OT', "is_unique_but[work_order.uid.id.$id]");
 				$this->form_validation->set_rules('creation_date', 'Fecha de tramite', 'trim|required|min_length[10]');
@@ -2349,12 +2353,11 @@ alert("changed!");
 				$error = false;
 				$current_date = date( 'Y-m-d H:i:s' );
 				if ($function == 'editar')
-					$field_values = array(
-						'prima' => $this->input->post( 'prima' ),
-						'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
-						'last_updated' => $current_date,
-					);
-				else {
+				{
+					$field_values = array();
+					$error = !$this->_process_update_db_policy_prima(
+						$current_date, $field_values);
+				} else {
 
 	// 1. update table `work_order`
 					$new_status = $this->input->post( 'ot_status' );
@@ -2402,13 +2405,15 @@ alert("changed!");
 							);
 						if ($is_nuevo_negocio)
 						{
+							$error = !$this->_process_update_db_policy_prima(
+								$current_date, $field_values);
+
 							$field_values = array_merge($field_values, array(
-								'currency_id' => $this->input->post( 'currency_id' ),
-								'payment_method_id' => $this->input->post( 'payment_method_id' ),
-								'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
+								'payment_method_id' => $this->input->post(
+									'payment_method_id' ),
 								'period' => $this->input->post( 'period' ),
-								'prima' => $this->input->post( 'prima' ),						
 							));
+
 							if (in_array($ot[0]['status_id'], array(7, 4, 10)))
 								$field_values['uid'] = $this->input->post( 'uid' );
 						}
@@ -2546,6 +2551,33 @@ alert("changed!");
 
 		// Render view 
 		$this->load->view( 'index', $this->view );
+	}
+
+	private function _process_update_db_policy_prima($current_date, &$field_values)
+	{
+		$prima_entered = $this->input->post( 'prima' );
+		$currency_id = $this->input->post('currency_id');
+		if ($currency_id == 2)
+		{
+		// if entered in USD, compute prima by converting to MXN
+			$this->load->model('exchange_rate_model');
+			$prima = $this->exchange_rate_model->convert_prima(
+				$prima_entered, 2, 1);
+			if ($prima === FALSE)
+				return FALSE;
+		}
+		else
+		{
+			$prima = $prima_entered;
+		}
+		$field_values = array_merge($field_values, array(
+			'prima' => $prima,
+			'prima_entered' => $prima_entered,
+			'currency_id' => $currency_id,
+			'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
+			'last_updated' => $current_date,
+			));
+		return TRUE;
 	}
 
 	private function _notify_ot_status_change($order_id)

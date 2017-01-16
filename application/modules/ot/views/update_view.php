@@ -260,28 +260,31 @@ $display[ $data['product_group_id'] ] = '';
                     </div>
                   </div>
 
-                  <div class="control-group hide-update-others">
-                    <label class="control-label text-error" for="inputError">Prima anual<br>en pesos M.N.</label>
-                    <div class="controls">
-                      <input <?php if (($function == 'ver') || ($update && !$is_nuevo_negocio)) echo 'readonly="readonly"' ?> style="height: 1.7em" type="number" pattern="[0-9]+([\.][0-9]+)?" step="0.01" value="<?php echo set_value('prima', $data['policy'][0]['prima']); ?>" class="input-xlarge focused required" id="prima" name="prima" />
-                      <span id="prima-error" style="display: none">Campo invalido</span>
-                    </div>
-                  </div>
-
                   <div class="control-group typtramite hide-update-others">
                     <label class="control-label text-error" for="inputError">Moneda</label>
                     <div class="controls">
-                      <select class="input-xlarge focused required update-nn-editable" id="currency_id" name="currency_id" <?php if (!$update_nn_editable) echo 'readonly="readonly"'?>>
-<?php foreach ($currencies as $key => $value) {
+                      <select class="input-xlarge focused required update-nn-editable" id="currency_id" name="currency_id" <?php if (($function == 'ver') || ($update && !$is_nuevo_negocio)) echo 'readonly="readonly"' ?>>
+<?php
+foreach ($currencies as $key => $value) {
 	if ($key == $data['policy'][0]['currency_id'])
 		echo '<option value="' . $key . '" selected="selected">' . $value . '</option>';
-	elseif ($update_nn_editable)
-		echo '<option value="' . $key . '">' . $value . '</option>';
+//	elseif ($update_nn_editable)
 	else
-		echo '<option value="' . $key . '" disabled="disabled">' . $value . '</option>';
+		echo '<option value="' . $key . '">' . $value . '</option>';
+//	else
+//		echo '<option value="' . $key . '" disabled="disabled">' . $value . '</option>';
 } ?>
 
                       </select>
+                    </div>
+                  </div>
+
+                  <div class="control-group hide-update-others">
+                    <label class="control-label text-error" for="inputError">Prima anual
+                    <br>en la moneda seleccionada</label>
+                    <div class="controls">
+                      <input <?php if (($function == 'ver') || ($update && !$is_nuevo_negocio)) echo 'readonly="readonly"' ?> style="height: 1.7em" type="number" pattern="[0-9]+([\.][0-9]+)?" step="0.01" value="<?php echo set_value('prima', $data['policy'][0]['prima_entered']); ?>" class="input-xlarge focused required" id="prima" name="prima" />
+                      <span id="prima-error" style="display: none">Campo invalido</span>
                     </div>
                   </div>
 
