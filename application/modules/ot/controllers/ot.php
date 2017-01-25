@@ -1546,13 +1546,14 @@ implode(', ', $ramo_tramite_types) . '
 				// Verify policy
 				//$policy = $this->work_order->getPolicyByUid( $item->uid );
 					$payment_date = strtotime( $item->payment_date );
+					$stringed_payment_date = date( 'Y-m-d', $payment_date );
 					$payment = array( 
 						'product_group' => $product,
 						'agent_id' => $item->agent_id,
 						'year_prime' => $item->year_prime,
 						'currency_id' => 1,
 						'amount' => $item->amount,
-						'payment_date' => date( 'Y-m-d', $payment_date ),
+						'payment_date' => $stringed_payment_date,
 						'business' => $item->is_new,
 						'policy_number' => $item->uid,
 						'last_updated' => date( 'Y-m-d H:i:s' ),
@@ -1573,14 +1574,30 @@ implode(', ', $ramo_tramite_types) . '
 							$controlSaved = false;
 
 						$policy = $this->work_order->getPolicyByUid( $item->uid, false );
-						if ($controlSaved && $policy && 
-							( (int) ($policy[0]['prima'] * 100) <= (int) ($item->amount * 100)))
+
+						if ($controlSaved && $policy)
 						{
-							$ot = $this->work_order->getWorkOrderByPolicy(  $policy[0]['id'] );
-							if( !empty( $ot ) )
+							if ($policy[0]['currency_id'] == 1)
+								$item_amount = $item->amount;
+							else // if policy in USD, convert payment amount from MXN to USD
+								// using the exchange rate at payment's payment date
 							{
-								$work_order = array( 'work_order_status_id' => 4 );
-								$this->work_order->update( 'work_order', $ot[0]['id'], $work_order );
+								$this->load->model('exchange_rate_model');
+								$item_amount = $this->exchange_rate_model->convert_prima(
+									$item->amount, 1, 2, $stringed_payment_date);
+							}
+
+							if (($item_amount !== FALSE) &&
+								( (int) ($policy[0]['prima_entered'] * 100) <= 
+									(int) ($item_amount * 100)))
+							{
+								$ot = $this->work_order->getWorkOrderByPolicy(  $policy[0]['id'] );
+								if( !empty( $ot ) )
+								{
+									$work_order = array( 'work_order_status_id' => 4 );
+									$this->work_order->update( 'work_order',
+										$ot[0]['id'], $work_order );
+								}
 							}
 						} 
 						if( $controlSaved == false )

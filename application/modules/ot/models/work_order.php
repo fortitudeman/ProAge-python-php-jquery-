@@ -1089,7 +1089,7 @@ class Work_order extends CI_Model{
 			FROM policies
 			WHERE uid='';
 		*/
-		$this->db->select( 'id, prima' );
+		$this->db->select( 'id, currency_id, prima, prima_entered' );
 		if ($strict)
 			$this->db->where( 'policies.uid', $uid );
 		else
@@ -1103,7 +1103,9 @@ class Work_order extends CI_Model{
 		foreach ($query->result() as $row) {
 			$policy[] = array( 
 		    	'id' => $row->id,
-				'prima' => $row->prima
+		    	'currency_id' => $row->currency_id,
+				'prima' => $row->prima,
+				'prima_entered' => $row->prima_entered,
 		    );
 		}
 		return $policy;

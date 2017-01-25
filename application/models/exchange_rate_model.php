@@ -118,12 +118,20 @@ class Exchange_rate_model extends CI_Model
 /**
   Converts prima
  **/
-	public function convert_prima($prima, $currency_from, $currency_to)
+	public function convert_prima($prima, $currency_from, $currency_to, $rate_date = null)
 	{
 		$this->db->select( 'rate' );
 		$this->db->order_by('date', 'DESC');
-		$rate_query = $this->db->get_where('exchange_rates',
-			"rate != 'N/E'", 1);
+		if ($rate_date)
+		{
+			$rate_query = $this->db->get_where('exchange_rates',
+				"(rate != 'N/E') AND (date <= '$rate_date')", 1);
+		}
+		else
+		{
+			$rate_query = $this->db->get_where('exchange_rates',
+				"rate != 'N/E'", 1);
+		}
 		if ($rate_query->num_rows() > 0)
 		{
 			$rate_row = $rate_query->row();
