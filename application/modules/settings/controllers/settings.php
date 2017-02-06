@@ -217,6 +217,94 @@ class Settings extends CI_Controller {
 		);
 		$this->load->view( 'index', $this->view );	
 	}
+
+	public function xrate_list()
+	{
+		$selected_date = $this->input->post('selected_date');
+		if (!$selected_date)
+		{
+			$selected_date = date('Y-m-d');
+		}
+		$this->load->model( 'exchange_rate_model' );
+		$where = null;
+		if ($selected_date)
+		{
+			$parts = explode('-', $selected_date);
+			if (!empty($parts[0]) && !empty($parts[1]) &&
+				!empty($parts[2]) && 
+				checkdate($parts[1], $parts[2], $parts[0]))
+			{
+				$selected_date = sprintf("%04d-%02d-%02d",
+					$parts[0], $parts[1], $parts[2]);
+				$where = "date <= '$selected_date'";
+			}
+		}
+
+		$rates = $this->exchange_rate_model->get($where);
+
+		$inline_js = "
+<script type=\"text/javascript\">
+	var selectedDate = '';
+	$( document ).ready( function(){ 
+		selectedDate = $('#selectedDate').val();
+
+		$( '#fechapicker' ).datepicker({
+			defaultDate: selectedDate,
+			dateFormat: 'yy-mm-dd',
+			changeMonth: true,
+			showOtherMonths: true,
+			selectOtherMonths: true,
+			firstDay:1,
+			closeText: 'Cerrar',
+			prevText: '&#x3c;Ant',
+			nextText: 'Sig&#x3e;',
+			currentText: 'Hoy',
+			monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+				'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+			monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
+				'Jul','Ago','Sep','Oct','Nov','Dic'],
+			dayNames: ['Domingo','Lunes','Martes','Mi&eacute;rcoles',
+				'Jueves','Viernes','S&aacute;bado'],
+			dayNamesShort: ['Dom','Lun','Mar','Mi&eacute;','Juv','Vie','S&aacute;b'],
+			dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S&aacute;'],
+			maxDate: 0,
+			onSelect: function(dateText, inst) {
+				var date = $(this).datepicker('getDate');
+				var theMonth = date.getMonth() + 1;
+				if( theMonth < 10 ) {
+					theMonth = '0' + theMonth;
+				}
+				var theDay = date.getDate();
+				if ( theDay < 10 ) {
+					theDay = '0' + theDay;
+				}
+				$( '#selectedDate' ).val(  date.getFullYear() + '-' + theMonth + '-' + theDay );
+				$( '#rate-form' ).hide();
+				$( '#rate-form' ).submit();
+			}
+		});
+
+	});
+</script>";
+
+		$this->view = array(
+			'title' => 'Tipos de cambio MXN/USD',
+			'user' => $this->sessions,
+			'user_vs_rol' => $this->user_vs_rol,
+			'roles_vs_access' => $this->roles_vs_access,
+			'content' => 'xrate_list',
+			'message' => $this->session->flashdata('message'),
+			'data' => $rates,
+			'selected_date' => $selected_date,		
+			'scripts' => array(
+				$inline_js
+			),
+		);
+		$this->load->view( 'index', $this->view );
+
+	}
+
+
 }
 
 /* End of file settings.php */

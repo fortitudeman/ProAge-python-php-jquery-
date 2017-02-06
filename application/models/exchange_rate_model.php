@@ -153,6 +153,50 @@ class Exchange_rate_model extends CI_Model
 		else
 			return FALSE;
 	}
+
+/**
+  Get rate list
+ **/
+	public function get($where = null, $fields = 'id, date, rate',
+		$orderby = 'date desc', $limit = 25)
+	{
+		if ($fields)
+		{
+			$this->db->select($fields);
+		}
+		else
+		{
+			$this->db->select( '*' );
+		}
+		if ($where)
+		{
+			$this->db->where($where);
+		}
+		else
+		{
+			$this->db->where("date < '" . date('Y-m-d') . "'");
+		}
+		if ($orderby)
+		{
+			$this->db->order_by($orderby);
+		}
+		if ($limit)
+		{
+			$this->db->limit($limit);
+		}
+		$query = $this->db->get('exchange_rates');
+
+		if ($query->num_rows() > 0)
+		{
+			return $query->result();
+		}
+		else
+		{
+			return array();
+		}
+	}
+
+
 }
 /* End of file exchange_rate_model.php */
 /* Location: ./application/models/exchange_rate_model.php */

@@ -38,6 +38,11 @@ $is_update_page = ($this->uri->segment(2, '') == 'update');
         </div>
 
         <div class="box-content">
+          <div style="text-align: right">
+            <a class="btn btn-primary" href="<?php echo site_url('settings/xrate_list') ?>">Tipos de cambio</a>
+          </div>
+
+
         <?php
 			$validation = validation_errors(); // Validation and upload errors if any
 			if( !empty( $validation ) || (!empty( $other_errors )) ): ?>
