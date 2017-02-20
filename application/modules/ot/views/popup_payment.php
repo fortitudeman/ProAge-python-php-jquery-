@@ -115,6 +115,9 @@ $ignore_image = '
 			<td style="width: 110px; text-align: right; padding-right: 2.5em">
 <span style="padding-left: 2.5em; padding-right: 1.5em; text-align: right;"><?php echo $value->business;?></span>
 <?php
+if ($is_negocio_pai):
+	echo "&nbsp;&nbsp;&nbsp;&nbsp;";
+else:
 if ( $access_update && $value->valid_for_report ) :
 	echo $ignore_image;
 endif;
@@ -129,6 +132,9 @@ echo $delete_image;
 echo $additional_form_fields;
 ?>
 </form>
+<?php
+endif;
+?>
 			</td>
         </tr>
 <?php endforeach; ?>
