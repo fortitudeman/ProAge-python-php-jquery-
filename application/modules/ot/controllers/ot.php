@@ -300,10 +300,13 @@ implode(', ', $ramo_tramite_types) . '
 			$this->form_validation->set_rules('subtype', 'Sub tipo', 'required');
 
 			// IF IS A NEW BUSSINESS
-			if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' ){
+			if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' )
+			{
 				// Validations
 				$this->form_validation->set_rules('product_id', 'Producto', 'required|xxs_clean');
 				$this->form_validation->set_rules('currency_id', 'Moneda', 'required|xxs_clean');
+				$this->form_validation->set_rules('prima', ' Prima anual',
+					'trim|decimal_or_integer');
 				$this->form_validation->set_rules('payment_interval_id', 'Conducto', 'required|xxs_clean');
 				$this->form_validation->set_rules('payment_method_id', 'Forma de pago', 'required|xxs_clean');
 				$this->form_validation->set_rules('name', 'Nombre', 'required|xxs_clean');
@@ -320,24 +323,36 @@ implode(', ', $ramo_tramite_types) . '
 
 				// Save new bussiness
 				//if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' ){
-				if( !empty( $_POST['product_id'] ) ){
-					$policy = array(
+				if( !empty( $_POST['product_id'] ) )
+				{
+					$current_date = date( 'Y-m-d H:i:s' );
+					$field_values = array(
+						'last_updated' => $current_date,
+						);
+					if (! $this->_process_update_db_policy_prima(
+						$current_date, $field_values))
+					{
+					// Set false message		
+						$this->session->set_flashdata( 'message', array( 
+							'type' => false,	
+							'message' => 'No se pudo convertir la prima.'
+						));	
+						redirect( 'ot/create', 'refresh' );
+					}
+					$policy = array_merge($field_values, array(
 						'product_id' => $this->input->post( 'product_id' ),
 						'period' => $this->input->post( 'period' ),
-						'currency_id' => $this->input->post( 'currency_id' ),
-						'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
 						'payment_method_id' => $this->input->post( 'payment_method_id' ),
-						'prima' => $this->input->post( 'prima' ),
 						'uid' => $this->input->post( 'uid' ),
 						'name' => $this->input->post( 'name' ),
 						'lastname_father' => $this->input->post( 'lastname_father' ),
 						'lastname_mother' => $this->input->post( 'lastname_mother' ),
 						'year_premium' => $this->input->post( 'year_premium' ),
 						'expired_date' => $this->input->post( 'expired_date' ),
-						'last_updated' => date( 'Y-m-d H:i:s' ),
-						'date' => date( 'Y-m-d H:i:s' )
-					  );
-				}else{
+						'date' => $current_date
+						));
+
+				} else {
 					$policy = array(
 						'name' => $this->input->post( 'name' ),
 						'uid' => $this->input->post( 'uid' ),
@@ -345,7 +360,8 @@ implode(', ', $ramo_tramite_types) . '
 						'date' => date( 'Y-m-d H:i:s' )
 					);
 				}
-				if( $this->work_order->create( 'policies', $policy ) == false )
+				if ( $controlSaved && 
+					$this->work_order->create( 'policies', $policy ) == false )
 					$controlSaved = false;
 
 				$policyId = $this->work_order->insert_id();
@@ -436,6 +452,20 @@ implode(', ', $ramo_tramite_types) . '
 		$payment_conduct = $this->work_order->getPaymentMethodsConductoOptions();
 		// Get Agents
 		$agents = $this->user->getAgents();
+
+		$add_js = '
+<script type="text/javascript">
+	$("#prima").on("change keyup", function(event) {
+		if ( event.target.validity.valid ) {
+//		if ( ! event.target.validity.patternMismatch ) {
+			$("#prima-error").hide();
+		} else {
+			$("#prima-error").show();
+		}
+	});
+';
+
+		$base_url = base_url();
 		// Config view
 		$this->view = array(
 		  'title' => 'Crear OT',
@@ -445,11 +475,16 @@ implode(', ', $ramo_tramite_types) . '
 		  'roles_vs_access' => $this->roles_vs_access,
 		  'css' => array(),
 		  'scripts' =>  array(
-			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
-			  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-			  '<script src="'.base_url().'ot/assets/scripts/create.js"></script>',		
-			  '<script src="'.base_url().'scripts/config.js"></script>'
+			  '<script type="text/javascript" src="' . 
+				$base_url . 'plugins/jquery-validation/jquery.validate.js"></script>',
+			  '<script type="text/javascript" src="' .
+				$base_url . 'plugins/jquery-validation/es_validator.js"></script>',
+//			  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+			  '<script src="' .
+				$base_url . 'ot/assets/scripts/create.js"></script>',		
+			  '<script src="' .
+				$base_url . 'scripts/config.js"></script>',
+			  $add_js
 		  ),
 		  'content' => 'ot/create', // View to load
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have

@@ -162,19 +162,23 @@
                     </div>
                   </div>
 
-                  <div class="control-group">
-                    <label class="control-label text-error" for="inputError">Prima anual<br>en pesos M.N.</label>
-                    <div class="controls">
-                      <input class="input-xlarge focused required" id="prima" name="prima" type="text">
-                    </div>
-                  </div>
-
                    <div class="control-group typtramite">
                     <label class="control-label text-error" for="inputError">Moneda<br /><div id="loadcurrency"></div></label>
                     <div class="controls">
                       <select class="input-xlarge focused required" id="currency_id" name="currency_id">
                       	<?php echo $currency ?>						
                       </select>
+                    </div>
+                  </div>
+
+                  <div class="control-group">
+                    <label class="control-label text-error" for="inputError">Prima anual
+                    <br>en la moneda seleccionada</label>
+                    <div class="controls">
+
+                      <input style="height: 1.7em" type="number" pattern="[0-9]+([\.][0-9]+)?" step="0.01" value="<?php echo set_value('prima'); ?>" class="input-xlarge focused required" id="prima" name="prima" />
+                      <span id="prima-error" style="display: none">Campo invalido</span>
+
                     </div>
                   </div>
 
