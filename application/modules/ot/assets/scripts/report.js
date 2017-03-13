@@ -321,11 +321,16 @@ $( document ).ready(function() {
 	$(".add-perc-ok").on( "click", function( event ) {
 		var current = $(this).parent(".add-perc-edit");
 		var entered = 0;
+		var realPerc;
 		current.children(".perc-value").each(function() {
-			entered = $(this).val();
+			entered = $(this).val() - 100;
+			realPerc = $(this).siblings(".add_perc_real");
+//			$(this).siblings(".add_perc_real").val(entered);
 			return false;
 		});
 		if ((addPerc !== entered) && !isNaN(parseInt(entered, 10))) {
+
+			realPerc.val(entered);
 			$.ajax({
 				url: Config.base_url() + currentModule + '/change_add_perc.html',
 				type: 'POST',
@@ -347,7 +352,7 @@ $( document ).ready(function() {
 						//  refresh the whole page to reflect the change
 							if ( confirm( 'Se pudo cambiar el % adicional para pago de bono correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?' ) )
 								window.location.reload();
-							current.siblings(".add-perc-display").text(entered);
+							current.siblings(".add-perc-display").text(entered + 100);
 							var newPrima = parseFloat(current.siblings(".ori-prima").text());
 							newPrima = (newPrima * (1 + (entered / 100))).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,");
 							current.parent().siblings(".prima-value").text(newPrima);
