@@ -56,6 +56,10 @@ $ignore_image = '
             <th>Negocio PAI</th>
 <?php endif ?>
             <th>Asegurado</th>
+
+            <th>Producto</th>
+            <th>Plazo</th>
+
             <th>Agente importado</th>
             <th>Folio importado</th>
 <?php if ($is_cartera): ?>
@@ -94,6 +98,10 @@ $ignore_image = '
 			</td>
 <?php endif ?>
             <td><?php echo $value->asegurado ? $value->asegurado : 'No disponible'?></td>
+
+            <td><?php echo $value->product_name ? $value->product_name : 'No disponible'?></td>
+            <td><?php echo $value->plazo ? $value->plazo : 'No disponible'?></td>
+
             <td><?php echo $value->imported_agent_name ? $value->imported_agent_name : 'No disponible'?></td>
             <td><?php echo $value->imported_folio ? $value->imported_folio : 'No disponible'?></td>
 

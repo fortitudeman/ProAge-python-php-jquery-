@@ -2722,25 +2722,15 @@ class User extends CI_Model{
 			$query->free_result();
 			return $result;
 		} 
-		else {
+		else
+		{
 			if ($agent_id && is_array($agent_id))
 				$this->db->where_in('agent_id', $agent_id);
 			$query = $this->db->get();
-			$result = array();
-			if ($query->num_rows() > 0) {
-				foreach ($query->result() as $row) {
-					$row->asegurado = '';
-					if ($row->policy_number) {
-						$query_policy = $this->db->get_where('policies', array('uid' => $row->policy_number), 1, 0);
-						if ($query_policy->num_rows() > 0)
-							$row->asegurado = $query_policy->row()->name;
-						$query_policy->free_result();
-					}
-					$result[] = $row;
-				}
-			}
-			$query->free_result();
+
+			$result = $this->complement_payments($query);
 			return $result;
+
 		}
   }  
 
@@ -2810,21 +2800,9 @@ class User extends CI_Model{
 				$this->db->where_in('agent_id', $agent_id);
 			$query = $this->db->get();
 
-			$result = array();
-			if ($query->num_rows() > 0) {
-				foreach ($query->result() as $row) {
-					$row->asegurado = '';
-					if ($row->policy_number) {
-						$query_policy = $this->db->get_where('policies', array('uid' => $row->policy_number), 1, 0);
-						if ($query_policy->num_rows() > 0)
-							$row->asegurado = $query_policy->row()->name;
-						$query_policy->free_result();
-					}
-					$result[] = $row;
-				}
-			}
-			$query->free_result();
+			$result = $this->complement_payments($query);
 			return $result;
+
 		}
 	}
 
@@ -3248,7 +3226,7 @@ AND `payments`.`payment_date` <= '$to 23:59:59'";
 		$join_plus = '';
 		if (!$count_requested)
 		{
-			$select_plus = "`policies`.`name` as `asegurado`, ";
+			$select_plus = "`policies`.`name` as `asegurado`, `policies`.`period` as `plazo`, ";
 			$join_plus = ' LEFT OUTER JOIN `policies` ON `policies`.`uid`= `payments`.`policy_number` ';
 		}
 		$sql_str = "SELECT *
@@ -3307,11 +3285,15 @@ AS `wrapping_t`
 		if ($query->num_rows() > 0)
 		{
 			$result = array();
+			$policy_rows = array();
 			foreach ($query->result() as $row)
 			{
 				$this->_create_negocio_pai_rows($row);
 				if (isset($row->asegurado) && ($row->asegurado == NULL))
 					$row->asegurado = '';
+				if (isset($row->plazo) && ($row->plazo == NULL))
+					$row->plazo = '';
+				$row->product_name = '';
 				if ($count_requested)
 				{
 					if (isset($result[$row->agent_id]))
@@ -3320,7 +3302,13 @@ AS `wrapping_t`
 						$result[$row->agent_id] = $row->negocio_pai;
 				}
 				else
-					$result[] = $row;	
+				{
+					if ($row->policy_number)
+					{
+						$policy_rows[] = $row->policy_number;
+					}
+					$result[] = $row;
+				}
 			}
 			$query->free_result();
 
@@ -3334,6 +3322,29 @@ AS `wrapping_t`
 					{
 						if ($result[$pai_key]->policy_number == $prima_detail->policy_number)
 							$result[$pai_key]->amount += $prima_detail->amount;
+					}
+				}
+
+				if ($policy_rows)
+				{
+					$policy_row_array = array();
+					$query = $this->db
+						->select('policies.*, products.name as product_name')
+						->from('policies')
+						->join( 'products', 'products.id = policies.product_id' )
+						->where_in('policies.uid', array_unique(array_values($policy_rows)))
+						->get();
+					foreach ($query->result() as $policy_field)
+					{
+						$policy_row_array[$policy_field->uid] = $policy_field;
+					}
+				}
+				foreach ($result as $pai_key => $pai_value)
+				{
+					if (!empty($policy_row_array[$pai_value->policy_number]))
+					{
+						$result[$pai_key]->product_name = 
+							$policy_row_array[$pai_value->policy_number]->product_name;			
 					}
 				}
 			}
@@ -3497,22 +3508,56 @@ AS `wrapping_t`
 //			if ($agent_id && is_array($agent_id))
 //				$this->db->where_in('agent_id', $agent_id);
 
-			$result = array();
-			if ($query->num_rows() > 0) {
-				foreach ($query->result() as $row) {
-					$row->asegurado = '';
-					if ($row->policy_number) {
-						$query_policy = $this->db->get_where('policies', array('uid' => $row->policy_number), 1, 0);
-						if ($query_policy->num_rows() > 0)
-							$row->asegurado = $query_policy->row()->name;
-						$query_policy->free_result();
-					}
-					$result[] = $row;
+			$result = $this->complement_payments($query);
+			return $result;
+		}
+	}
+
+	private function complement_payments(&$query = null)
+	{
+		$result = array();
+		if ($query && $query->num_rows() > 0) {
+			$policy_rows = array();
+			foreach ($query->result() as $row) {
+				if ($row->policy_number)
+				{
+					$policy_rows[] = $row->policy_number;
+				}
+				$row->asegurado = '';
+				$row->plazo = '';
+				$row->product_name = '';
+				$result[] = $row;
+			}
+			$query->free_result();
+
+			if ($policy_rows)
+			{
+				$policy_row_array = array();
+				$query = $this->db
+					->select('policies.*, products.name as product_name')
+					->from('policies')
+					->join( 'products', 'products.id = policies.product_id' )
+					->where_in('policies.uid', array_unique(array_values($policy_rows)))
+					->get();
+				foreach ($query->result() as $policy_field)
+				{
+					$policy_row_array[$policy_field->uid] = $policy_field;
 				}
 			}
 			$query->free_result();
-			return $result;
+
+			foreach ($result as $key => $value)
+			{
+				if (!empty($policy_row_array[$value->policy_number]))
+				{
+					$result[$key]->asegurado = $policy_row_array[$value->policy_number]->name;
+					$result[$key]->plazo = $policy_row_array[$value->policy_number]->period;
+					$result[$key]->product_name = $policy_row_array[$value->policy_number]->product_name;			
+				}
+			}
 		}
+		return $result;
+
 	}
 /*
  Get the prima for a given policy while taking into account
