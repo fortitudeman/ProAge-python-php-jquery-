@@ -32,7 +32,7 @@ To deploy for the first time, those files must be modified as follows:
 
 * */application/config/database.php*
 
-1. change the database access details to those of the databases already used, if possible. If the "multi-sites" configuration uses a MySQL server different from the one already used by the "mono_site" configurations, then adjust the MYSQL server name and port configuration accordingly.
+1. change the database access details to those of the databases already used, if possible. If the "multi-sites" configuration uses a MySQL server different from the one already used by the "mono_site" configurations, then adjust the MySQL server name and port configuration accordingly.
 
 2. add the access details of the database for the test website (to create).
 
@@ -58,7 +58,7 @@ Manual tests.
 
 ### Deployment instructions ###
 
-* MySQL server: create a MySQL server. It may not be used until all websites / agencies have finished migrating.
+* MySQL server: create a MySQL server. It may not be used until all websites / agencies have finished migrating (including DNS changes propagated).
 
 * Test website:
 
@@ -85,7 +85,7 @@ Migrate the production websites:
 1. Monitor users' feedback during a period to be defined.
 1. If the "old" MySQL server was used, copy the database of the website migrated to the new MySQL server and change */application/config/database.php* to point to the new MySQL server.
 
-Repeat steps 1. to 6. for each production website.
+Repeat steps 1. to 8. for each production website.
 
 If only the "old" MySQL server was used so far, transfer all the databases to the new MySQL server and change */application/config/database.php*.
 
