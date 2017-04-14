@@ -223,7 +223,7 @@ function CalcPercConservacion(base, primaAfectadas) {
 				porcentaje = 5;	
 			if( primaAfectadas >= 145000 && primaAfectadas < 195000 )
 				porcentaje = 4;	
-			if( primaAfectadas >= 110000 && primaAfectadas < 145000 )
+			if( primaAfectadas >= 115000 && primaAfectadas < 145000 )
 				porcentaje = 3;	
 		}			
 		if( base == 95 ){				
