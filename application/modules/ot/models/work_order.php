@@ -2330,7 +2330,7 @@ class Work_order extends CI_Model{
 					->join('products', 'products.id = policies.product_id')
 					->where($this->operation_where);
 			else
-				$this->db->select('policies_vs_users.percentage, policies_vs_users.user_id AS agent_id, users.name, users.lastnames, users.company_name, users.email, users.manager_id, users.id as user_id , policies.name as asegurado, policies.prima as policy_prima, work_order_types.patent_id as tramite_type, product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*, products.id AS prod_id, products.name AS product_name')
+				$this->db->select('policies_vs_users.percentage, policies_vs_users.user_id AS agent_id, users.name, users.lastnames, users.company_name, users.email, users.manager_id, users.id as user_id , policies.name as asegurado, policies.period as plazo, policies.prima as policy_prima, work_order_types.patent_id as tramite_type, product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*, products.id AS prod_id, products.name AS product_name')
 					->from('work_order' )
 					->join( 'product_group', 'product_group.id=work_order.product_group_id' )
 					->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' )

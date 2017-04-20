@@ -78,10 +78,14 @@ function setPay( id ){
       <col width="14%" />
       <col width="10%" />
       <col width="10%" />
-      <col width="10%" />
+      <col width="8%" />
       <col width="6%" />
-      <col width="17%" />
-      <col width="15%" />
+      <col width="10%" />
+
+      <col width="7%" />
+      <col width="7%" />
+
+      <col width="10%" />
       <col width="8%" />
       <col width="10%" />
     </colgroup>
@@ -93,6 +97,10 @@ function setPay( id ){
         <th>Gerente&nbsp;</th>
         <th>Ramo&nbsp;</th>
         <th>Tipo de trámite&nbsp;</th>
+
+        <th>Producto&nbsp;</th>
+        <th>Plazo&nbsp;</th>
+
         <th>Nombre del asegurado&nbsp;</th>
         <th>Estado&nbsp;</th>
         <th>Prima&nbsp;</th>
@@ -175,6 +183,10 @@ function setPay( id ){
     <td style="text-align: center"><?php echo implode('<br>', $agent_gerente_arr); ?></td>
     <td class="center"><?php echo $value['group_name'] ?></td>
     <td class="center"><?php echo $value['parent_type_name'] ?></td>
+
+    <td class="center"><?php echo $value['product_name'] ?></td>
+    <td class="center"><?php echo $value['plazo'] ?></td>
+
     <td class="center"><?php echo $value['asegurado'] ?></td>
     <td class="center" ><?php echo ucwords(str_replace( 'desactivada', 'en trámite', $value['status_name'])); ?></td>
     <td class="center">
