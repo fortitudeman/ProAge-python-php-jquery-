@@ -1931,6 +1931,11 @@ implode(', ', $ramo_tramite_types) . '
 		$this->load->helper('ot/ot');
 		delete_cobranza('director');
 	}
+        
+        public function repair_negocios_pai(){
+            $this->load->model( 'ot/work_order' );
+            $this->work_order->mark_polizas_as_paid();
+        }
 
 //////// Above are page duplicated in ot, agent and director modules
 /* End of file director.php */

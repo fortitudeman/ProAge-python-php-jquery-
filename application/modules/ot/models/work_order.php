@@ -2505,5 +2505,33 @@ class Work_order extends CI_Model{
 			$result[$row->agent_id] = $row->count;
 		return $result;
 	}
+        
+        public function mark_polizas_as_paid(){
+            $num =1;
+            $query = $this->db->query("SELECT* from ( SELECT * FROM payments ORDER BY payment_date ASC) as sub GROUP BY policy_number");
+            
+            //$query = $this->db->select("*")->from("payments")->group_by('policy_number')->get();
+            foreach ($query->result() as $row)
+            {
+                $q = $this->db->select("*")->from("policy_negocio_pai")->where("policy_number",$row->policy_number)->get();
+                if($q->num_rows() == 0){
+                    $year_date = date( "Y-m-d", strtotime( $row->payment_date." +12 month" ) );
+                        
+                    $total_amount = $this->db->select("sum(amount) as total")->from("payments")->where("policy_number",$row->policy_number)->where("payment_date >=",$row->payment_date)->where("payment_date <=",$year_date)->get()->row();
+                    
+                    if($total_amount->total > 12000){
+                        $this->db->insert("policy_negocio_pai",array("ramo"=>$row->product_group,"policy_number"=>$row->policy_number,"negocio_pai"=>1,"creation_date"=> date("Y-m-d H:i:s")));
+                    }elseif($total_amount->total > 110000){
+                        $this->db->insert("policy_negocio_pai",array("ramo"=>$row->product_group,"policy_number"=>$row->policy_number,"negocio_pai"=>2,"creation_date"=> date("Y-m-d H:i:s")));
+                    }elseif($total_amount->total > 500000){
+                        $this->db->insert("policy_negocio_pai",array("ramo"=>$row->product_group,"policy_number"=>$row->policy_number,"negocio_pai"=>3,"creation_date"=> date("Y-m-d H:i:s")));
+                    }
+       
+                    $num++;
+                }
+                
+            }
+            echo "Registros agregados:".$num;
+        }
 }
 ?>
