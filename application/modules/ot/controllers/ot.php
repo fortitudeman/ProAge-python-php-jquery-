@@ -1287,6 +1287,7 @@ implode(', ', $ramo_tramite_types) . '
  **/
 	public function import_payments()
 	{
+            
 		// Check access teh for import
 		if( $this->access_import_payments == false ){
 			// Set false message		
@@ -1302,7 +1303,7 @@ implode(', ', $ramo_tramite_types) . '
 		$tmp_file = null;
 		$file_array = array();	
 		$process = '';
-
+                $work_orders = array();
 		if( !empty( $_FILES ) ){
 // 1: Upload the file to import
 			$process = 'change-index';
@@ -1607,7 +1608,7 @@ implode(', ', $ramo_tramite_types) . '
 					{
 						if( $this->work_order->replace( 'payments', $payment ) == false )
 							$controlSaved = false;
-
+                                                    
 						$policy = $this->work_order->getPolicyByUid( $item->uid, false );
 
 						if ($controlSaved && $policy)
@@ -1635,6 +1636,10 @@ implode(', ', $ramo_tramite_types) . '
 								}
 							}
 						} 
+                                                
+                                                if($policy){
+                                                    $work_orders[] = $this->work_order->getWorkOrderByPolicy(  $policy[0]['id'] )[0];
+                                                }
 						if( $controlSaved == false )
 							$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
 //					}else{
@@ -1668,6 +1673,10 @@ implode(', ', $ramo_tramite_types) . '
 				}			 
 			}		  
 			$this->work_order->removeImportPaymentsTmp();
+                        
+                        //Display a list of orders to mark as paid
+                        
+                        $process = "finished";
 		}
 
 		@ini_set('auto_detect_line_endings', $save_setting);
@@ -1712,6 +1721,9 @@ implode(', ', $ramo_tramite_types) . '
 			$this->view['product'] = $product;		
 		if( isset( $file_array ) and !empty( $file_array ) )
 			$this->view['file_array'] = $file_array;
+                if( isset( $work_orders ) and !empty( $work_orders ) )
+			$this->view['work_orders'] = $work_orders;
+    
 		// Render view 
 		$this->load->view('index',$this->view );
 	}
@@ -2977,6 +2989,31 @@ Display custom filter period
 		));
 		redirect( '/ot/import_payments', 'refresh' );			
 	}
+        
+        public function markAsPaid(){
+            $this->load->model('work_order');
+            $wo = $this->input->post('wo');
+            $fallados = array();
+            foreach ($wo as $value) {
+                if( !empty( $value ) )
+                {
+		$work_order = array( 'work_order_status_id' => 4 );
+                if(!$this->work_order->update( 'work_order',$value, $work_order )){
+                    $fallados[] = $value;
+                }
+                }               
+            }
+            if($fallados){
+                $msj = 'Las siguientes ordenes fallaron: '. implode(",", $fallados);
+            }else{
+                $msj = 'Las ordenes se marcaron como pagadas.';
+            }
+              $this->session->set_flashdata( 'message', array( 
+						'type' => true,	
+						'message' => $msj 
+					));	
+            redirect( 'ot', 'refresh' );
+        }
 /* End of file ot.php */
 /* Location: ./application/controllers/ot.php */
 }
