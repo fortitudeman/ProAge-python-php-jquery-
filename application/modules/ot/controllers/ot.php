@@ -2824,10 +2824,12 @@ Display custom filter period
 			$this->load->model( 'work_order' );
 			$month = (int) $month;
 			$year = (int) $year;
+                        $lastday = date('t',strtotime(sprintf("%04d-%02d-01", (int) $year, (int) $month)));
 			$where = array(
-				'import_date' => sprintf("%04d-%02d-01", (int) $year, (int) $month),
+				'payment_date >=' => sprintf("%04d-%02d-01", (int) $year, (int) $month),
+                                'payment_date <=' => sprintf("%04d-%02d-%02d", (int) $year, (int) $month, (int) $lastday),
 				'product_group' => (int) $ramo
-			);
+			);   
 			$db_result = $this->work_order->generic_get('payments', $where);
 			if (!$db_result)
 				$result = json_encode('0');
