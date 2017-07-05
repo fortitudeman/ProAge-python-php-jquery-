@@ -1638,7 +1638,8 @@ implode(', ', $ramo_tramite_types) . '
 						} 
                                                 
                                                 if($policy){
-                                                    $work_orders[] = $this->work_order->getWorkOrderByPolicy(  $policy[0]['id'] )[0];
+                                                    $po = $this->work_order->getWorkOrderByPolicy($policy[0]['id']);
+                                                    $work_orders[] = $po[0];
                                                 }
 						if( $controlSaved == false )
 							$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
