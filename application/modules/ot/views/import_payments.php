@@ -459,14 +459,13 @@ $is_posted = (count($_POST) > 0);
                 <thead class="head">
                     <tr>
                         <th><input type="checkbox" name="woAsPAI" id="woAsPAI" value="<?php echo $value['id'];?>" ></th>
+                        <th>Poliza</th>
+                        <th>Forma de Pago</th>
+                        <th>Prima</th>
                         <th>Numero OT</th>
                         <th>Fecha</th>
                         <th>Agente</th>
-                        <th>Ramo</th>
-                        <th>Prima</th>
-                        <th>Forma de Pago</th>
-                        <th>Poliza</th>
-                       
+                        <th>Ramo</th>  
                     </tr>
                 </thead>
             
@@ -474,14 +473,13 @@ $is_posted = (count($_POST) > 0);
                    <?php foreach ($work_orders as $value) { ?>
                      <tr>
                          <td><input type="checkbox" name="wo[]" class="wo" value="<?php echo $value['id'];?>" ></td>
+                         <td><?php echo $value['policy'][0]['uid'];?> </td>
+                         <td><?php echo $value['policy'][0]['payment_intervals_name'];?> </td>
+                         <td><?php echo $value['policy'][0]['prima'];?> </td>
                          <td><?php echo $value['uid'];?></td>
                          <td><?php echo $value['creation_date'];?> </td>
                          <td><?php echo $value['agents'][0]['name']." ".$value['agents'][0]['lastnames'];?> </td>
                          <td><?php echo $value['product_group_id'];?> </td>
-                         <td><?php echo $value['policy'][0]['prima'];?> </td>
-                         <td><?php echo $value['policy'][0]['payment_intervals_name'];?> </td>
-                         <td><?php echo $value['policy'][0]['uid'];?> </td>
-                         
                      </tr>
                 <?php } ?>
 
