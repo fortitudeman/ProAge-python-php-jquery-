@@ -1613,6 +1613,7 @@ implode(', ', $ramo_tramite_types) . '
 
 						if ($controlSaved && $policy)
 						{
+                                                    $this->user->create_negocio_pai($item->uid,$product);
 							if ($policy[0]['currency_id'] == 1)
 								$item_amount = $item->amount;
 							else // if policy in USD, convert payment amount from MXN to USD
