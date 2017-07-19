@@ -455,33 +455,31 @@ $is_posted = (count($_POST) > 0);
             <?php if( !isset( $tmp_file ) and isset($process) and $process == 'finished' ): // Is is load a file?>
             <h5>Las siguientes polizas se muestra como no pagadas.Porfavor especifique las polizas que si desea marcar como pagadas</h5>
              <form action="<?php echo base_url() ?>ot/markAsPaid.html" id="wo-form" method="post">
-            <table class="table table-rounder">
+            <table class="table table-rounder" id="woListPAI">
                 <thead class="head">
                     <tr>
-                        <th></th>
+                        <th><input type="checkbox" name="woAsPAI" id="woAsPAI" value="<?php echo $value['id'];?>" ></th>
+                        <th>Poliza</th>
+                        <th>Forma de Pago</th>
+                        <th>Prima</th>
                         <th>Numero OT</th>
                         <th>Fecha</th>
                         <th>Agente</th>
-                        <th>Ramo</th>
-                        <th>Prima</th>
-                        <th>Forma de Pago</th>
-                        <th>Poliza</th>
-                       
+                        <th>Ramo</th>  
                     </tr>
                 </thead>
             
                <tbody class="tbody">   
                    <?php foreach ($work_orders as $value) { ?>
                      <tr>
-                         <td><input type="checkbox" name="wo[]" value="<?php echo $value['id'];?>" ></td>
+                         <td><input type="checkbox" name="wo[]" class="wo" value="<?php echo $value['id'];?>" ></td>
+                         <td><?php echo $value['policy'][0]['uid'];?> </td>
+                         <td><?php echo $value['policy'][0]['payment_intervals_name'];?> </td>
+                         <td><?php echo $value['policy'][0]['prima'];?> </td>
                          <td><?php echo $value['uid'];?></td>
                          <td><?php echo $value['creation_date'];?> </td>
                          <td><?php echo $value['agents'][0]['name']." ".$value['agents'][0]['lastnames'];?> </td>
                          <td><?php echo $value['product_group_id'];?> </td>
-                         <td><?php echo $value['policy'][0]['prima'];?> </td>
-                         <td><?php echo $value['policy'][0]['payment_intervals_name'];?> </td>
-                         <td><?php echo $value['policy'][0]['uid'];?> </td>
-                         
                      </tr>
                 <?php } ?>
 

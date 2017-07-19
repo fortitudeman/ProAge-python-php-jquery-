@@ -124,6 +124,13 @@ $( ".create-user" )
 		return false;        
 	});
 
-
+        $("#woAsPAI").click(function(){
+            if($(this).prop('checked')){
+                $(".wo","#woListPAI").prop( "checked", true );
+            }else{
+                $(".wo","#woListPAI").removeAttr('checked');
+  
+            }
+        });
 
 });	  
