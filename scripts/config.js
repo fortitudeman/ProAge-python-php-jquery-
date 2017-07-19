@@ -8,7 +8,7 @@
 var Config = {
 	
 	// Setting Url base path
-	url : 'http://proages-dev.serviciosisinet.com/2001/',
+	url : 'http://intranet.aevum.com.mx/aevum/',
 	
 	
 	// Return base url path
