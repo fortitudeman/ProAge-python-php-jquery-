@@ -1,0 +1,76 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
+
+ERROR - 2014-06-16 12:43:48 --> Severity: Warning  --> Missing argument 2 for Work_order::pop_up_data(), called in /var/lib/git/aevum/application/modules/ot/controllers/ot.php on line 2713 and defined /var/lib/git/aevum/application/modules/ot/models/work_order.php 1677
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined variable: agent_id /var/lib/git/aevum/application/modules/ot/models/work_order.php 1682
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined offset: 0 /var/lib/git/aevum/application/modules/ot/controllers/ot.php 2716
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Trying to get property of non-object /var/lib/git/aevum/application/modules/ot/controllers/ot.php 2716
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$comments /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 4
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$work_order_status_id /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 9
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$work_order_status_id /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 9
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$work_order_status_id /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 30
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$work_order_id /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 43
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$work_order_uid /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 43
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$creation_date /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 49
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$work_order_status_name /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 50
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$policies_uid /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 52
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$policies_name /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 54
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$products_name /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 56
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$policies_period /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 58
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$payment_intervals_name /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 60
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$payment_methods_name /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 62
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$currencies_name /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 63
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$is_ntuable /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 68
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$policies_uid /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 4
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$work_order_uid /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 5
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$work_order_id /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 6
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$creation_date /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 9
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$work_order_status_name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 10
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 12
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$policies_name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 13
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$products_name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 14
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$policies_period /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 15
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$payment_intervals_name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 16
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$payment_methods_name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 17
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$currencies_name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 18
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$prima /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 19
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$work_order_id /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 23
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$user /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 25
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$agent_user_email /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 26
+ERROR - 2014-06-16 12:43:48 --> Severity: Notice  --> Undefined property: stdClass::$name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 26
+ERROR - 2014-06-16 12:45:29 --> Severity: Warning  --> Missing argument 2 for Work_order::pop_up_data(), called in /var/lib/git/aevum/application/modules/ot/controllers/ot.php on line 2713 and defined /var/lib/git/aevum/application/modules/ot/models/work_order.php 1677
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined variable: agent_id /var/lib/git/aevum/application/modules/ot/models/work_order.php 1682
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined offset: 0 /var/lib/git/aevum/application/modules/ot/controllers/ot.php 2716
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Trying to get property of non-object /var/lib/git/aevum/application/modules/ot/controllers/ot.php 2716
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$comments /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 4
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$work_order_status_id /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 9
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$work_order_status_id /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 9
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$work_order_status_id /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 30
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$work_order_id /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 43
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$work_order_uid /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 43
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$creation_date /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 49
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$work_order_status_name /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 50
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$policies_uid /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 52
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$policies_name /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 54
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$products_name /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 56
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$policies_period /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 58
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$payment_intervals_name /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 60
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$payment_methods_name /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 62
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$currencies_name /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 63
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$is_ntuable /var/lib/git/aevum/application/modules/ot/views/popup_report_main_row.php 68
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$policies_uid /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 4
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$work_order_uid /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 5
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$work_order_id /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 6
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$creation_date /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 9
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$work_order_status_name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 10
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 12
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$policies_name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 13
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$products_name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 14
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$policies_period /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 15
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$payment_intervals_name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 16
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$payment_methods_name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 17
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$currencies_name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 18
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$prima /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 19
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$work_order_id /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 23
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$user /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 25
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$agent_user_email /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 26
+ERROR - 2014-06-16 12:45:29 --> Severity: Notice  --> Undefined property: stdClass::$name /var/lib/git/aevum/application/modules/ot/views/popup_report_menu_row.php 26
