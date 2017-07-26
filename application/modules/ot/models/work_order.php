@@ -2508,12 +2508,12 @@ class Work_order extends CI_Model{
         
         public function mark_polizas_as_paid(){
             
-            $num =1;
+            $num =0;
             $sql = "SELECT `payments`.*
 	    FROM `payments`
 	    WHERE `valid_for_report` = '1' 
             AND `year_prime` = '1'  
-            AND `business`=1 GROUP BY `policy_number` ORDER BY `payment_date` ASC";
+            GROUP BY `policy_number` ORDER BY `payment_date` ASC";
             
             $query = $this->db->query($sql);
             
@@ -2523,46 +2523,46 @@ class Work_order extends CI_Model{
                         FROM `payments`
                         WHERE `valid_for_report` = '1' 
                         AND `year_prime` = '1'  
-                        AND `business`=1 
                         AND `policy_number` = '".$row->policy_number."' ORDER BY `payment_date` ASC";
                 $q = $this->db->query($sql2);
                 $total = 0;
-                
+                $payment_date = "";
+                $flag = true;
                     foreach ($q->result() as $payment)
                     {
                         $total+=(int)$payment->amount;
-                        
-                        if($total > 500000){
-                            $subq = $this->db->where("policy_number",$payment->policy_number)->get("policy_negocio_pai");
-                            $data = array("ramo"=>$payment->product_group,"policy_number"=>$payment->policy_number,"negocio_pai"=>3,"creation_date"=> date("Y-m-d H:i:s"),"date_pai"=>$payment->payment_date);
-                            if ( $subq->num_rows() > 0 ) {
-                                $this->db->where("policy_number",$payment->policy_number)->update("policy_negocio_pai",$data);
-                            }else{
-                                $this->db->insert("policy_negocio_pai",$data);    
-                            }
-                            break;
-                        }elseif($total > 110000){
-                            $subq = $this->db->where("policy_number",$payment->policy_number)->get("policy_negocio_pai");
-                            $data = array("ramo"=>$payment->product_group,"policy_number"=>$payment->policy_number,"negocio_pai"=>3,"creation_date"=> date("Y-m-d H:i:s"),"date_pai"=>$payment->payment_date);
-                            if ( $subq->num_rows() > 0 ) {
-                                $this->db->where("policy_number",$payment->policy_number)->update("policy_negocio_pai",$data);
-                            }else{
-                                $this->db->insert("policy_negocio_pai",$data);    
-                            }
-                            break;
-                        }elseif($total > 12000){
-                            $subq = $this->db->where("policy_number",$payment->policy_number)->get("policy_negocio_pai");
-                            $data = array("ramo"=>$payment->product_group,"policy_number"=>$payment->policy_number,"negocio_pai"=>1,"creation_date"=> date("Y-m-d H:i:s"),"date_pai"=>$payment->payment_date);
-                            if ( $subq->num_rows() > 0 ) {
-                                $this->db->where("policy_number",$payment->policy_number)->update("policy_negocio_pai",$data);
-                            }else{
-                                $this->db->insert("policy_negocio_pai",$data);    
-                            }
-                            break;
+                        if($flag && $total > 12000){
+                        $payment_date = $payment->payment_date;
+                        $flag = false;
                         }
-                    }
-                    
-                
+                    }   
+                        if($total > 500000){
+                            $subq = $this->db->where("policy_number",$row->policy_number)->get("policy_negocio_pai");
+                            $data = array("ramo"=>$row->product_group,"policy_number"=>$row->policy_number,"negocio_pai"=>3,"creation_date"=> date("Y-m-d H:i:s"),"date_pai"=>$payment_date);
+                            if ( $subq->num_rows() > 0 ) {
+                                $this->db->where("policy_number",$row->policy_number)->update("policy_negocio_pai",array("negocio_pai"=>3,"date_pai"=>$payment_date));
+                            }else{
+                                $this->db->insert("policy_negocio_pai",$data);    
+                            }
+                         
+                        }elseif($total > 110000){
+                            $subq = $this->db->where("policy_number",$row->policy_number)->get("policy_negocio_pai");
+                            $data = array("ramo"=>$row->product_group,"policy_number"=>$row->policy_number,"negocio_pai"=>2,"creation_date"=> date("Y-m-d H:i:s"),"date_pai"=>$payment_date);
+                            if ( $subq->num_rows() > 0 ) {
+                                $this->db->where("policy_number",$row->policy_number)->update("policy_negocio_pai",array("negocio_pai"=>2,"date_pai"=>$payment_date));
+                            }else{
+                                $this->db->insert("policy_negocio_pai",$data);    
+                            }
+                          
+                        }elseif($total > 12000){
+                            $subq = $this->db->where("policy_number",$row->policy_number)->get("policy_negocio_pai");
+                            $data = array("ramo"=>$row->product_group,"policy_number"=>$row->policy_number,"negocio_pai"=>1,"creation_date"=> date("Y-m-d H:i:s"),"date_pai"=>$payment_date);
+                            if ( $subq->num_rows() > 0 ) {
+                                $this->db->where("policy_number",$row->policy_number)->update("policy_negocio_pai",array("negocio_pai"=>1,"date_pai"=>$payment_date));
+                            }else{
+                                $this->db->insert("policy_negocio_pai",$data);    
+                            }
+                        }
                 $num++;
             }
             echo "Registros agregados:".$num;

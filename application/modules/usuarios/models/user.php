@@ -3281,26 +3281,27 @@ class User extends CI_Model{
 	    FROM `payments`
 	    WHERE `valid_for_report` = '1' 
             AND `year_prime` = '1'  
-            AND `product_group` = '".$product_group."' AND `business`=1 AND `policy_number` = '".$policy."' ORDER BY `payment_date` ASC";
+            AND `product_group` = '".$product_group."' AND `policy_number` = '".$policy."' ORDER BY `payment_date` ASC";
             $total = 0;
             $query = $this->db->query($sql);
-            
+            $flag = true;
+            $payment_date = '';
             if ($query->num_rows() > 0)
             {
                 foreach ($query->result() as $row)
                 {
                     $total += (int)$row->amount;
-                    
-                    if($total > 500000){
-                        $this->_create_negocio_pai_rows(array('product_group'=>$row->product_group,'policy_number'=>$row->policy_number,'pai'=>3,'date_pai'=>$row->payment_date));    
-                        break;
-                    }elseif($total > 110000){
-                        $this->_create_negocio_pai_rows(array('product_group'=>$row->product_group,'policy_number'=>$row->policy_number,'pai'=>2,'date_pai'=>$row->payment_date));                        
-                        break;
-                    }elseif($total > 12000){
-                        $this->_create_negocio_pai_rows(array('product_group'=>$row->product_group,'policy_number'=>$row->policy_number,'pai'=>1,'date_pai'=>$row->payment_date));
-                        break;
-                    }
+                       if($flag && $total > 12000){
+                        $payment_date = $row->payment_date;
+                        $flag = false;
+                        }
+                }
+                if($total > 500000){
+                        $this->_create_negocio_pai_rows(array('product_group'=>$product_group,'policy_number'=>$policy,'pai'=>3,'date_pai'=>$payment_date));    
+                }elseif($total > 110000){
+                        $this->_create_negocio_pai_rows(array('product_group'=>$product_group,'policy_number'=>$policy,'pai'=>2,'date_pai'=>$payment_date));                        
+                }elseif($total > 12000){
+                        $this->_create_negocio_pai_rows(array('product_group'=>$product_group,'policy_number'=>$policy,'pai'=>1,'date_pai'=>$payment_date));
                 }
             }
         }
