@@ -3286,6 +3286,7 @@ class User extends CI_Model{
             $query = $this->db->query($sql);
             $flag = true;
             $payment_date = '';
+            $data = array();
             if ($query->num_rows() > 0)
             {
                 foreach ($query->result() as $row)
@@ -3297,11 +3298,16 @@ class User extends CI_Model{
                         }
                 }
                 if($total > 500000){
-                        $this->_create_negocio_pai_rows(array('product_group'=>$product_group,'policy_number'=>$policy,'pai'=>3,'date_pai'=>$payment_date));    
+                        $data = array('ramo'=>$row->product_group,'policy_number'=>$row->policy_number,'negocio_pai'=>'3','date_pai'=>$payment_date,'creation_date'=>date("Y-m-d H:i:s"));
+                        $this->db->replace('policy_negocio_pai',$data);
                 }elseif($total > 110000){
-                        $this->_create_negocio_pai_rows(array('product_group'=>$product_group,'policy_number'=>$policy,'pai'=>2,'date_pai'=>$payment_date));                        
+                        $data = array('ramo'=>$row->product_group,'policy_number'=>$row->policy_number,'negocio_pai'=>'2','date_pai'=>$payment_date,'creation_date'=>date("Y-m-d H:i:s"));
+                        $this->db->replace('policy_negocio_pai',$data);                       
                 }elseif($total > 12000){
-                        $this->_create_negocio_pai_rows(array('product_group'=>$product_group,'policy_number'=>$policy,'pai'=>1,'date_pai'=>$payment_date));
+                        $data = array('ramo'=>$row->product_group,'policy_number'=>$row->policy_number,'negocio_pai'=>'1','date_pai'=>$payment_date,'creation_date'=>date("Y-m-d H:i:s"));
+                        $this->db->replace('policy_negocio_pai',$data);
+                }else{
+                    $this->db->where('policy_number',$row->policy_number)->delete('policy_negocio_pai');
                 }
             }
         }
