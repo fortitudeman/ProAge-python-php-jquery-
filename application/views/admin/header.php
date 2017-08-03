@@ -63,7 +63,7 @@ else
 	<link href="<?php echo base_url() ?>bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
     <link href="<?php echo base_url() ?>bootstrap/FortAwesome/css/font-awesome.css" rel="stylesheet">
 	<link href="<?php echo base_url() ?>style/charisma-app.css" rel="stylesheet">
- 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+ 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
     <link href="<?php echo base_url() ?>bootstrap/Ui/css/custom-theme/jquery-ui-1.10.0.custom.css" rel="stylesheet">
 	<link href='<?php echo base_url() ?>style/fullcalendar.css' rel='stylesheet'>
 	<link href='<?php echo base_url() ?>style/fullcalendar.print.css' rel='stylesheet'  media='print'>
@@ -81,7 +81,7 @@ else
 	<link href="<?php echo base_url() ?>style/style.css" rel="stylesheet">
 	<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
-	  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	  <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 
 	<!-- The fav icon -->
