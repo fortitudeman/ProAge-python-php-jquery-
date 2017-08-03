@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']     = 'https://app.proages.net/DA521/';
+$config['base_url']     = 'http://intranet.aevum.com.mx/aevum/';
 
 /*
 |--------------------------------------------------------------------------
