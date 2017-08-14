@@ -3151,7 +3151,7 @@ class User extends CI_Model{
 				switch ($filter['query']['periodo'])
 				{
 					case 1: // month
-                                                $start_date = date('m');
+                                                $start_date = date('Y-m')."-01";
                                                 $end_date = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
                                                 break;
 					case 2: // trimester/cuatrimestre
@@ -3165,7 +3165,7 @@ class User extends CI_Model{
                                                 $end_date = $begin_end['end'];
                                                 break;
 					case 3: // year
-                                                $start_date = "$year-01-01";
+                                                $start_date = "$year-01-01 00:00:00";
                                                 $end_date = "$year-12-31 23:59:59";
                                                 break;
 					case 4: // custom period
@@ -3199,7 +3199,7 @@ class User extends CI_Model{
                         AND `policy_negocio_pai`.`date_pai` BETWEEN '".$start_date."' AND '".$end_date."' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
                    
 		$query = $this->db->query($sql_str);
-                  
+                
 		if ($query->num_rows() > 0)
 		{
 			$result = array();
