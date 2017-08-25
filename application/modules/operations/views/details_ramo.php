@@ -20,7 +20,7 @@ $segments[2] = 'stat_detail_export';
 if ($with_primas)
 	$segments[5] = 'full';
 
-$ot_url = $base_url . "operations/ot_per_prod/$stat_type/$status/";
+$ot_url = $base_url . "director/ot_por_producto/$stat_type/$status/";
 $user = $this->user_id ? $this->user_id : '';
 
 ?>
@@ -30,11 +30,11 @@ $user = $this->user_id ? $this->user_id : '';
 		$(".detailed").on( "click", function(){
 			var linkId = $(this).attr("id");
 			linkId = linkId.replace(/detailed-/, "");
-			var detailUrl = "<?php echo $ot_url ?>" + linkId  + "/" + "<?php echo $user ?>" + ".html";
+			var detailUrl = "<?php echo $ot_url ?>" + linkId  +  ".html";
 
 			$.fancybox.showLoading();
 			$.post(detailUrl, function(data) {
-				if (data) {
+                               if (data) {
 					$.fancybox({
 						content:data
 					});

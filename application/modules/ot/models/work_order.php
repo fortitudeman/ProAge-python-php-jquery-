@@ -2349,7 +2349,7 @@ class Work_order extends CI_Model{
 		if (!$get_ot_list)
 			$this->db->group_by('products.id');
 		$query = $this->db->get();
-
+                
 		if ($query->num_rows() == 0)
 			return $ot;
 

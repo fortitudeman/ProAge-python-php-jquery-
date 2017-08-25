@@ -872,6 +872,7 @@ $( document ).ready( function(){
 				'<link rel="stylesheet" href="'. $base_url .'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'director/assets/style/director.css">',
 				'<link href="'. $base_url .'ot/assets/style/report.css" rel="stylesheet">',
+                            '<link rel="stylesheet" href="'. $base_url .'ot/assets/style/jquery.fancybox.css">',
 			),
 			'scripts' =>  array(
 				'<script type="text/javascript" src="'.$base_url.'plugins/jquery-validation/jquery.validate.js"></script>',
@@ -881,6 +882,9 @@ $( document ).ready( function(){
 				'<script type="text/javascript" src="' . $base_url .'director/assets/scripts/director.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/operations.js"></script>',
+                                '<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
+                            '<script type="text/javascript" src="'.$base_url.'ot/assets/scripts/jquery.fancybox.js"></script>',
 				$add_js,
 				$inline_js,
 			),
@@ -1320,15 +1324,40 @@ $( document ).ready( function(){
 		$data = array('stats' => $stats, 'stat_type' => $stat_type, 'status' => $status);
 		$this->load->view( 'operations/details_ramo', $data );
 	}
+        public function ot_por_producto(){
+            	$valid_stat_types = array(1 => 1, 2 => 2, 3 => 3);
+		$valid_status = array(
+			'tramite' => 'tramite', 'pagada' => 'pagada',
+			'canceladas' => 'canceladas', 'NTU' => 'NTU',
+			'pendientes_pago' => 'pendientes_pago', 'activadas' => 'activadas',
+			'todos' => 'todos');
+		$stat_type = $this->uri->segment(3, 0);
+		$status = $this->uri->segment(4, 0);
+                $prod_segment = $this->uri->segment(5, 0);
+                $this->_init_profile();
+		if (!isset($valid_stat_types[$stat_type]) || !isset($valid_status[$status]))
+		{
+			echo 'Ocurrio un error.';
+			exit();
+		}
+                
+		if ($prod_segment && ($prod_segment != 'total'))
+			$prod_id = array('products.id' => (int) $prod_segment);
+		else
+			$prod_id = array();
+                    
+                $ots = $this->_read_details($stat_type, $status,FALSE,$prod_id);
+                $this->load->view( 'ot_list', array('data' => $ots) );
+        }
 
-	private function _read_details($ramo = NULL, $status = NULL)
+        private function _read_details($ramo = NULL, $status = NULL,$get_ot_list = TRUE, $prod_id = NULL)
 	{
 		$this->load->helper('filter');
 		$periodo = get_filter_period();
-		get_generic_filter($this->other_filters, array());
-
-		$users = $this->user->get_filtered_agents(array('query' => $this->other_filters));
-		if (is_array($users) && !count($users))
+                get_generic_filter($this->other_filters, array());
+                
+		$users = $this->user->get_filtered_agents(array('query' => $this->other_filters)); 
+                if (is_array($users) && !count($users))
 		{
 //			$result = $this->work_order->init_operation_result($ramo, FALSE, FALSE);
 			$result = $this->work_order->init_operation_result($ramo, FALSE, TRUE);
@@ -1338,7 +1367,13 @@ $( document ).ready( function(){
 			$this->work_order->init_operations(null, $periodo, $ramo);
 			if ($users)
 				$this->work_order->add_operation_where(array('policies_vs_users.user_id' => array_keys($users)));
-			$result = $this->work_order->operation_detailed($ramo, $status, TRUE);
+                        if (!is_null($prod_id)){
+			$this->work_order->add_operation_where($prod_id);
+                        $result = $this->work_order->operation_detailed($ramo, $status, $get_ot_list,TRUE);    
+                        }
+                        else{
+                        $result = $this->work_order->operation_detailed($ramo, $status, $get_ot_list);
+                        }
 		}
 
 		return $result;		

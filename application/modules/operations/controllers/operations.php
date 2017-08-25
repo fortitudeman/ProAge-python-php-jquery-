@@ -130,7 +130,7 @@ class Operations extends CI_Controller {
 
 		$this->misc_filter_name = 'operations_misc_filter';
 		$this->misc_filters = $this->session->userdata($this->misc_filter_name);
-
+                
 		$this->load->helper('filter');
 	}
 
