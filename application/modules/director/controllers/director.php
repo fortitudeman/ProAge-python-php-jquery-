@@ -1564,7 +1564,7 @@ $( document ).ready( function(){
 			echo 'Ocurrio un error.';
 			exit();
 		}
-		$data = array('stats' => $stats);
+		$data = array('stats' => $stats, 'stat_type' => $stat_type, 'status' => $status);
 		$this->load->view( 'operations/details_ramo', $data );
 	}
 
