@@ -470,6 +470,7 @@ $is_posted = (count($_POST) > 0);
                 </thead>
             
                <tbody class="tbody">   
+               	   <?php $work_orders = is_array($work_orders) ? $work_orders : array(); ?>
                    <?php foreach ($work_orders as $value) { ?>
                      <tr>
                          <td><input type="checkbox" name="wo[]" class="wo" value="<?php echo $value['id'];?>" ></td>
