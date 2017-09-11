@@ -356,7 +356,7 @@ endif;
 	}
 	else
 	{
-echo '<p class="sales-activity-results">No hay datos</p>';
+echo '<p class="sales-activity-results" style="text-align:center">No hay datos</p>';
 	}
 ?>
 
