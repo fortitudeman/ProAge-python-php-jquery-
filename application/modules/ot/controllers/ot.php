@@ -2438,6 +2438,7 @@ alert("changed!");
 					if ( !$this->work_order->update( 'work_order', $ot[0]['id'], $ot_fields) )
 						$error = true;
 					else {
+                                        
 						// send email notification of status update
 						if (($ot[0]['status_id'] != $new_status) && ($this->input->post( 'email_notification' )))
 							$this->_notify_ot_status_change($ot[0]['id']);
@@ -2484,19 +2485,31 @@ alert("changed!");
 								$field_values['uid'] = $this->input->post( 'uid' );
 						}
 						else
-							$field_values['uid'] = $this->input->post( 'uid' );						
+							$field_values['uid'] = $this->input->post( 'uid' );
 					}
 
 				}
 				if ( !$error && isset($field_values) )
 					$error = !$this->work_order->update( 'policies', $ot[0]['policy_id'], $field_values);
 
-				if ( !$error )	
+				if ( !$error )	{
 					$message = array(
 						'type' => true,	
 						'message' => 'Se guardo el registro correctamente.'
 					);
-				else
+                                            //check if work order existes on ajusted_primas table,if it exists replace it
+                                            $this->load->model('policy_model');
+                                            $primas_cached = $this->policy_model->get_ot_adjusted_primas($id);
+                                           
+                                            if (isset($primas_cached[$id]) && 
+                                                    isset($primas_cached[$id]['adjusted_prima']))
+                                            {
+                                                
+                                                    $wo = $this->work_order->getWorkOrderById($id);
+                                                    $this->policy_model->recalculate_adjusted_primas($id,$wo[0]['policy_id']);
+                                                    
+                                            }
+                                }else
 					$message = array(
 						'type' => false,	
 						'message' => 'No se pudo guardar el registro (ocurrio un error en la base de datos). Pongase en contacto con el desarrollador.'
@@ -3017,6 +3030,18 @@ Display custom filter period
 						'message' => $msj 
 					));	
             redirect( 'ot', 'refresh' );
+        }
+        public function recalculate_adjusted($ot){
+            $this->load->model('policy_model');
+            $this->load->model( 'work_order' );
+             $id = $this->uri->segment(3);
+            echo "<pre>";            
+            //var_export($this->policy_model->recalculate_adjusted_primas($this->uri->segment(3),$this->uri->segment(4),$this->uri->segment(5)));
+            $ot1 = $this->work_order->getWorkOrderById(  $id);
+            print_r($ot1);
+            /*$this->uri->segment(4);
+                    $this->uri->segment(5)
+            $this->policy_model->getPolicyBuId();*/
         }
 /* End of file ot.php */
 /* Location: ./application/controllers/ot.php */

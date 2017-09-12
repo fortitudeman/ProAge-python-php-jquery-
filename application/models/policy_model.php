@@ -121,13 +121,10 @@ AND
 			return false;
 	}
 
-/**
-  Update adjusted prima in `policy_adjusted_primas` for one given OT
- **/
-	public function update_adjusted_primas($ot_id = FALSE, $policy_id = FALSE, $new_prima = FALSE)
+        public function recalculate_adjusted_primas($ot_id = FALSE, $policy_id = FALSE)
 	{
-		return TRUE;
-		if (!$ot_id || !$policy_id || ($new_prima === FALSE))
+		//return TRUE;
+                if (!$ot_id || !$policy_id )
 			return FALSE;
 		$result = TRUE;
 
@@ -142,56 +139,46 @@ AND
 		$this->db->select('`work_order`.`work_order_status_id`, `work_order`.`product_group_id`, `work_order_types`.`patent_id`, `policies`.`id`, `policies`.`prima`, `policies`.`payment_interval_id`, `policies`.`date`, `extra_payment`.`extra_percentage`', FALSE);
 		$this->db->from(array('work_order', 'work_order_types', 'policies', 'products', 'extra_payment'));
 		$this->db->where("
-`work_order`.`id` = '$ot_id'
-AND
-`work_order_types`.`id`=`work_order`.`work_order_type_id`
-AND
-`work_order`.`policy_id` = `policies`.`id`
-AND
- `products`.`id`=`policies`.`product_id`
-AND
-`extra_payment`.`x_product_platform` = `products`.`platform_id`
-AND
-`extra_payment`.`x_currency` = `policies`.`currency_id`
-AND
-`extra_payment`.`x_payment_interval` = `policies`.`payment_interval_id`
-AND
-`work_order`.`work_order_status_id` IN ( 7, 4)
-AND
-(
-((`work_order`.`product_group_id` = 1) AND (`work_order_types`.`patent_id` = 47))
-OR
-((`work_order`.`product_group_id` = 2) AND (`work_order_types`.`patent_id` = 90))
-)
-", NULL, FALSE);
+                `work_order`.`id` = '$ot_id'
+                AND
+                `work_order_types`.`id`=`work_order`.`work_order_type_id`
+                AND
+                `work_order`.`policy_id` = `policies`.`id`
+                AND
+                 `products`.`id`=`policies`.`product_id`
+                AND
+                `extra_payment`.`x_product_platform` = `products`.`platform_id`
+                AND
+                `extra_payment`.`x_currency` = `policies`.`currency_id`
+                AND
+                `extra_payment`.`x_payment_interval` = `policies`.`payment_interval_id`
+                AND
+                `work_order`.`work_order_status_id` IN ( 7, 4)
+                ", NULL, FALSE);
 
 		$query = $this->db->get();
+                
 		$new_rows = array();
 		foreach ($query->result_array() as $row)
 		{
 			$row['date'] = $start_date;
 			$this->_prepare_adjusted_primas($row, $new_rows);
 		}
-log_message('error', print_r($row, true));
-log_message('error', print_r($new_rows, true));
+                
 		if ($new_rows)
 		{
 			if ($this->db->delete('policy_adjusted_primas', 
 				array('policy_id' => $new_rows[0]['policy_id'])))
 			{
-log_message('error', $this->db->last_query());
 				$result = $this->db->insert_batch('policy_adjusted_primas', $new_rows);
-log_message('error', $this->db->last_query());
 			}
 			else
 			{
-log_message('error', $this->db->last_query());
 				$result = FALSE;
 			}
 		}
 		return $result;
 	}
-
 /**
   Insert rows in `policy_adjusted_primas` for one given OT
  **/
