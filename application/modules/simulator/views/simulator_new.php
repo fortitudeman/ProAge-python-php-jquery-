@@ -166,10 +166,19 @@ for ($i = 1; $i <= $period_max; $i++) :
           <span style="display: none" class="meta-ori" id="meta-prima-ori-<?php echo $i ?>"><?php echo $meta_ori['prima'][$i] ?></span>
           <input type="text" class="span12 smaller simulator-primas-period" name="<?php echo $simulator_prima_fields[$i] ?>" id="<?php echo $simulator_prima_fields[$i] ?>" value="<?php echo $prima_values[$i]; ?>">
         </div>
-        <div class="span3 smaller"><?php if ($ramo == 'vida'): ?>No. de Negocios PAI:<?php endif ?></div>
+        <div class="span3 smaller">
+          <?php if ($ramo == 'vida'): ?>
+            No. de Negocios PAI:
+          <?php elseif($ramo == 'gmm'): ?>
+            Nuevos Negocios
+          <?php endif ?>  
+        </div>
         <div class="span3">
 <?php if ($ramo == 'vida'): ?>
 	       <span style="display: none" class="meta-ori" id="meta-negocio-ori-<?php echo $i ?>"><?php echo $meta_ori['negocios'][$i] ?></span>
+           <input type="text" class="span12 smaller noNegocios" name="noNegocios_<?php echo $i ?>" id="noNegocios_<?php echo $i ?>" value="<?php echo $negocio_values[$i]; ?>">
+<?php elseif($ramo == 'gmm'): ?>
+          <span style="display: none" class="meta-ori" id="meta-negocio-ori-<?php echo $i ?>"><?php echo $meta_ori['negocios'][$i] ?></span>
            <input type="text" class="span12 smaller noNegocios" name="noNegocios_<?php echo $i ?>" id="noNegocios_<?php echo $i ?>" value="<?php echo $negocio_values[$i]; ?>">
 <?php endif ?>
         </div>

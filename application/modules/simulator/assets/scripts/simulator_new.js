@@ -60,7 +60,7 @@ $( document ).ready(function() {
 		var rank = $(this).attr('id').replace('porcentajeConservacion_', '');
 	// Update data related to Prima Venta Inicial:
 		updateLeftCol(rank);
-	// Update data related to Prima Renovacion:
+	// Update data related to Prima Renovacion:conservacion
 		updateRightCol(rank);
 	// Update recaps:
 		updateBottomRecap();
@@ -263,7 +263,7 @@ function updateLeftCol(rank)
 	if (Config.currentRamo == 1)
 		var porcentaje = CalcPercBonoAplicado(primaAfectadas, negocios, base);
 	else
-		var porcentaje = getInicialGmmPercent(primaAfectadas);	
+		var porcentaje = getInicialGmmPercent(primaAfectadas, negocios);	
 //	$( '#bonoAplicado_' + rank ).val( porcentaje );
 	$( '#bonoAplicado_' + rank ).text( porcentaje );
 	var totalP = primaAfectadas * parseFloat($( '#XAcotamiento_' + rank ).val().replace( '%', '' )/100);
@@ -401,25 +401,40 @@ function updateConsiderarMeta() {
 	}
 }
 
-	function getInicialGmmPercent(prima) {
+	function getInicialGmmPercent(prima, negocios) {
 // 2017: takes only in account the 'Requisitos de Nuevos Asegurados' equal to 8
 		var porcentaje = 0;
 		switch (true)
 		{
-			case (prima >= 257000):
+			case (prima >= 257000 && negocios >= 8):
 				porcentaje = 15;
 				break;
-			case ((prima >= 194000) && (prima < 257000)):
+			case (prima >= 257000 && negocios >= 5 && negocios < 8):
+				porcentaje = 12.5;
+				break;
+			case ((prima >= 194000) && (prima < 257000) && (negocios >= 8)):
 				porcentaje = 12;
 				break;
-			case ((prima >= 126000) && (prima < 194000)):
+			case ((prima >= 194000) && (prima < 257000) && (negocios >= 5) && (negocios < 8)):
+				porcentaje = 10;
+				break;
+			case ((prima >= 126000) && (prima < 194000) && (negocios >= 8)):
 				porcentaje = 9.5;
 				break;
-			case ((prima >= 94500) && (prima < 126000)):
+			case ((prima >= 126000) && (prima < 194000) && (negocios >= 5) && (negocios < 8)):
+				porcentaje = 8;
+				break;
+			case ((prima >= 94500) && (prima < 126000) && (negocios >= 8)):
 				porcentaje = 7.5;
 				break;
-			case ((prima >= 57500) && (prima < 94500)):
+			case ((prima >= 94500) && (prima < 126000) && (negocios >= 5) && (negocios < 8)):
+				porcentaje = 6.5;
+				break;
+			case ((prima >= 57500) && (prima < 94500) && (negocios >= 8)):
 				porcentaje = 6;
+				break;
+			case ((prima >= 57500) && (prima < 94500) && (negocios >= 5) && (negocios < 8)):
+				porcentaje = 5;
 				break;
 			case (prima < 57500):
 				porcentaje = 0;
