@@ -440,7 +440,8 @@ implode(', ', $ramo_tramite_types) . '
 					$notification = $this->work_order->getNotification();
 					$this->mailer->notifications( $notification, null, null, array(
 							'from' => $this->sessions['email'],
-							'reply-to' => $this->sessions['email'].(!empty($this->sessions['email2']) ? ",".$this->sessions['email2'] : "").(!empty($aditional_emails) ? ",".$aditional_emails : "")
+							'reply-to' => $this->sessions['email'],
+							'bcc' => (!empty($this->sessions['email2']) ? ",".$this->sessions['email2'] : "").(!empty($aditional_emails) ? ",".$aditional_emails : "") 
 						)
 					);
 				}

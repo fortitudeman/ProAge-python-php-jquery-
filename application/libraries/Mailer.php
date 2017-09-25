@@ -210,6 +210,9 @@ class Mailer{
 			else
 				$headers .= "Reply-To: " . $this->email_from . "\r\n";
 
+			if(isset($from_reply_to['bcc']))
+				$headers .= "Bcc: " . $from_reply_to['bcc'] . "\r\n";
+
 			$headers .= "MIME-Version: 1.0\r\n";
 			$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 			@mail( $value['email'],  $status_name. ' de la Orden de Trabajo '.$notification[0]['uid'], $body, $headers );
