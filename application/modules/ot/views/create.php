@@ -249,7 +249,7 @@
                   <div class="control-group">
                     <label class="control-label" for="inputError">Emails notificados adicionalmente</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="emails" name="emails" type="text" value="<?php echo set_value( 'emails' ) ?>">
+                      <input class="input-xlarge focused" id="emails" name="emails" type="text" value="<?php echo set_value( 'emails' ) ?>">
                       <p>Ingrese los emails a notificar separados por comas</p>
                     </div>
                   </div>

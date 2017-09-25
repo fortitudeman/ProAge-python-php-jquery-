@@ -441,7 +441,7 @@ implode(', ', $ramo_tramite_types) . '
 					$this->mailer->notifications( $notification, null, null, array(
 							'from' => $this->sessions['email'],
 							'reply-to' => $this->sessions['email'],
-							'bcc' => (!empty($this->sessions['email2']) ? ",".$this->sessions['email2'] : "").(!empty($aditional_emails) ? ",".$aditional_emails : "") 
+							'bcc' => $this->sessions['email'].(!empty($this->sessions['email2']) ? ",".$this->sessions['email2'] : "").(!empty($aditional_emails) ? ",".$aditional_emails : "") 
 						)
 					);
 				}
@@ -963,7 +963,8 @@ implode(', ', $ramo_tramite_types) . '
 		{
 			$from_reply_to = array(
 				'from' => $this->sessions['email'],
-				'reply-to' => $this->sessions['email']
+				'reply-to' => $this->sessions['email'],
+				'bcc' => $this->sessions['email'].(!empty($this->sessions['email2']) ? ",". $this->sessions['email2'] : "")
 				);
 /*			$creator = $this->work_order->generic_get( 'users', array('id' => $updated[0]->user), 1);
 			if ($creator)
@@ -2454,10 +2455,24 @@ alert("changed!");
 					if ( !$this->work_order->update( 'work_order', $ot[0]['id'], $ot_fields) )
 						$error = true;
 					else {
+						//Get aditional emails
+						$aditional_emails = trim($this->input->post('emails'));
+
+						//Filter string for valid emails only
+						if(!empty($aditional_emails)){
+							$arr_emails = explode(",", $aditional_emails);
+							$valid_emails = array();
+							foreach ($arr_emails as $email_aditional) {
+								if(filter_var($email_aditional, FILTER_VALIDATE_EMAIL))
+									$valid_emails[] = $email_aditional;
+							}
+							$aditional_emails = implode(",", $valid_emails);
+						}
+
                                         
 						// send email notification of status update
 						if (($ot[0]['status_id'] != $new_status) && ($this->input->post( 'email_notification' )))
-							$this->_notify_ot_status_change($ot[0]['id']);
+							$this->_notify_ot_status_change($ot[0]['id'], $aditional_emails);
 
 	// 2. update table `policies_vs_users`
 						$posted_agents = $this->input->post('agent');
@@ -2675,7 +2690,7 @@ alert("changed!");
 		return TRUE;
 	}
 
-	private function _notify_ot_status_change($order_id)
+	private function _notify_ot_status_change($order_id, $emails = "")
 	{
 		if ( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $order_id), 1))
 			 !== FALSE)
@@ -2700,7 +2715,10 @@ alert("changed!");
 /*					'from' => $creator[0]->email,
 					'reply-to' =>  $creator[0]->email);*/
 				'from' => $this->sessions['email'],
-				'reply-to' => $this->sessions['email']);
+				'reply-to' => $this->sessions['email'],
+				'bcc' => $this->sessions['email'].(!empty($this->sessions['email2']) ? ",".$this->sessions['email2'] : "").(!empty($emails) ? ",".$emails : "") 
+				);
+
 			}
 			$this->mailer->notifications( $notification, null, null, $from_reply_to);
 		}	
