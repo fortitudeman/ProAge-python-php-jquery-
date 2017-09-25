@@ -1308,6 +1308,7 @@ class User extends CI_Model{
 				  'username' => $row->username,
 				  'password' => $row->password,
 				  'email' => $row->email,
+				  'email2' => $row->email2,
 				  'picture' => $row->picture
 				  
 				  
@@ -1460,6 +1461,7 @@ class User extends CI_Model{
 				'lastnames' => $row->lastnames,
 				'birthdate' => $row->birthdate,
 				'email' => $row->email,
+				'email2' => $row->email2,
 				'disabled' => $row->disabled,
 				'picture' => $row->picture
 		    );

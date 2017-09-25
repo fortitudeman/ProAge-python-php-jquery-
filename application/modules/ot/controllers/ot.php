@@ -421,11 +421,26 @@ implode(', ', $ramo_tramite_types) . '
 				$notification = $this->input->post('notification');
 				if ($notification !== FALSE)
 				{
+					//Get aditional emails
+					$aditional_emails = trim($this->input->post('emails'));
+
+					//Filter string for valid emails only
+					if(!empty($aditional_emails)){
+						$arr_emails = explode(",", $aditional_emails);
+						$valid_emails = array();
+						foreach ($arr_emails as $email_aditional) {
+							if(filter_var($email_aditional, FILTER_VALIDATE_EMAIL))
+								$valid_emails[] = $email_aditional;
+						}
+						$aditional_emails = implode(",", $valid_emails);
+					}
+
+
 					$this->load->library( 'mailer' );
 					$notification = $this->work_order->getNotification();
 					$this->mailer->notifications( $notification, null, null, array(
 							'from' => $this->sessions['email'],
-							'reply-to' => $this->sessions['email']
+							'reply-to' => $this->sessions['email'].(!empty($this->sessions['email2']) ? ",".$this->sessions['email2'] : "").(!empty($aditional_emails) ? ",".$aditional_emails : "")
 						)
 					);
 				}

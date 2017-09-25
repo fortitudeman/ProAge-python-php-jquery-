@@ -1788,6 +1788,8 @@ class Usuarios extends CI_Controller {
 			}
 			if( $user['email'] != $this->input->post( 'email' ) )
 				$this->form_validation->set_rules('email', 'Correo', 'valid_email|is_unique[users.email]');
+			if( $user['email2'] != $this->input->post( 'email2' ) )
+				$this->form_validation->set_rules('email2', 'Correo', 'valid_email|is_unique[users.email2]');
 
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
@@ -1801,7 +1803,10 @@ class Usuarios extends CI_Controller {
 					$usernew['password'] = md5($this->input->post('password'));
 				
 				if( !empty( $_POST['email'] ) )
-					$usernew['email'] = $this->input->post('email');						
+					$usernew['email'] = $this->input->post('email');
+
+				if( !empty( $_POST['email2'] ) )
+					$usernew['email2'] = $this->input->post('email2');						
 
 				$this->_handle_profile_picture( $user, $usernew );
 				$this->_update_user( $id, $usernew, TRUE );
