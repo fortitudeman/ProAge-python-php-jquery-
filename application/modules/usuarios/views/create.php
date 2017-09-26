@@ -274,6 +274,13 @@
                       <input class="input-xlarge focused required email" id="email" name="email" type="text" value="<?php echo set_value('email') ?>">
                     </div>
                   </div>
+
+                  <div class="control-group">
+                    <label class="control-label text-error" for="inputError">Correo Alternativo</label>
+                    <div class="controls">
+                      <input class="input-xlarge focused email" id="email2" name="email2" type="text" value="<?php echo set_value('email2') ?>">
+                    </div>
+                  </div>
                   
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Imagen: </label>

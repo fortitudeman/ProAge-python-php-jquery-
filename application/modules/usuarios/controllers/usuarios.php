@@ -303,6 +303,7 @@ class Usuarios extends CI_Controller {
 			$this->form_validation->set_rules('username', 'Usuario', 'required|is_unique[users.username]');
 			$this->form_validation->set_rules('password', 'Contraseña', 'required');
 			$this->form_validation->set_rules('email', 'Correo', 'trim|required|valid_email|my_is_unique[users.email]');
+			$this->form_validation->set_rules('email', 'Correo Alternativo', 'trim|valid_email|my_is_unique[users.email2]');
 
 			if( $this->input->post('persona') == 'fisica' ){
 				$this->form_validation->set_rules('lastname', 'Apellido', 'required');
@@ -343,6 +344,7 @@ class Usuarios extends CI_Controller {
 					'lastnames'  => $this->input->post( 'lastname' ),
 					'birthdate'  => $this->input->post( 'birthdate' ),					
 					'email'  => $this->input->post( 'email' ),
+					'email2'  => $this->input->post( 'email2' ),
 				);
 				// Add Manager if is an agent
 				if( in_array( 1, $this->input->post('group') ) )
@@ -675,6 +677,7 @@ class Usuarios extends CI_Controller {
 			$this->form_validation->set_rules('username', 'Usuario', 'required|is_unique[users.username]');
 			$this->form_validation->set_rules('password', 'Contraseña', 'required');
 			$this->form_validation->set_rules('email', 'Correo', 'required|valid_email|is_unique[users.email]');
+			$this->form_validation->set_rules('email', 'Correo Alternativo', 'valid_email|is_unique[users.email]');
 
 			if( $this->input->post('persona') == 'fisica' ){
 				$this->form_validation->set_rules('lastname', 'Apellido', 'required');
@@ -724,6 +727,7 @@ class Usuarios extends CI_Controller {
 					'lastnames'  => $this->input->post( 'lastname' ),
 					'birthdate'  => $this->input->post( 'birthdate' ),					
 					'email'  => $this->input->post( 'email' ),
+					'email2'  => $this->input->post( 'email2' ),
 				);
 				
 				// Add Manager if is an agent
