@@ -879,6 +879,7 @@ class Work_order extends CI_Model{
 				'comments' => $row->comments,
 				'duration' =>  $row->duration,
 				'last_updated' =>  $row->last_updated,
+				'notes' =>  $row->notes,
 				'date' =>  $row->date
 		    );
 

@@ -44,34 +44,43 @@
 
             <form id="form" action="<?php echo base_url() ?>ot/cancelar/<?php echo $ot ?>.html" class="form-horizontal" method="post">
                 <fieldset>
+                  <div class="span6">
+                    <div class="control-group subtype">
+                      <label class="control-label text-error" for="inputError">Razón</label>
+                      <div class="controls">
+                        <select class="input-xlarge focused required" id="work_order_reason_id" name="work_order_reason_id">
+                        	<?php echo $reason ?>
+                        </select>
+                      </div>
+                    </div>
 
-                   <div class="control-group subtype">
-                    <label class="control-label text-error" for="inputError">Razón</label>
+                    <div class="control-group poliza">
+                      <label class="control-label text-error" for="inputError">Responsable</label>
+                      <div class="controls">
+                        <select class="input-xlarge focused" id="work_order_responsible_id" name="work_order_responsible_id">
+                        	<?php echo $responsibles ?>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="control-group">
+                      <label class="control-label" for="inputError">¿Con notificacion por correo electrónico?</label>
+                      <div class="controls">
+                        <input type="checkbox" value="1" name="notification" checked="checked" />&nbsp;Si&nbsp;&nbsp;
+  					          </div>
+                    </div>
+
+                    <input type="hidden" id="creation_date" name="creation_date" />
+                  </div>
+                  <div class="span6">
+                    <div class="control-group">
+                    <label class="control-label" for="inputError">Notas adicionales</label>
                     <div class="controls">
-                      <select class="input-xlarge focused required" id="work_order_reason_id" name="work_order_reason_id">
-                      	<?php echo $reason ?>
-                      </select>
+                      <textarea class="input-xlarge focused update-editable valid" id="notes" name="notes" rows="6"></textarea>
                     </div>
                   </div>
-
-                  <div class="control-group poliza">
-                    <label class="control-label text-error" for="inputError">Responsable</label>
-                    <div class="controls">
-                      <select class="input-xlarge focused" id="work_order_responsible_id" name="work_order_responsible_id">
-                      	<?php echo $responsibles ?>
-                      </select>
-                    </div>
                   </div>
-
-                  <div class="control-group">
-                    <label class="control-label" for="inputError">¿Con notificacion por correo electrónico?</label>
-                    <div class="controls">
-                      <input type="checkbox" value="1" name="notification" checked="checked" />&nbsp;Si&nbsp;&nbsp;
-					  </div>
-                  </div>
-
-                  <input type="hidden" id="creation_date" name="creation_date" />
-
+                  <div style="clear: both"></div>
                   <div id="actions-buttons-forms" class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>
                     <input type="button" class="btn" onclick="javascript: history.back()" value="Cancelar">

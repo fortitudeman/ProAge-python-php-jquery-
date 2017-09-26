@@ -379,6 +379,12 @@ else
                     </div>
                   </div>
 <?php endif ?>
+                  <div id="notas_adicionales" class="control-group" <?php if($data['status_id'] != 2 && $data['status_id'] != 8) echo "style='display:none'"?>>
+                    <label class="control-label" for="inputError">Notas adicionales</label>
+                    <div class="controls">
+                      <textarea class="input-xlarge focused update-editable" id="notes" name="notes" rows="6" <?php if (!$update) echo 'readonly="readonly"'?>><?php echo $data['notes'] ?></textarea>
+                    </div>
+                  </div>
 
                   <div class="control-group">
                     <label class="control-label" for="inputError">Comentarios</label>
@@ -403,4 +409,3 @@ else
     </div><!--/span-->
 
 </div><!--/row-->
-			

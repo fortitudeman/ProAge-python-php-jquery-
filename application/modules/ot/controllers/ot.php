@@ -897,6 +897,7 @@ implode(', ', $ramo_tramite_types) . '
 				'work_order_status_id' => 2,
 				'work_order_reason_id' => $this->input->post( 'work_order_reason_id' ),
 				'work_order_responsible_id' => $this->input->post( 'work_order_responsible_id' ),
+				'notes' => $this->input->post( 'notes' ),
 				'last_updated' => date( 'd-m-Y H:i:s' )
 			);
 
@@ -2449,7 +2450,8 @@ alert("changed!");
 						'creation_date' => $this->input->post('creation_date') . ' ' . date( 'H:s:i' ),
 						'comments' => $this->input->post('comments'),
 						'last_updated' => $current_date,
-						'work_order_status_id' => $new_status
+						'work_order_status_id' => $new_status,
+						'notes' => $this->input->post('notes')
 					);
 
 					if ( !$this->work_order->update( 'work_order', $ot[0]['id'], $ot_fields) )
@@ -2624,6 +2626,13 @@ alert("changed!");
 ';
 	}
 	$add_js .= '
+	$("#ot-status").on("change", function(e){
+      if($(this).val() == 8)
+        $("#notas_adicionales").css("display","block");
+      else
+        $("#notas_adicionales").css("display","none");
+
+    });
 </script>
 ';		
 
