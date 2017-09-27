@@ -155,10 +155,7 @@ function chooseOption( choose, is_new ){
 			}
 		}
 		if( choose[0] == 'rechazar' ) {
-			if( confirm( 'Seguro quiere marcar como rechazada' ) ) {
-				var sendNotification = (confirm( "¿Con notificacion por correo electrónico?" ) ) ? "1": "0";
-				window.location=Config.base_url()+"ot/rechazar/"+choose[1]+ '/' + sendNotification + ".html";
-			}
+			window.location=Config.base_url()+"ot/rechazar/"+choose[1]+".html";
 		}
 		if( choose[0] == 'cancelar' )
 			window.location=Config.base_url()+"ot/cancelar/"+choose[1]+".html";
