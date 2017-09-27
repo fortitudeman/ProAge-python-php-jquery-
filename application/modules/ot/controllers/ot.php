@@ -441,7 +441,7 @@ implode(', ', $ramo_tramite_types) . '
 					$this->mailer->notifications( $notification, null, null, array(
 							'from' => $this->sessions['email'],
 							'reply-to' => $this->sessions['email'],
-							'bcc' => $this->sessions['email'].(!empty($this->sessions['email2']) ? ",".$this->sessions['email2'] : "").(!empty($aditional_emails) ? ",".$aditional_emails : "") 
+							'bcc' => /*$this->sessions['email'].(!empty($this->sessions['email2']) ? ",".$this->sessions['email2'] : "").*/(!empty($aditional_emails) ? ",".$aditional_emails : "")
 						)
 					);
 				}
@@ -964,8 +964,8 @@ implode(', ', $ramo_tramite_types) . '
 		{
 			$from_reply_to = array(
 				'from' => $this->sessions['email'],
-				'reply-to' => $this->sessions['email'],
-				'bcc' => $this->sessions['email'].(!empty($this->sessions['email2']) ? ",". $this->sessions['email2'] : "")
+				'reply-to' => $this->sessions['email']/*,
+				'bcc' => $this->sessions['email'].(!empty($this->sessions['email2']) ? ",". $this->sessions['email2'] : "")*/
 				);
 /*			$creator = $this->work_order->generic_get( 'users', array('id' => $updated[0]->user), 1);
 			if ($creator)
@@ -2725,7 +2725,7 @@ alert("changed!");
 					'reply-to' =>  $creator[0]->email);*/
 				'from' => $this->sessions['email'],
 				'reply-to' => $this->sessions['email'],
-				'bcc' => $this->sessions['email'].(!empty($this->sessions['email2']) ? ",".$this->sessions['email2'] : "").(!empty($emails) ? ",".$emails : "") 
+				'bcc' => /*$this->sessions['email'].(!empty($this->sessions['email2']) ? ",".$this->sessions['email2'] : "").*/(!empty($emails) ? ",".$emails : "") 
 				);
 
 			}
