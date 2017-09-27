@@ -1031,22 +1031,23 @@ implode(', ', $ramo_tramite_types) . '
 		}
 	} 
 	 
-	public function rechazar( $ot = null, $send_notification = null){
+public function rechazar( $ot = null){
 
-		// Load Model
-		$this->load->model( 'work_order' );
-
+	// Load Model
+	$this->load->model( 'work_order' );
+	if( !empty( $_POST ) ){
 		$work_order = array(
 			'work_order_status_id' => 8,
+			'notes' => $this->input->post('notes'),
 			'last_updated' => date( 'd-m-Y H:i:s' )
 		);
 
 		if ( $this->work_order->update( 'work_order', $ot, $work_order ) &&
-			( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
-			 !== FALSE)
-			)
+			(($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
+			 !== FALSE))
 		{
 			// Send Email
+			$send_notification = $this->input->post('notification');
 			if ($send_notification == 1)
 				$this->_send_notification($ot, $updated);
 
@@ -1065,6 +1066,30 @@ implode(', ', $ramo_tramite_types) . '
 			redirect( 'ot', 'refresh' );
 		}
 	}
+	// Config view
+	$this->view = array(
+	  'title' => 'Desactivar OT',
+	   // Permisions
+	  'user' => $this->sessions,
+	  'user_vs_rol' => $this->user_vs_rol,
+	  'roles_vs_access' => $this->roles_vs_access,
+	  'css' => array(),
+	  'scripts' =>  array(
+		  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+		  '<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+		  '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+		  '<script src="'.base_url().'ot/assets/scripts/activate_desactivate.js"></script>',		
+		  '<script src="'.base_url().'scripts/config.js"></script>'
+	  ),
+	  'content' => 'ot/cancelar', // View to load
+	  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+	  'ot' => $ot,
+	  'rechazar' => 1
+	);
+
+	// Render view 
+	$this->load->view( 'index', $this->view );	
+}
 
 /*
 // Cancel work order
