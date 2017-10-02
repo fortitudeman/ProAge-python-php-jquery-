@@ -335,7 +335,7 @@ else
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Nombre del asegurado / contratante</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required update-editable" id="name" name="name" type="text" value="<?php echo $data['policy'][0]['name'] ?>"  <?php if(!$update) echo 'readonly="readonly"'?>>
+                      <input class="input-xlarge focused required uppercase update-editable" id="name" name="name" type="text" value="<?php echo $data['policy'][0]['name'] ?>"  <?php if(!$update) echo 'readonly="readonly"'?>>
                     </div>
                   </div>
 

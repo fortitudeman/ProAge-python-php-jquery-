@@ -221,7 +221,7 @@
                   <div class="control-group">
                     <label class="control-label text-error" for="inputError">Nombre del asegurado / contratante</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="name" name="name" type="text" value="<?php echo set_value( 'name' ) ?>">
+                      <input class="input-xlarge focused required uppercase" id="name" name="name" type="text" value="<?php echo set_value( 'name' ) ?>">
                     </div>
                   </div> 
                   

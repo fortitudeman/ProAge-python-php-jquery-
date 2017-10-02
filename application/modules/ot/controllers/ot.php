@@ -309,9 +309,13 @@ implode(', ', $ramo_tramite_types) . '
 					'trim|decimal_or_integer');
 				$this->form_validation->set_rules('payment_interval_id', 'Conducto', 'required|xxs_clean');
 				$this->form_validation->set_rules('payment_method_id', 'Forma de pago', 'required|xxs_clean');
-				$this->form_validation->set_rules('name', 'Nombre', 'required|xxs_clean');
+				$this->form_validation->set_rules('name', 'Nombre', 'required|strtoupper|xxs_clean');
 				//$this->form_validation->set_rules('lastname_father', 'Apellido paterno', 'required|xxs_clean');
 				//$this->form_validation->set_rules('lastname_mother', 'Apellido materno', 'required|xxs_clean');
+			}
+			else
+			{
+				$this->form_validation->set_rules('name', 'Nombre', 'strtoupper');
 			}
 
 			// Run Validation
@@ -597,7 +601,7 @@ implode(', ', $ramo_tramite_types) . '
 			$this->form_validation->set_rules('currency_id', 'Moneda', 'required|xxs_clean');
 			$this->form_validation->set_rules('payment_interval_id', 'Conducto', 'required|xxs_clean');
 			$this->form_validation->set_rules('payment_method_id', 'Forma de pago', 'required|xxs_clean');
-			$this->form_validation->set_rules('name', 'Nombre', 'required|xxs_clean');
+			$this->form_validation->set_rules('name', 'Nombre', 'required|strtoupper|xxs_clean');
 			$this->form_validation->set_rules('lastname_father', 'Apellido paterno', 'required|xxs_clean');
 			$this->form_validation->set_rules('lastname_mother', 'Apellido materno', 'required|xxs_clean');
 			//$this->form_validation->set_rules('agent[]', 'Agente', 'required|xxs_clean');
@@ -2441,7 +2445,7 @@ alert("changed!");
 				$this->form_validation->set_rules('ot', 'Número de OT', "is_unique_but[work_order.uid.id.$id]");
 				$this->form_validation->set_rules('creation_date', 'Fecha de tramite', 'trim|required|min_length[10]');
 				$this->form_validation->set_rules('agent[]', 'Agente', 'trim|required|is_natural_no_zero');
-				$this->form_validation->set_rules('name', 'Nombre del asegurado / contratante', 'trim|required|xxs_clean');
+				$this->form_validation->set_rules('name', 'Nombre del asegurado / contratante', 'trim|strtoupper|required|xxs_clean');
 				$this->form_validation->set_rules('ot_status', 'Estado', 'trim|required|is_natural_no_zero');				
 				$this->form_validation->set_rules('comments', 'Comentarios', 'trim|xxs_clean');
 				if ($is_nuevo_negocio) {

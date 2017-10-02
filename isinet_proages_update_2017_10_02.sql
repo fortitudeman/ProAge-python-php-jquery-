@@ -1,3 +1,4 @@
+##PROAGES-46
 #Renovacion
 INSERT INTO work_order_types (patent_id, name, description, duration, last_updated, date) values(2, 'RENOVACIÓN','', 0, NOW(), NOW());
 SET @last_id = LAST_INSERT_ID();
@@ -27,3 +28,6 @@ INSERT INTO work_order_types (patent_id, name, description, duration, last_updat
 INSERT INTO work_order_types (patent_id, name, description, duration, last_updated, date) values(2, 'CAMBIO INDIVIDUAL A CONEXIÓN','', 0, NOW(), NOW());
 SET @last_id = LAST_INSERT_ID();
 INSERT INTO work_order_types (patent_id, name, description, duration, last_updated, date) values(@last_id, 'GENERAL','', 1, NOW(), NOW());
+
+##PROAGES-47
+UPDATE policies SET name=UPPER(name)
