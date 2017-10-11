@@ -1896,7 +1896,7 @@ implode(', ', $ramo_tramite_types) . '
 			foreach ($negocio_pai as $id => $value)
 			{
 				$result = $this->work_order->generic_update(
-					'policy_negocio_pai', array('negocio_pai' => (int) $value), array('id' => (int) $id), 1, 0) ?
+					'policy_negocio_pai', array('negocio_pai' => (int) $value), array('policy_number' => (int) $id), 1, 0) ?
 						'1' : '0';
 				echo json_encode($result);
 				exit();
