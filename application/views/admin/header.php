@@ -186,6 +186,10 @@ if( !empty( $roles_vs_access ) ): ?>
                         <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>usuarios.html"><i class="icon-th"></i><span class="hidden-tablet">Usuarios</span></a></li>
                         <?php break; endif; endforeach; ?>
+
+                        <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Grupos', $value ) ): ?>
+                        <li><a href="<?php echo base_url() ?>groups.html"><i class="icon-user"></i><span class="hidden-tablet">Grupos</span></a></li>
+                        <?php break; endif; endforeach; ?>
 <!--                       
                         <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>ot.html"><i class="icon-tablet"></i><span class="hidden-tablet">Orden trabajo</span></a></li>
