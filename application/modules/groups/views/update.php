@@ -52,7 +52,7 @@
                         <div class="control-group miembro">
                           <label class="control-label"><?= ($i==0)? "Miembros" : "" ?></label>
                           <div class="controls">
-                            <?= form_input('miembro_name[]', $agent["agent_name"], "class='input-xlarge miembro-text'"); ?>
+                            <?= form_input('miembro_name[]', $agent["agent_name"], "class='input-xlarge miembro-text' disabled"); ?>
                             <input type="hidden" name="miembros[]" class="miembro-hidden" value="<?= $agent["agent_id"] ?>">
                             <a href="#" class="btn btn-link search-agent">
                               <i class="icon-search"></i>
@@ -67,7 +67,7 @@
                       <div class="control-group miembro">
                         <label class="control-label">Miembros</label>
                         <div class="controls">
-                          <?= form_input('miembro_name[]', null, "class='input-xlarge miembro-text'"); ?>
+                          <?= form_input('miembro_name[]', null, "class='input-xlarge miembro-text' disabled"); ?>
                           <input type="hidden" name="miembros[]" class="miembro-hidden">
                           <a href="#" class="btn btn-link search-agent">
                             <i class="icon-search"></i>
