@@ -1951,6 +1951,11 @@ class User extends CI_Model{
 			if ($this->agent_name_where_in)
 				$this->db->where_in('agents.id', $this->agent_name_where_in);
 		}
+
+		if(isset($filter['query']['grupo']) && !empty($filter["query"]["grupo"])) {
+			$this->db->join('user_groups_vs_agents', 'agents.id = user_groups_vs_agents.agent_id');
+			$this->db->where('user_groups_vs_agents.user_group_id', $filter['query']['grupo']);
+		}
 	
 		if ( isset( $filter['query']['policy_num'] ) and !empty( $filter['query']['policy_num'] ) )
 		{

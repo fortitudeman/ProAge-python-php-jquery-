@@ -225,6 +225,7 @@ class Director extends CI_Controller {
 		}
 
 		$this->load->helper( array('ot/ot' ));
+		$this->load->model('groups/group');
 		if (count($_POST))
 		{
 			update_custom_period($this->input->post('cust_period_from'),
@@ -397,9 +398,9 @@ class Director extends CI_Controller {
 		}
 		else 
 			$report_lines = $this->load->view('meta_overview', array('data' => $data, 'ramo' => $ramo), TRUE);
-
 		$content_data = array(
 			'manager' => $this->user->getSelectsGerentes2(),
+			'groups' => $this->group->all(0, 0, "", $ramo),
 			'period_form' => show_custom_period(),
 			'period_fields' => show_period_fields('director', $this->other_filters['ramo']),
 			'other_filters' => $this->other_filters,
@@ -1232,6 +1233,7 @@ $( document ).ready( function(){
 			'policy_num' => '',
 			'activity_view' => 'normal',
 			'coordinators' => '',
+			'grupo' => '',
 		);
 		get_generic_filter($this->other_filters, $this->agent_array);
 
@@ -1270,6 +1272,9 @@ $( document ).ready( function(){
 				$filters_to_save['agent_name'] = $_POST['query']['agent_name'];
 			if ( isset($_POST['query']['policy_num']))
 				$filters_to_save['policy_num'] = $_POST['query']['policy_num'];
+			if ( isset($_POST['query']['grupo'])){
+				$filters_to_save['grupo'] = $_POST['query']['grupo'];
+			}
 
 			if ( isset($_POST['activity_view']) && 
 				(($_POST['activity_view'] == 'normal') || ($_POST['activity_view'] != 'efectividad')) )
@@ -1277,6 +1282,7 @@ $( document ).ready( function(){
 
 			if (isset($_POST['coordinator_name']))
 				$filters_to_save['coordinators'] = extract_coordinator_name($_POST['coordinator_name']);
+
 
 			generic_set_report_filter( $filters_to_save, $this->agent_array );
 			foreach ($filters_to_save as $key => $value)

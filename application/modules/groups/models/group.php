@@ -75,13 +75,17 @@ class group extends CI_Model {
 	/**
 	 |	Getting All
 	 **/ 
-	public function all($limit = 30, $start = 0, $filter = "" ) {
+	public function all($limit = 30, $start = 0, $filter = "", $ramo= "") {
 		$this->db->select("g.*");
 		$this->db->select("concat(u.name, ' ', u.lastnames) owner_name", FALSE);
 		$this->db->select("(select count(*) from user_groups_vs_agents where user_group_id=g.id) agents", FALSE);
         if($filter != "")
         	$this->db->like('description', "%$filter%");
-        $this->db->limit($limit, $start );
+        if($ramo != ""){
+        	$this->db->where_in("filter_type", array($ramo, 3));
+        }
+        if($limit != 0)
+        	$this->db->limit($limit, $start );
         $this->db->join('users u', 'g.group_owner = u.id');
         $query = $this->db->get($this->table." g");
 		
