@@ -2,13 +2,13 @@
 <div>
     <ul class="breadcrumb">
         <li>
-            <a href="<?php echo base_url() ?>modulos.html">Role</a> <span class="divider">/</span>
+            <a href="<?php echo base_url("groups.html") ?>">Grupos</a> <span class="divider">/</span>
         </li>
         <li>
-             <a href="<?php echo base_url() ?>modulos/update/<?php echo $data['id'] ?>.html"> Editar </a> <span class="divider">/</span> 
+            <a href="<?php echo base_url("groups/update/".$data['id'].".html") ?>">Editar </a> <span class="divider">/</span> 
         </li>
         <li>
-            <?php echo $data['name'] ?>
+            <?php echo $data['description'] ?>
         </li>
     </ul>
 </div>
@@ -16,18 +16,13 @@
 <div class="row-fluid sortable">
     <div class="box span12">
         <div class="box-header well" data-original-title>
-            <h2><i class="icon-edit"></i> Editar Módulo</h2>
+            <h2><i class="icon-edit"></i> Editar Grupo</h2>
             <div class="box-icon">
-                <a href="<?php echo base_url() ?>modulos/delete/<?php echo $data['id'] ?>.html" class="btn btn-close btn-round"><i class="icon-remove"></i></a>
+                <a href="<?php echo base_url("groups/delete/".$data["id"].".html") ?>" class="btn btn-close btn-round"><i class="icon-remove"></i></a>
             </div>
         </div>
-        
-        <div class="box-content">
-        	
-            
-			
-			<?php // Return Message error ?>
-            
+        <div class="box-content">   
+			   <?php // Return Message error ?>
             <?php $validation = validation_errors(); ?>
             
             <?php if( !empty( $message ) ): ?>
@@ -36,37 +31,80 @@
                   <strong>Error: </strong> <?php  echo $validation; // Show Dinamical message error ?>
             </div>
             <?php endif; ?>
-            
-            
-            
-        
-            <form id="form" action="<?php echo base_url() ?>modulos/update/<?php echo $data['id'] ?>.html" class="form-horizontal" method="post">
+            <?= form_open('', 'id="form" class="form-horizontal"'); ?>
                 <fieldset>
-                  
-                  <div class="control-group error">
-                    <label class="control-label" for="inputError">Nombre</label>
+                  <div class="control-group">
+                    <label class="control-label">Nombre</label>
                     <div class="controls">
-                      <input class="input-xlarge focused required" id="name" name="name" type="text" placeholder="El nombre del módulo" value="<?php echo $data['name'] ?>">
+                      <input class="input-xlarge focused required" id="name" name="name" type="text" placeholder="El nombre del nuevo grupo" value="<?= $data["description"]  ?>">
                     </div>
                   </div>
                   
                   <div class="control-group">
-                    <label class="control-label" for="inputError">Label</label>
+                    <label class="control-label">Filtro en Ramo</label>
                     <div class="controls">
-                      <input class="input-xlarge focused" id="label" name="label" type="text" value="<?php echo $data['label'] ?>">
+                      <?= form_dropdown('ramo', $ramos, $data["filter_type"], "class='form-control required'"); ?>
                     </div>
                   </div>
-                  
-                                   
+                  <div class="miembros-container">
+                    <?php if(count($data["agents"]) > 0): ?>
+                      <?php foreach ($data["agents"] as $i => $agent): ?>
+                        <div class="control-group miembro">
+                          <label class="control-label"><?= ($i==0)? "Miembros" : "" ?></label>
+                          <div class="controls">
+                            <?= form_input('miembro_name[]', $agent["agent_name"], "class='input-xlarge miembro-text'"); ?>
+                            <input type="hidden" name="miembros[]" class="miembro-hidden" value="<?= $agent["agent_id"] ?>">
+                            <a href="#" class="btn btn-link search-agent">
+                              <i class="icon-search"></i>
+                            </a>
+                            <a href="#" class="btn btn-link <?= ($i==0)? "add-agent" : "remove-agent" ?>">
+                              <i class="<?= ($i==0)? "icon-plus" : "icon-minus" ?>"></i>
+                            </a>
+                          </div>
+                        </div>
+                      <?php endforeach; ?>
+                    <?php else: ?>
+                      <div class="control-group miembro">
+                        <label class="control-label">Miembros</label>
+                        <div class="controls">
+                          <?= form_input('miembro_name[]', null, "class='input-xlarge miembro-text'"); ?>
+                          <input type="hidden" name="miembros[]" class="miembro-hidden">
+                          <a href="#" class="btn btn-link search-agent">
+                            <i class="icon-search"></i>
+                          </a>
+                          <a href="#" class="btn btn-link add-agent">
+                            <i class="icon-plus"></i>
+                          </a>
+                        </div>
+                      </div>
+                    <?php endif; ?>
+                  </div>
+                 
                   <div id="actions-buttons-forms" class="form-actions">
                     <button type="submit" class="btn btn-primary">Guardar</button>
-                    <button class="btn" onclick="history.back()">Cancelar</button>
+                    <button type="button" class="btn" onclick="history.back()">Cancelar</button>
                   </div>
                 </fieldset>
               </form>
-        
         </div>
     </div><!--/span-->
-
 </div><!--/row-->
-			
+
+<div id="search-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true" style="top:50%">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="searchModalLabel">Busqueda de Agente</h3>
+  </div>
+  <div class="modal-body">
+    <form class="form-search" style="text-align: center">
+      <input type="text" id="search-query" class="input-medium search-query">
+      <input type="button" id="search-button" class="btn" value="Buscar">
+    </form>
+    <div class="result">
+      
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" id="add-button">Agregar agentes</button>
+  </div>
+</div>

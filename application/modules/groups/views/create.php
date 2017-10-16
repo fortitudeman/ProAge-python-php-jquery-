@@ -38,17 +38,32 @@
             
             <?= form_open('', 'id="form" class="form-horizontal"'); ?>
                 <fieldset>
-                  <div class="control-group error">
-                    <label class="control-label" for="inputError">Nombre</label>
+                  <div class="control-group">
+                    <label class="control-label">Nombre</label>
                     <div class="controls">
                       <input class="input-xlarge focused required" id="name" name="name" type="text" placeholder="El nombre del nuevo grupo" value="<?= set_value("name")  ?>">
                     </div>
                   </div>
                   
                   <div class="control-group">
-                    <label class="control-label" for="inputError">Filtro en Ramo</label>
+                    <label class="control-label">Filtro en Ramo</label>
                     <div class="controls">
                       <?= form_dropdown('ramo', $ramos, set_value("ramo"), "class='form-control required'"); ?>
+                    </div>
+                  </div>
+                  <div class="miembros-container">
+                    <div class="control-group miembro">
+                      <label class="control-label">Miembros</label>
+                      <div class="controls">
+                        <?= form_input('miembro_name[]', null, "class='input-xlarge miembro-text' disabled"); ?>
+                        <input type="hidden" name="miembros[]" class="miembro-hidden">
+                        <a href="#" class="btn btn-link search-agent">
+                          <i class="icon-search"></i>
+                        </a>
+                        <a href="#" class="btn btn-link add-agent">
+                          <i class="icon-plus"></i>
+                        </a>
+                      </div>
                     </div>
                   </div>
                  
@@ -63,4 +78,22 @@
     </div><!--/span-->
 
 </div><!--/row-->
-			
+
+<div id="search-modal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true" style="top:50%">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="searchModalLabel">Busqueda de Agente</h3>
+  </div>
+  <div class="modal-body">
+    <form class="form-search" style="text-align: center">
+      <input type="text" id="search-query" class="input-medium search-query">
+      <input type="button" id="search-button" class="btn" value="Buscar">
+    </form>
+    <div class="result">
+      
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" id="add-button">Agregar agentes</button>
+  </div>
+</div>

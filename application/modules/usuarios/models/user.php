@@ -481,6 +481,9 @@ class User extends CI_Model{
 		if( isset( $find['find'] ) and !empty( $find['find'] ) )
 			$this->db->like( 'users.name', $find['find'] );
 
+		if( isset( $find['fullname'] ) and !empty( $find['fullname'] ) )
+			$this->db->like( "concat(users.name,' ', users.lastnames)", $find['fullname']);
+
 		// Advanced search
 		if( isset( $find['advanced'] ) and !empty( $find['advanced'] ) ){
 			
@@ -537,6 +540,10 @@ class User extends CI_Model{
 				
 				if( $value[0] == 'license_expired_date' ){
 					$this->db->where( array( 'agents.license_expired_date' => $value[1] ) );	
+				}
+
+				if( $value[0] == 'agent_not_in' ){
+					$this->db->where_not_in('agents.id', $value[1]);
 				}
 
 					//clavenationalprovincial
@@ -672,8 +679,7 @@ class User extends CI_Model{
 					$provincial .= $row_provincial->uid.'<br>';	
 
 			unset( $provincials ); // Clean memory
-
-			$this->data[] = array( 
+			$arr = array( 
 		    	'id' => $row->id,
 		    	'name' => $row->name,
 				'lastnames' => $row->lastnames,
@@ -687,7 +693,10 @@ class User extends CI_Model{
 		    	'date' => $row->date ,
 		    	'last_updated' => $row->last_updated
 		    );
-
+		    if(isset($row->agent_id))
+		    	$arr["agent_id"] = $row->agent_id;
+		    
+			$this->data[] = $arr;
 		}
 
 		return $this->data;

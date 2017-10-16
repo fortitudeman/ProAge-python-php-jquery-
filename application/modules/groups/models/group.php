@@ -17,11 +17,37 @@ class group extends CI_Model {
 		if( empty( $values ) ) return false;
 		if( $this->db->insert( $this->table, $values ) )
 			
-			return true;
+			return $this->db->insert_id();
 		else
 		
 			return false;
        
+    }
+
+    /**
+ 	 |	Add member
+	 **/
+	 public function add_member($values = array()){
+	 	if( empty( $values ) ) return false;
+		if( $this->db->insert( "user_groups_vs_agents", $values ) )
+			
+			return true;
+		else
+		
+			return false;
+	 }
+
+	 /**
+	  |	Update
+	 **/ 
+
+    public function update( $id = 0, $values = array() ){
+		if( empty( $values ) or empty( $id ) ) return false;
+		unset( $this->data ); $this->data = array();			
+        if( $this->db->update( $this->table , $values, array( 'id' => $id ) ) )
+			return true;
+		else
+			return false;	
     }
 
     /**
@@ -30,6 +56,17 @@ class group extends CI_Model {
 	public function delete( $id ){
 		if( empty( $id ) ) return false;				   
 			if( $this->db->delete( $this->table, array('id' => $id ) ) )
+				return true;
+			else
+				return false;
+	}
+
+	/**
+ 	 |	Clean Members
+	 **/ 	
+	public function clean_members( $id ){
+		if( empty( $id ) ) return false;				   
+			if( $this->db->delete( "user_groups_vs_agents", array('user_group_id' => $id ) ) )
 				return true;
 			else
 				return false;
@@ -48,7 +85,7 @@ class group extends CI_Model {
         $this->db->join('users u', 'g.group_owner = u.id');
         $query = $this->db->get($this->table." g");
 		
-		if ($query->num_rows() == 0) return false;
+		if ($query->num_rows() == 0) return array();
 		
 		unset( $this->data );
 		$this->data = $query->result_array();
@@ -84,7 +121,7 @@ class group extends CI_Model {
 		$this->db->flush_cache();
 
 		$this->db->select('uga.*, u.username');
-		$this->db->select("CONCAT(u.name, ' ', u.lastnames)", FALSE);
+		$this->db->select("CONCAT(u.name, ' ', u.lastnames) agent_name", FALSE);
 		$this->db->where('user_group_id', $id);
 		$this->db->join('agents a', 'a.id = uga.agent_id');
 		$this->db->join('users u', 'u.id = a.user_id');
