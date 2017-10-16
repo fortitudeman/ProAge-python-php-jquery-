@@ -115,10 +115,10 @@ class groups extends CI_Controller {
 		foreach ($data as $i => $value) {
 			switch ($value["filter_type"]) {
 				case 1:
-					$data[$i]["ramo"] = "GMM";
+					$data[$i]["ramo"] = "Vida";
 					break;
 				case 2:
-					$data[$i]["ramo"] = "Vida";
+					$data[$i]["ramo"] = "GMM";
 					break;
 				case 3:
 					$data[$i]["ramo"] = "Ambos";
@@ -231,8 +231,8 @@ class groups extends CI_Controller {
 		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
 		  'ramos' => array(
 		  	"" => "Seleccione un ramo",
-		  	1 => "GMM",
-		  	2 => "Vida",
+		  	1 => "Vida",
+		  	2 => "GMM",
 		  	3 => "Ambos"
 		  ),
 		  'user' => $this->sessions
@@ -345,8 +345,8 @@ class groups extends CI_Controller {
 		  'data' => $data,
 		  'ramos' => array(
 		  	"" => "Seleccione un ramo",
-		  	1 => "GMM",
-		  	2 => "Vida",
+		  	1 => "Vida",
+		  	2 => "GMM",
 		  	3 => "Ambos"
 		  ),
 		  'user' => $this->sessions		
