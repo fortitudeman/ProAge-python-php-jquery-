@@ -77,7 +77,7 @@ class groups extends CI_Controller {
 		$this->load->model('group');
 
 		//Filter Parameters
-		$userid = $this->session->userdata('system')["id"];
+		$userid = $this->sessions["id"];
 		$limit = 10;
 
 		// Pagination config	
