@@ -9,7 +9,7 @@ CREATE TABLE user_groups(
 	id INT(11) auto_increment PRIMARY KEY,
 	description VARCHAR(100),
 	group_owner INT(11) NOT NULL,
-	filter_type TINYINT(1) COMMENT '1 => GMM, 2 => Vida, 3 => Both',
+	filter_type TINYINT(1) COMMENT '1 => Vida, 2 => GMM, 3 => Both',
 	CONSTRAINT fk_ug_users FOREIGN KEY (group_owner) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
