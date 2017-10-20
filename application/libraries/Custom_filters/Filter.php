@@ -129,7 +129,6 @@ class Filter
 			}
 
 			$query = $this->CI->db->get($this->Options_dbtable);
-			echo $this->CI->db->last_query();
 
 			$result = $query->result_array();
 			foreach ($result as $row) {
