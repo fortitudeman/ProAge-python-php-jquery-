@@ -104,24 +104,22 @@ class Filter
 
        	if(isset($params["process"]) && is_array($params["process"]))
        		$this->Filter_process = $params["process"];
-
-       	$this->prepare_options();
 	}
 
-	public function prepare_options(){
+	public function prepare_options($filters){
 		if($this->Type == 1 || $this->Type == 2){
 			$this->CI->db->select($this->Options_dbfield_values." options_value, ".$this->Options_dbfield_text. " options_text");
 			if(!empty($this->Options_dbfilter)){
 				foreach ($this->Options_dbfilter as $field => $filter) {
 					if(!is_array($filter))
 					{
-						$where_val = isset($_POST["query"][$filter]) ? $_POST["query"][$filter] : $filter;
+						$where_val = isset($filters[$filter]) ? $filters[$filter] : $filter;
 						$this->CI->db->where($field, $where_val);
 					}
 					else{
 						$arr_in = array();
 						foreach ($filter as $single_filter)
-							$arr_in[] = isset($_POST["query"][$single_filter]) ? $_POST["query"][$single_filter] : $single_filter;
+							$arr_in[] = isset($filters[$single_filter]) ? $filters[$single_filter] : $single_filter;
 						
 						$this->CI->db->where_in($field, $arr_in);
 					}

@@ -51,6 +51,12 @@ class Custom_filters {
         	require_once("Custom_filters/filters_".$params["name"].".php");
     }
 
+    public function prepare_filters(){
+        foreach ($this->Filters as $filter) {
+            $filter->prepare_options($this->Current_filters);
+        }
+    }
+
     public function execute_filters($section){
         foreach ($this->Filters as $filter) {
             $filter->execute_filter($section, $this->Current_filters);
@@ -103,6 +109,7 @@ class Custom_filters {
 
     public function set_current_filters($filter_values){
         $this->Current_filters = $filter_values;
+        $this->prepare_filters();
     }
 
     public function get_array_defaults(){
