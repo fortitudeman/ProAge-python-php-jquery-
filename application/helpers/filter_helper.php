@@ -685,6 +685,19 @@ if ( ! function_exists('extract_coordinator_name'))
 	}
 }
 
+if ( ! function_exists('execute_filters'))
+{
+
+	function execute_filters($section)
+	{
+		$CI =& get_instance();
+		if($CI->load->is_loaded('custom_filters')){
+			$CI->custom_filters->execute_filters($section);
+		}
+	}
+
+}
+
 /* End of file filter_helper.php */
 /* Location: ./application/helpers/filter_helper.php */
 ?>

@@ -61,16 +61,7 @@ $base_url = base_url();
 
                                                 </select>
                                             </th>
-                                            <th>
-                                                <select id="grupo" name="query[grupo]" class="select2" style="width: 140px" onchange="this.form.submit()">
-                                                    <option value="">Todos los grupos</option>
-                                                    <?php if(isset($groups) && count($groups) > 0): ?>
-                                                        <?php foreach ($groups as $group): ?>
-                                                            <option value="<?= $group["id"] ?>" <?php if (($other_filters['grupo'] == $group["id"])) echo 'selected="selected"' ?>><?= $group["description"] ?></option>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </select>
-                                            </th>
+                                            <?php $this->custom_filters->render_filters() ?>
                                             <th style="white-space:nowrap;" title="Escriba el nombre del agente que desea buscar y selecciónelo de la lista que aparece. Puede buscar más posteriormente en la siguiente línea.">
                                                 <textarea placeholder="AGENTES" id="agent-name" name="query[agent_name]" rows="1" class="input-xlarge select4" style="min-width: 250px; height: 2.2em"><?php echo $other_filters['agent_name']; ?></textarea>
                                             </th>

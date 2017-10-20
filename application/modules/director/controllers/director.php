@@ -198,7 +198,18 @@ class Director extends CI_Controller {
 		$this->misc_filters = $this->session->userdata($this->misc_filter_name);
 		$this->load->helper('filter');
 
+		//Load custom filters library
+		$options = array(
+			"name" => "general",
+			"page" => "director",
+			"general_open" => "<table><thead><tr>",
+			"general_close" => "</tr></thead></table>",
+			"filter_open" => "<th>",
+			"filter_close" => "</th>",
+		);
+		$this->load->library('custom_filters', $options);
 		$this->query_filters = $this->_init_filters();
+		$this->custom_filters->set_current_filters($this->other_filters);
 		$this->user_id == $this->sessions['id'];
 	}
 
@@ -530,6 +541,7 @@ class Director extends CI_Controller {
 				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'scripts/report_columns.js"></script>',
 				$inline_js,
+				$this->custom_filters->render_javascript(),
 			),
 			'content' => 'director/director_profile',
 			'message' => $this->session->flashdata('message'),
@@ -1233,15 +1245,15 @@ $( document ).ready( function(){
 			'policy_num' => '',
 			'activity_view' => 'normal',
 			'coordinators' => '',
-			'grupo' => '',
 		);
+		$this->custom_filters->set_array_defaults($this->other_filters);
 		get_generic_filter($this->other_filters, $this->agent_array);
 
 		$page = $this->uri->segment(2, '');
 		if (($this->other_filters['ramo'] < 1) && ($page != 'ot_list') && ($page != 'find'))
 			$this->other_filters['ramo'] = 1;
 
-		if( !empty( $_POST ) )
+		if( $this->input->post())
 		{
 			if ( isset($_POST['query']['periodo']) && $this->form_validation->is_natural_no_zero($_POST['query']['periodo']) &&
 				($_POST['query']['periodo'] <= 4) )
@@ -1272,9 +1284,6 @@ $( document ).ready( function(){
 				$filters_to_save['agent_name'] = $_POST['query']['agent_name'];
 			if ( isset($_POST['query']['policy_num']))
 				$filters_to_save['policy_num'] = $_POST['query']['policy_num'];
-			if ( isset($_POST['query']['grupo'])){
-				$filters_to_save['grupo'] = $_POST['query']['grupo'];
-			}
 
 			if ( isset($_POST['activity_view']) && 
 				(($_POST['activity_view'] == 'normal') || ($_POST['activity_view'] != 'efectividad')) )
@@ -1282,8 +1291,7 @@ $( document ).ready( function(){
 
 			if (isset($_POST['coordinator_name']))
 				$filters_to_save['coordinators'] = extract_coordinator_name($_POST['coordinator_name']);
-
-
+			$this->custom_filters->set_filters_to_save($filters_to_save);
 			generic_set_report_filter( $filters_to_save, $this->agent_array );
 			foreach ($filters_to_save as $key => $value)
 				$this->other_filters[$key] = $value;
