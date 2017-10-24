@@ -567,9 +567,8 @@ class Work_order extends CI_Model{
 			$this->db->join( 'policies_vs_users AS policies_users_B', 'policies_users_B.policy_id=work_order.policy_id' );
 			$this->db->where_in( 'policies_users_B.user_id', $agentes_gerentes );		
 		}
-
+		execute_filters("find-new-1");
 		$query = $this->db->get();
-
 		if ($query->num_rows() == 0) return false;
 
 		$ot = array();

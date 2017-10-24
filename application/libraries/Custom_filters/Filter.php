@@ -16,6 +16,8 @@ class Filter
 	public $Element_id;
 	public $Element_class;
 	public $Element_style;
+	public $Element_placeholder;
+	public $Element_template;
 	public $Type; // 1. Texto, 2. Select dbfield, 3. Select static, 4. Date period, 5. External filter
 	public $Filter_dbfield;
 
@@ -55,6 +57,8 @@ class Filter
 		$this->Options_default = "";
 		$this->Options_dbfilter = array();
 		$this->Filter_process = array();
+		$this->Element_placeholder = "";
+		$this->Element_template = "#{input}";
 
 		if(isset($params["name"]))
        		$this->Name = $params["name"];
@@ -104,6 +108,17 @@ class Filter
 
        	if(isset($params["process"]) && is_array($params["process"]))
        		$this->Filter_process = $params["process"];
+
+       	if($this->Active_page){
+       		if(isset($this->Filter_process[$this->Active_page]["elm_placeholder"]))
+       			$this->Element_placeholder = $this->Filter_process[$this->Active_page]["elm_placeholder"];
+       		if(isset($this->Filter_process[$this->Active_page]["elm_label"]))
+       			$this->Label = $this->Filter_process[$this->Active_page]["elm_label"];
+       		if(isset($this->Filter_process[$this->Active_page]["elm_template"]))
+       			$this->Element_template = $this->Filter_process[$this->Active_page]["elm_template"];
+       		if(isset($this->Filter_process[$this->Active_page]["odb_filter"]))
+       			$this->Options_dbfilter = $this->Filter_process[$this->Active_page]["odb_filter"];
+       	}
 	}
 
 	public function prepare_options($filters){
@@ -137,9 +152,9 @@ class Filter
 	}
 
 	public function execute_filter($section, $current_filters){
-		if(isset($this->Filter_process[$this->Active_page][$section])){
-			$relationships = $this->Filter_process[$this->Active_page][$section]["relationships"];
-			$filters = $this->Filter_process[$this->Active_page][$section]["filters"];
+		if(isset($this->Filter_process[$this->Active_page]["sections"][$section])){
+			$relationships = $this->Filter_process[$this->Active_page]["sections"][$section]["relationships"];
+			$filters = $this->Filter_process[$this->Active_page]["sections"][$section]["filters"];
 
 			$filters_fields = array_keys($filters);
 			$filters_queries = array_values($filters);
@@ -180,12 +195,12 @@ class Filter
 			$value = $filter_values[$this->Name];
 
 		echo $open;
-
+		$input = "";
 		// IF type is text
 		if($this->Type == 1){
 			$arr_text = array(
 				"name" => "query[".$this->Name."]",
-				"placeholder" => $this->Label,
+				"placeholder" => !empty($this->Element_placeholder) ? $this->Element_placeholder : $this->Label,
 				"id" => $this->Element_id,
 				"class" => $this->Element_class,
 				"style" => $this->Element_style,
@@ -194,19 +209,25 @@ class Filter
 				"autocomplete" => "off",
 				"value" => $value
 			);
-			echo form_textarea($arr_text);
-			echo $open;
-			echo "\n<i style='cursor: pointer; vertical-align: top' class='icon-filter filter-button' title='Filtrar' data-control='".$this->Element_id."'></i>
+			$input = form_textarea($arr_text);
+			$input .= $open;
+			$input .= "\n<i style='cursor: pointer; vertical-align: top' class='icon-filter filter-button' title='Filtrar' data-control='".$this->Element_id."'></i>
     			<br>
     			<i style='cursor: pointer;' class='icon-list-alt clear-button' title='Mostrar ".$this->Name."' data-control='".$this->Element_id."'></i>\n";
-			echo $close;
+			$input .= $close;
 		}
 		// If type is dropdown
 		else if(in_array($this->Type, array(2,3))){
 			$options = $this->get_options_array();
 			
-			echo form_dropdown("query[".$this->Name."]", $options, $value, "id='".$this->Element_id."' class='".$this->Element_class." filter-select' style='" . $this->Element_style ."'");	
+			$input = form_dropdown("query[".$this->Name."]", $options, $value, "id='".$this->Element_id."' class='".$this->Element_class." filter-select' style='" . $this->Element_style ."'");	
 		}
+		if(!empty($input)){
+			$converted_template = str_replace("#{input}", $input, $this->Element_template);
+			$converted_template = str_replace("#{label}", $this->Label, $converted_template);
+			echo $converted_template;
+		}
+
 		echo $close;
 	}
 
@@ -215,7 +236,7 @@ class Filter
 
 		// If is type is dropdown
 		if(in_array($this->Type, array(2,3))){
-			$return_array[$this->Options_default] = $this->Label;
+			$return_array[$this->Options_default] = !empty($this->Element_placeholder) ? $this->Element_placeholder : $this->Label;
 			foreach ($this->Options_values as $i => $val)
 				$return_array[$val] = $this->Options_text[$i];
 		}

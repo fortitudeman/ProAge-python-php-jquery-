@@ -61,7 +61,7 @@ $base_url = base_url();
 
                                                 </select>
                                             </th>
-                                            <?php $this->custom_filters->render_filters() ?>
+                                            <?php render_custom_filters() ?>
                                             <th style="white-space:nowrap;" title="Escriba el nombre del agente que desea buscar y selecciónelo de la lista que aparece. Puede buscar más posteriormente en la siguiente línea.">
                                                 <textarea placeholder="AGENTES" id="agent-name" name="query[agent_name]" rows="1" class="input-xlarge select4" style="min-width: 250px; height: 2.2em"><?php echo $other_filters['agent_name']; ?></textarea>
                                             </th>

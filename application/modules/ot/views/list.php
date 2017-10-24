@@ -218,6 +218,7 @@ Período :<br />
                             <option value="todas" <?php echo $estado_selected['todas'] ?>>Todas</option>
                           </select>
 					    </th>
+                      <?php render_custom_filters() ?>
                       </tr>
                     </thead>
 

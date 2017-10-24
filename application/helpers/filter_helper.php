@@ -534,6 +534,10 @@ if ( ! function_exists('get_ot_data'))
 
 			if ( isset($_POST['work_order_status_id']))
 				$other_filters['work_order_status_id'] = $_POST['work_order_status_id'];
+			if($CI->load->is_loaded('custom_filters')){
+				$CI->custom_filters->set_filters_to_save($other_filters);
+				$CI->custom_filters->set_current_filters($other_filters);
+			}
 			generic_set_report_filter( $other_filters, array() );
 		}
 
@@ -683,6 +687,22 @@ if ( ! function_exists('extract_coordinator_name'))
 		}
 		return implode('_', $to_check_array2);
 	}
+}
+
+if ( ! function_exists('render_custom_filters'))
+{
+
+	function render_custom_filters($full_render = FALSE)
+	{
+		$CI =& get_instance();
+		if($CI->load->is_loaded('custom_filters')){
+			if($full_render)
+				$CI->custom_filters->render();
+			else
+				$CI->custom_filters->render_filters();
+		}
+	}
+
 }
 
 if ( ! function_exists('execute_filters'))

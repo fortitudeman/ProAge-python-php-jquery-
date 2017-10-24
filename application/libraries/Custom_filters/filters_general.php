@@ -4,7 +4,7 @@
 	$group_args = array(
 		"name" => "grupos",
 		"id" => "grupos-filter",
-		"class" => "select-2",
+		"class" => "select-2 filter-field",
 		"style" => "width: 130px",
 		"label" => "Todos los grupos",
 		"default" => "",
@@ -12,19 +12,38 @@
 		"odb_table" => "user_groups",
 		"odb_text" => "description",
 		"odb_value" => "id",
-		"odb_filter" => array(
-			"filter_type" => array("ramo", 3)
-		),
 		"process" => array(
 			"director" => array(
-				"users-report" => array(
-					"relationships" => array(
-						"user_groups_vs_agents" => "agents.id = user_groups_vs_agents.agent_id",
-					),
-					"filters" => array(
-						"user_groups_vs_agents.user_group_id" => "grupos",
+				"sections" => array(
+					"users-report" => array(
+						"relationships" => array(
+							"user_groups_vs_agents" => "agents.id = user_groups_vs_agents.agent_id",
+						),
+						"filters" => array(
+							"user_groups_vs_agents.user_group_id" => "grupos",
+						)
 					)
+				),
+				"odb_filter" => array(
+					"filter_type" => array("ramo", 3)
 				)
+			),
+			"operations" => array(
+				"sections" => array(
+					"find-new-1" => array(
+						"relationships" => array(
+							"policies_vs_users as policies_users_C" => "policies_users_C.policy_id=work_order.policy_id",
+							"user_groups_vs_agents" => "policies_users_C.user_id = user_groups_vs_agents.agent_id",
+						),
+						"filters" => array(
+							"user_groups_vs_agents.user_group_id" => "grupos",
+						)
+					)
+				),
+				"elm_placeholder" => "Todos los grupos",
+				"elm_label" => "Grupos:",
+				"elm_template" => "#{label}<br>#{input}",
+				"odb_filter" => array(),
 			)
 		)
 	);

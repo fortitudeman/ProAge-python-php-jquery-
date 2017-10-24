@@ -130,6 +130,16 @@ class Operations extends CI_Controller {
 
 		$this->misc_filter_name = 'operations_misc_filter';
 		$this->misc_filters = $this->session->userdata($this->misc_filter_name);
+
+		$options = array(
+			"name" => "general",
+			"page" => "operations",
+			"general_open" => "<table><thead><tr>",
+			"general_close" => "</tr></thead></table>",
+			"filter_open" => "<th>",
+			"filter_close" => "</th>",
+		);
+		$this->load->library('custom_filters', $options);
                 
 		$this->load->helper('filter');
 	}
@@ -168,7 +178,6 @@ class Operations extends CI_Controller {
 		$ramo_tramite_types = array();
 		$patent_type_ramo = 0;
 		prepare_ot_form($other_filters, $gerente_str, $agente_str, $ramo_tramite_types, $patent_type_ramo);
-		
 		$content_data = array(
 			'access_all' => $this->access_all,
 			'period_fields' => show_period_fields('operations', $ramo),
@@ -179,7 +188,6 @@ class Operations extends CI_Controller {
 			'other_filters' => $other_filters
 			);
 		$sub_page_content = $this->load->view('ot/list', $content_data, true);
-
 		$add_js = '
 <script type="text/javascript">
 	$( document ).ready( function(){ 
@@ -241,8 +249,8 @@ implode(', ', $ramo_tramite_types) . '
 			'data' => $this->operation_user,
 			'sub_page_content' => $sub_page_content,
 		);
-
 		// Render view 
+		
 		$this->load->view( 'index', $this->view );	
 	}
 
@@ -874,11 +882,12 @@ implode(', ', $ramo_tramite_types) . '
 	});
 </script>
 ';
-
 		$this->coordinator_select = $this->load->view('coordinator_select', array(
 			'coordinators' => $coordinators_in_db,
 			'selected_coordinator_text' => $selected_coordinator_text,
 			), TRUE);
+		$this->custom_filters->set_array_defaults($other_filters);
+		$this->custom_filters->set_current_filters($other_filters);
 		return $other_filters;
 	}
 
