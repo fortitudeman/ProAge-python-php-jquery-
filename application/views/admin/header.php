@@ -218,11 +218,6 @@ if( !empty( $roles_vs_access ) ): ?>
 						if( in_array( 'Actividades', $value ) && ( $value['action_name'] == 'Ver' )): ?>
                         <li><a href="<?php echo base_url() ?>activities.html"><i class="icon-tablet"></i><span class="hidden-tablet">Mis actividades</span></a></li>
                         <?php break; endif; endforeach; ?>
-
-                        <?php foreach( $roles_vs_access  as $value ): 
-						if( in_array( 'Actividades', $value ) &&  ( $value['action_name'] == 'Ver reporte' )): ?>
-                        <li><a href="<?php echo base_url() ?>activities/report.html"><i class="icon-tasks"></i><span class="hidden-tablet">Reporte actividades</span></a></li>
-                        <?php break; endif; endforeach; ?>
 						
                         <?php foreach( $roles_vs_access  as $value ): 
 						if( in_array( 'Actividades', $value ) &&  ( $value['action_name'] == 'Actividades de ventas' )): ?>				
