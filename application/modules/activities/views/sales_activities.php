@@ -123,9 +123,6 @@ endif;
 <select id="periodo_form" name="periodo" style="width: 175px" title="Período">
 	  <option value="<?php echo $selected_period ?>"></option>
 </select>
-<a href="<?php echo base_url("activities/create.html") ?>" style="font-size: larger;" target="_blank" class="btn btn-link" title="Crear"> 
-	<i class="icon-plus"></i>
-</a>
 <input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
 <input type="hidden" value="<?php echo $selection_filters['begin'] ?>" id="start-d" name="start_d" />
 <input type="hidden" value="<?php echo $selection_filters['end'] ?>" id="end-d" name="end_d" />
@@ -264,7 +261,8 @@ endif;
 <td colspan="15">
 	<a href="' . $value['activities_url'] . '" class="btn btn-link">Ver actividad de ventas</a> |
 	<a href="' . $value['simulator_url'] . '" class="btn btn-link">Simular resultado y definir meta</a> |
-	<a href="' . $value['perfil_url'] . '" class="btn btn-link">Vision general</a>
+	<a href="' . $value['perfil_url'] . '" class="btn btn-link">Vision general</a> |
+	<a href="' . $value['add_activities_url'] . '" class="btn btn-link">Agregar nueva actividad</a> 
 </td>
 </tr>
 ';
@@ -346,7 +344,8 @@ endif;
 <td colspan="12">
 	<a href="' . $value['activities_url'] . '" class="btn btn-link">Ver actividad de ventas</a> |
 	<a href="' . $value['simulator_url'] . '" class="btn btn-link">Simular resultado y definir meta</a> |
-	<a href="' . $value['perfil_url'] . '" class="btn btn-link">Vision general</a>
+	<a href="' . $value['perfil_url'] . '" class="btn btn-link">Vision general</a> |
+	<a href="' . $value['add_activities_url'] . '" class="btn btn-link">Agregar nueva actividad</a> 
 </td>
 </tr>
 ';
