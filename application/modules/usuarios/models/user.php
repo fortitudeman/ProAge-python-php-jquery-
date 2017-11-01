@@ -733,8 +733,7 @@ class User extends CI_Model{
 		// SELECT id, name, lastnames, email FROM `users`;
 		$this->db->select();
 		$this->db->from( 'users' );
-        $this->db->limit( 150, $start );
-		
+        
 		$query = $this->db->get();
 		
 		if ($query->num_rows() == 0) return false;
