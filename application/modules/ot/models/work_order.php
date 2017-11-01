@@ -1321,6 +1321,15 @@ class Work_order extends CI_Model{
 /**
  *	Functions Products
  **/
+	public function getProductsGroups(){
+		$query = $this->db->get('product_group');
+		$result = $query->result_array();
+		$return_arr = array("" => "Todos");
+		foreach ($result as $row)
+			$return_arr[$row["id"]] = $row["name"];
+		return $return_arr;
+	}
+
 	public function getProductsGroupsOptions(){
 				
 		$query = $this->db->get( 'product_group' );	

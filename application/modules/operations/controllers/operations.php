@@ -481,6 +481,95 @@ implode(', ', $ramo_tramite_types) . '
 		$this->load->view( 'details_ramo', $data );
 	}
 
+	public function requests_summary(){
+		if ($this->default_period_filter == 5)
+			set_filter_period( 2 );
+
+		$other_filters = $this->_init_profile();
+		if ( !$this->access_report )
+		{	
+			$this->session->set_flashdata( 'message', array
+			( 
+				'type' => false,	
+				'message' => 'No tiene permisos para ver el reporte "Orden de trabajo" en la sección "Perfil de operaciones", informe a su administrador para que le otorge los permisos necesarios.'
+			));	
+			redirect( 'home', 'refresh' );
+		}
+		$this->load->helper( array('ot/ot', 'filter' ));
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+		}
+		$base_url = base_url();
+		$ramo= 55;
+		$ramos = $this->work_order->getProductsGroups();
+		unset($ramos[3]);
+
+		$gerente_str = '';
+		$agente_str = '<option value="">Todos</option>';
+		$ramo_tramite_types = array();
+		$patent_type_ramo = 0;
+		prepare_ot_form($other_filters, $gerente_str, $agente_str, $ramo_tramite_types, $patent_type_ramo);
+
+		$this->form_validation->run();
+
+		$content_data = array(
+			'access_all' => $this->access_all,
+			'period_fields' => show_period_fields('operations', $ramo),
+			'selected_period' => get_filter_period(),
+			'ramos' => $ramos,
+		);
+
+		$sub_page_content = $this->load->view('ot/request_summary', $content_data, TRUE);
+
+		$add_js = '
+			<script type="text/javascript">
+				$( document ).ready( function(){ 
+					$("#myTab a").click(function (e) {
+					  e.preventDefault();
+					  $(this).tab("show");
+					})
+				});
+			</script>
+			';
+		$add_css = '
+		<style>
+			.filterstable {margin-left: 2em; width:80%;}
+			.filterstable th {text-align: left;}
+		</style>
+		';
+
+		$this->view = array(
+			'title' => 'Resumen de Solicitación',
+			 // Permisions
+			'user' => $this->sessions,
+			'user_vs_rol' => $this->user_vs_rol,
+			'roles_vs_access' => $this->roles_vs_access,
+			'css' => array(
+				'<link href="' . $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
+				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
+				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">', // TO CHECK
+				$add_css,
+			),
+			'scripts' => array(
+				'<script type="text/javascript" src="'. $base_url .'scripts/jquery.cookie.js"></script>',
+				'<script src="'. $base_url .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
+				'<script src="' . $base_url . 'scripts/config.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
+				$add_js,
+				$this->custom_filters->render_javascript(),
+			),
+			'content' => 'operations/operation_profile', // View to load
+			'message' => $this->session->flashdata('message'),
+			'data' => array(),
+			'sub_page_content' => $sub_page_content,
+		);
+
+		// Render view 
+		$this->load->view( 'index', $this->view );
+	}
+
 	public function ot_per_prod()
 	{
 		$stat_type = '';
