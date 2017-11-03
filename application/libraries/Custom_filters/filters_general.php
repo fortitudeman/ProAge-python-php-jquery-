@@ -38,6 +38,14 @@
 						"filters" => array(
 							"user_groups_vs_agents.user_group_id" => "grupos",
 						)
+					),
+					"work-orders-get-group-by" => array(
+						"relationships" => array(
+							"user_groups_vs_agents" => "agents.id = user_groups_vs_agents.agent_id",
+						),
+						"filters" => array(
+							"user_groups_vs_agents.user_group_id" => "grupos",
+						)
 					)
 				),
 				"elm_placeholder" => "Todos los grupos",

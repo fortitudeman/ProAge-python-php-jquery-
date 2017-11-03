@@ -496,21 +496,70 @@ implode(', ', $ramo_tramite_types) . '
 			redirect( 'home', 'refresh' );
 		}
 		$this->load->helper( array('ot/ot', 'filter' ));
-		if (count($_POST))
-		{
+		if($this->input->post()){
 			update_custom_period($this->input->post('cust_period_from'),
 				$this->input->post('cust_period_to'), FALSE);
+
+			if ( isset($_POST['periodo']) && $this->form_validation->is_natural_no_zero($_POST['periodo']) &&
+				($_POST['periodo'] <= 4) )
+				set_filter_period($_POST['periodo']);
+
+			if ( isset($_POST['ramo']) && (($this->form_validation->is_natural_no_zero($_POST['ramo']) &&
+				($_POST['ramo'] <= 3)) || (($_POST['ramo']) === '')) )
+				$other_filters['ramo'] = $_POST['ramo'];
+
+
+			$this->custom_filters->set_filters_to_save($other_filters);
+			$this->custom_filters->set_current_filters($other_filters);
+			generic_set_report_filter( $other_filters, array() );
 		}
+
+		$other_filters["nuevos_negocios"] = 1;
+		$other_filters["periodo"] = get_filter_period();
+
+		//General work orders
+		$work_orders_general = $this->work_order->getWorkOrdersGroupBy($other_filters);
+		//Formating names
+		foreach ($work_orders_general as $i => $order){
+			if(empty($order["name"]) && empty($order["lastnames"]))
+				$work_orders_general[$i]["name"] = $order["company_name"];
+			$work_orders_general[$i]["lastnames"].= " - <b>". $order["percentage"]."</b>";
+		}
+
+		//Configuration agent group
+		$args = array(
+			"select" => "users.company_name, users.name, users.lastnames, policies_vs_users.percentage",
+			"by" => "users.company_name, agents.id, policies_vs_users.percentage",
+			"order" => "conteo asc",
+		);
+		$work_orders_agents = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+		$work_orders_data = array();
+		foreach ($work_orders_agents as $order)
+			$work_orders_data[] = array(
+				"label" => empty($order["name"]) && empty($order["lastnames"]) ? $order["company_name"] :$order["name"]." ".$order["lastnames"],
+				"y" => $order["conteo"]
+			);	
+		
+		//Configuration status group
+		$args = array(
+			"select" => "work_order_status.name status",
+			"by" => "work_order_status.name",
+			"order" => "work_order_status.name asc",
+		);
+		$work_orders_status = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+
+		//Configuration products group
+		$args = array(
+			"select" => "products.name producto",
+			"by" => "products.id",
+			"order" => "products.name asc",
+		);
+		$work_orders_products = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+
 		$base_url = base_url();
 		$ramo= 55;
 		$ramos = $this->work_order->getProductsGroups();
 		unset($ramos[3]);
-
-		$gerente_str = '';
-		$agente_str = '<option value="">Todos</option>';
-		$ramo_tramite_types = array();
-		$patent_type_ramo = 0;
-		prepare_ot_form($other_filters, $gerente_str, $agente_str, $ramo_tramite_types, $patent_type_ramo);
 
 		$this->form_validation->run();
 
@@ -518,18 +567,42 @@ implode(', ', $ramo_tramite_types) . '
 			'access_all' => $this->access_all,
 			'period_fields' => show_period_fields('operations', $ramo),
 			'selected_period' => get_filter_period(),
+			'other_filters' => $other_filters,
 			'ramos' => $ramos,
+			'wo_general' => $work_orders_general,
+			'wo_agents' => $work_orders_agents,
+			'wo_status' => $work_orders_status,
+			'wo_products' => $work_orders_products,
 		);
 
 		$sub_page_content = $this->load->view('ot/request_summary', $content_data, TRUE);
 
 		$add_js = '
 			<script type="text/javascript">
-				$( document ).ready( function(){ 
+				$(document).ready( function(){ 
 					$("#myTab a").click(function (e) {
 					  e.preventDefault();
 					  $(this).tab("show");
-					})
+					});
+					$("#agentsContainer").CanvasJSChart({ 
+						title: { 
+							text: "Solicitudes" 
+						}, 
+						axisX:{
+							labelFontSize: 12,
+						},
+						axisY:{
+							interval: 1,
+						},
+						data: [ 
+							{ 
+								type: "bar", 
+								color: "#4885ed",
+								toolTipContent: "{label}: {y} solicitudes",
+								dataPoints: '.preg_replace('/"([a-zA-Z_]+[a-zA-Z0-9_]*)":/','$1:',json_encode($work_orders_data, JSON_NUMERIC_CHECK)).'
+							} 
+						] 
+					});
 				});
 			</script>
 			';
@@ -557,6 +630,7 @@ implode(', ', $ramo_tramite_types) . '
 				'<script src="'. $base_url .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
 				'<script src="' . $base_url . 'scripts/config.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/jquery.canvasjs.min.js"></script>',
 				$add_js,
 				$this->custom_filters->render_javascript(),
 			),
