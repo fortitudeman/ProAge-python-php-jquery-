@@ -539,22 +539,36 @@ implode(', ', $ramo_tramite_types) . '
 				"label" => empty($order["name"]) && empty($order["lastnames"]) ? $order["company_name"] :$order["name"]." ".$order["lastnames"],
 				"y" => $order["conteo"]
 			);	
-		
+		$work_orders_data = preg_replace('/"([a-zA-Z_]+[a-zA-Z0-9_]*)":/','$1:',json_encode($work_orders_data, JSON_NUMERIC_CHECK));
 		//Configuration status group
 		$args = array(
 			"select" => "work_order_status.name status",
 			"by" => "work_order_status.name",
-			"order" => "work_order_status.name asc",
+			"order" => "conteo desc",
 		);
 		$work_orders_status = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+		$work_orders_status_data = array();
+		foreach ($work_orders_status as $order)
+			$work_orders_status_data[] = array(
+				"label" => $order["status"],
+				"y" => $order["conteo"]
+			);
+		$work_orders_status_data = preg_replace('/"([a-zA-Z_]+[a-zA-Z0-9_]*)":/','$1:',json_encode($work_orders_status_data, JSON_NUMERIC_CHECK));
 
 		//Configuration products group
 		$args = array(
 			"select" => "products.name producto",
 			"by" => "products.id",
-			"order" => "products.name asc",
+			"order" => "conteo desc",
 		);
 		$work_orders_products = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+		$work_orders_products_data = array();
+		foreach ($work_orders_products as $order)
+			$work_orders_products_data[] = array(
+				"label" => $order["producto"],
+				"y" => $order["conteo"]
+			);
+		$work_orders_products_data = preg_replace('/"([a-zA-Z_]+[a-zA-Z0-9_]*)":/','$1:',json_encode($work_orders_products_data, JSON_NUMERIC_CHECK));
 
 		$base_url = base_url();
 		$ramo= 55;
@@ -586,7 +600,7 @@ implode(', ', $ramo_tramite_types) . '
 					});
 					$("#agentsContainer").CanvasJSChart({ 
 						title: { 
-							text: "Solicitudes" 
+							text: "SOLICITUDES" 
 						}, 
 						axisX:{
 							labelFontSize: 12,
@@ -599,7 +613,37 @@ implode(', ', $ramo_tramite_types) . '
 								type: "bar", 
 								color: "#4885ed",
 								toolTipContent: "{label}: {y} solicitudes",
-								dataPoints: '.preg_replace('/"([a-zA-Z_]+[a-zA-Z0-9_]*)":/','$1:',json_encode($work_orders_data, JSON_NUMERIC_CHECK)).'
+								dataPoints: '.$work_orders_data.'
+							} 
+						] 
+					});
+					$("#statusContainer").CanvasJSChart({ 
+						title: { 
+							text: "OT\'S POR ESTATUS" 
+						}, 
+						axisX:{
+							labelFontSize: 12,
+						},
+						data: [ 
+							{ 
+								type: "pie", 
+								toolTipContent: "{label}: {y} solicitudes",
+								dataPoints: '.$work_orders_status_data.'
+							} 
+						] 
+					});
+					$("#productsContainer").CanvasJSChart({ 
+						title: { 
+							text: "SOLICITUDES" 
+						}, 
+						axisX:{
+							labelFontSize: 12,
+						},
+						data: [ 
+							{ 
+								type: "pie", 
+								toolTipContent: "{label}: {y} solicitudes",
+								dataPoints: '.$work_orders_products_data.'
 							} 
 						] 
 					});
@@ -610,6 +654,7 @@ implode(', ', $ramo_tramite_types) . '
 		<style>
 			.filterstable {margin-left: 2em; width:80%;}
 			.filterstable th {text-align: left;}
+			.tab-content {overflow: hidden;}
 		</style>
 		';
 

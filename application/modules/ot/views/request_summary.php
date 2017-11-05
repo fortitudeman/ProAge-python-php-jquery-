@@ -25,9 +25,57 @@
  
 <div class="tab-content">
   <div class="tab-pane active" id="graficos">
-  	<div class="span8">
-  		<div id="agentsContainer" style="width: 100%; height: 300px"></div>
-  	</div>
+  	<div class="row">
+	  	<div class="span12">
+	  		<div id="agentsContainer" style="width: 100%; height: 400px"></div>
+	  	</div>
+	  </div>
+	  <div class="row">
+	  	<div class="span6">
+	  		<table class="table table-striped" style="margin-left: 30px">
+				<thead>
+					<tr>
+						<th>Estatus</th>
+						<th>OT'S</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($wo_status as $order): ?>
+						<tr>
+							<td><?= $order["status"] ?></td>
+							<td><?= $order["conteo"] ?></td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+	  	</div>
+	  	<div class="span6">
+	  		<div id="statusContainer" style="width: 100%; height: 350px"></div>
+	  	</div>
+	  </div>
+	  <div class="row">
+	  	<div class="span6">
+	  		<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
+				<thead>
+					<tr>
+						<th>PRODUCTO</th>
+						<th>OT'S</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($wo_products as $order): ?>
+						<tr>
+							<td><?= $order["producto"] ?></td>
+							<td><?= $order["conteo"] ?></td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+			</table>
+	  	</div>
+	  	<div class="span6">
+	  		<div id="productsContainer" style="width: 100%; height: 350px"></div>
+	  	</div>
+	  </div>
   </div>
   <div class="tab-pane" id="reporte">
   	<table class="table table-striped">

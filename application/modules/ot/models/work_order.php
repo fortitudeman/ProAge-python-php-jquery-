@@ -977,16 +977,10 @@ class Work_order extends CI_Model{
 					'work_order.creation_date < ' => date('Y-m', mktime(0, 0, 0, date('m') + 1, date('d'), date('Y'))) . '-01')); 
 			if( $periodo == 2 ) // Trimester or cuatrimester depending ramo
 			{
-				$this->load->helper('tri_cuatrimester');
-				if( ($ramo == 2 ) || ( $ramo == 3 ) )
-					$begin_end = get_tri_cuatrimester( cuatrimestre(), 'cuatrimestre' ) ;
-				else
-					$begin_end = get_tri_cuatrimester( trimestre(), 'trimestre' );
-
-				if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
-					$this->db->where( array(
-						'work_order.creation_date >= ' => $begin_end['begind'],
-						'work_order.creation_date <=' =>  $begin_end['end']) );
+				$this->db->where( array(
+					'work_order.creation_date >= ' => $this->custom_period_from,
+					'work_order.creation_date <=' =>  $this->custom_period_to )
+				);
 			}
 			if(  $periodo == 3 ) // Year
 				$this->db->where( array(
