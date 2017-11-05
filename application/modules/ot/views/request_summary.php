@@ -27,7 +27,7 @@
   <div class="tab-pane active" id="graficos">
   	<div class="row">
 	  	<div class="span12">
-	  		<div id="agentsContainer" style="width: 100%; height: 400px"></div>
+	  		<div id="agentsContainer" style="width: 100%; height: 400px; margin-left: 30px"></div>
 	  	</div>
 	  </div>
 	  <div class="row">

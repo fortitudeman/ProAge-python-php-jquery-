@@ -606,7 +606,7 @@ implode(', ', $ramo_tramite_types) . '
 							labelFontSize: 12,
 						},
 						axisY:{
-							interval: 1,
+							interval: 2,
 						},
 						data: [ 
 							{ 
