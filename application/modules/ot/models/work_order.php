@@ -929,7 +929,83 @@ class Work_order extends CI_Model{
 		return $ot;
    
    }	
-	
+
+   public function getWorkOrdersGroupBy($filter, $group = array()){
+   		//Default fields
+   		if(empty($group)){
+	   		$this->db->select('work_order.*');
+	   		$this->db->select('product_group.name ramo');
+	   		$this->db->select('policies.name asegurado, policies.prima, policies.uid poliza');
+	   		$this->db->select('users.name, users.lastnames, users.company_name, policies_vs_users.percentage');
+	   		$this->db->select('work_order_patent.name tipo_tramite');
+	   		$this->db->select('products.name producto');
+	   		$this->db->select('work_order_status.name status');
+	   		$this->db->order_by('users.lastnames asc, users.name asc');
+   		}
+   		else{
+   			$this->db->select($group["select"]);
+   			$this->db->select('count(*) as conteo');
+   			$this->db->order_by($group["order"]);
+   			$this->db->group_by($group["by"]);
+   		}
+   		$this->db->from('work_order');
+   		$this->db->join('policies', 'work_order.policy_id = policies.id');
+   		$this->db->join('product_group', 'work_order.product_group_id = product_group.id');
+   		$this->db->join('policies_vs_users', 'policies_vs_users.policy_id = policies.id');
+   		$this->db->join('agents', 'policies_vs_users.user_id = agents.id');
+   		$this->db->join('users', 'agents.user_id = users.id');
+   		$this->db->join('work_order_status', 'work_order_status.id = work_order.work_order_status_id');
+   		$this->db->join('work_order_types', 'work_order_types.id = work_order.work_order_type_id');
+   		$this->db->join('work_order_types as work_order_patent', 'work_order_types.patent_id = work_order_patent.id');
+   		$this->db->join('products', 'products.id = policies.product_id', 'right');
+   		
+   		if(isset($filter["nuevos_negocios"]))
+   			$this->db->where_in('work_order_types.patent_id', array(47, 90));
+
+   		$ramo = $filter["ramo"];
+   		$periodo = (int) $filter["periodo"];
+   		// Ramo
+		if ($ramo == 1 || $ramo == 2)
+			$this->db->where('work_order.product_group_id', $ramo);
+
+		// Periodo
+		if (is_int($periodo) && $periodo >= 1 && $periodo <= 4)
+		{
+			if( $periodo == 1 ) // Month
+				$this->db->where(  array(
+					'work_order.creation_date >= ' => date( 'Y' ) . '-' . (date( 'm' )) . '-01',
+					'work_order.creation_date < ' => date('Y-m', mktime(0, 0, 0, date('m') + 1, date('d'), date('Y'))) . '-01')); 
+			if( $periodo == 2 ) // Trimester or cuatrimester depending ramo
+			{
+				$this->db->where( array(
+					'work_order.creation_date >= ' => $this->custom_period_from,
+					'work_order.creation_date <=' =>  $this->custom_period_to )
+				);
+			}
+			if(  $periodo == 3 ) // Year
+				$this->db->where( array(
+					'work_order.creation_date >= ' => date( 'Y' ) .'-01-01', 
+					'work_order.creation_date <=' => date( 'Y-m-d' ) . ' 23:59:59') );
+
+			if( $periodo == 4 ) // Custom
+			{
+				$from = $this->custom_period_from;
+				$to = $this->custom_period_to;
+				if ( ( $from === FALSE ) || ( $to === FALSE ) )
+				{
+					$from = date('Y-m-d');
+					$to = $from;
+				}
+				$this->db->where( array(
+					'work_order.creation_date >= ' => $from . ' 00:00:00',
+					'work_order.creation_date <=' => $to . ' 23:59:59') );
+			}
+		}	
+		execute_filters("work-orders-get-group-by");
+		$query = $this->db->get();
+		return $query->result_array();
+   }
+
 
 /**
  *	Functions Policies
@@ -1321,6 +1397,15 @@ class Work_order extends CI_Model{
 /**
  *	Functions Products
  **/
+	public function getProductsGroups(){
+		$query = $this->db->get('product_group');
+		$result = $query->result_array();
+		$return_arr = array("" => "Todos");
+		foreach ($result as $row)
+			$return_arr[$row["id"]] = $row["name"];
+		return $return_arr;
+	}
+
 	public function getProductsGroupsOptions(){
 				
 		$query = $this->db->get( 'product_group' );	

@@ -261,7 +261,8 @@ endif;
 <td colspan="15">
 	<a href="' . $value['activities_url'] . '" class="btn btn-link">Ver actividad de ventas</a> |
 	<a href="' . $value['simulator_url'] . '" class="btn btn-link">Simular resultado y definir meta</a> |
-	<a href="' . $value['perfil_url'] . '" class="btn btn-link">Vision general</a>
+	<a href="' . $value['perfil_url'] . '" class="btn btn-link">Vision general</a> |
+	<a href="' . $value['add_activities_url'] . '" class="btn btn-link">Agregar nueva actividad</a> 
 </td>
 </tr>
 ';
@@ -343,7 +344,8 @@ endif;
 <td colspan="12">
 	<a href="' . $value['activities_url'] . '" class="btn btn-link">Ver actividad de ventas</a> |
 	<a href="' . $value['simulator_url'] . '" class="btn btn-link">Simular resultado y definir meta</a> |
-	<a href="' . $value['perfil_url'] . '" class="btn btn-link">Vision general</a>
+	<a href="' . $value['perfil_url'] . '" class="btn btn-link">Vision general</a> |
+	<a href="' . $value['add_activities_url'] . '" class="btn btn-link">Agregar nueva actividad</a> 
 </td>
 </tr>
 ';

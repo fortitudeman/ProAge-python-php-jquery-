@@ -472,6 +472,7 @@ SUM( `agents_activity`.`interview` )  AS `interview`';
 						'simulator_url' => $base_url . 'simulator/index/' . $row->user_id . '/1.html',
 						'perfil_url' => $base_url . 'agent/index/' . $row->user_id . '/1.html',
 						'activities_url' => $base_url . 'activities/index/' . $row->user_id . '.html',
+						'add_activities_url' => $base_url . 'activities/create/' . $row->user_id . '.html',
 						'name' => $name,
 						'weeks_reported' => 0,
 						'citaT' => 0,
