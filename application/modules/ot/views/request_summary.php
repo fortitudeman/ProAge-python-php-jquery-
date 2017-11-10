@@ -31,7 +31,16 @@
 	  	</div>
 	  </div>
 	  <div class="row">
-	  	<div class="span6">
+	  	<div class="span12">
+	  		<div id="statusContainer" style="width: 100%; height: 350px"></div>
+	  	</div>
+	  	<div class="span12" style="margin-left: 30px">
+		  	<a href="#" class="toggleTable" data-target="#statusTable">
+				<i class="icon-plus"></i>
+				Mas información
+		  	</a>
+	  </div>
+	  	<div class="span12" id="statusTable" style="display: none">
 	  		<table class="table table-striped" style="margin-left: 30px">
 				<thead>
 					<tr>
@@ -49,12 +58,18 @@
 				</tbody>
 			</table>
 	  	</div>
-	  	<div class="span6">
-	  		<div id="statusContainer" style="width: 100%; height: 350px"></div>
-	  	</div>
 	  </div>
 	  <div class="row">
-	  	<div class="span6">
+		<div class="span12">
+			<div id="productsContainer" style="width: 100%; height: 350px"></div>
+		</div>
+		<div class="span12" style="margin-left: 30px;">
+			<a href="#" class="toggleTable" data-target="#productsTable">
+				<i class="icon-plus"></i>
+				Mas información
+			</a>
+		</div>
+	  <div class="span12" id="productsTable" style="display: none">
 	  		<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
 				<thead>
 					<tr>
@@ -72,20 +87,16 @@
 				</tbody>
 			</table>
 	  	</div>
-	  	<div class="span6">
-	  		<div id="productsContainer" style="width: 100%; height: 350px"></div>
-	  	</div>
-	  </div>
+	 </div>
   </div>
   <div class="tab-pane" id="reporte">
-  	<table class="table table-striped">
+  	<table class="table table-striped" id="tablesorted">
 		<thead>
 			<tr>
 				<th>Número de OT</th>
 				<th>Fecha alta</th>
 				<th>Agente</th>
 				<th>Ramo</th>
-				<th>Tipo</th>
 				<th>Asegurado</th>
 				<th>Estatus</th>
 				<th>Prima</th>
@@ -99,7 +110,6 @@
 					<td><?= $order["creation_date"] ?></td>
 					<td><?= $order["name"]." ".$order["lastnames"] ?></td>
 					<td><?= $order["ramo"] ?></td>
-					<td><?= $order["tipo_tramite"] ?></td>
 					<td><?= $order["asegurado"] ?></td>
 					<td><?= $order["status"] ?></td>
 					<td>$<?= number_format($order["prima"], 2) ?></td>

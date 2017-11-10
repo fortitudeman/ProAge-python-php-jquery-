@@ -496,6 +496,7 @@ implode(', ', $ramo_tramite_types) . '
 			redirect( 'home', 'refresh' );
 		}
 		$this->load->helper( array('ot/ot', 'filter' ));
+		//Filters
 		if($this->input->post()){
 			update_custom_period($this->input->post('cust_period_from'),
 				$this->input->post('cust_period_to'), FALSE);
@@ -634,7 +635,7 @@ implode(', ', $ramo_tramite_types) . '
 					});
 					$("#productsContainer").CanvasJSChart({ 
 						title: { 
-							text: "SOLICITUDES" 
+							text: "PRODUCTOS SOLICITADOS" 
 						}, 
 						axisX:{
 							labelFontSize: 12,
@@ -647,6 +648,16 @@ implode(', ', $ramo_tramite_types) . '
 							} 
 						] 
 					});
+					$(".toggleTable").on("click", function(e){
+						e.preventDefault();
+						var target = $(this).attr("data-target");
+						var itag = $(this).find("i");
+						itag.toggleClass("icon-plus");
+						itag.toggleClass("icon-minus");
+						$(target).toggle("fast");
+					});
+					$("#tablesorted")
+						.tablesorter({theme : "default", widthFixed: true, widgets: ["saveSort", "zebra"]});
 				});
 			</script>
 			';
@@ -676,6 +687,7 @@ implode(', ', $ramo_tramite_types) . '
 				'<script src="' . $base_url . 'scripts/config.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/jquery.canvasjs.min.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
 				$add_js,
 				$this->custom_filters->render_javascript(),
 			),
