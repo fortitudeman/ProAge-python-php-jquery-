@@ -25,68 +25,70 @@
  
 <div class="tab-content">
   <div class="tab-pane active" id="graficos">
-  	<div class="row">
+  	  <div class="row">
 	  	<div class="span12 chart-container" style="height: 1200px">
 	  		<canvas id="agentsContainer" style="margin-left: 30px"></canvas>
 	  	</div>
 	  </div>
 	  <div class="row">
-		<div class="span12" id="statusCell" style="height: 375px">
-			<canvas id="statusContainer"></canvas>
-		</div>
-		<div class="span6" id="statusTable" style="display: none">
-			<table class="table table-striped" style="margin-left: 30px">
-			<thead>
-				<tr>
-					<th>Estatus</th>
-					<th>OT'S</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ($wo_status as $order): ?>
-					<tr>
-						<td><?= $order["status"] ?></td>
-						<td><?= $order["conteo"] ?></td>
-					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
-		</div>
-		<div class="span12" style="margin-left: 30px">
-			<a href="#" class="toggleTable" data-target="#statusTable" data-resize="#statusCell">
-			<i class="icon-plus"></i>
-			<span>Ver</span> información
-			</a>
-		</div>
-	  </div>
-	  <div class="row">
-		<div class="span12" id="productsCell" style="height: 400px">
-			<canvas id="productsContainer"></canvas>
-		</div>
-		<div class="span6" id="productsTable" style="display: none">
-			<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
+		  <div class="span6">
+			<div class="span12" id="statusCell" style="height: 450px">
+				<canvas id="statusContainer"></canvas>
+			</div>
+			<div class="span12" id="statusTable" style="display: none">
+				<table class="table table-striped" style="margin-left: 30px">
 				<thead>
 					<tr>
-						<th>PRODUCTO</th>
+						<th>Estatus</th>
 						<th>OT'S</th>
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ($wo_products as $order): ?>
+					<?php foreach ($wo_status as $order): ?>
 						<tr>
-							<td><?= $order["producto"] ?></td>
+							<td><?= $order["status"] ?></td>
 							<td><?= $order["conteo"] ?></td>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-		</div>
-		<div class="span12" style="margin-left: 30px;">
-			<a href="#" class="toggleTable" data-target="#productsTable" data-resize="#productsCell">
+			</div>
+			<div class="span12" style="margin-left: 30px">
+				<a href="#" class="toggleTable" data-target="#statusTable" data-resize="#statusCell">
 				<i class="icon-plus"></i>
-				<span>Ver</span> información
-			</a>
-		</div>
+				<span>Ver tabla</span>
+				</a>
+			</div>
+		  </div>
+		  <div class="span6">
+			<div class="span12" id="productsCell" style="height: 450px">
+				<canvas id="productsContainer"></canvas>
+			</div>
+			<div class="span12" id="productsTable" style="display: none">
+				<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
+					<thead>
+						<tr>
+							<th>PRODUCTO</th>
+							<th>OT'S</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($wo_products as $order): ?>
+							<tr>
+								<td><?= $order["producto"] ?></td>
+								<td><?= $order["conteo"] ?></td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
+			<div class="span12" style="margin-left: 30px;">
+				<a href="#" class="toggleTable" data-target="#productsTable" data-resize="#productsCell">
+					<i class="icon-plus"></i>
+					<span>Ver tabla</span>
+				</a>
+			</div>
+		 </div>
 	 </div>
   </div>
   <div class="tab-pane" id="reporte">

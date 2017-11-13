@@ -157,7 +157,7 @@ class solicitudes extends CI_Controller {
 		$args = array(
 			"select" => "users.company_name, users.name, users.lastnames, policies_vs_users.percentage",
 			"by" => "users.company_name, agents.id, policies_vs_users.percentage",
-			"order" => "conteo asc",
+			"order" => "conteo desc",
 		);
 		$work_orders_agents = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
 		$work_orders_data = array();
@@ -264,20 +264,20 @@ class solicitudes extends CI_Controller {
 							datasets: [{
 							    label: "# Solicitudes",
 							    data: '.$work_orders_status_data_graph.',
-							    borderWidth: 1
+							    borderWidth: 1,
+							    backgroundColor: [
+				                    "#4d4d4d",
+									"#5da5da",
+									"#faa43a",
+									"#60bd68",
+									"#f17cB0",
+									"#b2912f",
+									"#b276b2",
+									"#decf3f",
+									"#f15854",
+				                ],
 							}]
-						},
-						backgroundColor: [
-		                    "#4D4D4D",
-							"#5DA5DA",
-							"#FAA43A",
-							"#60BD68",
-							"#F17CB0",
-							"#B2912F",
-							"#B276B2",
-							"#DECF3F",
-							"#F15854",
-		                ],	
+						},	
 						options: {
 							scales: {
 							    yAxes: [{
@@ -301,20 +301,33 @@ class solicitudes extends CI_Controller {
 							datasets: [{
 							    label: "# Solicitudes",
 							    data: '.$work_orders_products_data.',
-							    borderWidth: 1
+							    borderWidth: 1,
+							    backgroundColor: [
+				                    "#e6194b",
+				                    "#3cb44b",
+				                    "#ffe119",
+				                    "#0082c8",
+				                    "#f58231",
+				                    "#911eb4",
+				                    "#46f0f0",
+				                    "#f032e6",
+				                    "#d2f53c",
+				                    "#fabebe",
+				                    "#008080",
+				                    "#e6beff",
+				                    "#aa6e28",
+				                    "#fffac8",
+				                    "#800000",
+				                    "#aaffc3",
+				                    "#808000",
+				                    "#ffd8b1",
+				                    "#000080",
+				                    "#808080",
+				                    "#FFFFFF",
+				                    "#000000",
+				                ],	
 							}]
 						},
-						backgroundColor: [
-		                    "#4D4D4D",
-							"#5DA5DA",
-							"#FAA43A",
-							"#60BD68",
-							"#F17CB0",
-							"#B2912F",
-							"#B276B2",
-							"#DECF3F",
-							"#F15854",
-		                ],	
 						options: {
 							scales: {
 							    yAxes: [{
@@ -339,18 +352,15 @@ class solicitudes extends CI_Controller {
 						itag.toggleClass("icon-minus");
 
 						var spantext = $(this).find("span").text();
-						if(spantext == "Ver")
-							$(this).find("span").text("Ocultar")
+						if(spantext == "Ver tabla")
+							$(this).find("span").text("Ver grafico");
 						else
-							$(this).find("span").text("Ver")
+							$(this).find("span").text("Ver tabla");
 
 						var resize_cell = $(this).closest(".row").find(resize_target);
-						console.log(resize_cell);
-						resize_cell.toggleClass("span6");
-						resize_cell.toggleClass("span12");
+						resize_cell.toggle("fast");
 						$(target).toggle("fast");
 
-						StatusGraph.resize();
 					});
 					$("#tablesorted")
 						.tablesorter({theme : "default", widthFixed: true, widgets: ["saveSort", "zebra"]});
