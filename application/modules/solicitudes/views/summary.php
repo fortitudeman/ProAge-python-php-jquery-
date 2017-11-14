@@ -39,6 +39,11 @@
 				<table class="table table-striped" style="margin-left: 30px">
 				<thead>
 					<tr>
+						<th colspan="2" style="text-align: center">
+							OT'S POR ESTATUS
+						</th>
+					</tr>
+					<tr>
 						<th>Estatus</th>
 						<th>OT'S</th>
 					</tr>
@@ -67,6 +72,11 @@
 			<div class="span12" id="productsTable" style="display: none">
 				<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
 					<thead>
+						<tr>
+							<th colspan="2" style="text-align: center">
+								PRODUCTOS SOLICITADOS
+							</th>
+						</tr>
 						<tr>
 							<th>PRODUCTO</th>
 							<th>OT'S</th>

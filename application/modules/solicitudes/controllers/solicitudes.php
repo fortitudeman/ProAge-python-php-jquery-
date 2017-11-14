@@ -291,6 +291,21 @@ class solicitudes extends CI_Controller {
 					            text: "OT\'S POR ESTATUS"
 							},
 							maintainAspectRatio: false,
+							tooltips: {
+								callbacks: {
+									label: function(tooltipItem, data) {
+										var allData = data.datasets[tooltipItem.datasetIndex].data;
+										var tooltipLabel = data.labels[tooltipItem.index];
+										var tooltipData = allData[tooltipItem.index];
+										var total = 0;
+										for (var i in allData) {
+											total += parseFloat(allData[i]);
+										}
+										var tooltipPercentage = Math.round((tooltipData / total) * 100);
+										return tooltipLabel + ": " + tooltipData + " (" + tooltipPercentage + "%)";
+									}
+								}
+							}
 						}
 					});
 					var ctxProducts = document.getElementById("productsContainer").getContext("2d");
@@ -341,6 +356,21 @@ class solicitudes extends CI_Controller {
 					            text: "PRODUCTOS SOLICITADOS"
 							},
 							maintainAspectRatio: false,
+							tooltips: {
+								callbacks: {
+									label: function(tooltipItem, data) {
+										var allData = data.datasets[tooltipItem.datasetIndex].data;
+										var tooltipLabel = data.labels[tooltipItem.index];
+										var tooltipData = allData[tooltipItem.index];
+										var total = 0;
+										for (var i in allData) {
+											total += parseFloat(allData[i]);
+										}
+										var tooltipPercentage = Math.round((tooltipData / total) * 100);
+										return tooltipLabel + ": " + tooltipData + " (" + tooltipPercentage + "%)";
+									}
+								}
+							}
 						}
 					});
 					$(".toggleTable").on("click", function(e){
