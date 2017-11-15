@@ -945,6 +945,9 @@ class Work_order extends CI_Model{
    		else{
    			$this->db->select($group["select"]);
    			$this->db->select('count(*) as conteo');
+   			if(isset($group["sum"]))
+   				$this->db->select_sum($group["sum"]);
+
    			$this->db->order_by($group["order"]);
    			$this->db->group_by($group["by"]);
    		}

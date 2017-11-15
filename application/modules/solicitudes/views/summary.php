@@ -26,8 +26,14 @@
 <div class="tab-content">
   <div class="tab-pane active" id="graficos">
   	  <div class="row">
-	  	<div class="span12 chart-container" style="height: 1200px">
+  	  	<div class="span12 chart-container" style="height: <?= !empty($wo_agents) ? (ceil(count($wo_agents) / 10)*125)+100 : 250?>px">
 	  		<canvas id="agentsContainer" style="margin-left: 30px"></canvas>
+	  	</div>
+	  	<div style="margin-top: 10px; margin-bottom: 15px; margin-left: 30px;">
+	  		Ordenar por: 
+	  		<?= anchor('solicitudes/summary/requests', 'Solicitudes', "style='display:inline-block; margin-right: 15px'"); ?>
+	  		|
+	  		<?= anchor('solicitudes/summary/primas', 'Primas', "style='display:inline-block; margin-left: 15px'"); ?>
 	  	</div>
 	  </div>
 	  <div class="row">

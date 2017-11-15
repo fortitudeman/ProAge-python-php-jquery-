@@ -125,7 +125,7 @@ class solicitudes extends CI_Controller {
 		$this->summary();
 	}
 
-	public function summary(){
+	public function summary($order_agents = "requests"){
 		if ($this->default_period_filter == 5)
 			set_filter_period( 2 );
 
@@ -142,7 +142,7 @@ class solicitudes extends CI_Controller {
 
 		$other_filters["nuevos_negocios"] = 1;
 		$other_filters["periodo"] = get_filter_period();
-
+		
 		$this->load->model( 'ot/work_order' );
 		//General work orders
 		$work_orders_general = $this->work_order->getWorkOrdersGroupBy($other_filters);
@@ -154,20 +154,25 @@ class solicitudes extends CI_Controller {
 		}
 
 		//Configuration agent group
+		$order = $order_agents == "requests" ? "conteo" : "prima";
 		$args = array(
 			"select" => "users.company_name, users.name, users.lastnames, policies_vs_users.percentage",
+			"sum" => "policies.prima",
 			"by" => "users.company_name, agents.id, policies_vs_users.percentage",
-			"order" => "conteo desc",
+			"order" => "$order desc",
 		);
 		$work_orders_agents = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
 		$work_orders_data = array();
 		$work_orders_labels = array();
-		foreach ($work_orders_agents as $order){
+		$work_orders_primas = array();
+		foreach ($work_orders_agents as $i => $order){
 			$work_orders_labels[] = empty($order["name"]) && empty($order["lastnames"]) ? $order["company_name"] :$order["name"]." ".$order["lastnames"];
 			$work_orders_data[] = $order["conteo"];
+			$work_orders_primas[] = $order["prima"];
 		}
 		$work_orders_data = json_encode($work_orders_data);
 		$work_orders_labels = json_encode($work_orders_labels);
+		$work_orders_primas = json_encode($work_orders_primas);
 		//Configuration status group
 		$args = array(
 			"select" => "work_order_status.name status",
@@ -237,23 +242,83 @@ class solicitudes extends CI_Controller {
 							datasets: [{
 							    label: "# Solicitudes",
 							    data: '.$work_orders_data.',
+							    xAxisID: "y-axis-1",
 							    backgroundColor: "rgba(54, 162, 235, 0.4)",
+							    borderWidth: 1
+							},
+							{
+								label: "Primas totales",
+							    data: '.$work_orders_primas.',
+							    xAxisID: "y-axis-2",
+							    backgroundColor: "rgba(230, 25, 75, 0.4)",
 							    borderWidth: 1
 							}]
 						},
 						options: {
 							scales: {
-							    yAxes: [{
-							        ticks: {
+								xAxes: [{
+			                        type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+			                        display: true,
+			                        position: "top",
+			                        id: "y-axis-1",
+			                        gridLines: {
+			                            drawOnChartArea: false
+			                        },
+			                        ticks: {
 							            beginAtZero:true
 							        },
-							    }],
+			                    },{
+			                        type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+			                        display: true,
+			                        position: "bottom",
+			                        id: "y-axis-2",
+			                        gridLines: {
+			                            drawOnChartArea: false
+			                        },
+			                        ticks: {
+							            // Return an empty string to draw the tick line but hide the tick label
+							           	// Return "null" or "undefined" to hide the tick line entirely
+							           	userCallback: function(value, index, values) {
+							           		// Convert the number to a string and splite the string every 3 charaters from the end
+							           		value = Math.round(value*100)/100;
+							                if(value >= 1000){
+								                value = value.toString();
+								                value = value.split(/(?=(?:...)*$)/);
+								                // Convert the array to a string and format the output
+								                value = value.join(",");
+							                }
+							                return "$" + value;
+							            	}
+							          }
+			                    }],
 							},
 							title: {
 					            display: true,
 					            text: "SOLICITUDES"
 							},
 							maintainAspectRatio: false,
+							tooltips: {
+								callbacks: {
+									label: function(tooltipItem, data) {
+										var allData = data.datasets[tooltipItem.datasetIndex].data;
+										var tooltipLabel = data.datasets[tooltipItem.datasetIndex].label;
+										var tooltipData = allData[tooltipItem.index];
+										if(tooltipItem.datasetIndex == 1){
+											nStr = tooltipData;
+											nStr += "";
+											x = nStr.split(".");
+											x1 = x[0];
+											x2 = x.length > 1 ? "." + x[1] : "";
+											var rgx = /(\d+)(\d{3})/;
+											while (rgx.test(x1)) {
+												x1 = x1.replace(rgx, "$1" + "," + "$2");
+											}
+											return tooltipLabel + ": $" + x1 + x2;
+										}
+										return tooltipLabel + ": " + tooltipData;
+									}
+								}
+							}
 						}
 					});
 					var ctxStatus = document.getElementById("statusContainer").getContext("2d");
@@ -458,12 +523,11 @@ class solicitudes extends CI_Controller {
 			if ( isset($_POST['ramo']) && (($this->form_validation->is_natural_no_zero($_POST['ramo']) &&
 				($_POST['ramo'] <= 3)) || (($_POST['ramo']) === '')) )
 				$other_filters['ramo'] = $_POST['ramo'];
-
-
-			$this->custom_filters->set_filters_to_save($other_filters);
-			$this->custom_filters->set_current_filters($other_filters);
-			generic_set_report_filter( $other_filters, array() );
 		}
+		$this->custom_filters->set_array_defaults($other_filters);
+		$this->custom_filters->set_filters_to_save($other_filters);
+		$this->custom_filters->set_current_filters($other_filters);
+		generic_set_report_filter( $other_filters, array() );
 		return $other_filters;
 	}
 
