@@ -198,7 +198,7 @@ if( !empty( $roles_vs_access ) ): ?>
                         <?php if( isset($user) && isset($user['id'])):
 						foreach( $roles_vs_access  as $value ):
 							if( in_array( 'Operations', $value ) ): ?>
-                         <li><a href="<?php echo base_url() ?>operations/index/<?php echo $user['id'] ?>.html"><i class="icon-tablet"></i><span class="hidden-tablet">Operaciones</span></a></li>
+                         <li><a href="<?php echo base_url() ?>operations/index/<?php echo $user['id'] ?>.html"><i class="icon-briefcase"></i><span class="hidden-tablet">Operaciones</span></a></li>
                         <?php break; endif;
 						endforeach;
 						endif; ?>
@@ -211,12 +211,17 @@ if( !empty( $roles_vs_access ) ): ?>
 
                         <?php foreach( $roles_vs_access  as $value ): 
 						if( in_array( 'Orden de trabajo', $value ) && ( $value['action_name'] == 'Ver reporte' )): ?>
-                        <li><a href="<?php echo base_url() ?>director"><i class="icon-tasks"></i><span class="hidden-tablet">Reporte directivo</span></a></li>
+                        <li><a href="<?php echo base_url() ?>director"><i class="icon-file"></i><span class="hidden-tablet">Reporte directivo</span></a></li>
+                        <?php break; endif; endforeach; ?>
+
+                        <?php foreach( $roles_vs_access  as $value ): 
+						if( in_array( 'Solicitudes', $value ) && ( $value['action_name'] == 'Ver reporte' )): ?>
+                        <li><a href="<?php echo base_url() ?>solicitudes"><i class="icon-file"></i><span class="hidden-tablet">Reporte de solicitudes</span></a></li>
                         <?php break; endif; endforeach; ?>
 
                         <?php foreach( $roles_vs_access  as $value ):
 						if( in_array( 'Actividades', $value ) && ( $value['action_name'] == 'Ver' )): ?>
-                        <li><a href="<?php echo base_url() ?>activities.html"><i class="icon-tablet"></i><span class="hidden-tablet">Mis actividades</span></a></li>
+                        <li><a href="<?php echo base_url() ?>activities.html"><i class="icon-tasks"></i><span class="hidden-tablet">Mis actividades</span></a></li>
                         <?php break; endif; endforeach; ?>
 						
                         <?php foreach( $roles_vs_access  as $value ): 
@@ -226,7 +231,7 @@ if( !empty( $roles_vs_access ) ): ?>
 
 						<?php foreach( $roles_vs_access as $value ): 
 						if( in_array( 'Settings', $value ) && ( $value['action_name'] == 'Ver' )): ?>
-						<li><a href="<?php echo base_url() ?>settings.html"><i class="icon-tablet"></i><span class="hidden-tablet">Configuración</span></a></li>
+						<li><a href="<?php echo base_url() ?>settings.html"><i class="icon-cog"></i><span class="hidden-tablet">Configuración</span></a></li>
 						<?php break; endif; endforeach; ?>
 <?php endif; ?>
 

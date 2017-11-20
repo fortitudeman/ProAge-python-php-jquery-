@@ -104,7 +104,7 @@ class solicitudes extends CI_Controller {
 		$this->custom_period_from = $this->session->userdata('custom_period_from_'.$this->period_filter_for);
 		$this->custom_period_to = $this->session->userdata('custom_period_to_'.$this->period_filter_for);
 
-		$this->misc_filter_name = 'operations_misc_filter';
+		$this->misc_filter_name = $this->period_filter_for.'_misc_filter';
 		$this->misc_filters = $this->session->userdata($this->misc_filter_name);
 
 		$options = array(
@@ -143,7 +143,8 @@ class solicitudes extends CI_Controller {
 		$other_filters["nuevos_negocios"] = 1;
 		$other_filters["periodo"] = get_filter_period();
 		
-		$this->load->model( 'ot/work_order' );
+		$this->load->model( 'ot/work_order');
+		$this->load->model( 'users/user');
 		//General work orders
 		$work_orders_general = $this->work_order->getWorkOrdersGroupBy($other_filters);
 		//Formating names
@@ -154,70 +155,59 @@ class solicitudes extends CI_Controller {
 		}
 
 		//Configuration agent group
-		$order = $order_agents == "requests" ? "conteo" : "prima";
 		$args = array(
 			"select" => "users.company_name, users.name, users.lastnames, policies_vs_users.percentage",
 			"sum" => "policies.prima",
 			"by" => "users.company_name, agents.id, policies_vs_users.percentage",
-			"order" => "$order desc",
+			"order" => "conteo desc",
 		);
 		$work_orders_agents = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
-		$work_orders_data = array();
-		$work_orders_labels = array();
-		$work_orders_primas = array();
 		foreach ($work_orders_agents as $i => $order){
-			$work_orders_labels[] = empty($order["name"]) && empty($order["lastnames"]) ? $order["company_name"] :$order["name"]." ".$order["lastnames"];
-			$work_orders_data[] = $order["conteo"];
-			$work_orders_primas[] = $order["prima"];
+			$work_orders_agents[$i]["name"] = empty($order["name"]) && empty($order["lastnames"]) ? $order["company_name"] :$order["name"]." ".$order["lastnames"];
 		}
-		$work_orders_data = json_encode($work_orders_data);
-		$work_orders_labels = json_encode($work_orders_labels);
-		$work_orders_primas = json_encode($work_orders_primas);
+		$work_orders_data = json_encode($work_orders_agents);
+
 		//Configuration status group
 		$args = array(
 			"select" => "work_order_status.name status",
+			"sum" => "policies.prima",
 			"by" => "work_order_status.name",
 			"order" => "conteo desc",
 		);
 		$work_orders_status = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
-		$work_orders_status_labels = array();
-		$work_orders_status_data_graph = array();
-		foreach ($work_orders_status as $order){
-			$work_orders_status_labels[] = $order["status"];
-			$work_orders_status_data_graph[] = $order["conteo"];
-		}
-		$work_orders_status_labels = json_encode($work_orders_status_labels);
-		$work_orders_status_data_graph = json_encode($work_orders_status_data_graph);
+		$work_orders_status_data = json_encode($work_orders_status);
 
 		//Configuration products group
 		$args = array(
 			"select" => "products.name producto",
+			"sum" => "policies.prima",
 			"by" => "products.id",
 			"order" => "conteo desc",
 		);
 		$work_orders_products = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
-		$work_orders_products_data = array();
-		$work_orders_products_labels = array();
-		foreach ($work_orders_products as $order){
-			$work_orders_products_data[] = $order["conteo"];
-			$work_orders_products_labels[] = $order["producto"];
-		}
-		$work_orders_products_data = json_encode($work_orders_products_data);
-		$work_orders_products_labels = json_encode($work_orders_products_labels);
+		//Calculate Average Prima per product
+		foreach ($work_orders_products as $i => $row) 
+			$work_orders_products[$i]["avgPrima"] = ($row["conteo"] != 0) ? $row["prima"] / $row["conteo"] : 0;
+		$work_orders_products_data = json_encode($work_orders_products);
 
 		$base_url = base_url();
 		$ramo= 55;
-		$ramos = $this->work_order->getProductsGroups();
+		$ramos = makeDropdown($this->work_order->getProductsGroups(), "id", "name");
+		$products = makeDropdown($this->work_order->getProducts(), "id", "name");
+		$status = makeDropdown($this->work_order->getStatusArray(), "name", "name");
+		$agents = makeDropdown($this->user->getAgentsArray(), "id", "name");
 		unset($ramos[3]);
 
-		$this->form_validation->run();
-
+		$this->load->helper('sort');
 		$content_data = array(
 			'access_all' => $this->access_all,
 			'period_fields' => show_period_fields('requests', $ramo),
 			'selected_period' => get_filter_period(),
 			'other_filters' => $other_filters,
 			'ramos' => $ramos,
+			'products' => $products,
+			'status' => $status,
+			'agents' => $agents,
 			'wo_general' => $work_orders_general,
 			'wo_agents' => $work_orders_agents,
 			'wo_status' => $work_orders_status,
@@ -228,238 +218,9 @@ class solicitudes extends CI_Controller {
 
 		$add_js = '
 			<script type="text/javascript">
-				var StatusGraph;
-				$(document).ready( function(){ 
-					$("#myTab a").click(function (e) {
-					  e.preventDefault();
-					  $(this).tab("show");
-					});
-					var ctxAgents = document.getElementById("agentsContainer").getContext("2d");
-					var AgentsGraph = new Chart(ctxAgents, {
-					    type: "horizontalBar",
-					    data: {
-							labels: '.$work_orders_labels.',
-							datasets: [{
-							    label: "# Solicitudes",
-							    data: '.$work_orders_data.',
-							    xAxisID: "y-axis-1",
-							    backgroundColor: "rgba(54, 162, 235, 0.4)",
-							    borderWidth: 1
-							},
-							{
-								label: "Primas totales",
-							    data: '.$work_orders_primas.',
-							    xAxisID: "y-axis-2",
-							    backgroundColor: "rgba(230, 25, 75, 0.4)",
-							    borderWidth: 1
-							}]
-						},
-						options: {
-							scales: {
-								xAxes: [{
-			                        type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-			                        display: true,
-			                        position: "top",
-			                        id: "y-axis-1",
-			                        gridLines: {
-			                            drawOnChartArea: false
-			                        },
-			                        ticks: {
-							            beginAtZero:true
-							        },
-			                    },{
-			                        type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
-			                        display: true,
-			                        position: "bottom",
-			                        id: "y-axis-2",
-			                        gridLines: {
-			                            drawOnChartArea: false
-			                        },
-			                        ticks: {
-							            // Return an empty string to draw the tick line but hide the tick label
-							           	// Return "null" or "undefined" to hide the tick line entirely
-							           	userCallback: function(value, index, values) {
-							           		// Convert the number to a string and splite the string every 3 charaters from the end
-							           		value = Math.round(value*100)/100;
-							                if(value >= 1000){
-								                value = value.toString();
-								                value = value.split(/(?=(?:...)*$)/);
-								                // Convert the array to a string and format the output
-								                value = value.join(",");
-							                }
-							                return "$" + value;
-							            	}
-							          }
-			                    }],
-							},
-							title: {
-					            display: true,
-					            text: "SOLICITUDES"
-							},
-							maintainAspectRatio: false,
-							tooltips: {
-								callbacks: {
-									label: function(tooltipItem, data) {
-										var allData = data.datasets[tooltipItem.datasetIndex].data;
-										var tooltipLabel = data.datasets[tooltipItem.datasetIndex].label;
-										var tooltipData = allData[tooltipItem.index];
-										if(tooltipItem.datasetIndex == 1){
-											nStr = tooltipData;
-											nStr += "";
-											x = nStr.split(".");
-											x1 = x[0];
-											x2 = x.length > 1 ? "." + x[1] : "";
-											var rgx = /(\d+)(\d{3})/;
-											while (rgx.test(x1)) {
-												x1 = x1.replace(rgx, "$1" + "," + "$2");
-											}
-											return tooltipLabel + ": $" + x1 + x2;
-										}
-										return tooltipLabel + ": " + tooltipData;
-									}
-								}
-							}
-						}
-					});
-					var ctxStatus = document.getElementById("statusContainer").getContext("2d");
-					StatusGraph = new Chart(ctxStatus, {
-					    type: "pie",
-					    data: {
-							labels: '.$work_orders_status_labels.',
-							datasets: [{
-							    label: "# Solicitudes",
-							    data: '.$work_orders_status_data_graph.',
-							    borderWidth: 1,
-							    backgroundColor: [
-				                    "#4d4d4d",
-									"#5da5da",
-									"#faa43a",
-									"#60bd68",
-									"#f17cB0",
-									"#b2912f",
-									"#b276b2",
-									"#decf3f",
-									"#f15854",
-				                ],
-							}]
-						},	
-						options: {
-							scales: {
-							    yAxes: [{
-							        ticks: {
-							            beginAtZero:true
-							        },
-							    }],
-							},
-							title: {
-					            display: true,
-					            text: "OT\'S POR ESTATUS"
-							},
-							maintainAspectRatio: false,
-							tooltips: {
-								callbacks: {
-									label: function(tooltipItem, data) {
-										var allData = data.datasets[tooltipItem.datasetIndex].data;
-										var tooltipLabel = data.labels[tooltipItem.index];
-										var tooltipData = allData[tooltipItem.index];
-										var total = 0;
-										for (var i in allData) {
-											total += parseFloat(allData[i]);
-										}
-										var tooltipPercentage = Math.round((tooltipData / total) * 100);
-										return tooltipLabel + ": " + tooltipData + " (" + tooltipPercentage + "%)";
-									}
-								}
-							}
-						}
-					});
-					var ctxProducts = document.getElementById("productsContainer").getContext("2d");
-					ProductsGraph = new Chart(ctxProducts, {
-					    type: "pie",
-					    data: {
-							labels: '.$work_orders_products_labels.',
-							datasets: [{
-							    label: "# Solicitudes",
-							    data: '.$work_orders_products_data.',
-							    borderWidth: 1,
-							    backgroundColor: [
-				                    "#e6194b",
-				                    "#3cb44b",
-				                    "#ffe119",
-				                    "#0082c8",
-				                    "#f58231",
-				                    "#911eb4",
-				                    "#46f0f0",
-				                    "#f032e6",
-				                    "#d2f53c",
-				                    "#fabebe",
-				                    "#008080",
-				                    "#e6beff",
-				                    "#aa6e28",
-				                    "#fffac8",
-				                    "#800000",
-				                    "#aaffc3",
-				                    "#808000",
-				                    "#ffd8b1",
-				                    "#000080",
-				                    "#808080",
-				                    "#FFFFFF",
-				                    "#000000",
-				                ],	
-							}]
-						},
-						options: {
-							scales: {
-							    yAxes: [{
-							        ticks: {
-							            beginAtZero:true
-							        },
-							    }],
-							},
-							title: {
-					            display: true,
-					            text: "PRODUCTOS SOLICITADOS"
-							},
-							maintainAspectRatio: false,
-							tooltips: {
-								callbacks: {
-									label: function(tooltipItem, data) {
-										var allData = data.datasets[tooltipItem.datasetIndex].data;
-										var tooltipLabel = data.labels[tooltipItem.index];
-										var tooltipData = allData[tooltipItem.index];
-										var total = 0;
-										for (var i in allData) {
-											total += parseFloat(allData[i]);
-										}
-										var tooltipPercentage = Math.round((tooltipData / total) * 100);
-										return tooltipLabel + ": " + tooltipData + " (" + tooltipPercentage + "%)";
-									}
-								}
-							}
-						}
-					});
-					$(".toggleTable").on("click", function(e){
-						e.preventDefault();
-						var target = $(this).attr("data-target");
-						var resize_target = $(this).attr("data-resize");
-						var itag = $(this).find("i");
-						itag.toggleClass("icon-plus");
-						itag.toggleClass("icon-minus");
-
-						var spantext = $(this).find("span").text();
-						if(spantext == "Ver tabla")
-							$(this).find("span").text("Ver grafico");
-						else
-							$(this).find("span").text("Ver tabla");
-
-						var resize_cell = $(this).closest(".row").find(resize_target);
-						resize_cell.toggle("fast");
-						$(target).toggle("fast");
-
-					});
-					$("#tablesorted")
-						.tablesorter({theme : "default", widthFixed: true, widgets: ["saveSort", "zebra"]});
-				});
+				var WO_Agents = '.$work_orders_data.';
+				var WO_Status = '.$work_orders_status_data.'
+				var WO_Products = '.$work_orders_products_data.'
 			</script>
 			';
 		$add_css = '
@@ -467,6 +228,7 @@ class solicitudes extends CI_Controller {
 			.filterstable {margin-left: 2em; width:80%;}
 			.filterstable th {text-align: left;}
 			.tab-content {overflow: hidden;}
+			.sorter.active{color: #000}
 		</style>
 		';
 
@@ -490,6 +252,7 @@ class solicitudes extends CI_Controller {
 				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/jquery.canvasjs.min.js"></script>',
 				'<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'solicitudes/assets/scripts/summary.js"></script>',
 				$add_js,
 				$this->custom_filters->render_javascript(),
 			),
@@ -506,10 +269,17 @@ class solicitudes extends CI_Controller {
 	public function _init_profile(){
 		$this->load->helper('ot/ot');
 
+		//Generic Filters
 		$other_filters = array(
 			"periodo" => 2,
 			"ramo" => '',
+			"agent" => '',
+			"status" => '',
+			"product" => '',
+
 		);
+		$this->custom_filters->set_array_defaults($other_filters);
+		$other_filters = array_merge($other_filters, $this->misc_filters);
 
 		//Filters
 		if($this->input->post()){
@@ -523,8 +293,19 @@ class solicitudes extends CI_Controller {
 			if ( isset($_POST['ramo']) && (($this->form_validation->is_natural_no_zero($_POST['ramo']) &&
 				($_POST['ramo'] <= 3)) || (($_POST['ramo']) === '')) )
 				$other_filters['ramo'] = $_POST['ramo'];
+
+			if (isset($_POST['agent']) && ($this->form_validation->is_natural_no_zero($_POST['agent']) || 
+				$_POST['agent'] === ''))
+				$other_filters['agent'] = $_POST['agent'];
+
+			if (isset($_POST['product']) && ($this->form_validation->is_natural_no_zero($_POST['product']) || 
+				$_POST['product'] === ''))
+				$other_filters['product'] = $_POST['product'];
+
+			if (isset($_POST['status']))
+				$other_filters['status'] = $_POST['status'];
 		}
-		$this->custom_filters->set_array_defaults($other_filters);
+		
 		$this->custom_filters->set_filters_to_save($other_filters);
 		$this->custom_filters->set_current_filters($other_filters);
 		generic_set_report_filter( $other_filters, array() );

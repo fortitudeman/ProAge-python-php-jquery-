@@ -2,7 +2,7 @@
 
 <div class="row-fluid sortable">
     <div class="box span12">      
-        <div class="box-content" style="padding-left: 3em"> <!-- To tweak left padding -->
+        <div class="box-content"> <!-- To tweak left padding -->
             <?php // Show Messages ?>            
             <?php if (isset($message['type'])): ?>            
                 <?php if ($message['type'] == true): ?>

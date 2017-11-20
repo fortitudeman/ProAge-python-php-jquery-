@@ -967,9 +967,21 @@ class Work_order extends CI_Model{
 
    		$ramo = $filter["ramo"];
    		$periodo = (int) $filter["periodo"];
+   		$producto = $filter["product"];
+   		$agente = $filter["agent"];
    		// Ramo
 		if ($ramo == 1 || $ramo == 2)
 			$this->db->where('work_order.product_group_id', $ramo);
+
+		// Producto
+		if ($producto > 0)
+			$this->db->where('products.id', $producto);
+
+		if ($agente > 0)
+			$this->db->where('agents.id', $agente);
+
+		if(isset($filter["status"]) && $filter["status"] != "")
+			$this->db->where('work_order_status.name', $filter["status"]);
 
 		// Periodo
 		if (is_int($periodo) && $periodo >= 1 && $periodo <= 4)
@@ -1402,11 +1414,7 @@ class Work_order extends CI_Model{
  **/
 	public function getProductsGroups(){
 		$query = $this->db->get('product_group');
-		$result = $query->result_array();
-		$return_arr = array("" => "Todos");
-		foreach ($result as $row)
-			$return_arr[$row["id"]] = $row["name"];
-		return $return_arr;
+		return $query->result_array();
 	}
 
 	public function getProductsGroupsOptions(){
@@ -1436,6 +1444,7 @@ class Work_order extends CI_Model{
 		if( !empty( $product_group ) )
 			
 			$this->db->where( array( 'product_group_id' => $product_group ) );
+		$this->db->order_by('name', 'asc');
 			
 		
 		$query = $this->db->get( 'products' );	
@@ -1691,6 +1700,13 @@ class Work_order extends CI_Model{
 
 		$updatepolicy = array( 'uid' =>  $policy );
 		return $this->db->update( 'policies', $updatepolicy, array( 'id' => $policies[0]['policy_id'] ) );
+	}
+
+	public function getStatusArray(){
+		$this->db->group_by('name');
+		$this->db->order_by('name', 'asc');
+		$query = $this->db->get('work_order_status');
+		return $query->result_array();
 	}
 	
  

@@ -1540,6 +1540,25 @@ class User extends CI_Model{
 		return $data;
 		
 	}	
+
+	//Get Agents array
+	public function getAgentsArray(){
+		$this->db->select( "agents.id, users.company_name");
+		$this->db->select( "concat(users.name,' ',users.lastnames) name", FALSE);
+		$this->db->from( 'agents' );
+		$this->db->join( 'users', 'users.id=agents.user_id' );
+		$this->db->order_by( 'users.name', 'asc' );	
+		$this->db->order_by( 'users.lastnames', 'asc' );
+
+		$query = $this->db->get();
+		$arr = $query->result_array();
+		foreach ($arr as $i => $row) {
+			$name = trim($row["name"]);
+			if(empty($name))
+				$arr[$i]["name"] = $row["company_name"];
+		}
+		return $arr;
+	}
 	
 
 // Get selects Agents 	
