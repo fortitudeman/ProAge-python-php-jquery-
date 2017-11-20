@@ -242,6 +242,7 @@ class solicitudes extends CI_Controller {
 				'<link href="' . $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
 				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">', // TO CHECK
+				'<link rel="stylesheet" href="'. $base_url .'style/print-reset.css">', // TO CHECK
 				$add_css,
 			),
 			'scripts' => array(
@@ -279,7 +280,8 @@ class solicitudes extends CI_Controller {
 
 		);
 		$this->custom_filters->set_array_defaults($other_filters);
-		$other_filters = array_merge($other_filters, $this->misc_filters);
+		if(!empty($this->misc_filters))
+			$other_filters = array_merge($other_filters, $this->misc_filters);
 
 		//Filters
 		if($this->input->post()){

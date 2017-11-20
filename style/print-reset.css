@@ -1,0 +1,5 @@
+@media print{
+	.navbar, .main-menu-span{
+		display: none;
+	}
+}
