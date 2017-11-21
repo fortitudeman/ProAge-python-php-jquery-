@@ -125,7 +125,7 @@ class solicitudes extends CI_Controller {
 		$this->summary();
 	}
 
-	public function summary($order_agents = "requests"){
+	public function summary(){
 		if ($this->default_period_filter == 5)
 			set_filter_period( 2 );
 
@@ -293,9 +293,28 @@ class solicitudes extends CI_Controller {
 		foreach ($work_orders_general as $i => $order){
 			if(empty($order["name"]) && empty($order["lastnames"]))
 				$work_orders_general[$i]["name"] = $order["company_name"];
-			$work_orders_general[$i]["lastnames"].= " - <b>". $order["percentage"]."</b>";
+			$work_orders_general[$i]["lastnames"].= " - ".$order["percentage"];
 		}
-		echo $filename = 'solicitudes_'.$typeFile.'_'.date("Ymd_Hi").'.csv';
+
+		$clean_arr[] = array(
+			"Numero de OT", "Fecha alta", "Agente", "Ramo", "Asegurado", "Estatus", "Prima", "Poliza"
+		);
+		foreach ($work_orders_general as $order) {
+			$clean_arr[] = array(
+				$order["uid"], $order["creation_date"], $order["name"]." ".$order["lastnames"], $order["ramo"], $order["asegurado"], $order["status"], $order["prima"], $order["poliza"] 
+			);
+		}
+
+		// Export
+		$this->load->helper('usuarios/csv');
+		$filename = 'solicitudes_'.$typeFile.'_'.date("Ymd_Hi").'.csv';
+		array_to_csv($clean_arr, $filename);
+		
+		if( is_file( $filename ) )
+			echo file_get_contents( $filename );
+		if( is_file( $filename ) )
+			unlink( $filename );
+		exit;
 	}
 
 	public function _init_profile(){

@@ -46,9 +46,15 @@
 		top: 0px !important;
 	}
 
-	.chart-container{
+	.chart-container, #tablesorted{
 		position: relative;
 		top: 50px;
 		margin-bottom: 50px;
+	}
+	#tablesorted{
+		width: 100%;
+	}
+	#tablesorted tr{
+		page-break-after: auto !important;
 	}
 }

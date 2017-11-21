@@ -43,7 +43,7 @@
 	  		<?= anchor('#', 'Primas', "class='sorter' style='display:inline-block; margin-left: 15px'  data-sort-by='primas'"); ?>
 	  	</div>
 	  	<div class="span12 opciones" style="margin-left: 30px;">
-			<button type="button" class="btn" id="imprimir">
+			<button type="button" class="btn imprimir">
 				<i class="icon-print" style="font-size: 24px"></i>
 			</button>
 	  	</div>
@@ -241,6 +241,9 @@
   	<?php if($access_export_xls): ?>
 	  	<div class="row">
 		  	<div class="span12 opciones" style="margin-left: 30px;">
+		  		<button type="button" class="btn imprimir">
+					<i class="icon-print" style="font-size: 24px"></i>
+				</button>
 				<a class="btn" href="<?= base_url("solicitudes/export/summary") ?>">
 					<i class="icon-download-alt" style="font-size: 24px"></i>
 				</a>
@@ -251,7 +254,7 @@
 		<thead>
 			<tr>
 				<th>Número de OT</th>
-				<th>Fecha alta</th>
+				<th style="width: 60px">Fecha alta</th>
 				<th>Agente</th>
 				<th>Ramo</th>
 				<th>Asegurado</th>
@@ -264,7 +267,7 @@
 			<?php foreach ($wo_general as $order): ?>
 				<tr>
 					<td><?= $order["uid"] ?></td>
-					<td><?= $order["creation_date"] ?></td>
+					<td><?= date("Y-m-d", strtotime($order["creation_date"])) ?></td>
 					<td><?= $order["name"]." ".$order["lastnames"] ?></td>
 					<td><?= $order["ramo"] ?></td>
 					<td><?= $order["asegurado"] ?></td>

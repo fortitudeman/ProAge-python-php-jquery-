@@ -387,7 +387,7 @@ $(document).ready( function(){
 	});
 	$("#tablesorted")
 		.tablesorter({theme : "default", widthFixed: true, widgets: ["saveSort", "zebra"]});
-	$("#imprimir").click(function(e){
+	$(".imprimir").click(function(e){
 		e.preventDefault();
 		window.print();
 	})
