@@ -387,6 +387,10 @@ $(document).ready( function(){
 	});
 	$("#tablesorted")
 		.tablesorter({theme : "default", widthFixed: true, widgets: ["saveSort", "zebra"]});
+	$("#imprimir").click(function(e){
+		e.preventDefault();
+		window.print();
+	})
 });
 
 function dynamicSort(property) {
@@ -401,21 +405,4 @@ function dynamicSort(property) {
         var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
         return result * sortOrder;
     }
-}
-
-function reloadData(chart, datasetIndex, labels, values) {
-    var diff = chart.datasets[datasetIndex].bars.length - values.length;
-    if (diff < 0) {
-        for (var i = 0; i < -diff; i++)
-            chart.addData([0], "");
-    } else if (diff > 0) {
-        for (var i = 0; i < diff; i++)
-            chart.removeData();
-    }
-
-    chart.datasets[datasetIndex].bars.forEach(function (bar, i) {
-        chart.scale.xLabels[i] = labels[i];
-        bar.value = values[i];
-    })
-    chart.update();
 }

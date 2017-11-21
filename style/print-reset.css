@@ -1,5 +1,54 @@
 @media print{
-	.navbar, .main-menu-span{
-		display: none;
+	.navbar, .nav-tabs, .main-menu-span, .opciones, .toggleTable, footer, hr{
+		display: none !important;
+	}
+	.box, .box-content, .row, .span6, form{
+		margin: 0 !important;
+		padding: 0 !important;
+		border: none !important;
+	}
+	.container, .container-fluid {
+	    width: auto;
+	    display: block!important;
+	 }
+	.graph-container, .table-container{
+		display: block !important;
+		width: 45% !important;
+	}
+	.row, form{
+		display: block;
+		width: 100% !important;
+	}
+
+	.span6{
+		width: 100% !important;
+	}
+	.graph-container{
+		float: left !important;
+	}
+	.table-container{
+		float: right !important;
+	}
+	.table-container table{
+		margin-left: 20px;
+	}
+	.graph-clear{
+		clear: both;
+	}
+
+	canvas, iframe, div, table, form{
+		page-break-after: avoid !important;
+		page-break-before: avoid !important;
+	}
+
+	form{
+		position: absolute !important;
+		top: 0px !important;
+	}
+
+	.chart-container{
+		position: relative;
+		top: 50px;
+		margin-bottom: 50px;
 	}
 }

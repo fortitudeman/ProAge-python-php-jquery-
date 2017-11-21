@@ -36,11 +36,16 @@
 <div class="tab-content">
   <div class="tab-pane active" id="graficos">
   	  <div class="row">
-  	  	<div style="margin-top: 10px; margin-bottom: 15px; margin-left: 30px;">
+  	  	<div class="span12 opciones" style="margin-top: 10px; margin-bottom: 15px; margin-left: 30px;">
 	  		Ordenar por: 
 	  		<?= anchor('#', 'Solicitudes', "class='sorter active' style='display:inline-block; margin-right: 15px' data-sort-by='requests'"); ?>
 	  		|
 	  		<?= anchor('#', 'Primas', "class='sorter' style='display:inline-block; margin-left: 15px'  data-sort-by='primas'"); ?>
+	  	</div>
+	  	<div class="span12 opciones" style="margin-left: 30px;">
+			<button type="button" class="btn" id="imprimir">
+				<i class="icon-print" style="font-size: 24px"></i>
+			</button>
 	  	</div>
   	  	<div class="span12 chart-container" style="height: <?= !empty($wo_agents) ? (ceil(count($wo_agents) / 10)*125)+100 : 250?>px">
 	  		<canvas id="agentsContainer"></canvas>
@@ -48,10 +53,10 @@
 	  </div>
 	  <div class="row">
 		  <div class="span6">
-			<div class="span12" id="statusCell" style="height: 450px">
+			<div class="span12 graph-container" id="statusCell" style="height: 450px">
 				<canvas id="statusContainer"></canvas>
 			</div>
-			<div class="span12" id="statusTable" style="display: none">
+			<div class="span12 table-container" id="statusTable" style="display: none">
 				<table class="table table-striped" style="margin-left: 30px">
 				<thead>
 					<tr>
@@ -74,7 +79,7 @@
 				</tbody>
 			</table>
 			</div>
-			<div class="span12" style="margin-left: 30px">
+			<div class="span12 graph-clear" style="margin-left: 30px">
 				<a href="#" class="toggleTable" data-target="#statusTable" data-resize="#statusCell">
 				<i class="icon-plus"></i>
 				<span>Ver tabla</span>
@@ -82,10 +87,10 @@
 			</div>
 		  </div>
 		  <div class="span6">
-			<div class="span12" id="productsCell" style="height: 450px">
+			<div class="span12 graph-container" id="productsCell" style="height: 450px">
 				<canvas id="productsContainer"></canvas>
 			</div>
-			<div class="span12" id="productsTable" style="display: none">
+			<div class="span12 table-container" id="productsTable" style="display: none">
 				<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
 					<thead>
 						<tr>
@@ -108,7 +113,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="span12" style="margin-left: 30px;">
+			<div class="span12 graph-clear" style="margin-left: 30px;">
 				<a href="#" class="toggleTable" data-target="#productsTable" data-resize="#productsCell">
 					<i class="icon-plus"></i>
 					<span>Ver tabla</span>
@@ -123,10 +128,10 @@
 	 ?>
 	 <div class="row">
 		  <div class="span6">
-			<div class="span12" id="statusPrimaCell" style="height: 450px">
+			<div class="span12 graph-container" id="statusPrimaCell" style="height: 450px">
 				<canvas id="statusPrimaContainer"></canvas>
 			</div>
-			<div class="span12" id="statusPrimaTable" style="display: none">
+			<div class="span12 table-container" id="statusPrimaTable" style="display: none">
 				<table class="table table-striped" style="margin-left: 30px">
 				<thead>
 					<tr>
@@ -149,7 +154,7 @@
 				</tbody>
 			</table>
 			</div>
-			<div class="span12" style="margin-left: 30px">
+			<div class="span12 graph-clear" style="margin-left: 30px">
 				<a href="#" class="toggleTable" data-target="#statusPrimaTable" data-resize="#statusPrimaCell">
 				<i class="icon-plus"></i>
 				<span>Ver tabla</span>
@@ -157,10 +162,10 @@
 			</div>
 		  </div>
 		  <div class="span6">
-			<div class="span12" id="productsPrimaCell" style="height: 450px">
+			<div class="span12 graph-container" id="productsPrimaCell" style="height: 450px">
 				<canvas id="productsPrimaContainer"></canvas>
 			</div>
-			<div class="span12" id="productsPrimaTable" style="display: none">
+			<div class="span12 table-container" id="productsPrimaTable" style="display: none">
 				<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
 					<thead>
 						<tr>
@@ -183,7 +188,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="span12" style="margin-left: 30px;">
+			<div class="span12 graph-clear" style="margin-left: 30px;">
 				<a href="#" class="toggleTable" data-target="#productsPrimaTable" data-resize="#productsPrimaCell">
 					<i class="icon-plus"></i>
 					<span>Ver tabla</span>
@@ -197,10 +202,10 @@
 	 ?>
 	 <div class="row">
 		  <div class="span6">
-			<div class="span12" id="productsPrimaAvgCell" style="height: 450px">
+			<div class="span12 graph-container" id="productsPrimaAvgCell" style="height: 450px">
 				<canvas id="productsPrimaAvgContainer"></canvas>
 			</div>
-			<div class="span12" id="productsPrimaAvgTable" style="display: none">
+			<div class="span12 table-container" id="productsPrimaAvgTable" style="display: none">
 				<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
 					<thead>
 						<tr>
@@ -223,7 +228,7 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="span12" style="margin-left: 30px;">
+			<div class="span12 graph-clear" style="margin-left: 30px;">
 				<a href="#" class="toggleTable" data-target="#productsPrimaAvgTable" data-resize="#productsPrimaAvgCell">
 					<i class="icon-plus"></i>
 					<span>Ver tabla</span>
@@ -233,6 +238,15 @@
 	 </div>
   </div>
   <div class="tab-pane" id="reporte">
+  	<?php if($access_export_xls): ?>
+	  	<div class="row">
+		  	<div class="span12 opciones" style="margin-left: 30px;">
+				<a class="btn" href="<?= base_url("solicitudes/export/summary") ?>">
+					<i class="icon-download-alt" style="font-size: 24px"></i>
+				</a>
+		  	</div>
+	  	</div>
+	  <?php endif; ?>
   	<table class="table table-striped" id="tablesorted">
 		<thead>
 			<tr>

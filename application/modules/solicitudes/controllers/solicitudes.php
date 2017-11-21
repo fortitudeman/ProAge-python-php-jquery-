@@ -201,6 +201,7 @@ class solicitudes extends CI_Controller {
 		$this->load->helper('sort');
 		$content_data = array(
 			'access_all' => $this->access_all,
+			'access_export_xls' => $this->access_export_xls,
 			'period_fields' => show_period_fields('requests', $ramo),
 			'selected_period' => get_filter_period(),
 			'other_filters' => $other_filters,
@@ -267,6 +268,36 @@ class solicitudes extends CI_Controller {
 		$this->load->view( 'index', $this->view );
 	}
 
+	public function export($typeFile = "summary"){
+		$exportTypes = array("summary");
+		if(!in_array($typeFile, $exportTypes))
+			redirect('summary');
+		if ( !$this->access_export_xls )
+		{	
+			$this->session->set_flashdata( 'message', array
+			( 
+				'type' => false,	
+				'message' => 'No tiene permisos para exportar a XLS este reporte.'
+			));	
+			redirect( 'home', 'refresh' );
+		}
+
+		$other_filters = $this->_init_profile();
+		$other_filters["nuevos_negocios"] = 1;
+		$other_filters["periodo"] = get_filter_period();
+		
+		$this->load->model( 'ot/work_order');
+		//General work orders
+		$work_orders_general = $this->work_order->getWorkOrdersGroupBy($other_filters);
+		//Formating names
+		foreach ($work_orders_general as $i => $order){
+			if(empty($order["name"]) && empty($order["lastnames"]))
+				$work_orders_general[$i]["name"] = $order["company_name"];
+			$work_orders_general[$i]["lastnames"].= " - <b>". $order["percentage"]."</b>";
+		}
+		echo $filename = 'solicitudes_'.$typeFile.'_'.date("Ymd_Hi").'.csv';
+	}
+
 	public function _init_profile(){
 		$this->load->helper('ot/ot');
 
@@ -313,7 +344,6 @@ class solicitudes extends CI_Controller {
 		generic_set_report_filter( $other_filters, array() );
 		return $other_filters;
 	}
-
 }
 
 /* End of file solicitudes.php */
