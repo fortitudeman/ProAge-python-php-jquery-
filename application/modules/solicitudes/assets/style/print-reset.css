@@ -1,4 +1,5 @@
 @media print{
+	html, body { height: 99% !important; }
 	.navbar, .nav-tabs, .main-menu-span, .opciones, .toggleTable, footer, hr{
 		display: none !important;
 	}
@@ -46,23 +47,40 @@
 		top: 0px !important;
 	}
 
-	.chart-container, #tablesorted{
+	.chart-container{
 		position: relative;
 		top: 100px;
 		margin-bottom: 100px;
 	}
 	#tablesorted{
-		width: 100%;
+		position: relative;
+		width: 100% !important;
+		height: auto !important;
+		margin: 0 !important;
 	}
 	#tablesorted tr{
 		page-break-after: auto !important;
 	}
 	h2, h3{
+		padding-top: 50px !important;
 		text-align: center !important;
+		padding-left: 0 !important;
 	}
 
 	#AgentsSection h2, #AgentsSection h3{
-		top: 50px;
+		padding: 0px !important;
+		top: 50px !important;
 		position: absolute !important;
+	}
+
+	.printable{
+		display: none !important;
+	}
+	.printable.print, form{
+		display: block !important;
+	}
+	div{
+		height: auto !important;
+		margin: 0 !important;
 	}
 }

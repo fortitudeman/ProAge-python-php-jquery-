@@ -234,8 +234,8 @@ class solicitudes extends CI_Controller {
 				'<link href="' . $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
 				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">', // TO CHECK
-				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/style.css">', // TO CHECK
-				'<link rel="stylesheet" href="'. $base_url .'style/print-reset.css">', // TO CHECK
+				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/style.css">',
+				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/print-reset.css">',
 			),
 			'scripts' => array(
 				'<script type="text/javascript" src="'. $base_url .'scripts/jquery.cookie.js"></script>',

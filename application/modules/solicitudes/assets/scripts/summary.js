@@ -359,6 +359,8 @@ $(document).ready( function(){
 		.tablesorter({theme : "default", widthFixed: true, widgets: ["saveSort", "zebra"]});
 	$(".imprimir").click(function(e){
 		e.preventDefault();
+		$(".print").removeClass("print");
+		$(this).closest(".printable").addClass("print");
 		window.print();
 	})
 });

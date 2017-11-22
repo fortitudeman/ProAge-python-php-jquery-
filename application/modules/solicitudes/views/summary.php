@@ -44,7 +44,7 @@
 	  	</div>
 	  </div>
 	  <div class="row">
-	  	<div id="AgentsSection" style="margin-left: 30px;">
+	  	<div id="AgentsSection" class=" printable" style="margin-left: 30px;">
 		  	<h3 class="span12">
 		  		Solicitudes
 				<div class="opciones">
@@ -59,13 +59,16 @@
 	  	</div>
 	  </div>
 	  <div class="row">
-		  <div class="span6">
+		  <div class="span6 printable">
 		  	<h3 class="span12">
 		  		OT's por Estatus
 				<div class="opciones">
 					<a href="#" class="btn btn-primary toggleTable" data-target="#statusTable" data-resize="#statusCell">
 						<i class="icon-list-alt"></i>
 					</a>
+					<button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="statusCell" style="height: 450px">
@@ -90,13 +93,16 @@
 			</table>
 			</div>
 		  </div>
-		  <div class="span6">
+		  <div class="span6 printable">
 		  	<h3 class="span12">
 		  		Productos Solicitados
 				<div class="opciones">
 					<a href="#" class="btn btn-primary toggleTable" data-target="#productsTable" data-resize="#productsCell">
 						<i class="icon-list-alt"></i>
 					</a>
+					<button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="productsCell" style="height: 450px">
@@ -128,13 +134,16 @@
 	 	sort_object($wo_products, "prima");
 	 ?>
 	 <div class="row">
-		  <div class="span6">
+		  <div class="span6 printable">
 		 	<h3 class="span12">
 		  		Primas por Estatus
 				<div class="opciones">
 					<a href="#" class="btn btn-primary toggleTable" data-target="#statusPrimaTable" data-resize="#statusPrimaCell">
 						<i class="icon-list-alt"></i>
 					</a>
+					<button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="statusPrimaCell" style="height: 450px">
@@ -159,13 +168,16 @@
 			</table>
 			</div>
 		  </div>
-		  <div class="span6">
+		  <div class="span6 printable">
 		  	<h3 class="span12">
 		  		Primas por Producto
 				<div class="opciones">
 					<a href="#" class="btn btn-primary toggleTable" data-target="#productsPrimaTable" data-resize="#productsPrimaCell">
 						<i class="icon-list-alt"></i>
 					</a>
+					<button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="productsPrimaCell" style="height: 450px">
@@ -196,13 +208,16 @@
 	 	sort_object($wo_products, "avgPrima");
 	 ?>
 	 <div class="row">
-		  <div class="span6">
+		  <div class="span6 printable">
 		  	<h3 class="span12">
 		  		Primas Promedio por Producto
 				<div class="opciones">
 					<a href="#" class="btn btn-primary toggleTable" data-target="#productsPrimaAvgTable" data-resize="#productsPrimaAvgCell">
 						<i class="icon-list-alt"></i>
 					</a>
+					<button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="productsPrimaAvgCell" style="height: 450px">
@@ -230,45 +245,48 @@
 	 </div>
   </div>
   <div class="tab-pane" id="reporte">
-  	<?php if($access_export_xls): ?>
-	  	<div class="row">
-		  	<div class="span12 opciones" style="margin-left: 30px;">
-		  		<button type="button" class="btn imprimir">
-					<i class="icon-print" style="font-size: 24px"></i>
-				</button>
-				<a class="btn" href="<?= base_url("solicitudes/export/summary") ?>">
-					<i class="icon-download-alt" style="font-size: 24px"></i>
-				</a>
-		  	</div>
-	  	</div>
-	  <?php endif; ?>
-  	<table class="table table-striped" id="tablesorted">
-		<thead>
-			<tr>
-				<th>Número de OT</th>
-				<th style="width: 60px">Fecha alta</th>
-				<th>Agente</th>
-				<th>Ramo</th>
-				<th>Asegurado</th>
-				<th>Estatus</th>
-				<th>Prima</th>
-				<th>Poliza</th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php foreach ($wo_general as $order): ?>
+  	<div class="printable">
+	  	<h3 class="span12">
+			Reporte General
+	  		<?php if($access_export_xls): ?>
+				  	<div class="opciones">
+				  		<button type="button" class="btn btn-primary imprimir">
+							<i class="icon-print"></i>
+						</button>
+						<a class="btn btn-primary" href="<?= base_url("solicitudes/export/summary") ?>">
+							<i class="icon-download-alt" style="font-size: 24px"></i>
+						</a>
+				  	</div>
+		  	<?php endif; ?>
+		</h3>
+	  	<table class="table table-striped" id="tablesorted">
+			<thead>
 				<tr>
-					<td><?= $order["uid"] ?></td>
-					<td><?= date("Y-m-d", strtotime($order["creation_date"])) ?></td>
-					<td><?= $order["name"]." ".$order["lastnames"] ?></td>
-					<td><?= $order["ramo"] ?></td>
-					<td><?= $order["asegurado"] ?></td>
-					<td><?= $order["status"] ?></td>
-					<td>$<?= number_format($order["prima"], 2) ?></td>
-					<td><?= $order["poliza"] ?></td>
+					<th>Número de OT</th>
+					<th style="width: 60px">Fecha alta</th>
+					<th>Agente</th>
+					<th>Ramo</th>
+					<th>Asegurado</th>
+					<th>Estatus</th>
+					<th>Prima</th>
+					<th>Poliza</th>
 				</tr>
-			<?php endforeach; ?>
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				<?php foreach ($wo_general as $order): ?>
+					<tr>
+						<td><?= $order["uid"] ?></td>
+						<td><?= date("Y-m-d", strtotime($order["creation_date"])) ?></td>
+						<td><?= $order["name"]." ".$order["lastnames"] ?></td>
+						<td><?= $order["ramo"] ?></td>
+						<td><?= $order["asegurado"] ?></td>
+						<td><?= $order["status"] ?></td>
+						<td>$<?= number_format($order["prima"], 2) ?></td>
+						<td><?= $order["poliza"] ?></td>
+					</tr>
+				<?php endforeach; ?>
+			</tbody>
+		</table>
+	</div>
   </div>
 </div>
