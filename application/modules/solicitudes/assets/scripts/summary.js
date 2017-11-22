@@ -60,10 +60,6 @@ $(document).ready( function(){
 			          }
                 }],
 			},
-			title: {
-	            display: true,
-	            text: "SOLICITUDES"
-			},
 			maintainAspectRatio: false,
 			tooltips: {
 				callbacks: {
@@ -111,10 +107,6 @@ $(document).ready( function(){
 			        },
 			    }],
 			},
-			title: {
-	            display: true,
-	            text: "OT\'S POR ESTATUS"
-			},
 			maintainAspectRatio: false,
 			tooltips: {
 				callbacks: {
@@ -152,10 +144,6 @@ $(document).ready( function(){
 			            beginAtZero:true
 			        },
 			    }],
-			},
-			title: {
-	            display: true,
-	            text: "PRODUCTOS SOLICITADOS"
 			},
 			maintainAspectRatio: false,
 			tooltips: {
@@ -199,10 +187,6 @@ $(document).ready( function(){
 			            beginAtZero:true
 			        },
 			    }],
-			},
-			title: {
-	            display: true,
-	            text: "PRIMAS POR ESTATUS"
 			},
 			maintainAspectRatio: false,
 			tooltips: {
@@ -252,10 +236,6 @@ $(document).ready( function(){
 			            beginAtZero:true
 			        },
 			    }],
-			},
-			title: {
-	            display: true,
-	            text: "PRIMAS POR PRODUCTO"
 			},
 			maintainAspectRatio: false,
 			tooltips: {
@@ -308,10 +288,6 @@ $(document).ready( function(){
 			            beginAtZero:true
 			        },
 			    }],
-			},
-			title: {
-	            display: true,
-	            text: "PRIMAS PROMEDIO POR PRODUCTO"
 			},
 			maintainAspectRatio: false,
 			tooltips: {
@@ -371,14 +347,8 @@ $(document).ready( function(){
 		var target = $(this).attr("data-target");
 		var resize_target = $(this).attr("data-resize");
 		var itag = $(this).find("i");
-		itag.toggleClass("icon-plus");
-		itag.toggleClass("icon-minus");
-
-		var spantext = $(this).find("span").text();
-		if(spantext == "Ver tabla")
-			$(this).find("span").text("Ver grafico");
-		else
-			$(this).find("span").text("Ver tabla");
+		itag.toggleClass("icon-picture");
+		itag.toggleClass("icon-list-alt");
 
 		var resize_cell = $(this).closest(".row").find(resize_target);
 		resize_cell.toggle("fast");

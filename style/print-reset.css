@@ -48,13 +48,21 @@
 
 	.chart-container, #tablesorted{
 		position: relative;
-		top: 50px;
-		margin-bottom: 50px;
+		top: 100px;
+		margin-bottom: 100px;
 	}
 	#tablesorted{
 		width: 100%;
 	}
 	#tablesorted tr{
 		page-break-after: auto !important;
+	}
+	h2, h3{
+		text-align: center !important;
+	}
+
+	#AgentsSection h2, #AgentsSection h3{
+		top: 50px;
+		position: absolute !important;
 	}
 }

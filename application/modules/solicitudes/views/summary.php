@@ -42,28 +42,38 @@
 	  		|
 	  		<?= anchor('#', 'Primas', "class='sorter' style='display:inline-block; margin-left: 15px'  data-sort-by='primas'"); ?>
 	  	</div>
-	  	<div class="span12 opciones" style="margin-left: 30px;">
-			<button type="button" class="btn imprimir">
-				<i class="icon-print" style="font-size: 24px"></i>
-			</button>
-	  	</div>
-  	  	<div class="span12 chart-container" style="height: <?= !empty($wo_agents) ? (ceil(count($wo_agents) / 10)*125)+100 : 250?>px">
-	  		<canvas id="agentsContainer"></canvas>
+	  </div>
+	  <div class="row">
+	  	<div id="AgentsSection" style="margin-left: 30px;">
+		  	<h3 class="span12">
+		  		Solicitudes
+				<div class="opciones">
+					<button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button>
+			  	</div>
+		  	</h3>
+	  	  	<div class="span12 chart-container" style="height: <?= !empty($wo_agents) ? (ceil(count($wo_agents) / 10)*125)+100 : 250?>px">
+		  		<canvas id="agentsContainer"></canvas>
+		  	</div>
 	  	</div>
 	  </div>
 	  <div class="row">
 		  <div class="span6">
+		  	<h3 class="span12">
+		  		OT's por Estatus
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#statusTable" data-resize="#statusCell">
+						<i class="icon-list-alt"></i>
+					</a>
+			  	</div>
+		  	</h3>
 			<div class="span12 graph-container" id="statusCell" style="height: 450px">
 				<canvas id="statusContainer"></canvas>
 			</div>
 			<div class="span12 table-container" id="statusTable" style="display: none">
 				<table class="table table-striped" style="margin-left: 30px">
 				<thead>
-					<tr>
-						<th colspan="2" style="text-align: center">
-							OT'S POR ESTATUS
-						</th>
-					</tr>
 					<tr>
 						<th>Estatus</th>
 						<th>OT'S</th>
@@ -79,25 +89,22 @@
 				</tbody>
 			</table>
 			</div>
-			<div class="span12 graph-clear" style="margin-left: 30px">
-				<a href="#" class="toggleTable" data-target="#statusTable" data-resize="#statusCell">
-				<i class="icon-plus"></i>
-				<span>Ver tabla</span>
-				</a>
-			</div>
 		  </div>
 		  <div class="span6">
+		  	<h3 class="span12">
+		  		Productos Solicitados
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#productsTable" data-resize="#productsCell">
+						<i class="icon-list-alt"></i>
+					</a>
+			  	</div>
+		  	</h3>
 			<div class="span12 graph-container" id="productsCell" style="height: 450px">
 				<canvas id="productsContainer"></canvas>
 			</div>
 			<div class="span12 table-container" id="productsTable" style="display: none">
 				<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
 					<thead>
-						<tr>
-							<th colspan="2" style="text-align: center">
-								PRODUCTOS SOLICITADOS
-							</th>
-						</tr>
 						<tr>
 							<th>PRODUCTO</th>
 							<th>OT'S</th>
@@ -113,12 +120,6 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="span12 graph-clear" style="margin-left: 30px;">
-				<a href="#" class="toggleTable" data-target="#productsTable" data-resize="#productsCell">
-					<i class="icon-plus"></i>
-					<span>Ver tabla</span>
-				</a>
-			</div>
 		 </div>
 	 </div>
 	 <?php  
@@ -128,17 +129,20 @@
 	 ?>
 	 <div class="row">
 		  <div class="span6">
+		 	<h3 class="span12">
+		  		Primas por Estatus
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#statusPrimaTable" data-resize="#statusPrimaCell">
+						<i class="icon-list-alt"></i>
+					</a>
+			  	</div>
+		  	</h3>
 			<div class="span12 graph-container" id="statusPrimaCell" style="height: 450px">
 				<canvas id="statusPrimaContainer"></canvas>
 			</div>
 			<div class="span12 table-container" id="statusPrimaTable" style="display: none">
 				<table class="table table-striped" style="margin-left: 30px">
 				<thead>
-					<tr>
-						<th colspan="2" style="text-align: center">
-							PRIMAS POR ESTATUS
-						</th>
-					</tr>
 					<tr>
 						<th>Estatus</th>
 						<th>PRIMA</th>
@@ -154,25 +158,22 @@
 				</tbody>
 			</table>
 			</div>
-			<div class="span12 graph-clear" style="margin-left: 30px">
-				<a href="#" class="toggleTable" data-target="#statusPrimaTable" data-resize="#statusPrimaCell">
-				<i class="icon-plus"></i>
-				<span>Ver tabla</span>
-				</a>
-			</div>
 		  </div>
 		  <div class="span6">
+		  	<h3 class="span12">
+		  		Primas por Producto
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#productsPrimaTable" data-resize="#productsPrimaCell">
+						<i class="icon-list-alt"></i>
+					</a>
+			  	</div>
+		  	</h3>
 			<div class="span12 graph-container" id="productsPrimaCell" style="height: 450px">
 				<canvas id="productsPrimaContainer"></canvas>
 			</div>
 			<div class="span12 table-container" id="productsPrimaTable" style="display: none">
 				<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
 					<thead>
-						<tr>
-							<th colspan="2" style="text-align: center">
-								PRIMAS POR PRODUCTO
-							</th>
-						</tr>
 						<tr>
 							<th>PRODUCTO</th>
 							<th>PRIMA</th>
@@ -188,12 +189,6 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="span12 graph-clear" style="margin-left: 30px;">
-				<a href="#" class="toggleTable" data-target="#productsPrimaTable" data-resize="#productsPrimaCell">
-					<i class="icon-plus"></i>
-					<span>Ver tabla</span>
-				</a>
-			</div>
 		 </div>
 	 </div>
 	 <?php 
@@ -202,17 +197,20 @@
 	 ?>
 	 <div class="row">
 		  <div class="span6">
+		  	<h3 class="span12">
+		  		Primas Promedio por Producto
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#productsPrimaAvgTable" data-resize="#productsPrimaAvgCell">
+						<i class="icon-list-alt"></i>
+					</a>
+			  	</div>
+		  	</h3>
 			<div class="span12 graph-container" id="productsPrimaAvgCell" style="height: 450px">
 				<canvas id="productsPrimaAvgContainer"></canvas>
 			</div>
 			<div class="span12 table-container" id="productsPrimaAvgTable" style="display: none">
 				<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
 					<thead>
-						<tr>
-							<th colspan="2" style="text-align: center">
-								PRIMAS PROMEDIO POR PRODUCTO
-							</th>
-						</tr>
 						<tr>
 							<th>PRODUCTO</th>
 							<th>PRIMA PROMEDIO</th>
@@ -227,12 +225,6 @@
 						<?php endforeach; ?>
 					</tbody>
 				</table>
-			</div>
-			<div class="span12 graph-clear" style="margin-left: 30px;">
-				<a href="#" class="toggleTable" data-target="#productsPrimaAvgTable" data-resize="#productsPrimaAvgCell">
-					<i class="icon-plus"></i>
-					<span>Ver tabla</span>
-				</a>
 			</div>
 		 </div>
 	 </div>

@@ -224,15 +224,6 @@ class solicitudes extends CI_Controller {
 				var WO_Products = '.$work_orders_products_data.'
 			</script>
 			';
-		$add_css = '
-		<style>
-			.filterstable {margin-left: 2em; width:80%;}
-			.filterstable th {text-align: left;}
-			.tab-content {overflow: hidden;}
-			.sorter.active{color: #000}
-		</style>
-		';
-
 		$this->view = array(
 			'title' => 'Resumen de Solicitación',
 			 // Permisions
@@ -243,8 +234,8 @@ class solicitudes extends CI_Controller {
 				'<link href="' . $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
 				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">', // TO CHECK
+				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/style.css">', // TO CHECK
 				'<link rel="stylesheet" href="'. $base_url .'style/print-reset.css">', // TO CHECK
-				$add_css,
 			),
 			'scripts' => array(
 				'<script type="text/javascript" src="'. $base_url .'scripts/jquery.cookie.js"></script>',

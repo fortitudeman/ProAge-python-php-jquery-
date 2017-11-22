@@ -1,0 +1,21 @@
+.filterstable {margin-left: 2em; width:80%;}
+.filterstable th {text-align: left;}
+.tab-content {overflow: hidden;}
+.sorter.active{color: #000}
+.opciones{
+	float: right;
+}
+h2, h3{
+	text-align: left;
+	padding-left: 30px;
+}
+#AgentsSection h2, #AgentsSection h3{
+	text-align: center;
+}
+.btn{
+	padding: 4px 8px;
+}
+i[class^="icon-"] {
+	opacity: 1;
+	font-size: 20px;
+}
