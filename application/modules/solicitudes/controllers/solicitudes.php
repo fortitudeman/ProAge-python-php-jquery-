@@ -234,8 +234,8 @@ class solicitudes extends CI_Controller {
 				'<link href="' . $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
 				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">', // TO CHECK
-				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/style.css">',
-				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/print-reset.css">',
+				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/style.css?version=1.0">',
+				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/print-reset.css?version=1.0">',
 			),
 			'scripts' => array(
 				'<script type="text/javascript" src="'. $base_url .'scripts/jquery.cookie.js"></script>',
@@ -245,7 +245,7 @@ class solicitudes extends CI_Controller {
 				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/jquery.canvasjs.min.js"></script>',
 				'<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
-				'<script type="text/javascript" src="'. $base_url .'solicitudes/assets/scripts/summary.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'solicitudes/assets/scripts/summary.js?version=1.0"></script>',
 				$add_js,
 				$this->custom_filters->render_javascript(),
 			),
@@ -260,9 +260,10 @@ class solicitudes extends CI_Controller {
 	}
 
 	public function export($typeFile = "summary"){
-		$exportTypes = array("summary");
+		//Validation of export
+		$exportTypes = array("summary", "agents", "status", "products", "primastatus", "primaproduct", "primaavgproduct");
 		if(!in_array($typeFile, $exportTypes))
-			redirect('summary');
+			redirect('solicitudes');
 		if ( !$this->access_export_xls )
 		{	
 			$this->session->set_flashdata( 'message', array
@@ -278,22 +279,144 @@ class solicitudes extends CI_Controller {
 		$other_filters["periodo"] = get_filter_period();
 		
 		$this->load->model( 'ot/work_order');
-		//General work orders
-		$work_orders_general = $this->work_order->getWorkOrdersGroupBy($other_filters);
-		//Formating names
-		foreach ($work_orders_general as $i => $order){
-			if(empty($order["name"]) && empty($order["lastnames"]))
-				$work_orders_general[$i]["name"] = $order["company_name"];
-			$work_orders_general[$i]["lastnames"].= " - ".$order["percentage"];
-		}
+		switch ($typeFile) {
+			case 'summary':
+				//General work orders
+				$work_orders_general = $this->work_order->getWorkOrdersGroupBy($other_filters);
+				//Formating names
+				foreach ($work_orders_general as $i => $order){
+					if(empty($order["name"]) && empty($order["lastnames"]))
+						$work_orders_general[$i]["name"] = $order["company_name"];
+					$work_orders_general[$i]["lastnames"].= " - ".$order["percentage"];
+				}
 
-		$clean_arr[] = array(
-			"Numero de OT", "Fecha alta", "Agente", "Ramo", "Asegurado", "Estatus", "Prima", "Poliza"
-		);
-		foreach ($work_orders_general as $order) {
-			$clean_arr[] = array(
-				$order["uid"], $order["creation_date"], $order["name"]." ".$order["lastnames"], $order["ramo"], $order["asegurado"], $order["status"], $order["prima"], $order["poliza"] 
-			);
+				$clean_arr[] = array(
+					"Numero de OT", "Fecha alta", "Agente", "Ramo", "Asegurado", "Estatus", "Prima", "Poliza"
+				);
+				foreach ($work_orders_general as $order) {
+					$clean_arr[] = array(
+						$order["uid"], $order["creation_date"], $order["name"]." ".$order["lastnames"], $order["ramo"], $order["asegurado"], $order["status"], $order["prima"], $order["poliza"] 
+					);
+				}
+				break;
+			case 'agents':
+				//Configuration agent group
+				$args = array(
+					"select" => "users.company_name, users.name, users.lastnames, policies_vs_users.percentage",
+					"sum" => "policies.prima",
+					"by" => "users.company_name, agents.id, policies_vs_users.percentage",
+					"order" => "conteo desc",
+				);
+				$work_orders_agents = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+				foreach ($work_orders_agents as $i => $order){
+					$work_orders_agents[$i]["name"] = empty($order["name"]) && empty($order["lastnames"]) ? $order["company_name"] :$order["name"]." ".$order["lastnames"];
+				}
+				$clean_arr[] = array(
+					"Agente", "Solicitudes", "Primas Totales"
+				);
+				foreach ($work_orders_agents as $order) {
+					$clean_arr[] = array(
+						$order["name"], $order["conteo"], $order["prima"]
+					);
+				}
+				break;
+			case 'status':
+				$args = array(
+					"select" => "work_order_status.name status",
+					"by" => "work_order_status.name",
+					"order" => "conteo desc",
+				);
+				$work_orders_status = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+				$clean_arr[] = array(
+					"Status", "Solicitudes"
+				);
+				foreach ($work_orders_status as $order) {
+					$clean_arr[] = array(
+						$order["status"], $order["conteo"]
+					);
+				}
+				break;
+			case 'products':
+				//Configuration products group
+				$args = array(
+					"select" => "products.name producto",
+					"sum" => "policies.prima",
+					"by" => "products.id",
+					"order" => "conteo desc",
+				);
+				$work_orders_products = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+				$clean_arr[] = array(
+					"Producto", "Solicitudes"
+				);
+				foreach ($work_orders_products as $order) {
+					$clean_arr[] = array(
+						$order["producto"], $order["conteo"]
+					);
+				}
+				break;
+			case 'primastatus':
+				$args = array(
+					"select" => "work_order_status.name status",
+					"sum" => "policies.prima",
+					"by" => "work_order_status.name",
+					"order" => "prima desc",
+				);
+				$work_orders_status = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+				$clean_arr[] = array(
+					"Status", "Prima"
+				);
+				foreach ($work_orders_status as $order) {
+					$clean_arr[] = array(
+						$order["status"], $order["prima"]
+					);
+				}
+				break;
+			case 'primaproduct':
+				//Configuration products group
+				$args = array(
+					"select" => "products.name producto",
+					"sum" => "policies.prima",
+					"by" => "products.id",
+					"order" => "prima desc",
+				);
+				$clean_arr[] = array(
+					"Producto", "Prima"
+				);
+				$work_orders_products = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+				foreach ($work_orders_products as $order) {
+					$clean_arr[] = array(
+						$order["producto"], $order["prima"]
+					);
+				}
+				break;
+			case 'primaavgproduct':
+				//Configuration products group
+				$args = array(
+					"select" => "products.name producto",
+					"sum" => "policies.prima",
+					"by" => "products.id",
+					"order" => "conteo desc",
+				);
+				$work_orders_products = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+				//Calculate Average Prima per product
+				foreach ($work_orders_products as $i => $row) 
+					$work_orders_products[$i]["avgPrima"] = ($row["conteo"] != 0) ? $row["prima"] / $row["conteo"] : 0;
+				//Sorting Array by primaAvg
+				$this->load->helper('sort');
+	 			sort_object($work_orders_products, "avgPrima");
+
+				$clean_arr[] = array(
+					"Producto", "Prima Promedio"
+				);
+				foreach ($work_orders_products as $order) {
+					$clean_arr[] = array(
+						$order["producto"], $order["avgPrima"]
+					);
+				}
+				break;
+			default:
+				# code...
+				break;
 		}
 
 		// Export

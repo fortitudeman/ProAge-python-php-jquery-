@@ -19,3 +19,24 @@ i[class^="icon-"] {
 	opacity: 1;
 	font-size: 20px;
 }
+.offset-1{
+	margin-left: 8.333% !important;
+}
+.offset-2{
+	margin-left: 16.667% !important;
+}
+tfoot{
+	background: #222;
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+	width: 100%;
+}
+
+tfoot th{
+	padding: 8px 10px !important;
+	color: #fff !important;
+	font-size: 18px !important;
+	text-align: center !important;
+	vertical-align: middle !important;
+}

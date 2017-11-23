@@ -51,6 +51,9 @@
 					<button type="button" class="btn btn-primary imprimir">
 						<i class="icon-print"></i>
 					</button>
+					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/agents") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
 			  	</div>
 		  	</h3>
 	  	  	<div class="span12 chart-container" style="height: <?= !empty($wo_agents) ? (ceil(count($wo_agents) / 10)*125)+100 : 250?>px">
@@ -59,7 +62,7 @@
 	  	</div>
 	  </div>
 	  <div class="row">
-		  <div class="span6 printable">
+		  <div class="span5 printable">
 		  	<h3 class="span12">
 		  		OT's por Estatus
 				<div class="opciones">
@@ -69,6 +72,9 @@
 					<button type="button" class="btn btn-primary imprimir">
 						<i class="icon-print"></i>
 					</button>
+					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/status") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="statusCell" style="height: 450px">
@@ -93,7 +99,7 @@
 			</table>
 			</div>
 		  </div>
-		  <div class="span6 printable">
+		  <div class="span5 offset-2 printable">
 		  	<h3 class="span12">
 		  		Productos Solicitados
 				<div class="opciones">
@@ -103,6 +109,9 @@
 					<button type="button" class="btn btn-primary imprimir">
 						<i class="icon-print"></i>
 					</button>
+					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/products") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="productsCell" style="height: 450px">
@@ -134,7 +143,7 @@
 	 	sort_object($wo_products, "prima");
 	 ?>
 	 <div class="row">
-		  <div class="span6 printable">
+		  <div class="span5 printable">
 		 	<h3 class="span12">
 		  		Primas por Estatus
 				<div class="opciones">
@@ -144,6 +153,9 @@
 					<button type="button" class="btn btn-primary imprimir">
 						<i class="icon-print"></i>
 					</button>
+					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/primastatus") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="statusPrimaCell" style="height: 450px">
@@ -168,7 +180,7 @@
 			</table>
 			</div>
 		  </div>
-		  <div class="span6 printable">
+		  <div class="span5 offset-2 printable">
 		  	<h3 class="span12">
 		  		Primas por Producto
 				<div class="opciones">
@@ -178,6 +190,9 @@
 					<button type="button" class="btn btn-primary imprimir">
 						<i class="icon-print"></i>
 					</button>
+					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/primaproduct") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="productsPrimaCell" style="height: 450px">
@@ -208,9 +223,9 @@
 	 	sort_object($wo_products, "avgPrima");
 	 ?>
 	 <div class="row">
-		  <div class="span6 printable">
+		  <div class="span5 printable">
 		  	<h3 class="span12">
-		  		Primas Promedio por Producto
+		  		P. Promedio Producto
 				<div class="opciones">
 					<a href="#" class="btn btn-primary toggleTable" data-target="#productsPrimaAvgTable" data-resize="#productsPrimaAvgCell">
 						<i class="icon-list-alt"></i>
@@ -218,6 +233,9 @@
 					<button type="button" class="btn btn-primary imprimir">
 						<i class="icon-print"></i>
 					</button>
+					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/primaavgproduct") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="productsPrimaAvgCell" style="height: 450px">
@@ -273,6 +291,7 @@
 				</tr>
 			</thead>
 			<tbody>
+				<?php $total_primas = 0; ?>
 				<?php foreach ($wo_general as $order): ?>
 					<tr>
 						<td><?= $order["uid"] ?></td>
@@ -283,9 +302,28 @@
 						<td><?= $order["status"] ?></td>
 						<td>$<?= number_format($order["prima"], 2) ?></td>
 						<td><?= $order["poliza"] ?></td>
+						<?php $total_primas += $order["prima"] ?>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>
+			<tfoot class="tfoot">
+				<tr>
+					<th style="width: 175px">Total</th>
+					<th style="width: 80px;"></th>
+					<th style="width: 265px"><?= number_format(count($wo_general), 0) ?>
+						<br />
+						OT'S
+					</th>
+					<th style="width: 200px"></th>
+					<th></th>
+					<th></th>
+					<th>$<?= number_format($total_primas,2) ?> 
+						<br />
+						Primas
+					</th>
+					<th></th>
+				</tr>
+			</tfoot>
 		</table>
 	</div>
   </div>

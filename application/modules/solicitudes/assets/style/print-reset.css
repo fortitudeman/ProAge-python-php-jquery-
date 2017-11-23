@@ -14,32 +14,21 @@
 	 }
 	.graph-container, .table-container{
 		display: block !important;
-		width: 45% !important;
+		margin: 0 auto !important;
 	}
 	.row, form{
 		display: block;
 		width: 100% !important;
 	}
-
-	.span6{
-		width: 100% !important;
-	}
-	.graph-container{
-		float: left !important;
-	}
-	.table-container{
-		float: right !important;
-	}
 	.table-container table{
 		margin-left: 20px;
 	}
-	.graph-clear{
-		clear: both;
-	}
-
 	canvas, iframe, div, table, form{
 		page-break-after: avoid !important;
 		page-break-before: avoid !important;
+	}
+	canvas{
+		margin: 0 auto !important;
 	}
 
 	form{
@@ -82,5 +71,24 @@
 	div{
 		height: auto !important;
 		margin: 0 !important;
+	}
+	[class^="span"] {
+		float: none !important;
+		width: 100% !important;
+	}
+	.offset-1, .offset-2{
+		margin-left: 0px !important;
+	}
+	tfoot.tfoot{
+		bottom: unset !important;
+		left: unset !important;
+		position: static !important;
+	}
+
+	tfoot th{
+		padding: 0px !important;
+		color: #000 !important;
+		font-size: 12px !important;
+		width: auto !important;
 	}
 }
