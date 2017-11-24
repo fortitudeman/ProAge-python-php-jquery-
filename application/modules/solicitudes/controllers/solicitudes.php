@@ -220,8 +220,8 @@ class solicitudes extends CI_Controller {
 		$add_js = '
 			<script type="text/javascript">
 				var WO_Agents = '.$work_orders_data.';
-				var WO_Status = '.$work_orders_status_data.'
-				var WO_Products = '.$work_orders_products_data.'
+				var WO_Status = '.$work_orders_status_data.';
+				var WO_Products = '.$work_orders_products_data.';
 			</script>
 			';
 		$this->view = array(

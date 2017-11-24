@@ -29,6 +29,6 @@ END;
 
 UPDATE products SET name = CAP_FIRST(name);
 UPDATE work_order_status SET name = CAP_FIRST(name);
-UPDATE users SET company_name = CAP_FIRST(company_name);
+UPDATE users SET company_name = UPPER(company_name);
 
 DROP FUNCTION CAP_FIRST;

@@ -272,7 +272,7 @@
 							<i class="icon-print"></i>
 						</button>
 						<a class="btn btn-primary" href="<?= base_url("solicitudes/export/summary") ?>">
-							<i class="icon-download-alt" style="font-size: 24px"></i>
+							<i class="icon-download-alt"></i>
 						</a>
 				  	</div>
 		  	<?php endif; ?>
@@ -308,16 +308,16 @@
 			</tbody>
 			<tfoot class="tfoot">
 				<tr>
-					<th style="width: 175px">Total</th>
-					<th style="width: 80px;"></th>
-					<th style="width: 265px"><?= number_format(count($wo_general), 0) ?>
+					<th class="total" style="width: 110px">Total</th>
+					<th style="width: 65px;"></th>
+					<th style="width: 285px"><?= number_format(count($wo_general), 0) ?>
 						<br />
 						OT'S
 					</th>
-					<th style="width: 200px"></th>
-					<th></th>
-					<th></th>
-					<th>$<?= number_format($total_primas,2) ?> 
+					<th style="width: 45px"></th>
+					<th style="width: 225px"></th>
+					<th style="width: 50px"></th>
+					<th style="width: 120px">$<?= number_format($total_primas,2) ?> 
 						<br />
 						Primas
 					</th>

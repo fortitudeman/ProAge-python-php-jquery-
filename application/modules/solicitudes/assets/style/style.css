@@ -29,14 +29,16 @@ tfoot{
 	background: #222;
 	position: fixed;
 	bottom: 0px;
-	left: 0px;
-	width: 100%;
 }
 
 tfoot th{
 	padding: 8px 10px !important;
 	color: #fff !important;
-	font-size: 18px !important;
 	text-align: center !important;
+	font-size: 18px !important;
 	vertical-align: middle !important;
+}
+
+tfoot .total{
+	text-align: left !important; 
 }

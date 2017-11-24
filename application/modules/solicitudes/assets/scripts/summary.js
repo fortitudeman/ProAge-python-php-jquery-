@@ -378,3 +378,64 @@ function dynamicSort(property) {
         return result * sortOrder;
     }
 }
+
+// update and resize chart when printing
+var chartScale = function (chart) {
+  var ua = navigator.userAgent.toLowerCase();
+
+  // Firefox printing bug workaround
+  if (ua.indexOf('firefox') > -1) {
+    var chart = document.getElementsByClassName('ct-chart-bar')[0], // change class name to your svg
+      width = chart.getBBox().width,
+      factor = 565 / width; // width of printable area(75dpi) / width of chart
+
+    chart.setAttribute("transform", "scale("+factor+")");
+    setTimeout(function () {
+      chart.setAttribute("transform", "scale(1)");
+    }, 10);
+  } else {
+    // this works in Chrome & latest Opera
+    chart.update();
+  }
+};
+
+// fix printing for different browsers
+var preparePrintChart = function (chart) {
+  if (window.matchMedia) {
+
+    window.matchMedia('print').addListener(function() {
+      chartScale(chart);
+    });
+  }
+
+  window.onbeforeprint = function () {
+    chartScale(chart);
+  };
+};
+(function() {
+	var agentsHeight
+    var beforePrint = function() {
+        agentsHeight = $("#AgentsSection .chart-container").height();
+        var agentsCount = WO_Agents.length;
+        var actHeight = (Math.ceil(agentsCount)*25) + 150;
+        AgentsGraph.update();
+    };
+    var afterPrint = function() {
+        $("#AgentsSection .chart-container").height(agentsHeight);
+        AgentsGraph.update();
+    };
+
+    if (window.matchMedia) {
+        var mediaQueryList = window.matchMedia('print');
+        mediaQueryList.addListener(function(mql) {
+            if (mql.matches) {
+                beforePrint();
+            } else {
+                afterPrint();
+            }
+        });
+    }
+
+    window.onbeforeprint = beforePrint;
+    window.onafterprint = afterPrint;
+}());
