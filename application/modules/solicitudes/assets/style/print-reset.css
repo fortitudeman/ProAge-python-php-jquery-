@@ -29,6 +29,7 @@
 	}
 	canvas{
 		margin: 0 auto !important;
+		page-break-inside: auto !important;
 	}
 
 	form{
