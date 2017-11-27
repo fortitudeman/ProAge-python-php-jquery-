@@ -82,7 +82,9 @@ $(document).ready( function(){
 						return tooltipLabel + ": " + tooltipData;
 					}
 				}
-			}
+			},
+			bezierCurve : false,
+            animation: false
 		}
 	});
 
@@ -363,23 +365,23 @@ $(document).ready( function(){
 		$(".print").removeClass("print");
 		var printable = $(this.closest(".printable"))
 		printable.addClass("print");
-		var canvas, chartImage;
+
 		if(printable.attr("id") == "AgentsSection"){
 			canvas = printable.find("canvas")[0];
-			var height = $(canvas).height();
-			var width = $(canvas).width();
-			canvas.remove();
-			var dataUrl = canvas.toDataURL('image/png', 1.0);
+			AgentsGraph.update();
+			AgentsGraph.render();
+			var dataUrl = AgentsGraph.toBase64Image();
 			chartImage = new Image();
+			chartImage.onload = function(){
+				window.print();
+			}
 	      	chartImage.src = dataUrl;
-	      	chartImage.height = height;
-	      	chartImage.width = width;
+	      	chartImage.id = "waitLoad";
+	      	$(canvas).css("display", "none");
 	      	$(canvas).parent().append(chartImage);
 		}
-		window.print();
-		if(printable.attr("id") == "AgentsSection"){
-			$(canvas).parent().find("img").remove();
-		}
+		else
+			window.print();
 	})
 });
 
@@ -396,3 +398,27 @@ function dynamicSort(property) {
         return result * sortOrder;
     }
 }
+var beforePrint = function() {
+};
+var afterPrint = function() {
+	var printable = $(".printable");
+    if(printable.attr("id") == "AgentsSection"){
+    	canvas = printable.find("canvas")[0];
+    	$(canvas).css("display", "block");
+		$(canvas).parent().find("img").remove();
+	}
+};
+
+if (window.matchMedia) {
+    var mediaQueryList = window.matchMedia('print');
+    mediaQueryList.addListener(function(mql) {
+        if (mql.matches) {
+            beforePrint();
+        } else {
+            afterPrint();
+        }
+    });
+}
+
+window.onbeforeprint = beforePrint;
+window.onafterprint = afterPrint;

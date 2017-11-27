@@ -1,5 +1,4 @@
 @media print{
-	html, body { height: 99% !important; }
 	.navbar, .nav-tabs, .main-menu-span, .opciones, .toggleTable, footer, hr{
 		display: none !important;
 	}
@@ -70,7 +69,6 @@
 		display: block !important;
 	}
 	div{
-		height: auto !important;
 		margin: 0 !important;
 	}
 	[class^="span"] {
