@@ -8,9 +8,12 @@
 h2, h3{
 	text-align: left;
 	padding-left: 30px;
+	margin-top: 30px;
 }
-#AgentsSection h2, #AgentsSection h3{
+
+#AgentsSection h2, #AgentsSection h3, #reporte h2, #reporte h3{
 	text-align: center;
+	margin-top: 10px;
 }
 .btn{
 	padding: 4px 8px;
@@ -29,6 +32,12 @@ tfoot{
 	background: #222;
 	position: fixed;
 	bottom: 0px;
+	width: 100%;
+}
+
+tfoot .float-right{
+	display: inline-block;
+	float: right;
 }
 
 tfoot th{

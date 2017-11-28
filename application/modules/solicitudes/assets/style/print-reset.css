@@ -82,6 +82,7 @@
 		bottom: unset !important;
 		left: unset !important;
 		position: static !important;
+		display:table-row-group !important;
 	}
 
 	tfoot th{
