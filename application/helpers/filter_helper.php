@@ -689,6 +689,20 @@ if ( ! function_exists('extract_coordinator_name'))
 	}
 }
 
+if (!function_exists('makeDropdown'))
+{
+
+	function makeDropdown($arr, $idColumn, $valColumn)
+	{
+		$returnArr = array("" => "Todos");
+		foreach ($arr as $row)
+			$returnArr[$row[$idColumn]] = $row[$valColumn];
+		return $returnArr;
+	}
+
+}
+
+
 if ( ! function_exists('render_custom_filters'))
 {
 
