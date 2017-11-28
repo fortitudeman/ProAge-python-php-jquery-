@@ -64,6 +64,15 @@ if ( ! function_exists('get_tri_cuatrimestre'))
 		}
 		return $result;
 	}
+
+	function get_current_trimester()
+	{
+	    $month = date('n');
+	    if ($month <= 3) return 1;
+	    if ($month <= 6) return 2;
+	    if ($month <= 9) return 3;
+	    return 4;
+	}
 }
 
 ?>

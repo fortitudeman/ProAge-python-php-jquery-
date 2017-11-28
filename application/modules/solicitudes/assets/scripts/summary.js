@@ -343,13 +343,14 @@ $(document).ready( function(){
 	$("#myTab a").click(function (e) {
 	  e.preventDefault();
 	  $(this).tab("show");
+	  $(window).trigger("resize");
 	});
 	$(".toggleTable").on("click", function(e){
 		e.preventDefault();
 		var target = $(this).attr("data-target");
 		var resize_target = $(this).attr("data-resize");
 		var itag = $(this).find("i");
-		itag.toggleClass("icon-picture");
+		itag.toggleClass("icon-signal");
 		itag.toggleClass("icon-list-alt");
 
 		var resize_cell = $(this).closest(".row").find(resize_target);
@@ -382,7 +383,20 @@ $(document).ready( function(){
 		}
 		else
 			window.print();
-	})
+	});
+	$(window).on("resize", function(){
+		var activeTab = $(".nav-tabs .active").index();
+		if(activeTab == 1){
+			var table = $("#tablesorted");
+			$(".tfoot").css({
+				"left" : table.offset().left+"px",
+				"width": table.width()+"px",
+			});
+			table.find("thead tr th").each(function(i, val){
+				$(".tfoot tr th").eq(i).width($(val).width());
+			});
+		}
+	});
 });
 
 function dynamicSort(property) {

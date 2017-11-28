@@ -62,7 +62,7 @@
 	  	</div>
 	  </div>
 	  <div class="row">
-		  <div class="span5 printable">
+		  <div class="span6 printable">
 		  	<h3 class="span12">
 		  		OT's por Estatus
 				<div class="opciones">
@@ -99,7 +99,7 @@
 			</table>
 			</div>
 		  </div>
-		  <div class="span5 offset-2 printable">
+		  <div class="span6 printable">
 		  	<h3 class="span12">
 		  		Productos Solicitados
 				<div class="opciones">
@@ -143,7 +143,7 @@
 	 	sort_object($wo_products, "prima");
 	 ?>
 	 <div class="row">
-		  <div class="span5 printable">
+		  <div class="span6 printable">
 		 	<h3 class="span12">
 		  		Primas por Estatus
 				<div class="opciones">
@@ -180,7 +180,7 @@
 			</table>
 			</div>
 		  </div>
-		  <div class="span5 offset-2 printable">
+		  <div class="span6 printable">
 		  	<h3 class="span12">
 		  		Primas por Producto
 				<div class="opciones">
@@ -223,7 +223,7 @@
 	 	sort_object($wo_products, "avgPrima");
 	 ?>
 	 <div class="row">
-		  <div class="span5 printable">
+		  <div class="span6 printable">
 		  	<h3 class="span12">
 		  		P. Promedio Producto
 				<div class="opciones">
@@ -308,16 +308,16 @@
 			</tbody>
 			<tfoot class="tfoot">
 				<tr>
-					<th class="total" style="width: 110px">Total</th>
-					<th style="width: 65px;"></th>
-					<th style="width: 285px"><?= number_format(count($wo_general), 0) ?>
+					<th class="total">Total</th>
+					<th></th>
+					<th><?= number_format(count($wo_general), 0) ?>
 						<br />
-						OT'S
+						Solicitudes
 					</th>
-					<th style="width: 45px"></th>
-					<th style="width: 225px"></th>
-					<th style="width: 50px"></th>
-					<th style="width: 120px">$<?= number_format($total_primas,2) ?> 
+					<th></th>
+					<th></th>
+					<th></th>
+					<th>$<?= number_format($total_primas,2) ?> 
 						<br />
 						Primas
 					</th>

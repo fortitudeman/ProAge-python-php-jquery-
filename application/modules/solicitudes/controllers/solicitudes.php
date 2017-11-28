@@ -447,6 +447,13 @@ class solicitudes extends CI_Controller {
 		if(!empty($this->misc_filters))
 			$other_filters = array_merge($other_filters, $this->misc_filters);
 
+		if(empty($this->custom_period_to) || empty($this->custom_period_from)){
+			$this->load->helper('tri_cuatrimester');
+			$result = get_tri_cuatrimester(get_current_trimester());
+			$this->custom_period_from = date("Y-m-d", strtotime($result["begind"]));
+			$this->custom_period_to = date("Y-m-d", strtotime($result["end"]));
+		}
+
 		//Filters
 		if($this->input->post()){
 			update_custom_period($this->input->post('cust_period_from'),
