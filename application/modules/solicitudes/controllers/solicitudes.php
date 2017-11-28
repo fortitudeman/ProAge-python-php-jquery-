@@ -234,8 +234,8 @@ class solicitudes extends CI_Controller {
 				'<link href="' . $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
 				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">', // TO CHECK
-				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/style.css?version=1.0">',
-				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/print-reset.css?version=1.0">',
+				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/style.css?'.time().'">',
+				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/print-reset.css?'.time().'">',
 			),
 			'scripts' => array(
 				'<script type="text/javascript" src="'. $base_url .'scripts/jquery.cookie.js"></script>',
@@ -245,7 +245,8 @@ class solicitudes extends CI_Controller {
 				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/jquery.canvasjs.min.js"></script>',
 				'<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
-				'<script type="text/javascript" src="'. $base_url .'solicitudes/assets/scripts/summary.js?version=1.0"></script>',
+				'<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.2/randomColor.min.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'solicitudes/assets/scripts/summary.js?'.time().'"></script>',
 				$add_js,
 				$this->custom_filters->render_javascript(),
 			),

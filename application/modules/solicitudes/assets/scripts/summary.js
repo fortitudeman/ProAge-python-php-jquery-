@@ -1,5 +1,9 @@
 var Colors = ["#4d4d4d","#5da5da","#faa43a","#60bd68","#f17cB0","#b2912f","#b276b2","#decf3f","#f15854"];
-var ColorsExtended = ["#e6194b","#3cb44b","#ffe119","#0082c8","#f58231","#911eb4","#46f0f0","#f032e6","#d2f53c","#fabebe","#008080","#e6beff","#aa6e28","#fffac8","#800000","#aaffc3","#808000","#ffd8b1","#000080","#808080","#FFFFFF","#000000"];
+var ColorsExtended = randomColor({
+	count: 40,
+	luminosity: 'bright',
+	seed: 'gus'
+})
 var AgentsGraph;
 $(document).ready( function(){ 
 	var ctxAgents = document.getElementById("agentsContainer").getContext("2d");
