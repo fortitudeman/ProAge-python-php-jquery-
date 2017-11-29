@@ -1,4 +1,5 @@
 @media print{
+	body{padding: 0 !important}
 	.navbar, .nav-tabs, .main-menu-span, .opciones, .toggleTable, footer, hr{
 		display: none !important;
 	}
@@ -37,9 +38,9 @@
 	}
 
 	.chart-container{
-		position: relative;
-		top: 100px;
-		margin-bottom: 100px;
+		position: relative !important;
+		top: 100px !important;
+		margin-bottom: 100px !important;
 	}
 	#tablesorted{
 		position: relative;
@@ -90,5 +91,8 @@
 		color: #000 !important;
 		font-size: 12px !important;
 		width: auto !important;
+	}
+	img{
+		page-break-inside: all !important;
 	}
 }
