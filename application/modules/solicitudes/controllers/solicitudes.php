@@ -125,7 +125,7 @@ class solicitudes extends CI_Controller {
 		$this->summary();
 	}
 
-	public function summary(){
+	public function summary($tab = "graficos"){
 		if ($this->default_period_filter == 5)
 			set_filter_period( 2 );
 
@@ -199,6 +199,7 @@ class solicitudes extends CI_Controller {
 		unset($ramos[3]);
 
 		$this->load->helper('sort');
+		$this->load->helper('render');
 		$content_data = array(
 			'access_all' => $this->access_all,
 			'access_export_xls' => $this->access_export_xls,
@@ -213,6 +214,7 @@ class solicitudes extends CI_Controller {
 			'wo_agents' => $work_orders_agents,
 			'wo_status' => $work_orders_status,
 			'wo_products' => $work_orders_products,
+			'selected_tab' => $tab,
 		);
 
 		$sub_page_content = $this->load->view('solicitudes/summary', $content_data, TRUE);
@@ -245,6 +247,7 @@ class solicitudes extends CI_Controller {
 				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/jquery.canvasjs.min.js"></script>',
 				'<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
 				'<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.2/randomColor.min.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'solicitudes/assets/scripts/summary.js?'.time().'"></script>',
 				$add_js,

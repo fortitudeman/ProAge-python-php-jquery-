@@ -1,6 +1,6 @@
 @media print{
 	body{padding: 0 !important}
-	.navbar, .nav-tabs, .main-menu-span, .opciones, .toggleTable, footer, hr{
+	.navbar, .nav-tabs, .main-menu-span, .opciones, .toggleTable, footer, hr, a{
 		display: none !important;
 	}
 	.box, .box-content, .row, .span6, form{

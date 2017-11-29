@@ -21,6 +21,9 @@ i[class^="icon-"] {
 	opacity: 1;
 	font-size: 20px;
 }
+table i[class^="icon-"] {
+	font-size: 11px;
+}
 .offset-1{
 	margin-left: 8.333% !important;
 }
@@ -32,11 +35,7 @@ tfoot{
 	position: fixed;
 	bottom: 0px;
 	width: 100%;
-}
-
-tfoot .float-right{
-	display: inline-block;
-	float: right;
+	display: none;
 }
 
 tfoot th{

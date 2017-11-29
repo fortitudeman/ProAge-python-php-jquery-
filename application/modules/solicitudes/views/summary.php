@@ -29,20 +29,22 @@
 </div>
 
 <ul class="nav nav-tabs" id="myTab">
-  <li class="active"><a href="#graficos">Estadisticas</a></li>
-  <li><a href="#reporte">Reporte general</a></li>
+  <li class="<?= printEquals($selected_tab, "graficos", "active") ?>"><a href="#graficos">Estadisticas</a></li>
+  <li class="<?= printEquals($selected_tab, "reporte", "active") ?>"><a href="#reporte">Reporte general</a></li>
 </ul>
  
 <div class="tab-content">
-  <div class="tab-pane active" id="graficos">
-  	  <div class="row">
-  	  	<div class="span12 opciones" style="margin-top: 10px; margin-bottom: 15px; margin-left: 30px;">
-	  		Ordenar por: 
-	  		<?= anchor('#', 'Solicitudes', "class='sorter active' style='display:inline-block; margin-right: 15px' data-sort-by='requests'"); ?>
-	  		|
-	  		<?= anchor('#', 'Primas', "class='sorter' style='display:inline-block; margin-left: 15px'  data-sort-by='primas'"); ?>
-	  	</div>
-	  </div>
+  <div class="tab-pane <?= printEquals($selected_tab, "graficos", "active") ?>" id="graficos">
+  	  <?php if(!empty($wo_agents) && count($wo_agents) > 1): ?>
+	  	  <div class="row">
+	  	  	<div class="span12 opciones" style="margin-top: 10px; margin-left: 30px;">
+		  		Ordenar por: 
+		  		<?= anchor('#', 'Solicitudes', "class='sorter active' style='display:inline-block; margin-right: 15px' data-sort-by='requests'"); ?>
+		  		|
+		  		<?= anchor('#', 'Primas', "class='sorter' style='display:inline-block; margin-left: 15px'  data-sort-by='primas'"); ?>
+		  	</div>
+		  </div>
+	  <?php endif; ?>
 	  <div class="row">
 	  	<div id="AgentsSection" class=" printable" style="margin-left: 30px;">
 		  	<h3 class="span12">
@@ -262,7 +264,7 @@
 		 </div>
 	 </div>
   </div>
-  <div class="tab-pane" id="reporte">
+  <div class="tab-pane <?= printEquals($selected_tab, "reporte", "active") ?>" id="reporte">
   	<div class="printable">
 	  	<h3 class="span12">
 			Reporte General
@@ -280,7 +282,7 @@
 	  	<table class="table table-striped" id="tablesorted">
 			<thead>
 				<tr>
-					<th>Número de OT</th>
+					<th style="width: 125px">Número de OT</th>
 					<th style="width: 60px">Fecha alta</th>
 					<th>Agente</th>
 					<th>Ramo</th>
@@ -294,7 +296,12 @@
 				<?php $total_primas = 0; ?>
 				<?php foreach ($wo_general as $order): ?>
 					<tr>
-						<td><?= $order["uid"] ?></td>
+						<td>
+							<?= $order["uid"] ?>
+							<a href="<?= base_url("ot/ver_ot/".$order["id"]) ?>" target="_blank">
+								<i class="icon-eye-open" title="Ver OT <?= $order["uid"]  ?>"></i>
+							</a>
+						</td>
 						<td><?= date("Y-m-d", strtotime($order["creation_date"])) ?></td>
 						<td><?= $order["name"]." ".$order["lastnames"] ?></td>
 						<td><?= $order["ramo"] ?></td>

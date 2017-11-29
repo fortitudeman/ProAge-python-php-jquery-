@@ -48,6 +48,7 @@ $(document).ready( function(){
                         drawOnChartArea: false
                     },
                     ticks: {
+                    	beginAtZero:true,
 			            // Return an empty string to draw the tick line but hide the tick label
 			           	// Return "null" or "undefined" to hide the tick line entirely
 			           	userCallback: function(value, index, values) {
@@ -55,9 +56,13 @@ $(document).ready( function(){
 			           		value = Math.round(value*100)/100;
 			                if(value >= 1000){
 				                value = value.toString();
-				                value = value.split(/(?=(?:...)*$)/);
+				                x = value.split(".");
+								x1 = x[0];
+								x2 = x.length > 1 ? "." + x[1] : "";
+				                x1 = x1.split(/(?=(?:...)*$)/);
 				                // Convert the array to a string and format the output
-				                value = value.join(",");
+				                value = x1.join(",");
+				                value = value+x2;
 			                }
 			                return "$" + value;
 			            	}
@@ -347,6 +352,10 @@ $(document).ready( function(){
 	$("#myTab a").click(function (e) {
 	  e.preventDefault();
 	  $(this).tab("show");
+	  var hash = $(this).attr("href").substr(1);
+	  var newUrl = Config.base_url()+"solicitudes/summary/"+hash+".html";
+	  $("#ot-form").attr("action", newUrl);
+	  history.replaceState({}, null, newUrl);
 	  $(window).trigger("resize");
 	});
 	$(".toggleTable").on("click", function(e){
@@ -389,6 +398,7 @@ $(document).ready( function(){
 			window.print();
 	});
 	$(window).on("resize", function(){
+		$(".tfoot").css("display", "none")
 		var activeTab = $(".nav-tabs .active").index();
 		if(activeTab == 1){
 			var table = $("#tablesorted");
@@ -399,8 +409,10 @@ $(document).ready( function(){
 			table.find("thead tr th").each(function(i, val){
 				$(".tfoot tr th").eq(i).width($(val).width());
 			});
+			$(".tfoot").css("display", "table-footer-group");
 		}
 	});
+	$(window).trigger("resize");
 });
 
 function dynamicSort(property) {
