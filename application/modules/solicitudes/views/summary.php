@@ -91,13 +91,21 @@
 					</tr>
 				</thead>
 				<tbody>
+					<?php $total = 0; ?>
 					<?php foreach ($wo_status as $order): ?>
 						<tr>
 							<td><?= $order["status"] ?></td>
 							<td><?= $order["conteo"] ?></td>
+							<?php $total += $order["conteo"] ?>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
+				<tfoot>
+					<tr>
+						<th>Total</th>
+						<th><?= $total ?></th>
+					</tr>
+				</tfoot>
 			</table>
 			</div>
 		  </div>
@@ -128,13 +136,21 @@
 						</tr>
 					</thead>
 					<tbody>
+						<?php $total = 0; ?>
 						<?php foreach ($wo_products as $order): ?>
 							<tr>
 								<td><?= $order["producto"] ?></td>
 								<td><?= $order["conteo"] ?></td>
+								<?php $total += $order["conteo"] ?>
 							</tr>
 						<?php endforeach; ?>
 					</tbody>
+					<tfoot>
+						<tr>
+							<th>Total</th>
+							<th><?= $total ?></th>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		 </div>
@@ -172,13 +188,21 @@
 					</tr>
 				</thead>
 				<tbody>
+					<?php $total = 0; ?>
 					<?php foreach ($wo_status as $order): ?>
 						<tr>
 							<td><?= $order["status"] ?></td>
 							<td>$<?= number_format($order["prima"], 2) ?></td>
+							<?php $total += $order["prima"]; ?>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
+				<tfoot>
+					<tr>
+						<th>Total</th>
+						<th>$<?= number_format($total, 2) ?></th>
+					</tr>
+				</tfoot>
 			</table>
 			</div>
 		  </div>
@@ -209,12 +233,20 @@
 						</tr>
 					</thead>
 					<tbody>
+						<?php $total = 0; ?>
 						<?php foreach ($wo_products as $order): ?>
 							<tr>
 								<td><?= $order["producto"] ?></td>
 								<td>$<?= number_format($order["prima"], 2) ?></td>
+								<?php $total += $order["prima"]; ?>
 							</tr>
 						<?php endforeach; ?>
+						<tfoot>
+							<tr>
+								<th>Total</th>
+								<th>$<?= number_format($total, 2) ?></th>
+							</tr>
+						</tfoot>
 					</tbody>
 				</table>
 			</div>
@@ -252,13 +284,21 @@
 						</tr>
 					</thead>
 					<tbody>
+						<?php $total = 0; ?>
 						<?php foreach ($wo_products as $order): ?>
 							<tr>
 								<td><?= $order["producto"] ?></td>
 								<td>$<?= number_format($order["avgPrima"], 2) ?></td>
+								<?php $total += $order["avgPrima"]; ?>
 							</tr>
 						<?php endforeach; ?>
 					</tbody>
+					<tfoot>
+						<tr>
+							<th>Promedio Total</th>
+							<th>$<?= count($wo_products) > 0 ? number_format($total / count($wo_products), 2) : 0 ?></th>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		 </div>

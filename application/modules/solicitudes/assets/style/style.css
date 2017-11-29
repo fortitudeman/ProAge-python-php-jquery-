@@ -30,7 +30,7 @@ table i[class^="icon-"] {
 .offset-2{
 	margin-left: 16.667% !important;
 }
-tfoot{
+.tfoot{
 	background: #222;
 	position: fixed;
 	bottom: 0px;
@@ -38,7 +38,7 @@ tfoot{
 	display: none;
 }
 
-tfoot th{
+.tfoot th{
 	padding: 8px 10px !important;
 	color: #fff !important;
 	text-align: center !important;
@@ -46,7 +46,7 @@ tfoot th{
 	vertical-align: middle !important;
 }
 
-tfoot .total{
+.tfoot .total{
 	text-align: left !important; 
 }
 
