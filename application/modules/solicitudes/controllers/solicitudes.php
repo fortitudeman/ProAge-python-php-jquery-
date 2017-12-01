@@ -125,7 +125,25 @@ class solicitudes extends CI_Controller {
 		$this->summary();
 	}
 
-	public function summary($tab = "graficos"){
+	public function summary($tab = "graficos", $orderby = "primas"){
+		$Available_tabs = array("graficos", "reporte");
+		//Url Validations
+		if(!in_array($tab, $Available_tabs))
+			$tab = "graficos";
+
+		$Available_orderbys = array("primas", "requests");
+		if(!in_array($orderby, $Available_orderbys))
+			$orderby = "primas";
+		switch ($orderby) {
+			case 'primas':
+				$orderby = "prima";
+				break;
+			case 'requests':
+				$orderby = "conteo";
+				break;
+		}
+
+
 		if ($this->default_period_filter == 5)
 			set_filter_period( 2 );
 
@@ -159,7 +177,7 @@ class solicitudes extends CI_Controller {
 			"select" => "users.company_name, users.name, users.lastnames, policies_vs_users.percentage",
 			"sum" => "policies.prima",
 			"by" => "users.company_name, agents.id, policies_vs_users.percentage",
-			"order" => "conteo desc",
+			"order" => "$orderby desc",
 		);
 		$work_orders_agents = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
 		foreach ($work_orders_agents as $i => $order){
@@ -215,6 +233,7 @@ class solicitudes extends CI_Controller {
 			'wo_status' => $work_orders_status,
 			'wo_products' => $work_orders_products,
 			'selected_tab' => $tab,
+			'selected_order' => $orderby,
 		);
 
 		$sub_page_content = $this->load->view('solicitudes/summary', $content_data, TRUE);
@@ -250,6 +269,7 @@ class solicitudes extends CI_Controller {
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
 				'<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.2/randomColor.min.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'solicitudes/assets/scripts/summary.js?'.time().'"></script>',
+				'<script src="https://use.fontawesome.com/884297e135.js"></script>',
 				$add_js,
 				$this->custom_filters->render_javascript(),
 			),
@@ -452,10 +472,8 @@ class solicitudes extends CI_Controller {
 			$other_filters = array_merge($other_filters, $this->misc_filters);
 
 		if(empty($this->custom_period_to) || empty($this->custom_period_from)){
-			$this->load->helper('tri_cuatrimester');
-			$result = get_tri_cuatrimester(get_current_trimester());
-			$this->custom_period_from = date("Y-m-d", strtotime($result["begind"]));
-			$this->custom_period_to = date("Y-m-d", strtotime($result["end"]));
+			$this->custom_period_from = date("Y-m-d", strtotime("last week monday"));
+			$this->custom_period_to = date("Y-m-d", strtotime("last week sunday"));
 		}
 
 		//Filters

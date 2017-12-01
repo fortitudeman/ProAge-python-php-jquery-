@@ -39,9 +39,9 @@
 	  	  <div class="row">
 	  	  	<div class="span12 opciones" style="margin-top: 10px; margin-left: 30px;">
 		  		Ordenar por: 
-		  		<?= anchor('#', 'Solicitudes', "class='sorter active' style='display:inline-block; margin-right: 15px' data-sort-by='requests'"); ?>
+		  		<?= anchor('#', 'Primas', "class='sorter ".printEquals($selected_order, "prima", "active")."' style='display:inline-block; margin-right: 15px'  data-sort-by='primas'"); ?>
 		  		|
-		  		<?= anchor('#', 'Primas', "class='sorter' style='display:inline-block; margin-left: 15px'  data-sort-by='primas'"); ?>
+		  		<?= anchor('#', 'Solicitudes', "class='sorter ".printEquals($selected_order, "conteo", "active")."' style='display:inline-block; margin-left: 15px' data-sort-by='requests'"); ?>
 		  	</div>
 		  </div>
 	  <?php endif; ?>
@@ -50,6 +50,9 @@
 		  	<h3 class="span12">
 		  		Solicitudes
 				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#agentsTable" data-resize="#agentsCell">
+						<i class="icon-list-alt"></i>
+					</a>
 					<button type="button" class="btn btn-primary imprimir">
 						<i class="icon-print"></i>
 					</button>
@@ -58,8 +61,39 @@
 					</a>
 			  	</div>
 		  	</h3>
-	  	  	<div class="span12 chart-container" style="height: <?= !empty($wo_agents) ? (ceil(count($wo_agents) / 10)*125)+100 : 250?>px">
+	  	  	<div id="agentsCell" class="span12 chart-container" style="height: <?= !empty($wo_agents) ? (ceil(count($wo_agents) / 10)*125)+100 : 250?>px">
 		  		<canvas id="agentsContainer"></canvas>
+		  	</div>
+		  	<div class="span12 table-container" id="agentsTable" style="display: none;">
+		  		<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Agente</th>
+							<th>Primas</th>
+							<th>Solicitudes</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php $total = 0; ?>
+						<?php $totalaux = 0; ?>
+						<?php foreach ($wo_agents as $order): ?>
+							<tr>
+								<td><?= $order["name"] ?></td>
+								<td>$<?= number_format($order["prima"],2) ?></td>
+								<td><?= $order["conteo"] ?></td>
+								<?php $total += $order["conteo"] ?>
+								<?php $totalaux += $order["prima"] ?>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Total</th>
+							<th>$<?= number_format($totalaux, 2) ?></th>
+							<th><?= $total ?></th>
+						</tr>
+					</tfoot>
+				</table>
 		  	</div>
 	  	</div>
 	  </div>

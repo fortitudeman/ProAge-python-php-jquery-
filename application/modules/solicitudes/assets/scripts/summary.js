@@ -341,6 +341,18 @@ $(document).ready( function(){
 
 		$(".sorter").removeClass("active");
 		$(this).addClass("active");
+		changeUrl();
+
+		var tableBody = $("#agentsTable table tbody");
+		tableBody.html("");
+		$.each(WO_Agents, function(i, order){
+			var tr = $("<tr></tr>");
+			var agente = $("<td>"+order.name+"</td>");
+			var primas = $("<td>$"+number_format(order.prima, 2)+"</td>");
+			var solicitudes = $("<td>"+order.conteo+"</td>");
+			tr.append(agente).append(primas).append(solicitudes);
+			tableBody.append(tr);
+		});
 
 		AgentsGraph.data.labels = agents_arr.map(obj => obj.name);
 		AgentsGraph.config.data.datasets[0].data = agents_arr.map(obj => obj.conteo);
@@ -352,10 +364,7 @@ $(document).ready( function(){
 	$("#myTab a").click(function (e) {
 	  e.preventDefault();
 	  $(this).tab("show");
-	  var hash = $(this).attr("href").substr(1);
-	  var newUrl = Config.base_url()+"solicitudes/summary/"+hash+".html";
-	  $("#ot-form").attr("action", newUrl);
-	  history.replaceState({}, null, newUrl);
+	  changeUrl();
 	  $(window).trigger("resize");
 	});
 	$(".toggleTable").on("click", function(e){
@@ -387,6 +396,7 @@ $(document).ready( function(){
 			var dataUrl = AgentsGraph.toBase64Image();
 			chartImage = new Image();
 			chartImage.onload = function(){
+				//printable.find("table").css("margin-top", chartImage.height+"px");
 				window.print();
 			}
 	      	chartImage.src = dataUrl;
@@ -428,12 +438,14 @@ function dynamicSort(property) {
         return result * sortOrder;
     }
 }
+/*
 var beforePrint = function() {
 };
 var afterPrint = function() {
 	var printable = $(".printable");
     if(printable.attr("id") == "AgentsSection"){
     	canvas = printable.find("canvas")[0];
+    	table = printable.find("table")[0];
     	$(canvas).css("display", "block");
 		$(canvas).parent().find("img").remove();
 	}
@@ -452,3 +464,24 @@ if (window.matchMedia) {
 
 window.onbeforeprint = beforePrint;
 window.onafterprint = afterPrint;
+*/
+function number_format(number, decimals){
+	number = parseFloat(Math.round(number * 100) / 100).toFixed(decimals);
+	number = number.toString();
+    x = number.split(".");
+	x1 = x[0];
+	x2 = x.length > 1 ? "." + x[1] : "";
+    x1 = x1.split(/(?=(?:...)*$)/);
+    // Convert the array to a string and format the output
+    number = x1.join(",");
+    number = number+x2;
+    return number;
+}
+
+function changeUrl(){
+	var selected_tab = $(".nav-tabs .active a").attr("href").substr(1);
+	var selected_order = $(".sorter.active").attr("data-sort-by");
+	var newUrl = Config.base_url()+"solicitudes/summary/"+selected_tab+"/"+selected_order+".html";
+	$("#ot-form").attr("action", newUrl);
+	history.replaceState({}, null, newUrl);
+}

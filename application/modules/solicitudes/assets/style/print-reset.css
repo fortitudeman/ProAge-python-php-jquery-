@@ -40,7 +40,7 @@
 	.chart-container{
 		position: relative !important;
 		top: 100px !important;
-		margin-bottom: 100px !important;
+		margin-bottom: 20px !important;
 	}
 	#tablesorted{
 		position: relative;
@@ -99,6 +99,8 @@
 		width: auto !important;
 	}
 	img{
-		page-break-inside: all !important;
+		page-break-inside: auto !important;
+		display: block !important;
+		margin: 0 auto !important;
 	}
 }
