@@ -35,21 +35,17 @@
  
 <div class="tab-content">
   <div class="tab-pane <?= printEquals($selected_tab, "graficos", "active") ?>" id="graficos">
-  	  <?php if(!empty($wo_agents) && count($wo_agents) > 1): ?>
-	  	  <div class="row">
-	  	  	<div class="span12 opciones" style="margin-top: 10px; margin-left: 30px;">
-		  		Ordenar por: 
-		  		<?= anchor('#', 'Primas', "class='sorter ".printEquals($selected_order, "prima", "active")."' style='display:inline-block; margin-right: 15px'  data-sort-by='primas'"); ?>
-		  		|
-		  		<?= anchor('#', 'Solicitudes', "class='sorter ".printEquals($selected_order, "conteo", "active")."' style='display:inline-block; margin-left: 15px' data-sort-by='requests'"); ?>
-		  	</div>
-		  </div>
-	  <?php endif; ?>
 	  <div class="row">
 	  	<div id="AgentsSection" class=" printable" style="margin-left: 30px;">
 		  	<h3 class="span12">
 		  		Solicitudes
 				<div class="opciones">
+					<?php if(!empty($wo_agents) && count($wo_agents) > 1): ?>
+						<a href="#" class="btn btn-primary sorter" data-sort-by="<?= $orderhash ?>">
+							<i class="fa fa-sort-amount-desc" aria-hidden="true"></i> 
+							<span><?= $orderlabel ?></span>
+						</a>
+					<?php endif; ?>
 					<a href="#" class="btn btn-primary toggleTable" data-target="#agentsTable" data-resize="#agentsCell">
 						<i class="icon-list-alt"></i>
 					</a>
@@ -79,8 +75,16 @@
 						<?php foreach ($wo_agents as $order): ?>
 							<tr>
 								<td><?= $order["name"] ?></td>
-								<td>$<?= number_format($order["prima"],2) ?></td>
-								<td><?= $order["conteo"] ?></td>
+								<td>
+									<a href="#" class="popup" data-search="agent" data-value="<?= $order["id"] ?>">
+										$<?= number_format($order["prima"],2) ?>
+									</a>
+								</td>
+								<td>
+									<a href="#" class="popup" data-search="agent" data-value="<?= $order["id"] ?>">
+										<?= $order["conteo"] ?>
+									</a>
+								</td>
 								<?php $total += $order["conteo"] ?>
 								<?php $totalaux += $order["prima"] ?>
 							</tr>
@@ -129,7 +133,11 @@
 					<?php foreach ($wo_status as $order): ?>
 						<tr>
 							<td><?= $order["status"] ?></td>
-							<td><?= $order["conteo"] ?></td>
+							<td>
+								<a href="#" class="popup" data-search="status" data-value="<?= $order["status"] ?>">
+									<?= $order["conteo"] ?>
+								</a>	
+							</td>
 							<?php $total += $order["conteo"] ?>
 						</tr>
 					<?php endforeach; ?>
@@ -174,7 +182,11 @@
 						<?php foreach ($wo_products as $order): ?>
 							<tr>
 								<td><?= $order["producto"] ?></td>
-								<td><?= $order["conteo"] ?></td>
+								<td>
+									<a href="#" class="popup" data-search="product" data-value="<?= $order["id"] ?>">
+										<?= $order["conteo"] ?>
+									</a>	
+								</td>
 								<?php $total += $order["conteo"] ?>
 							</tr>
 						<?php endforeach; ?>
@@ -226,7 +238,11 @@
 					<?php foreach ($wo_status as $order): ?>
 						<tr>
 							<td><?= $order["status"] ?></td>
-							<td>$<?= number_format($order["prima"], 2) ?></td>
+							<td>
+								<a href="#" class="popup" data-search="status" data-value="<?= $order["status"] ?>">
+									$<?= number_format($order["prima"], 2) ?>
+								</a>
+							</td>
 							<?php $total += $order["prima"]; ?>
 						</tr>
 					<?php endforeach; ?>
@@ -271,7 +287,11 @@
 						<?php foreach ($wo_products as $order): ?>
 							<tr>
 								<td><?= $order["producto"] ?></td>
-								<td>$<?= number_format($order["prima"], 2) ?></td>
+								<td>
+									<a href="#" class="popup" data-search="product" data-value="<?= $order["id"] ?>">
+										$<?= number_format($order["prima"], 2) ?>
+									</a>
+								</td>
 								<?php $total += $order["prima"]; ?>
 							</tr>
 						<?php endforeach; ?>
@@ -322,7 +342,11 @@
 						<?php foreach ($wo_products as $order): ?>
 							<tr>
 								<td><?= $order["producto"] ?></td>
-								<td>$<?= number_format($order["avgPrima"], 2) ?></td>
+								<td>
+									<a href="#" class="popup" data-search="product" data-value="<?= $order["id"] ?>">
+										$<?= number_format($order["avgPrima"], 2) ?>
+									</a>
+								</td>
 								<?php $total += $order["avgPrima"]; ?>
 							</tr>
 						<?php endforeach; ?>
@@ -330,7 +354,9 @@
 					<tfoot>
 						<tr>
 							<th>Promedio Total</th>
-							<th>$<?= count($wo_products) > 0 ? number_format($total / count($wo_products), 2) : 0 ?></th>
+							<th>
+								$<?= count($wo_products) > 0 ? number_format($total / count($wo_products), 2) : 0 ?>	
+							</th>
 						</tr>
 					</tfoot>
 				</table>
@@ -353,59 +379,7 @@
 				  	</div>
 		  	<?php endif; ?>
 		</h3>
-	  	<table class="table table-striped" id="tablesorted">
-			<thead>
-				<tr>
-					<th style="width: 125px">Número de OT</th>
-					<th style="width: 60px">Fecha alta</th>
-					<th>Agente</th>
-					<th>Ramo</th>
-					<th>Asegurado</th>
-					<th>Estatus</th>
-					<th>Prima</th>
-					<th>Poliza</th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php $total_primas = 0; ?>
-				<?php foreach ($wo_general as $order): ?>
-					<tr>
-						<td>
-							<?= $order["uid"] ?>
-							<a href="<?= base_url("ot/ver_ot/".$order["id"]) ?>" target="_blank">
-								<i class="icon-eye-open" title="Ver OT <?= $order["uid"]  ?>"></i>
-							</a>
-						</td>
-						<td><?= date("Y-m-d", strtotime($order["creation_date"])) ?></td>
-						<td><?= $order["name"]." ".$order["lastnames"] ?></td>
-						<td><?= $order["ramo"] ?></td>
-						<td><?= $order["asegurado"] ?></td>
-						<td><?= $order["status"] ?></td>
-						<td>$<?= number_format($order["prima"], 2) ?></td>
-						<td><?= $order["poliza"] ?></td>
-						<?php $total_primas += $order["prima"] ?>
-					</tr>
-				<?php endforeach; ?>
-			</tbody>
-			<tfoot class="tfoot">
-				<tr>
-					<th class="total">Total</th>
-					<th></th>
-					<th><?= number_format(count($wo_general), 0) ?>
-						<br />
-						Solicitudes
-					</th>
-					<th></th>
-					<th></th>
-					<th></th>
-					<th>$<?= number_format($total_primas,2) ?> 
-						<br />
-						Primas
-					</th>
-					<th></th>
-				</tr>
-			</tfoot>
-		</table>
+		<?php $this->load->view('solicitudes/reporte_general_table', array("general_data" => $wo_general, "tfoot_class" => "tfoot", "show_tfoot" => 1)); ?>
 	</div>
   </div>
 </div>

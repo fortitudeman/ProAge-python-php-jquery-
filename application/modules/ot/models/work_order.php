@@ -937,6 +937,7 @@ class Work_order extends CI_Model{
 	   		$this->db->select('product_group.name ramo');
 	   		$this->db->select('policies.name asegurado, policies.prima, policies.uid poliza');
 	   		$this->db->select('users.name, users.lastnames, users.company_name, policies_vs_users.percentage');
+	   		$this->db->select('agents.id agent_id');
 	   		$this->db->select('work_order_patent.name tipo_tramite');
 	   		$this->db->select('products.name producto');
 	   		$this->db->select('work_order_status.name status');
@@ -962,6 +963,9 @@ class Work_order extends CI_Model{
    		$this->db->join('work_order_types as work_order_patent', 'work_order_types.patent_id = work_order_patent.id');
    		$this->db->join('products', 'products.id = policies.product_id', 'right');
    		
+   		//Remove NTU, Excedido and Canceladas
+   		$this->db->where_not_in("work_order_status.id", array(2, 3, 10));
+
    		if(isset($filter["nuevos_negocios"]))
    			$this->db->where_in('work_order_types.patent_id', array(47, 90));
 
@@ -1016,6 +1020,9 @@ class Work_order extends CI_Model{
 					'work_order.creation_date <=' => $to . ' 23:59:59') );
 			}
 		}	
+		if(isset($filter["where"]))
+			$this->db->where($filter["where"]);
+
 		execute_filters("work-orders-get-group-by");
 		$query = $this->db->get();
 		return $query->result_array();
@@ -1702,9 +1709,13 @@ class Work_order extends CI_Model{
 		return $this->db->update( 'policies', $updatepolicy, array( 'id' => $policies[0]['policy_id'] ) );
 	}
 
-	public function getStatusArray(){
+	public function getStatusArray($args = array()){
 		$this->db->group_by('name');
 		$this->db->order_by('name', 'asc');
+		if(isset($args["not_in"]))
+			foreach ($args["not_in"] as $column => $values) 
+				$this->db->where_not_in($column, $values);
+			
 		$query = $this->db->get('work_order_status');
 		return $query->result_array();
 	}

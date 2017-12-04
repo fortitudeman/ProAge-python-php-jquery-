@@ -137,17 +137,15 @@ class solicitudes extends CI_Controller {
 		switch ($orderby) {
 			case 'primas':
 				$orderby = "prima";
+				$orderhash = "requests";
+				$orderlabel = "S";
 				break;
 			case 'requests':
 				$orderby = "conteo";
+				$orderhash = "primas";
+				$orderlabel = "P";
 				break;
 		}
-
-
-		if ($this->default_period_filter == 5)
-			set_filter_period( 2 );
-
-		$other_filters = $this->_init_profile();
 		if ( !$this->access_report )
 		{	
 			$this->session->set_flashdata( 'message', array
@@ -157,6 +155,11 @@ class solicitudes extends CI_Controller {
 			));	
 			redirect( 'home', 'refresh' );
 		}
+
+		if ($this->default_period_filter == 5)
+			set_filter_period( 2 );
+
+		$other_filters = $this->_init_profile();
 
 		$other_filters["nuevos_negocios"] = 1;
 		$other_filters["periodo"] = get_filter_period();
@@ -174,7 +177,7 @@ class solicitudes extends CI_Controller {
 
 		//Configuration agent group
 		$args = array(
-			"select" => "users.company_name, users.name, users.lastnames, policies_vs_users.percentage",
+			"select" => "users.company_name, users.name, users.lastnames, policies_vs_users.percentage, agents.id",
 			"sum" => "policies.prima",
 			"by" => "users.company_name, agents.id, policies_vs_users.percentage",
 			"order" => "$orderby desc",
@@ -197,7 +200,7 @@ class solicitudes extends CI_Controller {
 
 		//Configuration products group
 		$args = array(
-			"select" => "products.name producto",
+			"select" => "products.name producto, products.id",
 			"sum" => "policies.prima",
 			"by" => "products.id",
 			"order" => "conteo desc",
@@ -212,7 +215,10 @@ class solicitudes extends CI_Controller {
 		$ramo= 55;
 		$ramos = makeDropdown($this->work_order->getProductsGroups(), "id", "name");
 		$products = makeDropdown($this->work_order->getProducts(), "id", "name");
-		$status = makeDropdown($this->work_order->getStatusArray(), "name", "name");
+
+		//Remove NTU, Excedido and Cancelada
+		$args = array( "not_in" => array("id" => array(2, 3, 10)) );
+		$status = makeDropdown($this->work_order->getStatusArray($args), "name", "name");
 		$agents = makeDropdown($this->user->getAgentsArray(), "id", "name");
 		unset($ramos[3]);
 
@@ -234,6 +240,8 @@ class solicitudes extends CI_Controller {
 			'wo_products' => $work_orders_products,
 			'selected_tab' => $tab,
 			'selected_order' => $orderby,
+			'orderhash' => $orderhash,
+			'orderlabel' => $orderlabel,
 		);
 
 		$sub_page_content = $this->load->view('solicitudes/summary', $content_data, TRUE);
@@ -254,7 +262,8 @@ class solicitudes extends CI_Controller {
 			'css' => array(
 				'<link href="' . $base_url . 'ot/assets/style/theme.default.css" rel="stylesheet">',
 				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
-				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">', // TO CHECK
+				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">',
+				'<link rel="stylesheet" href="'. $base_url .'ot/assets/style/jquery.fancybox.css">',
 				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/style.css?'.time().'">',
 				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/print-reset.css?'.time().'">',
 			),
@@ -267,6 +276,7 @@ class solicitudes extends CI_Controller {
 				'<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.fancybox.js"></script>',
 				'<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.2/randomColor.min.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'solicitudes/assets/scripts/summary.js?'.time().'"></script>',
 				'<script src="https://use.fontawesome.com/884297e135.js"></script>',
@@ -438,9 +448,6 @@ class solicitudes extends CI_Controller {
 					);
 				}
 				break;
-			default:
-				# code...
-				break;
 		}
 
 		// Export
@@ -453,6 +460,48 @@ class solicitudes extends CI_Controller {
 		if( is_file( $filename ) )
 			unlink( $filename );
 		exit;
+	}
+
+	public function popup(){
+		if(!$this->input->is_ajax_request())
+			show_404();
+
+		$search = $this->input->post("search");
+		$value = $this->input->post("value");
+
+		$Available_searchs = array("status", "agent", "product");
+		if(!in_array($search, $Available_searchs))
+			show_404();
+
+		switch ($search) {
+			case 'status':
+				$search = "work_order_status.name";	
+				break;
+			case 'agent':
+				$search = "agents.id";
+				break;
+			case 'product':
+				$search = "products.id";
+				break;
+		}
+
+		$other_filters = $this->_init_profile();
+
+		$other_filters["nuevos_negocios"] = 1;
+		$other_filters["periodo"] = get_filter_period();
+		$other_filters["where"] = array($search => $value);
+		
+		$this->load->model( 'ot/work_order');
+		$this->load->model( 'users/user');
+		//General work orders
+		$work_orders_general = $this->work_order->getWorkOrdersGroupBy($other_filters);
+		//Formating names
+		foreach ($work_orders_general as $i => $order){
+			if(empty($order["name"]) && empty($order["lastnames"]))
+				$work_orders_general[$i]["name"] = $order["company_name"];
+			$work_orders_general[$i]["lastnames"].= " - <b>". $order["percentage"]."</b>";
+		}
+		$this->load->view('solicitudes/reporte_general_table', array("general_data" => $work_orders_general));
 	}
 
 	public function _init_profile(){
