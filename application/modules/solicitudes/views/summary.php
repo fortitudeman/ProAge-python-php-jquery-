@@ -1,3 +1,21 @@
+<div class="row" id="indicators">
+	<div class="span3 indicator">
+		<span class="title">Solicitudes</span>
+		<?= $general_indicators["solicitudes"] ?>
+	</div>
+	<div class="span3 indicator">
+		<span class="title">Primas Solicitadas</span>
+		$<?= number_format($general_indicators["primas_solicitadas"],2) ?>
+	</div>
+	<div class="span3 indicator">
+		<span class="title">Prima Promedio</span>
+		$<?= number_format($general_indicators["prima_promedio"],2) ?>
+	</div>
+	<div class="span3 indicator">
+		<span class="title">Agentes</span>
+		<?= $general_indicators["agentes"] ?>
+	</div>
+</div>
 <div class="row">
 	<?= form_open('', 'id="ot-form"'); ?>
 		<table class="filterstable">
@@ -29,8 +47,8 @@
 </div>
 
 <ul class="nav nav-tabs" id="myTab">
-  <li class="<?= printEquals($selected_tab, "graficos", "active") ?>"><a href="#graficos">Estadisticas</a></li>
   <li class="<?= printEquals($selected_tab, "reporte", "active") ?>"><a href="#reporte">Reporte general</a></li>
+  <li class="<?= printEquals($selected_tab, "graficos", "active") ?>"><a href="#graficos">Estadisticas</a></li>
 </ul>
  
 <div class="tab-content">

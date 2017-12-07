@@ -56,3 +56,24 @@ table i[class^="icon-"] {
 .span6.printable{
 	padding: 0px 25px;
 }
+#myTab > li, #myTab > li{
+	float: right;
+}
+
+#indicators{
+	margin: 25px 0px;
+}
+#indicators .indicator{
+	text-align: center;
+	font-size: 22px;
+	color: #0044cc;
+	font-weight: bold;
+}
+#indicators .indicator .title{
+	font-weight: normal;
+	font-size: 16px;
+	display: block;
+	width: 100%;
+	margin-bottom: 5px;
+	color: #000;
+}

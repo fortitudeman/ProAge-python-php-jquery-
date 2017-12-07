@@ -224,6 +224,23 @@ class solicitudes extends CI_Controller {
 
 		$this->load->helper('sort');
 		$this->load->helper('render');
+
+		//Create Indicators array
+		$indicators = array(
+			"solicitudes" => 0,
+			"primas_solicitadas" => 0,
+			"prima_promedio" => 0,
+			"agentes" => 0
+		);
+
+		//Calculate solicitudes and primas_solicitadas indicator
+		foreach ($work_orders_status as $order) {
+			$indicators["solicitudes"] += $order["conteo"];
+			$indicators["primas_solicitadas"] += $order["prima"];
+		}
+		$indicators["prima_promedio"] = $indicators["solicitudes"] > 0 ? $indicators["primas_solicitadas"] / $indicators["solicitudes"] : 0;
+		$indicators["agentes"] = count($work_orders_agents);
+
 		$content_data = array(
 			'access_all' => $this->access_all,
 			'access_export_xls' => $this->access_export_xls,
@@ -242,6 +259,7 @@ class solicitudes extends CI_Controller {
 			'selected_order' => $orderby,
 			'orderhash' => $orderhash,
 			'orderlabel' => $orderlabel,
+			'general_indicators' => $indicators,
 		);
 
 		$sub_page_content = $this->load->view('solicitudes/summary', $content_data, TRUE);
