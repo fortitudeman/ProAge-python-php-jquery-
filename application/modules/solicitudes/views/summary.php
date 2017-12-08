@@ -73,12 +73,10 @@
 		  	<h3 class="span12">
 		  		Solicitudes
 				<div class="opciones">
-					<?php if(!empty($wo_agents) && count($wo_agents) > 1): ?>
-						<a href="#" class="btn btn-primary sorter" data-sort-by="<?= $orderhash ?>">
-							<i class="fa fa-sort-amount-desc" aria-hidden="true"></i> 
-							<span><?= $orderlabel ?></span>
-						</a>
-					<?php endif; ?>
+					<a href="#" class="btn btn-primary sorter" data-sort-by="<?= $orderhash ?>">
+						<i class="fa fa-sort-amount-desc" aria-hidden="true"></i> 
+						<span><?= $orderlabel ?></span>
+					</a>
 					<a href="#" class="btn btn-primary toggleTable" data-target="#agentsTable" data-resize="#agentsCell">
 						<i class="icon-list-alt"></i>
 					</a>
@@ -254,7 +252,7 @@
 		  
 		  <div class="span6 printable">
 		  	<h3 class="span12">
-		  		Productividad Generacion
+		  		Solicitacion por Generacion
 				<div class="opciones">
 					<a href="#" class="btn btn-primary toggleTable" data-target="#generationsTable" data-resize="#generationsCell">
 						<i class="icon-list-alt"></i>
@@ -275,7 +273,7 @@
 					<thead>
 						<tr>
 							<th>GENERACION</th>
-							<th>PRIMAS PAGADAS</th>
+							<th>SOLICITUDES</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -284,9 +282,9 @@
 							<tr>
 								<td><?= $order["title"] ?></td>
 								<td>
-									$<?= number_format($order["primas"],2); ?>
+									<?= $order["solicitudes"]; ?>
 								</td>
-								<?php $total += $order["primas"]; ?>
+								<?php $total += $order["solicitudes"]; ?>
 							</tr>
 						<?php endforeach; ?>
 					</tbody>
@@ -294,7 +292,7 @@
 						<tr>
 							<th>Total</th>
 							<th>
-								$<?= number_format($total, 2) ?>	
+								<?= $total ?>	
 							</th>
 						</tr>
 					</tfoot>

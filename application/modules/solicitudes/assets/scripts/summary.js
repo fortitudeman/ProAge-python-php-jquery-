@@ -337,7 +337,7 @@ $(document).ready( function(){
 			labels: WO_Generations.map(obj => obj.title),
 			datasets: [{
 			    label: "# Solicitudes",
-			    data: WO_Generations.map(obj => obj.primas),
+			    data: WO_Generations.map(obj => obj.solicitudes),
 			    borderWidth: 1,
 			    backgroundColor: Colors,	
 			}]
@@ -362,7 +362,7 @@ $(document).ready( function(){
 							total += parseFloat(allData[i]);
 						}
 						var tooltipPercentage = Math.round((tooltipData / total) * 100);
-						return tooltipLabel + ": $" + number_format(tooltipData,2) + " (" + tooltipPercentage + "%)";
+						return tooltipLabel + ": " + tooltipData + " (" + tooltipPercentage + "%)";
 					}
 				}
 			}
