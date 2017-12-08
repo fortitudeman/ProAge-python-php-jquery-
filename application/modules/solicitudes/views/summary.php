@@ -135,162 +135,11 @@
 		  	</div>
 	  	</div>
 	  </div>
+	  <?php 
+	  	sort_object($wo_products, "prima");
+	  ?>
 	  <div class="row">
-		  <div class="span6 printable">
-		  	<h3 class="span12">
-		  		OT's por Estatus
-				<div class="opciones">
-					<a href="#" class="btn btn-primary toggleTable" data-target="#statusTable" data-resize="#statusCell">
-						<i class="icon-list-alt"></i>
-					</a>
-					<button type="button" class="btn btn-primary imprimir">
-						<i class="icon-print"></i>
-					</button>
-					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/status") ?>">
-						<i class="icon-download-alt"></i>
-					</a>
-			  	</div>
-		  	</h3>
-			<div class="span12 graph-container" id="statusCell" style="height: 450px">
-				<canvas id="statusContainer"></canvas>
-			</div>
-			<div class="span12 table-container" id="statusTable" style="display: none">
-				<table class="table table-striped" style="margin-left: 30px">
-				<thead>
-					<tr>
-						<th>Estatus</th>
-						<th>OT'S</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php $total = 0; ?>
-					<?php foreach ($wo_status as $order): ?>
-						<tr>
-							<td><?= $order["status"] ?></td>
-							<td>
-								<a href="#" class="popup" data-search="status" data-value="<?= $order["status"] ?>">
-									<?= $order["conteo"] ?>
-								</a>	
-							</td>
-							<?php $total += $order["conteo"] ?>
-						</tr>
-					<?php endforeach; ?>
-				</tbody>
-				<tfoot>
-					<tr>
-						<th>Total</th>
-						<th><?= $total ?></th>
-					</tr>
-				</tfoot>
-			</table>
-			</div>
-		  </div>
-		  <div class="span6 printable">
-		  	<h3 class="span12">
-		  		Productos Solicitados
-				<div class="opciones">
-					<a href="#" class="btn btn-primary toggleTable" data-target="#productsTable" data-resize="#productsCell">
-						<i class="icon-list-alt"></i>
-					</a>
-					<button type="button" class="btn btn-primary imprimir">
-						<i class="icon-print"></i>
-					</button>
-					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/products") ?>">
-						<i class="icon-download-alt"></i>
-					</a>
-			  	</div>
-		  	</h3>
-			<div class="span12 graph-container" id="productsCell" style="height: 450px">
-				<canvas id="productsContainer"></canvas>
-			</div>
-			<div class="span12 table-container" id="productsTable" style="display: none">
-				<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
-					<thead>
-						<tr>
-							<th>PRODUCTO</th>
-							<th>OT'S</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php $total = 0; ?>
-						<?php foreach ($wo_products as $order): ?>
-							<tr>
-								<td><?= $order["producto"] ?></td>
-								<td>
-									<a href="#" class="popup" data-search="product" data-value="<?= $order["id"] ?>">
-										<?= $order["conteo"] ?>
-									</a>	
-								</td>
-								<?php $total += $order["conteo"] ?>
-							</tr>
-						<?php endforeach; ?>
-					</tbody>
-					<tfoot>
-						<tr>
-							<th>Total</th>
-							<th><?= $total ?></th>
-						</tr>
-					</tfoot>
-				</table>
-			</div>
-		 </div>
-	 </div>
-	 <?php  
-	 	//Sorting Arrays by prima
-	 	sort_object($wo_status, "prima");
-	 	sort_object($wo_products, "prima");
-	 ?>
-	 <div class="row">
-		  <div class="span6 printable">
-		 	<h3 class="span12">
-		  		Primas por Estatus
-				<div class="opciones">
-					<a href="#" class="btn btn-primary toggleTable" data-target="#statusPrimaTable" data-resize="#statusPrimaCell">
-						<i class="icon-list-alt"></i>
-					</a>
-					<button type="button" class="btn btn-primary imprimir">
-						<i class="icon-print"></i>
-					</button>
-					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/primastatus") ?>">
-						<i class="icon-download-alt"></i>
-					</a>
-			  	</div>
-		  	</h3>
-			<div class="span12 graph-container" id="statusPrimaCell" style="height: 450px">
-				<canvas id="statusPrimaContainer"></canvas>
-			</div>
-			<div class="span12 table-container" id="statusPrimaTable" style="display: none">
-				<table class="table table-striped" style="margin-left: 30px">
-				<thead>
-					<tr>
-						<th>Estatus</th>
-						<th>PRIMA</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php $total = 0; ?>
-					<?php foreach ($wo_status as $order): ?>
-						<tr>
-							<td><?= $order["status"] ?></td>
-							<td>
-								<a href="#" class="popup" data-search="status" data-value="<?= $order["status"] ?>">
-									$<?= number_format($order["prima"], 2) ?>
-								</a>
-							</td>
-							<?php $total += $order["prima"]; ?>
-						</tr>
-					<?php endforeach; ?>
-				</tbody>
-				<tfoot>
-					<tr>
-						<th>Total</th>
-						<th>$<?= number_format($total, 2) ?></th>
-					</tr>
-				</tfoot>
-			</table>
-			</div>
-		  </div>
-		  <div class="span6 printable">
+	  	  <div class="span6 printable">
 		  	<h3 class="span12">
 		  		Primas por Producto
 				<div class="opciones">
@@ -339,13 +188,11 @@
 				</table>
 			</div>
 		 </div>
-	 </div>
-	 <?php 
-	 	//Sorting Array by primaAvg
-	 	sort_object($wo_products, "avgPrima");
-	 ?>
-	 <div class="row">
-		  <div class="span6 printable">
+		 <?php 
+		 	//Sorting Array by primaAvg
+	 		sort_object($wo_products, "avgPrima");
+		 ?>
+		 <div class="span6 printable">
 		  	<h3 class="span12">
 		  		P. Promedio Producto
 				<div class="opciones">
@@ -396,7 +243,17 @@
 				</table>
 			</div>
 		 </div>
-		 <div class="span6 printable">
+		 
+
+	 </div>
+	 <?php  
+	 	//Sorting Arrays by solicitudes
+	 	sort_object($wo_products, "conteo");
+	 	
+	 ?>
+	 <div class="row">
+		  
+		  <div class="span6 printable">
 		  	<h3 class="span12">
 		  		Productividad Generacion
 				<div class="opciones">
@@ -419,7 +276,7 @@
 					<thead>
 						<tr>
 							<th>GENERACION</th>
-							<th>SOLICITUDES</th>
+							<th>PRIMAS PAGADAS</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -428,9 +285,9 @@
 							<tr>
 								<td><?= $order["title"] ?></td>
 								<td>
-									<?= $order["solicitudes"]; ?>
+									$<?= number_format($order["primas"],2); ?>
 								</td>
-								<?php $total += $order["solicitudes"]; ?>
+								<?php $total += $order["primas"]; ?>
 							</tr>
 						<?php endforeach; ?>
 					</tbody>
@@ -438,13 +295,173 @@
 						<tr>
 							<th>Total</th>
 							<th>
-								<?= $total ?>	
+								$<?= number_format($total, 2) ?>	
 							</th>
 						</tr>
 					</tfoot>
 				</table>
 			</div>
 		 </div>
+
+		 <div class="span6 printable">
+		  	<h3 class="span12">
+		  		Productos Solicitados
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#productsTable" data-resize="#productsCell">
+						<i class="icon-list-alt"></i>
+					</a>
+					<button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button>
+					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/products") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
+			  	</div>
+		  	</h3>
+			<div class="span12 graph-container" id="productsCell" style="height: 450px">
+				<canvas id="productsContainer"></canvas>
+			</div>
+			<div class="span12 table-container" id="productsTable" style="display: none">
+				<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
+					<thead>
+						<tr>
+							<th>PRODUCTO</th>
+							<th>OT'S</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php $total = 0; ?>
+						<?php foreach ($wo_products as $order): ?>
+							<tr>
+								<td><?= $order["producto"] ?></td>
+								<td>
+									<a href="#" class="popup" data-search="product" data-value="<?= $order["id"] ?>">
+										<?= $order["conteo"] ?>
+									</a>	
+								</td>
+								<?php $total += $order["conteo"] ?>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Total</th>
+							<th><?= $total ?></th>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		 </div>
+	 </div>
+	 <?php 
+	 	//Sort Status by Prima
+	 	sort_object($wo_status, "prima");
+	 ?>
+	 <div class="row">
+		
+		<div class="span6 printable">
+		 	<h3 class="span12">
+		  		Primas por Estatus
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#statusPrimaTable" data-resize="#statusPrimaCell">
+						<i class="icon-list-alt"></i>
+					</a>
+					<button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button>
+					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/primastatus") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
+			  	</div>
+		  	</h3>
+			<div class="span12 graph-container" id="statusPrimaCell" style="height: 450px">
+				<canvas id="statusPrimaContainer"></canvas>
+			</div>
+			<div class="span12 table-container" id="statusPrimaTable" style="display: none">
+				<table class="table table-striped" style="margin-left: 30px">
+				<thead>
+					<tr>
+						<th>Estatus</th>
+						<th>PRIMA</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php $total = 0; ?>
+					<?php foreach ($wo_status as $order): ?>
+						<tr>
+							<td><?= $order["status"] ?></td>
+							<td>
+								<a href="#" class="popup" data-search="status" data-value="<?= $order["status"] ?>">
+									$<?= number_format($order["prima"], 2) ?>
+								</a>
+							</td>
+							<?php $total += $order["prima"]; ?>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th>Total</th>
+						<th>$<?= number_format($total, 2) ?></th>
+					</tr>
+				</tfoot>
+			</table>
+			</div>
+		  </div>
+		<?php 
+		 	//Sort Status by Solicitudes
+		 	sort_object($wo_status, "conteo");
+		 ?>
+		<div class="span6 printable">
+		  	<h3 class="span12">
+		  		OT's por Estatus
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#statusTable" data-resize="#statusCell">
+						<i class="icon-list-alt"></i>
+					</a>
+					<button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button>
+					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/status") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
+			  	</div>
+		  	</h3>
+			<div class="span12 graph-container" id="statusCell" style="height: 450px">
+				<canvas id="statusContainer"></canvas>
+			</div>
+			<div class="span12 table-container" id="statusTable" style="display: none">
+				<table class="table table-striped" style="margin-left: 30px">
+				<thead>
+					<tr>
+						<th>Estatus</th>
+						<th>OT'S</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php $total = 0; ?>
+					<?php foreach ($wo_status as $order): ?>
+						<tr>
+							<td><?= $order["status"] ?></td>
+							<td>
+								<a href="#" class="popup" data-search="status" data-value="<?= $order["status"] ?>">
+									<?= $order["conteo"] ?>
+								</a>	
+							</td>
+							<?php $total += $order["conteo"] ?>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th>Total</th>
+						<th><?= $total ?></th>
+					</tr>
+				</tfoot>
+			</table>
+			</div>
+		  </div>
+
 	 </div>
   </div>
   <div class="tab-pane <?= printEquals($selected_tab, "reporte", "active") ?>" id="reporte">

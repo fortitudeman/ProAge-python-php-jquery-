@@ -692,9 +692,11 @@ if ( ! function_exists('extract_coordinator_name'))
 if (!function_exists('makeDropdown'))
 {
 
-	function makeDropdown($arr, $idColumn, $valColumn)
+	function makeDropdown($arr, $idColumn, $valColumn, $all = TRUE)
 	{
-		$returnArr = array("" => "Todos");
+		$returnArr = array();
+		if($all)
+			$returnArr[""] = "Todos";
 		foreach ($arr as $row)
 			$returnArr[$row[$idColumn]] = $row[$valColumn];
 		return $returnArr;

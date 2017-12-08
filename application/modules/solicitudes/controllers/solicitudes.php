@@ -221,7 +221,7 @@ class solicitudes extends CI_Controller {
 
 		$base_url = base_url();
 		$ramo= 55;
-		$ramos = makeDropdown($this->work_order->getProductsGroups(), "id", "name");
+		$ramos = makeDropdown($this->work_order->getProductsGroups(), "id", "name", FALSE);
 		$products = makeDropdown($this->work_order->getProducts(), "id", "name");
 
 		//Remove NTU, Excedido and Cancelada
@@ -614,6 +614,9 @@ class solicitudes extends CI_Controller {
 			$this->custom_period_from = date("Y-m-d", strtotime("last week monday"));
 			$this->custom_period_to = date("Y-m-d", strtotime("last week sunday"));
 		}
+
+		if(empty($other_filters["ramo"]))
+			$other_filters["ramo"] = 1;
 
 		//Filters
 		if($this->input->post()){
