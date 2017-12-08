@@ -1,32 +1,30 @@
-<div class="row">
-	<?= form_open('', 'id="ot-form"'); ?>
-		<table class="filterstable">
-			<thead>
-				<th>Período :<br />
-					<?php echo $period_fields ?>
-					<select id="periodo_form" name="periodo" style="width: 175px" title="Período">
-						  <option value="<?php echo $selected_period ?>"></option>
-					</select>
-					<input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
-				</th>
-				<th>Ramo:<br />
-				<?= form_dropdown('ramo', $ramos, $other_filters["ramo"], 'id="ramo" class="filter-field filter-select"') ?>
-				</th>
-				<th>Agentes:<br />
-				<?= form_dropdown('agent', $agents, $other_filters["agent"], 'id="agent" class="filter-field filter-select" style="width:250px"') ?>
-				</th>
-				<th>Producto:<br />
-				<?= form_dropdown('product', $products, $other_filters["product"], 'id="product" class="filter-field filter-select" style="width: 150px"') ?>
-				</th>
-				
-				<th>Estatus:<br />
-				<?= form_dropdown('status', $status, $other_filters["status"], 'id="status" class="filter-field filter-select"') ?>
-				</th>
-				<?php render_custom_filters() ?>
-			</thead>
-		</table>
-	<?= form_close(); ?>
-</div>
+<?= form_open('', 'id="ot-form"'); ?>
+	<table class="filterstable no-more-tables">
+		<thead>
+			<th>Período :<br />
+				<?php echo $period_fields ?>
+				<select id="periodo_form" name="periodo" style="width: 175px" title="Período">
+					  <option value="<?php echo $selected_period ?>"></option>
+				</select>
+				<input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
+			</th>
+			<th>Ramo:<br />
+			<?= form_dropdown('ramo', $ramos, $other_filters["ramo"], 'id="ramo" class="filter-field filter-select"') ?>
+			</th>
+			<th>Agentes:<br />
+			<?= form_dropdown('agent', $agents, $other_filters["agent"], 'id="agent" class="filter-field filter-select" style="width:250px"') ?>
+			</th>
+			<th>Producto:<br />
+			<?= form_dropdown('product', $products, $other_filters["product"], 'id="product" class="filter-field filter-select" style="width: 150px"') ?>
+			</th>
+			
+			<th>Estatus:<br />
+			<?= form_dropdown('status', $status, $other_filters["status"], 'id="status" class="filter-field filter-select"') ?>
+			</th>
+			<?php render_custom_filters() ?>
+		</thead>
+	</table>
+<?= form_close(); ?>
 <div class="row" id="indicators">
 	<div class="span3 indicator">
 		<span class="title">Solicitudes</span>
