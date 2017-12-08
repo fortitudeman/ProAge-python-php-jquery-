@@ -396,6 +396,55 @@
 				</table>
 			</div>
 		 </div>
+		 <div class="span6 printable">
+		  	<h3 class="span12">
+		  		Productividad Generacion
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#generationsTable" data-resize="#generationsCell">
+						<i class="icon-list-alt"></i>
+					</a>
+					<button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button>
+					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/generations") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
+			  	</div>
+		  	</h3>
+			<div class="span12 graph-container" id="generationsCell" style="height: 450px">
+				<canvas id="generationsContainer"></canvas>
+			</div>
+			<div class="span12 table-container" id="generationsTable" style="display: none">
+				<table class="table table-striped" style="margin-left: 30px; height: 350px; overflow-y: auto;">
+					<thead>
+						<tr>
+							<th>GENERACION</th>
+							<th>SOLICITUDES</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php $total = 0; ?>
+						<?php foreach ($wo_generations as $order): ?>
+							<tr>
+								<td><?= $order["title"] ?></td>
+								<td>
+									<?= $order["solicitudes"]; ?>
+								</td>
+								<?php $total += $order["solicitudes"]; ?>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>Total</th>
+							<th>
+								<?= $total ?>	
+							</th>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		 </div>
 	 </div>
   </div>
   <div class="tab-pane <?= printEquals($selected_tab, "reporte", "active") ?>" id="reporte">

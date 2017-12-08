@@ -73,6 +73,12 @@ if ( ! function_exists('get_tri_cuatrimestre'))
 	    if ($month <= 9) return 3;
 	    return 4;
 	}
+
+	function get_trimester($date){
+		$curMonth = date("m", strtotime($date));
+		$curQuarter = ceil($curMonth/3);
+		return $curQuarter;
+	}
 }
 
 ?>

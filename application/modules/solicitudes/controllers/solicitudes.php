@@ -214,6 +214,11 @@ class solicitudes extends CI_Controller {
 			$work_orders_products[$i]["avgPrima"] = ($row["conteo"] != 0) ? $row["prima"] / $row["conteo"] : 0;
 		$work_orders_products_data = json_encode($work_orders_products);
 
+		//Getting Generation group
+		$work_orders_generations = $this->work_order->getWorkOrdersGroupByGeneracion($other_filters);
+		$work_orders_generations_data = json_encode($work_orders_generations);
+
+
 		$base_url = base_url();
 		$ramo= 55;
 		$ramos = makeDropdown($this->work_order->getProductsGroups(), "id", "name");
@@ -308,6 +313,7 @@ class solicitudes extends CI_Controller {
 			'wo_agents' => $work_orders_agents,
 			'wo_status' => $work_orders_status,
 			'wo_products' => $work_orders_products,
+			'wo_generations' => $work_orders_generations,
 			'selected_tab' => $tab,
 			'selected_order' => $orderby,
 			'orderhash' => $orderhash,
@@ -323,6 +329,7 @@ class solicitudes extends CI_Controller {
 				var WO_Agents = '.$work_orders_data.';
 				var WO_Status = '.$work_orders_status_data.';
 				var WO_Products = '.$work_orders_products_data.';
+				var WO_Generations = '.$work_orders_generations_data.';
 			</script>
 			';
 		$this->view = array(
@@ -367,7 +374,7 @@ class solicitudes extends CI_Controller {
 
 	public function export($typeFile = "summary"){
 		//Validation of export
-		$exportTypes = array("summary", "agents", "status", "products", "primastatus", "primaproduct", "primaavgproduct");
+		$exportTypes = array("summary", "agents", "status", "products", "primastatus", "primaproduct", "primaavgproduct", "generations");
 		if(!in_array($typeFile, $exportTypes))
 			redirect('solicitudes');
 		if ( !$this->access_export_xls )
@@ -520,6 +527,17 @@ class solicitudes extends CI_Controller {
 					);
 				}
 				break;
+			case 'generations':
+				$work_orders_generations = $this->work_order->getWorkOrdersGroupByGeneracion($other_filters);
+
+				$clean_arr[] = array(
+					"Generacion", "Solicitudes"
+				);
+				foreach ($work_orders_generations as $order) {
+					$clean_arr[] = array(
+						$order["title"], $order["solicitudes"]
+					);
+				}
 		}
 
 		// Export

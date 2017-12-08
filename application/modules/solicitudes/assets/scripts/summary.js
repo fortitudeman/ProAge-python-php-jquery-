@@ -330,6 +330,45 @@ $(document).ready( function(){
 		}
 	});
 
+	var ctxGenerations = document.getElementById("generationsContainer").getContext("2d");
+	GenerationsGraph = new Chart(ctxGenerations, {
+	    type: "pie",
+	    data: {
+			labels: WO_Generations.map(obj => obj.title),
+			datasets: [{
+			    label: "# Solicitudes",
+			    data: WO_Generations.map(obj => obj.solicitudes),
+			    borderWidth: 1,
+			    backgroundColor: Colors,	
+			}]
+		},
+		options: {
+			scales: {
+			    yAxes: [{
+			        ticks: {
+			            beginAtZero:true
+			        },
+			    }],
+			},
+			maintainAspectRatio: false,
+			tooltips: {
+				callbacks: {
+					label: function(tooltipItem, data) {
+						var allData = data.datasets[tooltipItem.datasetIndex].data;
+						var tooltipLabel = data.labels[tooltipItem.index];
+						var tooltipData = allData[tooltipItem.index];
+						var total = 0;
+						for (var i in allData) {
+							total += parseFloat(allData[i]);
+						}
+						var tooltipPercentage = Math.round((tooltipData / total) * 100);
+						return tooltipLabel + ": " + tooltipData + " (" + tooltipPercentage + "%)";
+					}
+				}
+			}
+		}
+	});
+
 	$(".sorter").click(function (e){
 		e.preventDefault();
 		var sort_by = $(this).attr("data-sort-by");
