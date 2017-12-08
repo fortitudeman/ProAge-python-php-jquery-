@@ -937,7 +937,7 @@ class Work_order extends CI_Model{
 	   		$this->db->select('product_group.name ramo');
 	   		$this->db->select('policies.name asegurado, policies.prima, policies.uid poliza');
 	   		$this->db->select('users.name, users.lastnames, users.company_name, policies_vs_users.percentage');
-	   		$this->db->select('agents.id agent_id');
+	   		$this->db->select('agents.id agent_id, connection_date');
 	   		$this->db->select('work_order_patent.name tipo_tramite');
 	   		$this->db->select('products.name producto');
 	   		$this->db->select('work_order_status.name status');

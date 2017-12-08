@@ -427,7 +427,7 @@ $(document).ready( function(){
 	$(window).on("resize", function(){
 		$(".tfoot").css("display", "none")
 		var activeTab = $(".nav-tabs .active").index();
-		if(activeTab == 1){
+		if(activeTab == 0){
 			var table = $("#tablesorted");
 			$(".tfoot").css({
 				"left" : table.offset().left+"px",

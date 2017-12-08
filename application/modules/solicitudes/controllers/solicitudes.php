@@ -131,6 +131,7 @@ class solicitudes extends CI_Controller {
 		if(!in_array($tab, $Available_tabs))
 			$tab = "graficos";
 
+		//Validation of order
 		$Available_orderbys = array("primas", "requests");
 		if(!in_array($orderby, $Available_orderbys))
 			$orderby = "primas";
@@ -159,14 +160,16 @@ class solicitudes extends CI_Controller {
 		if ($this->default_period_filter == 5)
 			set_filter_period( 2 );
 
+		// Getting filters
 		$other_filters = $this->_init_profile();
-
+		// Aditional configuration
 		$other_filters["nuevos_negocios"] = 1;
 		$other_filters["periodo"] = get_filter_period();
 		
 		$this->load->model( 'ot/work_order');
 		$this->load->model( 'users/user');
-		//General work orders
+
+		//General Report work orders
 		$work_orders_general = $this->work_order->getWorkOrdersGroupBy($other_filters);
 		//Formating names
 		foreach ($work_orders_general as $i => $order){
@@ -234,12 +237,62 @@ class solicitudes extends CI_Controller {
 		);
 
 		//Calculate solicitudes and primas_solicitadas indicator
-		foreach ($work_orders_status as $order) {
+		foreach ($work_orders_agents as $order) {
 			$indicators["solicitudes"] += $order["conteo"];
 			$indicators["primas_solicitadas"] += $order["prima"];
 		}
 		$indicators["prima_promedio"] = $indicators["solicitudes"] > 0 ? $indicators["primas_solicitadas"] / $indicators["solicitudes"] : 0;
 		$indicators["agentes"] = count($work_orders_agents);
+
+		/* 
+			Calculate previous year same period
+		 */
+		$this->load->helper('date');
+		//Auxiliar variables
+		$from = $this->custom_period_from;
+		$to = $this->custom_period_to;
+		$period = $other_filters["periodo"];
+
+		//Get last year date
+		$this->custom_period_from = sameDayLastYear($this->custom_period_from);
+		$this->custom_period_to = sameDayLastYear($this->custom_period_to);
+		$other_filters["periodo"] = 4;
+
+		//Configuration agent group
+		$args = array(
+			"select" => "users.company_name, users.name, users.lastnames, policies_vs_users.percentage, agents.id",
+			"sum" => "policies.prima",
+			"by" => "users.company_name, agents.id, policies_vs_users.percentage",
+			"order" => "$orderby desc",
+		);
+		$work_orders_agents_prev = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+		$prev_indicators = array(
+			"solicitudes" => 0,
+			"primas_solicitadas" => 0,
+			"prima_promedio" => 0,
+			"agentes" => 0
+		);
+
+		//Calculate solicitudes and primas_solicitadas indicator
+		foreach ($work_orders_agents_prev as $order) {
+			$prev_indicators["solicitudes"] += $order["conteo"];
+			$prev_indicators["primas_solicitadas"] += $order["prima"];
+		}
+		$prev_indicators["prima_promedio"] = $prev_indicators["solicitudes"] > 0 ? $prev_indicators["primas_solicitadas"] / $prev_indicators["solicitudes"] : 0;
+		$prev_indicators["agentes"] = count($work_orders_agents_prev);
+
+		$comparative = array(
+			"solicitudes" => $prev_indicators["solicitudes"] > 0 ? ($indicators["solicitudes"] - $prev_indicators["solicitudes"])*100/ $prev_indicators["solicitudes"] : 100,
+			"primas_solicitadas" => $prev_indicators["primas_solicitadas"] > 0 ? ($indicators["primas_solicitadas"] - $prev_indicators["primas_solicitadas"])*100/ $prev_indicators["primas_solicitadas"] : 100,
+			"prima_promedio" => $prev_indicators["prima_promedio"] > 0 ? ($indicators["prima_promedio"] - $prev_indicators["prima_promedio"])*100/ $prev_indicators["prima_promedio"] : 100,
+			"agentes" => $prev_indicators["agentes"] > 0 ? ($indicators["agentes"] - $prev_indicators["agentes"])*100/ $prev_indicators["agentes"] : 100,
+		);
+		
+		//Return to the original state
+		$this->custom_period_from = $from;
+		$this->custom_period_to = $to;
+		$other_filters["periodo"] = $period;
+
 
 		$content_data = array(
 			'access_all' => $this->access_all,
@@ -260,6 +313,7 @@ class solicitudes extends CI_Controller {
 			'orderhash' => $orderhash,
 			'orderlabel' => $orderlabel,
 			'general_indicators' => $indicators,
+			'comparative_indicators' => $comparative,
 		);
 
 		$sub_page_content = $this->load->view('solicitudes/summary', $content_data, TRUE);

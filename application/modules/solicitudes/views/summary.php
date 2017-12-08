@@ -2,18 +2,34 @@
 	<div class="span3 indicator">
 		<span class="title">Solicitudes</span>
 		<?= $general_indicators["solicitudes"] ?>
+		<span class="comparative <?= sign($comparative_indicators["solicitudes"]) ?>">
+			<i class="fa <?= sign($comparative_indicators["solicitudes"] ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
+			<?= number_format(abs($comparative_indicators["solicitudes"]), 2 ) ?>%
+		</span>
 	</div>
 	<div class="span3 indicator">
 		<span class="title">Primas Solicitadas</span>
 		$<?= number_format($general_indicators["primas_solicitadas"],2) ?>
+		<span class="comparative <?= sign($comparative_indicators["primas_solicitadas"]) ?>">
+			<i class="fa <?= sign($comparative_indicators["primas_solicitadas"] ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
+			<?= number_format(abs($comparative_indicators["primas_solicitadas"]), 2 ) ?>%
+		</span>
 	</div>
 	<div class="span3 indicator">
 		<span class="title">Prima Promedio</span>
 		$<?= number_format($general_indicators["prima_promedio"],2) ?>
+		<span class="comparative <?= sign($comparative_indicators["prima_promedio"]) ?>">
+			<i class="fa <?= sign($comparative_indicators["prima_promedio"] ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
+			<?= number_format(abs($comparative_indicators["prima_promedio"]), 2 ) ?>%
+		</span>
 	</div>
 	<div class="span3 indicator">
 		<span class="title">Agentes</span>
 		<?= $general_indicators["agentes"] ?>
+		<span class="comparative <?= sign($comparative_indicators["agentes"]) ?>">
+			<i class="fa <?= sign($comparative_indicators["agentes"] ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
+			<?= number_format(abs($comparative_indicators["agentes"]), 2 ) ?>%
+		</span>
 	</div>
 </div>
 <div class="row">

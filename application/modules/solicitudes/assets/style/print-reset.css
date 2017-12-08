@@ -1,6 +1,6 @@
 @media print{
 	body{padding: 0 !important}
-	.navbar, .nav-tabs, .main-menu-span, .opciones, .toggleTable, footer, hr, a{
+	.navbar, .nav-tabs, .main-menu-span, .opciones, .toggleTable, footer, hr, #reporte a, #indicators{
 		display: none !important;
 	}
 	.box, .box-content, .row, .span6, form, .container-fluid, table{
@@ -102,5 +102,8 @@
 		page-break-inside: auto !important;
 		display: block !important;
 		margin: 0 auto !important;
+	}
+	a{
+		text-decoration: none;
 	}
 }
