@@ -256,7 +256,7 @@
 		  
 		  <div class="span6 printable">
 		  	<h3 class="span12">
-		  		Solicitacion por Generacion
+		  		Solicitación por Generación
 				<div class="opciones">
 					<a href="#" class="btn btn-primary toggleTable" data-target="#generationsTable" data-resize="#generationsCell">
 						<i class="icon-list-alt"></i>

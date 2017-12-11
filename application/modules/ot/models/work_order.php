@@ -1040,22 +1040,22 @@ class Work_order extends CI_Model{
    		//Create generaciones array
    			$generaciones = array(
    				"generacion_1" => array(
-   					"title" => "Generacion 1",
+   					"title" => "Generación 1",
    					"primas" => 0,
    					"solicitudes" => 0,
    				),
    				"generacion_2" => array(
-   					"title" => "Generacion 2",
+   					"title" => "Generación 2",
    					"primas" => 0,
    					"solicitudes" => 0,
    				),
    				"generacion_3" => array(
-   					"title" => "Generacion 3",
+   					"title" => "Generación 3",
    					"primas" => 0,
    					"solicitudes" => 0,
    				),
    				"generacion_4" => array(
-   					"title" => "Generacion 4",
+   					"title" => "Generación 4",
    					"primas" => 0,
    					"solicitudes" => 0,
    				),
