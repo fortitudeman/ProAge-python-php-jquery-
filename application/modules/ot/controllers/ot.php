@@ -1439,6 +1439,7 @@ public function rechazar( $ot = null){
 			$this->load->helper('date');
 			$fields_to_import = $this->imported_fields[$product];
 			for( $i=0; $i<=count( $file_array ); $i++ ){
+				$this->db->reconnect();
 // Prepare the import
 				if( isset( $file_array[$i] ) ) 
 				{
