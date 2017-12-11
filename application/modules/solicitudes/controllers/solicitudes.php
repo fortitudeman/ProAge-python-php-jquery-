@@ -372,7 +372,7 @@ class solicitudes extends CI_Controller {
 		$this->load->view( 'index', $this->view );
 	}
 
-	public function export($typeFile = "summary"){
+	public function download($typeFile = "summary"){
 		//Validation of export
 		$exportTypes = array("summary", "agents", "status", "products", "primastatus", "primaproduct", "primaavgproduct", "generations");
 		if(!in_array($typeFile, $exportTypes))

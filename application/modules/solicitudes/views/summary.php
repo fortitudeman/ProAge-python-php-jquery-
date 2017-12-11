@@ -78,12 +78,14 @@
 					<a href="#" class="btn btn-primary toggleTable" data-target="#agentsTable" data-resize="#agentsCell">
 						<i class="icon-list-alt"></i>
 					</a>
-					<button type="button" class="btn btn-primary imprimir">
-						<i class="icon-print"></i>
-					</button>
-					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/agents") ?>">
-						<i class="icon-download-alt"></i>
-					</a>
+					<?php if($access_export_xls): ?>
+						<button type="button" class="btn btn-primary imprimir">
+							<i class="icon-print"></i>
+						</button>
+						<a class="btn btn-primary" href="<?= base_url("solicitudes/download/agents") ?>">
+							<i class="icon-download-alt"></i>
+						</a>
+					<?php endif; ?>
 			  	</div>
 		  	</h3>
 	  	  	<div id="agentsCell" class="span12 chart-container" style="height: <?= !empty($wo_agents) ? (ceil(count($wo_agents) / 10)*125)+100 : 250?>px">
@@ -141,12 +143,14 @@
 					<a href="#" class="btn btn-primary toggleTable" data-target="#productsPrimaTable" data-resize="#productsPrimaCell">
 						<i class="icon-list-alt"></i>
 					</a>
-					<button type="button" class="btn btn-primary imprimir">
-						<i class="icon-print"></i>
-					</button>
-					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/primaproduct") ?>">
-						<i class="icon-download-alt"></i>
-					</a>
+					<?php if($access_export_xls): ?>
+						<button type="button" class="btn btn-primary imprimir">
+							<i class="icon-print"></i>
+						</button>
+						<a class="btn btn-primary" href="<?= base_url("solicitudes/download/primaproduct") ?>">
+							<i class="icon-download-alt"></i>
+						</a>
+					<?php endif; ?>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="productsPrimaCell" style="height: 450px">
@@ -194,12 +198,14 @@
 					<a href="#" class="btn btn-primary toggleTable" data-target="#productsPrimaAvgTable" data-resize="#productsPrimaAvgCell">
 						<i class="icon-list-alt"></i>
 					</a>
-					<button type="button" class="btn btn-primary imprimir">
-						<i class="icon-print"></i>
-					</button>
-					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/primaavgproduct") ?>">
-						<i class="icon-download-alt"></i>
-					</a>
+					<?php if($access_export_xls): ?>
+						<button type="button" class="btn btn-primary imprimir">
+							<i class="icon-print"></i>
+						</button>
+						<a class="btn btn-primary" href="<?= base_url("solicitudes/download/primaavgproduct") ?>">
+							<i class="icon-download-alt"></i>
+						</a>
+					<?php endif; ?>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="productsPrimaAvgCell" style="height: 450px">
@@ -255,12 +261,14 @@
 					<a href="#" class="btn btn-primary toggleTable" data-target="#generationsTable" data-resize="#generationsCell">
 						<i class="icon-list-alt"></i>
 					</a>
-					<button type="button" class="btn btn-primary imprimir">
-						<i class="icon-print"></i>
-					</button>
-					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/generations") ?>">
-						<i class="icon-download-alt"></i>
-					</a>
+					<?php if($access_export_xls): ?>
+						<button type="button" class="btn btn-primary imprimir">
+							<i class="icon-print"></i>
+						</button>
+						<a class="btn btn-primary" href="<?= base_url("solicitudes/download/generations") ?>">
+							<i class="icon-download-alt"></i>
+						</a>
+					<?php endif; ?>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="generationsCell" style="height: 450px">
@@ -305,12 +313,14 @@
 					<a href="#" class="btn btn-primary toggleTable" data-target="#productsTable" data-resize="#productsCell">
 						<i class="icon-list-alt"></i>
 					</a>
-					<button type="button" class="btn btn-primary imprimir">
-						<i class="icon-print"></i>
-					</button>
-					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/products") ?>">
-						<i class="icon-download-alt"></i>
-					</a>
+					<?php if($access_export_xls): ?>
+						<button type="button" class="btn btn-primary imprimir">
+							<i class="icon-print"></i>
+						</button>
+						<a class="btn btn-primary" href="<?= base_url("solicitudes/download/products") ?>">
+							<i class="icon-download-alt"></i>
+						</a>
+					<?php endif; ?>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="productsCell" style="height: 450px">
@@ -361,12 +371,14 @@
 					<a href="#" class="btn btn-primary toggleTable" data-target="#statusPrimaTable" data-resize="#statusPrimaCell">
 						<i class="icon-list-alt"></i>
 					</a>
-					<button type="button" class="btn btn-primary imprimir">
-						<i class="icon-print"></i>
-					</button>
-					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/primastatus") ?>">
-						<i class="icon-download-alt"></i>
-					</a>
+					<?php if($access_export_xls): ?>
+						<button type="button" class="btn btn-primary imprimir">
+							<i class="icon-print"></i>
+						</button>
+						<a class="btn btn-primary" href="<?= base_url("solicitudes/download/primastatus") ?>">
+							<i class="icon-download-alt"></i>
+						</a>
+					<?php endif; ?>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="statusPrimaCell" style="height: 450px">
@@ -414,12 +426,14 @@
 					<a href="#" class="btn btn-primary toggleTable" data-target="#statusTable" data-resize="#statusCell">
 						<i class="icon-list-alt"></i>
 					</a>
-					<button type="button" class="btn btn-primary imprimir">
-						<i class="icon-print"></i>
-					</button>
-					<a class="btn btn-primary" href="<?= base_url("solicitudes/export/status") ?>">
-						<i class="icon-download-alt"></i>
-					</a>
+					<?php if($access_export_xls): ?>
+						<button type="button" class="btn btn-primary imprimir">
+							<i class="icon-print"></i>
+						</button>
+						<a class="btn btn-primary" href="<?= base_url("solicitudes/download/status") ?>">
+							<i class="icon-download-alt"></i>
+						</a>
+					<?php endif; ?>
 			  	</div>
 		  	</h3>
 			<div class="span12 graph-container" id="statusCell" style="height: 450px">
@@ -468,7 +482,7 @@
 				  		<button type="button" class="btn btn-primary imprimir">
 							<i class="icon-print"></i>
 						</button>
-						<a class="btn btn-primary" href="<?= base_url("solicitudes/export/summary") ?>">
+						<a class="btn btn-primary" href="<?= base_url("solicitudes/download/summary") ?>">
 							<i class="icon-download-alt"></i>
 						</a>
 				  	</div>
