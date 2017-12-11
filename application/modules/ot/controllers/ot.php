@@ -1391,6 +1391,7 @@ public function rechazar( $ot = null){
 		// Chane index
 // 2: "Pre import"
 		if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'change-index' ){
+			ini_set('memory_limit', '-1');
 
 			$posted_month = $this->input->post('month');
 			$posted_year = $this->input->post('year');
