@@ -1660,7 +1660,7 @@ public function rechazar( $ot = null){
 
 						if ($controlSaved && $policy)
 						{
-                                                    $this->user->create_negocio_pai($item->uid,$product);
+                            $this->user->create_negocio_pai($item->uid,$product);
 							if ($policy[0]['currency_id'] == 1)
 								$item_amount = $item->amount;
 							else // if policy in USD, convert payment amount from MXN to USD
@@ -1685,10 +1685,10 @@ public function rechazar( $ot = null){
 							}
 						} 
                                                 
-                                                if($policy){
-                                                    $po = $this->work_order->getWorkOrderByPolicy($policy[0]['id']);
-                                                    $work_orders[] = $po[0];
-                                                }
+                        if($policy){
+                            $po = $this->work_order->getWorkOrderByPolicy($policy[0]['id']);
+                            $work_orders[] = $po[0];
+                        }
 						if( $controlSaved == false )
 							$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
 //					}else{

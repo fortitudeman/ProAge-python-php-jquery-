@@ -1872,7 +1872,7 @@ implode(', ', $ramo_tramite_types) . '
 
 		if ($user_id && ($result = $this->work_order->create( 'payments', $payment )))
 		{
-                        $this->user->create_negocio_pai($payment['policy_number'],$product_group);
+            $this->user->create_negocio_pai($payment['policy_number'],$product_group);
 			$policy = $this->work_order->getPolicyByUid(  $payment['policy_number'] );
 			if ($policy && 
 				( (float)$policy[0]['prima'] >= (float)$payment['amount'] ))

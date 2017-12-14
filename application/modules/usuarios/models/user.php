@@ -3339,8 +3339,6 @@ class User extends CI_Model{
                 }elseif($total > 12000){
                         $data = array('ramo'=>$row->product_group,'policy_number'=>$row->policy_number,'negocio_pai'=>'1','date_pai'=>$payment_date,'creation_date'=>date("Y-m-d H:i:s"));
                         $this->db->replace('policy_negocio_pai',$data);
-                }else{
-                    $this->db->where('policy_number',$row->policy_number)->delete('policy_negocio_pai');
                 }
             }
         }
