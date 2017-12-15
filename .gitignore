@@ -1,1 +1,3 @@
-*/config/development/*
+application/config/development/*
+application/logs/*
+application/modules/ot/assets/tmp/*
