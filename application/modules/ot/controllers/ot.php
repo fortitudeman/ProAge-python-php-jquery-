@@ -1334,7 +1334,8 @@ public function rechazar( $ot = null){
  **/
 	public function import_payments()
 	{
-            
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', -1);
 		// Check access teh for import
 		if( $this->access_import_payments == false ){
 			// Set false message		
@@ -1391,8 +1392,7 @@ public function rechazar( $ot = null){
 		// Chane index
 // 2: "Pre import"
 		if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'change-index' ){
-			ini_set('memory_limit', '-1');
-			ini_set('max_execution_time', '0');
+			
 
 			$posted_month = $this->input->post('month');
 			$posted_year = $this->input->post('year');
@@ -1547,8 +1547,6 @@ public function rechazar( $ot = null){
 // 3: Allow user to assign agents to payments
 		// Change Selects Agents
 		if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'choose-agents' ){
-			ini_set('memory_limit', '-1');
-			ini_set('max_execution_time', '0');
 			// Load Helper
 			$this->load->helper('file');
 			$filename = $this->session->userdata('tmp_payment_file');
