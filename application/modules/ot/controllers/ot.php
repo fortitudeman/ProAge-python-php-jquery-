@@ -1391,6 +1391,8 @@ public function rechazar( $ot = null){
 		// Chane index
 // 2: "Pre import"
 		if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'change-index' ){
+			ini_set('memory_limit', '-1');
+			ini_set('max_execution_time', '0');
 
 			$posted_month = $this->input->post('month');
 			$posted_year = $this->input->post('year');
@@ -1438,6 +1440,8 @@ public function rechazar( $ot = null){
 			$this->load->helper('date');
 			$fields_to_import = $this->imported_fields[$product];
 			for( $i=0; $i<=count( $file_array ); $i++ ){
+				$this->db->close();
+				$this->db->initialize(); 
 // Prepare the import
 				if( isset( $file_array[$i] ) ) 
 				{
@@ -1531,8 +1535,11 @@ public function rechazar( $ot = null){
 
 // Here: $file_array contains an array of arrays - each of these arrays are indexed by the fields to import
 			// Load Model
-			$this->load->model( 'work_order' );
-			$this->work_order->importPaymentsTmp( $file_array );
+			$this->load->helper('file');
+			$time = time();
+			$filename = "./application/modules/ot/assets/tmp/payments_".$time.".json";
+			write_file($filename, json_encode($file_array));
+			$this->session->set_userdata('tmp_payment_file', $filename);
 			for( $i=0; $i<=count( $file_array ); $i++ )
 				unset( $file_array[$i]['agent_id'] );
 		}
@@ -1540,12 +1547,16 @@ public function rechazar( $ot = null){
 // 3: Allow user to assign agents to payments
 		// Change Selects Agents
 		if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'choose-agents' ){
-			// Load Model
-			$this->load->model( array( 'work_order', 'usuarios/user' ) );
-			$file_array = $this->work_order->getImportPaymentsTmp();
+			ini_set('memory_limit', '-1');
+			ini_set('max_execution_time', '0');
+			// Load Helper
+			$this->load->helper('file');
+			$filename = $this->session->userdata('tmp_payment_file');
+			$file_array = read_file($filename);
+			unlink($filename);
 			if (!$file_array)
 				$this->_abort_import(1);
-			$file_array = json_decode( $file_array[0]['data'] );
+			$file_array = json_decode( $file_array );
 			if (!$file_array)
 				$this->_abort_import(2);
 			$tmp_file = $_POST['tmp_file'];
@@ -1589,7 +1600,7 @@ public function rechazar( $ot = null){
 				$i++;
 			}
 
-			$this->work_order->importPaymentsTmp( $file_array );
+			write_file($filename, json_encode($file_array));
 			for( $i=0; $i<=count( $file_array ); $i++ )
 				if( isset( $file_array[$i]->agent_id ) )
 						unset( $file_array[$i]->agent_id );
@@ -1599,10 +1610,13 @@ public function rechazar( $ot = null){
 		if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'preview' ){
 		  // Load Model
 			$this->load->model( array( 'work_order', 'usuarios/user' ) );
-			$file_array = $this->work_order->getImportPaymentsTmp();
+			$this->load->helper('file');
+			$filename = $this->session->userdata('tmp_payment_file');
+			$file_array = read_file($filename);
+			unlink($filename);
 			if (!$file_array)
 				$this->_abort_import(1);
-			$file_array = json_decode( $file_array[0]['data'] );
+			$file_array = json_decode( $file_array );
 			if (!$file_array)
 				$this->_abort_import(2);
   			$product = $_POST['product'];
@@ -1650,7 +1664,7 @@ public function rechazar( $ot = null){
 					{
 						$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
 					}
-//					elseif( $this->work_order->checkPayment( $item->uid, $item->amount, $item->payment_date, $user_id ) == true )
+
 					else
 					{
 						if( $this->work_order->replace( 'payments', $payment ) == false )
@@ -1691,8 +1705,6 @@ public function rechazar( $ot = null){
                         }
 						if( $controlSaved == false )
 							$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
-//					}else{
-//						$message['message'][0][$i]['saved'] = 'La linea '.$i.' ya existia y no se ha guardado.';
 					}
 					$i++;
 				}
@@ -1700,7 +1712,6 @@ public function rechazar( $ot = null){
 			if( !isset( $message['message'] ) ){
 		  	
 				$message['type'] = true;
-//				$message['message'][0][0]['saved'] = 'El archivo se importo correctamente.';
 				$message['message'] = 'El archivo se importo correctamente.';
 			}
 			// Clean System
@@ -1721,11 +1732,7 @@ public function rechazar( $ot = null){
 					$this->reader_csv->drop();				  
 				}			 
 			}		  
-			$this->work_order->removeImportPaymentsTmp();
-                        
-                        //Display a list of orders to mark as paid
-                        
-                        $process = "finished";
+			$process = "finished";
 		}
 
 		@ini_set('auto_detect_line_endings', $save_setting);
@@ -3071,7 +3078,6 @@ Display custom filter period
 				$this->reader_csv->drop();
 			}
 		}
-		$this->work_order->removeImportPaymentsTmp();
 		$this->session->set_flashdata( 'message', array( 
 			'type' => false,	
 			'message' => $error_messages[$error_code]
