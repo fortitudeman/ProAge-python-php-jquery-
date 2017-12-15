@@ -390,6 +390,7 @@ class Director extends CI_Controller {
 		$ramo = 1;
 		if (isset($this->query_filters['query']) && isset($this->query_filters['query']['ramo']))
 			$ramo = $this->query_filters['query']['ramo'];
+		$imported_date = $this->work_order->getLastPaymentImportedDate($ramo);
 
 		if ($page == 'sales_planning')
 		{
@@ -397,13 +398,13 @@ class Director extends CI_Controller {
 			switch ($ramo)
 			{
 				case 2:
-					$report_lines = $this->load->view('ot/report2', array('data' => $data, 'tata' => 2), TRUE);
+					$report_lines = $this->load->view('ot/report2', array('data' => $data, 'tata' => 2, "last_date" => $imported_date), TRUE);
 				break;
 				case 3:
 					$report_lines = $this->load->view('ot/report3', array('data' => $data, 'tata' => 3), TRUE);
 				break;
 				default:
-					$report_lines = $this->load->view('ot/report1', array('data' => $data, 'tata' => 1), TRUE);
+					$report_lines = $this->load->view('ot/report1', array('data' => $data, 'tata' => 1, "last_date" => $imported_date), TRUE);
 				break;
 			}
 		}

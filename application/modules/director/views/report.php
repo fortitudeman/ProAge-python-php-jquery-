@@ -102,7 +102,12 @@ if ($is_sales_planning) :?>
                             <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="gmm" <?php if ($other_filters['ramo'] == 2) echo 'style="color:#06F"' ?>>GMM</a>
                             <a href="javascript:void(0);" class="links-menu btn btn-link link-ramo" id="autos" <?php if ($other_filters['ramo'] == 3) echo 'style="color:#06F"' ?>>Autos</a>
 
-                            <p class="line">&nbsp; </p>
+                            <p class="line">
+                              <?php if(isset($last_date)): ?>
+                                Información de pagos actualizada al: <?= $last_date ?>
+                              <?php endif; ?>
+                              &nbsp;
+                            </p>
                             <form id="form" method="post">
 								<input type="hidden" name="query[ramo]" id="ramo" value="<?php echo $other_filters['ramo'] ?>" />
 								<input type="hidden" name="ver_meta" id="ver-meta" value="<?php echo $page ?>" />
