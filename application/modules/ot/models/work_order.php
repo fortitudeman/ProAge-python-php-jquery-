@@ -222,6 +222,14 @@ class Work_order extends CI_Model{
 		return $this->db->from( 'work_order' )->count_all_results();
 	}
 
+// Last payment imported date
+	public function getLastPaymentImportedDate($ramo){
+		$this->db->select_max("import_date");
+		$this->db->where('product_group', $ramo);
+		$query = $this->db->get('payments');
+		$row = $query->row_array();
+		return !empty($row) ? $row["import_date"] : "0000-00-00";
+	}
 	
 	
 	
