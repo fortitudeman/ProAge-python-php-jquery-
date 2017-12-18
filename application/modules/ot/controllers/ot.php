@@ -1334,7 +1334,7 @@ public function rechazar( $ot = null){
  **/
 	public function import_payments()
 	{
-        ini_set('max_execution_time', 0);
+        set_time_limit(0);
         ini_set('memory_limit', -1);
 		// Check access teh for import
 		if( $this->access_import_payments == false ){
