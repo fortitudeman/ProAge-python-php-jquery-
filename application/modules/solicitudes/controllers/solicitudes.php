@@ -178,37 +178,19 @@ class solicitudes extends CI_Controller {
 			$work_orders_general[$i]["lastnames"].= " - <b>". $order["percentage"]."</b>";
 		}
 
-		//Configuration agent group
-		$args = array(
-			"select" => "users.company_name, users.name, users.lastnames, policies_vs_users.percentage, agents.id",
-			"sum" => "policies.prima",
-			"by" => "users.company_name, agents.id, policies_vs_users.percentage",
-			"order" => "$orderby desc",
-		);
-		$work_orders_agents = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+		//Agents Report
+		$work_orders_agents = $this->work_order->getWorkOrdersGroupByAgents($other_filters, $orderby);
 		foreach ($work_orders_agents as $i => $order){
 			$work_orders_agents[$i]["name"] = empty($order["name"]) && empty($order["lastnames"]) ? $order["company_name"] :$order["name"]." ".$order["lastnames"];
 		}
 		$work_orders_data = json_encode($work_orders_agents);
 
-		//Configuration status group
-		$args = array(
-			"select" => "work_order_status.name status",
-			"sum" => "policies.prima",
-			"by" => "work_order_status.name",
-			"order" => "conteo desc",
-		);
-		$work_orders_status = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+		//Status Report
+		$work_orders_status = $this->work_order->getWorkOrdersGroupByStatus($other_filters);
 		$work_orders_status_data = json_encode($work_orders_status);
 
-		//Configuration products group
-		$args = array(
-			"select" => "products.name producto, products.id",
-			"sum" => "policies.prima",
-			"by" => "products.id",
-			"order" => "conteo desc",
-		);
-		$work_orders_products = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
+		//Products Report
+		$work_orders_products = $this->work_order->getWorkOrdersGroupByProducts($other_filters);
 		//Calculate Average Prima per product
 		foreach ($work_orders_products as $i => $row) 
 			$work_orders_products[$i]["avgPrima"] = ($row["conteo"] != 0) ? $row["prima"] / $row["conteo"] : 0;

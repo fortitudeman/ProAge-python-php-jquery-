@@ -224,11 +224,11 @@ class Work_order extends CI_Model{
 
 // Last payment imported date
 	public function getLastPaymentImportedDate($ramo){
-		$this->db->select_max("import_date");
+		$this->db->select_max("payment_date");
 		$this->db->where('product_group', $ramo);
 		$query = $this->db->get('payments');
 		$row = $query->row_array();
-		return !empty($row) ? $row["import_date"] : "0000-00-00";
+		return !empty($row) ? $row["payment_date"] : "0000-00-00";
 	}
 	
 	
@@ -1034,6 +1034,39 @@ class Work_order extends CI_Model{
 		execute_filters("work-orders-get-group-by");
 		$query = $this->db->get();
 		return $query->result_array();
+   }
+
+   public function getWorkOrdersGroupByAgents($filter, $orderby){
+   		//Configuration agent group
+		$args = array(
+			"select" => "users.company_name, users.name, users.lastnames, policies_vs_users.percentage, agents.id",
+			"sum" => "policies.prima",
+			"by" => "users.company_name, agents.id, policies_vs_users.percentage",
+			"order" => "$orderby desc",
+		);
+		return $this->getWorkOrdersGroupBy($filter, $args);
+   }
+
+   public function getWorkOrdersGroupByStatus($filter){
+   		//Configuration status group
+		$args = array(
+			"select" => "work_order_status.name status",
+			"sum" => "policies.prima",
+			"by" => "work_order_status.name",
+			"order" => "conteo desc",
+		);
+		return $this->getWorkOrdersGroupBy($filter, $args);
+   }
+
+   public function getWorkOrdersGroupByProducts($filter){
+		//Configuration products group
+		$args = array(
+			"select" => "products.name producto, products.id",
+			"sum" => "policies.prima",
+			"by" => "products.id",
+			"order" => "conteo desc",
+		);
+		return $this->getWorkOrdersGroupBy($filter, $args);
    }
 
    public function getWorkOrdersGroupByGeneracion($filter){
