@@ -1070,69 +1070,20 @@ class Work_order extends CI_Model{
    }
 
    public function getWorkOrdersGroupByGeneracion($filter){
+   		$this->load->helper('ot/generations');
    		//work_order_status = Pagadas
    		//$filter["where"] = array("work_order_status.id" => 4);
 
    		$work_orders = $this->getWorkOrdersGroupBy($filter);
    		
+   		//Declare aditional parameters for the generations array
+   		$params = array("primas", "solicitudes");
+   		//Create generations array
+   		$generaciones = getGenerationList($params);
 
-   		$this->load->helper('tri_cuatrimester');
-
-   		//Create generaciones array
-   			$generaciones = array(
-   				"generacion_1" => array(
-   					"title" => "Generacion 1",
-   					"primas" => 0,
-   					"solicitudes" => 0,
-   				),
-   				"generacion_2" => array(
-   					"title" => "Generacion 2",
-   					"primas" => 0,
-   					"solicitudes" => 0,
-   				),
-   				"generacion_3" => array(
-   					"title" => "Generacion 3",
-   					"primas" => 0,
-   					"solicitudes" => 0,
-   				),
-   				"generacion_4" => array(
-   					"title" => "Generacion 4",
-   					"primas" => 0,
-   					"solicitudes" => 0,
-   				),
-   				"consolidado" => array(
-   					"title" => "Consolidado",
-   					"primas" => 0,
-   					"solicitudes" => 0,
-   				)
-   			);
    		foreach ($work_orders as $order) {
-   			$today = new Datetime();
-   			$connection = date_create($order["connection_date"]);
-   			$connection_years = $today->diff($connection)->y;
-
-   			$today_trimester = get_trimester($today->format("Y-m-d"));
-   			$connection_trimester = get_trimester($connection->format("Y-m-d"));
-
-   			if($connection_years > 0 && $today_trimester == $connection_trimester)
-   				$connection_years--;
-
-   			switch ($connection_years) {
-   				case 0:
-   					$index = "generacion_1";
-   					break;
-   				case 1:
-   					$index = "generacion_2";
-   					break;
-   				case 2:
-   					$index = "generacion_3";
-   					break;
-   				case 3:
-   					$index = "generacion_4";
-   				default:
-   					$index = "consolidado";
-   					break;
-   			}
+   			//get generation index of this order
+   			$index = getGeneracionByConnection($order["connection_date"]);
 
    			$generaciones[$index]["primas"] += $order["prima"];
    			$generaciones[$index]["solicitudes"]++;
