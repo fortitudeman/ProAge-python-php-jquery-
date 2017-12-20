@@ -4167,38 +4167,9 @@ AND
 
 	public function get_agent_generation($connection_date = '')
 	{
-		$generacion = '';
-		if ( $connection_date != '0000-00-00' && $connection_date)
-		{
-			// Consolidado: "agents.connection_date" < October 1 of 4 years ago
-			if ( $connection_date < (( date( 'Y' )-4 ) . '-10-01'))
-				$generacion = 'Consolidado';	
-			// Generación 4:  "agents.connection_date" is 
-			// between October 1 of 4 years ago and September 30 of 3 years ago
-			elseif (( $connection_date >= (( date( 'Y' ) - 4 ) . '-10-01')) &&
-				( $connection_date < (( date( 'Y' ) - 3 ) . '-09-30')))
-				$generacion = 'Generación 4';
-			// Generación 3: "agents.connection_date" is
-			// between October 1 of 3 years ago and September 30 of 2 years ago
-			elseif (( $connection_date >= (( date( 'Y' ) - 3 ) . '-10-01')) &&
-				( $connection_date < (( date( 'Y' ) - 2 ) . '-09-30')))
-				$generacion = 'Generación 3';
-			// Generación 2: "agents.connection_date" is
-			// between October 1 of 2 years ago and September 30 of 1 year ago
-			elseif (( $connection_date >= (( date( 'Y' ) - 2 ) . '-10-01')) &&
-				( $connection_date < (( date( 'Y' ) - 1 ) . '-09-30')))
-				$generacion = 'Generación 2';
-			// Generación 1: "agents.connection_date" is
-			// between October 1 of 1 year ago and September 31 of current year
-			elseif (( $connection_date >= (( date( 'Y' ) - 1 ) . '-10-01')) &&
-				( $connection_date < (( date( 'Y' ) ) . '-12-31')))
-				$generacion = 'Generación 1';
-		}
-		else
-		{
-			$generacion = 'Generación 1';
-		}
-		return $generacion;
+		$this->load->helper('ot/generations');
+		$generation_id = getGeneracionByConnection($connection_date);
+		return getGeneracionTitleByID($generation_id);
 	}
 
 	public function generic_get( $table = null, $where = null, $limit = null, $offset = 0, $order_by = null )

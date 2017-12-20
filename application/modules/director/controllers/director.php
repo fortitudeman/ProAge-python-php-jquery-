@@ -410,6 +410,8 @@ class Director extends CI_Controller {
 		}
 		else 
 			$report_lines = $this->load->view('meta_overview', array('data' => $data, 'ramo' => $ramo), TRUE);
+
+		
 		$content_data = array(
 			'manager' => $this->user->getSelectsGerentes2(),
 			'groups' => $this->group->all(0, 0, "", $ramo),

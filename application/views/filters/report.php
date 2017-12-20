@@ -51,7 +51,7 @@ $base_url = base_url();
                                                 </select>
                                             </th>
                                             <th>
-                                                <select id="generarion" name="query[generacion]" class="select3" style="width:180px;" onchange="this.form.submit();">
+                                                <select id="generation" name="query[generacion]" class="select3" style="width:180px;" onchange="this.form.submit();">
                                                     <option value="" <?php if (!$other_filters['generacion'] || ($other_filters['generacion'] == 1)) echo 'selected="selected"' ?>>Todas las Generaciónes</option>
                                                     <option value="3" <?php if ($other_filters['generacion'] == 3) echo 'selected="selected"' ?>>Generación 1</option>
                                                     <option value="4" <?php if ($other_filters['generacion'] == 4) echo 'selected="selected"' ?>>Generación 2</option>
