@@ -4167,7 +4167,7 @@ AND
 
 	public function get_agent_generation($connection_date = '')
 	{
-		$this->load->helper('ot/generations');
+		$this->load->helper('agent/generations');
 		$generation_id = getGeneracionByConnection($connection_date);
 		return getGeneracionTitleByID($generation_id);
 	}

@@ -1070,7 +1070,7 @@ class Work_order extends CI_Model{
    }
 
    public function getWorkOrdersGroupByGeneracion($filter){
-   		$this->load->helper('ot/generations');
+   		$this->load->helper('agent/generations');
    		//work_order_status = Pagadas
    		//$filter["where"] = array("work_order_status.id" => 4);
 
