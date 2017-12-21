@@ -4099,6 +4099,9 @@ AND
 
 	private function _get_generation_filter($filter, &$with_filter)
 	{
+		$this->load->helper('agent/generations');
+		$generations_list = getGenerationDropDown();
+
 		$this->_set_year_filter($filter);
 		$generacion_year = isset($this->year_filter['start']) ?
 			$this->year_filter['start'] : date( 'Y' );

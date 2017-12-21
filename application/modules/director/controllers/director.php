@@ -411,7 +411,11 @@ class Director extends CI_Controller {
 		else 
 			$report_lines = $this->load->view('meta_overview', array('data' => $data, 'ramo' => $ramo), TRUE);
 
-		
+		/*call the helper*/
+		$this->load->helper('agent/generations');
+		$generations_list = getGenerationDropDown();
+		/*call the helper*/
+
 		$content_data = array(
 			'manager' => $this->user->getSelectsGerentes2(),
 			'groups' => $this->group->all(0, 0, "", $ramo),
@@ -421,6 +425,7 @@ class Director extends CI_Controller {
 			'report_lines' => $report_lines,
 			'export_xls' => $this->access_export_xls,
 			'page' => $page,
+			'generations_list'=> $generations_list,
 			'report_columns' => $this->load->view('filters/report_columns', array(), true)
 			);
 		$filter_view = $this->load->view('filters/report', $content_data, true);

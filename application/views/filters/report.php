@@ -52,13 +52,25 @@ $base_url = base_url();
                                             </th>
                                             <th>
                                                 <select id="generation" name="query[generacion]" class="select3" style="width:180px;" onchange="this.form.submit();">
+                                                    <?php
+                                                        //using helper
+                                                        foreach ($generations_list as $key => $generation) {
+                                                            if ($other_filters['generacion'] == $key) {
+                                                                $select = 'selected="selected"';
+                                                            } else {
+                                                                $select = '';
+                                                            }
+                                                            echo '<option value="'.$key.'" '.$select.'>'.$generation.'</option>';
+                                                        }
+                                                    ?>
+                                                    <!--
                                                     <option value="" <?php if (!$other_filters['generacion'] || ($other_filters['generacion'] == 1)) echo 'selected="selected"' ?>>Todas las Generaciónes</option>
                                                     <option value="3" <?php if ($other_filters['generacion'] == 3) echo 'selected="selected"' ?>>Generación 1</option>
                                                     <option value="4" <?php if ($other_filters['generacion'] == 4) echo 'selected="selected"' ?>>Generación 2</option>
                                                     <option value="5" <?php if ($other_filters['generacion'] == 5) echo 'selected="selected"' ?>>Generación 3</option>
                                                     <option value="6" <?php if ($other_filters['generacion'] == 6) echo 'selected="selected"' ?>>Generación 4</option>
                                                     <option value="2" <?php if ($other_filters['generacion'] == 2) echo 'selected="selected"' ?>>Consolidado</option>
-
+                                                    -->
                                                 </select>
                                             </th>
                                             <?php render_custom_filters() ?>
