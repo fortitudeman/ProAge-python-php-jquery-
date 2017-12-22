@@ -4105,8 +4105,26 @@ AND
 		$this->_set_year_filter($filter);
 		$generacion_year = isset($this->year_filter['start']) ?
 			$this->year_filter['start'] : date( 'Y' );
+
+
 		if( isset( $filter['query']['generacion'] ) and !empty( $filter['query']['generacion'] ) )
 		{
+			$inifingen = getGeneracionDateRange($filter['query']['generacion'],$this->custom_period_from);
+			if(isset($inifingen['init'])){ $ini = $inifingen['init']; }else{ $ini = 0; }
+			if(isset($inifingen['end'])) { $end = $inifingen['end'];  }else{ $end = 0; }
+			$with_filter = TRUE;
+			$begin = $ini;
+			$end   = $end;
+			if($generacion=='consolidado'){
+				$this->db->where("((`agents`.`connection_date` < '$end') AND (`agents`.`connection_date` IS NOT NULL ) AND (`agents`.`connection_date` != '0000-00-00') AND (`agents`.`connection_date` != ''))", NULL, FALSE);
+			}else if($generacion=='generacion_1'){
+				$this->db->where("(((`agents`.`connection_date` <= '$end') AND (`agents`.`connection_date` >= '$begin')) OR (`agents`.`connection_date` IS NULL ) OR (`agents`.`connection_date` = '0000-00-00') OR (`agents`.`connection_date` = ''))", NULL, FALSE);
+			}else{
+				$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) );
+			}
+			$generacion = $filter['query']['generacion'];
+
+			/*
 			switch ($filter['query']['generacion'])
 			{
 				case 2:
@@ -4127,7 +4145,7 @@ AND
 				// or connection_date = '0000-00-00' or connection_date = ''
 					$begin = ( $generacion_year - 1 ) . '-10-01';
 					$end = 	( $generacion_year ) . '-12-31';
-//					$this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) );
+				// $this->db->where( array( 'agents.connection_date >=' => $begin, 'agents.connection_date <=' => $end ) );
 					$this->db->where(
 						"(((`agents`.`connection_date` <= '$end') AND
 						(`agents`.`connection_date` >= '$begin')) OR
@@ -4165,6 +4183,7 @@ AND
 				default:
 				break;
 			}
+			*/
 		}
 	}
 

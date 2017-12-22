@@ -117,7 +117,7 @@ if(!function_exists("getGeneracionDateRange")){
 		$CI =& get_instance();
 		$CI->load->helper('date');
 
-		$comparation_date = lastDayOf("quarter", $comparation_date);
+		$comparation_date = firstDayOf("quarter", $comparation_date);
 
 		$init_date = clone $comparation_date;
 		$init_date->modify("+1 day");

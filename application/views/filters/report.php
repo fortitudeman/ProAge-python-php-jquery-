@@ -52,7 +52,7 @@ $base_url = base_url();
                                             </th>
                                             <th>
                                                 <select id="generation" name="query[generacion]" class="select3" style="width:180px;" onchange="this.form.submit();">
-                                                    <?php
+                                                    <?php echo '<pre>'; print_r($other_filters); echo '</pre>';
                                                         //using helper
                                                         foreach ($generations_list as $key => $generation) {
                                                             if ($other_filters['generacion'] == $key) {

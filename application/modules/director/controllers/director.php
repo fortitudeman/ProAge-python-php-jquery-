@@ -824,7 +824,10 @@ $( document ).ready( function(){
 		$text_ramo_arr = array(1 => 'vida', 2 => 'gmm', 3 => 'autos');
 		$report_lines = $this->load->view('operations/stats_details',
 			array('stats' => $stats, 'ramo' => $text_ramo_arr[$ramo]), TRUE);
-
+		/*call the helper*/
+		$this->load->helper('agent/generations');
+		$generations_list = getGenerationDropDown();
+		/*call the helper*/
 		$content_data = array(
 			'manager' => $this->user->getSelectsGerentes2(),
 			'period_form' => show_custom_period(),
@@ -832,7 +835,8 @@ $( document ).ready( function(){
 			'other_filters' => $this->other_filters,
 			'report_lines' => $report_lines,
 			'export_xls' => $this->access_export_xls,
-			'page' => 'activity_distribution'
+			'page' => 'activity_distribution',
+			'generations_list'=> $generations_list
 			);
 		$filter_view = $this->load->view('filters/report', $content_data, true);
 
@@ -1282,11 +1286,7 @@ $( document ).ready( function(){
 				($_POST['query']['agent'] <= 3))   )
 				)
 				$filters_to_save['agent'] = $_POST['query']['agent'];
-			if ( isset($_POST['query']['generacion']) &&
-				(  ($_POST['query']['generacion'] == '') || 
-				( $this->form_validation->is_natural_no_zero($_POST['query']['generacion']) &&
-				($_POST['query']['generacion'] <= 6)) )
-				)
+			if ( isset($_POST['query']['generacion']) )
 				$filters_to_save['generacion'] = $_POST['query']['generacion'];
 			if ( isset($_POST['query']['agent_name']))
 				$filters_to_save['agent_name'] = $_POST['query']['agent_name'];
@@ -1425,7 +1425,10 @@ $( document ).ready( function(){
 			'periodo' => $this->query_filters['query']['periodo'],
 			'begin' => '', 'end' => '');
 		get_new_period_start_end($selection_filters);
-
+		/*call the helper*/
+		$this->load->helper('agent/generations');
+		$generations_list = getGenerationDropDown();
+		/*call the helper*/
 		$filter_data = array(
 			'manager' => $this->user->getSelectsGerentes2(),
 			'period_form' => show_custom_period(),
@@ -1435,6 +1438,7 @@ $( document ).ready( function(){
 //			'report_lines' => '',
 			'export_xls' => false,
 //			'page' => 'activity_distribution'
+			'generations_list'=> $generations_list
 			);
 		$filter_view = $this->load->view('filters/report', $filter_data, true);
 		$data = array('totals' => 
