@@ -210,7 +210,7 @@ class rpventas extends CI_Controller {
 		$args = array( "not_in" => array("id" => array(2, 3, 10)) );
 		$status = makeDropdown($this->work_order->getStatusArray($args), "name", "name");
 		$agents = makeDropdown($this->user->getAgentsArray(), "id", "name");
-		//unset($ramos[3]);
+		unset($ramos[3]);
 
 		$this->load->helper('sort');
 		$this->load->helper('render');
@@ -300,6 +300,10 @@ class rpventas extends CI_Controller {
         $ayear = date("Y");
         $year1 = $ayear-1;
         $year2 = $ayear;
+        $ramog = 1;
+        if(isset($_POST['ramo'])){
+        	$ramog = $_POST['ramo'];
+    	}
         if(isset($_POST['periodo2'])){
         	$selected_range = $_POST['periodo2'];
 	        $years = explode('-', $_POST['periodo2']);
@@ -307,7 +311,7 @@ class rpventas extends CI_Controller {
 	        $year2 = $years[1];
         }
         $this->load->model( 'rpventas/rpm');
-        $test  = $this->rpm->getAllData($year1,$year2);
+        $test  = $this->rpm->getAllData($year1,$year2,$ramog);
         $l1='';
         $l2='';
         $f1=0;
@@ -331,7 +335,7 @@ class rpventas extends CI_Controller {
         	$f2++;
     	}
         // echo '<pre>'; print_r($l1); echo '</pre>';
-        // echo '<pre>'; print_r($l2); echo '</pre>';
+        // echo '<pre>'; print_r($_POST); echo '</pre>';
         // die();
         /*creación de los rangos*/
 
@@ -357,6 +361,7 @@ class rpventas extends CI_Controller {
 			'orderlabel' => $orderlabel,
 			'general_indicators' => $indicators,
 			'comparative_indicators' => $comparative,
+			'month_sumarry' => $test[1]
 		);
 
 		$sub_page_content = $this->load->view('rpventas/summary', $content_data, TRUE);
@@ -367,6 +372,19 @@ class rpventas extends CI_Controller {
 				//var WO_Status = '.$work_orders_status_data.';
 				//var WO_Products = '.$work_orders_products_data.';
 				//var WO_Generations = '.$work_orders_generations_data.';
+				$(".toggleTable").on("click", function(e){
+					e.preventDefault();
+					var target = $(this).attr("data-target");
+					var resize_target = $(this).attr("data-resize");
+					var itag = $(this).find("i");
+					itag.toggleClass("icon-signal");
+					itag.toggleClass("icon-list-alt");
+
+					var resize_cell = $(this).closest(".row").find(resize_target);
+					resize_cell.toggle("fast");
+					$(target).toggle("fast");
+
+				});
 				var ctx = document.getElementById("agentsContainer").getContext("2d");
 				var chart = new Chart(ctx, {
 				    // The type of chart we want to create

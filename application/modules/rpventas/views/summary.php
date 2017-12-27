@@ -110,37 +110,70 @@
 					<table class="table table-striped">
 						<thead>
 							<tr>
-								<th>Agente</th>
-								<th>Primas</th>
-								<th>Solicitudes</th>
+								<th>Mes</th>
+								<th>Cantidad</th>
 							</tr>
 						</thead>
 						<tbody>
-							<?php $total = 0; ?>
-							<?php $totalaux = 0; ?>
-							<?php foreach ($wo_agents as $order): ?>
 							<tr>
-								<td><?= $order["name"] ?></td>
-								<td>
-									<a href="#" class="popup" data-search="agent" data-value="<?= $order["id"] ?>">
-										$<?= number_format($order["prima"],2) ?>
-									</a>
-								</td>
-								<td>
-									<a href="#" class="popup" data-search="agent" data-value="<?= $order["id"] ?>">
-										<?= $order["conteo"] ?>
-									</a>
-								</td>
-								<?php $total += $order["conteo"] ?>
-								<?php $totalaux += $order["prima"] ?>
+								<td>Enero</td>
+								<td>$<?php echo number_format($month_sumarry[0], 2); ?></td>
 							</tr>
-							<?php endforeach; ?>
+							<tr>
+								<td>Febrero</td>
+								<td>$<?php echo number_format($month_sumarry[1], 2); ?></td>
+							</tr>
+							<tr>
+								<td>Marzo</td>
+								<td>$<?php echo number_format($month_sumarry[2], 2); ?></td>
+							</tr>
+							<tr>
+								<td>Abril</td>
+								<td>$<?php echo number_format($month_sumarry[3], 2); ?></td>
+							</tr>
+							<tr>
+								<td>Mayo</td>
+								<td>$<?php echo number_format($month_sumarry[4], 2); ?></td>
+							</tr>
+							<tr>
+								<td>Junio</td>
+								<td>$<?php echo number_format($month_sumarry[5], 2); ?></td>
+							</tr>
+							<tr>
+								<td>Julio</td>
+								<td>$<?php echo number_format($month_sumarry[6], 2); ?></td>
+							</tr>
+							<tr>
+								<td>Agosto</td>
+								<td>$<?php echo number_format($month_sumarry[7], 2); ?></td>
+							</tr>
+							<tr>
+								<td>Septiembre</td>
+								<td>$<?php echo number_format($month_sumarry[8], 2); ?></td>
+							</tr>
+							<tr>
+								<td>Octubre</td>
+								<td>$<?php echo number_format($month_sumarry[9], 2); ?></td>
+							</tr>
+							<tr>
+								<td>Noviembre</td>
+								<td>$<?php echo number_format($month_sumarry[10], 2); ?></td>
+							</tr>
+							<tr>
+								<td>Diciembre</td>
+								<td>$<?php echo number_format($month_sumarry[11], 2); ?></td>
+							</tr>
 						</tbody>
 						<tfoot>
 							<tr>
 								<th>Total</th>
-								<th>$<?= number_format($totalaux, 2) ?></th>
-								<th><?= $total ?></th>
+								<?php
+									$totla=0;
+									foreach ($month_sumarry as $val) {
+										$totla += $val;
+									}
+								?>
+								<th>$ <?php echo number_format($totla,2); ?></th>
 							</tr>
 						</tfoot>
 					</table>

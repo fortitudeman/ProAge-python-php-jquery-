@@ -24,14 +24,14 @@ class rpm extends CI_Model{
 	// 	return $this->data;
 	// }
 
-	public function getAllData($year1, $year2){
+	public function getAllData($year1, $year2, $ramos){
 		//echo $year1.'  '.$year2;
 		$yearb = array();
 		$yeara = array();
 		for($i=1;$i<13;$i++){
 			$month=$i;
 			//echo "SELECT SUM(py.amount) FROM payments AS py WHERE valid_for_report=1 AND YEAR(py.payment_date)=$year1 AND MONTH(py.payment_date)=$month".'<br>';
-			$query = $this->db->query("SELECT SUM(py.amount) as sumr FROM payments AS py WHERE valid_for_report=1 AND YEAR(py.payment_date)=$year1 AND MONTH(py.payment_date)=$month");
+			$query = $this->db->query("SELECT SUM(py.amount) as sumr FROM payments AS py WHERE product_group=$ramos AND valid_for_report=1 AND YEAR(py.payment_date)=$year1 AND MONTH(py.payment_date)=$month");
 			$resulta = $query->result_array();
 			$res = $resulta[0]['sumr'];
 			array_push($yearb, $res);
@@ -39,7 +39,7 @@ class rpm extends CI_Model{
 		for($i=1;$i<13;$i++){
 			$month=$i;
 			//echo "SELECT SUM(py.amount) FROM payments AS py WHERE valid_for_report=1 AND YEAR(py.payment_date)=$year1 AND MONTH(py.payment_date)=$month".'<br>';
-			$query = $this->db->query("SELECT SUM(py.amount) as sumr FROM payments AS py WHERE valid_for_report=1 AND YEAR(py.payment_date)=$year2 AND MONTH(py.payment_date)=$month");
+			$query = $this->db->query("SELECT SUM(py.amount) as sumr FROM payments AS py WHERE product_group=$ramos AND valid_for_report=1 AND YEAR(py.payment_date)=$year2 AND MONTH(py.payment_date)=$month");
 			$resulta = $query->result_array();
 			$res = $resulta[0]['sumr'];
 			array_push($yeara, $res);
