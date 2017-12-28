@@ -36,26 +36,38 @@
 					<tr>
 						<th>Mes</th>
 						<th><?= $year1 ?></th>
+						<th>Porcentaje</th>
 						<th><?= $year2 ?></th>
+						<th>Porcentaje</th>
 					</tr>
 				</thead>
 				<tbody>
-					<?php $t1=0;$t2=0; ?>
+					<?php
+						$t1=0;$t2=0;
+						foreach ($months as $i => $month):
+							$t1 += $y1[$i];
+							$t2 += $y2[$i];
+						endforeach;
+					?>
 					<?php foreach ($months as $i => $month): ?>
 						<tr>
 							<td><?= $month ?></td>
 							<td>$<?= number_format($y1[$i], 2) ?></td>
+							<td>(<?= number_format(($y1[$i]*100)/$t1, 2) ?>%)</td>
 							<td>$<?= number_format($y2[$i], 2) ?></td>
+							<td>(<?= number_format(($y2[$i]*100)/$t2, 2) ?>%)</td>
 						</tr>
-						<?php $t1 += $y1[$i] ?>
-						<?php $t2 += $y2[$i] ?>
+						<?php //$t1 += $y1[$i] ?>
+						<?php //$t2 += $y2[$i] ?>
 					<?php endforeach; ?>
 				</tbody>
 				<tfoot>
 					<tr>
-						<th>Total</th>
+						<th style="text-align: right;">Total: </th>
 						<th>$<?= number_format($t1, 2) ?></th>
+						<th></th>
 						<th>$<?= number_format($t2, 2) ?></th>
+						<th></th>
 					</tr>
 				</tfoot>
 			</table>
@@ -78,7 +90,7 @@
 				</a> -->
 			</div>
 		</h3>
-		<div id="productsCell" class="span12 chart-container" style="position: relative; width:100%; margin-left: 10px; height: 500px;">
+		<div id="productsCell" class="span12 chart-container" style="position: relative; width:100%; margin-left: 10px;">
 			<canvas id="productsContainer"></canvas>
 		</div>
 		<div id="productsTable" class="span12 table-container" style="margin-left: 10px; display: none">
@@ -98,8 +110,8 @@
 								<?= $producto["name"] ?>
 							</td>
 							<?php foreach ($producto["payments"] as $i => $payment): ?>
-								<td>
-									<?= number_format(($payment*100)/$y1[$i], 2) ?>%
+								<td style="font-size: 11px;">
+									$<?= number_format($payment, 2) ?> (<?= number_format(($payment*100)/$y1[$i], 2) ?>%)
 								</td>
 							<?php endforeach; ?>
 						</tr>
