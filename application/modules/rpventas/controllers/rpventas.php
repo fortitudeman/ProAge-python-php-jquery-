@@ -181,12 +181,16 @@ class rpventas extends CI_Controller {
 
 		$this->load->helper('sort');
 		$this->load->helper('render');
-		/*creación de los rangos*/
+		
+		//Get first graphic info
         $year1 = $other_filters["periodo"];
         $year2 = $year1 - 1;
     	$sramo = $other_filters["ramo"];
         $y1  = $this->rpm->getAllData($year1, $sramo);
         $y2  = $this->rpm->getAllData($year2, $sramo);
+
+        //Get table info
+        $products = $this->rpm->getDataByProduct($year1, $sramo);
 
 		$content_data = array(
 			'access_all' => $this->access_all,
@@ -199,6 +203,7 @@ class rpventas extends CI_Controller {
 			'year2' => $year2,
 			'y1' => $y1,
 			'y2' => $y2,
+			"productos" => $products,
 		);
 		$sub_page_content = $this->load->view('rpventas/summary', $content_data, TRUE);
 

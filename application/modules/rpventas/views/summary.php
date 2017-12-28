@@ -28,7 +28,7 @@
 			</div>
 		</h3>
 		<div id="agentsCell" class="span12 chart-container" style="position: relative; width:75vw">
-			<canvas id="agentsContainer"></canvas>
+			<canvas id="ventasContainer"></canvas>
 		</div>
 		<div class="span12 table-container" id="agentsTable" style="display: none;">
 			<table class="table table-striped">
@@ -44,11 +44,11 @@
 					<?php foreach ($months as $i => $month): ?>
 						<tr>
 							<td><?= $month ?></td>
-							<td>$<?= number_format(issetor($y1[$i]["amount"], "0"), 2) ?></td>
-							<td>$<?= number_format(issetor($y2[$i]["amount"], "0"), 2) ?></td>
+							<td>$<?= number_format($y1[$i], 2) ?></td>
+							<td>$<?= number_format($y2[$i], 2) ?></td>
 						</tr>
-						<?php $t1 += isset($y1[$i]["amount"]) ? $y1[$i]["amount"] : 0 ?>
-						<?php $t2 += isset($y2[$i]["amount"]) ? $y2[$i]["amount"] : 0 ?>
+						<?php $t1 += $y1[$i] ?>
+						<?php $t2 += $y2[$i] ?>
 					<?php endforeach; ?>
 				</tbody>
 				<tfoot>
@@ -58,6 +58,47 @@
 						<th>$<?= number_format($t2, 2) ?></th>
 					</tr>
 				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="printable">
+		<h3 class="span12">
+			Tabla Comparativa
+			<div class="opciones">
+				<button type="button" class="btn btn-primary imprimir">
+					<i class="icon-print"></i>
+				</button>
+				<!-- <a class="btn btn-primary" href="<?= base_url("solicitudes/export/agents") ?>">
+					<i class="icon-download-alt"></i>
+				</a> -->
+			</div>
+		</h3>
+		<div class="span12 table-container" style="margin-left: 10px;">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Producto</th>
+						<?php foreach ($months as $month): ?>
+							<th><?= substr($month, 0, 3) ?></th>
+						<?php endforeach; ?>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($productos as $producto): ?>
+						<tr>
+							<td>
+								<?= $producto["name"] ?>
+							</td>
+							<?php foreach ($producto["payments"] as $i => $payment): ?>
+								<td>
+									<?= number_format(($payment*100)/$y1[$i], 2) ?>%
+								</td>
+							<?php endforeach; ?>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
 			</table>
 		</div>
 	</div>
