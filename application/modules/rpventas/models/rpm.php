@@ -11,6 +11,7 @@ class rpm extends CI_Model{
 		$this->db->select('year(py.payment_date) year,month(py.payment_date) month', FALSE);
 		$this->db->select_sum("py.amount");
 		$this->db->where('year(py.payment_date)', $year);
+		$this->db->where('py.year_prime', 1);
 		$this->db->where('product_group', $ramo);
 		$this->db->group_by('year, month');
 		$this->db->order_by('month', 'asc');
@@ -55,6 +56,7 @@ class rpm extends CI_Model{
 				$this->db->select_sum("py.amount");
 				$this->db->where('product_group', $ramo);
 				$this->db->where('year(py.payment_date)', $year);
+				$this->db->where('py.year_prime', 1);
 				$this->db->where_in('policy_number', $product["policies"]);
 				$this->db->group_by('year, month');
 				$this->db->order_by('month', 'asc');

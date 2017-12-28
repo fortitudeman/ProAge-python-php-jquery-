@@ -65,7 +65,7 @@
 <div class="row">
 	<div class="printable">
 		<h3 class="span12">
-			Distribucion Ventas x Producción
+			Distribución de Ventas por Producto
 			<div class="opciones">
 				<a href="#" class="btn btn-primary toggleTable" data-target="#productsTable" data-resize="#productsCell">
 					<i class="icon-list-alt"></i>
@@ -78,7 +78,7 @@
 				</a> -->
 			</div>
 		</h3>
-		<div id="productsCell" class="span12 chart-container" style="position: relative; width:100%; margin-left: 10px">
+		<div id="productsCell" class="span12 chart-container" style="position: relative; width:100%; margin-left: 10px; height: 500px;">
 			<canvas id="productsContainer"></canvas>
 		</div>
 		<div id="productsTable" class="span12 table-container" style="margin-left: 10px; display: none">
