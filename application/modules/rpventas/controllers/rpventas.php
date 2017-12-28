@@ -99,7 +99,7 @@ class rpventas extends CI_Controller {
 			}
 		}
 
-		$this->period_filter_for = 'requests';
+		$this->period_filter_for = 'ventas';
 		$this->default_period_filter = $this->session->userdata('default_period_filter_'.$this->period_filter_for);
 		$this->custom_period_from = $this->session->userdata('custom_period_from_'.$this->period_filter_for);
 		$this->custom_period_to = $this->session->userdata('custom_period_to_'.$this->period_filter_for);
@@ -157,306 +157,58 @@ class rpventas extends CI_Controller {
 			redirect( 'home', 'refresh' );
 		}
 
-		if ($this->default_period_filter == 5)
-			set_filter_period( 2 );
-
 		// Getting filters
 		$other_filters = $this->_init_profile();
-		// Aditional configuration
-		$other_filters["nuevos_negocios"] = 1;
-		$other_filters["periodo"] = get_filter_period();
 		
 		$this->load->model( 'ot/work_order');
 		$this->load->model( 'users/user');
 
-		//General Report work orders
-		$work_orders_general = $this->work_order->getWorkOrdersGroupBy($other_filters);
-		//Formating names
-		foreach ($work_orders_general as $i => $order){
-			if(empty($order["name"]) && empty($order["lastnames"]))
-				$work_orders_general[$i]["name"] = $order["company_name"];
-			$work_orders_general[$i]["lastnames"].= " - <b>". $order["percentage"]."</b>";
-		}
-
-		//Agents Report
-		$work_orders_agents = $this->work_order->getWorkOrdersGroupByAgents($other_filters, $orderby);
-		foreach ($work_orders_agents as $i => $order){
-			$work_orders_agents[$i]["name"] = empty($order["name"]) && empty($order["lastnames"]) ? $order["company_name"] :$order["name"]." ".$order["lastnames"];
-		}
-		$work_orders_data = json_encode($work_orders_agents);
-
-		//Status Report
-		$work_orders_status = $this->work_order->getWorkOrdersGroupByStatus($other_filters);
-		$work_orders_status_data = json_encode($work_orders_status);
-
-		//Products Report
-		$work_orders_products = $this->work_order->getWorkOrdersGroupByProducts($other_filters);
-		//Calculate Average Prima per product
-		foreach ($work_orders_products as $i => $row) 
-			$work_orders_products[$i]["avgPrima"] = ($row["conteo"] != 0) ? $row["prima"] / $row["conteo"] : 0;
-		$work_orders_products_data = json_encode($work_orders_products);
-
-		//Getting Generation group
-		$work_orders_generations = $this->work_order->getWorkOrdersGroupByGeneracion($other_filters);
-		$work_orders_generations_data = json_encode($work_orders_generations);
-
-
 		$base_url = base_url();
 		$ramo= 55;
 		$ramos = makeDropdown($this->work_order->getProductsGroups(), "id", "name", FALSE);
-		$products = makeDropdown($this->work_order->getProducts(), "id", "name");
-
-		//Remove NTU, Excedido and Cancelada
-		$args = array( "not_in" => array("id" => array(2, 3, 10)) );
-		$status = makeDropdown($this->work_order->getStatusArray($args), "name", "name");
-		$agents = makeDropdown($this->user->getAgentsArray(), "id", "name");
 		unset($ramos[3]);
+
+		$this->load->model( 'rpventas/rpm');
+		$periods = array();
+        $minYear = $this->rpm->getFirstPaymentYear();
+        $auxYear = date("Y");
+        do{
+        	$periods[$auxYear] = $auxYear;
+        	$auxYear--;
+        }while ($auxYear > $minYear);
+        $months = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+
 
 		$this->load->helper('sort');
 		$this->load->helper('render');
-
-		//Create Indicators array
-		$indicators = array(
-			"solicitudes" => 0,
-			"primas_solicitadas" => 0,
-			"prima_promedio" => 0,
-			"agentes" => 0
-		);
-
-		//Calculate solicitudes and primas_solicitadas indicator
-		foreach ($work_orders_agents as $order) {
-			$indicators["solicitudes"] += $order["conteo"];
-			$indicators["primas_solicitadas"] += $order["prima"];
-		}
-		$indicators["prima_promedio"] = $indicators["solicitudes"] > 0 ? $indicators["primas_solicitadas"] / $indicators["solicitudes"] : 0;
-		$indicators["agentes"] = count($work_orders_agents);
-
-		/* 
-			Calculate previous year same period
-		 */
-		$this->load->helper('date');
-		//Auxiliar variables
-		$from = $this->custom_period_from;
-		$to = $this->custom_period_to;
-		$period = $other_filters["periodo"];
-
-		//Get last year date
-		$this->custom_period_from = sameDayLastYear($this->custom_period_from);
-		$this->custom_period_to = sameDayLastYear($this->custom_period_to);
-		$other_filters["periodo"] = 4;
-
-		//Configuration agent group
-		$args = array(
-			"select" => "users.company_name, users.name, users.lastnames, policies_vs_users.percentage, agents.id",
-			"sum" => "policies.prima",
-			"by" => "users.company_name, agents.id, policies_vs_users.percentage",
-			"order" => "$orderby desc",
-		);
-		$work_orders_agents_prev = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
-		$prev_indicators = array(
-			"solicitudes" => 0,
-			"primas_solicitadas" => 0,
-			"prima_promedio" => 0,
-			"agentes" => 0
-		);
-
-		//Calculate solicitudes and primas_solicitadas indicator
-		foreach ($work_orders_agents_prev as $order) {
-			$prev_indicators["solicitudes"] += $order["conteo"];
-			$prev_indicators["primas_solicitadas"] += $order["prima"];
-		}
-		$prev_indicators["prima_promedio"] = $prev_indicators["solicitudes"] > 0 ? $prev_indicators["primas_solicitadas"] / $prev_indicators["solicitudes"] : 0;
-		$prev_indicators["agentes"] = count($work_orders_agents_prev);
-
-		$comparative = array(
-			"solicitudes" => $prev_indicators["solicitudes"] > 0 ? ($indicators["solicitudes"] - $prev_indicators["solicitudes"])*100/ $prev_indicators["solicitudes"] : 100,
-			"primas_solicitadas" => $prev_indicators["primas_solicitadas"] > 0 ? ($indicators["primas_solicitadas"] - $prev_indicators["primas_solicitadas"])*100/ $prev_indicators["primas_solicitadas"] : 100,
-			"prima_promedio" => $prev_indicators["prima_promedio"] > 0 ? ($indicators["prima_promedio"] - $prev_indicators["prima_promedio"])*100/ $prev_indicators["prima_promedio"] : 100,
-			"agentes" => $prev_indicators["agentes"] > 0 ? ($indicators["agentes"] - $prev_indicators["agentes"])*100/ $prev_indicators["agentes"] : 100,
-		);
-		
-		//Return to the original state
-		$this->custom_period_from = $from;
-		$this->custom_period_to = $to;
-		$other_filters["periodo"] = $period;
-
 		/*creación de los rangos*/
-		$rangost = array();
-		$flaga   = 0;
-		$y1      = 0;
-		$y2      = 0;
-        $rangeys = '';
-		for($i = 2017; $i > 1999; $i--){
-		    if($flaga==0){ $y1 = $i; }
-            if($flaga==1){ $y2 = $i; }
-            if($flaga==1){
-		        $rangeys = $y1.'-'.$y2;
-		        array_push($rangost,$rangeys);
-                $flaga = 0;
-            }else{
-                $flaga++;
-            }
-        }
-        $ayear = date("Y");
-        $year1 = $ayear-1;
-        $year2 = $ayear;
-        $ramog = 1;
-        if(isset($_POST['ramo'])){
-        	$ramog = $_POST['ramo'];
-    	}
-        if(isset($_POST['periodo2'])){
-        	$selected_range = $_POST['periodo2'];
-	        $years = explode('-', $_POST['periodo2']);
-	        $year1 = $years[0];
-	        $year2 = $years[1];
-        }
-        $this->load->model( 'rpventas/rpm');
-        $test  = $this->rpm->getAllData($year1,$year2,$ramog);
-        $l1='';
-        $l2='';
-        $f1=0;
-        $f2=0;
-        foreach ($test[0] as $val) {
-        	if($val==''){ $val = 0; }
-        	if($f1==0){
-	        	$l1 .= ''.$val.'';
-	        }else{
-	        	$l1 .= ','.$val.'';
-	        }
-	        $f1++;
-    	}
-        foreach ($test[1] as $val) {
-        	if($val==''){ $val = 0; }
-        	if($f2==0){
-        		$l2 .= ''.$val.'';
-        	}else{
-        		$l2 .= ','.$val.'';
-        	}
-        	$f2++;
-    	}
-        // echo '<pre>'; print_r($l1); echo '</pre>';
-        // echo '<pre>'; print_r($_POST); echo '</pre>';
-        // die();
-        /*creación de los rangos*/
+        $year1 = $other_filters["periodo"];
+        $year2 = $year1 - 1;
+    	$sramo = $other_filters["ramo"];
+        $y1  = $this->rpm->getAllData($year1, $sramo);
+        $y2  = $this->rpm->getAllData($year2, $sramo);
 
 		$content_data = array(
 			'access_all' => $this->access_all,
 			'access_export_xls' => $this->access_export_xls,
-			'period_fields' => show_period_fields('requests', $ramo),
-			'selected_period' => $rangost, //get_filter_period(),
-			'selected_range' => $selected_range,
 			'other_filters' => $other_filters,
 			'ramos' => $ramos,
-			'products' => $products,
-			'status' => $status,
-			'agents' => $agents,
-			'wo_general' => $work_orders_general,
-			'wo_agents' => $work_orders_agents,
-			'wo_status' => $work_orders_status,
-			'wo_products' => $work_orders_products,
-			'wo_generations' => $work_orders_generations,
-			'selected_tab' => $tab,
-			'selected_order' => $orderby,
-			'orderhash' => $orderhash,
-			'orderlabel' => $orderlabel,
-			'general_indicators' => $indicators,
-			'comparative_indicators' => $comparative,
-			'month_sumarry' => $test[1]
+			'periodos' => $periods,
+			'months' => $months,
+			'year1' => $year1,
+			'year2' => $year2,
+			'y1' => $y1,
+			'y2' => $y2,
 		);
-
 		$sub_page_content = $this->load->view('rpventas/summary', $content_data, TRUE);
 
 		$add_js = '
 			<script type="text/javascript">
-				//var WO_Agents = '.$work_orders_data.';
-				//var WO_Status = '.$work_orders_status_data.';
-				//var WO_Products = '.$work_orders_products_data.';
-				//var WO_Generations = '.$work_orders_generations_data.';
-				$(".toggleTable").on("click", function(e){
-					e.preventDefault();
-					var target = $(this).attr("data-target");
-					var resize_target = $(this).attr("data-resize");
-					var itag = $(this).find("i");
-					itag.toggleClass("icon-signal");
-					itag.toggleClass("icon-list-alt");
-
-					var resize_cell = $(this).closest(".row").find(resize_target);
-					resize_cell.toggle("fast");
-					$(target).toggle("fast");
-
-				});
-				var ctx = document.getElementById("agentsContainer").getContext("2d");
-				var chart = new Chart(ctx, {
-				    // The type of chart we want to create
-				    type: "line",
-				    // Make responsive
-				    responsive: true,
-				    // The data for our dataset
-				    data: {
-				        labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
-				        datasets: [
-					        {
-					            label: "Ventas '.$year1.'",
-					            backgroundColor: "#0088cc",
-					            borderColor: "#0088cc",
-					            data: ['.$l1.'],
-					            fill: false
-					        },{
-					            label: "Ventas '.$year2.'",
-					            backgroundColor: "#f9ab2e",
-					            borderColor: "#f9ab2e",
-					            data: ['.$l2.'],
-					            fill: false
-					        }
-				        ],
-				        legend: {
-					        display: true,
-					        labels: {
-					            fontColor: "#999999"
-					        }
-					    }
-				    },
-				    // Configuration options go here
-				    options: {
-						tooltips: {
-				            mode: "index"
-				        },
-				        tooltips: {
-							callbacks: {
-								label: function(tooltipItem, data) {
-									var allData = data.datasets[tooltipItem.datasetIndex].data;
-									var tooltipLabel = data.datasets[tooltipItem.datasetIndex].label;
-									var tooltipData = allData[tooltipItem.index];
-									if(tooltipItem.datasetIndex == 0){
-										nStr = tooltipData;
-										nStr += "";
-										x = nStr.split(".");
-										x1 = x[0];
-										x2 = x.length > 1 ? "." + x[1] : "";
-										var rgx = /(\d+)(\d{3})/;
-										while (rgx.test(x1)) {
-											x1 = x1.replace(rgx, "$1" + "," + "$2");
-										}
-										return tooltipLabel + " : $" + x1 + x2;
-									}
-									if(tooltipItem.datasetIndex == 1){
-										nStr = tooltipData;
-										nStr += "";
-										x = nStr.split(".");
-										x1 = x[0];
-										x2 = x.length > 1 ? "." + x[1] : "";
-										var rgx = /(\d+)(\d{3})/;
-										while (rgx.test(x1)) {
-											x1 = x1.replace(rgx, "$1" + "," + "$2");
-										}
-										return tooltipLabel + " : $" + x1 + x2;
-									}
-									return tooltipLabel + " : " + tooltipData;
-								}
-							}
-						},
-				    }
-				});
+				var Y1 = '.json_encode($y1).'
+				var Y2 = '.json_encode($y2).'
+				var Y1Title = '.$year1.'
+				var Y2Title = '.$year2.'
+				var months = '.json_encode($months).'
 			</script>
 			';
 		$this->view = array(
@@ -477,17 +229,15 @@ class rpventas extends CI_Controller {
 				'<script type="text/javascript" src="'. $base_url .'scripts/jquery.cookie.js"></script>',
 				'<script src="'. $base_url .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
 				'<script src="' . $base_url . 'scripts/config.js"></script>',
-				'<script type="text/javascript" src="'. $base_url .'scripts/select_period.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'operations/assets/scripts/jquery.canvasjs.min.js"></script>',
 				'<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.fancybox.js"></script>',
 				'<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.2/randomColor.min.js"></script>',
-				'<script type="text/javascript" src="'. $base_url .'solicitudes/assets/scripts/summary.js?'.time().'"></script>',
+				'<script type="text/javascript" src="'. $base_url .'rpventas/assets/scripts/summary.js?'.time().'"></script>',
 				'<script src="https://use.fontawesome.com/884297e135.js"></script>',
 				$add_js,
-				$this->custom_filters->render_javascript(),
 			),
 			'content' => 'report_template', // View to load
 			'message' => $this->session->flashdata('message'),
@@ -726,24 +476,19 @@ class rpventas extends CI_Controller {
 
 		//Generic Filters
 		$other_filters = array(
-			"periodo" => 2,
+			"periodo" => '',
 			"ramo" => '',
-			"agent" => '',
-			"status" => '',
-			"product" => '',
 
 		);
 		$this->custom_filters->set_array_defaults($other_filters);
 		if(!empty($this->misc_filters))
 			$other_filters = array_merge($other_filters, $this->misc_filters);
 
-		if(empty($this->custom_period_to) || empty($this->custom_period_from)){
-			$this->custom_period_from = date("Y-m-d", strtotime("last week monday"));
-			$this->custom_period_to = date("Y-m-d", strtotime("last week sunday"));
-		}
-
 		if(empty($other_filters["ramo"]))
 			$other_filters["ramo"] = 1;
+
+		if(empty($other_filters["periodo"]))
+			$other_filters["periodo"] = date("Y");
 
 		//Filters
 		if($this->input->post()){
@@ -751,23 +496,12 @@ class rpventas extends CI_Controller {
 				$this->input->post('cust_period_to'), FALSE);
 
 			if ( isset($_POST['periodo']) && $this->form_validation->is_natural_no_zero($_POST['periodo']) &&
-				($_POST['periodo'] <= 4) )
-				set_filter_period($_POST['periodo']);
+				($_POST['periodo'] >= 2000) )
+				$other_filters["periodo"] = $_POST["periodo"];
 
 			if ( isset($_POST['ramo']) && (($this->form_validation->is_natural_no_zero($_POST['ramo']) &&
-				($_POST['ramo'] <= 3)) || (($_POST['ramo']) === '')) )
+				($_POST['ramo'] <= 2)) || (($_POST['ramo']) === '')) )
 				$other_filters['ramo'] = $_POST['ramo'];
-
-			if (isset($_POST['agent']) && ($this->form_validation->is_natural_no_zero($_POST['agent']) || 
-				$_POST['agent'] === ''))
-				$other_filters['agent'] = $_POST['agent'];
-
-			if (isset($_POST['product']) && ($this->form_validation->is_natural_no_zero($_POST['product']) || 
-				$_POST['product'] === ''))
-				$other_filters['product'] = $_POST['product'];
-
-			if (isset($_POST['status']))
-				$other_filters['status'] = $_POST['status'];
 		}
 		
 		$this->custom_filters->set_filters_to_save($other_filters);
