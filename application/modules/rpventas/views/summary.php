@@ -27,10 +27,10 @@
 				</a> -->
 			</div>
 		</h3>
-		<div id="agentsCell" class="span12 chart-container" style="position: relative; width:75vw">
+		<div id="agentsCell" class="span12 chart-container" style="position: relative; width:100%; margin-left: 10px">
 			<canvas id="ventasContainer"></canvas>
 		</div>
-		<div class="span12 table-container" id="agentsTable" style="display: none;">
+		<div class="span12 table-container" id="agentsTable" style="display: none; margin-left: 10px;">
 			<table class="table table-striped">
 				<thead>
 					<tr>
@@ -65,8 +65,11 @@
 <div class="row">
 	<div class="printable">
 		<h3 class="span12">
-			Tabla Comparativa
+			Distribucion Ventas x Producción
 			<div class="opciones">
+				<a href="#" class="btn btn-primary toggleTable" data-target="#productsTable" data-resize="#productsCell">
+					<i class="icon-list-alt"></i>
+				</a>
 				<button type="button" class="btn btn-primary imprimir">
 					<i class="icon-print"></i>
 				</button>
@@ -75,7 +78,10 @@
 				</a> -->
 			</div>
 		</h3>
-		<div class="span12 table-container" style="margin-left: 10px;">
+		<div id="productsCell" class="span12 chart-container" style="position: relative; width:100%; margin-left: 10px">
+			<canvas id="productsContainer"></canvas>
+		</div>
+		<div id="productsTable" class="span12 table-container" style="margin-left: 10px; display: none">
 			<table class="table table-striped">
 				<thead>
 					<tr>

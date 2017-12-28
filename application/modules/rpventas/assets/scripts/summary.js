@@ -77,6 +77,50 @@ $(document).ready( function(){
 		    }
 	    }
 	});
+	var ctx = document.getElementById("productsContainer").getContext("2d");
+	var chart = new Chart(ctx, {
+	    // The type of chart we want to create
+	    type: "line",
+	    // Make responsive
+	    responsive: true,
+	    // The data for our dataset
+	    data: {
+	        labels: months,
+	        datasets: ProdDs,
+	        legend: {
+		        display: true,
+		        labels: {
+		            fontColor: "#999999"
+		        }
+		    }
+	    },
+	    // Configuration options go here
+	    options: {
+			tooltips: {
+	            mode: "index"
+	        },
+	        tooltips: {
+				callbacks: {
+					label: function(tooltipItem, data) {
+						var allData = data.datasets[tooltipItem.datasetIndex].data;
+						var tooltipLabel = data.datasets[tooltipItem.datasetIndex].label;
+						var tooltipData = allData[tooltipItem.index];
+						return tooltipLabel + " : $" + number_format(tooltipData, 2);
+					}
+				}
+			},
+			scales: {
+		        yAxes: [{
+		          ticks: {
+		            beginAtZero: true,
+		            callback: function(value, index, values) {
+		              return "$" + number_format(value, 0);
+		            }
+		          }
+		        }]
+		    }
+	    }
+	});
 	$(".imprimir").click(function(e){
 		e.preventDefault();
 		$(".print").removeClass("print");

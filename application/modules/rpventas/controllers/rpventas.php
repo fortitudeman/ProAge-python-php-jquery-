@@ -191,6 +191,22 @@ class rpventas extends CI_Controller {
 
         //Get table info
         $products = $this->rpm->getDataByProduct($year1, $sramo);
+        //Generate DataSet array
+        $colors = array("#0e606b", "#179381", "#2dfca2", "#32fc6b", "#34f937", "#6bf738", "#a3f73d", "#d7f442", "#f9e848", "#f2b148", "#f2844d", "#f25d52", "#ef5677", "#f45da8", "#f461d2", "#eb63f2", "#b962e5", "#9967e5", "#1b04c9", "#0727c6", "#095ac4", "#0d8ec1", "#11c1c1", "#16cc9b", "#1acc6a", "#1ecc3b", "#31cc20", "#66ce25", "#97ce29", "#c8d12e", "#e5bf37", "#d38434", "#cc5737", "#ce3b43", "#ce406f", "#e04aa6", "#e04ecf", "#c850e0", "#8847bc", "#6748b5");
+		$productsDS = array();
+		$i = 0;
+		foreach ($products as $product) {
+			if(!empty($product["id"])){
+				$productsDS[] = array(
+					"label" => $product["name"],
+					"backgroundColor" => $colors[$i],
+					"borderColor" => $colors[$i],
+					"data" => $product["payments"],
+					"fill" => FALSE
+				);
+				$i++;
+			}
+		}
 
 		$content_data = array(
 			'access_all' => $this->access_all,
@@ -214,6 +230,7 @@ class rpventas extends CI_Controller {
 				var Y1Title = '.$year1.'
 				var Y2Title = '.$year2.'
 				var months = '.json_encode($months).'
+				var ProdDs = '.json_encode($productsDS).'
 			</script>
 			';
 		$this->view = array(
