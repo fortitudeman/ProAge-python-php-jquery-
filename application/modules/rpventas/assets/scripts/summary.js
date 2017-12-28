@@ -78,6 +78,15 @@ $(document).ready( function(){
 	    }
 	});
 	var ctx = document.getElementById("productsContainer").getContext("2d");
+		var scw = $(window).width()-39;
+		if(scw<522){
+			var currentWindowHeight = $(window).height();
+	        var canvas = document.getElementById("productsContainer")
+	        var chartHeight = currentWindowHeight - 220
+	        var lineChartParent = document.getElementById('productsCell')
+	        canvas.width = lineChartParent.clientWidth;
+	        canvas.height = chartHeight;
+        }
 	var chart = new Chart(ctx, {
 	    // The type of chart we want to create
 	    type: "line",
