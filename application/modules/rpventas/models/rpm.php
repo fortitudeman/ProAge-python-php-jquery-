@@ -84,5 +84,66 @@ class rpm extends CI_Model{
 		}
 		return $products;
 	}
+
+	public function getBusiness($year, $ramo){
+		$this->db->select('count(distinct py.policy_number) as val', FALSE);
+		$this->db->where('year(py.payment_date)', $year);
+		$this->db->where('py.valid_for_report', 1);
+		$this->db->where('py.product_group', $ramo);
+		$q = $this->db->get($this->table);
+		$result = $q->result_array();
+		$val = $result[0]['val'];
+		return $val;
+	}
+
+	public function getPrimesTotal($year, $ramo){
+		$this->db->select('count(py.amount) as val', FALSE);
+		$this->db->where('year(py.payment_date)', $year);
+		$this->db->where('py.valid_for_report', 1);
+		$this->db->where('py.product_group', $ramo);
+		$q = $this->db->get($this->table);
+		$result = $q->result_array();
+		$val = $result[0]['val'];
+		return $val;
+	}
+
+	public function getPrimes($year, $ramo){
+		$this->db->select('sum(py.amount) as val', FALSE);
+		$this->db->where('year(py.payment_date)', $year);
+		$this->db->where('py.valid_for_report', 1);
+		$this->db->where('py.product_group', $ramo);
+		$q = $this->db->get($this->table);
+		$result = $q->result_array();
+		$val = $result[0]['val'];
+		return $val;
+	}
+
+	public function getNumAgents($year, $ramo){
+		$this->db->select('sum(py.amount) as val', FALSE);
+		$this->db->where('py.product_group', $ramo);
+		$this->db->where('py.year_prime', 1);
+		$this->db->where('year(py.payment_date)', $year);
+		$this->db->where('py.valid_for_report', 1);
+		$this->db->group_by('py.agent_id');
+		$q = $this->db->get($this->table);
+		$result = $q->result_array();
+		$val=0;
+		foreach ($result as $value){
+			if($value['val'] >= 385000){
+				$val++;
+			}
+		}
+		return $val;
+	}
+
+	public function getNumBusiness($year, $ramo){
+		$this->db->select('sum(negocio_pai) as val', FALSE);
+		$this->db->where('ramo', $ramo);
+		$this->db->where('year(date_pai)', $year);
+		$q = $this->db->get('policy_negocio_pai');
+		$result = $q->result_array();
+		$val = $result[0]['val']; echo $val;
+		return $val;
+	}
 }
 ?>

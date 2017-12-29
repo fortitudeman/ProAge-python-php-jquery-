@@ -189,6 +189,21 @@ class rpventas extends CI_Controller {
         $y1  = $this->rpm->getAllData($year1, $sramo);
         $y2  = $this->rpm->getAllData($year2, $sramo);
 
+
+        //Get the indicators
+        $totalnidy1 = $this->rpm->getBusiness($year1, $sramo);
+        $totalnidy2 = $this->rpm->getBusiness($year2, $sramo);
+        $indebusins = ($totalnidy1-$totalnidy2)*100/$totalnidy2;
+        $totalpriy1 = $this->rpm->getPrimesTotal($year1, $sramo);
+        $totalpriy2 = $this->rpm->getPrimesTotal($year2, $sramo);
+        $primessmy1 = $this->rpm->getPrimes($year1, $sramo);
+        $primessmy2 = $this->rpm->getPrimes($year2, $sramo);
+        $primaprom1 = $primessmy1/$totalpriy1;
+        $primaprom2 = $primessmy2/$totalpriy2;
+        $indeprimes = ($primaprom1-$primaprom2)*100/$primaprom2;
+        $numagentsa = $this->rpm->getNumAgents($year1, $sramo);
+        $businespai = $this->rpm->getNumBusiness($year1, $sramo);
+
         //Get table info
         $products = $this->rpm->getDataByProduct($year1, $sramo);
         //Generate DataSet array
@@ -220,6 +235,12 @@ class rpventas extends CI_Controller {
 			'y1' => $y1,
 			'y2' => $y2,
 			"productos" => $products,
+			'nya' => $totalnidy1,
+			'idb' => $indebusins,
+			'pya' => $primaprom1,
+			'idp' => $indeprimes,
+			'naa' => $numagentsa,
+			'ngp' => $businespai
 		);
 		$sub_page_content = $this->load->view('rpventas/summary', $content_data, TRUE);
 

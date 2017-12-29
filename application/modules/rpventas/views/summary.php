@@ -11,6 +11,56 @@
 		</thead>
 	</table>
 <?= form_close(); ?>
+<div class="row" id="indicators">
+	<?php
+		$t1=0;$t2=0;
+		foreach ($months as $i => $month):
+			$t1 += $y1[$i];
+			$t2 += $y2[$i];
+		endforeach;
+		$tt = ($t1-$t2)*100/$t2;
+	?>
+	<div class="span3 indicator">
+		<span class="title">Pagado <?= $year1 ?></span>
+		$<?= number_format($t1, 2); ?>
+		<span class="comparative <?= sign($tt) ?>">
+			<i class="fa <?= sign($tt ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
+			<?= number_format(abs($tt), 2 ) ?>%
+		</span>
+	</div>
+	<div class="span2 indicator">
+		<span class="title">Negocios <?= $year1 ?></span>
+		<?= number_format($nya, 2); ?>
+		<span class="comparative <?= sign($idb) ?>">
+			<i class="fa <?= sign($idb ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
+			<?= number_format(abs($idb), 2 ) ?>%
+		</span>
+	</div>
+	<div class="span2 indicator">
+		<span class="title">Primas <?= $year1 ?></span>
+		<?= number_format($pya, 2); ?>
+		<span class="comparative <?= sign($idp) ?>">
+			<i class="fa <?= sign($idp ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
+			<?= number_format(abs($idp), 2 ) ?>%
+		</span>
+	</div>
+	<div class="span3 indicator">
+		<span class="title">Agentes Activos <?= $year1 ?></span>
+		<?= $naa; ?>
+		<span class="comparative <?php //sign($idp) ?>">
+			<i class="fa <?php //sign($idp ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
+			<?php //number_format(abs($idp), 2 ) ?>
+		</span>
+	</div>
+	<div class="span2 indicator">
+		<span class="title">Negocios pai <?= $year1 ?></span>
+		<?= $ngp; ?>
+		<span class="comparative <?php //sign($idp) ?>">
+			<i class="fa <?php //sign($idp ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
+			<?php //number_format(abs($idp), 2 ) ?>
+		</span>
+	</div>
+</div>
 <div class="row">
 	<div id="AgentsSection" class="printable">
 		<h3 class="span12">
@@ -35,27 +85,30 @@
 				<thead>
 					<tr>
 						<th>Mes</th>
-						<th><?= $year1 ?></th>
-						<th>Porcentaje</th>
+						<th colspan="2"><?= $year1 ?></th>
+						<th>Participación sobre la venta anual</th>
 						<th><?= $year2 ?></th>
 						<th>Porcentaje</th>
 					</tr>
 				</thead>
 				<tbody>
-					<?php
-						$t1=0;$t2=0;
-						foreach ($months as $i => $month):
-							$t1 += $y1[$i];
-							$t2 += $y2[$i];
-						endforeach;
-					?>
 					<?php foreach ($months as $i => $month): ?>
 						<tr>
 							<td><?= $month ?></td>
-							<td>$<?= number_format($y1[$i], 2) ?></td>
-							<td>(<?= number_format(($y1[$i]*100)/$t1, 2) ?>%)</td>
+							<td style="width: 7rem;">$<?= number_format($y1[$i], 2) ?></td>
+							<td>
+								<?php $tid = ($y1[$i]-$y2[$i])*100/$y2[$i]; ?>
+								<span id="indicators" style="border-top: 0px;">
+									<span class="indicator">
+										<span class="comparative <?= sign($tid) ?>" style="width: 1rem;display: inline-block;">
+											<i class="fa <?= sign($tid ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
+										</span>
+									</span>
+								</span>
+							</td>
+							<td><?= number_format(($y1[$i]*100)/$t1, 2) ?>%</td>
 							<td>$<?= number_format($y2[$i], 2) ?></td>
-							<td>(<?= number_format(($y2[$i]*100)/$t2, 2) ?>%)</td>
+							<td><?= number_format(($y2[$i]*100)/$t2, 2) ?>%</td>
 						</tr>
 						<?php //$t1 += $y1[$i] ?>
 						<?php //$t2 += $y2[$i] ?>
@@ -64,7 +117,7 @@
 				<tfoot>
 					<tr>
 						<th style="text-align: right;">Total: </th>
-						<th>$<?= number_format($t1, 2) ?></th>
+						<th colspan="2">$<?= number_format($t1, 2) ?></th>
 						<th></th>
 						<th>$<?= number_format($t2, 2) ?></th>
 						<th></th>
