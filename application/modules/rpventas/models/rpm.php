@@ -142,8 +142,10 @@ class rpm extends CI_Model{
 		$this->db->where('year(date_pai)', $year);
 		$q = $this->db->get('policy_negocio_pai');
 		$result = $q->result_array();
-		$val = $result[0]['val']; echo $val;
-		return $val;
+		$val = $result[0]['val'];
+		$num = 0;
+		if($val!=''){ $num = $val; }
+		return $num;
 	}
 }
 ?>

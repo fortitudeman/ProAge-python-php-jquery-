@@ -22,7 +22,7 @@ $(document).ready( function(){
 	var ctx = document.getElementById("ventasContainer").getContext("2d");
 	var chart = new Chart(ctx, {
 	    // The type of chart we want to create
-	    type: "line",
+	    type: "bar",
 	    // Make responsive
 	    responsive: true,
 	    // The data for our dataset
@@ -113,10 +113,18 @@ $(document).ready( function(){
 					label: function(tooltipItem, data) {
 						var allData = data.datasets[tooltipItem.datasetIndex].data;
 						var tooltipLabel = data.datasets[tooltipItem.datasetIndex].label;
+						var tooltipTotal = data.datasets[tooltipItem.datasetIndex].totaly;
 						var tooltipData = allData[tooltipItem.index];
 						return tooltipLabel + " : $" + number_format(tooltipData, 2);
+					},
+					afterLabel: function(tooltipItem, data) {
+						var allData = data.datasets[tooltipItem.datasetIndex].data;
+						var tooltipTotal = data.datasets[tooltipItem.datasetIndex].totaly;
+						var tooltipData = allData[tooltipItem.index];
+						return "Total Anual : $" + number_format(tooltipTotal, 2) ;
 					}
-				}
+				},
+				displayColors: false
 			},
 			scales: {
 		        yAxes: [{
