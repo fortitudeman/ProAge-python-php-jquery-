@@ -29,7 +29,31 @@ $(document).ready( function(){
 	    data: {
 	        labels: months,
 	        datasets: [
-		        {
+		        /*{
+		            label: "Primas "+ Y1Title,
+		            backgroundColor: "#f15854",
+		            borderColor: "#f15854",
+		            data: P1,
+		            fill: false
+		        },{
+		            label: "Primas "+ Y2Title,
+		            backgroundColor: "#b276b2",
+		            borderColor: "#b276b2",
+		            data: P2,
+		            fill: false
+		        },{
+		            label: "Negocios "+ Y1Title,
+		            backgroundColor: "#b2912f",
+		            borderColor: "#b2912f",
+		            data: N1,
+		            fill: false
+		        },{
+		            label: "Negocios "+ Y2Title,
+		            backgroundColor: "#f17cB0",
+		            borderColor: "#f17cB0",
+		            data: N2,
+		            fill: false
+		        },*/{
 		            label: "Ventas "+ Y1Title,
 		            backgroundColor: "#0088cc",
 		            borderColor: "#0088cc",

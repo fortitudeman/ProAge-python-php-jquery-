@@ -24,6 +24,53 @@ class rpm extends CI_Model{
 		return $payments;
 	}
 
+	public function getPolicies(){
+		$this->db->select('po.id,po.prima,po.uid', FALSE);
+		$this->db->join('work_order wo', 'wo.policy_id=po.id');
+		$this->db->where( 'po.prima > 0');
+		$q = $this->db->get('policies po');
+		$result = $q->result_array();
+		return $result;
+	}
+
+	public function getPrimas($year, $ramo){
+		$policies = $this->getPolicies();
+		// echo '<pre>'; print_r($policies); echo '</pre>'; die();
+		$this->db->select('year(py.payment_date) year, month(py.payment_date) month, SUM(po.prima) AS primas', FALSE);
+		$this->db->join('policies po', 'po.uid = py.policy_number');
+		$this->db->where('year(py.payment_date)', $year);
+		$this->db->where('py.year_prime', 1);
+		$this->db->where('product_group', $ramo);
+		$this->db->group_by('year, month');
+		$this->db->order_by('month', 'asc');
+		$q = $this->db->get($this->table);
+		$result = $q->result_array();
+		
+		//Fill the blank months
+		$primas = array(0,0,0,0,0,0,0,0,0,0,0,0);
+		foreach ($result as $row)
+			$primas[$row["month"] - 1] = $row["primas"];
+		return $primas;
+	}
+
+	public function getNegocios($year, $ramo){
+		$this->db->select('year(py.payment_date) year,month(py.payment_date) month, COUNT(wo.id) AS negocios', FALSE);
+		$this->db->join('policies po', 'po.uid=py.policy_number');
+		$this->db->join('work_order wo', 'wo.policy_id=po.id');
+		$this->db->where('year(py.payment_date)', $year);
+		$this->db->where('py.year_prime', 1);
+		$this->db->where('product_group', $ramo);
+		$this->db->group_by('year, month');
+		$this->db->order_by('month', 'asc');
+		$q = $this->db->get($this->table);
+		$result = $q->result_array();
+		//Fill the blank months
+		$negocios = array(0,0,0,0,0,0,0,0,0,0,0,0);
+		foreach ($result as $row)
+			$negocios[$row["month"] - 1] = $row["negocios"];
+		return $negocios;
+	}
+
 	public function getFirstPaymentYear(){
 		$this->db->select('min(year(py.payment_date)) year');
 		$q = $this->db->get($this->table);

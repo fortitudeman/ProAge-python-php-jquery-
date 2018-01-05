@@ -188,6 +188,10 @@ class rpventas extends CI_Controller {
     	$sramo = $other_filters["ramo"];
         $y1  = $this->rpm->getAllData($year1, $sramo);
         $y2  = $this->rpm->getAllData($year2, $sramo);
+        /*$primasy1 = $this->rpm->getPrimas($year1, $sramo);
+        $primasy2 = $this->rpm->getPrimas($year2, $sramo);
+        $negociosy1 = $this->rpm->getNegocios($year1, $sramo);
+        $negociosy2 = $this->rpm->getNegocios($year2, $sramo);*/
 
         //Get the indicators
         $totalnidy1 = $this->rpm->getBusiness($year1, $sramo);
@@ -251,6 +255,10 @@ class rpventas extends CI_Controller {
 
 		$add_js = '
 			<script type="text/javascript">
+				/*var P1 = '.json_encode($primasy1).'
+				var P2 = '.json_encode($primasy2).'
+				var N1 = '.json_encode($negociosy1).'
+				var N2 = '.json_encode($negociosy2).'*/
 				var Y1 = '.json_encode($y1).'
 				var Y2 = '.json_encode($y2).'
 				var Y1Title = '.$year1.'
