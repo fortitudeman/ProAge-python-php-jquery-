@@ -30,7 +30,7 @@
 	</div>
 	<div class="span2 indicator">
 		<span class="title">Negocios <?= $year1 ?></span>
-		<?= number_format($nya, 2); ?>
+		<?= number_format($nya, 0); ?>
 		<span class="comparative <?= sign($idb) ?>">
 			<i class="fa <?= sign($idb ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
 			<?= number_format(abs($idb), 2 ) ?>%
@@ -47,18 +47,10 @@
 	<div class="span3 indicator">
 		<span class="title">Agentes Activos <?= $year1 ?></span>
 		<?= $naa; ?>
-		<span class="comparative <?php //sign($idp) ?>">
-			<i class="fa <?php //sign($idp ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
-			<?php //number_format(abs($idp), 2 ) ?>
-		</span>
 	</div>
 	<div class="span2 indicator">
 		<span class="title">Negocios pai <?= $year1 ?></span>
 		<?= $ngp; ?>
-		<span class="comparative <?php //sign($idp) ?>">
-			<i class="fa <?php //sign($idp ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
-			<?php //number_format(abs($idp), 2 ) ?>
-		</span>
 	</div>
 </div>
 <div class="row">
@@ -85,7 +77,7 @@
 				<thead>
 					<tr>
 						<th>Mes</th>
-						<th colspan="2"><?= $year1 ?></th>
+						<th><?= $year1 ?></th>
 						<th>Participación sobre la venta anual</th>
 						<th><?= $year2 ?></th>
 						<th>Porcentaje</th>
@@ -95,7 +87,7 @@
 					<?php foreach ($months as $i => $month): ?>
 						<tr>
 							<td><?= $month ?></td>
-							<td style="width: 7rem;">$<?= number_format($y1[$i], 2) ?></td>
+							<td>$<?= number_format($y1[$i], 2) ?></td>
 							<td>
 								<?php $tid = ($y1[$i]-$y2[$i])*100/$y2[$i]; ?>
 								<span id="indicators" style="border-top: 0px;">
@@ -105,8 +97,8 @@
 										</span>
 									</span>
 								</span>
+								<?= number_format(($y1[$i]*100)/$t1, 2) ?>%
 							</td>
-							<td><?= number_format(($y1[$i]*100)/$t1, 2) ?>%</td>
 							<td>$<?= number_format($y2[$i], 2) ?></td>
 							<td><?= number_format(($y2[$i]*100)/$t2, 2) ?>%</td>
 						</tr>
@@ -118,7 +110,6 @@
 					<tr>
 						<th style="text-align: right;">Total: </th>
 						<th colspan="2">$<?= number_format($t1, 2) ?></th>
-						<th></th>
 						<th>$<?= number_format($t2, 2) ?></th>
 						<th></th>
 					</tr>

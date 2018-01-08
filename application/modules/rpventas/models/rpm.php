@@ -33,29 +33,28 @@ class rpm extends CI_Model{
 	}
 
 	public function getPrimas($year, $ramo){
-		$policies = $this->getPolicies();
-		$this->db->select('DISTINCT policy_number, month(py.payment_date) month, year(py.payment_date) year', FALSE);
-		$this->db->where('year(py.payment_date)', $year);
-		$this->db->where('py.year_prime', 1);
-		$this->db->where('py.business', 1);
-		$this->db->where('product_group', $ramo);
+		$this->db->select_sum("prima");
+		$this->db->where('year(wo.creation_date)', $year);
+		$this->db->where('wo.product_group_id', $ramo);
+		$this->db->where_in('wo.work_order_status_id', array(4, 7));
+		$this->db->join('policies po', 'po.id = wo.policy_id');
+		$q = $this->db->get("work_order wo");
+		$result = $q->row_array();
+		return $result['prima'];
+	}
+
+	public function getPrimasList($year, $ramo){
+		$this->db->select('year(wo.creation_date) year,month(wo.creation_date) month');
+		$this->db->select_sum("prima");
+		$this->db->where('year(wo.creation_date)', $year);
+		$this->db->where('wo.product_group_id', $ramo);
+		$this->db->where_in('wo.work_order_status_id', array(4, 7));
+		$this->db->join('policies po', 'po.id = wo.policy_id');
 		$this->db->order_by('month', 'asc');
-		$q = $this->db->get($this->table);
+		$this->db->group_by('month');
+		$q = $this->db->get("work_order wo");
 		$result = $q->result_array();
-
-		foreach ($result as $i => $row){
-			if(isset($policies[$row["policy_number"]])){
-				$result[$i]["prima"] = $policies[$row["policy_number"]]["prima"];
-			}
-			else{
-				unset($result[$i]);
-			}
-		}
-
-		$primas = $this->getZerosArray(12);
-		foreach ($result as $row) {
-			$primas[$row["month"] - 1] += $row["prima"];
-		}
+		$primas = $negocios = $this->fillMonths($result, "month", "prima");
 		return $primas;
 	}
 
@@ -134,37 +133,14 @@ class rpm extends CI_Model{
 	}
 
 	public function getBusiness($year, $ramo){
-		$this->db->select('count(distinct py.policy_number) as val', FALSE);
-		$this->db->where('year(py.payment_date)', $year);
-		$this->db->where('py.valid_for_report', 1);
-		$this->db->where('py.product_group', $ramo);
-		$q = $this->db->get($this->table);
-		$result = $q->result_array();
-		$val = $result[0]['val'];
-		return $val;
+		$this->db->join('work_order_types wot', 'wot.id = wo.work_order_type_id');
+		$this->db->where('year(wo.creation_date)', $year);
+		$this->db->where('wo.product_group_id', $ramo);
+		$this->db->where('wo.work_order_status_id', 4);
+		$this->db->where_in('wot.patent_id', array(47, 90));
+		return $this->db->count_all_results("work_order wo");
 	}
 
-	public function getPrimesTotal($year, $ramo){
-		$this->db->select('count(py.amount) as val', FALSE);
-		$this->db->where('year(py.payment_date)', $year);
-		$this->db->where('py.valid_for_report', 1);
-		$this->db->where('py.product_group', $ramo);
-		$q = $this->db->get($this->table);
-		$result = $q->result_array();
-		$val = $result[0]['val'];
-		return $val;
-	}
-
-	public function getPrimes($year, $ramo){
-		$this->db->select('sum(py.amount) as val', FALSE);
-		$this->db->where('year(py.payment_date)', $year);
-		$this->db->where('py.valid_for_report', 1);
-		$this->db->where('py.product_group', $ramo);
-		$q = $this->db->get($this->table);
-		$result = $q->result_array();
-		$val = $result[0]['val'];
-		return $val;
-	}
 
 	public function getNumAgents($year, $ramo){
 		$this->db->select('sum(py.amount) as val', FALSE);

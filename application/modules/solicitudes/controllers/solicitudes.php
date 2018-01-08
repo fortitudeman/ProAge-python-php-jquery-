@@ -325,8 +325,8 @@ class solicitudes extends CI_Controller {
 				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">',
 				'<link rel="stylesheet" href="'. $base_url .'ot/assets/style/jquery.fancybox.css">',
-				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/style.css?'.time().'">',
-				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/print-reset.css?'.time().'">',
+				'<link rel="stylesheet" href="'. $base_url .'/style/style-report.css?'.time().'">',
+				'<link rel="stylesheet" href="'. $base_url .'/style/print-reset.css?'.time().'">',
 			),
 			'scripts' => array(
 				'<script type="text/javascript" src="'. $base_url .'scripts/jquery.cookie.js"></script>',

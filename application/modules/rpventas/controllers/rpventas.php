@@ -63,7 +63,7 @@ class rpventas extends CI_Controller {
 		{
 			foreach( $this->roles_vs_access  as $value )
 			{
-				if ($value['module_name'] == 'Reporte de ventas')
+				if ($value['module_name'] == 'Reporte de produccion')
 				{
 					$this->access = true;
 					switch ($value['action_name'])
@@ -122,10 +122,10 @@ class rpventas extends CI_Controller {
 
 	public function index()
 	{
-		$this->summary();
+		$this->production();
 	}
 
-	public function summary(){
+	public function production(){
 		if ( !$this->access_report )
 		{	
 			$this->session->set_flashdata( 'message', array
@@ -167,8 +167,8 @@ class rpventas extends CI_Controller {
     	$sramo = $other_filters["ramo"];
         $y1  = $this->rpm->getAllData($year1, $sramo);
         $y2  = $this->rpm->getAllData($year2, $sramo);
-        $primasy1 = $this->rpm->getPrimas($year1, $sramo);
-        $primasy2 = $this->rpm->getPrimas($year2, $sramo);
+        $primasy1 = $this->rpm->getPrimasList($year1, $sramo);
+        $primasy2 = $this->rpm->getPrimasList($year2, $sramo);
         /*$negociosy1 = $this->rpm->getNegocios($year1, $sramo);
         $negociosy2 = $this->rpm->getNegocios($year2, $sramo);*/
 
@@ -176,13 +176,9 @@ class rpventas extends CI_Controller {
         $totalnidy1 = $this->rpm->getBusiness($year1, $sramo);
         $totalnidy2 = $this->rpm->getBusiness($year2, $sramo);
         $indebusins = ($totalnidy1-$totalnidy2)*100/$totalnidy2;
-        $totalpriy1 = $this->rpm->getPrimesTotal($year1, $sramo);
-        $totalpriy2 = $this->rpm->getPrimesTotal($year2, $sramo);
-        $primessmy1 = $this->rpm->getPrimes($year1, $sramo);
-        $primessmy2 = $this->rpm->getPrimes($year2, $sramo);
-        $primaprom1 = $primessmy1/$totalpriy1;
-        $primaprom2 = $primessmy2/$totalpriy2;
-        $indeprimes = ($primaprom1-$primaprom2)*100/$primaprom2;
+        $primessmy1 = $this->rpm->getPrimas($year1, $sramo);
+        $primessmy2 = $this->rpm->getPrimas($year2, $sramo);
+        $indeprimes = ($primessmy1-$primessmy2)*100/$primessmy2;
         $numagentsa = $this->rpm->getNumAgents($year1, $sramo);
         $businespai = $this->rpm->getNumBusiness($year1, $sramo);
         if($sramo==2){ $businespai=0; }
@@ -222,10 +218,12 @@ class rpventas extends CI_Controller {
 			'year2' => $year2,
 			'y1' => $y1,
 			'y2' => $y2,
+			'primasy1' => $primasy1,
+			'primasy2' => $primasy2,
 			"productos" => $products,
 			'nya' => $totalnidy1,
 			'idb' => $indebusins,
-			'pya' => $primaprom1,
+			'pya' => $primessmy1,
 			'idp' => $indeprimes,
 			'naa' => $numagentsa,
 			'ngp' => $businespai
@@ -247,7 +245,7 @@ class rpventas extends CI_Controller {
 			</script>
 			';
 		$this->view = array(
-			'title' => 'Reporte de Ventas',
+			'title' => 'Reporte de Producción',
 			 // Permisions
 			'user' => $this->sessions,
 			'user_vs_rol' => $this->user_vs_rol,
@@ -257,8 +255,8 @@ class rpventas extends CI_Controller {
 				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">',
 				'<link rel="stylesheet" href="'. $base_url .'ot/assets/style/jquery.fancybox.css">',
-				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/style.css?'.time().'">',
-				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/print-reset.css?'.time().'">',
+				'<link rel="stylesheet" href="'. $base_url .'/style/style-report.css?'.time().'">',
+				'<link rel="stylesheet" href="'. $base_url .'/style/print-reset.css?'.time().'">',
 			),
 			'scripts' => array(
 				'<script type="text/javascript" src="'. $base_url .'scripts/jquery.cookie.js"></script>',
