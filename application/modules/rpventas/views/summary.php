@@ -164,7 +164,7 @@
 							</td>
 							<?php foreach ($producto["payments"] as $i => $payment): ?>
 								<td style="font-size: 11px;">
-									$<?= number_format($payment, 2) ?> (<?= number_format(($payment*100)/$y1[$i], 2) ?>%)
+									$<?= number_format($payment, 2) ?> (<?= number_format($y1[$i] != 0 ? ($payment*100)/$y1[$i] : 0, 2) ?>%)
 								</td>
 							<?php endforeach; ?>
 						</tr>

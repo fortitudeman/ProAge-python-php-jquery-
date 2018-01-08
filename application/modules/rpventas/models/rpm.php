@@ -18,38 +18,44 @@ class rpm extends CI_Model{
 		$q = $this->db->get($this->table);
 		$result = $q->result_array();
 		//Fill the blank months
-		$payments = array(0,0,0,0,0,0,0,0,0,0,0,0);
-		foreach ($result as $row)
-			$payments[$row["month"] - 1] = $row["amount"];
+		$payments = $this->fillMonths($result, "month", "amount");
 		return $payments;
 	}
 
 	public function getPolicies(){
-		$this->db->select('po.id,po.prima,po.uid', FALSE);
-		$this->db->join('work_order wo', 'wo.policy_id=po.id');
-		$this->db->where( 'po.prima > 0');
+		$this->db->select('po.id,po.prima,po.uid');
 		$q = $this->db->get('policies po');
 		$result = $q->result_array();
-		return $result;
+		$return = array();
+		foreach ($result as $row) 
+			$return[$row["uid"]] = $row; 
+		return $return;
 	}
 
 	public function getPrimas($year, $ramo){
 		$policies = $this->getPolicies();
-		// echo '<pre>'; print_r($policies); echo '</pre>'; die();
-		$this->db->select('year(py.payment_date) year, month(py.payment_date) month, SUM(po.prima) AS primas', FALSE);
-		$this->db->join('policies po', 'po.uid = py.policy_number');
+		$this->db->select('DISTINCT policy_number, month(py.payment_date) month, year(py.payment_date) year', FALSE);
 		$this->db->where('year(py.payment_date)', $year);
 		$this->db->where('py.year_prime', 1);
+		$this->db->where('py.business', 1);
 		$this->db->where('product_group', $ramo);
-		$this->db->group_by('year, month');
 		$this->db->order_by('month', 'asc');
 		$q = $this->db->get($this->table);
 		$result = $q->result_array();
-		
-		//Fill the blank months
-		$primas = array(0,0,0,0,0,0,0,0,0,0,0,0);
-		foreach ($result as $row)
-			$primas[$row["month"] - 1] = $row["primas"];
+
+		foreach ($result as $i => $row){
+			if(isset($policies[$row["policy_number"]])){
+				$result[$i]["prima"] = $policies[$row["policy_number"]]["prima"];
+			}
+			else{
+				unset($result[$i]);
+			}
+		}
+
+		$primas = $this->getZerosArray(12);
+		foreach ($result as $row) {
+			$primas[$row["month"] - 1] += $row["prima"];
+		}
 		return $primas;
 	}
 
@@ -65,9 +71,7 @@ class rpm extends CI_Model{
 		$q = $this->db->get($this->table);
 		$result = $q->result_array();
 		//Fill the blank months
-		$negocios = array(0,0,0,0,0,0,0,0,0,0,0,0);
-		foreach ($result as $row)
-			$negocios[$row["month"] - 1] = $row["negocios"];
+		$negocios = $this->fillMonths($result, "month", "amount");
 		return $negocios;
 	}
 
@@ -113,10 +117,7 @@ class rpm extends CI_Model{
 			else
 				$result = array();
 			//Fill the blank months
-			$payments = array(0,0,0,0,0,0,0,0,0,0,0,0);
-			
-			foreach ($result as $row)
-				$payments[$row["month"] - 1] = $row["amount"];
+			$payments = $this->fillMonths($result, "month", "amount");
 			$products[$i]["payments"] = $payments;
 		}
 
@@ -172,15 +173,10 @@ class rpm extends CI_Model{
 		$this->db->where('year(py.payment_date)', $year);
 		$this->db->where('py.valid_for_report', 1);
 		$this->db->group_by('py.agent_id');
+		$this->db->having('val >= ', 385000); 
 		$q = $this->db->get($this->table);
 		$result = $q->result_array();
-		$val=0;
-		foreach ($result as $value){
-			if($value['val'] >= 385000){
-				$val++;
-			}
-		}
-		return $val;
+		return count($result);
 	}
 
 	public function getNumBusiness($year, $ramo){
@@ -188,11 +184,27 @@ class rpm extends CI_Model{
 		$this->db->where('ramo', $ramo);
 		$this->db->where('year(date_pai)', $year);
 		$q = $this->db->get('policy_negocio_pai');
-		$result = $q->result_array();
-		$val = $result[0]['val'];
+		$result = $q->row_array();
+		$val = $result['val'];
 		$num = 0;
 		if($val!=''){ $num = $val; }
 		return $num;
+	}
+
+	public function fillMonths($data, $month_field, $value_field){
+		$filled_months = $this->getZerosArray(12);
+		foreach ($data as $row){
+			$filled_months[$row[$month_field] - 1] = $row[$value_field];
+		}
+		return $filled_months;
+	}
+
+	public function getZerosArray($length){
+		$zeros = array();
+		for ($i=0; $i < $length; $i++) { 
+			$zeros[$i] = 0;
+		}
+		return $zeros;
 	}
 }
 ?>

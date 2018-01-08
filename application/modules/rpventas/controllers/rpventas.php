@@ -125,28 +125,7 @@ class rpventas extends CI_Controller {
 		$this->summary();
 	}
 
-	public function summary($tab = "graficos", $orderby = "primas"){
-		$Available_tabs = array("graficos", "reporte");
-		//Url Validations
-		if(!in_array($tab, $Available_tabs))
-			$tab = "graficos";
-
-		//Validation of order
-		$Available_orderbys = array("primas", "requests");
-		if(!in_array($orderby, $Available_orderbys))
-			$orderby = "primas";
-		switch ($orderby) {
-			case 'primas':
-				$orderby = "prima";
-				$orderhash = "requests";
-				$orderlabel = "S";
-				break;
-			case 'requests':
-				$orderby = "conteo";
-				$orderhash = "primas";
-				$orderlabel = "P";
-				break;
-		}
+	public function summary(){
 		if ( !$this->access_report )
 		{	
 			$this->session->set_flashdata( 'message', array
@@ -188,9 +167,9 @@ class rpventas extends CI_Controller {
     	$sramo = $other_filters["ramo"];
         $y1  = $this->rpm->getAllData($year1, $sramo);
         $y2  = $this->rpm->getAllData($year2, $sramo);
-        /*$primasy1 = $this->rpm->getPrimas($year1, $sramo);
+        $primasy1 = $this->rpm->getPrimas($year1, $sramo);
         $primasy2 = $this->rpm->getPrimas($year2, $sramo);
-        $negociosy1 = $this->rpm->getNegocios($year1, $sramo);
+        /*$negociosy1 = $this->rpm->getNegocios($year1, $sramo);
         $negociosy2 = $this->rpm->getNegocios($year2, $sramo);*/
 
         //Get the indicators
@@ -255,10 +234,10 @@ class rpventas extends CI_Controller {
 
 		$add_js = '
 			<script type="text/javascript">
-				/*var P1 = '.json_encode($primasy1).'
+				var P1 = '.json_encode($primasy1).'
 				var P2 = '.json_encode($primasy2).'
 				var N1 = '.json_encode($negociosy1).'
-				var N2 = '.json_encode($negociosy2).'*/
+				var N2 = '.json_encode($negociosy2).'
 				var Y1 = '.json_encode($y1).'
 				var Y2 = '.json_encode($y2).'
 				var Y1Title = '.$year1.'
