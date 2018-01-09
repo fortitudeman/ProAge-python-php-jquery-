@@ -23,3 +23,23 @@ if (!function_exists("sign")) {
 	}
 }
 
+if (!function_exists("comparationRatio")) {
+	function comparationRatio($value, $comparation_value){
+		$ratio = 0;
+		if($comparation_value != 0){
+			$ratio = ($value-$comparation_value)*100/$comparation_value;
+		}
+		return $ratio;
+	}
+}
+
+if (!function_exists("percentageRatio")) {
+	function percentageRatio($value, $total){
+		$ratio = 0;
+		if($total != 0){
+			$ratio = ($value/$total)*100;
+		}
+		return $ratio;
+	}
+}
+

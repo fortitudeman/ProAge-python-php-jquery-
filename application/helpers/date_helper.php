@@ -106,3 +106,10 @@ if(!function_exists("lastDayOf")){
 	    return $newDate;
 	}
 }
+
+if(!function_exists("getMonths")){
+	function getMonths(){
+		$months = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+		return $months;
+	}
+}

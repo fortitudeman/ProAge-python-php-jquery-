@@ -1,24 +1,5 @@
-var Colors = ["#4d4d4d","#5da5da","#faa43a","#60bd68","#f17cB0","#b2912f","#b276b2","#decf3f","#f15854"];
-var ColorsExtended = randomColor({
-	count: 40,
-	luminosity: 'bright',
-	seed: 'gus'
-})
 var AgentsGraph;
 $(document).ready( function(){ 
-	$(".toggleTable").on("click", function(e){
-		e.preventDefault();
-		var target = $(this).attr("data-target");
-		var resize_target = $(this).attr("data-resize");
-		var itag = $(this).find("i");
-		itag.toggleClass("icon-signal");
-		itag.toggleClass("icon-list-alt");
-
-		var resize_cell = $(this).closest(".row").find(resize_target);
-		resize_cell.toggle("fast");
-		$(target).toggle("fast");
-
-	});
 	var ctx = document.getElementById("ventasContainer").getContext("2d");
 	var chart = new Chart(ctx, {
 	    // The type of chart we want to create
@@ -29,43 +10,43 @@ $(document).ready( function(){
 	    data: {
 	        labels: months,
 	        datasets: [
-		        /*{
-		            label: "Primas "+ Y1Title,
-		            backgroundColor: "#f15854",
-		            borderColor: "#f15854",
-		            data: P1,
-		            fill: false
-		        },{
-		            label: "Primas "+ Y2Title,
-		            backgroundColor: "#b276b2",
-		            borderColor: "#b276b2",
-		            data: P2,
-		            fill: false
-		        },{
-		            label: "Negocios "+ Y1Title,
-		            backgroundColor: "#b2912f",
-		            borderColor: "#b2912f",
-		            data: N1,
-		            fill: false
-		        },{
-		            label: "Negocios "+ Y2Title,
-		            backgroundColor: "#f17cB0",
-		            borderColor: "#f17cB0",
-		            data: N2,
-		            fill: false
-		        },*/{
+		        {
 		            label: "Ventas "+ Y1Title,
-		            backgroundColor: "#0088cc",
-		            borderColor: "#0088cc",
-		            data: Y1,
-		            fill: false
+		            backgroundColor: Colors[0],
+		            borderColor: Colors[0],
+		            yAxisID: "y-axis-1",
+		            data: V1,
 		        },{
 		            label: "Ventas "+ Y2Title,
-		            backgroundColor: "#f9ab2e",
-		            borderColor: "#f9ab2e",
-		            data: Y2,
-		            fill: false
-		        }
+		            backgroundColor: Colors[1],
+		            borderColor: Colors[1],
+		            yAxisID: "y-axis-1",
+		            data: V2,
+		        },{
+		            label: "Primas "+ Y1Title,
+		            backgroundColor: Colors[2],
+		            borderColor: Colors[2],
+		            yAxisID: "y-axis-1",
+		            data: P1,
+		        },{
+		            label: "Primas "+ Y2Title,
+		            backgroundColor: Colors[3],
+		            borderColor: Colors[3],
+		            yAxisID: "y-axis-1",
+		            data: P2,
+		        },{
+		            label: "Negocios "+ Y1Title,
+		            backgroundColor: Colors[4],
+		            borderColor: Colors[4],
+		            yAxisID: "y-axis-2",
+		            data: N1,
+		        },{
+		            label: "Negocios "+ Y2Title,
+		            backgroundColor: Colors[5],
+		            borderColor: Colors[5],
+		            yAxisID: "y-axis-2",
+		            data: N2,
+		        },
 	        ],
 	        legend: {
 		        display: true,
@@ -85,19 +66,40 @@ $(document).ready( function(){
 						var allData = data.datasets[tooltipItem.datasetIndex].data;
 						var tooltipLabel = data.datasets[tooltipItem.datasetIndex].label;
 						var tooltipData = allData[tooltipItem.index];
-						return tooltipLabel + " : $" + number_format(tooltipData, 2);
+						if(tooltipItem.datasetIndex >= 0 && tooltipItem.datasetIndex <= 3)
+							return tooltipLabel + " : $" + number_format(tooltipData, 2);
+						else
+							return tooltipLabel + " : " + tooltipData;
 					}
 				}
 			},
 			scales: {
-		        yAxes: [{
-		          ticks: {
-		            beginAtZero: true,
-		            callback: function(value, index, values) {
-		              return "$" + number_format(value, 0);
-		            }
-		          }
-		        }]
+				yAxes: [{
+                    type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                    display: true,
+                    position: "left",
+                    id: "y-axis-1",
+                    gridLines: {
+                        drawOnChartArea: true
+                    },
+                    ticks: {
+						beginAtZero: true,
+						callback: function(value, index, values) {
+						  return "$" + number_format(value, 0);
+						}
+					}
+                },{
+                    type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+                    display: true,
+                    position: "right",
+                    id: "y-axis-2",
+                    gridLines: {
+                        drawOnChartArea: false
+                    },
+                    ticks: {
+                    	beginAtZero:true,
+			        }
+                }],
 		    }
 	    }
 	});
@@ -130,9 +132,7 @@ $(document).ready( function(){
 	    // Configuration options go here
 	    options: {
 			tooltips: {
-	            mode: "index"
-	        },
-	        tooltips: {
+	        	mode: "index",
 				callbacks: {
 					label: function(tooltipItem, data) {
 						var allData = data.datasets[tooltipItem.datasetIndex].data;
@@ -162,42 +162,7 @@ $(document).ready( function(){
 		    }
 	    }
 	});
-	$(".imprimir").click(function(e){
-		e.preventDefault();
-		$(".print").removeClass("print");
-		var printable = $(this.closest(".printable"))
-		printable.addClass("print");
-
-		window.print();
-	});
 });
-
-function dynamicSort(property) {
-    var sortOrder = 1;
-    if(property[0] === "-") {
-        sortOrder = -1;
-        property = property.substr(1);
-    }
-    return function (a,b) {
-    	a[property] = parseFloat(a[property]);
-    	b[property] = parseFloat(b[property]);
-        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-        return result * sortOrder;
-    }
-}
-
-function number_format(number, decimals){
-	number = parseFloat(Math.round(number * 100) / 100).toFixed(decimals);
-	number = number.toString();
-    x = number.split(".");
-	x1 = x[0];
-	x2 = x.length > 1 ? "." + x[1] : "";
-    x1 = x1.split(/(?=(?:...)*$)/);
-    // Convert the array to a string and format the output
-    number = x1.join(",");
-    number = number+x2;
-    return number;
-}
 
 function solicitudes_popup(search_obj){
 	var url = Config.base_url()+"solicitudes/popup";

@@ -45,11 +45,11 @@ class rpm extends CI_Model{
 
 	public function getPrimasList($year, $ramo){
 		$this->db->select('year(wo.creation_date) year,month(wo.creation_date) month');
+		$this->db->join('policies po', 'po.id = wo.policy_id');
 		$this->db->select_sum("prima");
 		$this->db->where('year(wo.creation_date)', $year);
 		$this->db->where('wo.product_group_id', $ramo);
 		$this->db->where_in('wo.work_order_status_id', array(4, 7));
-		$this->db->join('policies po', 'po.id = wo.policy_id');
 		$this->db->order_by('month', 'asc');
 		$this->db->group_by('month');
 		$q = $this->db->get("work_order wo");
@@ -58,19 +58,20 @@ class rpm extends CI_Model{
 		return $primas;
 	}
 
-	public function getNegocios($year, $ramo){
-		$this->db->select('year(py.payment_date) year,month(py.payment_date) month, COUNT(wo.id) AS negocios', FALSE);
-		$this->db->join('policies po', 'po.uid=py.policy_number');
-		$this->db->join('work_order wo', 'wo.policy_id=po.id');
-		$this->db->where('year(py.payment_date)', $year);
-		$this->db->where('py.year_prime', 1);
-		$this->db->where('product_group', $ramo);
-		$this->db->group_by('year, month');
+	public function getNegociosList($year, $ramo){
+		$this->db->select('month(wo.creation_date) month, count(*) negocios', FALSE);
+		$this->db->join('work_order_types wot', 'wot.id = wo.work_order_type_id');
+		$this->db->where('year(wo.creation_date)', $year);
+		$this->db->where('wo.product_group_id', $ramo);
+		$this->db->where('wo.work_order_status_id', 4);
+		$this->db->where_in('wot.patent_id', array(47, 90));
 		$this->db->order_by('month', 'asc');
-		$q = $this->db->get($this->table);
+		$this->db->group_by('month');
+		$q = $this->db->get("work_order wo");
 		$result = $q->result_array();
+
 		//Fill the blank months
-		$negocios = $this->fillMonths($result, "month", "amount");
+		$negocios = $this->fillMonths($result, "month", "negocios");
 		return $negocios;
 	}
 
@@ -89,7 +90,7 @@ class rpm extends CI_Model{
 		$q = $this->db->get('policies po');
 		$policies = $q->result_array();
 		
-		//Create array of products
+		//Create array of with all policies grouped by product (Enhaces the direct query speed)
 		$products = array();
 		foreach ($policies as $policy) {
 			$products[$policy["id"]]["name"] = $policy["name"];
@@ -120,6 +121,7 @@ class rpm extends CI_Model{
 			$products[$i]["payments"] = $payments;
 		}
 
+		//Delete the products without payments
 		foreach ($products as $i => $product) {
 			$delete = TRUE;
 			foreach ($product["payments"] as $payment){
@@ -132,7 +134,7 @@ class rpm extends CI_Model{
 		return $products;
 	}
 
-	public function getBusiness($year, $ramo){
+	public function getNegocios($year, $ramo){
 		$this->db->join('work_order_types wot', 'wot.id = wo.work_order_type_id');
 		$this->db->where('year(wo.creation_date)', $year);
 		$this->db->where('wo.product_group_id', $ramo);
