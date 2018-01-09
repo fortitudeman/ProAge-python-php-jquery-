@@ -63,7 +63,7 @@ class rpventas extends CI_Controller {
 		{
 			foreach( $this->roles_vs_access  as $value )
 			{
-				if ($value['module_name'] == 'Reporte de ventas')
+				if ($value['module_name'] == 'Reporte de produccion')
 				{
 					$this->access = true;
 					switch ($value['action_name'])
@@ -122,31 +122,10 @@ class rpventas extends CI_Controller {
 
 	public function index()
 	{
-		$this->summary();
+		$this->production();
 	}
 
-	public function summary($tab = "graficos", $orderby = "primas"){
-		$Available_tabs = array("graficos", "reporte");
-		//Url Validations
-		if(!in_array($tab, $Available_tabs))
-			$tab = "graficos";
-
-		//Validation of order
-		$Available_orderbys = array("primas", "requests");
-		if(!in_array($orderby, $Available_orderbys))
-			$orderby = "primas";
-		switch ($orderby) {
-			case 'primas':
-				$orderby = "prima";
-				$orderhash = "requests";
-				$orderlabel = "S";
-				break;
-			case 'requests':
-				$orderby = "conteo";
-				$orderhash = "primas";
-				$orderlabel = "P";
-				break;
-		}
+	public function production(){
 		if ( !$this->access_report )
 		{	
 			$this->session->set_flashdata( 'message', array
@@ -160,15 +139,22 @@ class rpventas extends CI_Controller {
 		// Getting filters
 		$other_filters = $this->_init_profile();
 		
+		//Loading Models
 		$this->load->model( 'ot/work_order');
-		$this->load->model( 'users/user');
+		$this->load->model( 'rpventas/rpm');
 
+		//Loading helpers
+		$this->load->helper('render');
+		$this->load->helper('date');
+
+		//Configure filters of the report
 		$base_url = base_url();
 		$ramo= 55;
 		$ramos = makeDropdown($this->work_order->getProductsGroups(), "id", "name", FALSE);
+		$months = getMonths();
 		unset($ramos[3]);
 
-		$this->load->model( 'rpventas/rpm');
+		//Create year dropdown
 		$periods = array();
         $minYear = $this->rpm->getFirstPaymentYear();
         $auxYear = date("Y");
@@ -176,20 +162,19 @@ class rpventas extends CI_Controller {
         	$periods[$auxYear] = $auxYear;
         	$auxYear--;
         }while ($auxYear > $minYear);
-        $months = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-
-
-		$this->load->helper('sort');
-		$this->load->helper('render');
-		
-		//Get first graphic info
+        
+		//Get sales graphic info
         $year1 = $other_filters["periodo"];
         $year2 = $year1 - 1;
     	$sramo = $other_filters["ramo"];
-        $y1  = $this->rpm->getAllData($year1, $sramo);
-        $y2  = $this->rpm->getAllData($year2, $sramo);
+        $ventasy1  = $this->rpm->getAllData($year1, $sramo);
+        $ventasy2  = $this->rpm->getAllData($year2, $sramo);
+        $primasy1 = $this->rpm->getPrimasList($year1, $sramo);
+        $primasy2 = $this->rpm->getPrimasList($year2, $sramo);
+        $negociosy1 = $this->rpm->getNegociosList($year1, $sramo);
+        $negociosy2 = $this->rpm->getNegociosList($year2, $sramo);
 
-        //Get table info
+        //Get products graphic info
         $products = $this->rpm->getDataByProduct($year1, $sramo);
         //Generate DataSet array
         $colors = array("#0e606b", "#179381", "#2dfca2", "#32fc6b", "#34f937", "#6bf738", "#a3f73d", "#d7f442", "#f9e848", "#f2b148", "#f2844d", "#f25d52", "#ef5677", "#f45da8", "#f461d2", "#eb63f2", "#b962e5", "#9967e5", "#1b04c9", "#0727c6", "#095ac4", "#0d8ec1", "#11c1c1", "#16cc9b", "#1acc6a", "#1ecc3b", "#31cc20", "#66ce25", "#97ce29", "#c8d12e", "#e5bf37", "#d38434", "#cc5737", "#ce3b43", "#ce406f", "#e04aa6", "#e04ecf", "#c850e0", "#8847bc", "#6748b5");
@@ -197,16 +182,32 @@ class rpventas extends CI_Controller {
 		$i = 0;
 		foreach ($products as $product) {
 			if(!empty($product["id"])){
+				$totalpvpy = 0;
+				foreach ($product["payments"] as $value) {
+					$totalpvpy += $value;
+				}
 				$productsDS[] = array(
 					"label" => $product["name"],
 					"backgroundColor" => $colors[$i],
 					"borderColor" => $colors[$i],
 					"data" => $product["payments"],
-					"fill" => FALSE
+					"fill" => FALSE,
+					"totaly" => $totalpvpy
 				);
 				$i++;
 			}
 		}
+
+		//Get the indicators
+        $totalnidy1 = $this->rpm->getNegocios($year1, $sramo);
+        $totalnidy2 = $this->rpm->getNegocios($year2, $sramo);
+        $indebusins = comparationRatio($totalnidy1, $totalnidy2);
+        $primessmy1 = $this->rpm->getPrimas($year1, $sramo);
+        $primessmy2 = $this->rpm->getPrimas($year2, $sramo);
+        $indeprimes = comparationRatio($primessmy1, $primessmy2);
+        $numagentsa = $this->rpm->getNumAgents($year1, $sramo);
+        $businespai = $this->rpm->getNumBusiness($year1, $sramo);
+        if($sramo==2){ $businespai=0; }
 
 		$content_data = array(
 			'access_all' => $this->access_all,
@@ -217,16 +218,30 @@ class rpventas extends CI_Controller {
 			'months' => $months,
 			'year1' => $year1,
 			'year2' => $year2,
-			'y1' => $y1,
-			'y2' => $y2,
+			'y1' => $ventasy1,
+			'y2' => $ventasy2,
+			'primasy1' => $primasy1,
+			'primasy2' => $primasy2,
+			'negociosy1' => $negociosy1,
+			'negociosy2' => $negociosy2,
 			"productos" => $products,
+			'nya' => $totalnidy1,
+			'idb' => $indebusins,
+			'pya' => $primessmy1,
+			'idp' => $indeprimes,
+			'naa' => $numagentsa,
+			'ngp' => $businespai
 		);
 		$sub_page_content = $this->load->view('rpventas/summary', $content_data, TRUE);
 
 		$add_js = '
 			<script type="text/javascript">
-				var Y1 = '.json_encode($y1).'
-				var Y2 = '.json_encode($y2).'
+				var P1 = '.json_encode($primasy1).'
+				var P2 = '.json_encode($primasy2).'
+				var N1 = '.json_encode($negociosy1).'
+				var N2 = '.json_encode($negociosy2).'
+				var V1 = '.json_encode($ventasy1).'
+				var V2 = '.json_encode($ventasy2).'
 				var Y1Title = '.$year1.'
 				var Y2Title = '.$year2.'
 				var months = '.json_encode($months).'
@@ -234,7 +249,7 @@ class rpventas extends CI_Controller {
 			</script>
 			';
 		$this->view = array(
-			'title' => 'Reporte de Ventas',
+			'title' => 'Reporte de Producción',
 			 // Permisions
 			'user' => $this->sessions,
 			'user_vs_rol' => $this->user_vs_rol,
@@ -244,8 +259,8 @@ class rpventas extends CI_Controller {
 				'<link rel="stylesheet" href="' . $base_url . 'ot/assets/style/main.css">',
 				'<link rel="stylesheet" href="'. $base_url .'agent/assets/style/agent.css">',
 				'<link rel="stylesheet" href="'. $base_url .'ot/assets/style/jquery.fancybox.css">',
-				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/style.css?'.time().'">',
-				'<link rel="stylesheet" href="'. $base_url .'solicitudes/assets/style/print-reset.css?'.time().'">',
+				'<link rel="stylesheet" href="'. $base_url .'/style/style-report.css?'.time().'">',
+				'<link rel="stylesheet" href="'. $base_url .'/style/print-reset.css?'.time().'">',
 			),
 			'scripts' => array(
 				'<script type="text/javascript" src="'. $base_url .'scripts/jquery.cookie.js"></script>',
@@ -257,6 +272,7 @@ class rpventas extends CI_Controller {
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
 				'<script type="text/javascript" src="'. $base_url .'ot/assets/scripts/jquery.fancybox.js"></script>',
 				'<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/randomcolor/0.5.2/randomColor.min.js"></script>',
+				'<script type="text/javascript" src="'. $base_url .'scripts/report-utilities.js?'.time().'"></script>',
 				'<script type="text/javascript" src="'. $base_url .'rpventas/assets/scripts/summary.js?'.time().'"></script>',
 				'<script src="https://use.fontawesome.com/884297e135.js"></script>',
 				$add_js,
@@ -269,228 +285,6 @@ class rpventas extends CI_Controller {
 
 		// Render view 
 		$this->load->view( 'index', $this->view );
-	}
-
-	public function export($typeFile = "summary"){
-		//Validation of export
-		$exportTypes = array("summary", "agents", "status", "products", "primastatus", "primaproduct", "primaavgproduct", "generations");
-		if(!in_array($typeFile, $exportTypes))
-			redirect('solicitudes');
-		if ( !$this->access_export_xls )
-		{	
-			$this->session->set_flashdata( 'message', array
-			( 
-				'type' => false,	
-				'message' => 'No tiene permisos para exportar a XLS este reporte.'
-			));	
-			redirect( 'home', 'refresh' );
-		}
-
-		$other_filters = $this->_init_profile();
-		$other_filters["nuevos_negocios"] = 1;
-		$other_filters["periodo"] = get_filter_period();
-		
-		$this->load->model( 'ot/work_order');
-		switch ($typeFile) {
-			case 'summary':
-				//General work orders
-				$work_orders_general = $this->work_order->getWorkOrdersGroupBy($other_filters);
-				//Formating names
-				foreach ($work_orders_general as $i => $order){
-					if(empty($order["name"]) && empty($order["lastnames"]))
-						$work_orders_general[$i]["name"] = $order["company_name"];
-					$work_orders_general[$i]["lastnames"].= " - ".$order["percentage"];
-				}
-
-				$clean_arr[] = array(
-					"Numero de OT", "Fecha alta", "Agente", "Ramo", "Asegurado", "Estatus", "Prima", "Poliza"
-				);
-				foreach ($work_orders_general as $order) {
-					$clean_arr[] = array(
-						$order["uid"], $order["creation_date"], $order["name"]." ".$order["lastnames"], $order["ramo"], $order["asegurado"], $order["status"], $order["prima"], $order["poliza"] 
-					);
-				}
-				break;
-			case 'agents':
-				//Configuration agent group
-				$args = array(
-					"select" => "users.company_name, users.name, users.lastnames, policies_vs_users.percentage",
-					"sum" => "policies.prima",
-					"by" => "users.company_name, agents.id, policies_vs_users.percentage",
-					"order" => "conteo desc",
-				);
-				$work_orders_agents = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
-				foreach ($work_orders_agents as $i => $order){
-					$work_orders_agents[$i]["name"] = empty($order["name"]) && empty($order["lastnames"]) ? $order["company_name"] :$order["name"]." ".$order["lastnames"];
-				}
-				$clean_arr[] = array(
-					"Agente", "Solicitudes", "Primas Totales"
-				);
-				foreach ($work_orders_agents as $order) {
-					$clean_arr[] = array(
-						$order["name"], $order["conteo"], $order["prima"]
-					);
-				}
-				break;
-			case 'status':
-				$args = array(
-					"select" => "work_order_status.name status",
-					"by" => "work_order_status.name",
-					"order" => "conteo desc",
-				);
-				$work_orders_status = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
-				$clean_arr[] = array(
-					"Status", "Solicitudes"
-				);
-				foreach ($work_orders_status as $order) {
-					$clean_arr[] = array(
-						$order["status"], $order["conteo"]
-					);
-				}
-				break;
-			case 'products':
-				//Configuration products group
-				$args = array(
-					"select" => "products.name producto",
-					"sum" => "policies.prima",
-					"by" => "products.id",
-					"order" => "conteo desc",
-				);
-				$work_orders_products = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
-				$clean_arr[] = array(
-					"Producto", "Solicitudes"
-				);
-				foreach ($work_orders_products as $order) {
-					$clean_arr[] = array(
-						$order["producto"], $order["conteo"]
-					);
-				}
-				break;
-			case 'primastatus':
-				$args = array(
-					"select" => "work_order_status.name status",
-					"sum" => "policies.prima",
-					"by" => "work_order_status.name",
-					"order" => "prima desc",
-				);
-				$work_orders_status = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
-				$clean_arr[] = array(
-					"Status", "Prima"
-				);
-				foreach ($work_orders_status as $order) {
-					$clean_arr[] = array(
-						$order["status"], $order["prima"]
-					);
-				}
-				break;
-			case 'primaproduct':
-				//Configuration products group
-				$args = array(
-					"select" => "products.name producto",
-					"sum" => "policies.prima",
-					"by" => "products.id",
-					"order" => "prima desc",
-				);
-				$clean_arr[] = array(
-					"Producto", "Prima"
-				);
-				$work_orders_products = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
-				foreach ($work_orders_products as $order) {
-					$clean_arr[] = array(
-						$order["producto"], $order["prima"]
-					);
-				}
-				break;
-			case 'primaavgproduct':
-				//Configuration products group
-				$args = array(
-					"select" => "products.name producto",
-					"sum" => "policies.prima",
-					"by" => "products.id",
-					"order" => "conteo desc",
-				);
-				$work_orders_products = $this->work_order->getWorkOrdersGroupBy($other_filters, $args);
-				//Calculate Average Prima per product
-				foreach ($work_orders_products as $i => $row) 
-					$work_orders_products[$i]["avgPrima"] = ($row["conteo"] != 0) ? $row["prima"] / $row["conteo"] : 0;
-				//Sorting Array by primaAvg
-				$this->load->helper('sort');
-	 			sort_object($work_orders_products, "avgPrima");
-
-				$clean_arr[] = array(
-					"Producto", "Prima Promedio"
-				);
-				foreach ($work_orders_products as $order) {
-					$clean_arr[] = array(
-						$order["producto"], $order["avgPrima"]
-					);
-				}
-				break;
-			case 'generations':
-				$work_orders_generations = $this->work_order->getWorkOrdersGroupByGeneracion($other_filters);
-
-				$clean_arr[] = array(
-					"Generacion", "Solicitudes"
-				);
-				foreach ($work_orders_generations as $order) {
-					$clean_arr[] = array(
-						$order["title"], $order["solicitudes"]
-					);
-				}
-		}
-
-		// Export
-		$this->load->helper('usuarios/csv');
-		$filename = 'solicitudes_'.$typeFile.'_'.date("Ymd_Hi").'.csv';
-		array_to_csv($clean_arr, $filename);
-		
-		if( is_file( $filename ) )
-			echo file_get_contents( $filename );
-		if( is_file( $filename ) )
-			unlink( $filename );
-		exit;
-	}
-
-	public function popup(){
-		if(!$this->input->is_ajax_request())
-			show_404();
-
-		$search = $this->input->post("search");
-		$value = $this->input->post("value");
-
-		$Available_searchs = array("status", "agent", "product");
-		if(!in_array($search, $Available_searchs))
-			show_404();
-
-		switch ($search) {
-			case 'status':
-				$search = "work_order_status.name";	
-				break;
-			case 'agent':
-				$search = "agents.id";
-				break;
-			case 'product':
-				$search = "products.id";
-				break;
-		}
-
-		$other_filters = $this->_init_profile();
-
-		$other_filters["nuevos_negocios"] = 1;
-		$other_filters["periodo"] = get_filter_period();
-		$other_filters["where"] = array($search => $value);
-		
-		$this->load->model( 'ot/work_order');
-		$this->load->model( 'users/user');
-		//General work orders
-		$work_orders_general = $this->work_order->getWorkOrdersGroupBy($other_filters);
-		//Formating names
-		foreach ($work_orders_general as $i => $order){
-			if(empty($order["name"]) && empty($order["lastnames"]))
-				$work_orders_general[$i]["name"] = $order["company_name"];
-			$work_orders_general[$i]["lastnames"].= " - <b>". $order["percentage"]."</b>";
-		}
-		$this->load->view('solicitudes/reporte_general_table', array("general_data" => $work_orders_general));
 	}
 
 	public function _init_profile(){

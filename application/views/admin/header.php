@@ -220,8 +220,8 @@ if( !empty( $roles_vs_access ) ): ?>
                         <?php break; endif; endforeach; ?>
 
                         <?php foreach( $roles_vs_access  as $value ):
-                        if( in_array( 'Reporte de ventas', $value ) && ( $value['action_name'] == 'Ver reporte' )): ?>
-                        <li><a href="<?php echo base_url() ?>rpventas"><i class="icon-file"></i><span class="hidden-tablet">Reporte de ventas</span></a></li>
+                        if( in_array( 'Reporte de produccion', $value ) && ( $value['action_name'] == 'Ver reporte' )): ?>
+                        <li><a href="<?php echo base_url() ?>rpventas"><i class="icon-file"></i><span class="hidden-tablet">Reporte de producción</span></a></li>
                         <?php break; endif; endforeach; ?>
 
                         <?php foreach( $roles_vs_access  as $value ):

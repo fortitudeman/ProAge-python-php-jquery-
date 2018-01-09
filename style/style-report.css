@@ -81,17 +81,17 @@ table i[class^="icon-"] {
 	margin-bottom: 10px;
 	color: #4faa98;
 }
-#indicators .indicator .comparative{
+.comparative{
 	display: block;
 	width: 100%;
 	margin-top: 5px;
 	font-size: 16px;
 }
 
-#indicators .indicator .comparative.positive{
+.comparative.positive{
 	color: #009900;
 }
-#indicators .indicator .comparative.negative{
+.comparative.negative{
 	color: #e50000;
 }
 
