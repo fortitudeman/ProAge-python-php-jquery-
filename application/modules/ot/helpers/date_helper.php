@@ -6,49 +6,49 @@
  //Nota: Esta función puede devolver el valor booleano FALSE, pero también puede devolver un valor no booleano que se evalúa como FALSE. Use el operador === para comprobar el valor devuelto por esta función.
  //Autor: dantepiazza
  //Version: 1.0
- 
+
 function comparar_fechas($fecha, $fecha_comparar = null){
  if($fecha_comparar == null){
   $fecha_comparar = date("Y-m-d H:i:s");
  }
- 
+
  $fecha = strtotime($fecha);
  $fecha_comparar = strtotime($fecha_comparar);
- 
- if($fecha == $fecha_comparar){  
+
+ if($fecha == $fecha_comparar){
   return 0;
  }
- else if($fecha < $fecha_comparar){  
+ else if($fecha < $fecha_comparar){
   return -1;
  }
- else if($fecha > $fecha_comparar){    
+ else if($fecha > $fecha_comparar){
   return 1;
  }
- 
+
  return false;
 }
 
 
 // Tiempo transcurrido
 function tiempo_transcurrido($fecha) {
-		
-					
+
+
 		if(empty($fecha)) {
 			  return "No hay fecha";
 		}
-		
-		
-	   
+
+
+
 		$intervalos = array("segundo", "minuto", "hora", "día", "semana", "mes", "año");
 		$duraciones = array("60","60","24","7","4.35","12");
-	   
+
 		$ahora = time();
 		$Fecha_Unix = strtotime($fecha);
-			
-		if(empty($Fecha_Unix)) {   
+
+		if(empty($Fecha_Unix)) {
 			  return "Fecha incorracta";
 		}
-		if($ahora > $Fecha_Unix) {   
+		if($ahora > $Fecha_Unix) {
 			  $diferencia     =$ahora - $Fecha_Unix;
 			  $tiempo         = "Hace";
 		} else {
@@ -58,14 +58,14 @@ function tiempo_transcurrido($fecha) {
 		for($j = 0; $diferencia >= $duraciones[$j] && $j < count($duraciones)-1; $j++) {
 		  $diferencia /= $duraciones[$j];
 		}
-	   
+
 		$diferencia = round($diferencia);
-		
+
 		if($diferencia != 1) {
 			$intervalos[5].="e"; //MESES
 			$intervalos[$j].= "s";
 		}
-	    				
+
 		return "$tiempo $diferencia $intervalos[$j]";
 }
 // Ejemplos de uso
@@ -102,17 +102,17 @@ function diferenciaEntreFechas($fecha_principal, $fecha_secundaria, $obtener = '
 if ( ! function_exists('trimestre'))
 {
 	function trimestre($mes=null)
-	{	  
+	{
 		$mes = is_null($mes) ? date('m') : $mes;
 		$trim=floor(($mes-1) / 3)+1;
 		return $trim;
 	}
-} 
+}
 
 if ( ! function_exists('cuatrimestre'))
 {
 	function cuatrimestre($mes=null)
-	{	  
+	{
 		$mes = is_null($mes) ? date('m') : $mes;
 		$trim=floor(($mes-1) / 4)+1;
 		return $trim;

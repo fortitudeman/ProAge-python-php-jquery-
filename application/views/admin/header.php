@@ -1,9 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
-<?php 
+<?php
 /*
 
   Author		Ulises Rodríguez
-  Site:			http://www.ulisesrodriguez.com	
+  Site:			http://www.ulisesrodriguez.com
   Twitter:		https://twitter.com/#!/isc_ulises
   Facebook:		http://www.facebook.com/ISC.Ulises
   Github:		https://github.com/ulisesrodriguez
@@ -11,85 +11,85 @@
   Skype:		systemonlinesoftware
   Location:		Guadalajara Jalisco Mexíco
 
-  	
+
 */
-if (isset($user) && isset($user['picture']))
-{
-	$this->load->helper( 'user_image' );
-	get_default_user_image( $user['picture'] );
-}
-$segments = $this->uri->rsegment_array();
-if (($this->roles_vs_access !== FALSE) &&
-	(isset($segments[1])) &&
-	($segments[1] == 'agent')
-	)
-{
-	$hide_menu = FALSE;
-	foreach ($this->roles_vs_access as $access)
-	{
-		if (($access['module_name'] == 'Agent Profile') && ($access['action_name'] == 'Ocultar el menú'))
-			$hide_menu = TRUE;
-	}
-}
-else
-	$hide_menu = FALSE;
+  if (isset($user) && isset($user['picture']))
+  {
+  	$this->load->helper( 'user_image' );
+  	get_default_user_image( $user['picture'] );
+  }
+  $segments = $this->uri->rsegment_array();
+  if (($this->roles_vs_access !== FALSE) &&
+  	(isset($segments[1])) &&
+  	($segments[1] == 'agent')
+  )
+  {
+  	$hide_menu = FALSE;
+  	foreach ($this->roles_vs_access as $access)
+  	{
+  		if (($access['module_name'] == 'Agent Profile') && ($access['action_name'] == 'Ocultar el menú'))
+  			$hide_menu = TRUE;
+  	}
+  }
+  else
+  	$hide_menu = FALSE;
 
-if ($proages_home = $this->session->userdata('proages_home'))
-	$home = site_url($proages_home);
-else
-	$home = base_url();
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	
-	<meta charset="utf-8">
-	<title>Pro-ages <?php if( isset( $title ) ) echo $title ?></title>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="description" content="">
-	<meta name="author" content="Ulises Rodriguez">
+  if ($proages_home = $this->session->userdata('proages_home'))
+  	$home = site_url($proages_home);
+  else
+  	$home = base_url();
+  ?>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
 
-	<!-- The styles -->
-	<link id="bs-css" href="<?php echo base_url() ?>style/bootstrap-cerulean.css" rel="stylesheet">
-	<style type="text/css">
-	  body {
-		padding-bottom: 40px;
-	  }
-	  .sidebar-nav {
-		padding: 9px 0;
-	  }
-	</style>
-    <link href="<?php echo base_url() ?>bootstrap/css/bootstrap.css" rel="stylesheet">
-	<link href="<?php echo base_url() ?>bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="<?php echo base_url() ?>bootstrap/FortAwesome/css/font-awesome.css" rel="stylesheet">
-	<link href="<?php echo base_url() ?>style/charisma-app.css" rel="stylesheet">
- 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-    <link href="<?php echo base_url() ?>bootstrap/Ui/css/custom-theme/jquery-ui-1.10.0.custom.css" rel="stylesheet">
-	<link href='<?php echo base_url() ?>style/fullcalendar.css' rel='stylesheet'>
-	<link href='<?php echo base_url() ?>style/fullcalendar.print.css' rel='stylesheet'  media='print'>
-	<link href='<?php echo base_url() ?>style/chosen.css' rel='stylesheet'>
-	<link href='<?php echo base_url() ?>style/uniform.default.css' rel='stylesheet'>
-	<link href='<?php echo base_url() ?>style/colorbox.css' rel='stylesheet'>
-	<link href='<?php echo base_url() ?>style/jquery.cleditor.css' rel='stylesheet'>
-	<link href='<?php echo base_url() ?>style/jquery.noty.css' rel='stylesheet'>
-	<link href='<?php echo base_url() ?>style/noty_theme_default.css' rel='stylesheet'>
-	<link href='<?php echo base_url() ?>style/elfinder.min.css' rel='stylesheet'>
-	<link href='<?php echo base_url() ?>style/elfinder.theme.css' rel='stylesheet'>
-	<link href='<?php echo base_url() ?>style/jquery.iphone.toggle.css' rel='stylesheet'>
-	<link href='<?php echo base_url() ?>style/opa-icons.css' rel='stylesheet'>
-	<link href='<?php echo base_url() ?>style/uploadify.css' rel='stylesheet'>
-	<link href="<?php echo base_url() ?>style/style.css" rel="stylesheet">
-	<!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
+  	<meta charset="utf-8">
+  	<title>Pro-ages <?php if( isset( $title ) ) echo $title ?></title>
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  	<meta name="description" content="">
+  	<meta name="author" content="Ulises Rodriguez">
+
+  	<!-- The styles -->
+  	<link id="bs-css" href="<?php echo base_url() ?>style/bootstrap-cerulean.css" rel="stylesheet">
+  	<style type="text/css">
+  	body {
+  		padding-bottom: 40px;
+  	}
+  	.sidebar-nav {
+  		padding: 9px 0;
+  	}
+  </style>
+  <link href="<?php echo base_url() ?>bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link href="<?php echo base_url() ?>bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="<?php echo base_url() ?>bootstrap/FortAwesome/css/font-awesome.css" rel="stylesheet">
+  <link href="<?php echo base_url() ?>style/charisma-app.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+  <link href="<?php echo base_url() ?>bootstrap/Ui/css/custom-theme/jquery-ui-1.10.0.custom.css" rel="stylesheet">
+  <link href='<?php echo base_url() ?>style/fullcalendar.css' rel='stylesheet'>
+  <link href='<?php echo base_url() ?>style/fullcalendar.print.css' rel='stylesheet'  media='print'>
+  <link href='<?php echo base_url() ?>style/chosen.css' rel='stylesheet'>
+  <link href='<?php echo base_url() ?>style/uniform.default.css' rel='stylesheet'>
+  <link href='<?php echo base_url() ?>style/colorbox.css' rel='stylesheet'>
+  <link href='<?php echo base_url() ?>style/jquery.cleditor.css' rel='stylesheet'>
+  <link href='<?php echo base_url() ?>style/jquery.noty.css' rel='stylesheet'>
+  <link href='<?php echo base_url() ?>style/noty_theme_default.css' rel='stylesheet'>
+  <link href='<?php echo base_url() ?>style/elfinder.min.css' rel='stylesheet'>
+  <link href='<?php echo base_url() ?>style/elfinder.theme.css' rel='stylesheet'>
+  <link href='<?php echo base_url() ?>style/jquery.iphone.toggle.css' rel='stylesheet'>
+  <link href='<?php echo base_url() ?>style/opa-icons.css' rel='stylesheet'>
+  <link href='<?php echo base_url() ?>style/uploadify.css' rel='stylesheet'>
+  <link href="<?php echo base_url() ?>style/style.css" rel="stylesheet">
+  <!-- The HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
 	  <script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
 
 	<!-- The fav icon -->
 	<!--<link rel="shortcut icon" href="img/favicon.ico">-->
-	
-    <?php if( isset( $css ) and !empty( $css ) ) foreach( $css as $value ) echo $value; ?>
-    
-    	
+
+	<?php if( isset( $css ) and !empty( $css ) ) foreach( $css as $value ) echo $value; ?>
+
+
 </head>
 
 <body>
@@ -98,15 +98,15 @@ else
 	<div class="navbar">
 		<div class="navbar-inner">
 			<div class="container-fluid">
-<?php if (!$hide_menu): ?>
-				<a class="btn btn-navbar" data-toggle="collapse" data-target=".top-nav.nav-collapse,.sidebar-nav.nav-collapse">
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</a>
-<?php endif; ?>
- 				<a class="brand" href="<?php echo $home; ?>"> <img alt="Charisma Logo" src="<?php echo base_url() . 'images/' . $this->config->item('logo') ?>" /> <span><?php echo $this->config->item('company_name') ?></span></a>
-				
+				<?php if (!$hide_menu): ?>
+					<a class="btn btn-navbar" data-toggle="collapse" data-target=".top-nav.nav-collapse,.sidebar-nav.nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</a>
+				<?php endif; ?>
+				<a class="brand" href="<?php echo $home; ?>"> <img alt="Charisma Logo" src="<?php echo base_url() . 'images/' . $this->config->item('logo') ?>" /> <span><?php echo $this->config->item('company_name') ?></span></a>
+
 				<!-- theme selector starts -->
 				<div class="btn-group pull-right theme-container" >
 					<!--<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -126,12 +126,12 @@ else
 					</ul>
 				</div>
 				<!-- theme selector ends -->
-				
+
 				<!-- user dropdown starts -->
 				<div class="btn-group pull-right" >
 					<a class="btn dropdown-toggle" data-toggle="dropdown" href="javascript: void(0);">
 						<img src="<?php echo base_url() . 'usuarios/assets/profiles/' . $user['picture'] ?>" />
-                        <span class="hidden-phone"> <?php echo $user['name'] ?></span>
+						<span class="hidden-phone"> <?php echo $user['name'] ?></span>
 						<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
@@ -140,9 +140,9 @@ else
 						<li><a href="<?php echo base_url() ?>usuarios/logout.html">Logout</a></li>
 					</ul>
 				</div>
-                
+
 				<!-- user dropdown ends -->
-				
+
 				<div class="top-nav nav-collapse">
 					<!--<ul class="nav">
 						<li><a href="#">Visit Site</a></li>
@@ -160,85 +160,85 @@ else
 	<?php } ?>
 	<div class="container-fluid">
 		<div class="row-fluid">
-		<?php if(!isset($no_visible_elements) || !$no_visible_elements) { ?>
-<?php if (!$hide_menu): ?>
-			<!-- left menu starts -->
-			<div class="span2 main-menu-span">
-				<div class="well nav-collapse sidebar-nav">
-					<ul class="nav nav-tabs nav-stacked main-menu">
-						<li class="nav-header hidden-tablet">Navegación</li>
+			<?php if(!isset($no_visible_elements) || !$no_visible_elements) { ?>
+			<?php if (!$hide_menu): ?>
+				<!-- left menu starts -->
+				<div class="span2 main-menu-span">
+					<div class="well nav-collapse sidebar-nav">
+						<ul class="nav nav-tabs nav-stacked main-menu">
+							<li class="nav-header hidden-tablet">Navegación</li>
 
-						<li><a class="ajax-link" href="<?php echo $home ?>"><i class="icon-home"></i><span class="hidden-tablet"><?php echo $this->config->item('company_name') ?></span></a></li>						
+							<li><a class="ajax-link" href="<?php echo $home ?>"><i class="icon-home"></i><span class="hidden-tablet"><?php echo $this->config->item('company_name') ?></span></a></li>
 
-                        <?php 
+							<?php
 							/**
 							 *	Check $roles_vs_access for setting or added navigation for an user
 							 **/
-if( !empty( $roles_vs_access ) ): ?>
-						<?php foreach( $roles_vs_access  as $value ): if( in_array( 'Modulos', $value ) ): ?>
-                        <li><a href="<?php echo base_url() ?>modulos.html"><i class="icon-th"></i><span class="hidden-tablet">Módulos</span></a></li>
-                        <?php break; endif; endforeach; ?>
+							if( !empty( $roles_vs_access ) ): ?>
+							<?php foreach( $roles_vs_access  as $value ): if( in_array( 'Modulos', $value ) ): ?>
+								<li><a href="<?php echo base_url() ?>modulos.html"><i class="icon-th"></i><span class="hidden-tablet">Módulos</span></a></li>
+								<?php break; endif; endforeach; ?>
 
-                        <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Rol', $value ) ): ?>
-                        <li><a href="<?php echo base_url() ?>roles.html"><i class="icon-th"></i><span class="hidden-tablet">Rol</span></a></li>
-                        <?php break; endif; endforeach; ?>
+								<?php foreach( $roles_vs_access  as $value ): if( in_array( 'Rol', $value ) ): ?>
+									<li><a href="<?php echo base_url() ?>roles.html"><i class="icon-th"></i><span class="hidden-tablet">Rol</span></a></li>
+									<?php break; endif; endforeach; ?>
 
-                        <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ): ?>
-                        <li><a href="<?php echo base_url() ?>usuarios.html"><i class="icon-th"></i><span class="hidden-tablet">Usuarios</span></a></li>
-                        <?php break; endif; endforeach; ?>
+									<?php foreach( $roles_vs_access  as $value ): if( in_array( 'Usuarios', $value ) ): ?>
+										<li><a href="<?php echo base_url() ?>usuarios.html"><i class="icon-th"></i><span class="hidden-tablet">Usuarios</span></a></li>
+										<?php break; endif; endforeach; ?>
 
-                        <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Grupos', $value ) ): ?>
-                        <li><a href="<?php echo base_url() ?>groups.html"><i class="icon-user"></i><span class="hidden-tablet">Grupos</span></a></li>
-                        <?php break; endif; endforeach; ?>
-<!--                       
+										<?php foreach( $roles_vs_access  as $value ): if( in_array( 'Grupos', $value ) ): ?>
+											<li><a href="<?php echo base_url() ?>groups.html"><i class="icon-user"></i><span class="hidden-tablet">Grupos</span></a></li>
+											<?php break; endif; endforeach; ?>
+<!--
                         <?php foreach( $roles_vs_access  as $value ): if( in_array( 'Orden de trabajo', $value ) ): ?>
                         <li><a href="<?php echo base_url() ?>ot.html"><i class="icon-tablet"></i><span class="hidden-tablet">Orden trabajo</span></a></li>
                         <?php break; endif; endforeach; ?>
--->
-                        <?php if( isset($user) && isset($user['id'])):
-						foreach( $roles_vs_access  as $value ):
-							if( in_array( 'Operations', $value ) ): ?>
-                         <li><a href="<?php echo base_url() ?>operations/index/<?php echo $user['id'] ?>.html"><i class="icon-briefcase"></i><span class="hidden-tablet">Operaciones</span></a></li>
-                        <?php break; endif;
-						endforeach;
-						endif; ?>
+                    -->
+                    <?php if( isset($user) && isset($user['id'])):
+                    foreach( $roles_vs_access  as $value ):
+                    	if( in_array( 'Operations', $value ) ): ?>
+                    	<li><a href="<?php echo base_url() ?>operations/index/<?php echo $user['id'] ?>.html"><i class="icon-briefcase"></i><span class="hidden-tablet">Operaciones</span></a></li>
+                    	<?php break; endif;
+                    endforeach;
+                    endif; ?>
 
-                        <?php  
-						foreach( $roles_vs_access  as $value ):
-							if( in_array( 'Orden de trabajo', $value ) && ( $value['action_name'] == 'Importar payments' )): ?>
-                        <li><a href="<?php echo base_url() ?>ot/import_payments.html"><i class="icon-hdd"></i><span class="hidden-tablet">Importar Pagos</span></a></li>
-                        <?php break; endif; endforeach;?>
+                    <?php
+                    foreach( $roles_vs_access  as $value ):
+                    	if( in_array( 'Orden de trabajo', $value ) && ( $value['action_name'] == 'Importar payments' )): ?>
+                    	<li><a href="<?php echo base_url() ?>ot/import_payments.html"><i class="icon-hdd"></i><span class="hidden-tablet">Importar Pagos</span></a></li>
+                    	<?php break; endif; endforeach;?>
 
-                        <?php foreach( $roles_vs_access  as $value ): 
-						if( in_array( 'Orden de trabajo', $value ) && ( $value['action_name'] == 'Ver reporte' )): ?>
-                        <li><a href="<?php echo base_url() ?>director"><i class="icon-file"></i><span class="hidden-tablet">Reporte directivo</span></a></li>
-                        <?php break; endif; endforeach; ?>
+                    	<?php foreach( $roles_vs_access  as $value ):
+                    	if( in_array( 'Orden de trabajo', $value ) && ( $value['action_name'] == 'Ver reporte' )): ?>
+                    	<li><a href="<?php echo base_url() ?>director"><i class="icon-file"></i><span class="hidden-tablet">Reporte directivo</span></a></li>
+                    	<?php break; endif; endforeach; ?>
 
-                        <?php foreach( $roles_vs_access  as $value ): 
-						if( in_array( 'Solicitudes', $value ) && ( $value['action_name'] == 'Ver reporte' )): ?>
-                        <li><a href="<?php echo base_url() ?>solicitudes"><i class="icon-file"></i><span class="hidden-tablet">Reporte de solicitudes</span></a></li>
-                        <?php break; endif; endforeach; ?>
+                    	<?php foreach( $roles_vs_access  as $value ):
+                    	if( in_array( 'Solicitudes', $value ) && ( $value['action_name'] == 'Ver reporte' )): ?>
+                    	<li><a href="<?php echo base_url() ?>solicitudes"><i class="icon-file"></i><span class="hidden-tablet">Reporte de solicitudes</span></a></li>
+                    	<?php break; endif; endforeach; ?>
 
-                        <?php foreach( $roles_vs_access  as $value ):
-                        if( in_array( 'Reporte de produccion', $value ) && ( $value['action_name'] == 'Ver reporte' )): ?>
-                        <li><a href="<?php echo base_url() ?>rpventas"><i class="icon-file"></i><span class="hidden-tablet">Reporte de producción</span></a></li>
-                        <?php break; endif; endforeach; ?>
+                    	<?php foreach( $roles_vs_access  as $value ):
+                    	if( in_array( 'Reporte de produccion', $value ) && ( $value['action_name'] == 'Ver reporte' )): ?>
+                    	<li><a href="<?php echo base_url() ?>rpventas"><i class="icon-file"></i><span class="hidden-tablet">Reporte de producción</span></a></li>
+                    	<?php break; endif; endforeach; ?>
 
-                        <?php foreach( $roles_vs_access  as $value ):
-						if( in_array( 'Actividades', $value ) && ( $value['action_name'] == 'Ver' )): ?>
-                        <li><a href="<?php echo base_url() ?>activities.html"><i class="icon-tasks"></i><span class="hidden-tablet">Mis actividades</span></a></li>
-                        <?php break; endif; endforeach; ?>
-						
-                        <?php foreach( $roles_vs_access  as $value ): 
-						if( in_array( 'Actividades', $value ) &&  ( $value['action_name'] == 'Actividades de ventas' )): ?>				
-                        <li><a href="<?php echo base_url() ?>activities/sales_activities_stats.html"><i class="icon-tasks"></i><span class="hidden-tablet">Actividades de ventas</span></a></li>
-                        <?php break; endif; endforeach; ?>
+                    	<?php foreach( $roles_vs_access  as $value ):
+                    	if( in_array( 'Actividades', $value ) && ( $value['action_name'] == 'Ver' )): ?>
+                    	<li><a href="<?php echo base_url() ?>activities.html"><i class="icon-tasks"></i><span class="hidden-tablet">Mis actividades</span></a></li>
+                    	<?php break; endif; endforeach; ?>
 
-						<?php foreach( $roles_vs_access as $value ): 
-						if( in_array( 'Settings', $value ) && ( $value['action_name'] == 'Ver' )): ?>
-						<li><a href="<?php echo base_url() ?>settings.html"><i class="icon-cog"></i><span class="hidden-tablet">Configuración</span></a></li>
-						<?php break; endif; endforeach; ?>
-<?php endif; ?>
+                    	<?php foreach( $roles_vs_access  as $value ):
+                    	if( in_array( 'Actividades', $value ) &&  ( $value['action_name'] == 'Actividades de ventas' )): ?>
+                    	<li><a href="<?php echo base_url() ?>activities/sales_activities_stats.html"><i class="icon-tasks"></i><span class="hidden-tablet">Actividades de ventas</span></a></li>
+                    	<?php break; endif; endforeach; ?>
+
+                    	<?php foreach( $roles_vs_access as $value ):
+                    	if( in_array( 'Settings', $value ) && ( $value['action_name'] == 'Ver' )): ?>
+                    	<li><a href="<?php echo base_url() ?>settings.html"><i class="icon-cog"></i><span class="hidden-tablet">Configuración</span></a></li>
+                    	<?php break; endif; endforeach; ?>
+                    <?php endif; ?>
 
 						<!--
                         <li><a class="ajax-link" href="form.html"><i class="icon-edit"></i><span class="hidden-tablet"> Forms</span></a></li>
@@ -259,8 +259,8 @@ if( !empty( $roles_vs_access ) ): ?>
 				</div><!--/.well -->
 			</div><!--/span-->
 			<!-- left menu ends -->
-<?php endif; ?>
+		<?php endif; ?>
 
-			<div id="content" class="span<?php if ($hide_menu) echo 12; else echo 10; ?>">
+		<div id="content" class="span<?php if ($hide_menu) echo 12; else echo 10; ?>">
 			<!-- content starts -->
 			<?php } ?>

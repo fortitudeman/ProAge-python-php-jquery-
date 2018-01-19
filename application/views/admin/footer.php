@@ -1,9 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); ?>
-<?php 
+<?php
 /*
 
   Author		Ulises Rodríguez
-  Site:			http://www.ulisesrodriguez.com	
+  Site:			http://www.ulisesrodriguez.com
   Twitter:		https://twitter.com/#!/isc_ulises
   Facebook:		http://www.facebook.com/ISC.Ulises
   Github:		https://github.com/ulisesrodriguez
@@ -11,7 +11,7 @@
   Skype:		systemonlinesoftware
   Location:		Guadalajara Jalisco Mexíco
 
-  	
+
 */
 ?>
 		<?php if(!isset($no_visible_elements) || !$no_visible_elements)	{ ?>
@@ -20,7 +20,7 @@
 		<?php } ?>
 		</div><!--/fluid-row-->
 		<?php if(!isset($no_visible_elements) || !$no_visible_elements)	{ ?>
-		
+
 		<hr>
 
 		<div class="modal hide fade" id="myModal">
@@ -50,7 +50,7 @@
 	<!-- Placed at the end of the document so the pages load faster -->
 
 	<!-- jQuery -->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<!-- jQuery UI -->
 	<!--<script src="http://code.jquery.com/jquery-1.9.1.js"></script>-->
     <script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
@@ -117,14 +117,16 @@
 	<script src="<?php echo base_url() ?>scripts/jquery.uploadify-3.1.min.js"></script>
 	<!-- history.js for cross-browser state change on ajax -->
 	<script src="<?php echo base_url() ?>scripts/jquery.history.js"></script>
+	<!-- CDN script for implement SweetAlert -->
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 	<!-- application script for Charisma demo -->
 	<!--<script src="<?php echo base_url() ?>scripts/charisma.js"></script>-->
-	
-    
+
+
     <?php if( isset( $scripts ) and !empty( $scripts ) ) foreach( $scripts as $value ) echo $value; ?>
-    
-    
-    
+
+
+
 	<?php //Google Analytics code for tracking my demo site, you can remove this.
 		if($_SERVER['HTTP_HOST']=='usman.it') { ?>
 		<script>
@@ -138,6 +140,6 @@
 			})();
 		</script>
 	<?php } ?>
-	
+
 </body>
 </html>

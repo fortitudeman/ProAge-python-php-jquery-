@@ -2,7 +2,7 @@
 /*
 
   Author		Ulises Rodríguez
-  Site:			http://www.ulisesrodriguez.com	
+  Site:			http://www.ulisesrodriguez.com
   Twitter:		https://twitter.com/#!/isc_ulises
   Facebook:		http://www.facebook.com/ISC.Ulises
   Github:		https://github.com/ulisesrodriguez
@@ -16,166 +16,166 @@
 function renderTable( $data = array(), $access_activate = false, $access_update = false, $access_delete = false ){
 
 	if( empty( $data ) ) return false;
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
 	$table = null;
-	
-	foreach( $data as $value ){ 
-	
+
+	foreach( $data as $value ){
+
     		if( $value['creation_date'] == '0000-00-00 00:00:00' ) $value['creation_date'] = '';
-    
+
     		$table .= '<tr onclick="menu(\'menu-'. $value['id'] .'\');">';
-			
-			
-			
-			
+
+
+
+
 			$color = diferenciaEntreFechas( date('Y-m-d H:i:s'), $value['creation_date'], "DIAS", FALSE );
-					
-						
+
+
 			$table .='				<td class="center">';
-			
+
 			if( $value['work_order_status_id'] == 5 or $value['work_order_status_id'] == 9 ) {
-				if( (float)$color <= 5 ) 
+				if( (float)$color <= 5 )
 					$table .= '<div style="background-color:#0C0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
-				else if( (float)$color > 5 and (float)$color <= 10 )	
-					$table .= '<div style="background-color:#FF0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';									
-				else if( (float)$color > 10 )	
+				else if( (float)$color > 5 and (float)$color <= 10 )
+					$table .= '<div style="background-color:#FF0; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
+				else if( (float)$color > 10 )
 					$table .= '<div style="background-color:#F30; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
 			}
-			
-			
+
+
 			if( $value['work_order_status_id'] == 6 )
 				$table .= '<div style="background-color:#000; width: 10px;  height: 10px; border-radius: 50%; float:left; margin-top:5px;"></div>';
-							
-							
+
+
 			$table .= $value['uid'];
-			
-			$table .='</td>';				
-			
-			
+
+			$table .='</td>';
+
+
 			$table .='		<td class="center">'. $value['creation_date'] .'</td>';
-			
-			
-			
+
+
+
 			if( !empty( $value['agents'] ) ){
-					
+
 					$table .='		<td class="center">';
-					
-					foreach( $value['agents'] as $agent ) 
-							
+
+					foreach( $value['agents'] as $agent )
+
 							if( !empty( $agent['company_name'] ) )
 								$table .=  $agent['company_name'] . ' '. $agent['percentage'] . '% <br>';
 							else
 								$table .= $agent['name']. ' '. $agent['lastnames']. ' '. $agent['percentage'] . '% <br>';
-					
+
 					$table .='		</td>';
-					
+
 			}
-			
+
 			else
 					$table .='		<td class="center"></td>';
-			
+
 			$table .= '<td class="center">'.$value['group_name'] .'</td>';
 			$table .= '<td class="center">'.$value['parent_type_name']['name'] .'</td>';
-			
+
 			$table .='<td class="center">'.  $value['policy'][0]['name'] .'</td>';
-						
-													
-			
+
+
+
 			$table .= '<td class="center"> ';
-			
-			
+
+
 			$table .=  ucwords(str_replace( 'desactivada', 'en trámite', $value['status_name']));
-			
-			
-			
+
+
+
 			$table .= '</td>';
-			
+
 			$table .='</tr>';
-    		
-			
-			
+
+
+
 			if( $value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 7 and $value['work_order_status_id'] != 8 )
 				$table .='<tr id="menu-'. $value['id'] .'" class="popup">';
 			else
-				$table .='<tr class="popup">';	
-			
-			
-			
-			
-			
-			
+				$table .='<tr class="popup">';
+
+
+
+
+
+
             $table .='    	<td colspan="8">';
-                   
+
    				    $table .= '<a href="javascript:void(0)" class="btn btn-link btn-hide"><i class="icon-arrow-up"></i></a>';
-					
+
 					$new = false;
-												
+
 					if( $value['parent_type_name']['name'] == 'NUEVO NEGOCIO' )
-					
+
 						$new = true;
-					
+
 					$scrips='';
-					
+
 					if( $access_activate == true and $value['work_order_status_id'] ==  9 )
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
-												
-									
+
+
 					else if( $access_activate == true and $value['work_order_status_id'] ==  6 )
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'desactivar-'.$value['id'].'\', \''.$new.'\')">Desactivar</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
-					
-					else 
+
+					else
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'activar-'.$value['id'].'\', \''.$new.'\')">Activar</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
-												
-												
-												
-												
+
+
+
+
 					if( $access_update == true ){
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'aceptar-'.$value['id'].'\', \''.$new.'\')">Marcar como aceptada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
-												
+
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'rechazar-'.$value['id'].'\', \''.$new.'\')">Marcar como rechazada</a>&nbsp;&nbsp;|&nbsp;&nbsp;';
 												}
 					if( $access_delete == true )
-												
+
 						$scrips .= '<a href="javascript:void(0)" onclick="chooseOption(\'cancelar-'.$value['id'].'\', \''.$new.'\')">Cancelar</a>&nbsp;&nbsp;';
-					
+
 					if( $value['work_order_status_id'] != 2 and $value['work_order_status_id'] != 7 and $value['work_order_status_id'] != 8 )
 					$table .=  $scrips;
-												
-					
+
+
                     $table .= '
                     </td>
                 </tr>    ';
-	
+
 	}
-	
-	
+
+
 	return $table;
 }
 
 
 // Getting format date
 function getFormatDate( $date = null ){
-		
+
 	 if( empty( $date ) or $date == '0000-00-00' ) return false;
-	 
-	 	 
+
+
 	 $date = explode( '-', $date );
-	 
-	 
+
+
 	 $meses= array('01'=>"Enero",'02'=>"Febrero",'03'=>"Marzo",'04'=>"Abril",'05'=>"Mayo",'06'=>"Junio",'07'=>"Julio",'08'=>"Agosto",'09'=>"Septiembre",'10'=>"Octubre",'11'=>"Noviembre",'12'=>"Diciembre");
-	 
+
 	 return 'el '.$date[2].' de '.$meses[$date[1]].' del '.$date[0];
-	 
-	 
-			 
-}	
+
+
+
+}
 /*
 	Prepare form fields for ot.html page
 */
@@ -213,7 +213,7 @@ if ( ! function_exists('prepare_ot_form'))
 		}
 		if (isset($other_filters['patent_type']))
 			$ramo_tramite_types = $CI->work_order->get_tramite_types_select_arr($other_filters['patent_type']);
-		else 
+		else
 			$ramo_tramite_types = $CI->work_order->get_tramite_types_select_arr();
 		$patent_type_ramo = 0;
 		if (isset($other_filters['ramo']) && isset($ramo_tramite_types[$other_filters['ramo']]))
@@ -247,7 +247,7 @@ if ( ! function_exists('change_ot_status'))
 			$order_id = (int)$order_id;
 			$user_id = (int)$user_id;
 			$CI->load->model( 'ot/work_order' );
-			$work_order = array(				
+			$work_order = array(
 				'work_order_status_id' => $new_status
 			);
 
@@ -350,7 +350,7 @@ if ( ! function_exists('payment_actions'))
 				'payment_date' => $payment_date,
 				'policy_number' => $policy_number
 			);
-			switch ($action) 
+			switch ($action)
 			{
 				case 'mark_ignored':
 					$db_result = $CI->work_order->generic_update('payments', array('valid_for_report' => 0), $where, 1, 0);
@@ -378,14 +378,14 @@ if ( ! function_exists('reporte_popup'))
 	function reporte_popup($module = 'ot')
 	{
 		$CI =& get_instance();
-		$work_order_ids = $CI->input->post('wrk_ord_ids');  
+		$work_order_ids = $CI->input->post('wrk_ord_ids');
 		$data['is_poliza'] = $CI->input->post('is_poliza');
 		$data['gmm'] = $CI->input->post('gmm');
 
 		$CI->load->model( array( 'ot/work_order', 'usuarios/user' ) );
 		$CI->view = array(
 			'css' => array(
-			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',			
+			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
 			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
 			<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
 			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
@@ -394,13 +394,13 @@ if ( ! function_exists('reporte_popup'))
 		  	'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
 			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-			//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',			
+			//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',
 			'<script src="'. base_url() .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
 			'<script>window.jQuery || document.write ("<script src='. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js><\/script>");</script>',
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.ddslick.js"></script>',
 			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',			
-			'<script src="'.base_url().'scripts/config.js"></script>'	,	
+			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',
+			'<script src="'.base_url().'scripts/config.js"></script>'	,
 			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
 			'<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
 		  ));
@@ -432,7 +432,7 @@ if ( ! function_exists('reporte_popup'))
 				($row_result['value']['general'][0]->work_order_status_id == 9) ||
 				($row_result['value']['general'][0]->work_order_status_id == 7) )
 			{
-				if (isset($primas_cached[$work_order_id]) && 
+				if (isset($primas_cached[$work_order_id]) &&
 					isset($primas_cached[$work_order_id]['adjusted_prima']))
 				{
 					$ot_adjusted = $primas_cached[$work_order_id]['adjusted_prima'];
@@ -440,14 +440,14 @@ if ( ! function_exists('reporte_popup'))
 				else
 					$ot_adjusted = $CI->user->get_adjusted_prima($row_result['value']['general'][0]->policy_id,
 						$ramo, $period);
-	
-				$row_result['value']['general'][0]->adjusted_prima = 
+
+				$row_result['value']['general'][0]->adjusted_prima =
 					$ot_adjusted * ($row_result['value']['general'][0]->p_percentage / 100);
 			}
 			$data['values'][$work_order_id]['main'] = $CI->load->view('ot/popup_report_main_row', $row_result, TRUE);
 			$data['values'][$work_order_id]['menu'] = $CI->load->view('ot/popup_report_menu_row', $row_result, TRUE);
 		}
-		$CI->load->view('ot/popup_report', $data);	
+		$CI->load->view('ot/popup_report', $data);
 	}
 }
 
