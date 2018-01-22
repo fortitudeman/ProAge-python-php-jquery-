@@ -16,13 +16,13 @@
   class Ot extends CI_Controller {
 
 
-	public $view = array();
+  	public $view = array();
 
-	public $sessions = array();
+  	public $sessions = array();
 
-	public $user_vs_rol = array();
+  	public $user_vs_rol = array();
 
-	public $roles_vs_access = array();
+  	public $roles_vs_access = array();
 
 	public $access = false; // Force security
 
@@ -1345,7 +1345,8 @@ public function import_payments()
 	}
 	$save_setting = @ini_get('auto_detect_line_endings');
 	@ini_set('auto_detect_line_endings', true);
-
+	$posted_month = null;
+	$posted_year = null;
 	$tmp_file = null;
 	$file_array = array();
 	$process = '';
@@ -1377,6 +1378,9 @@ public function import_payments()
 			}
 			$tmp_file = $file;
 		}
+		$fecha = explode("-", $file_array[0][8]);
+		$posted_month = $file_array[0][10];
+		$posted_year = $fecha[0];
 		if (!$tmp_file)
 		{
 			$this->session->set_flashdata( 'message', array(
@@ -1386,22 +1390,9 @@ public function import_payments()
 			redirect( '/ot/import_payments', 'refresh' );
 		}
 	}
-
-		// Chane index
+		// Change index
 // 2: "Pre import"
 	if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'change-index' ){
-
-
-		$posted_month = $this->input->post('month');
-		$posted_year = $this->input->post('year');
-		if (($posted_month === FALSE) || ($posted_year === FALSE) || !$posted_month || !$posted_year )
-		{
-			$this->session->set_flashdata( 'message', array(
-				'type' => false,
-				'message' => 'Por favor seleccione un mes.'
-			));
-			redirect( '/ot/import_payments', 'refresh' );
-		}
 		if (!isset($_POST['product']) || ($_POST['product'] < 1) || ($_POST['product'] > 3))
 		{
 			$this->session->set_flashdata( 'message', array(
@@ -1433,6 +1424,9 @@ public function import_payments()
 				$file_array = $this->reader_csv->reader();
 			}
 		}
+		$fecha = explode("-", $file_array[0][8]);
+		$posted_month = $file_array[0][10];
+		$posted_year = $fecha[0];
 		unset( $_POST['tmp_file'], $_POST['process'], $_POST['product'] );
 
 		$this->load->helper('date');
@@ -1443,18 +1437,10 @@ public function import_payments()
 // Prepare the import
 			if( isset( $file_array[$i] ) )
 			{
-				if ($product == 3)
-					$always_imported = array(
-						'imported_folio' => $file_array[$i][3],
-						'imported_agent_name' => $file_array[$i][6],
-						'import_date' => sprintf("%04d-%02d-01", $posted_year, $posted_month),
-						'is_new' => 0,
-					);
-				else
-					$always_imported = array(
-						'imported_folio' => $file_array[$i][4],
-						'imported_agent_name' => $file_array[$i][11],
-						'import_date' => sprintf("%04d-%02d-01", $posted_year, $posted_month));
+				$always_imported = array(
+					'imported_folio' => $file_array[$i][4],
+					'imported_agent_name' => $file_array[$i][11],
+					'import_date' => sprintf("%04d-%02d-01", $posted_year, $posted_month));
 
 ///////////////////////////////
 				$sometimes_imported = array();
@@ -1775,6 +1761,8 @@ public function import_payments()
 			$this->view['file_array'] = $file_array;
 		if( isset( $work_orders ) and !empty( $work_orders ) )
 			$this->view['work_orders'] = $work_orders;
+		$this->view['month'] = $posted_month;
+		$this->view['year'] = $posted_year;
 
 		// Render view
 		$this->load->view('index',$this->view );
@@ -2049,10 +2037,10 @@ public function reporte_popupa()
  public function reporte_popup_later()
  {
 		//$data['value'] = $this->uri->segment(3);
-	$this->load->model(array('work_order'));
-	$data['values'] = $this->work_order->pop_up_data();
-	$result = $this->load->view('popup_report',$data);
-	echo json_encode($result);
+ 	$this->load->model(array('work_order'));
+ 	$data['values'] = $this->work_order->pop_up_data();
+ 	$result = $this->load->view('popup_report',$data);
+ 	echo json_encode($result);
  }
 
 /**
@@ -2073,71 +2061,71 @@ public function email_popup()
  **/
  public function send_email()
  {
-	$email_address = $this->input->post('email_address');
-	$email_body = $this->input->post('email_body');
-	$this->load->library('email');
-	$this->email->set_mailtype("html");
-	$this->email->from('proAges@example.com','proAges');
-	$this->email->to($email_address);
-	$this->email->subject('Email from proAges');
-	$this->email->message($email_body);
+ 	$email_address = $this->input->post('email_address');
+ 	$email_body = $this->input->post('email_body');
+ 	$this->load->library('email');
+ 	$this->email->set_mailtype("html");
+ 	$this->email->from('proAges@example.com','proAges');
+ 	$this->email->to($email_address);
+ 	$this->email->subject('Email from proAges');
+ 	$this->email->message($email_body);
 
-	$result = $this->email->send();
-	echo json_encode($result);
+ 	$result = $this->email->send();
+ 	echo json_encode($result);
  }
 
  private function _report_export_helper($value, $ramo = 'vida_gmm')
  {
-	if ($ramo == 'vida_gmm')
-		$data_row = array(
-			'name' => $value['name'],
-			'uids' => '',
-			'connection_date' => '',
-			'negocio' => $value['negocio'],
-			'negociopai' => 0,
-			'prima' => $value['prima'],
-			'tramite' => 0,
-			'tramite_prima' => 0,
-			'pendientes' => 0,
-			'pendientes_primas' => 0,
-			'cobranza' => 0,
-			'negocios_proyectados' => 0,
-			'negocios_proyectados_primas' => 0,
-			'cartera' => 0,
-		);
-	else
-		$data_row = array(
-			'name' => $value['name'],
-			'uids' => '',
-			'connection_date' => '',
-			'iniciales' => $value['iniciales'],
-			'renovaciones' => $value['renovacion'],
-			'totales' => (int)$value['iniciales']+(int)$value['renovacion']
-		);
-	if ( !empty( $value['uids'][0]['type'] ) && ($value['uids'][0]['type'] == 'clave')
-		&& !empty( $value['uids'][0]['uid'] ))
-		$data_row['uids'] =  $value['uids'][0]['uid'];
-	else
-		$data_row['uids'] = 'Sin clave asignada';
+ 	if ($ramo == 'vida_gmm')
+ 		$data_row = array(
+ 			'name' => $value['name'],
+ 			'uids' => '',
+ 			'connection_date' => '',
+ 			'negocio' => $value['negocio'],
+ 			'negociopai' => 0,
+ 			'prima' => $value['prima'],
+ 			'tramite' => 0,
+ 			'tramite_prima' => 0,
+ 			'pendientes' => 0,
+ 			'pendientes_primas' => 0,
+ 			'cobranza' => 0,
+ 			'negocios_proyectados' => 0,
+ 			'negocios_proyectados_primas' => 0,
+ 			'cartera' => 0,
+ 		);
+ 	else
+ 		$data_row = array(
+ 			'name' => $value['name'],
+ 			'uids' => '',
+ 			'connection_date' => '',
+ 			'iniciales' => $value['iniciales'],
+ 			'renovaciones' => $value['renovacion'],
+ 			'totales' => (int)$value['iniciales']+(int)$value['renovacion']
+ 		);
+ 	if ( !empty( $value['uids'][0]['type'] ) && ($value['uids'][0]['type'] == 'clave')
+ 		&& !empty( $value['uids'][0]['uid'] ))
+ 		$data_row['uids'] =  $value['uids'][0]['uid'];
+ 	else
+ 		$data_row['uids'] = 'Sin clave asignada';
 
-	if ( !empty( $value['connection_date'] ) && ($value['connection_date'] != '0000-00-00' ))
-		$data_row['connection_date'] =  $value['connection_date'];
-	else
-		$data_row['connection_date'] = 'No Conectado';
+ 	if ( !empty( $value['connection_date'] ) && ($value['connection_date'] != '0000-00-00' ))
+ 		$data_row['connection_date'] =  $value['connection_date'];
+ 	else
+ 		$data_row['connection_date'] = 'No Conectado';
 
-	return $data_row;
+ 	return $data_row;
  }
 
  public function report_export()
  {
-	$agent_array = array();
-	$other_filters = array();
-	$data = $this->_init_report($agent_array, $other_filters);
-	$data_report = array();
+ 	$agent_array = array();
+ 	$other_filters = array();
+ 	$data = $this->_init_report($agent_array, $other_filters);
+ 	$data_report = array();
 		// Load Helper
-	$this->load->helper( array( 'usuarios/csv', 'ot' ) );
+ 	$this->load->helper( array( 'usuarios/csv', 'ot' ) );
 
-	if( empty( $_POST ) or isset( $_POST['query']['ramo'] )  and $_POST['query']['ramo'] !=3  )
+ 	if( empty( $_POST ) or isset( $_POST['query']['ramo'] )  and $_POST['query']['ramo'] !=3  )
 		{ // Vida or GMM
 			$total_negocio=0;
 			$total_negocio_pai=0;
