@@ -47,7 +47,7 @@
 	'wathdo' => '¿Asignar el pago a OT?',
 	'payment_date' => 'Fecha de pago real',
 	'clave' => 'Clave',
-	'agent_uidsnational' => 'Folio national',
+	'agent_uidsnational' => 'Folio nacional',
 	'agent_uidsprovincial' => 'Folio provincial',
 	'agent' => 'Agente',
 	'uid' => 'Poliza',
@@ -136,7 +136,7 @@
 
 					</fieldset>
 					<div id="actions-buttons-forms" class="form-actions">
-						<button type="submit" class="btn btn-primary">Cargar</button>
+						<button id="btnImport" type="submit" class="btn btn-primary">Cargar</button>
 						<input type="button" class="btn" onclick="javascript: history.back()" value="Cancelar">
 					</div>
 				</form>
@@ -181,6 +181,11 @@
 					</form>
 				<?php endif; ?>
 				<div style="clear: both">&nbsp;</div>
+				<?php
+			/**
+			 *	Change Index, Selectes options fields
+			 **/
+			?>
 
 			<?php if( isset( $tmp_file ) and $process == 'change-index' ): // Is is load a file?>
 
@@ -192,25 +197,28 @@
 
 					<input type="hidden" name="product" value="<?php echo $product ?>" />
 					<?php if (($posted_month !== FALSE) && ($posted_year !== FALSE) ): ?>
-						<input type="hidden" name="month" value="<?php echo $posted_month ?>" />
-						<input type="hidden" name="year" value="<?php echo $posted_year ?>" />
+						<input name="month" value="<?php echo $posted_month ?>" />
+						<input name="year" value="<?php echo $posted_year ?>" />
 					<?php else: ?>
+						<div class="alert alert-info">
+							Se encontró la siguiente fecha de importación, presione "Pre importar" para continuar.
+						</div>
 						<div class="control-group">
 							<label class="control-label text-error" for="month_year">Mes - Año de la importacion:</label>
 							<div class="controls">
-								<select name="month" class="required span3">
+								<select name="month" class="required span3" disabled>
 									<?php foreach ($month_texts as $key => $month_text):
-									$selected = ($key == $selected_month) ? ' selected="selected"' : '';
+									$selected = ($key == $month) ? ' selected="selected"' : '';
 									?>
 
-									<option value="<?php echo $key ?>" <?php echo $selected ?>><?php echo $month_text ?></option>
+									<option value="<?php echo $posted_month ?>" <?php echo $selected ?>><?php echo $month_text ?></option>
 								<?php endforeach; ?>
 							</select>
-							<select name="year" class="required span2">
+							<select name="year" class="required span2" disabled>
 								<?php for ($i = $max_year; $i > $min_year; $i--):
 								$selected = ($i == $selected_year) ? ' selected="selected"' : '';
 								?>
-								<option value="<?php echo $i ?>" <?php echo $selected ?>><?php echo $i ?></option>
+								<option value="<?php echo $i ?>" <?php echo $selected ?>><?php echo $year ?></option>
 							<?php endfor; ?>
 						</select>
 					</div>
@@ -442,46 +450,6 @@
 
 <?php endif; ?>
 
-
-<?php if( !isset( $tmp_file ) and isset($process) and $process == 'finished' ): // Is is load a file?>
-	<h5>Las siguientes polizas se muestra como no pagadas.Porfavor especifique las polizas que si desea marcar como pagadas</h5>
-	<form action="<?php echo base_url() ?>ot/markAsPaid.html" id="wo-form" method="post">
-		<table class="table table-rounder" id="woListPAI">
-			<thead class="head">
-				<tr>
-					<th><input type="checkbox" name="woAsPAI" id="woAsPAI" value="<?php echo $value['id'];?>" ></th>
-					<th>Poliza</th>
-					<th>Forma de Pago</th>
-					<th>Prima</th>
-					<th>Numero OT</th>
-					<th>Fecha</th>
-					<th>Agente</th>
-					<th>Ramo</th>
-				</tr>
-			</thead>
-
-			<tbody class="tbody">
-				<?php $work_orders = is_array($work_orders) ? $work_orders : array(); ?>
-				<?php foreach ($work_orders as $value) { ?>
-				<tr>
-					<td><input type="checkbox" name="wo[]" class="wo" value="<?php echo $value['id'];?>" ></td>
-					<td><?php echo $value['policy'][0]['uid'];?> </td>
-					<td><?php echo $value['policy'][0]['payment_intervals_name'];?> </td>
-					<td><?php echo $value['policy'][0]['prima'];?> </td>
-					<td><?php echo $value['uid'];?></td>
-					<td><?php echo $value['creation_date'];?> </td>
-					<td><?php echo $value['agents'][0]['name']." ".$value['agents'][0]['lastnames'];?> </td>
-					<td><?php echo $value['product_group_id'];?> </td>
-				</tr>
-				<?php } ?>
-
-			</tbody>
-		</table>
-		<div id="actions-buttons-forms-send" class="form-actions">
-			<button type="submit" class="btn btn-primary">Enviar</button>
-		</div>
-	</form>
-<?php endif; ?>
 </div>
 </div><!--/span-->
 
