@@ -3,6 +3,7 @@
 		init: function(){
 			this.cacheDom();
 			this.binder();
+			this.render();
 		},
 		cacheDom: function() {
 			this.$formDelete = $("#import-delete");
@@ -13,10 +14,41 @@
 			this.$btnDelete = this.$formDelete.find("#delete-submit");
 			this.$importPayment = $('#formfile');
 			this.$btnImport = this.$importPayment.find("#btnImport");
+			this.$dialog = $("#dialog-form");
+			this.$control = $("#control").val(this.id);
+			this.$btnOpen = $(".create-user");
 		},
 		binder: function(){
-			this.$btnDelete.on('click',this.deletePayments.bind(this));
+			this.$btnDelete.on('click', this.deletePayments.bind(this));
+			this.$btnOpen.on('click', this.openDialog.bind(this));
 			//this.$importPayment.on('submit',this.importPayments.bind(this));
+		},
+		render: function(){
+			this.$dialog.dialog({
+				autoOpen: false,
+				height: 600,
+				width: 800,
+				modal: true,
+				buttons: {
+					Cerrar: function() {
+						$( this ).dialog( "close" );
+						$.ajax({
+
+							url: Config.base_url()+'ot/getSelectAgents.html',
+							type: "POST",
+							cache: false,
+							async: false,
+							success: function(data){
+								var option = this.$control.val();
+
+								option = option.split('-');
+
+								$( '.options-'+option[1] ).html(data);
+							}
+						});
+					}
+				}
+			});
 		},
 		deletePayments: function(){
 			swal({
@@ -84,7 +116,37 @@
 				}
 			})
 			return false;
+		},
+		openDialog: function() {
+			this.render();
+			this.$dialog.dialog( "open" );
 		}
 	};
 	imports.init();
 })()
+
+  	$( "#dialog-form" ).dialog({
+  		autoOpen: false,
+  		height: 600,
+  		width: 800,
+  		modal: true,
+  		buttons: {
+  			Cerrar: function() {
+  				$( this ).dialog( "close" );
+  				$.ajax({
+
+  					url:  Config.base_url()+'ot/getSelectAgents.html',
+  					type: "POST",
+  					cache: false,
+  					async: false,
+  					success: function(data){
+  						var option = $( '#control' ).val();
+
+  						option = option.split('-');
+
+  						$( '.options-'+option[1] ).html(data);
+  					}
+  				});
+  			}
+  		}
+  	});
