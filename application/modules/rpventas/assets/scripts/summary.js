@@ -167,8 +167,17 @@ $(document).ready( function(){
 	});
 });
 
+$(".table-container").on("click", ".popup", function(e){
+	e.preventDefault();
+	var search_obj = {};
+	search_obj.search = $(this).attr("data-search");
+	search_obj.value = $(this).attr("data-value");
+	search_obj.month = $(this).attr("data-month");
+	solicitudes_popup(search_obj);
+});
+
 function solicitudes_popup(search_obj){
-	var url = Config.base_url()+"solicitudes/popup";
+	var url = Config.base_url()+"rpventas/popup";
 	$.fancybox.showLoading();
 	$.post(url, search_obj,function(data)
     { 

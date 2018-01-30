@@ -287,6 +287,27 @@ class rpventas extends CI_Controller {
 		$this->load->view( 'index', $this->view );
 	}
 
+	public function popup(){
+		// Getting filters
+		$other_filters = $this->_init_profile();
+		
+		//Loading Models
+		$this->load->model( 'ot/work_order');
+		$this->load->model( 'rpventas/rpm');
+
+		//Loading helpers
+		$this->load->helper('render');
+		$this->load->helper('date');
+
+		$other_filters["producto"] = $this->input->post('value');
+		$other_filters["month_search"] = $this->input->post('month');
+
+    	//Get products graphic info
+        $products = $this->rpm->getDataByProductMonth($other_filters);
+
+        $this->load->view('rpventas/reporte_general_table', array("general_data" => $products));
+	}
+
 	public function _init_profile(){
 		$this->load->helper('ot/ot');
 
