@@ -402,7 +402,7 @@
 <div class="row">
 	<div class="printable">
 		<h3 class="span12">
-			Distribución de Ventas por Producto
+			Distribución mensual de ventas por producto
 			<div class="opciones">
 				<a href="#" class="btn btn-primary toggleTable" data-target="#productsTable" data-resize="#productsCell">
 					<i class="icon-list-alt"></i>
@@ -424,30 +424,59 @@
 		<div id="productsCell" class="span12 chart-container" style="position: relative; width:100%; margin-left: 10px;">
 			<canvas id="productsContainer"></canvas>
 		</div>
+		<?php
+			$totalesMes = array();
+			for ($i=0; $i < 12; $i++) { 
+				$totalesMes[$i] = 0;
+			}
+		?>
 		<div id="productsTable" class="span12 table-container" style="margin-left: 10px; display: none">
 			<table class="table table-striped">
 				<thead>
 					<tr>
-						<th>Producto</th>
+						<th style="font-size: 10px;">Producto</th>
 						<?php foreach ($months as $month): ?>
-							<th><?= substr($month, 0, 3) ?></th>
+							<th style="font-size: 10px;"><?= substr($month, 0, 3) ?></th>
 						<?php endforeach; ?>
+						<th style="font-size: 10px;">Total</th>
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ($productos as $producto): ?>
+					<?php foreach ($productos as $producto): $total = 0; ?>
 						<tr>
-							<td>
+							<td style="font-size: 10px;">
 								<?= $producto["name"] ?>
 							</td>
-							<?php foreach ($producto["payments"] as $i => $payment): ?>
-								<td style="font-size: 11px;">
-									$<?= number_format($payment, 2) ?> 
-									(<?= number_format(percentageRatio($payment, $y1[$i]), 2) ?>%)
+							<?php
+								foreach ($producto["payments"] as $i => $payment):
+									$total = $total + $payment;
+									$totalesMes[$i] = $totalesMes[$i] + $payment;
+							?>
+								<td style="font-size: 10px;">
+									<a href="#" class="popup" data-search="product" data-value="<?= $producto["id"] ?>" data-month="<?= $i + 1 ?>">
+										$<?php echo number_format($payment, 2); ?> 
+										(<?= number_format(percentageRatio($payment, $y1[$i]), 2) ?>%)
+									</a>
 								</td>
 							<?php endforeach; ?>
+							<td style="font-size: 10px;">
+								<b>$<?= number_format($total, 2); ?></b>
+							</td>
 						</tr>
 					<?php endforeach; ?>
+						<tr>
+							<td style="font-size: 10px;">Total</td>
+					<?php 
+						$total = 0;
+						foreach ($totalesMes as $key => $value) {
+							$total = $total + $value;
+					?>
+							<td style="font-size: 10px;"><b>$<?= number_format($value, 2); ?></b></td>
+					<?php
+						}
+					?>
+							<td style="font-size: 10px;"><b>$<?= number_format($total, 2); ?></b></td>
+						</tr>
 				</tbody>
 			</table>
 		</div>
