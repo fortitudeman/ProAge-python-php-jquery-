@@ -63,12 +63,18 @@
 				<a href="#" class="btn btn-primary toggleTable" data-target="#agentsTable" data-resize="#agentsCell">
 					<i class="icon-list-alt"></i>
 				</a>
-				<button type="button" class="btn btn-primary imprimir">
+				<!-- <button type="button" class="btn btn-primary imprimir">
 					<i class="icon-print"></i>
-				</button>
-				<!-- <a class="btn btn-primary" href="<?= base_url("solicitudes/export/agents") ?>">
+				</button> -->
+		<?php
+			if($access_export_xls):
+		?>
+				<a class="btn btn-primary" href="<?= base_url("rpventas/exportar/general") ?>">
 					<i class="icon-download-alt"></i>
-				</a> -->
+				</a>
+		<?php
+			endif;
+		?>
 			</div>
 		</h3>
 		<div id="agentsCell" class="span12 chart-container" style="position: relative; width:100%; margin-left: 10px">
@@ -388,12 +394,18 @@
 				<a href="#" class="btn btn-primary toggleTable" data-target="#productsTable" data-resize="#productsCell">
 					<i class="icon-list-alt"></i>
 				</a>
-				<button type="button" class="btn btn-primary imprimir">
+				<!-- <button type="button" class="btn btn-primary imprimir">
 					<i class="icon-print"></i>
-				</button>
-				<!-- <a class="btn btn-primary" href="<?= base_url("solicitudes/export/agents") ?>">
-					<i class="icon-download-alt"></i>
-				</a> -->
+				</button> -->
+			<?php
+				if($access_export_xls):
+			?>
+					<a class="btn btn-primary" href="<?= base_url("rpventas/exportar/distribucionmensualp") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
+			<?php
+				endif;
+			?>
 			</div>
 		</h3>
 		<div id="productsCell" class="span12 chart-container" style="position: relative; width:100%; margin-left: 10px;">

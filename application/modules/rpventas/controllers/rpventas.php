@@ -323,6 +323,254 @@ class rpventas extends CI_Controller {
 		$this->load->view( 'index', $this->view );
 	}
 
+	public function exportar($type = ""){
+		if( $this->access_export_xls == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Reporte de Ventas Exportar", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'rpventas', 'refresh' );
+		
+		}
+
+		// Getting filters
+		$other_filters = $this->_init_profile();
+		
+		//Loading Models
+		$this->load->model( 'ot/work_order');
+		$this->load->model( 'rpventas/rpm');
+
+		//Loading helpers
+		$this->load->helper('render');
+		$this->load->helper('date');
+		$this->load->helper('usuarios/csv');
+
+		//Configure filters of the report
+		$base_url = base_url();
+		$year1 = $other_filters["periodo"];
+        $year2 = $year1 - 1;
+    	$sramo = $other_filters["ramo"];
+    	$data = array();
+
+		switch ($type) {
+			case 'ventasp':
+				$products = $this->rpm->getDataByProduct($year1, $sramo);
+				$namefile = "proages_ventas_anual_producto.csv";
+				array_push($data, array('Producto', 'Pagado '.$year1));
+
+				$total = 0;
+				foreach ($products as $product) {
+					$totalpvpy = 0;
+					foreach ($product["payments"] as $value) {
+						$totalpvpy += $value;
+					}
+					$total += $totalpvpy;
+					array_push($data, array($product["name"], "$".number_format($totalpvpy, 2)));
+				}
+
+				array_push($data, array('Total:', "$".number_format($total, 2)));
+				break;
+
+			case 'negociosp':
+				$negociosp = $this->rpm->getNegociosProduct($year1, $sramo);
+				$namefile = "proages_negocios_anual_producto.csv";
+				array_push($data, array('Producto', 'Negocios '.$year1));
+
+				$total = 0;
+				foreach ($negociosp as $key => $value) {
+					$total += $value["cantidad"];
+					array_push($data, array($value["name"], $value["cantidad"]));
+				}
+
+				array_push($data, array("Total: ", $total));
+				break;
+
+			case 'primapromediop':
+				$negociosp = $this->rpm->getNegociosProduct($year1, $sramo);
+				$primasp = $this->rpm->getPrimasProduct($year1, $sramo);
+				$namefile = "proages_prima_promedio_anual_producto.csv";
+				array_push($data, array('Producto', 'Prima promedio '.$year1));
+
+				foreach ($primasp as $key => $value) {
+					array_push($data, array($value["name"], "$".number_format(($value["prima"]/$negociosp[$key]["cantidad"]))));
+				}
+
+				break;
+
+			case 'distribucionmensualp':
+				$products = $this->rpm->getDataByProduct($year1, $sramo);
+				$namefile = "proages_distribucion_venta_mensual_producto.csv";
+				$months = getMonths();
+
+				$totalesMes = array();
+				for ($i=0; $i < 12; $i++) { 
+					$totalesMes[$i] = 0;
+				}
+
+				$data[0][] = 'Producto';
+				foreach ($months as $month):
+					$data[0][] = substr($month, 0, 3);
+				endforeach;
+				$data[0][] = 'Total';
+
+				$i = 1;
+
+				foreach ($products as $producto):
+					$total = 0;
+					$data[$i][] = $producto["name"];
+
+					foreach ($producto["payments"] as $j => $payment):
+						$total = $total + $payment;
+						$totalesMes[$j] = $totalesMes[$j] + $payment;
+
+						$data[$i][] = "$".number_format($payment, 2);
+					endforeach;
+
+					$data[$i][] = "$".number_format($total, 2);
+					$i++;
+				endforeach;
+
+				$data[$i][] = 'Total';
+				$total = 0;
+				foreach ($totalesMes as $key => $value) {
+					$total = $total + $value;
+					$data[$i][] = "$".number_format($value, 2);
+				}
+				$data[$i][] = "$".number_format($total, 2);
+
+				break;
+
+			case 'general':
+				$ventasy1  = $this->rpm->getAllData($year1, $sramo);
+		        $ventasy2  = $this->rpm->getAllData($year2, $sramo);
+		        $primasy1 = $this->rpm->getPrimasList($year1, $sramo);
+		        $primasy2 = $this->rpm->getPrimasList($year2, $sramo);
+		        $negociosy1 = $this->rpm->getNegociosList($year1, $sramo);
+		        $negociosy2 = $this->rpm->getNegociosList($year2, $sramo);
+		        $totalnidy1 = $this->rpm->getNegocios($year1, $sramo);
+				$months = getMonths();
+
+				$t1=0;$t2=0;$ny2=0;$py2=0;
+				foreach ($months as $i => $month):
+					$t1 += $ventasy1[$i];
+					$t2 += $ventasy2[$i];
+					$ny2 += $negociosy2[$i];
+					$py2 += $primasy2[$i];
+				endforeach;
+
+				$namefile = "proages_reporte_ventas.csv";
+				array_push($data, array('Mes', 'Pagado '.$year1, '% de participación sobre la venta anual', 'Negocios '.$year1, 'Variación contra periodo anterior', 'Prima promedio', 'Variación contra periodo anterior'));
+
+				foreach ($months as $i => $month):
+					array_push($data, array(
+						$month,
+						"$".number_format($ventasy1[$i], 2),
+						number_format(percentageRatio($ventasy1[$i], $t1), 2)."%",
+						$negociosy1[$i],
+						number_format(comparationRatio($ventasy1[$i], $ventasy2[$i]), 2)."%",
+						((!empty($negociosy1[$i]) && !empty($primasy1[$i])) ? number_format(($primasy1[$i]/$negociosy1[$i]), 2) : 0),
+						number_format(comparationRatio(((!empty($negociosy1[$i]) && !empty($primasy1[$i])) ? ($primasy1[$i]/$negociosy1[$i]) : 0), ((!empty($negociosy2[$i]) && !empty($primasy2[$i])) ? ($primasy2[$i]/$negociosy2[$i]) : 0)), 2)
+					));
+				endforeach;
+
+				array_push($data, array(
+					'Total:',
+					'$'.number_format($t1, 2),
+					$totalnidy1,
+					'',
+					'',
+					''
+				));
+
+				break;
+
+			case 'ventasam':
+				$agentsm = $this->rpm->getAgentsMonth($other_filters);
+				$months = getMonths();
+				$namefile = "proages_ventas_agentes_mensual.csv";
+
+				array_push($data, array('Mes', 'Agentes '.$year1));
+
+				foreach ($agentsm as $key => $agent):
+					array_push($data, array($months[$agent["month"]], $agent["agents"]));
+				endforeach;
+				break;
+
+			case 'ventasap':
+				$agentsp = $this->rpm->getAgentsProduct($other_filters);
+				$namefile = "proages_ventas_agentes_producto.csv";
+
+				array_push($data, array('Producto', 'Agentes '.$year1));
+
+				foreach ($agentsp as $key => $agent):
+					array_push($data, array($agent["name"], $agent["agents"]));
+				endforeach;
+				break;
+			
+			default:
+				$ventasy1  = $this->rpm->getAllData($year1, $sramo);
+		        $ventasy2  = $this->rpm->getAllData($year2, $sramo);
+		        $primasy1 = $this->rpm->getPrimasList($year1, $sramo);
+		        $primasy2 = $this->rpm->getPrimasList($year2, $sramo);
+		        $negociosy1 = $this->rpm->getNegociosList($year1, $sramo);
+		        $negociosy2 = $this->rpm->getNegociosList($year2, $sramo);
+		        $totalnidy1 = $this->rpm->getNegocios($year1, $sramo);
+				$months = getMonths();
+
+				$t1=0;$t2=0;$ny2=0;$py2=0;
+				foreach ($months as $i => $month):
+					$t1 += $ventasy1[$i];
+					$t2 += $ventasy2[$i];
+					$ny2 += $negociosy2[$i];
+					$py2 += $primasy2[$i];
+				endforeach;
+
+				$namefile = "proages_reporte_ventas.csv";
+				array_push($data, array('Mes', 'Pagado '.$year1, '% de participación sobre la venta anual', 'Negocios '.$year1, 'Variación contra periodo anterior', 'Prima promedio', 'Variación contra periodo anterior'));
+
+				foreach ($months as $i => $month):
+					array_push($data, array(
+						$month,
+						"$".number_format($ventasy1[$i], 2),
+						number_format(percentageRatio($ventasy1[$i], $t1), 2)."%",
+						$negociosy1[$i],
+						number_format(comparationRatio($ventasy1[$i], $ventasy2[$i]), 2)."%",
+						((!empty($negociosy1[$i]) && !empty($primasy1[$i])) ? number_format(($primasy1[$i]/$negociosy1[$i]), 2) : 0),
+						number_format(comparationRatio(((!empty($negociosy1[$i]) && !empty($primasy1[$i])) ? ($primasy1[$i]/$negociosy1[$i]) : 0), ((!empty($negociosy2[$i]) && !empty($primasy2[$i])) ? ($primasy2[$i]/$negociosy2[$i]) : 0)), 2)
+					));
+				endforeach;
+
+				array_push($data, array(
+					'Total:',
+					'$'.number_format($t1, 2),
+					$totalnidy1,
+					'',
+					'',
+					''
+				));
+				break;
+		}
+
+		header('Content-Type: application/csv');
+        header('Content-Disposition: attachement; filename="'.$namefile.'"');
+		
+	 	array_to_csv($data, $namefile);
+		
+		if( is_file( $namefile ) )
+			echo file_get_contents( $namefile );
+		
+		if( is_file( $namefile ) )
+			unlink( $namefile );
+				
+		exit;
+	}
+
 	public function popup(){
 		// Getting filters
 		$other_filters = $this->_init_profile();
