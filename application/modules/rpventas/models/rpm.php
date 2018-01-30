@@ -43,10 +43,40 @@ class rpm extends CI_Model{
 		return $result['prima'];
 	}
 
-	public function getPrimasList($year, $ramo){
+	public function getPrimasProduct($year, $ramo, $filter){
+		$this->db->select('pr.name');
+		$this->db->select_sum('po.prima');
+		$this->db->join('policies AS po', 'po.id = wo.policy_id', 'LEFT');
+		$this->db->join('products AS pr', 'pr.id = po.product_id', 'LEFT');
+		if(!empty($filter["product"])){
+			$this->db->where('po.product_id', $filter["product"]);
+		}
+		$this->db->where('year(wo.creation_date)', $year);
+		$this->db->where('wo.product_group_id', $ramo);
+		$this->db->where_in('wo.work_order_status_id', array(4, 7));
+		$this->db->group_by('pr.name');
+		$this->db->order_by('pr.name', 'ASC');
+		$q = $this->db->get('work_order wo');
+		$result = $q->result_array();
+
+		$products = array();
+
+		foreach ($result as $i => $prima) {
+			if(!empty($prima["prima"])){
+				array_push($products, $prima);
+			}
+		}
+
+		return $products;
+	}
+
+	public function getPrimasList($year, $ramo, $filter){
 		$this->db->select('year(wo.creation_date) year,month(wo.creation_date) month');
 		$this->db->join('policies po', 'po.id = wo.policy_id');
 		$this->db->select_sum("prima");
+		if(!empty($filter["product"])){
+			$this->db->where('po.product_id', $filter["product"]);
+		}
 		$this->db->where('year(wo.creation_date)', $year);
 		$this->db->where('wo.product_group_id', $ramo);
 		$this->db->where_in('wo.work_order_status_id', array(4, 7));
@@ -73,6 +103,28 @@ class rpm extends CI_Model{
 		//Fill the blank months
 		$negocios = $this->fillMonths($result, "month", "negocios");
 		return $negocios;
+	}
+
+	public function getNegociosProduct($year, $ramo, $filter){
+		$this->db->select('COUNT(*) AS cantidad, pr.name', false);
+		$this->db->join('work_order_types AS wot', 'wot.id = wo.work_order_type_id', 'LEFT');
+		$this->db->join('policies', 'policies.id = wo.policy_id', 'LEFT');
+		$this->db->join('products AS pr', 'pr.id = policies.product_id', 'LEFT');
+		
+		if(!empty($filter["product"])){
+			$this->db->where('pr.id', $filter["product"]);
+		}
+
+		$this->db->where('YEAR(wo.creation_date)', $year);
+		$this->db->where('wo.product_group_id', $ramo);
+		$this->db->where('wo.work_order_status_id', 4);
+		$this->db->where_in('wot.patent_id', array(47, 90));
+		$this->db->group_by('pr.name');
+		$this->db->order_by('pr.name', 'ASC');
+		$q = $this->db->get('work_order AS wo');
+		$result = $q->result_array();
+
+		return $result;
 	}
 
 	public function getFirstPaymentYear(){

@@ -106,6 +106,144 @@ $(document).ready( function(){
 		    }
 	    }
 	});
+
+	var ctx2 = document.getElementById("productosContainerAnual").getContext("2d");
+	var chart2 = new Chart(ctx2, {
+		// The type of chart we want to create
+	    type: "pie",
+	    // Make responsive
+	    responsive: true,
+	    // The data for our dataset
+	    data: {
+	    	labels: productosName,
+	    	datasets: [{
+	    		label: "Productos",
+	    		data: productosTAnual,
+	    		backgroundColor: productosColor,
+	    		borderColor: productosColor
+	    	}],
+	    	legend: {
+	    		display: true,
+	    		labels: {
+	    			fontColor: "#999999"
+	    		}
+	    	}
+	    },
+	    options: {
+			tooltips: {
+	        	mode: "index",
+				callbacks: {
+					label: function(tooltipItem, data) {
+						var allData = data.datasets[tooltipItem.datasetIndex].data;
+						var tooltipLabel = data.labels[tooltipItem.index];
+						var tooltipData = allData[tooltipItem.index];
+						return tooltipLabel + " : $" + number_format(tooltipData, 2);
+					}
+				},
+				displayColors: false
+			},
+			scales: {
+			    yAxes: [{
+			        ticks: {
+			            beginAtZero:true
+			        },
+			    }],
+			},
+			maintainAspectRatio: false,
+	    }
+	});
+
+	var ctx3 = document.getElementById("businessContainerAnual").getContext("2d");
+	var chart3 = new Chart(ctx3, {
+		// The type of chart we want to create
+	    type: "pie",
+	    // Make responsive
+	    responsive: true,
+	    // The data for our dataset
+	    data: {
+	    	labels: negocioPrName,
+	    	datasets: [{
+	    		label: "Negocios",
+	    		data: negocioPrCant,
+	    		backgroundColor: negocioPrColor,
+	    		borderColor: negocioPrColor
+	    	}],
+	    	legend: {
+	    		display: true,
+	    		labels: {
+	    			fontColor: "#999999"
+	    		}
+	    	}
+	    },
+	    options: {
+			tooltips: {
+	        	mode: "index",
+				callbacks: {
+					label: function(tooltipItem, data) {
+						var allData = data.datasets[tooltipItem.datasetIndex].data;
+						var tooltipLabel = data.labels[tooltipItem.index];
+						var tooltipData = allData[tooltipItem.index];
+						return tooltipLabel + " : " + tooltipData;
+					}
+				},
+				displayColors: false
+			},
+			scales: {
+			    yAxes: [{
+			        ticks: {
+			            beginAtZero:true
+			        },
+			    }],
+			},
+			maintainAspectRatio: false,
+	    }
+	});
+
+	var ctx4 = document.getElementById("primapromedioContainerAnual").getContext("2d");
+	var chart4 = new Chart(ctx4, {
+		// The type of chart we want to create
+	    type: "pie",
+	    // Make responsive
+	    responsive: true,
+	    // The data for our dataset
+	    data: {
+	    	labels: primaspName,
+	    	datasets: [{
+	    		label: "Prima promedio",
+	    		data: primaspCant,
+	    		backgroundColor: primasPrColor,
+	    		borderColor: primasPrColor
+	    	}],
+	    	legend: {
+	    		display: true,
+	    		labels: {
+	    			fontColor: "#999999"
+	    		}
+	    	}
+	    },
+	    options: {
+			tooltips: {
+	        	mode: "index",
+				callbacks: {
+					label: function(tooltipItem, data) {
+						var allData = data.datasets[tooltipItem.datasetIndex].data;
+						var tooltipLabel = data.labels[tooltipItem.index];
+						var tooltipData = allData[tooltipItem.index];
+						return tooltipLabel + " : $" + number_format(tooltipData, 2);
+					}
+				},
+				displayColors: false
+			},
+			scales: {
+			    yAxes: [{
+			        ticks: {
+			            beginAtZero:true
+			        },
+			    }],
+			},
+			maintainAspectRatio: false,
+	    }
+	});
 	var ctx = document.getElementById("productsContainer").getContext("2d");
 		var scw = $(window).width()-39;
 		if(scw<522){

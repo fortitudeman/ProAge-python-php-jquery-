@@ -246,6 +246,15 @@ class rpventas extends CI_Controller {
 				var Y2Title = '.$year2.'
 				var months = '.json_encode($months).'
 				var ProdDs = '.json_encode($productsDS).'
+				var productosName = '.json_encode($productosNombres).'
+				var productosTAnual = '.json_encode($productosTAnual).'
+				var productosColor = '.json_encode($productosColor).'
+				var negocioPrName = '.json_encode($negociospName).'
+				var negocioPrCant = '.json_encode($negociospCant).'
+				var negocioPrColor = '.json_encode($negocioPrColor).'
+				var primaspName = '.json_encode($primaspName).'
+				var primaspCant = '.json_encode($primaspCant).'
+				var primasPrColor = '.json_encode($primasPrColor).'
 			</script>
 			';
 		$this->view = array(

@@ -126,6 +126,162 @@
 		</div>
 	</div>
 </div>
+
+<div class="row">
+	<div class="span4">
+		<div class="printable">
+			<h3 class="span12">
+				Venta anual por productos
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#productsTableAnual" data-resize="#productsCellAnual">
+						<i class="icon-list-alt"></i>
+					</a>
+					<!-- <button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button> -->
+			<?php
+				if($access_export_xls):
+			?>
+					<a class="btn btn-primary" href="<?= base_url("rpventas/exportar/ventasp") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
+			<?php
+				endif;
+			?>
+				</div>
+			</h3>
+			<div id="productsCellAnual" class="span12 graph-container" style="position: relative; height: 450px;">
+				<canvas id="productosContainerAnual"></canvas>
+			</div>
+			<div id="productsTableAnual" class="span12 table-container" style="margin-left: 10px; display: none">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Producto</th>
+							<th>Pagado <?= $year1 ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php $total = 0; foreach ($productosAnual as $producto => $cantidad): $total = $total + $cantidad; ?>
+							<tr>
+								<td><?= $producto ?></td>
+								<td style="font-size: 11px;">
+									<b>$<?= number_format($cantidad, 2); ?></b>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+							<tr>
+								<td>Total</td>
+								<td style="font-size: 11px;">
+									<b>$<?= number_format($total, 2); ?></b>
+								</td>
+							</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="span4">
+		<div class="printable">
+			<h3 class="span12">
+				Negocios por producto
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#businessTableAnual" data-resize="#businessCellAnual">
+						<i class="icon-list-alt"></i>
+					</a>
+					<!-- <button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button> -->
+			<?php
+				if($access_export_xls):
+			?>
+					<a class="btn btn-primary" href="<?= base_url("rpventas/exportar/negociosp") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
+			<?php
+				endif;
+			?>
+				</div>
+			</h3>
+			<div id="businessCellAnual" class="span12 graph-container" style="position: relative; height: 450px;">
+				<canvas id="businessContainerAnual"></canvas>
+			</div>
+			<div id="businessTableAnual" class="span12 table-container" style="margin-left: 10px; display: none">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Producto</th>
+							<th>Negocios <?= $year1 ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php $total = 0; foreach ($negociosp as $key => $negocio): $total = $total + $negocio["cantidad"]; ?>
+							<tr>
+								<td><?= $negocio["name"] ?></td>
+								<td style="font-size: 11px;">
+									<b><?= $negocio["cantidad"]; ?></b>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+							<tr>
+								<td>Total</td>
+								<td style="font-size: 11px;">
+									<b><?= $total; ?></b>
+								</td>
+							</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="span4">
+		<div class="printable">
+			<h3 class="span12">
+				Prima promedio por producto
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#primaTableAnual" data-resize="#primaCellAnual">
+						<i class="icon-list-alt"></i>
+					</a>
+					<!-- <button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button> -->
+			<?php
+				if($access_export_xls):
+			?>
+					<a class="btn btn-primary" href="<?= base_url("rpventas/exportar/primapromediop") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
+			<?php
+				endif;
+			?>
+				</div>
+			</h3>
+			<div id="primaCellAnual" class="span12 graph-container" style="position: relative; height: 450px;">
+				<canvas id="primapromedioContainerAnual"></canvas>
+			</div>
+			<div id="primaTableAnual" class="span12 table-container" style="margin-left: 10px; display: none">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Producto</th>
+							<th>Prima promedio <?= $year1 ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($primasp as $key => $prima): ?>
+							<tr>
+								<td><?= $prima["name"] ?></td>
+								<td style="font-size: 11px;">
+									<b>$<?= number_format(($prima["prima"]/$prima["negocios"]), 2); ?></b>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
 <div class="row">
 	<div class="printable">
 		<h3 class="span12">
