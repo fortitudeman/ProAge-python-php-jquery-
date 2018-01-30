@@ -204,14 +204,46 @@ class rpventas extends CI_Controller {
         	$agentsCantP[] = $value["agents"];
         	$agentPColor[] = $colors[$key];
         }
+
+        $negociospName = array();
+        $negociospCant = array();
+        $negocioPrColor = array();
+
+        foreach ($negociosp as $key => $value) {
+        	$negociospName[] = $value["name"];
+        	$negociospCant[] = $value["cantidad"];
+        	$negocioPrColor[] = $colors[$key];
+        }
+
+        $primaspName = array();
+        $primaspCant = array();
+        $primasPrColor = array();
+
+        foreach ($primasp as $key => $value) {
+        	$primaspName[$key] = $value["name"];
+        	$primaspCant[$key] = $value["prima"] / $negociosp[$key]["cantidad"];
+        	$primasPrColor[$key] = $colors[$key];
+        	$primasp[$key]["negocios"] = $negociosp[$key]["cantidad"];
+        }
+
 		$productsDS = array();
+		$productosNombres = array();
+		$productosTAnual = array();
+		$productosColor = array();
+		$productosGeneral = array();
+
 		$i = 0;
 		foreach ($products as $product) {
-			if(!empty($product["id"])){
+			// if(!empty($product["id"])){
 				$totalpvpy = 0;
 				foreach ($product["payments"] as $value) {
 					$totalpvpy += $value;
 				}
+				array_push($productosNombres, $product["name"]);
+				array_push($productosTAnual, $totalpvpy);
+				array_push($productosColor, $colors[$i]);
+				$productosGeneral[$product["name"]] = $totalpvpy;
+
 				$productsDS[] = array(
 					"label" => $product["name"],
 					"backgroundColor" => $colors[$i],
@@ -256,15 +288,22 @@ class rpventas extends CI_Controller {
 			'y2' => $ventasy2,
 			'primasy1' => $primasy1,
 			'primasy2' => $primasy2,
+			'primasp' => $primasp,
 			'negociosy1' => $negociosy1,
 			'negociosy2' => $negociosy2,
+			'negociosp' => $negociosp,
 			"productos" => $products,
 			'nya' => $totalnidy1,
 			'idb' => $indebusins,
 			'pya' => $primessmy1,
 			'idp' => $indeprimes,
 			'naa' => $numagentsa,
-			'ngp' => $businespai
+			'naa2' => $numagentsa2,
+			'ida' => $indeagents,
+			'ngp' => $businespai,
+			'ngp2' => $businespai2,
+			'idn' => $indebusines,
+			'productosAnual' => $productosGeneral
 		);
 		$sub_page_content = $this->load->view('rpventas/summary', $content_data, TRUE);
 
