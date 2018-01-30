@@ -244,6 +244,99 @@ $(document).ready( function(){
 			maintainAspectRatio: false,
 	    }
 	});
+
+	var ctx5 = document.getElementById("paymentsContainerAgents").getContext("2d");
+	var chart5 = new Chart(ctx5, {
+		// The type of chart we want to create
+	    type: "pie",
+	    // Make responsive
+	    responsive: true,
+	    // The data for our dataset
+	    data: {
+	    	labels: months,
+	    	datasets: [{
+	    		label: "Agentes",
+	    		data: agentsCantM,
+	    		backgroundColor: agentMColor,
+	    		borderColor: agentMColor
+	    	}],
+	    	legend: {
+	    		display: true,
+	    		labels: {
+	    			fontColor: "#999999"
+	    		}
+	    	}
+	    },
+	    options: {
+			tooltips: {
+	        	mode: "index",
+				callbacks: {
+					label: function(tooltipItem, data) {
+						var allData = data.datasets[tooltipItem.datasetIndex].data;
+						var tooltipLabel = data.labels[tooltipItem.index];
+						var tooltipData = allData[tooltipItem.index];
+						return tooltipLabel + " : " + tooltipData;
+					}
+				},
+				displayColors: false
+			},
+			scales: {
+			    yAxes: [{
+			        ticks: {
+			            beginAtZero:true
+			        },
+			    }],
+			},
+			maintainAspectRatio: false,
+	    }
+	});
+
+	var ctx6 = document.getElementById("paymentsContainerAgentsP").getContext("2d");
+	var chart6 = new Chart(ctx6, {
+		// The type of chart we want to create
+	    type: "pie",
+	    // Make responsive
+	    responsive: true,
+	    // The data for our dataset
+	    data: {
+	    	labels: agentsNameP,
+	    	datasets: [{
+	    		label: "Agentes",
+	    		data: agentsCantP,
+	    		backgroundColor: agentPColor,
+	    		borderColor: agentPColor
+	    	}],
+	    	legend: {
+	    		display: true,
+	    		labels: {
+	    			fontColor: "#999999"
+	    		}
+	    	}
+	    },
+	    options: {
+			tooltips: {
+	        	mode: "index",
+				callbacks: {
+					label: function(tooltipItem, data) {
+						var allData = data.datasets[tooltipItem.datasetIndex].data;
+						var tooltipLabel = data.labels[tooltipItem.index];
+						var tooltipData = allData[tooltipItem.index];
+						return tooltipLabel + " : " + tooltipData;
+					}
+				},
+				displayColors: false
+			},
+			scales: {
+			    yAxes: [{
+			        ticks: {
+			            beginAtZero:true
+			        },
+			    }],
+			},
+			maintainAspectRatio: false,
+	    }
+	});
+
 	var ctx = document.getElementById("productsContainer").getContext("2d");
 		var scw = $(window).width()-39;
 		if(scw<522){

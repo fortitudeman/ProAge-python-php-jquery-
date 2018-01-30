@@ -209,7 +209,79 @@ class rpm extends CI_Model{
 		return count($result);
 	}
 
-	public function getNumBusiness($year, $ramo){
+	public function getAgentsMonth($filter){
+		$months = $this->getZerosArray(12);
+		$datos = array();
+		foreach ($months as $key => $value) {
+			$this->db->select('agent_id, sum(py.amount) as val');
+			$this->db->join('policies AS po', 'po.uid = py.policy_number', 'LEFT');
+			$this->db->join('products AS pr', 'pr.id = po.product_id');
+			
+			if($filter["agent"]){
+				$this->db->where('py.agent_id', $filter["agent"]);
+			}
+
+			if(!empty($filter["product"])){
+				$this->db->where('pr.id', $filter["product"]);
+			}
+
+			$this->db->where('py.year_prime', 1);
+			$this->db->where('py.product_group', $filter["ramo"]);
+			$this->db->where('year(py.payment_date)', $filter["periodo"]);
+			$this->db->where('month(py.payment_date)', $key+1);
+			$this->db->where('py.valid_for_report', 1);
+			$this->db->group_by('py.agent_id');
+			// $this->db->having('val >= ', 385000); 
+			$q = $this->db->get($this->table);
+			$result = $q->result_array();
+
+			array_push($datos, array(
+				'month' => $key,
+				'agents' => count($result)
+			));
+		}
+
+		return $datos;
+	}
+
+	public function getAgentsProduct($filter){
+		$whered = 'WHERE year_prime = 1 AND product_group = ? AND YEAR(py.payment_date) = ?';
+		$dwhere = array($filter["ramo"], $filter["periodo"]);
+		
+		if(!empty($filter["agent"])){
+			array_push($dwhere, $filter["agent"]);
+			$whered .= ' AND py.agent_id = ?';
+		}
+
+		if(!empty($filter["product"])){
+			array_push($dwhere, $filter["product"]);
+			$whered .= ' AND pr.id = ?';
+		}
+
+		$sql = "SELECT IFNULL(id, 0) AS id, IFNULL(name, 'No disponible') AS name, agent_id, COUNT(*) AS total FROM (SELECT pr.id, pr.name, agent_id
+			FROM payments AS py
+			LEFT JOIN policies AS po ON po.uid = py.policy_number
+			LEFT JOIN products AS pr ON pr.id = po.product_id
+			$whered
+			GROUP BY py.pay_tbl_id) AS payments GROUP BY id, agent_id";
+
+		$q = $this->db->query($sql, $dwhere);
+		$paymentsResult = $q->result_array();
+
+		$agents = array();
+
+		foreach ($paymentsResult as $key => $value) {
+			$agents[$value["id"]]["name"] = $value["name"];
+			if(isset($agents[$value["id"]]["agents"])){
+				$agents[$value["id"]]["agents"] += 1;
+			}else{
+				$agents[$value["id"]]["agents"] = 1;
+			}
+		}
+
+		return $agents;
+	}
+
 		$this->db->select('sum(negocio_pai) as val', FALSE);
 		$this->db->where('ramo', $ramo);
 		$this->db->where('year(date_pai)', $year);

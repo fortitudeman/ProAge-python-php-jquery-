@@ -282,6 +282,104 @@
 		</div>
 	</div>
 </div>
+
+<div class="row">
+	<div class="span6">
+		<div class="printable">
+			<h3 class="span12">
+				Ventas de agentes por mes
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#paymentsTableAgents" data-resize="#paymentsCellAgents">
+						<i class="icon-list-alt"></i>
+					</a>
+					<!-- <button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button> -->
+			<?php
+				if($access_export_xls):
+			?>
+					<a class="btn btn-primary" href="<?= base_url("rpventas/exportar/ventasam") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
+			<?php
+				endif;
+			?>
+				</div>
+			</h3>
+			<div id="paymentsCellAgents" class="span12 graph-container" style="position: relative; height: 450px;">
+				<canvas id="paymentsContainerAgents"></canvas>
+			</div>
+			<div id="paymentsTableAgents" class="span12 table-container" style="margin-left: 10px; display: none">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Mes</th>
+							<th>Agentes <?= $year1 ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($agentsm as $key => $agent): ?>
+							<tr>
+								<td><?= $months[$agent["month"]] ?></td>
+								<td style="font-size: 11px;">
+									<b><?= $agent["agents"]; ?></b>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="span6">
+		<div class="printable">
+			<h3 class="span12">
+				Ventas de agentes por producto
+				<div class="opciones">
+					<a href="#" class="btn btn-primary toggleTable" data-target="#paymentsTableAgentsP" data-resize="#paymentsCellAgentsP">
+						<i class="icon-list-alt"></i>
+					</a>
+					<!-- <button type="button" class="btn btn-primary imprimir">
+						<i class="icon-print"></i>
+					</button> -->
+			<?php
+				if($access_export_xls):
+			?>
+					<a class="btn btn-primary" href="<?= base_url("rpventas/exportar/ventasap") ?>">
+						<i class="icon-download-alt"></i>
+					</a>
+			<?php
+				endif;
+			?>
+				</div>
+			</h3>
+			<div id="paymentsCellAgentsP" class="span12 graph-container" style="position: relative; height: 450px;">
+				<canvas id="paymentsContainerAgentsP"></canvas>
+			</div>
+			<div id="paymentsTableAgentsP" class="span12 table-container" style="margin-left: 10px; display: none">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Producto</th>
+							<th>Agentes <?= $year1 ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ($agentsp as $key => $agent): ?>
+							<tr>
+								<td><?= $agent["name"] ?></td>
+								<td style="font-size: 11px;">
+									<b><?= $agent["agents"]; ?></b>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="row">
 	<div class="printable">
 		<h3 class="span12">
