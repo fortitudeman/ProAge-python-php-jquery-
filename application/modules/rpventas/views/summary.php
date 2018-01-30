@@ -44,8 +44,8 @@
 		</span>
 	</div>
 	<div class="span2 indicator">
-		<span class="title">Primas <?= $year1 ?></span>
-		<?= number_format($pya, 2); ?>
+		<span class="title">Prima Promedio <?= $year1 ?></span>
+		$<?= (!empty($pya) && !empty($nya)) ? number_format(($pya / $nya), 2) : 0; ?>
 		<span class="comparative <?= sign($idp) ?>">
 			<i class="fa <?= sign($idp ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
 			<?= number_format(abs($idp), 2 ) ?>%
@@ -54,10 +54,18 @@
 	<div class="span3 indicator">
 		<span class="title">Agentes Activos <?= $year1 ?></span>
 		<?= $naa; ?>
+		<span class="comparative <?= sign($ida) ?>">
+			<i class="fa <?= sign($ida ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
+			<?= number_format(abs($ida), 2 ) ?>%
+		</span>
 	</div>
 	<div class="span2 indicator">
 		<span class="title">Negocios pai <?= $year1 ?></span>
 		<?= $ngp; ?>
+		<span class="comparative <?= sign($idn) ?>">
+			<i class="fa <?= sign($idn ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
+			<?= number_format(abs($idn), 2 ) ?>%
+		</span>
 	</div>
 </div>
 <div class="row">
