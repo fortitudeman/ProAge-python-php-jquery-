@@ -98,14 +98,12 @@
 				<thead>
 					<tr>
 						<th>Mes</th>
-						<th><?= $year1 ?></th>
-						<th>Participación sobre la venta anual</th>
-						<th>Primas</th>
-						<th>Negocios</th>
-						<th><?= $year2 ?></th>
-						<th>Porcentaje</th>
-						<th>Primas</th>
-						<th>Negocios</th>
+						<th>Pagado <?= $year1 ?></th>
+						<th>% de participación sobre la venta anual</th>
+						<th>Negocios <?= $year1 ?></th>
+						<th>Variación contra periodo anterior</th>
+						<th>Prima promedio</th>
+						<th>Variación contra periodo anterior</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -113,19 +111,23 @@
 						<tr>
 							<td><?= $month ?></td>
 							<td>$<?= number_format($y1[$i], 2) ?></td>
+							<td><?= number_format(percentageRatio($y1[$i], $t1), 2) ?>%</td>
+							<td><?= $negociosy1[$i] ?></td>
 							<td>
 								<?php $tid = comparationRatio($y1[$i], $y2[$i]); ?>
 								<span class="comparative <?= sign($tid) ?>">
 									<i class="fa <?= sign($tid ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
-									<?= number_format(percentageRatio($y1[$i], $t1), 2) ?>%
+									<?= number_format(comparationRatio($y1[$i], $y2[$i]), 2) ?>%
 								</span>
 							</td>
-							<td>$<?= number_format($primasy1[$i]) ?></td>
-							<td><?= $negociosy1[$i] ?></td>
-							<td>$<?= number_format($y2[$i], 2) ?></td>
-							<td><?= number_format(percentageRatio($y2[$i], $t2), 2) ?>%</td>
-							<td>$<?= number_format($primasy2[$i]) ?></td>
-							<td><?= $negociosy2[$i] ?></td>
+							<td>$<?= (!empty($negociosy1[$i]) && !empty($primasy1[$i])) ? number_format(($primasy1[$i]/$negociosy1[$i]), 2) : 0; ?></td>
+							<td>
+								<?php $tid = comparationRatio(((!empty($negociosy1[$i]) && !empty($primasy1[$i])) ? ($primasy1[$i]/$negociosy1[$i]) : 0), ((!empty($negociosy2[$i]) && !empty($primasy2[$i])) ? ($primasy2[$i]/$negociosy2[$i]) : 0)); ?>
+								<span class="comparative <?= sign($tid) ?>">
+									<i class="fa <?= sign($tid ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
+									<?= number_format(comparationRatio(((!empty($negociosy1[$i]) && !empty($primasy1[$i])) ? ($primasy1[$i]/$negociosy1[$i]) : 0), ((!empty($negociosy2[$i]) && !empty($primasy2[$i])) ? ($primasy2[$i]/$negociosy2[$i]) : 0)), 2) ?>%
+								</span>
+							</td>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
@@ -133,12 +135,10 @@
 					<tr>
 						<th style="text-align: right;">Total: </th>
 						<th colspan="2">$<?= number_format($t1, 2) ?></th>
-						<th><?= number_format($pya, 2) ?></th>
 						<th><?= $nya ?></th>
-						<th>$<?= number_format($t2, 2) ?></th>
 						<th></th>
-						<th><?= number_format($py2, 2) ?></th>
-						<th><?= $ny2 ?></th>
+						<th></th>
+						<th></th>
 					</tr>
 				</tfoot>
 			</table>
