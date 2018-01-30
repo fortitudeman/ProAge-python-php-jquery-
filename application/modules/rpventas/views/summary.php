@@ -4,9 +4,14 @@
 			<th>Período :<br />
 				<?= form_dropdown('periodo', $periodos, $other_filters["periodo"], 'id="periodo" style="width: 175px" title="Período" onchange="this.form.submit();"'); ?>
 			</th>
-			<th>
-				Ramo:<br />
+			<th>Ramo:<br />
 				<?= form_dropdown('ramo', $ramos, $other_filters["ramo"], 'id="ramo" class="filter-field filter-select" onchange="this.form.submit();"') ?>
+			</th>
+			<th>Agentes:<br />
+				<?= form_dropdown('agent', $agents, $other_filters["agent"], 'id="agent" class="filter-field filter-select" style="width:250px" onchange="this.form.submit();"') ?>
+			</th>
+			<th>Producto:<br />
+				<?= form_dropdown('product', $products, $other_filters["product"], 'id="product" class="filter-field filter-select" style="width: 150px" onchange="this.form.submit();"') ?>
 			</th>
 		</thead>
 	</table>

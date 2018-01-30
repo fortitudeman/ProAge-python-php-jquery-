@@ -7,12 +7,15 @@ class rpm extends CI_Model{
 		parent::__construct();
 	}
 
-	public function getAllData($year, $ramo){
+	public function getAllData($year, $ramo, $filter){
 		$this->db->select('year(py.payment_date) year,month(py.payment_date) month', FALSE);
 		$this->db->select_sum("py.amount");
 		$this->db->where('year(py.payment_date)', $year);
 		$this->db->where('py.year_prime', 1);
 		$this->db->where('product_group', $ramo);
+		if(!empty($filter["agent"])){
+			$this->db->where('py.agent_id', $filter["agent"]);
+		}
 		$this->db->group_by('year, month');
 		$this->db->order_by('month', 'asc');
 		$q = $this->db->get($this->table);
@@ -32,10 +35,13 @@ class rpm extends CI_Model{
 		return $return;
 	}
 
-	public function getPrimas($year, $ramo){
+	public function getPrimas($year, $ramo, $filter){
 		$this->db->select_sum("prima");
 		$this->db->where('year(wo.creation_date)', $year);
 		$this->db->where('wo.product_group_id', $ramo);
+		if(!empty($filter["product"])){
+			$this->db->where('po.product_id', $filter["product"]);
+		}
 		$this->db->where_in('wo.work_order_status_id', array(4, 7));
 		$this->db->join('policies po', 'po.id = wo.policy_id');
 		$q = $this->db->get("work_order wo");
@@ -88,9 +94,13 @@ class rpm extends CI_Model{
 		return $primas;
 	}
 
-	public function getNegociosList($year, $ramo){
+	public function getNegociosList($year, $ramo, $filter){
 		$this->db->select('month(wo.creation_date) month, count(*) negocios', FALSE);
 		$this->db->join('work_order_types wot', 'wot.id = wo.work_order_type_id');
+		$this->db->join('policies po', 'po.id = wo.policy_id');
+		if(!empty($filter["product"])){
+			$this->db->where('po.product_id', $filter["product"]);
+		}
 		$this->db->where('year(wo.creation_date)', $year);
 		$this->db->where('wo.product_group_id', $ramo);
 		$this->db->where('wo.work_order_status_id', 4);
@@ -134,11 +144,15 @@ class rpm extends CI_Model{
 		return isset($row["year"]) ? $row["year"] : date("Y");
 	}
 
-	public function getDataByProduct($year, $ramo){
+	public function getDataByProduct($year, $ramo, $filter){
 		//Get all products of ramo
 		$this->db->select('po.uid, pr.id, pr.name');
 		$this->db->join('products pr', 'po.product_id = pr.id', "left");
+		if(!empty($filter["product"])){
+			$this->db->where('pr.id', $filter["product"]);
+		}
 		$this->db->order_by('pr.id', 'asc');
+		$this->db->group_by('po.uid');
 		$q = $this->db->get('policies po');
 		$policies = $q->result_array();
 		
@@ -147,27 +161,91 @@ class rpm extends CI_Model{
 		foreach ($policies as $policy) {
 			$products[$policy["id"]]["name"] = $policy["name"];
 			$products[$policy["id"]]["id"] = $policy["id"];
-			if(!empty($policy["uid"]))
-				$products[$policy["id"]]["policies"][] = $policy["uid"];
+			// if(!empty($policy["uid"]))
+			// 	$products[$policy["id"]]["policies"][] = $policy["uid"];
 		}
-		$products[""]["name"] = "No clasificado";
+
+		if(isset($products[""])){
+			$products[""]["name"] = "No clasificado";
+		}
+
+		if(!empty($filter["agent"])){
+			$sql = 'SELECT py.amount, pr.id, year(py.payment_date) AS year, month(py.payment_date) AS month
+				FROM payments AS py
+				LEFT JOIN policies AS po ON po.uid = py.policy_number
+				LEFT JOIN products AS pr ON pr.id = po.product_id
+				WHERE year_prime = 1 AND product_group = ? AND YEAR(py.payment_date) = ? AND py.agent_id = ?
+				GROUP BY py.pay_tbl_id ORDER BY month ASC';
+
+			$q = $this->db->query($sql, array($ramo, $year, $filter["agent"]));
+			$paymentsResult = $q->result_array();
+		}else{
+			$sql = 'SELECT py.amount, pr.id, year(py.payment_date) AS year, month(py.payment_date) AS month
+				FROM payments AS py
+				LEFT JOIN policies AS po ON po.uid = py.policy_number
+				LEFT JOIN products AS pr ON pr.id = po.product_id
+				WHERE year_prime = 1 AND product_group = ? AND YEAR(py.payment_date) = ?
+				GROUP BY py.pay_tbl_id ORDER BY month ASC';
+
+			$q = $this->db->query($sql, array($ramo, $year));
+			$paymentsResult = $q->result_array();
+		}
 		
 		foreach ($products as $i => $product) {
-			//Get sum of amounts grouped by month
-			if(isset($product["policies"])){
-				$this->db->select('year(py.payment_date) year,month(py.payment_date) month', FALSE);
-				$this->db->select_sum("py.amount");
-				$this->db->where('product_group', $ramo);
-				$this->db->where('year(py.payment_date)', $year);
-				$this->db->where('py.year_prime', 1);
-				$this->db->where_in('policy_number', $product["policies"]);
-				$this->db->group_by('year, month');
-				$this->db->order_by('month', 'asc');
-				$q = $this->db->get($this->table);
-				$result = $q->result_array();
+			$result = array();
+			$amountMonth = array();
+
+			foreach ($paymentsResult as $key => $value) {
+				if($value["id"] == $product["id"]){
+					if(isset($amountMonth[$value["month"]])){
+						$amountMonth[$value["month"]] += $value["amount"];
+					}else{
+						$amountMonth[$value["month"]] = $value["amount"];
+					}
+				}
 			}
-			else
-				$result = array();
+
+			foreach ($amountMonth as $key => $value) {
+				array_push($result, array("year" => $year, "month" => $key, "amount" => $value));
+			}
+
+			//Get sum of amounts grouped by month
+			// if(isset($product["policies"])){
+			// if(!empty($product["id"])){
+			// 	$sql = 'SELECT year(payment_date) year, month(payment_date) month, SUM(amount) AS amount FROM (SELECT py.amount, py.payment_date, pr.id
+			// 		FROM payments AS py
+			// 		LEFT JOIN policies AS po ON po.uid = py.policy_number
+			// 		LEFT JOIN products AS pr ON pr.id = po.product_id
+			// 		WHERE year_prime = 1 AND product_group = ? AND YEAR(py.payment_date) = ?
+			// 		GROUP BY py.pay_tbl_id) AS payments WHERE id = ? GROUP BY year, month ORDER BY month ASC';
+
+			// 	$q = $this->db->query($sql, array($ramo, $year, $product["id"]));
+			// 	$result = $q->result_array();
+			// }else{
+			// 	$sql = 'SELECT year(payment_date) year, month(payment_date) month, SUM(amount) AS amount FROM (SELECT py.amount, py.payment_date, pr.id
+			// 		FROM payments AS py
+			// 		LEFT JOIN policies AS po ON po.uid = py.policy_number
+			// 		LEFT JOIN products AS pr ON pr.id = po.product_id
+			// 		WHERE year_prime = 1 AND product_group = ? AND YEAR(py.payment_date) = ?
+			// 		GROUP BY py.pay_tbl_id) AS payments WHERE id IS NULL GROUP BY year, month ORDER BY month ASC';
+
+			// 	$q = $this->db->query($sql, array($ramo, $year));
+			// 	$result = $q->result_array();
+			// }
+
+				// $this->db->select('year(py.payment_date) year, month(py.payment_date) month', FALSE);
+				// $this->db->select_sum("py.amount");
+				// $this->db->where('product_group', $ramo);
+				// $this->db->where('year(py.payment_date)', $year);
+				// $this->db->where('py.year_prime', 1);
+				// $this->db->where_in('policy_number', $product["policies"]);
+				// $this->db->group_by('year, month');
+				// $this->db->order_by('month', 'asc');
+				// $q = $this->db->get($this->table);
+				// $result = $q->result_array();
+			// }
+			// else
+			//	$result = array();
 			//Fill the blank months
 			$payments = $this->fillMonths($result, "month", "amount");
 			$products[$i]["payments"] = $payments;
@@ -186,7 +264,58 @@ class rpm extends CI_Model{
 		return $products;
 	}
 
-	public function getNegocios($year, $ramo){
+	public function getDataByProductMonth($filter){
+		$whered = 'WHERE year_prime = 1 AND product_group = ? AND YEAR(py.payment_date) = ? AND MONTH(py.payment_date) = ?';
+		$dwhere = array($filter["ramo"], $filter["periodo"], $filter["month_search"]);
+		
+		if(!empty($filter["agent"])){
+			array_push($dwhere, $filter["agent"]);
+			$whered .= ' AND py.agent_id = ?';
+		}
+
+		if(!empty($filter["product"])){
+			array_push($dwhere, $filter["product"]);
+			$whered .= ' AND pr.id = ?';
+		}
+
+		$sql = "SELECT py.*, po.name AS asegurado, po.period, pr.id, pr.name AS producto
+			FROM payments AS py
+			LEFT JOIN policies AS po ON po.uid = py.policy_number
+			LEFT JOIN products AS pr ON pr.id = po.product_id
+			$whered
+			GROUP BY py.pay_tbl_id";
+
+		$q = $this->db->query($sql, $dwhere);
+		$paymentsResult = $q->result_array();
+
+		$payments = array();
+
+		foreach ($paymentsResult as $key => $value) {
+			if($value["id"] == $filter["producto"]){
+				array_push($payments, $value);
+			}
+		}
+
+		// $this->db->select('py.*, po.name AS asegurado, po.period, pr.id, pr.name AS producto');
+		// $this->db->join('policies AS po', 'po.uid = py.policy_number', 'LEFT');
+		// $this->db->join('products AS pr', 'pr.id = po.product_id', 'LEFT');
+		// $this->db->where('py.year_prime', 1);
+		// $this->db->where('py.product_group', $filter["ramo"]);
+		// $this->db->where('YEAR(py.payment_date)', $filter["periodo"]);
+		// $this->db->where('month(py.payment_date)', $filter["month_search"]);
+		// if(!empty($filter["producto"])){
+		// 	$this->db->where('pr.id', $filter["producto"]);
+		// }else{
+		// 	$this->db->where('pr.id IS NULL', null, false);
+		// }
+
+		// $q = $this->db->get('payments py');
+		// $payments = $q->result_array();
+
+		return $payments;
+	}
+
+	public function getNegocios($year, $ramo, $filter){
 		$this->db->join('work_order_types wot', 'wot.id = wo.work_order_type_id');
 		$this->db->where('year(wo.creation_date)', $year);
 		$this->db->where('wo.product_group_id', $ramo);
@@ -196,8 +325,11 @@ class rpm extends CI_Model{
 	}
 
 
-	public function getNumAgents($year, $ramo){
+	public function getNumAgents($year, $ramo, $filter){
 		$this->db->select('sum(py.amount) as val', FALSE);
+		if($filter["agent"]){
+			$this->db->where('py.agent_id', $filter["agent"]);
+		}
 		$this->db->where('py.product_group', $ramo);
 		$this->db->where('py.year_prime', 1);
 		$this->db->where('year(py.payment_date)', $year);
@@ -282,7 +414,12 @@ class rpm extends CI_Model{
 		return $agents;
 	}
 
+	public function getNumBusiness($year, $ramo, $filter){
 		$this->db->select('sum(negocio_pai) as val', FALSE);
+		$this->db->join('policies po', 'po.uid = policy_negocio_pai.policy_number', 'LEFT');
+		if(!empty($filter["product"])){
+			$this->db->where('po.product_id', $filter["product"]);
+		}
 		$this->db->where('ramo', $ramo);
 		$this->db->where('year(date_pai)', $year);
 		$q = $this->db->get('policy_negocio_pai');

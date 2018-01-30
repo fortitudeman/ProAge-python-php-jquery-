@@ -154,6 +154,9 @@ class rpventas extends CI_Controller {
 		$months = getMonths();
 		unset($ramos[3]);
 
+		$productsFilter = makeDropdown($this->work_order->getProducts(), "id", "name");
+		$agents = makeDropdown($this->user->getAgentsArray(), "id", "name");
+
 		//Create year dropdown
 		$periods = array();
         $minYear = $this->rpm->getFirstPaymentYear();
@@ -167,17 +170,20 @@ class rpventas extends CI_Controller {
         $year1 = $other_filters["periodo"];
         $year2 = $year1 - 1;
     	$sramo = $other_filters["ramo"];
-        $ventasy1  = $this->rpm->getAllData($year1, $sramo);
-        $ventasy2  = $this->rpm->getAllData($year2, $sramo);
-        $primasy1 = $this->rpm->getPrimasList($year1, $sramo);
-        $primasy2 = $this->rpm->getPrimasList($year2, $sramo);
-        $negociosy1 = $this->rpm->getNegociosList($year1, $sramo);
-        $negociosy2 = $this->rpm->getNegociosList($year2, $sramo);
+        $ventasy1  = $this->rpm->getAllData($year1, $sramo, $other_filters);
+        $ventasy2  = $this->rpm->getAllData($year2, $sramo, $other_filters);
+        $primasy1 = $this->rpm->getPrimasList($year1, $sramo, $other_filters);
+        $primasy2 = $this->rpm->getPrimasList($year2, $sramo, $other_filters);
+        $negociosy1 = $this->rpm->getNegociosList($year1, $sramo, $other_filters);
+        $negociosy2 = $this->rpm->getNegociosList($year2, $sramo, $other_filters);
+
+        $negociosp = $this->rpm->getNegociosProduct($year1, $sramo, $other_filters);
+        $primasp = $this->rpm->getPrimasProduct($year1, $sramo, $other_filters);
         $agentsm = $this->rpm->getAgentsMonth($other_filters);
         $agentsp = $this->rpm->getAgentsProduct($other_filters);
 
         //Get products graphic info
-        $products = $this->rpm->getDataByProduct($year1, $sramo);
+        $products = $this->rpm->getDataByProduct($year1, $sramo, $other_filters);
         //Generate DataSet array
         $colors = array("#0e606b", "#179381", "#2dfca2", "#32fc6b", "#34f937", "#6bf738", "#a3f73d", "#d7f442", "#f9e848", "#f2b148", "#f2844d", "#f25d52", "#ef5677", "#f45da8", "#f461d2", "#eb63f2", "#b962e5", "#9967e5", "#1b04c9", "#0727c6", "#095ac4", "#0d8ec1", "#11c1c1", "#16cc9b", "#1acc6a", "#1ecc3b", "#31cc20", "#66ce25", "#97ce29", "#c8d12e", "#e5bf37", "#d38434", "#cc5737", "#ce3b43", "#ce406f", "#e04aa6", "#e04ecf", "#c850e0", "#8847bc", "#6748b5");
 
@@ -215,25 +221,31 @@ class rpventas extends CI_Controller {
 					"totaly" => $totalpvpy
 				);
 				$i++;
-			}
+			// }
 		}
 
 		//Get the indicators
-        $totalnidy1 = $this->rpm->getNegocios($year1, $sramo);
-        $totalnidy2 = $this->rpm->getNegocios($year2, $sramo);
+        $totalnidy1 = $this->rpm->getNegocios($year1, $sramo, $other_filters);
+        $totalnidy2 = $this->rpm->getNegocios($year2, $sramo, $other_filters);
         $indebusins = comparationRatio($totalnidy1, $totalnidy2);
-        $primessmy1 = $this->rpm->getPrimas($year1, $sramo);
-        $primessmy2 = $this->rpm->getPrimas($year2, $sramo);
-        $indeprimes = comparationRatio($primessmy1, $primessmy2);
-        $numagentsa = $this->rpm->getNumAgents($year1, $sramo);
-        $businespai = $this->rpm->getNumBusiness($year1, $sramo);
-        if($sramo==2){ $businespai=0; }
+        $primessmy1 = $this->rpm->getPrimas($year1, $sramo, $other_filters);
+        $primessmy2 = $this->rpm->getPrimas($year2, $sramo, $other_filters);
+        $indeprimes = comparationRatio(((!empty($primessmy1) && !empty($totalnidy1)) ? ($primessmy1/$totalnidy1) : 0), ((!empty($primessmy2) && !empty($totalnidy2)) ? ($primessmy2/$totalnidy2) : 0));
+        $numagentsa = $this->rpm->getNumAgents($year1, $sramo, $other_filters);
+        $numagentsa2 = $this->rpm->getNumAgents($year2, $sramo, $other_filters);
+        $indeagents = comparationRatio($numagentsa, $numagentsa2);
+        $businespai = $this->rpm->getNumBusiness($year1, $sramo, $other_filters);
+        $businespai2 = $this->rpm->getNumBusiness($year2, $sramo, $other_filters);
+        if($sramo==2){ $businespai=0; $businespai2=0; }
+        $indebusines = comparationRatio($businespai, $businespai2);
 
 		$content_data = array(
 			'access_all' => $this->access_all,
 			'access_export_xls' => $this->access_export_xls,
 			'other_filters' => $other_filters,
 			'ramos' => $ramos,
+			'products' => $productsFilter,
+			'agents' => $agents,
 			'agentsm' => $agentsm,
 			'agentsp' => $agentsp,
 			'periodos' => $periods,
@@ -599,7 +611,8 @@ class rpventas extends CI_Controller {
 		$other_filters = array(
 			"periodo" => '',
 			"ramo" => '',
-
+			"agent" => '',
+			"product" => ''
 		);
 		$this->custom_filters->set_array_defaults($other_filters);
 		if(!empty($this->misc_filters))
@@ -623,6 +636,14 @@ class rpventas extends CI_Controller {
 			if ( isset($_POST['ramo']) && (($this->form_validation->is_natural_no_zero($_POST['ramo']) &&
 				($_POST['ramo'] <= 2)) || (($_POST['ramo']) === '')) )
 				$other_filters['ramo'] = $_POST['ramo'];
+			
+			if (isset($_POST['agent']) && ($this->form_validation->is_natural_no_zero($_POST['agent']) || 
+				$_POST['agent'] === ''))
+				$other_filters['agent'] = $_POST['agent'];
+
+			if (isset($_POST['product']) && ($this->form_validation->is_natural_no_zero($_POST['product']) || 
+				$_POST['product'] === ''))
+				$other_filters['product'] = $_POST['product'];
 		}
 		
 		$this->custom_filters->set_filters_to_save($other_filters);
