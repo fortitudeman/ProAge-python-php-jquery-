@@ -69,7 +69,7 @@ $(document).ready( function(){
 						var allData = data.datasets[tooltipItem.datasetIndex].data;
 						var tooltipLabel = data.datasets[tooltipItem.datasetIndex].label;
 						var tooltipData = allData[tooltipItem.index];
-						if(tooltipItem.datasetIndex >= 0 && tooltipItem.datasetIndex <= 3)
+						if(tooltipItem.datasetIndex >= 0 && tooltipItem.datasetIndex <= 1)
 							return tooltipLabel + " : $" + number_format(tooltipData, 2);
 						else
 							return tooltipLabel + " : " + tooltipData;
