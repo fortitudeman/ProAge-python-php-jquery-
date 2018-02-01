@@ -154,6 +154,9 @@ class rpventas extends CI_Controller {
 		$months = getMonths();
 		unset($ramos[3]);
 
+		$productsFilter = makeDropdown($this->work_order->getProducts(), "id", "name");
+		$agents = makeDropdown($this->user->getAgentsArray(), "id", "name");
+
 		//Create year dropdown
 		$periods = array();
         $minYear = $this->rpm->getFirstPaymentYear();
@@ -167,25 +170,80 @@ class rpventas extends CI_Controller {
         $year1 = $other_filters["periodo"];
         $year2 = $year1 - 1;
     	$sramo = $other_filters["ramo"];
-        $ventasy1  = $this->rpm->getAllData($year1, $sramo);
-        $ventasy2  = $this->rpm->getAllData($year2, $sramo);
-        $primasy1 = $this->rpm->getPrimasList($year1, $sramo);
-        $primasy2 = $this->rpm->getPrimasList($year2, $sramo);
-        $negociosy1 = $this->rpm->getNegociosList($year1, $sramo);
-        $negociosy2 = $this->rpm->getNegociosList($year2, $sramo);
+        $ventasy1  = $this->rpm->getAllData($year1, $sramo, $other_filters);
+        $ventasy2  = $this->rpm->getAllData($year2, $sramo, $other_filters);
+        $primasy1 = $this->rpm->getPrimasList($year1, $sramo, $other_filters);
+        $primasy2 = $this->rpm->getPrimasList($year2, $sramo, $other_filters);
+        $negociosy1 = $this->rpm->getNegociosList($year1, $sramo, $other_filters);
+        $negociosy2 = $this->rpm->getNegociosList($year2, $sramo, $other_filters);
+
+        $negociosp = $this->rpm->getNegociosProduct($year1, $sramo, $other_filters);
+        $primasp = $this->rpm->getPrimasProduct($year1, $sramo, $other_filters);
+        $agentsm = $this->rpm->getAgentsMonth($other_filters);
+        $agentsp = $this->rpm->getAgentsProduct($other_filters);
 
         //Get products graphic info
-        $products = $this->rpm->getDataByProduct($year1, $sramo);
+        $products = $this->rpm->getDataByProduct($year1, $sramo, $other_filters);
         //Generate DataSet array
         $colors = array("#0e606b", "#179381", "#2dfca2", "#32fc6b", "#34f937", "#6bf738", "#a3f73d", "#d7f442", "#f9e848", "#f2b148", "#f2844d", "#f25d52", "#ef5677", "#f45da8", "#f461d2", "#eb63f2", "#b962e5", "#9967e5", "#1b04c9", "#0727c6", "#095ac4", "#0d8ec1", "#11c1c1", "#16cc9b", "#1acc6a", "#1ecc3b", "#31cc20", "#66ce25", "#97ce29", "#c8d12e", "#e5bf37", "#d38434", "#cc5737", "#ce3b43", "#ce406f", "#e04aa6", "#e04ecf", "#c850e0", "#8847bc", "#6748b5");
+
+        $agentsCantM = array();
+        $agentMColor = array();
+
+        foreach ($agentsm as $key => $value) {
+        	$agentsCantM[] = $value["agents"];
+        	$agentMColor[] = $colors[$key];
+        }
+
+        $agentsNameP = array();
+        $agentsCantP = array();
+        $agentPColor = array();
+
+        foreach ($agentsp as $key => $value) {
+        	$agentsNameP[] = $value["name"];
+        	$agentsCantP[] = $value["agents"];
+        	$agentPColor[] = $colors[$key];
+        }
+
+        $negociospName = array();
+        $negociospCant = array();
+        $negocioPrColor = array();
+
+        foreach ($negociosp as $key => $value) {
+        	$negociospName[] = $value["name"];
+        	$negociospCant[] = $value["cantidad"];
+        	$negocioPrColor[] = $colors[$key];
+        }
+
+        $primaspName = array();
+        $primaspCant = array();
+        $primasPrColor = array();
+
+        foreach ($primasp as $key => $value) {
+        	$primaspName[$key] = $value["name"];
+        	$primaspCant[$key] = $value["prima"] / $negociosp[$key]["cantidad"];
+        	$primasPrColor[$key] = $colors[$key];
+        	$primasp[$key]["negocios"] = $negociosp[$key]["cantidad"];
+        }
+
 		$productsDS = array();
+		$productosNombres = array();
+		$productosTAnual = array();
+		$productosColor = array();
+		$productosGeneral = array();
+
 		$i = 0;
 		foreach ($products as $product) {
-			if(!empty($product["id"])){
+			// if(!empty($product["id"])){
 				$totalpvpy = 0;
 				foreach ($product["payments"] as $value) {
 					$totalpvpy += $value;
 				}
+				array_push($productosNombres, $product["name"]);
+				array_push($productosTAnual, $totalpvpy);
+				array_push($productosColor, $colors[$i]);
+				$productosGeneral[$product["name"]] = $totalpvpy;
+
 				$productsDS[] = array(
 					"label" => $product["name"],
 					"backgroundColor" => $colors[$i],
@@ -195,25 +253,33 @@ class rpventas extends CI_Controller {
 					"totaly" => $totalpvpy
 				);
 				$i++;
-			}
+			// }
 		}
 
 		//Get the indicators
-        $totalnidy1 = $this->rpm->getNegocios($year1, $sramo);
-        $totalnidy2 = $this->rpm->getNegocios($year2, $sramo);
+        $totalnidy1 = $this->rpm->getNegocios($year1, $sramo, $other_filters);
+        $totalnidy2 = $this->rpm->getNegocios($year2, $sramo, $other_filters);
         $indebusins = comparationRatio($totalnidy1, $totalnidy2);
-        $primessmy1 = $this->rpm->getPrimas($year1, $sramo);
-        $primessmy2 = $this->rpm->getPrimas($year2, $sramo);
-        $indeprimes = comparationRatio($primessmy1, $primessmy2);
-        $numagentsa = $this->rpm->getNumAgents($year1, $sramo);
-        $businespai = $this->rpm->getNumBusiness($year1, $sramo);
-        if($sramo==2){ $businespai=0; }
+        $primessmy1 = $this->rpm->getPrimas($year1, $sramo, $other_filters);
+        $primessmy2 = $this->rpm->getPrimas($year2, $sramo, $other_filters);
+        $indeprimes = comparationRatio(((!empty($primessmy1) && !empty($totalnidy1)) ? ($primessmy1/$totalnidy1) : 0), ((!empty($primessmy2) && !empty($totalnidy2)) ? ($primessmy2/$totalnidy2) : 0));
+        $numagentsa = $this->rpm->getNumAgents($year1, $sramo, $other_filters);
+        $numagentsa2 = $this->rpm->getNumAgents($year2, $sramo, $other_filters);
+        $indeagents = comparationRatio($numagentsa, $numagentsa2);
+        $businespai = $this->rpm->getNumBusiness($year1, $sramo, $other_filters);
+        $businespai2 = $this->rpm->getNumBusiness($year2, $sramo, $other_filters);
+        if($sramo==2){ $businespai=0; $businespai2=0; }
+        $indebusines = comparationRatio($businespai, $businespai2);
 
 		$content_data = array(
 			'access_all' => $this->access_all,
 			'access_export_xls' => $this->access_export_xls,
 			'other_filters' => $other_filters,
 			'ramos' => $ramos,
+			'products' => $productsFilter,
+			'agents' => $agents,
+			'agentsm' => $agentsm,
+			'agentsp' => $agentsp,
 			'periodos' => $periods,
 			'months' => $months,
 			'year1' => $year1,
@@ -222,15 +288,22 @@ class rpventas extends CI_Controller {
 			'y2' => $ventasy2,
 			'primasy1' => $primasy1,
 			'primasy2' => $primasy2,
+			'primasp' => $primasp,
 			'negociosy1' => $negociosy1,
 			'negociosy2' => $negociosy2,
+			'negociosp' => $negociosp,
 			"productos" => $products,
 			'nya' => $totalnidy1,
 			'idb' => $indebusins,
 			'pya' => $primessmy1,
 			'idp' => $indeprimes,
 			'naa' => $numagentsa,
-			'ngp' => $businespai
+			'naa2' => $numagentsa2,
+			'ida' => $indeagents,
+			'ngp' => $businespai,
+			'ngp2' => $businespai2,
+			'idn' => $indebusines,
+			'productosAnual' => $productosGeneral
 		);
 		$sub_page_content = $this->load->view('rpventas/summary', $content_data, TRUE);
 
@@ -246,6 +319,20 @@ class rpventas extends CI_Controller {
 				var Y2Title = '.$year2.'
 				var months = '.json_encode($months).'
 				var ProdDs = '.json_encode($productsDS).'
+				var productosName = '.json_encode($productosNombres).'
+				var productosTAnual = '.json_encode($productosTAnual).'
+				var productosColor = '.json_encode($productosColor).'
+				var negocioPrName = '.json_encode($negociospName).'
+				var negocioPrCant = '.json_encode($negociospCant).'
+				var negocioPrColor = '.json_encode($negocioPrColor).'
+				var primaspName = '.json_encode($primaspName).'
+				var primaspCant = '.json_encode($primaspCant).'
+				var primasPrColor = '.json_encode($primasPrColor).'
+				var agentsCantM = '.json_encode($agentsCantM).'
+				var agentMColor = '.json_encode($agentMColor).'
+				var agentsNameP = '.json_encode($agentsNameP).'
+				var agentsCantP = '.json_encode($agentsCantP).'
+				var agentPColor = '.json_encode($agentPColor).'
 			</script>
 			';
 		$this->view = array(
@@ -287,6 +374,275 @@ class rpventas extends CI_Controller {
 		$this->load->view( 'index', $this->view );
 	}
 
+	public function exportar($type = ""){
+		if( $this->access_export_xls == false ){
+				
+			// Set false message		
+			$this->session->set_flashdata( 'message', array( 
+				
+				'type' => false,	
+				'message' => 'No tiene permisos para ingresar en esta sección "Reporte de Ventas Exportar", Informe a su administrador para que le otorge los permisos necesarios.'
+							
+			));	
+			
+			
+			redirect( 'rpventas', 'refresh' );
+		
+		}
+
+		// Getting filters
+		$other_filters = $this->_init_profile();
+		
+		//Loading Models
+		$this->load->model( 'ot/work_order');
+		$this->load->model( 'rpventas/rpm');
+
+		//Loading helpers
+		$this->load->helper('render');
+		$this->load->helper('date');
+		$this->load->helper('usuarios/csv');
+
+		//Configure filters of the report
+		$base_url = base_url();
+		$year1 = $other_filters["periodo"];
+        $year2 = $year1 - 1;
+    	$sramo = $other_filters["ramo"];
+    	$data = array();
+
+		switch ($type) {
+			case 'ventasp':
+				$products = $this->rpm->getDataByProduct($year1, $sramo);
+				$namefile = "proages_ventas_anual_producto.csv";
+				array_push($data, array('Producto', 'Pagado '.$year1));
+
+				$total = 0;
+				foreach ($products as $product) {
+					$totalpvpy = 0;
+					foreach ($product["payments"] as $value) {
+						$totalpvpy += $value;
+					}
+					$total += $totalpvpy;
+					array_push($data, array($product["name"], "$".number_format($totalpvpy, 2)));
+				}
+
+				array_push($data, array('Total:', "$".number_format($total, 2)));
+				break;
+
+			case 'negociosp':
+				$negociosp = $this->rpm->getNegociosProduct($year1, $sramo);
+				$namefile = "proages_negocios_anual_producto.csv";
+				array_push($data, array('Producto', 'Negocios '.$year1));
+
+				$total = 0;
+				foreach ($negociosp as $key => $value) {
+					$total += $value["cantidad"];
+					array_push($data, array($value["name"], $value["cantidad"]));
+				}
+
+				array_push($data, array("Total: ", $total));
+				break;
+
+			case 'primapromediop':
+				$negociosp = $this->rpm->getNegociosProduct($year1, $sramo);
+				$primasp = $this->rpm->getPrimasProduct($year1, $sramo);
+				$namefile = "proages_prima_promedio_anual_producto.csv";
+				array_push($data, array('Producto', 'Prima promedio '.$year1));
+
+				foreach ($primasp as $key => $value) {
+					array_push($data, array($value["name"], "$".number_format(($value["prima"]/$negociosp[$key]["cantidad"]))));
+				}
+
+				break;
+
+			case 'distribucionmensualp':
+				$products = $this->rpm->getDataByProduct($year1, $sramo);
+				$namefile = "proages_distribucion_venta_mensual_producto.csv";
+				$months = getMonths();
+
+				$totalesMes = array();
+				for ($i=0; $i < 12; $i++) { 
+					$totalesMes[$i] = 0;
+				}
+
+				$data[0][] = 'Producto';
+				foreach ($months as $month):
+					$data[0][] = substr($month, 0, 3);
+				endforeach;
+				$data[0][] = 'Total';
+
+				$i = 1;
+
+				foreach ($products as $producto):
+					$total = 0;
+					$data[$i][] = $producto["name"];
+
+					foreach ($producto["payments"] as $j => $payment):
+						$total = $total + $payment;
+						$totalesMes[$j] = $totalesMes[$j] + $payment;
+
+						$data[$i][] = "$".number_format($payment, 2);
+					endforeach;
+
+					$data[$i][] = "$".number_format($total, 2);
+					$i++;
+				endforeach;
+
+				$data[$i][] = 'Total';
+				$total = 0;
+				foreach ($totalesMes as $key => $value) {
+					$total = $total + $value;
+					$data[$i][] = "$".number_format($value, 2);
+				}
+				$data[$i][] = "$".number_format($total, 2);
+
+				break;
+
+			case 'general':
+				$ventasy1  = $this->rpm->getAllData($year1, $sramo);
+		        $ventasy2  = $this->rpm->getAllData($year2, $sramo);
+		        $primasy1 = $this->rpm->getPrimasList($year1, $sramo);
+		        $primasy2 = $this->rpm->getPrimasList($year2, $sramo);
+		        $negociosy1 = $this->rpm->getNegociosList($year1, $sramo);
+		        $negociosy2 = $this->rpm->getNegociosList($year2, $sramo);
+		        $totalnidy1 = $this->rpm->getNegocios($year1, $sramo);
+				$months = getMonths();
+
+				$t1=0;$t2=0;$ny2=0;$py2=0;
+				foreach ($months as $i => $month):
+					$t1 += $ventasy1[$i];
+					$t2 += $ventasy2[$i];
+					$ny2 += $negociosy2[$i];
+					$py2 += $primasy2[$i];
+				endforeach;
+
+				$namefile = "proages_reporte_ventas.csv";
+				array_push($data, array('Mes', 'Pagado '.$year1, '% de participación sobre la venta anual', 'Negocios '.$year1, 'Variación contra periodo anterior', 'Prima promedio', 'Variación contra periodo anterior'));
+
+				foreach ($months as $i => $month):
+					array_push($data, array(
+						$month,
+						"$".number_format($ventasy1[$i], 2),
+						number_format(percentageRatio($ventasy1[$i], $t1), 2)."%",
+						$negociosy1[$i],
+						number_format(comparationRatio($ventasy1[$i], $ventasy2[$i]), 2)."%",
+						((!empty($negociosy1[$i]) && !empty($primasy1[$i])) ? number_format(($primasy1[$i]/$negociosy1[$i]), 2) : 0),
+						number_format(comparationRatio(((!empty($negociosy1[$i]) && !empty($primasy1[$i])) ? ($primasy1[$i]/$negociosy1[$i]) : 0), ((!empty($negociosy2[$i]) && !empty($primasy2[$i])) ? ($primasy2[$i]/$negociosy2[$i]) : 0)), 2)
+					));
+				endforeach;
+
+				array_push($data, array(
+					'Total:',
+					'$'.number_format($t1, 2),
+					$totalnidy1,
+					'',
+					'',
+					''
+				));
+
+				break;
+
+			case 'ventasam':
+				$agentsm = $this->rpm->getAgentsMonth($other_filters);
+				$months = getMonths();
+				$namefile = "proages_ventas_agentes_mensual.csv";
+
+				array_push($data, array('Mes', 'Agentes '.$year1));
+
+				foreach ($agentsm as $key => $agent):
+					array_push($data, array($months[$agent["month"]], $agent["agents"]));
+				endforeach;
+				break;
+
+			case 'ventasap':
+				$agentsp = $this->rpm->getAgentsProduct($other_filters);
+				$namefile = "proages_ventas_agentes_producto.csv";
+
+				array_push($data, array('Producto', 'Agentes '.$year1));
+
+				foreach ($agentsp as $key => $agent):
+					array_push($data, array($agent["name"], $agent["agents"]));
+				endforeach;
+				break;
+			
+			default:
+				$ventasy1  = $this->rpm->getAllData($year1, $sramo);
+		        $ventasy2  = $this->rpm->getAllData($year2, $sramo);
+		        $primasy1 = $this->rpm->getPrimasList($year1, $sramo);
+		        $primasy2 = $this->rpm->getPrimasList($year2, $sramo);
+		        $negociosy1 = $this->rpm->getNegociosList($year1, $sramo);
+		        $negociosy2 = $this->rpm->getNegociosList($year2, $sramo);
+		        $totalnidy1 = $this->rpm->getNegocios($year1, $sramo);
+				$months = getMonths();
+
+				$t1=0;$t2=0;$ny2=0;$py2=0;
+				foreach ($months as $i => $month):
+					$t1 += $ventasy1[$i];
+					$t2 += $ventasy2[$i];
+					$ny2 += $negociosy2[$i];
+					$py2 += $primasy2[$i];
+				endforeach;
+
+				$namefile = "proages_reporte_ventas.csv";
+				array_push($data, array('Mes', 'Pagado '.$year1, '% de participación sobre la venta anual', 'Negocios '.$year1, 'Variación contra periodo anterior', 'Prima promedio', 'Variación contra periodo anterior'));
+
+				foreach ($months as $i => $month):
+					array_push($data, array(
+						$month,
+						"$".number_format($ventasy1[$i], 2),
+						number_format(percentageRatio($ventasy1[$i], $t1), 2)."%",
+						$negociosy1[$i],
+						number_format(comparationRatio($ventasy1[$i], $ventasy2[$i]), 2)."%",
+						((!empty($negociosy1[$i]) && !empty($primasy1[$i])) ? number_format(($primasy1[$i]/$negociosy1[$i]), 2) : 0),
+						number_format(comparationRatio(((!empty($negociosy1[$i]) && !empty($primasy1[$i])) ? ($primasy1[$i]/$negociosy1[$i]) : 0), ((!empty($negociosy2[$i]) && !empty($primasy2[$i])) ? ($primasy2[$i]/$negociosy2[$i]) : 0)), 2)
+					));
+				endforeach;
+
+				array_push($data, array(
+					'Total:',
+					'$'.number_format($t1, 2),
+					$totalnidy1,
+					'',
+					'',
+					''
+				));
+				break;
+		}
+
+		header('Content-Type: application/csv');
+        header('Content-Disposition: attachement; filename="'.$namefile.'"');
+		
+	 	array_to_csv($data, $namefile);
+		
+		if( is_file( $namefile ) )
+			echo file_get_contents( $namefile );
+		
+		if( is_file( $namefile ) )
+			unlink( $namefile );
+				
+		exit;
+	}
+
+	public function popup(){
+		// Getting filters
+		$other_filters = $this->_init_profile();
+		
+		//Loading Models
+		$this->load->model( 'ot/work_order');
+		$this->load->model( 'rpventas/rpm');
+
+		//Loading helpers
+		$this->load->helper('render');
+		$this->load->helper('date');
+
+		$other_filters["producto"] = $this->input->post('value');
+		$other_filters["month_search"] = $this->input->post('month');
+
+    	//Get products graphic info
+        $products = $this->rpm->getDataByProductMonth($other_filters);
+
+        $this->load->view('rpventas/reporte_general_table', array("general_data" => $products));
+	}
+
 	public function _init_profile(){
 		$this->load->helper('ot/ot');
 
@@ -294,7 +650,8 @@ class rpventas extends CI_Controller {
 		$other_filters = array(
 			"periodo" => '',
 			"ramo" => '',
-
+			"agent" => '',
+			"product" => ''
 		);
 		$this->custom_filters->set_array_defaults($other_filters);
 		if(!empty($this->misc_filters))
@@ -318,6 +675,14 @@ class rpventas extends CI_Controller {
 			if ( isset($_POST['ramo']) && (($this->form_validation->is_natural_no_zero($_POST['ramo']) &&
 				($_POST['ramo'] <= 2)) || (($_POST['ramo']) === '')) )
 				$other_filters['ramo'] = $_POST['ramo'];
+			
+			if (isset($_POST['agent']) && ($this->form_validation->is_natural_no_zero($_POST['agent']) || 
+				$_POST['agent'] === ''))
+				$other_filters['agent'] = $_POST['agent'];
+
+			if (isset($_POST['product']) && ($this->form_validation->is_natural_no_zero($_POST['product']) || 
+				$_POST['product'] === ''))
+				$other_filters['product'] = $_POST['product'];
 		}
 		
 		$this->custom_filters->set_filters_to_save($other_filters);
