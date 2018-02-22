@@ -1666,10 +1666,17 @@ public function import_payments()
 								$item_amount = $this->exchange_rate_model->convert_prima(
 									$item->amount, 1, 2, $stringed_payment_date);
 							}
-
-							if (($item_amount !== FALSE) &&
-								( (int) ($policy[0]['prima_entered'] * 100) <=
-									(int) ($item_amount * 100)))
+							$prima_total = $policy[0]['prima_entered'];
+							if ($policy[0]['payment_interval_id'] == 1) {
+								$interval_pay = 12;
+							} elseif ($policy[0]['payment_interval_id'] == 2) {
+								$interval_pay = 3;
+							}elseif ($policy[0]['payment_interval_id'] == 3) {
+								$interval_pay = 2;
+							}elseif ($policy[0]['payment_interval_id'] == 4) {
+								$interval_pay = 1;
+							}
+							if (($item_amount !== FALSE) && ($interval_pay/$prima_total) >= $item_amount)
 							{
 								$ot = $this->work_order->getWorkOrderByPolicy(  $policy[0]['id'] );
 								if( !empty( $ot ) )
