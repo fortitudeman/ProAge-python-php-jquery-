@@ -1973,7 +1973,7 @@ class User extends CI_Model
                 else
                     $name = $row->company_name;
 
-                $generacion = $this->get_agent_generation($row->connection_date);
+                $generacion = $this->get_agent_generation($row->connection_date, $is_vida);
 
                 $report_row = array(
                     'id' => $row->id,
@@ -3899,10 +3899,10 @@ AND
         }
     }
 
-    public function get_agent_generation($connection_date = '')
+    public function get_agent_generation($connection_date = '', $is_vida = true)
     {
         $this->load->helper('agent/generations');
-        $generation_id = getGeneracionByConnection($connection_date);
+        $generation_id = getGeneracionByConnection($connection_date, "", $is_vida);
         return getGeneracionTitleByID($generation_id);
     }
 

@@ -45,7 +45,7 @@ if(!function_exists("getGenerationDropDown")){
 }
 
 if(!function_exists("getGeneracionByConnection")){
-    function getGeneracionByConnection($connection_date, $comparation_date = ""){
+    function getGeneracionByConnection($connection_date, $comparation_date = "", $is_vida = true){
         //Set comparation date
         if(empty($comparation_date))
             $comparation_date = new Datetime();
@@ -58,29 +58,39 @@ if(!function_exists("getGeneracionByConnection")){
 
         $CI =& get_instance();
         $CI->load->helper('date');
-
         $connection = date_create($connection_date);
-        $connection = lastDayOf("quarter", $connection);
-        $connection->modify("+1 day");
-        $connection_years = $comparation_date->diff($connection)->y;
-        switch ($connection_years) {
-            case 0:
+
+        if ($is_vida) {
+            $connection_first_day = firstDayOf("month", $connection);
+            $comparision_date_first_day = firstDayOf("month", $comparation_date);
+            $difference_in_months = $comparision_date_first_day->diff($connection_first_day)->m;
+            if ($difference_in_months < 3) {
                 $index = "generacion_1";
-                break;
-            case 1:
+            } elseif ($difference_in_months < 6 and $difference_in_months >= 3) {
                 $index = "generacion_2";
-                break;
-            case 2:
+            } elseif ($difference_in_months < 9 and $difference_in_months >= 6) {
                 $index = "generacion_3";
-                break;
-            case 3:
+            } elseif ($difference_in_months < 12 and $difference_in_months >= 9) {
                 $index = "generacion_4";
-                break;
-            default:
+            } elseif ($comparation_date->diff($connection)->y >= 1) {
                 $index = "consolidado";
-                break;
+            }
+            return $index;
+        } else {
+            $connection_first_day = firstDayOf("month", $connection);
+            $comparision_date_first_day = firstDayOf("month", $comparation_date);
+            $difference_in_months = $comparision_date_first_day->diff($connection_first_day)->m;
+            if ($difference_in_months < 4) {
+                $index = "generacion_1";
+            } elseif ($difference_in_months < 8 and $difference_in_months >= 4) {
+                $index = "generacion_2";
+            } elseif ($difference_in_months < 12 and $difference_in_months >= 8) {
+                $index = "generacion_3";
+            } elseif ($comparation_date->diff($connection)->y >= 1) {
+                $index = "consolidado";
+            }
+            return $index;
         }
-        return $index;
     }
 }
 
