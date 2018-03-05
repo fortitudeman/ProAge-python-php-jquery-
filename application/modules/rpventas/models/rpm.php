@@ -155,28 +155,28 @@ class rpm extends CI_Model{
                     getGeneracionDateRange('generacion_1',
                         date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                         true);
-                $generacion1_total = getPaymentGenerationArray($generation1DateRange, $year, $filter);
+                $generacion1_total = $this->getPaymentGenerationArray($generation1DateRange, $year, $filter);
 
                 $generation2DateRange =
                     getGeneracionDateRange('generacion_2',
                         date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                         $ramo == 1);
-                $generacion2_total = getPaymentGenerationArray($generation2DateRange, $year, $filter);
+                $generacion2_total = $this->getPaymentGenerationArray($generation2DateRange, $year, $filter);
 
                 $generation3DateRange = getGeneracionDateRange('generacion_3',
                     date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                     $ramo == 1);
-                $generacion3_total = getPaymentGenerationArray($generation3DateRange, $year, $filter);
+                $generacion3_total = $this->getPaymentGenerationArray($generation3DateRange, $year, $filter);
 
                 $generation4DateRange = getGeneracionDateRange('generacion_4',
                     date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                     $ramo == 1);
-                $generacion4_total = getPaymentGenerationArray($generation4DateRange, $year, $filter);
+                $generacion4_total = $this->getPaymentGenerationArray($generation4DateRange, $year, $filter);
 
                 $generationConsolidado = getGeneracionDateRange('consolidado',
                     date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                     $ramo == 1);
-                $generacion_consolidado_total = getPaymentGenerationArray($generationConsolidado, $year, $filter);
+                $generacion_consolidado_total = $this->getPaymentGenerationArray($generationConsolidado, $year, $filter);
                 return array($generacion1_total, $generacion2_total, $generacion3_total,
                     $generacion4_total, $generacion_consolidado_total);
             } elseif ($ramo == 2) { // Es GMM
@@ -184,27 +184,28 @@ class rpm extends CI_Model{
                     getGeneracionDateRange('generacion_1',
                         date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                         $ramo == 1);
-                $generacion1_total = getPaymentGenerationArray($generation1DateRange, $year, $filter);
+                $generacion1_total = $this->getPaymentGenerationArray($generation1DateRange, $year, $filter);
 
                 $generation2DateRange =
                     getGeneracionDateRange('generacion_2',
                         date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                         $ramo == 1);
-                $generacion2_total = getPaymentGenerationArray($generation2DateRange, $year, $filter);
+                $generacion2_total = $this->getPaymentGenerationArray($generation2DateRange, $year, $filter);
 
                 $generation3DateRange = getGeneracionDateRange('generacion_3',
                     date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                     $ramo == 1);
-                $generacion3_total = getPaymentGenerationArray($generation3DateRange, $year, $filter);
+                $generacion3_total = $this->getPaymentGenerationArray($generation3DateRange, $year, $filter);
 
                 $generationConsolidado = getGeneracionDateRange('consolidado',
                     date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                     $ramo == 1);
 
-                $generacion_consolidado_total = getPaymentGenerationArray($generationConsolidado, $year, $filter);
-                return array($generacion1_total, $generacion2_total, $generacion3_total, $generacion_consolidado_total);
+                $generacion_consolidado_total = $this->getPaymentGenerationArray($generationConsolidado, $year, $filter);
+                return array($generacion1_total, $generacion2_total, $generacion3_total, 0, $generacion_consolidado_total);
             }
         }
+        return array(0, 0, 0, 0, 0);
     }
 
     public function getPaymentGenerationArray($generationDateRange, $year, $filter) {
