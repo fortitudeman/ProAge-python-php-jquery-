@@ -147,14 +147,17 @@ if(!function_exists("getGeneracionDateRange")){
                     break;
                 case 'generacion_2':
                     $init_date->modify("-6 month");
+                    $end_date = firstDayOf("month", $comparation_date);
                     $end_date->modify("-3 month");
                     break;
                 case 'generacion_3':
                     $init_date->modify("-9 month");
+                    $end_date = firstDayOf("month", $comparation_date);
                     $end_date->modify("-6 month");
                     break;
                 case 'generacion_4':
                     $init_date->modify("-12 month");
+                    $end_date = firstDayOf("month", $comparation_date);
                     $end_date->modify("-9 month");
                     break;
                 case 'consolidado':
@@ -173,10 +176,12 @@ if(!function_exists("getGeneracionDateRange")){
                     break;
                 case 'generacion_2':
                     $init_date->modify("-8 month");
+                    $end_date = firstDayOf("month", $comparation_date);
                     $end_date->modify("-4 month");
                     break;
                 case 'generacion_3':
                     $init_date->modify("-12 month");
+                    $end_date = firstDayOf("month", $comparation_date);
                     $end_date->modify("-8 month");
                     break;
                 case 'consolidado':

@@ -203,48 +203,30 @@ class rpm extends CI_Model{
         return array(0, 0, 0, 0, 0);
     }
 
-    public function getPaymentGenerationArray($generationDateRange, $year, $filter, $ramo) {
+    public function getPaymentGenerationArray($generationDateRange, $year, $filter, $ramo)
+    {
         if (isset($generationDateRange['init'])) {
             $begin_date = $generationDateRange['init'];
             log_message('error', $begin_date);
             if (isset($generationDateRange['end'])) {
                 $end_date = $generationDateRange['end'];
                 log_message('error', $end_date);
-                if(!empty($filter["product"])){
-                    if(!empty($filter["agent"])){
-                        $sql = 'SELECT a.id, py.amount, py.date
+                if (!empty($filter["agent"])) {
+                    $sql = 'SELECT a.id, py.amount, py.date
                         FROM payments AS py
                         JOIN agents AS a ON a.id = py.agent_id
-                        JOIN policies AS po ON po.uid = py.policy_number
-                        JOIN products AS pr ON pr.id = po.product_id
                         WHERE a.connection_date >= ? 
                         AND a.connection_date < ? 
                         AND py.product_group = ?
-                        AND pr.id = ? 
                         AND py.agent_id = ?
                         AND YEAR(py.payment_date) = ?';
-                        $q = $this->db->query($sql, array($begin_date, $end_date, $ramo, $filter["product"], $filter["agent"], $year));
-                    } else {
-                        $sql = 'SELECT a.id, py.amount, py.date
-                        FROM payments AS py
-                        JOIN agents AS a ON a.id = py.agent_id
-                        JOIN policies AS po ON po.uid = py.policy_number
-                        JOIN products AS pr ON pr.id = po.product_id
-                        WHERE a.connection_date >= ? 
-                        AND a.connection_date < ? 
-                        AND py.product_group = ?
-                        AND pr.id = ?
-                        AND YEAR(py.payment_date) = ?';
-                        $q = $this->db->query($sql, array($begin_date, $end_date, $ramo, $filter["product"], $year));
-                    }
+                    $q = $this->db->query($sql, array($begin_date, $end_date, $ramo, $filter["agent"], $year));
                 } else {
                     $sql = 'SELECT a.id, py.amount, py.date
                         FROM payments AS py
                         JOIN agents AS a ON a.id = py.agent_id
-                        JOIN policies AS po ON po.uid = py.policy_number
-                        JOIN products AS pr ON pr.id = po.product_id
                         WHERE a.connection_date >= ? 
-                        AND a.connection_date < ?
+                        AND a.connection_date < ? 
                         AND py.product_group = ?
                         AND YEAR(py.payment_date) = ?';
                     $q = $this->db->query($sql, array($begin_date, $end_date, $ramo, $year));
@@ -260,43 +242,24 @@ class rpm extends CI_Model{
         return 0;
     }
 
-    public function getConsolidadoResult($year, $filter, $ramo) {
-	    $comparition_date = date('Y') == $year ? date('Y-m-d') : $year . '-12-31';
+    public function getConsolidadoResult($year, $filter, $ramo)
+    {
+        $comparition_date = date('Y') == $year ? date('Y-m-d') : $year . '-12-31';
         $real_date = date_create($comparition_date);
         $minus_a_year = $real_date->modify("-1 year");
-        if(!empty($filter["product"])){
-            if(!empty($filter["agent"])){
-                $sql = 'SELECT a.id, py.amount, py.date
+        if (!empty($filter["agent"])) {
+            $sql = 'SELECT a.id, py.amount, py.date
                         FROM payments AS py
                         JOIN agents AS a ON a.id = py.agent_id
-                        JOIN policies AS po ON po.uid = py.policy_number
-                        JOIN products AS pr ON pr.id = po.product_id
                         WHERE a.connection_date <= ?
                         AND py.product_group = ?
-                        AND pr.id = ? 
                         AND py.agent_id = ?
                         AND YEAR(py.payment_date) = ?';
-                $q = $this->db->query($sql, array($minus_a_year->format("Y-m-d"), $ramo,
-                    $filter["product"], $filter["agent"], $year));
-            } else {
-                $sql = 'SELECT a.id, py.amount, py.date
-                        FROM payments AS py
-                        JOIN agents AS a ON a.id = py.agent_id
-                        JOIN policies AS po ON po.uid = py.policy_number
-                        JOIN products AS pr ON pr.id = po.product_id
-                        WHERE a.connection_date <= ?
-                        AND py.product_group = ?
-                        AND pr.id = ?
-                        AND YEAR(py.payment_date) = ?';
-                $q = $this->db->query($sql, array($minus_a_year->format("Y-m-d"), $ramo,
-                    $filter["product"], $year));
-            }
+            $q = $this->db->query($sql, array($minus_a_year->format("Y-m-d"), $ramo, $filter["agent"], $year));
         } else {
             $sql = 'SELECT a.id, py.amount, py.date
                         FROM payments AS py
                         JOIN agents AS a ON a.id = py.agent_id
-                        JOIN policies AS po ON po.uid = py.policy_number
-                        JOIN products AS pr ON pr.id = po.product_id
                         WHERE a.connection_date <= ?
                         AND py.product_group = ?
                         AND YEAR(py.payment_date) = ?';
