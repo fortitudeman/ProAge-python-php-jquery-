@@ -134,11 +134,10 @@ if(!function_exists("getGeneracionDateRange")){
         $CI =& get_instance();
         $CI->load->helper('date');
 
-        $comparation_date = firstDayOf("month", $comparation_date);
-        log_message('debug', 'comparition_date of quarter: ' . $comparation_date->format('Y-m-d'));
+        log_message('error', 'comparation_date: ' . $comparation_date->format('Y-m-d'));
 
         // $init_date  and $end_date are going to be the first day of the current date's month
-        $init_date = clone $comparation_date;
+        $init_date = firstDayOf("month", $comparation_date);
         $end_date = clone $comparation_date;
 
         if ($is_vida) {

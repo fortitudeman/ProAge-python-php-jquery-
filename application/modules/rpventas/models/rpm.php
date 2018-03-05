@@ -151,10 +151,12 @@ class rpm extends CI_Model{
         // Para agruparlos necesitamos su fecha de conexion
         if (isset($ramo)) {
             if ($ramo == 1) { // Es Vida
+                log_message('error', "The ramo = " . $ramo . "\n");
                 $generation1DateRange =
                     getGeneracionDateRange('generacion_1',
                         date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
-                        true);
+                        $ramo == 1);
+                log_message('error', "The year = " . $year);
                 $generacion1_total = $this->getPaymentGenerationArray($generation1DateRange, $year, $filter);
 
                 $generation2DateRange =

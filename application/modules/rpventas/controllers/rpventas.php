@@ -270,7 +270,12 @@ class rpventas extends CI_Controller {
 		    array_push($generacionesNombres, $value['title']);
         }
 
-        
+        $generacionAnualArray = array(
+            "Generacion 1" => $generationsTotal[0],
+            "Generacion 2" => $generationsTotal[1],
+            "Generacion 3" => $generationsTotal[2],
+            "Generacion 4" => $generationsTotal[3],
+            "Consolidado" => $generationsTotal[4]);
         //$generacionesColor = array(colors[0], colors[1], colors[2], colors[3], colors[4]);
 
 		//Get the indicators
@@ -320,7 +325,8 @@ class rpventas extends CI_Controller {
 			'ngp' => $businespai,
 			'ngp2' => $businespai2,
 			'idn' => $indebusines,
-			'productosAnual' => $productosGeneral
+			'productosAnual' => $productosGeneral,
+            'generacionAnual' => $generacionAnualArray
 		);
 		$sub_page_content = $this->load->view('rpventas/summary', $content_data, TRUE);
 
@@ -572,6 +578,25 @@ class rpventas extends CI_Controller {
 					array_push($data, array($months[$agent["month"]], $agent["agents"]));
 				endforeach;
 				break;
+
+            case 'generacionesp':
+                $year1 = $other_filters["periodo"];
+                $sramo = $other_filters["ramo"];
+                $generaciones_data = $this->rpm->getDataByGeneracion($year1, $sramo, $other_filters);
+                $generacionAnualArray = array(
+                    "Generacion 1" => $generaciones_data[0],
+                    "Generacion 2" => $generaciones_data[1],
+                    "Generacion 3" => $generaciones_data[2],
+                    "Generacion 4" => $generaciones_data[3],
+                    "Consolidado" => $generaciones_data[4]);
+                $namefile = "proages_ventas_anual_generacion.csv";
+
+                array_push($data, array('Generacion', 'Cantidad'));
+
+                foreach ($generacionAnualArray as $key => $total):
+                    array_push($data, array($key, $total));
+                endforeach;
+                break;
 
 			case 'ventasap':
 				$agentsp = $this->rpm->getAgentsProduct($other_filters);

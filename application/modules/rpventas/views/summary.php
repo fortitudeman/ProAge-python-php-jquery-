@@ -426,14 +426,14 @@
                 <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>Producto</th>
+                        <th>Generacion</th>
                         <th>Pagado <?= $year1 ?></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <?php $total = 0; foreach ($productosAnual as $producto => $cantidad): $total = $total + $cantidad; ?>
+                    <?php $total = 0; foreach ($generacionAnual as $generacion => $cantidad): $total = $total + $cantidad; ?>
                         <tr>
-                            <td><?= $producto ?></td>
+                            <td><?= $generacion ?></td>
                             <td style="font-size: 11px;">
                                 <b>$<?= number_format($cantidad, 2); ?></b>
                             </td>
