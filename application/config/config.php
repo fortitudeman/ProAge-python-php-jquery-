@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']     = 'http://localhost:8081/proages_2001/';
+$config['base_url']     = 'http://intranet.aevum.com.mx/aevum/';
 
 /*
 |--------------------------------------------------------------------------
@@ -180,7 +180,7 @@ $config['directory_trigger']	= 'd'; // experimental not currently in use
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 1;
+$config['log_threshold'] = 0;
 
 /*
 |--------------------------------------------------------------------------
