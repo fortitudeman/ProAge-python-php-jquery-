@@ -170,13 +170,18 @@ class rpventas extends CI_Controller {
         $year1 = $other_filters["periodo"];
         $year2 = $year1 - 1;
     	$sramo = $other_filters["ramo"];
+    	log_message('error', 'sramo' . $sramo);
         $ventasy1  = $this->rpm->getAllData($year1, $sramo, $other_filters);
         $ventasy2  = $this->rpm->getAllData($year2, $sramo, $other_filters);
         $primasy1 = $this->rpm->getPrimasList($year1, $sramo, $other_filters);
         $primasy2 = $this->rpm->getPrimasList($year2, $sramo, $other_filters);
         $negociosy1 = $this->rpm->getNegociosList($year1, $sramo, $other_filters);
         $negociosy2 = $this->rpm->getNegociosList($year2, $sramo, $other_filters);
+		
+		
+		$generationsTotal = $this->rpm->getDataByGeneracion($year1, $sramo, $other_filters);
 
+		log_message(error,json_encode($generationsTotal));
         $negociosp = $this->rpm->getNegociosProduct($year1, $sramo, $other_filters);
         $primasp = $this->rpm->getPrimasProduct($year1, $sramo, $other_filters);
         $agentsm = $this->rpm->getAgentsMonth($other_filters);
@@ -256,6 +261,23 @@ class rpventas extends CI_Controller {
 			// }
 		}
 
+
+        //Nombres de las generaciones
+        $this->load->helper('agent/generations');
+        $generacionesNombres = array();
+		foreach (getGenerationList() as $key => $value) {
+		    log_message('error', $value['title']);
+		    array_push($generacionesNombres, $value['title']);
+        }
+
+        $generacionAnualArray = array(
+            "Generacion 1" => $generationsTotal[0],
+            "Generacion 2" => $generationsTotal[1],
+            "Generacion 3" => $generationsTotal[2],
+            "Generacion 4" => $generationsTotal[3],
+            "Consolidado" => $generationsTotal[4]);
+        //$generacionesColor = array(colors[0], colors[1], colors[2], colors[3], colors[4]);
+
 		//Get the indicators
         $totalnidy1 = $this->rpm->getNegocios($year1, $sramo, $other_filters);
         $totalnidy2 = $this->rpm->getNegocios($year2, $sramo, $other_filters);
@@ -303,7 +325,8 @@ class rpventas extends CI_Controller {
 			'ngp' => $businespai,
 			'ngp2' => $businespai2,
 			'idn' => $indebusines,
-			'productosAnual' => $productosGeneral
+			'productosAnual' => $productosGeneral,
+            'generacionAnual' => $generacionAnualArray
 		);
 		$sub_page_content = $this->load->view('rpventas/summary', $content_data, TRUE);
 
@@ -320,6 +343,9 @@ class rpventas extends CI_Controller {
 				var months = '.json_encode($months).'
 				var ProdDs = '.json_encode($productsDS).'
 				var productosName = '.json_encode($productosNombres).'
+				var generacionesName = '.json_encode($generacionesNombres).'
+				var generacionTAnual = '.json_encode($generationsTotal).'
+				var generacionColor = '.json_encode($productosColor).'
 				var productosTAnual = '.json_encode($productosTAnual).'
 				var productosColor = '.json_encode($productosColor).'
 				var negocioPrName = '.json_encode($negociospName).'
@@ -552,6 +578,25 @@ class rpventas extends CI_Controller {
 					array_push($data, array($months[$agent["month"]], $agent["agents"]));
 				endforeach;
 				break;
+
+            case 'generacionesp':
+                $year1 = $other_filters["periodo"];
+                $sramo = $other_filters["ramo"];
+                $generaciones_data = $this->rpm->getDataByGeneracion($year1, $sramo, $other_filters);
+                $generacionAnualArray = array(
+                    "Generacion 1" => $generaciones_data[0],
+                    "Generacion 2" => $generaciones_data[1],
+                    "Generacion 3" => $generaciones_data[2],
+                    "Generacion 4" => $generaciones_data[3],
+                    "Consolidado" => $generaciones_data[4]);
+                $namefile = "proages_ventas_anual_generacion.csv";
+
+                array_push($data, array('Generacion', 'Cantidad'));
+
+                foreach ($generacionAnualArray as $key => $total):
+                    array_push($data, array($key, $total));
+                endforeach;
+                break;
 
 			case 'ventasap':
 				$agentsp = $this->rpm->getAgentsProduct($other_filters);
