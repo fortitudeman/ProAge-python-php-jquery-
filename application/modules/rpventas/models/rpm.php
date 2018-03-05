@@ -177,11 +177,8 @@ class rpm extends CI_Model{
                     date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                     $ramo == 1);
                 $generacion_consolidado_total = getPaymentGenerationArray($generationConsolidado, $year, $filter);
-                return array("Generación 1" => $generacion1_total,
-                    "Generación 2" => $generacion2_total,
-                    "Generación 3" => $generacion3_total,
-                    "Generación 4" => $generacion4_total,
-                    "Consolidado" => $generacion_consolidado_total);
+                return array($generacion1_total, $generacion2_total, $generacion3_total,
+                    $generacion4_total, $generacion_consolidado_total);
             } elseif ($ramo == 2) { // Es GMM
                 $generation1DateRange =
                     getGeneracionDateRange('generacion_1',
@@ -205,10 +202,7 @@ class rpm extends CI_Model{
                     $ramo == 1);
 
                 $generacion_consolidado_total = getPaymentGenerationArray($generationConsolidado, $year, $filter);
-                return array("Generación 1" => $generacion1_total,
-                    "Generación 2" => $generacion2_total,
-                    "Generación 3" => $generacion3_total,
-                    "Consolidado" => $generacion_consolidado_total);
+                return array($generacion1_total, $generacion2_total, $generacion3_total, $generacion_consolidado_total);
             }
         }
     }
