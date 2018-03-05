@@ -349,9 +349,9 @@ $(document).ready(function () {
             labels: generacionesName,
             datasets: [{
                 label: "Generaciones",
-                data: productosTAnual,
-                backgroundColor: productosColor,
-                borderColor: productosColor
+                data: generacionTAnual,
+                backgroundColor: generacionColor,
+                borderColor: generacionColor
             }],
             legend: {
                 display: true,

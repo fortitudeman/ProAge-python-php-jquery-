@@ -177,6 +177,8 @@ class rpventas extends CI_Controller {
         $primasy2 = $this->rpm->getPrimasList($year2, $sramo, $other_filters);
         $negociosy1 = $this->rpm->getNegociosList($year1, $sramo, $other_filters);
         $negociosy2 = $this->rpm->getNegociosList($year2, $sramo, $other_filters);
+		
+		$generationsTotal = $this->rpm->getDataByGeneracion($year1, $sramo, $other_filters);
 
         $negociosp = $this->rpm->getNegociosProduct($year1, $sramo, $other_filters);
         $primasp = $this->rpm->getPrimasProduct($year1, $sramo, $other_filters);
