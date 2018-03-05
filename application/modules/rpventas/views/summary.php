@@ -10,9 +10,9 @@
 			<th>Agentes:<br />
 				<?= form_dropdown('agent', $agents, $other_filters["agent"], 'id="agent" class="filter-field filter-select" style="width:250px" onchange="this.form.submit();"') ?>
 			</th>
-			<th>Producto:<br />
-				<?= form_dropdown('product', $products, $other_filters["product"], 'id="product" class="filter-field filter-select" style="width: 150px" onchange="this.form.submit();"') ?>
-			</th>
+			<!--<th>Producto:<br />
+				<?/*= form_dropdown('product', $products, $other_filters["product"], 'id="product" class="filter-field filter-select" style="width: 150px" onchange="this.form.submit();"') */?>
+			</th>-->
 		</thead>
 	</table>
 <?= form_close(); ?>
