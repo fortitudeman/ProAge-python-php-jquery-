@@ -338,8 +338,8 @@ $(document).ready(function () {
     });
 
     //Tabla de ventas anuales por generacion
-    var ctx2 = document.getElementById("generacionContainerAnual").getContext("2d");
-    var chart2 = new Chart(ctx2, {
+    var ctx7 = document.getElementById("generacionContainerAnual").getContext("2d");
+    var chart7 = new Chart(ctx7, {
         // The type of chart we want to create
         type: "pie",
         // Make responsive
