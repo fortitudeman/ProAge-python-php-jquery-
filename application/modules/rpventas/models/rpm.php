@@ -157,28 +157,25 @@ class rpm extends CI_Model{
                         date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                         $ramo == 1);
                 log_message('error', "The year = " . $year);
-                $generacion1_total = $this->getPaymentGenerationArray($generation1DateRange, $year, $filter);
+                $generacion1_total = $this->getPaymentGenerationArray($generation1DateRange, $year, $filter, $ramo);
 
                 $generation2DateRange =
                     getGeneracionDateRange('generacion_2',
                         date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                         $ramo == 1);
-                $generacion2_total = $this->getPaymentGenerationArray($generation2DateRange, $year, $filter);
+                $generacion2_total = $this->getPaymentGenerationArray($generation2DateRange, $year, $filter, $ramo);
 
                 $generation3DateRange = getGeneracionDateRange('generacion_3',
                     date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                     $ramo == 1);
-                $generacion3_total = $this->getPaymentGenerationArray($generation3DateRange, $year, $filter);
+                $generacion3_total = $this->getPaymentGenerationArray($generation3DateRange, $year, $filter, $ramo);
 
                 $generation4DateRange = getGeneracionDateRange('generacion_4',
                     date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                     $ramo == 1);
-                $generacion4_total = $this->getPaymentGenerationArray($generation4DateRange, $year, $filter);
+                $generacion4_total = $this->getPaymentGenerationArray($generation4DateRange, $year, $filter, $ramo);
 
-                $generationConsolidado = getGeneracionDateRange('consolidado',
-                    date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
-                    $ramo == 1);
-                $generacion_consolidado_total = $this->getPaymentGenerationArray($generationConsolidado, $year, $filter);
+                $generacion_consolidado_total = $this->getConsolidadoResult($year, $filter, $ramo);
                 return array($generacion1_total, $generacion2_total, $generacion3_total,
                     $generacion4_total, $generacion_consolidado_total);
             } elseif ($ramo == 2) { // Es GMM
@@ -186,31 +183,27 @@ class rpm extends CI_Model{
                     getGeneracionDateRange('generacion_1',
                         date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                         $ramo == 1);
-                $generacion1_total = $this->getPaymentGenerationArray($generation1DateRange, $year, $filter);
+                $generacion1_total = $this->getPaymentGenerationArray($generation1DateRange, $year, $filter, $ramo);
 
                 $generation2DateRange =
                     getGeneracionDateRange('generacion_2',
                         date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                         $ramo == 1);
-                $generacion2_total = $this->getPaymentGenerationArray($generation2DateRange, $year, $filter);
+                $generacion2_total = $this->getPaymentGenerationArray($generation2DateRange, $year, $filter, $ramo);
 
                 $generation3DateRange = getGeneracionDateRange('generacion_3',
                     date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
                     $ramo == 1);
-                $generacion3_total = $this->getPaymentGenerationArray($generation3DateRange, $year, $filter);
+                $generacion3_total = $this->getPaymentGenerationArray($generation3DateRange, $year, $filter, $ramo);
 
-                $generationConsolidado = getGeneracionDateRange('consolidado',
-                    date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
-                    $ramo == 1);
-
-                $generacion_consolidado_total = $this->getPaymentGenerationArray($generationConsolidado, $year, $filter);
+                $generacion_consolidado_total = $this->getConsolidadoResult($year, $filter, $ramo);
                 return array($generacion1_total, $generacion2_total, $generacion3_total, 0, $generacion_consolidado_total);
             }
         }
         return array(0, 0, 0, 0, 0);
     }
 
-    public function getPaymentGenerationArray($generationDateRange, $year, $filter) {
+    public function getPaymentGenerationArray($generationDateRange, $year, $filter, $ramo) {
         if (isset($generationDateRange['init'])) {
             $begin_date = $generationDateRange['init'];
             log_message('error', $begin_date);
@@ -220,38 +213,41 @@ class rpm extends CI_Model{
                 if(!empty($filter["product"])){
                     if(!empty($filter["agent"])){
                         $sql = 'SELECT a.id, py.amount, py.date
-                        FROM agents AS a
-                        JOIN payments AS py ON a.id = py.agent_id
+                        FROM payments AS py
+                        JOIN agents AS a ON a.id = py.agent_id
                         JOIN policies AS po ON po.uid = py.policy_number
                         JOIN products AS pr ON pr.id = po.product_id
                         WHERE a.connection_date >= ? 
                         AND a.connection_date < ? 
+                        AND py.product_group = ?
                         AND pr.id = ? 
                         AND py.agent_id = ?
                         AND YEAR(py.payment_date) = ?';
-                        $q = $this->db->query($sql, array($begin_date, $end_date, $filter["product"], $filter["agent"], $year));
+                        $q = $this->db->query($sql, array($begin_date, $end_date, $ramo, $filter["product"], $filter["agent"], $year));
                     } else {
                         $sql = 'SELECT a.id, py.amount, py.date
-                        FROM agents AS a
-                        JOIN payments AS py ON a.id = py.agent_id
+                        FROM payments AS py
+                        JOIN agents AS a ON a.id = py.agent_id
                         JOIN policies AS po ON po.uid = py.policy_number
                         JOIN products AS pr ON pr.id = po.product_id
                         WHERE a.connection_date >= ? 
                         AND a.connection_date < ? 
+                        AND py.product_group = ?
                         AND pr.id = ?
                         AND YEAR(py.payment_date) = ?';
-                        $q = $this->db->query($sql, array($begin_date, $end_date, $filter["product"], $year));
+                        $q = $this->db->query($sql, array($begin_date, $end_date, $ramo, $filter["product"], $year));
                     }
                 } else {
                     $sql = 'SELECT a.id, py.amount, py.date
-                        FROM agents AS a
-                        JOIN payments AS py ON a.id = py.agent_id
+                        FROM payments AS py
+                        JOIN agents AS a ON a.id = py.agent_id
                         JOIN policies AS po ON po.uid = py.policy_number
                         JOIN products AS pr ON pr.id = po.product_id
                         WHERE a.connection_date >= ? 
                         AND a.connection_date < ?
+                        AND py.product_group = ?
                         AND YEAR(py.payment_date) = ?';
-                    $q = $this->db->query($sql, array($begin_date, $end_date, $year));
+                    $q = $this->db->query($sql, array($begin_date, $end_date, $ramo, $year));
                 }
                 $sql_result = $q->result_array();
                 $amount_total = 0;
@@ -262,6 +258,56 @@ class rpm extends CI_Model{
             }
         }
         return 0;
+    }
+
+    public function getConsolidadoResult($year, $filter, $ramo) {
+	    $comparition_date = date('Y') == $year ? date('Y-m-d') : $year . '-12-31';
+        $real_date = date_create($comparition_date);
+        $minus_a_year = $real_date->modify("-1 year");
+        if(!empty($filter["product"])){
+            if(!empty($filter["agent"])){
+                $sql = 'SELECT a.id, py.amount, py.date
+                        FROM payments AS py
+                        JOIN agents AS a ON a.id = py.agent_id
+                        JOIN policies AS po ON po.uid = py.policy_number
+                        JOIN products AS pr ON pr.id = po.product_id
+                        WHERE a.connection_date <= ?
+                        AND py.product_group = ?
+                        AND pr.id = ? 
+                        AND py.agent_id = ?
+                        AND YEAR(py.payment_date) = ?';
+                $q = $this->db->query($sql, array($minus_a_year->format("Y-m-d"), $ramo,
+                    $filter["product"], $filter["agent"], $year));
+            } else {
+                $sql = 'SELECT a.id, py.amount, py.date
+                        FROM payments AS py
+                        JOIN agents AS a ON a.id = py.agent_id
+                        JOIN policies AS po ON po.uid = py.policy_number
+                        JOIN products AS pr ON pr.id = po.product_id
+                        WHERE a.connection_date <= ?
+                        AND py.product_group = ?
+                        AND pr.id = ?
+                        AND YEAR(py.payment_date) = ?';
+                $q = $this->db->query($sql, array($minus_a_year->format("Y-m-d"), $ramo,
+                    $filter["product"], $year));
+            }
+        } else {
+            $sql = 'SELECT a.id, py.amount, py.date
+                        FROM payments AS py
+                        JOIN agents AS a ON a.id = py.agent_id
+                        JOIN policies AS po ON po.uid = py.policy_number
+                        JOIN products AS pr ON pr.id = po.product_id
+                        WHERE a.connection_date <= ?
+                        AND py.product_group = ?
+                        AND YEAR(py.payment_date) = ?';
+            $q = $this->db->query($sql, array($minus_a_year->format("Y-m-d"), $ramo, $year));
+        }
+        $sql_result = $q->result_array();
+        $amount_total = 0;
+        foreach ($sql_result as $result) {
+            $amount_total += $result["amount"];
+        }
+        return $amount_total;
     }
 
 	public function getDataByProduct($year, $ramo, $filter){
