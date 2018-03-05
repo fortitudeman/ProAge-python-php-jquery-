@@ -303,7 +303,7 @@
 </div>
 
 <div class="row">
-	<div class="span6">
+	<div class="span4">
 		<div class="printable">
 			<h3 class="span12">
 				Ventas de agentes por mes
@@ -350,7 +350,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="span6">
+	<div class="span4">
 		<div class="printable">
 			<h3 class="span12">
 				Ventas de agentes por producto
@@ -397,6 +397,59 @@
 			</div>
 		</div>
 	</div>
+    <div class="span4">
+        <div class="printable">
+            <h3 class="span12">
+                Venta anual por generación
+                <div class="opciones">
+                    <a href="#" class="btn btn-primary toggleTable" data-target="#generacionTableAnual" data-resize="#generacionCellAnual">
+                        <i class="icon-list-alt"></i>
+                    </a>
+                    <!-- <button type="button" class="btn btn-primary imprimir">
+                        <i class="icon-print"></i>
+                    </button> -->
+                    <?php
+                    if($access_export_xls):
+                        ?>
+                        <a class="btn btn-primary" href="<?= base_url("rpventas/exportar/generacionesp") ?>">
+                            <i class="icon-download-alt"></i>
+                        </a>
+                    <?php
+                    endif;
+                    ?>
+                </div>
+            </h3>
+            <div id="generacionCellAnual" class="span12 graph-container" style="position: relative; height: 450px;">
+                <canvas id="generacionContainerAnual"></canvas>
+            </div>
+            <div id="generacionTableAnual" class="span12 table-container" style="margin-left: 10px; display: none">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Pagado <?= $year1 ?></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php $total = 0; foreach ($productosAnual as $producto => $cantidad): $total = $total + $cantidad; ?>
+                        <tr>
+                            <td><?= $producto ?></td>
+                            <td style="font-size: 11px;">
+                                <b>$<?= number_format($cantidad, 2); ?></b>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <tr>
+                        <td>Total</td>
+                        <td style="font-size: 11px;">
+                            <b>$<?= number_format($total, 2); ?></b>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row">

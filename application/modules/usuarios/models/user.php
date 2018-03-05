@@ -3873,7 +3873,7 @@ AND
             $generacion = $filter['query']['generacion']; //La generacion seleccionada por el usuario en el dropdown
             log_message('debug', 'Original query:generacion ' . $generacion);
             $this->load->helper('agent/generations'); //Archivo con la funcion de calculo de fechas iniciales y finales
-            $this->_set_year_filter($filter); //Ni idea
+            $this->_set_year_filter($filter);
             log_message('debug', 'custom_period_from: ' . $this->custom_period_from);
             $generationDateRange = getGeneracionDateRange($filter['query']['generacion'], $this->custom_period_from, $is_vida);
             if (isset($generationDateRange['init'])) {

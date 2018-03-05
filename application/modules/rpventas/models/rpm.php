@@ -144,6 +144,57 @@ class rpm extends CI_Model{
 		return isset($row["year"]) ? $row["year"] : date("Y");
 	}
 
+	public function getDataByGeneracion($year, $ramo, $filter){
+	    // Obtener el helper de generaciones
+        $this->load->helper('agent/generations');
+	    // Se agrupa por agentes y por sus generaciones
+        // Para agruparlos necesitamos su fecha de conexion
+        if (isset($ramo)) {
+            if ($ramo == 1) { // Es Vida
+                $generation1DateRange =
+                    getGeneracionDateRange('generacion_1',
+                        date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
+                        $ramo == 1);
+
+                $generation2DateRange =
+                    getGeneracionDateRange('generacion_2',
+                        date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
+                        $ramo == 1);
+
+                $generation3DateRange = getGeneracionDateRange('generacion_3',
+                    date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
+                    $ramo == 1);
+
+                $generation4DateRange = getGeneracionDateRange('generacion_4',
+                    date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
+                    $ramo == 1);
+
+                $generationConsolidado = getGeneracionDateRange('consolidado',
+                    date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
+                    $ramo == 1);
+
+            }
+        }
+        if (isset($generationDateRange['init'])) {
+            $begin_date = $generationDateRange['init'];
+            log_message('error', $begin_date);
+        } else {
+            $begin_date = 0;
+        }
+        if (isset($generationDateRange['end'])) {
+            $end_date = $generationDateRange['end'];
+            log_message('error', $end_date);
+        } else {
+            $end_date = 0;
+        }
+        $payments_generacion1_sql = 'SELECT a.id, py.amount, py.date
+                        FROM agents as a 
+                        JOIN payments as py ON a.id = py.agent_id
+                        WHERE a.connection_date >= ? 
+                        AND a.connection_date < ? 
+                        AND YEAR(py.payment_date) = ?';
+    }
+
 	public function getDataByProduct($year, $ramo, $filter){
 		//Get all products of ramo
 		$this->db->select('po.uid, pr.id, pr.name');
@@ -161,8 +212,6 @@ class rpm extends CI_Model{
 		foreach ($policies as $policy) {
 			$products[$policy["id"]]["name"] = $policy["name"];
 			$products[$policy["id"]]["id"] = $policy["id"];
-			// if(!empty($policy["uid"]))
-			// 	$products[$policy["id"]]["policies"][] = $policy["uid"];
 		}
 
 		if(isset($products[""])){
@@ -209,44 +258,6 @@ class rpm extends CI_Model{
 				array_push($result, array("year" => $year, "month" => $key, "amount" => $value));
 			}
 
-			//Get sum of amounts grouped by month
-			// if(isset($product["policies"])){
-			// if(!empty($product["id"])){
-			// 	$sql = 'SELECT year(payment_date) year, month(payment_date) month, SUM(amount) AS amount FROM (SELECT py.amount, py.payment_date, pr.id
-			// 		FROM payments AS py
-			// 		LEFT JOIN policies AS po ON po.uid = py.policy_number
-			// 		LEFT JOIN products AS pr ON pr.id = po.product_id
-			// 		WHERE year_prime = 1 AND product_group = ? AND YEAR(py.payment_date) = ?
-			// 		GROUP BY py.pay_tbl_id) AS payments WHERE id = ? GROUP BY year, month ORDER BY month ASC';
-
-			// 	$q = $this->db->query($sql, array($ramo, $year, $product["id"]));
-			// 	$result = $q->result_array();
-			// }else{
-			// 	$sql = 'SELECT year(payment_date) year, month(payment_date) month, SUM(amount) AS amount FROM (SELECT py.amount, py.payment_date, pr.id
-			// 		FROM payments AS py
-			// 		LEFT JOIN policies AS po ON po.uid = py.policy_number
-			// 		LEFT JOIN products AS pr ON pr.id = po.product_id
-			// 		WHERE year_prime = 1 AND product_group = ? AND YEAR(py.payment_date) = ?
-			// 		GROUP BY py.pay_tbl_id) AS payments WHERE id IS NULL GROUP BY year, month ORDER BY month ASC';
-
-			// 	$q = $this->db->query($sql, array($ramo, $year));
-			// 	$result = $q->result_array();
-			// }
-
-				// $this->db->select('year(py.payment_date) year, month(py.payment_date) month', FALSE);
-				// $this->db->select_sum("py.amount");
-				// $this->db->where('product_group', $ramo);
-				// $this->db->where('year(py.payment_date)', $year);
-				// $this->db->where('py.year_prime', 1);
-				// $this->db->where_in('policy_number', $product["policies"]);
-				// $this->db->group_by('year, month');
-				// $this->db->order_by('month', 'asc');
-				// $q = $this->db->get($this->table);
-				// $result = $q->result_array();
-			// }
-			// else
-			//	$result = array();
-			//Fill the blank months
 			$payments = $this->fillMonths($result, "month", "amount");
 			$products[$i]["payments"] = $payments;
 		}

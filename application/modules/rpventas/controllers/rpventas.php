@@ -170,6 +170,7 @@ class rpventas extends CI_Controller {
         $year1 = $other_filters["periodo"];
         $year2 = $year1 - 1;
     	$sramo = $other_filters["ramo"];
+    	log_message('error', 'sramo' . $sramo);
         $ventasy1  = $this->rpm->getAllData($year1, $sramo, $other_filters);
         $ventasy2  = $this->rpm->getAllData($year2, $sramo, $other_filters);
         $primasy1 = $this->rpm->getPrimasList($year1, $sramo, $other_filters);
@@ -256,6 +257,14 @@ class rpventas extends CI_Controller {
 			// }
 		}
 
+        //Nombres de las generaciones
+        $this->load->helper('agent/generations');
+        $generacionesNombres = array();
+		foreach (getGenerationList() as $key => $value) {
+		    log_message('error', $value['title']);
+		    array_push($generacionesNombres, $value['title']);
+        }
+
 		//Get the indicators
         $totalnidy1 = $this->rpm->getNegocios($year1, $sramo, $other_filters);
         $totalnidy2 = $this->rpm->getNegocios($year2, $sramo, $other_filters);
@@ -320,6 +329,7 @@ class rpventas extends CI_Controller {
 				var months = '.json_encode($months).'
 				var ProdDs = '.json_encode($productsDS).'
 				var productosName = '.json_encode($productosNombres).'
+				var generacionesName = '.json_encode($generacionesNombres).'
 				var productosTAnual = '.json_encode($productosTAnual).'
 				var productosColor = '.json_encode($productosColor).'
 				var negocioPrName = '.json_encode($negociospName).'
