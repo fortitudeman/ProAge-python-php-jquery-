@@ -235,6 +235,7 @@ class rpventas extends CI_Controller {
 		$productosNombres = array();
 		$productosTAnual = array();
 		$productosColor = array();
+		$generacionsColorArray = array("#0e606b", "#179381", "#f2844d", "#6bf738", "#f25d52");
 		$productosGeneral = array();
 
 		$i = 0;
@@ -345,7 +346,7 @@ class rpventas extends CI_Controller {
 				var productosName = '.json_encode($productosNombres).'
 				var generacionesName = '.json_encode($generacionesNombres).'
 				var generacionTAnual = '.json_encode($generationsTotal).'
-				var generacionColor = '.json_encode($productosColor).'
+				var generacionColor = '.json_encode($generacionsColorArray).'
 				var productosTAnual = '.json_encode($productosTAnual).'
 				var productosColor = '.json_encode($productosColor).'
 				var negocioPrName = '.json_encode($negociospName).'
