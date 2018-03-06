@@ -506,9 +506,7 @@ class rpm extends CI_Model{
         $payments = array();
 
         foreach ($paymentsResult as $key => $value) {
-            if($value["id"] == $filter["producto"]){
-                array_push($payments, $value);
-            }
+            array_push($payments, $value);
         }
         return $payments;
     }

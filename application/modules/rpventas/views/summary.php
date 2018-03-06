@@ -485,7 +485,7 @@
 				$totalesMes[$i] = 0;
 			}
 		?>
-		<div id="productsTable" class="span12 table-container" style="margin-left: 10px; display: none">
+		<div id="productsTable" class="span12 table-container table-products-month" style="margin-left: 10px; display: none">
 			<table class="table table-striped">
 				<thead>
 					<tr>
