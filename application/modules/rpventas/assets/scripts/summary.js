@@ -445,7 +445,7 @@ $(document).ready(function () {
     });
 });
 
-$(".table-container").on("click", ".popup", function (e) {
+$(".table-products-month").on("click", ".popup", function (e) {
     e.preventDefault();
     var search_obj = {};
     search_obj.search = $(this).attr("data-search");
@@ -454,8 +454,35 @@ $(".table-container").on("click", ".popup", function (e) {
     solicitudes_popup(search_obj);
 });
 
+$(".table-generation").on("click", ".popup", function (e) {
+    e.preventDefault();
+    var search_obj = {};
+    search_obj.search = $(this).attr("data-search");
+    search_obj.value = $(this).attr("data-value");
+    generaciones_popup(search_obj);
+});
+
 function solicitudes_popup(search_obj) {
     var url = Config.base_url() + "rpventas/popup";
+    $.fancybox.showLoading();
+    $.post(url, search_obj, function (data) {
+        if (data) {
+            $.fancybox({
+                content: data
+            });
+            $("#tableajax").tablesorter({theme: "default", widthFixed: true, widgets: ["zebra"]});
+            return false;
+        }
+    })
+        .fail(function () {
+            $.fancybox({
+                content: "Ha ocurrido un error, intente mas tarde"
+            });
+        });
+}
+
+function generaciones_popup(search_obj) {
+    var url = Config.base_url() + "rpventas/generacionPopup";
     $.fancybox.showLoading();
     $.post(url, search_obj, function (data) {
         if (data) {
