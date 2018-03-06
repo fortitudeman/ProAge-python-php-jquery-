@@ -181,7 +181,7 @@ class rpventas extends CI_Controller {
 		
 		$generationsTotal = $this->rpm->getDataByGeneracion($year1, $sramo, $other_filters);
 
-		log_message(error,json_encode($generationsTotal));
+		log_message('error',json_encode($generationsTotal));
         $negociosp = $this->rpm->getNegociosProduct($year1, $sramo, $other_filters);
         $primasp = $this->rpm->getPrimasProduct($year1, $sramo, $other_filters);
         $agentsm = $this->rpm->getAgentsMonth($other_filters);
@@ -688,6 +688,26 @@ class rpventas extends CI_Controller {
 
         $this->load->view('rpventas/reporte_general_table', array("general_data" => $products));
 	}
+
+    public function generacionPopup(){
+        // Getting filters
+        $other_filters = $this->_init_profile();
+
+        //Loading Models
+        $this->load->model( 'ot/work_order');
+        $this->load->model( 'rpventas/rpm');
+
+        //Loading helpers
+        $this->load->helper('render');
+        $this->load->helper('date');
+
+        $other_filters["generacion"] = $this->input->post('value');
+
+        //Get generaciones graphic input
+        $generaciones_data = $this->rpm->getDataByGeneration($other_filters);
+
+        $this->load->view('rpventas/reporte_general_table', array("general_data" => $generaciones_data));
+    }
 
 	public function _init_profile(){
 		$this->load->helper('ot/ot');

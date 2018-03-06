@@ -422,7 +422,7 @@
             <div id="generacionCellAnual" class="span12 graph-container" style="position: relative; height: 450px;">
                 <canvas id="generacionContainerAnual"></canvas>
             </div>
-            <div id="generacionTableAnual" class="span12 table-container" style="margin-left: 10px; display: none">
+            <div id="generacionTableAnual" class="span12 table-container table-generation" style="margin-left: 10px; display: none">
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -435,7 +435,9 @@
                         <tr>
                             <td><?= $generacion ?></td>
                             <td style="font-size: 11px;">
-                                <b>$<?= number_format($cantidad, 2); ?></b>
+                                <a href="#" class="popup" data-search="generacion" data-value="<?= $generacion ?>">
+                                    $<?php echo number_format($cantidad, 2); ?>
+                                </a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
