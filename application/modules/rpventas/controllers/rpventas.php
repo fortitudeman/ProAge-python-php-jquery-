@@ -170,13 +170,18 @@ class rpventas extends CI_Controller {
         $year1 = $other_filters["periodo"];
         $year2 = $year1 - 1;
     	$sramo = $other_filters["ramo"];
+    	log_message('error', 'sramo' . $sramo);
         $ventasy1  = $this->rpm->getAllData($year1, $sramo, $other_filters);
         $ventasy2  = $this->rpm->getAllData($year2, $sramo, $other_filters);
         $primasy1 = $this->rpm->getPrimasList($year1, $sramo, $other_filters);
         $primasy2 = $this->rpm->getPrimasList($year2, $sramo, $other_filters);
         $negociosy1 = $this->rpm->getNegociosList($year1, $sramo, $other_filters);
         $negociosy2 = $this->rpm->getNegociosList($year2, $sramo, $other_filters);
+		
+		
+		$generationsTotal = $this->rpm->getDataByGeneracion($year1, $sramo, $other_filters);
 
+		log_message('error',json_encode($generationsTotal));
         $negociosp = $this->rpm->getNegociosProduct($year1, $sramo, $other_filters);
         $primasp = $this->rpm->getPrimasProduct($year1, $sramo, $other_filters);
         $agentsm = $this->rpm->getAgentsMonth($other_filters);
@@ -230,6 +235,7 @@ class rpventas extends CI_Controller {
 		$productosNombres = array();
 		$productosTAnual = array();
 		$productosColor = array();
+		$generacionsColorArray = array("#0e606b", "#179381", "#f2844d", "#6bf738", "#f25d52");
 		$productosGeneral = array();
 
 		$i = 0;
@@ -255,6 +261,23 @@ class rpventas extends CI_Controller {
 				$i++;
 			// }
 		}
+
+
+        //Nombres de las generaciones
+        $this->load->helper('agent/generations');
+        $generacionesNombres = array();
+		foreach (getGenerationList() as $key => $value) {
+		    log_message('error', $value['title']);
+		    array_push($generacionesNombres, $value['title']);
+        }
+
+        $generacionAnualArray = array(
+            "Generacion 1" => $generationsTotal[0],
+            "Generacion 2" => $generationsTotal[1],
+            "Generacion 3" => $generationsTotal[2],
+            "Generacion 4" => $generationsTotal[3],
+            "Consolidado" => $generationsTotal[4]);
+        //$generacionesColor = array(colors[0], colors[1], colors[2], colors[3], colors[4]);
 
 		//Get the indicators
         $totalnidy1 = $this->rpm->getNegocios($year1, $sramo, $other_filters);
@@ -303,7 +326,8 @@ class rpventas extends CI_Controller {
 			'ngp' => $businespai,
 			'ngp2' => $businespai2,
 			'idn' => $indebusines,
-			'productosAnual' => $productosGeneral
+			'productosAnual' => $productosGeneral,
+            'generacionAnual' => $generacionAnualArray
 		);
 		$sub_page_content = $this->load->view('rpventas/summary', $content_data, TRUE);
 
@@ -320,6 +344,9 @@ class rpventas extends CI_Controller {
 				var months = '.json_encode($months).'
 				var ProdDs = '.json_encode($productsDS).'
 				var productosName = '.json_encode($productosNombres).'
+				var generacionesName = '.json_encode($generacionesNombres).'
+				var generacionTAnual = '.json_encode($generationsTotal).'
+				var generacionColor = '.json_encode($generacionsColorArray).'
 				var productosTAnual = '.json_encode($productosTAnual).'
 				var productosColor = '.json_encode($productosColor).'
 				var negocioPrName = '.json_encode($negociospName).'
@@ -553,6 +580,25 @@ class rpventas extends CI_Controller {
 				endforeach;
 				break;
 
+            case 'generacionesp':
+                $year1 = $other_filters["periodo"];
+                $sramo = $other_filters["ramo"];
+                $generaciones_data = $this->rpm->getDataByGeneracion($year1, $sramo, $other_filters);
+                $generacionAnualArray = array(
+                    "Generacion 1" => $generaciones_data[0],
+                    "Generacion 2" => $generaciones_data[1],
+                    "Generacion 3" => $generaciones_data[2],
+                    "Generacion 4" => $generaciones_data[3],
+                    "Consolidado" => $generaciones_data[4]);
+                $namefile = "proages_ventas_anual_generacion.csv";
+
+                array_push($data, array('Generacion', 'Cantidad'));
+
+                foreach ($generacionAnualArray as $key => $total):
+                    array_push($data, array($key, $total));
+                endforeach;
+                break;
+
 			case 'ventasap':
 				$agentsp = $this->rpm->getAgentsProduct($other_filters);
 				$namefile = "proages_ventas_agentes_producto.csv";
@@ -642,6 +688,26 @@ class rpventas extends CI_Controller {
 
         $this->load->view('rpventas/reporte_general_table', array("general_data" => $products));
 	}
+
+    public function generacionPopup(){
+        // Getting filters
+        $other_filters = $this->_init_profile();
+
+        //Loading Models
+        $this->load->model( 'ot/work_order');
+        $this->load->model( 'rpventas/rpm');
+
+        //Loading helpers
+        $this->load->helper('render');
+        $this->load->helper('date');
+
+        $other_filters["generacion"] = $this->input->post('value');
+
+        //Get generaciones graphic input
+        $generaciones_data = $this->rpm->getDataByGeneration($other_filters);
+
+        $this->load->view('rpventas/reporte_general_table', array("general_data" => $generaciones_data));
+    }
 
 	public function _init_profile(){
 		$this->load->helper('ot/ot');

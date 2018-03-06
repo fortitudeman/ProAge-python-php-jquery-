@@ -10,9 +10,9 @@
 			<th>Agentes:<br />
 				<?= form_dropdown('agent', $agents, $other_filters["agent"], 'id="agent" class="filter-field filter-select" style="width:250px" onchange="this.form.submit();"') ?>
 			</th>
-			<th>Producto:<br />
-				<?= form_dropdown('product', $products, $other_filters["product"], 'id="product" class="filter-field filter-select" style="width: 150px" onchange="this.form.submit();"') ?>
-			</th>
+			<!--<th>Producto:<br />
+				<?/*= form_dropdown('product', $products, $other_filters["product"], 'id="product" class="filter-field filter-select" style="width: 150px" onchange="this.form.submit();"') */?>
+			</th>-->
 		</thead>
 	</table>
 <?= form_close(); ?>
@@ -303,7 +303,7 @@
 </div>
 
 <div class="row">
-	<div class="span6">
+	<div class="span4">
 		<div class="printable">
 			<h3 class="span12">
 				Ventas de agentes por mes
@@ -350,7 +350,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="span6">
+	<div class="span4">
 		<div class="printable">
 			<h3 class="span12">
 				Ventas de agentes por producto
@@ -397,6 +397,61 @@
 			</div>
 		</div>
 	</div>
+    <div class="span4">
+        <div class="printable">
+            <h3 class="span12">
+                Venta anual por generación
+                <div class="opciones">
+                    <a href="#" class="btn btn-primary toggleTable" data-target="#generacionTableAnual" data-resize="#generacionCellAnual">
+                        <i class="icon-list-alt"></i>
+                    </a>
+                    <!-- <button type="button" class="btn btn-primary imprimir">
+                        <i class="icon-print"></i>
+                    </button> -->
+                    <?php
+                    if($access_export_xls):
+                        ?>
+                        <a class="btn btn-primary" href="<?= base_url("rpventas/exportar/generacionesp") ?>">
+                            <i class="icon-download-alt"></i>
+                        </a>
+                    <?php
+                    endif;
+                    ?>
+                </div>
+            </h3>
+            <div id="generacionCellAnual" class="span12 graph-container" style="position: relative; height: 450px;">
+                <canvas id="generacionContainerAnual"></canvas>
+            </div>
+            <div id="generacionTableAnual" class="span12 table-container table-generation" style="margin-left: 10px; display: none">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Generacion</th>
+                        <th>Pagado <?= $year1 ?></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php $total = 0; foreach ($generacionAnual as $generacion => $cantidad): $total = $total + $cantidad; ?>
+                        <tr>
+                            <td><?= $generacion ?></td>
+                            <td style="font-size: 11px;">
+                                <a href="#" class="popup" data-search="generacion" data-value="<?= $generacion ?>">
+                                    $<?php echo number_format($cantidad, 2); ?>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    <tr>
+                        <td>Total</td>
+                        <td style="font-size: 11px;">
+                            <b>$<?= number_format($total, 2); ?></b>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row">
