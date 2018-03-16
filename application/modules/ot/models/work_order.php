@@ -1250,7 +1250,7 @@ class Work_order extends CI_Model{
 			FROM policies
 			WHERE uid='';
 		*/
-		$this->db->select( 'id, currency_id, prima, prima_entered' );
+		$this->db->select( 'id, currency_id, prima, prima_entered,payment_interval_id' );
 		if ($strict)
 			$this->db->where( 'policies.uid', $uid );
 		else
@@ -1267,6 +1267,7 @@ class Work_order extends CI_Model{
 		    	'currency_id' => $row->currency_id,
 				'prima' => $row->prima,
 				'prima_entered' => $row->prima_entered,
+				'payment_interval_id'=>$row->payment_interval_id,
 		    );
 		}
 		return $policy;
