@@ -134,8 +134,6 @@ if(!function_exists("getGeneracionDateRange")){
         $CI =& get_instance();
         $CI->load->helper('date');
 
-        log_message('error', 'comparation_date: ' . $comparation_date->format('Y-m-d'));
-
         // $init_date  and $end_date are going to be the first day of the current date's month
         $init_date = firstDayOf("month", $comparation_date);
         $end_date = clone $comparation_date;
@@ -185,8 +183,7 @@ if(!function_exists("getGeneracionDateRange")){
                     $end_date->modify("-8 month");
                     break;
                 case 'consolidado':
-                    $today = new Datetime();
-                    $init_date = $today->modify("-1 year");
+                    $init_date = $end_date->modify("-1 year");
                     break;
                 default:
                     $init_date = NULL;

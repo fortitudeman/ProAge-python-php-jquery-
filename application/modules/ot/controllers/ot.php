@@ -1428,7 +1428,7 @@ public function import_payments()
 		$posted_month = $file_array[0][10];
 		$posted_year = $fecha[0];
 		unset( $_POST['tmp_file'], $_POST['process'], $_POST['product'] );
-
+		
 		$this->load->helper('date');
 		$fields_to_import = $this->imported_fields[$product];
 		for( $i=0; $i<=count( $file_array ); $i++ ){
@@ -1446,7 +1446,7 @@ public function import_payments()
 				$sometimes_imported = array();
 				foreach ($fields_to_import as $key => $value)
 				{
-					$sometimes_imported[$value] = $file_array[$i][$key];
+					$sometimes_imported[$value] = $file_array[$i][$key];	
 					switch ($value)
 					{
 						case 'clave':
@@ -1676,7 +1676,7 @@ public function import_payments()
 							}elseif ($policy[0]['payment_interval_id'] == 4) {
 								$interval_pay = 1;
 							}
-							if (($item_amount !== FALSE) && ($interval_pay/$prima_total) >= $item_amount)
+							if (($item_amount != FALSE) && ($prima_total/$interval_pay) >= $item_amount)
 							{
 								$ot = $this->work_order->getWorkOrderByPolicy(  $policy[0]['id'] );
 								if( !empty( $ot ) )

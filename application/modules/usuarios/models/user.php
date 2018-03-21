@@ -3050,7 +3050,12 @@ class User extends CI_Model
             $join_plus = ' LEFT OUTER JOIN `policies` ON `policies`.`uid`= `payments`.`policy_number` ';
         }
 
-        $sql_str = "SELECT `policy_negocio_pai`.*, " . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name` FROM `payments` 
+        $sql_str = "SELECT `policy_negocio_pai`.ramo,
+        `policy_negocio_pai`.policy_number,
+        `policy_negocio_pai`.negocio_pai,
+        DATE_FORMAT(`policy_negocio_pai`.date_pai,'%Y-%m-%d') as `date_pai`,
+        `policy_negocio_pai`.creation_date,
+        `policy_negocio_pai`.last_updated, " . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name` FROM `payments` 
                         JOIN `agents` ON `agents`.`id`=`payments`.`agent_id` 
                         JOIN `users` ON `users`.`id`=`agents`.`user_id` 
                         LEFT JOIN `policy_negocio_pai` ON `policy_negocio_pai`.`policy_number` =`payments`.`policy_number` " . $join_plus . " 

@@ -445,7 +445,7 @@ $(document).ready(function () {
     });
 });
 
-$(".table-container").on("click", ".popup", function (e) {
+$(".table-products-month").on("click", ".popup", function (e) {
     e.preventDefault();
     var search_obj = {};
     search_obj.search = $(this).attr("data-search");
