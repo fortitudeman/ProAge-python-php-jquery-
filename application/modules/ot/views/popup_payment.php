@@ -50,7 +50,7 @@ $ignore_image = '
     <thead>
         <tr id="popup_tr">
             <?php if ($for_agent_id === FALSE) : ?><th width="200px">Agente</th><?php endif; ?>
-            <th>Fecha de pago</th>
+            <th>Fecha PAI</th>
             <th>Poliza</th>
 <?php if ($is_negocio_pai): ?>
             <th>Negocio PAI</th>
