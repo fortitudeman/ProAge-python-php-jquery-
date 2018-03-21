@@ -84,7 +84,7 @@ $ignore_image = '
 			
             </td>
 <?php endif; ?>
-            <td><?php echo $value->payment_date ?></td>
+            <td><?php echo $value->date_pai ?></td>
             <td><?php echo $value->policy_number ?></td>
 <?php if ($is_negocio_pai): ?>
             <td>
