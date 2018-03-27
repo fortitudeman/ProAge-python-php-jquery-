@@ -3144,7 +3144,13 @@ class User extends CI_Model
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
                 $total += (int)$row->amount;
-                if ($flag && $total > 12000) {
+                if ($flag && $total > 12000 and $total < 110000) {
+                    $payment_date = $row->payment_date;
+                    $flag = false;
+                } elseif (!$flag && $total > 110000 and $total < 500000) {
+                    $payment_date = $row->payment_date;
+                    $flag = true;
+                }elseif ($flag && $total > 500000) {
                     $payment_date = $row->payment_date;
                     $flag = false;
                 }
