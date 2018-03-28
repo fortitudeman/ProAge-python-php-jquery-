@@ -50,7 +50,13 @@ $ignore_image = '
     <thead>
         <tr id="popup_tr">
             <?php if ($for_agent_id === FALSE) : ?><th width="200px">Agente</th><?php endif; ?>
-            <th>Fecha PAI</th>
+            <th>
+                <?php if ($is_negocio_pai): ?>
+                    Fecha PAI
+                <?php else: ?>
+                    Fecha de pago
+                <?php endif ?>
+            </th>
             <th>Poliza</th>
 <?php if ($is_negocio_pai): ?>
             <th>Negocio PAI</th>
@@ -84,7 +90,14 @@ $ignore_image = '
 			
             </td>
 <?php endif; ?>
-            <td><?php echo $value->date_pai ?></td>
+            <td>
+                <?php if ($is_negocio_pai)
+                        echo $value->date_pai; 
+                    else
+                        echo $value->payment_date;
+                ?>
+                    
+            </td>
             <td><?php echo $value->policy_number ?></td>
 <?php if ($is_negocio_pai): ?>
             <td>
