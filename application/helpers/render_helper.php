@@ -22,6 +22,16 @@ if (!function_exists("sign")) {
 	    	return $class_negative;
 	}
 }
+if (!function_exists("signPercentages")) {
+	function signPercentages($number, $comparation_value, $class_positive = "positive", $class_negative = "negative", $class_zero = "positive") {
+	    if($number < $comparation_value)
+			return $class_positive;
+		elseif ($number > $comparation_value)
+			return $class_negative;
+		else
+			return $class_zero;
+	}
+}
 
 if (!function_exists("comparationRatio")) {
 	function comparationRatio($value, $comparation_value){

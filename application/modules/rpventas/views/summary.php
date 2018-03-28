@@ -111,7 +111,14 @@
 						<tr>
 							<td><?= $month ?></td>
 							<td>$<?= number_format($y1[$i], 2) ?></td>
-							<td><?= number_format(percentageRatio($y1[$i], $t1), 2) ?>%</td>
+							<td>
+								<?php $tid = number_format(percentageRatio($y1[$i-1], $t1), 2); ?>
+								<?php $tid2 = number_format(percentageRatio($y1[$i], $t1), 2); ?>
+								<span class="comparative <?= signPercentages($tid, $tid2) ?>">
+									<i class="fa <?= signPercentages($tid,$tid2,"fa-arrow-up", "fa-arrow-down", "") ?>"> </i>
+									<?php echo number_format(percentageRatio($y1[$i], $t1), 2) ?>%
+								</span>
+							</td>
 							<td><?= $negociosy1[$i] ?></td>
 							<td>
 								<?php $tid = comparationRatio($y1[$i], $y2[$i]); ?>
