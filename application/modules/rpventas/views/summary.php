@@ -104,6 +104,7 @@
 						<th>Variación contra periodo anterior</th>
 						<th>Prima promedio</th>
 						<th>Variación contra periodo anterior</th>
+						<th>Ultima modificacion</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -135,6 +136,7 @@
 									<?= number_format(comparationRatio(((!empty($negociosy1[$i]) && !empty($primasy1[$i])) ? ($primasy1[$i]/$negociosy1[$i]) : 0), ((!empty($negociosy2[$i]) && !empty($primasy2[$i])) ? ($primasy2[$i]/$negociosy2[$i]) : 0)), 2) ?>%
 								</span>
 							</td>
+							<td><?= $last_updated[array_search($month, $months)] ?></td>
 						</tr>
 					<?php endforeach; ?>
 				</tbody>
