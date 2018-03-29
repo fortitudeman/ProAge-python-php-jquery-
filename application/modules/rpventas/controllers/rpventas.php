@@ -177,6 +177,7 @@ class rpventas extends CI_Controller {
         $primasy2 = $this->rpm->getPrimasList($year2, $sramo, $other_filters);
         $negociosy1 = $this->rpm->getNegociosList($year1, $sramo, $other_filters);
         $negociosy2 = $this->rpm->getNegociosList($year2, $sramo, $other_filters);
+        $last_updated = $this->rpm->getLastUpdated($months,$year1);
 		
 		
 		$generationsTotal = $this->rpm->getDataByGeneracion($year1, $sramo, $other_filters);
@@ -327,6 +328,7 @@ class rpventas extends CI_Controller {
 			'ngp2' => $businespai2,
 			'idn' => $indebusines,
 			'productosAnual' => $productosGeneral,
+			'last_updated' => $last_updated,
             'generacionAnual' => $generacionAnualArray
 		);
 		$sub_page_content = $this->load->view('rpventas/summary', $content_data, TRUE);
