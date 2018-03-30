@@ -641,27 +641,5 @@ class rpm extends CI_Model{
 		}
 		return $zeros;
 	}
-
-	public function getLastUpdated($months,$year1){
-		$dates = array();
-
-		foreach ($months as $month) {
-			$month = array_search($month, $months);
-			$month++;
-			$sql = "SELECT `payments`.last_updated
-		    FROM `payments`
-		    WHERE MONTH(payment_date)=".$month." AND YEAR(payment_date)=".$year1." ORDER BY `payment_date` DESC limit 1";
-		    $query = $this->db->query($sql);
-		    if ($query->num_rows() > 0) {
-		    	foreach ($query->result() as $row) {
-		    		$dates[] = $row->last_updated;
-		    	}
-		    }
-		    else
-		    	$dates[] = "No disponible";
-		}	
-	    return $dates;
-	}
-
 }
 ?>
