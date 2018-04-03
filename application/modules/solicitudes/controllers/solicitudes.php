@@ -199,6 +199,10 @@ class solicitudes extends CI_Controller {
 		//Getting Generation group
 		$work_orders_generations = $this->work_order->getWorkOrdersGroupByGeneracion($other_filters);
 		$work_orders_generations_data = json_encode($work_orders_generations);
+		$ramo = 1;
+		if (isset($this->query_filters['query']) && isset($this->query_filters['query']['ramo']))
+			$ramo = $this->query_filters['query']['ramo'];
+		$imported_date = $this->work_order->getLastPaymentImportedDate($ramo);
 
 
 		$base_url = base_url();
@@ -301,6 +305,7 @@ class solicitudes extends CI_Controller {
 			'orderhash' => $orderhash,
 			'orderlabel' => $orderlabel,
 			'general_indicators' => $indicators,
+			'last_date' => $imported_date,
 			'comparative_indicators' => $comparative,
 		);
 

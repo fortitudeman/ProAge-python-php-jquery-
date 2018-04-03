@@ -177,6 +177,10 @@ class rpventas extends CI_Controller {
         $primasy2 = $this->rpm->getPrimasList($year2, $sramo, $other_filters);
         $negociosy1 = $this->rpm->getNegociosList($year1, $sramo, $other_filters);
         $negociosy2 = $this->rpm->getNegociosList($year2, $sramo, $other_filters);
+        $ramo = 1;
+		if (isset($this->query_filters['query']) && isset($this->query_filters['query']['ramo']))
+			$ramo = $this->query_filters['query']['ramo'];
+        $imported_date = $this->work_order->getLastPaymentImportedDate($ramo);
 		
 		
 		$generationsTotal = $this->rpm->getDataByGeneracion($year1, $sramo, $other_filters);
@@ -327,6 +331,7 @@ class rpventas extends CI_Controller {
 			'ngp2' => $businespai2,
 			'idn' => $indebusines,
 			'productosAnual' => $productosGeneral,
+			'last_date' => $imported_date,
             'generacionAnual' => $generacionAnualArray
 		);
 		$sub_page_content = $this->load->view('rpventas/summary', $content_data, TRUE);
