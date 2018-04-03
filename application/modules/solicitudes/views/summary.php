@@ -23,6 +23,7 @@
 			</th>
 			<?php render_custom_filters() ?>
 		</thead>
+
 	</table>
 <?= form_close(); ?>
 <div class="row" id="indicators">
@@ -33,6 +34,7 @@
 			<i class="fa <?= sign($comparative_indicators["solicitudes"] ,"fa-arrow-up", "fa-arrow-down", "") ?>"></i>
 			<?= number_format(abs($comparative_indicators["solicitudes"]), 2 ) ?>%
 		</span>
+		
 	</div>
 	<div class="span3 indicator">
 		<span class="title">Primas Solicitadas</span>
@@ -63,6 +65,11 @@
   <li class="<?= printEquals($selected_tab, "reporte", "active") ?>"><a href="#reporte">Reporte general</a></li>
   <li class="<?= printEquals($selected_tab, "graficos", "active") ?>"><a href="#graficos">Estadisticas</a></li>
 </ul>
+<h5 style="text-align: right">
+	<?php if(isset($last_date)): ?>
+	    Información actualizada al: <?= $last_date ?>
+	<?php endif; ?>
+</h5>
  
 <div class="tab-content">
   <div class="tab-pane <?= printEquals($selected_tab, "graficos", "active") ?>" id="graficos">
