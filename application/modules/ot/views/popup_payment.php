@@ -1,3 +1,6 @@
+<?php
+$base_url = base_url();
+?>
 <link rel="stylesheet" href="<?php echo base_url();?>ot/assets/style/main.css">
 <link href="<?php echo base_url();?>ot/assets/style/report.css" rel="stylesheet">
 
@@ -98,7 +101,14 @@ $ignore_image = '
                 ?>
                     
             </td>
-            <td><?php echo $value->policy_number ?></td>
+            <td>
+                <?php if($value->work_order_uid):?>
+                    <?php $ot_url= $base_url."/ot/ver_ot/".$value->work_order_uid.".html"?>
+                    <a href="<?php echo $ot_url ?>" class="payment_row" target="_blank"><?php echo $value->policy_number ?></a>
+                <?php else:?>
+                    <?php echo $value->policy_number ?>
+                <?php endif?>
+            </td>
 <?php if ($is_negocio_pai): ?>
             <td>
 <form class="negocio_pai_field">
