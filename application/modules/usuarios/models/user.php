@@ -3220,10 +3220,14 @@ class User extends CI_Model
             else
                 $this->db->select('SUM(amount) AS primas, SUM(amount * add_perc / 100 ) AS primas_plus');
         } else
-            $this->db->select('payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name');
+            $this->db->select('payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name, work_order.id as work_order_uid');
         $this->db->from('payments');
         $this->db->join('agents', 'agents.id=payments.agent_id');
         $this->db->join('users', 'users.id=agents.user_id');
+        if (!$sum_requested) {
+            $this->db->join('policies', 'policies.uid=payments.policy_number');
+            $this->db->join('work_order', 'work_order.policy_id=policies.id');
+        }
 //		$where = array( 'year_prime' => 1, 'valid_for_report' => 1);
         if ($agent_id && !is_array($agent_id))
             $where['agent_id'] = $agent_id;
