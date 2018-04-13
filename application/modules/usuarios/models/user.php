@@ -2523,7 +2523,6 @@ class User extends CI_Model
     // Common method for getting count of negocios (first param = TRUE) and details of negocios (first param = FALSE)
     private function _getNegocios($count_requested = TRUE, $agent_id = null, $filter = array())
     {
-
         if (empty($agent_id) && $count_requested)
             return 0;
 
@@ -2532,11 +2531,20 @@ class User extends CI_Model
                 $this->db->select('SUM(business) AS sum_business, payments.agent_id as n_agent_id');
             else
                 $this->db->select('SUM(business) AS sum_business');
-        } else
-            $this->db->select('payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name');
+        } else{
+            if ($count_requested) {
+                $this->db->select('payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name');
+            }else{
+                $this->db->select('payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name, work_order.id as work_order_uid');
+            } 
+        }
         $this->db->from('payments');
         $this->db->join('agents', 'agents.id=payments.agent_id');
         $this->db->join('users', 'users.id=agents.user_id');
+        if (!$count_requested) {
+            $this->db->join('policies', 'policies.uid=payments.policy_number');
+            $this->db->join('work_order', 'work_order.policy_id=policies.id');
+        }
         $where = array('valid_for_report' => '1');
         if ($agent_id && !is_array($agent_id))
             $where['agent_id'] = $agent_id;
@@ -2726,7 +2734,7 @@ class User extends CI_Model
         $policy_ids = array();
 
 // 1. Get policy numbers that have a payment due in the period selected
-        $this->db->select('policy_adjusted_primas.*, policies.payment_interval_id, policies.uid, policies.name as asegurado, products.name as product_name, work_order.work_order_status_id, work_order.creation_date, policies_vs_users.user_id as agent_ident, users.disabled');
+        $this->db->select('policy_adjusted_primas.*, policies.payment_interval_id, policies.uid, policies.name as asegurado, products.name as product_name, work_order.work_order_status_id, work_order.creation_date, policies_vs_users.user_id as agent_ident, users.disabled, work_order.id as work_order_uid');
         $this->db->from('policy_adjusted_primas');
         $this->db->join('work_order', 'work_order.policy_id=policy_adjusted_primas.policy_id');
         $this->db->join('policies', 'policies.id=policy_adjusted_primas.policy_id');
@@ -3045,9 +3053,12 @@ class User extends CI_Model
 
         $select_plus = '';
         $join_plus = '';
+        $field_plus = '';
         if (!$count_requested) {
             $select_plus = "`policies`.`name` as `asegurado`, `policies`.`period` as `plazo`, ";
-            $join_plus = ' LEFT OUTER JOIN `policies` ON `policies`.`uid`= `payments`.`policy_number` ';
+            $join_plus = ' LEFT OUTER JOIN `policies` ON `policies`.`uid`= `payments`.`policy_number` 
+                            LEFT JOIN `work_order` ON `work_order`.`policy_id`= `policies`.`id`';
+            $field_plus = ', `work_order`.`id` AS `work_order_uid`';
         }
 
         $sql_str = "SELECT `policy_negocio_pai`.ramo,
@@ -3055,14 +3066,17 @@ class User extends CI_Model
         `policy_negocio_pai`.negocio_pai,
         DATE_FORMAT(`policy_negocio_pai`.date_pai,'%Y-%m-%d') as `date_pai`,
         `policy_negocio_pai`.creation_date,
-        `policy_negocio_pai`.last_updated, " . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name` FROM `payments` 
+        `policy_negocio_pai`.last_updated, " . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments` 
                         JOIN `agents` ON `agents`.`id`=`payments`.`agent_id` 
                         JOIN `users` ON `users`.`id`=`agents`.`user_id` 
+
                         LEFT JOIN `policy_negocio_pai` ON `policy_negocio_pai`.`policy_number` =`payments`.`policy_number` " . $join_plus . " 
                         WHERE " .
             $sql_plus .
             $sql_agent_filter . " 
                         AND `policy_negocio_pai`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
+
+
 
         $query = $this->db->query($sql_str);
 
@@ -3084,6 +3098,7 @@ class User extends CI_Model
                     if ($row->policy_number) {
                         $policy_rows[] = $row->policy_number;
                     }
+
                     $result[] = $row;
                 }
             }
@@ -3205,10 +3220,14 @@ class User extends CI_Model
             else
                 $this->db->select('SUM(amount) AS primas, SUM(amount * add_perc / 100 ) AS primas_plus');
         } else
-            $this->db->select('payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name');
+            $this->db->select('payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name, work_order.id as work_order_uid');
         $this->db->from('payments');
         $this->db->join('agents', 'agents.id=payments.agent_id');
         $this->db->join('users', 'users.id=agents.user_id');
+        if (!$sum_requested) {
+            $this->db->join('policies', 'policies.uid=payments.policy_number');
+            $this->db->join('work_order', 'work_order.policy_id=policies.id');
+        }
 //		$where = array( 'year_prime' => 1, 'valid_for_report' => 1);
         if ($agent_id && !is_array($agent_id))
             $where['agent_id'] = $agent_id;
