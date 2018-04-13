@@ -2734,7 +2734,7 @@ class User extends CI_Model
         $policy_ids = array();
 
 // 1. Get policy numbers that have a payment due in the period selected
-        $this->db->select('policy_adjusted_primas.*, policies.payment_interval_id, policies.uid, policies.name as asegurado, products.name as product_name, work_order.work_order_status_id, work_order.creation_date, policies_vs_users.user_id as agent_ident, users.disabled');
+        $this->db->select('policy_adjusted_primas.*, policies.payment_interval_id, policies.uid, policies.name as asegurado, products.name as product_name, work_order.work_order_status_id, work_order.creation_date, policies_vs_users.user_id as agent_ident, users.disabled, work_order.id as work_order_uid');
         $this->db->from('policy_adjusted_primas');
         $this->db->join('work_order', 'work_order.policy_id=policy_adjusted_primas.policy_id');
         $this->db->join('policies', 'policies.id=policy_adjusted_primas.policy_id');
@@ -2968,6 +2968,7 @@ class User extends CI_Model
             }
         }
         $query->free_result();
+        print_r( $this->db);
         return $dues;
     }
 

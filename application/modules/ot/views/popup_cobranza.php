@@ -107,6 +107,7 @@ foreach ($values as $key => $value)
 	if ($posted == $key)
 	{
 		$policies = $value['policy_uid'];
+		print_r($value);
 		break;
 	}
 }
@@ -149,8 +150,21 @@ $semaphores = array(
 ?>
         <tr class="payment_row" id="tr-<?php echo $value['policy_id'] ?>">
             <td><?php echo $semaphore ?></td>
-            <td><?php echo $key ?></td>
-			<td class="cobranza-v" style="text-align: right; padding-right: 2.5em">$ <span><?php echo number_format($policy_cobranza , 2); ?></span></td>
+            <td>
+            	<?php if($value['policy_id']):?>
+                    <?php $ot_url= $base_url."/ot/ver_ot/".$value['policy_id'].".html"?>
+                    <a href="<?php echo $ot_url ?>" class="payment_row" target="_blank"><?php echo $key ?></a>
+                <?php else:?>
+                    <?php echo $key ?>
+                <?php endif?>
+            </td>
+			<td class="cobranza-v" style="text-align: right; padding-right: 2.5em">$ 
+				<span>
+
+					<?php echo number_format($policy_cobranza , 2); ?>
+					
+				</span>
+			</td>
             <td><?php echo $value['product_name']; ?></td>
             <td><?php if ($value['asegurado']) echo $value['asegurado'] ; else echo 'No disponible'; ?></td>
             <td>
