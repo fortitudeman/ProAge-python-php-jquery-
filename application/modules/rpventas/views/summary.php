@@ -105,6 +105,7 @@
 						<th>Mes</th>
 						<th>Pagado <?= $year1 ?></th>
 						<th>% de participación sobre la venta anual</th>
+						<th>Variación contra periodo anterior</th>
 						<th>Negocios <?= $year1 ?></th>
 						<th>Variación contra periodo anterior</th>
 						<th>Prima promedio</th>
@@ -123,6 +124,14 @@
 								<span class="comparative <?= signPercentages($tid, $tid2) ?>">
 									<i class="fa <?= signPercentages($tid,$tid2,"fa-arrow-up", "fa-arrow-down", "") ?>"> </i>
 									<?php echo number_format(percentageRatio($y1[$i], $t1), 2) ?>%
+								</span>
+							</td>
+							<td>
+								<?php $tid = number_format(percentageRatio($y2[$i], $t2), 2); ?>
+								<?php $tid2 = number_format(percentageRatio($y1[$i], $t1), 2); ?>
+								<span class="comparative <?= signPercentages($tid, $tid2) ?>">
+									<i class="fa <?= signPercentages($tid,$tid2,"fa-arrow-up", "fa-arrow-down", "") ?>"> </i>
+									<?php echo $tid2-$tid ?>%
 								</span>
 							</td>
 							<td><?= $negociosy1[$i] ?></td>
