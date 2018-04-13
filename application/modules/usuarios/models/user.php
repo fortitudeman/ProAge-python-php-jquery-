@@ -2968,7 +2968,6 @@ class User extends CI_Model
             }
         }
         $query->free_result();
-        print_r( $this->db);
         return $dues;
     }
 

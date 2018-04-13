@@ -107,7 +107,6 @@ foreach ($values as $key => $value)
 	if ($posted == $key)
 	{
 		$policies = $value['policy_uid'];
-		print_r($value);
 		break;
 	}
 }
