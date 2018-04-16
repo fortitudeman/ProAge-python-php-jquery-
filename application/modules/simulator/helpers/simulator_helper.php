@@ -592,27 +592,45 @@ if ( ! function_exists('calc_perc_conservacion'))
 */
 if ( ! function_exists('get_inicial_gmm_percent'))
 {
-	function get_inicial_gmm_percent ($prima) {
+	function get_inicial_gmm_percent ($prima, $asociados) {
 // 2017: takes only in account the 'Requisitos de Nuevos Asegurados' equal to 8
 		$porcentaje = 0;
 		switch (true)
 		{
-			case ($prima >= 265000):
+			case ($prima >= 265000 && ($asociados >= 8)):
 				$porcentaje = 15;
 				break;
-			case (($prima >= 200000) && ($prima < 265000)):
+			case (($prima >= 200000) && ($prima < 265000) && ($asociados >= 8)):
 				$porcentaje = 12;
 				break;
-			case (($prima >= 145000) && ($prima < 200000)):
+			case (($prima >= 145000) && ($prima < 200000) && ($asociados >= 8)):
 				$porcentaje = 9.5;
 				break;
-			case (($prima >= 100000) && ($prima < 145000)):
+			case (($prima >= 100000) && ($prima < 145000) && ($asociados >= 8)):
 				$porcentaje = 7.5;
 				break;
-			case (($prima >= 60000) && ($prima < 100000)):
+			case (($prima >= 60000) && ($prima < 100000) && ($asociados >= 8)):
 				$porcentaje = 6;
 				break;
-			case ($prima < 60000):
+			case ($prima < 60000 && ($asociados >= 8)):
+				$porcentaje = 0;
+				break;
+			case ($prima >= 265000 && ($asociados >= 5) && ($asociados < 8)):
+				$porcentaje = 12.5;
+				break;
+			case (($prima >= 200000) && ($prima < 265000) && ($asociados >= 5) && ($asociados < 8)):
+				$porcentaje = 10;
+				break;
+			case (($prima >= 145000) && ($prima < 200000) && ($asociados >= 5) && ($asociados < 8)):
+				$porcentaje = 8;
+				break;
+			case (($prima >= 100000) && ($prima < 145000) && ($asociados >= 5) && ($asociados < 8)):
+				$porcentaje = 6.5;
+				break;
+			case (($prima >= 60000) && ($prima < 100000) && ($asociados >= 5) && ($asociados < 8)):
+				$porcentaje = 5;
+				break;
+			case ($prima < 60000 && ($asociados >= 5) && ($asociados < 8)):
 				$porcentaje = 0;
 				break;
 			default:
