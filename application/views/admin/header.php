@@ -200,8 +200,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-TWJ55N6');</script>
 <!-- End Google Tag Manager -->
 
-Pegue también este código inmediatamente después de la etiqueta <body> de apertura:
-
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWJ55N6"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
