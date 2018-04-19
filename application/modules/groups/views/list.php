@@ -62,12 +62,12 @@
                     <td class="center"><?= $value["owner_name"]?></td>
                     <td class="center">
                         <?php if( $access_update == true ): ?>
-                        <a class="btn btn-info" href="<?= base_url("groups/update/".$value['id'].".html") ?>" title="Editar rol">
+                        <a class="btn btn-info" href="<?= base_url("groups/update/".$value['id'].".html") ?>" title="Editar grupo">
                             <i class="icon-edit icon-white"></i>            
                         </a>
                         <?php endif; ?>
                         <?php if( $access_delete == true ): ?>
-                        <a class="btn btn-danger" href="<?= base_url("groups/delete/".$value['id'].".html") ?>" title="Eliminar rol">
+                        <a class="btn btn-danger" href="<?= base_url("groups/delete/".$value['id'].".html") ?>" title="Eliminar grupo">
                             <i class="icon-trash icon-white"></i> 
                         </a>
                         <?php endif; ?>
