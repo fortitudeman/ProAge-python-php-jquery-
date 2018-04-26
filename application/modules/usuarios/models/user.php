@@ -2725,6 +2725,56 @@ class User extends CI_Model
         return $this->_getCobranza(FALSE, $agent_id, $filter);
     }
 
+    public function checkCobranzasInDB(){
+        $sql_str = "select distinct  work_order.creation_date, policies.id, policies.prima, policies.prima_entered, policies.payment_interval_id
+                    from work_order
+                    join policies on policies.id = work_order.policy_id
+                    where payment_interval_id !=4
+                    and work_order.work_order_status_id != 4
+                    and work_order.id not in (select distinct work_order.id
+                                                from work_order
+                                                join policies on policies.id = work_order.policy_id
+                                                join policy_adjusted_primas on policy_adjusted_primas.policy_id = policies.id
+                                                where payment_interval_id != 4)";
+        $query = $this->db->query($sql_str);
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $sql_str_aux = "select SUM(payments.amount) as amount
+                                from policies 
+                                join payments on policies.uid = payments.policy_number 
+                                where policies.id = ".$row->id;
+                $query_aux = $this->db->query($sql_str_aux);
+                foreach ($query_aux->result() as $row_aux){
+                    if ($query_aux->num_rows() > 0) {
+                        if(isset($row->prima) && isset($row_aux->amount) && ($row_aux->amount < $row->prima)){
+                            $data = array('policy_id' => $row->id, 
+                                          'adjusted_prima' => $row_aux->amount,
+                                          'due_date' => $row->creation_date
+                            );
+                            $result = $this->db->insert('policy_adjusted_primas', $data);
+                        }else{
+                            if($row->payment_interval_id==1){
+                                $adjusted_prima=$row->prima/12;
+                            }else if ($row->payment_interval_id==2){
+                                $adjusted_prima=$row->prima/4;
+                            }else{
+                                $adjusted_prima=$row->prima/2;
+                            }
+                            $data = array('policy_id' => $row->id, 
+                                         'adjusted_prima' => $adjusted_prima,
+                                         'due_date' => $row->creation_date
+                            ); 
+                            $result = $this->db->insert('policy_adjusted_primas', $data);
+                        }
+                    }
+                }
+                $query_aux->free_result();   
+            }
+        }
+        $query->free_result();
+        return 0;
+    }
+
     // Common method for getting sum of cobranza (first param = TRUE) and details of cobranza (first param = FALSE)
     private function _getCobranza($sum_requested = TRUE, $agent_id = null, $filter = array())
     {
@@ -2732,6 +2782,7 @@ class User extends CI_Model
         $dues = array();
         $policy_uids = array();
         $policy_ids = array();
+        $this->checkCobranzasInDB();
 
 // 1. Get policy numbers that have a payment due in the period selected
         $this->db->select('policy_adjusted_primas.*, policies.payment_interval_id, policies.uid, policies.name as asegurado, products.name as product_name, work_order.work_order_status_id, work_order.creation_date, policies_vs_users.user_id as agent_ident, users.disabled, work_order.id as work_order_uid');
@@ -2847,7 +2898,7 @@ class User extends CI_Model
             $this->db->where('work_order.product_group_id', 1);
 
         $this->db->where(array(
-            '`work_order`.`work_order_status_id`' => 4,
+            '`work_order`.`work_order_status_id` !=' => 4,
             '`policies`.`payment_interval_id` != ' => 4));
 
         $with_filter = FALSE;
