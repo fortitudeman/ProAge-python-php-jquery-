@@ -1871,7 +1871,7 @@ implode(', ', $ramo_tramite_types) . '
 			'amount' => $this->input->post('amount'),
 			'payment_date' => $payment_date,
 			'business' => (int)$this->input->post('business'),
-			'policy_number' => $this->input->post('policy_number'),
+			'policy_number' => trim($this->input->post('policy_number')),
 			'valid_for_report' => $valid_for_report ? 1 : 0,
 			'last_updated' => $now,
 			'date' => $now,
