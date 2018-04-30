@@ -2898,9 +2898,8 @@ class User extends CI_Model
             $this->db->where('work_order.product_group_id', 1);
 
         $this->db->where(array(
-            '`work_order`.`work_order_status_id` !=' => 4,
+            '`work_order`.`work_order_status_id` =' => 4,
             '`policies`.`payment_interval_id` != ' => 4));
-
         $with_filter = FALSE;
         $this->_get_generation_filter($filter, $with_filter);
 
@@ -2916,6 +2915,7 @@ class User extends CI_Model
                         'total_paid' => 0);
                     $dues[$row->agent_ident]['policy_uid'][$row->uid] = array(
                         'policy_id' => $row->policy_id,
+                        'work_order_uid' => $row->work_order_uid,
                         'payment_interval_id' => $row->payment_interval_id,
                         'product_name' => $row->product_name,
                         'asegurado' => $row->asegurado,
@@ -2930,6 +2930,7 @@ class User extends CI_Model
                     if (!isset($dues[$row->agent_ident]['policy_uid'][$row->uid]))
                         $dues[$row->agent_ident]['policy_uid'][$row->uid] = array(
                             'policy_id' => $row->policy_id,
+                            'work_order_uid' => $row->work_order_uid,
                             'payment_interval_id' => $row->payment_interval_id,
                             'product_name' => $row->product_name,
                             'asegurado' => $row->asegurado,
