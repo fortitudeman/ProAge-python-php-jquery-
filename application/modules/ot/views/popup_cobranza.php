@@ -150,8 +150,8 @@ $semaphores = array(
         <tr class="payment_row" id="tr-<?php echo $value['policy_id'] ?>">
             <td><?php echo $semaphore ?></td>
             <td>
-            	<?php if($value['policy_id']):?>
-                    <?php $ot_url= $base_url."/ot/ver_ot/".$value['policy_id'].".html"?>
+            	<?php if($value['work_order_uid']):?>
+                    <?php $ot_url= $base_url."/ot/ver_ot/".$value['work_order_uid'].".html"?>
                     <a href="<?php echo $ot_url ?>" class="payment_row" target="_blank"><?php echo $key ?></a>
                 <?php else:?>
                     <?php echo $key ?>
