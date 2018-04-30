@@ -2898,9 +2898,9 @@ class User extends CI_Model
             $this->db->where('work_order.product_group_id', 1);
 
         $this->db->where(array(
-            '`work_order`.`work_order_status_id` !=' => 4,
+            '`work_order`.`work_order_status_id` =' => 4,
             '`policies`.`payment_interval_id` != ' => 4));
-
+        $this->db->or_where('`work_order`.`work_order_status_id`', 7);
         $with_filter = FALSE;
         $this->_get_generation_filter($filter, $with_filter);
 
