@@ -2730,7 +2730,7 @@ class User extends CI_Model
                     from work_order
                     join policies on policies.id = work_order.policy_id
                     where payment_interval_id !=4
-                    and work_order.work_order_status_id != 4
+                    and (work_order.work_order_status_id = 4 or work_order.work_order_status_id = 7)
                     and work_order.id not in (select distinct work_order.id
                                                 from work_order
                                                 join policies on policies.id = work_order.policy_id
@@ -2739,36 +2739,23 @@ class User extends CI_Model
         $query = $this->db->query($sql_str);
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
-                $sql_str_aux = "select SUM(payments.amount) as amount
-                                from policies 
-                                join payments on policies.uid = payments.policy_number 
-                                where policies.id = ".$row->id;
-                $query_aux = $this->db->query($sql_str_aux);
-                foreach ($query_aux->result() as $row_aux){
-                    if ($query_aux->num_rows() > 0) {
-                        if(isset($row->prima) && isset($row_aux->amount) && ($row_aux->amount < $row->prima)){
-                            $data = array('policy_id' => $row->id, 
-                                          'adjusted_prima' => $row_aux->amount,
-                                          'due_date' => $row->creation_date
-                            );
-                            $result = $this->db->insert('policy_adjusted_primas', $data);
-                        }else{
-                            if($row->payment_interval_id==1){
-                                $adjusted_prima=$row->prima/12;
-                            }else if ($row->payment_interval_id==2){
-                                $adjusted_prima=$row->prima/4;
-                            }else{
-                                $adjusted_prima=$row->prima/2;
-                            }
-                            $data = array('policy_id' => $row->id, 
-                                         'adjusted_prima' => $adjusted_prima,
-                                         'due_date' => $row->creation_date
-                            ); 
-                            $result = $this->db->insert('policy_adjusted_primas', $data);
-                        }
+                if(isset($row->prima)){
+                    $interval=0;
+                    if($row->payment_interval_id==1){
+                        $interval=12;
+                    }else if ($row->payment_interval_id==2){
+                        $interval=4;
+                    }else{
+                        $interval=2;
                     }
-                }
-                $query_aux->free_result();   
+                    for ($i=0;$i<$interval;$i++){
+                        $data = array('policy_id' => $row->id, 
+                                      'adjusted_prima' => $row->prima/$interval,
+                                      'due_date' => $row->creation_date
+                        );
+                        $result = $this->db->insert('policy_adjusted_primas', $data);
+                    }
+                }   
             }
         }
         $query->free_result();
@@ -2897,9 +2884,12 @@ class User extends CI_Model
         else
             $this->db->where('work_order.product_group_id', 1);
 
-        $this->db->where(array(
-            '`work_order`.`work_order_status_id` =' => 4,
-            '`policies`.`payment_interval_id` != ' => 4));
+        //$this->db->where(array(
+        //   '`work_order`.`work_order_status_id` =' => 4,
+        //    '`policies`.`payment_interval_id` != ' => 4));
+        $this->db->where('`policies`.`payment_interval_id` != ',4);
+        $this->db->where('`work_order`.`work_order_status_id` =',4);
+        $this->db->or_where('`work_order`.`work_order_status_id` =',7);
         $with_filter = FALSE;
         $this->_get_generation_filter($filter, $with_filter);
 
