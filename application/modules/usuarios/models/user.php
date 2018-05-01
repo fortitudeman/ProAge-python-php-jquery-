@@ -2725,6 +2725,43 @@ class User extends CI_Model
         return $this->_getCobranza(FALSE, $agent_id, $filter);
     }
 
+    public function checkCobranzasInDB(){
+        $sql_str = "select distinct  work_order.creation_date, policies.id, policies.prima, policies.prima_entered, policies.payment_interval_id
+                    from work_order
+                    join policies on policies.id = work_order.policy_id
+                    where payment_interval_id !=4
+                    and (work_order.work_order_status_id = 4 or work_order.work_order_status_id = 7)
+                    and work_order.id not in (select distinct work_order.id
+                                                from work_order
+                                                join policies on policies.id = work_order.policy_id
+                                                join policy_adjusted_primas on policy_adjusted_primas.policy_id = policies.id
+                                                where payment_interval_id != 4)";
+        $query = $this->db->query($sql_str);
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                if(isset($row->prima)){
+                    $interval=0;
+                    if($row->payment_interval_id==1){
+                        $interval=12;
+                    }else if ($row->payment_interval_id==2){
+                        $interval=4;
+                    }else{
+                        $interval=2;
+                    }
+                    for ($i=0;$i<$interval;$i++){
+                        $data = array('policy_id' => $row->id, 
+                                      'adjusted_prima' => $row->prima/$interval,
+                                      'due_date' => $row->creation_date
+                        );
+                        $result = $this->db->insert('policy_adjusted_primas', $data);
+                    }
+                }   
+            }
+        }
+        $query->free_result();
+        return 0;
+    }
+
     // Common method for getting sum of cobranza (first param = TRUE) and details of cobranza (first param = FALSE)
     private function _getCobranza($sum_requested = TRUE, $agent_id = null, $filter = array())
     {
@@ -2732,6 +2769,7 @@ class User extends CI_Model
         $dues = array();
         $policy_uids = array();
         $policy_ids = array();
+        $this->checkCobranzasInDB();
 
 // 1. Get policy numbers that have a payment due in the period selected
         $this->db->select('policy_adjusted_primas.*, policies.payment_interval_id, policies.uid, policies.name as asegurado, products.name as product_name, work_order.work_order_status_id, work_order.creation_date, policies_vs_users.user_id as agent_ident, users.disabled, work_order.id as work_order_uid');
@@ -2846,10 +2884,12 @@ class User extends CI_Model
         else
             $this->db->where('work_order.product_group_id', 1);
 
-        $this->db->where(array(
-            '`work_order`.`work_order_status_id`' => 4,
-            '`policies`.`payment_interval_id` != ' => 4));
-
+        //$this->db->where(array(
+        //   '`work_order`.`work_order_status_id` =' => 4,
+        //    '`policies`.`payment_interval_id` != ' => 4));
+        $this->db->where('`policies`.`payment_interval_id` != ',4);
+        $this->db->where('`work_order`.`work_order_status_id` =',4);
+        $this->db->or_where('`work_order`.`work_order_status_id` =',7);
         $with_filter = FALSE;
         $this->_get_generation_filter($filter, $with_filter);
 
@@ -2865,6 +2905,7 @@ class User extends CI_Model
                         'total_paid' => 0);
                     $dues[$row->agent_ident]['policy_uid'][$row->uid] = array(
                         'policy_id' => $row->policy_id,
+                        'work_order_uid' => $row->work_order_uid,
                         'payment_interval_id' => $row->payment_interval_id,
                         'product_name' => $row->product_name,
                         'asegurado' => $row->asegurado,
@@ -2879,6 +2920,7 @@ class User extends CI_Model
                     if (!isset($dues[$row->agent_ident]['policy_uid'][$row->uid]))
                         $dues[$row->agent_ident]['policy_uid'][$row->uid] = array(
                             'policy_id' => $row->policy_id,
+                            'work_order_uid' => $row->work_order_uid,
                             'payment_interval_id' => $row->payment_interval_id,
                             'product_name' => $row->product_name,
                             'asegurado' => $row->asegurado,
