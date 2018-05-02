@@ -3012,6 +3012,42 @@ class User extends CI_Model
         $query->free_result();
         return $dues;
     }
+    public function checkNegocioPai(){
+        $sql_str = "Select payments.policy_number, 
+                           payments.product_group, 
+                           payments.amount, 
+                           payments.import_date,
+                           payments.last_updated,
+                           policy_negocio_pai.negocio_pai, 
+                           policy_negocio_pai.date_pai
+                    from payments
+                    left join policy_negocio_pai on policy_negocio_pai.policy_number = payments.policy_number
+                    where policy_negocio_pai.negocio_pai is null
+                    and payments.amount > 12000";
+        $query = $this->db->query($sql_str);
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $negocios_pai=0;
+                if($row->amount>=12000 && $row->amount<=110000){
+                    $negocios_pai=1;
+                }elseif($row->amount>=110000 && $row->amount<=50000){
+                    $negocios_pai=2;
+                }elseif($row->amount>500000){
+                    $negocios_pai=3;
+                }
+                $data = array('ramo' => 1,
+                              'policy_number' => $row->policy_number, 
+                              'negocio_pai' => $negocios_pai,
+                              'date_pai' => $row->import_date, 
+                              'creation_date' => date("Y-m-d H:i:s"),
+                              'last_updated' => $row->last_updated
+                );
+                $result = $this->db->insert('policy_negocio_pai', $data);
+            }
+        }
+        $query->free_result();
+        return 0;
+    }
 
     public function getCountNegocioPai($agent_id = null, $filter = array())
     {
@@ -3040,6 +3076,7 @@ class User extends CI_Model
 
     private function _getNegocioPai($count_requested = TRUE, $agent_id = null, $filter = array())
     {
+        $this->checkNegocioPai();
         $sql_date_filter = '';
         $sql_agent_filter = '';
         $sql_plus = "`valid_for_report` = '1' AND `year_prime` = '1' ";
