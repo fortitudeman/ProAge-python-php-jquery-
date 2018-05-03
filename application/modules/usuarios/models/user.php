@@ -3015,7 +3015,7 @@ class User extends CI_Model
     public function checkNegocioPai(){
         $sql_str = "Select payments.policy_number, 
                            payments.product_group, 
-                           payments.amount, 
+                           sum(payments.amount) as amount, 
                            payments.import_date,
                            payments.last_updated,
                            policy_negocio_pai.negocio_pai, 
@@ -3023,7 +3023,8 @@ class User extends CI_Model
                     from payments
                     left join policy_negocio_pai on policy_negocio_pai.policy_number = payments.policy_number
                     where policy_negocio_pai.negocio_pai is null
-                    and payments.amount > 12000";
+                    and payments.amount > 12000
+                    group by payments.policy_number";
         $query = $this->db->query($sql_str);
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
