@@ -2888,8 +2888,8 @@ class User extends CI_Model
         //   '`work_order`.`work_order_status_id` =' => 4,
         //    '`policies`.`payment_interval_id` != ' => 4));
         $this->db->where('`policies`.`payment_interval_id` != ',4);
-        $this->db->where('`work_order`.`work_order_status_id` =',4);
-        $this->db->or_where('`work_order`.`work_order_status_id` =',7);
+        $str_where = "(`work_order`.`work_order_status_id` = 4 OR `work_order`.`work_order_status_id` = 7)";
+        $this->db->where($str_where);
         $with_filter = FALSE;
         $this->_get_generation_filter($filter, $with_filter);
 
