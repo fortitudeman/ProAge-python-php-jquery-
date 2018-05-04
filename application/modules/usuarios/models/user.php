@@ -3101,7 +3101,6 @@ class User extends CI_Model
                               'creation_date' => $row->date,
                               'last_updated' => $row->last_updated
                 );
-                print_r($data);
                 $result = $this->db->insert('policy_negocio_pai', $data);
             }
         }
