@@ -3015,16 +3015,15 @@ class User extends CI_Model
     public function checkNegocioPai(){
         $sql_str = "Select payments.policy_number, 
                            payments.product_group, 
-                           sum(payments.amount) as amount, 
-                           payments.import_date,
+                           payments.amount, 
+                           payments.payment_date,
                            payments.last_updated,
                            policy_negocio_pai.negocio_pai, 
                            policy_negocio_pai.date_pai
                     from payments
                     left join policy_negocio_pai on policy_negocio_pai.policy_number = payments.policy_number
                     where policy_negocio_pai.negocio_pai is null
-                    and payments.amount > 12000
-                    group by payments.policy_number";
+                    and payments.amount > 12000";
         $query = $this->db->query($sql_str);
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
@@ -3039,10 +3038,70 @@ class User extends CI_Model
                 $data = array('ramo' => 1,
                               'policy_number' => $row->policy_number, 
                               'negocio_pai' => $negocios_pai,
-                              'date_pai' => $row->import_date, 
+                              'date_pai' => $row->payment_date, 
                               'creation_date' => date("Y-m-d H:i:s"),
                               'last_updated' => $row->last_updated
                 );
+                $result = $this->db->insert('policy_negocio_pai', $data);
+            }
+        }
+        $query->free_result();
+        return 0;
+    }
+
+    public function rebuildNegociosPai(){
+        $sql_str = "Select policy_number,count(*) as count from policy_negocio_pai group by policy_negocio_pai.policy_number";
+        $query = $this->db->query($sql_str);
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $sql_str_aux = "Select payments.policy_number, count(*) as count
+                            from payments
+                            where payments.amount > 12000
+                            and payments.policy_number='".$row->policy_number."'";
+                $query_aux = $this->db->query($sql_str_aux);
+                if ($query_aux->num_rows() == 1) {
+                    foreach ($query_aux->result() as $row_aux){
+                        //print_r($row);
+                        //print_r($row_aux);
+                        if($row_aux->count > $row->count){
+                            $this->createSpecificNegocioPai($row_aux->policy_number);
+                        }
+                    }
+                }
+                $query_aux->free_result();
+            }
+        }
+        $query->free_result();
+        return 0;
+    }
+
+    public function createSpecificNegocioPai($policy_number = null){
+        if (empty($policy_number))
+            return 0;
+        $sql_str = "select amount, payment_date, date, last_updated 
+                    from payments 
+                    where amount > 12000
+                    and policy_number='".$policy_number."'";
+        $query = $this->db->query($sql_str);
+        if ($query->num_rows() > 0) {
+            $this->db->delete('policy_negocio_pai', array('policy_number' => $policy_number));
+            foreach ($query->result() as $row){
+                $negocios_pai=0;
+                if($row->amount>=12000 && $row->amount<=110000){
+                    $negocios_pai=1;
+                }elseif($row->amount>=110000 && $row->amount<=50000){
+                    $negocios_pai=2;
+                }elseif($row->amount>500000){
+                    $negocios_pai=3;
+                }
+                $data = array('ramo' => 1,
+                              'policy_number' => $policy_number, 
+                              'negocio_pai' => $negocios_pai,
+                              'date_pai' => $row->payment_date, 
+                              'creation_date' => $row->date,
+                              'last_updated' => $row->last_updated
+                );
+                print_r($data);
                 $result = $this->db->insert('policy_negocio_pai', $data);
             }
         }
@@ -3078,6 +3137,7 @@ class User extends CI_Model
     private function _getNegocioPai($count_requested = TRUE, $agent_id = null, $filter = array())
     {
         $this->checkNegocioPai();
+        $this->rebuildNegociosPai();
         $sql_date_filter = '';
         $sql_agent_filter = '';
         $sql_plus = "`valid_for_report` = '1' AND `year_prime` = '1' ";
@@ -3154,7 +3214,7 @@ class User extends CI_Model
                         WHERE " .
             $sql_plus .
             $sql_agent_filter . " 
-                        AND `policy_negocio_pai`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
+                        AND `policy_negocio_pai`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`, `policy_negocio_pai`.`date_pai`";
 
 
 
