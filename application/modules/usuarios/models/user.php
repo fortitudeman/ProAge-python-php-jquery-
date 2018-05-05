@@ -1850,7 +1850,7 @@ class User extends CI_Model
          *    SELECT users.*, agents.id as agent_id
          * FROM `agents`
          **/
-        $this->db->select('users.*, agents.connection_date, agents.id as agent_id');
+        $this->db->select('users.*, agents.connection_date, agents.id as agent_id, agents.generation_vida, agents.generation_gmm');
         $this->db->from('agents');
         $this->db->join('users', 'users.id=agents.user_id');
 
@@ -1972,8 +1972,8 @@ class User extends CI_Model
                     $name = $row->name . ' ' . $row->lastnames;
                 else
                     $name = $row->company_name;
-
-                $generacion = $this->get_agent_generation($row->connection_date, $is_vida);
+                $generacion = $is_vida == 1 ? $row->generation_vida : $row->generation_gmm;
+                // $generacion = $this->get_agent_generation($row->connection_date, $is_vida);
 
                 $report_row = array(
                     'id' => $row->id,
