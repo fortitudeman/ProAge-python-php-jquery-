@@ -93,10 +93,6 @@
 </head>
 
 <body>
-<<<<<<< HEAD
-
-=======
->>>>>>> dev-lazaro
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push(
 
@@ -111,10 +107,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TWJ55N6"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-<<<<<<< HEAD
-
-=======
->>>>>>> dev-lazaro
 	<?php if(!isset($no_visible_elements) || !$no_visible_elements)	{ ?>
 	<!-- topbar starts -->
 	<div class="navbar">
