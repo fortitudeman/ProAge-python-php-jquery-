@@ -3019,51 +3019,57 @@ class User extends CI_Model
                     where negocios_pai_per_policy.policy_number is null
                     and policy_negocio_pai.negocio_pai != 0";
         $query = $this->db->query($sql_str);
+        $policies = array();
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
-                $sql_str_aux = "Select payments.policy_number, amount, payment_date as date_pai, date, last_updated
-                                from payments where payments.policy_number='".$row->policy_number."'";
-                $query_aux=$this->db->query($sql_str_aux);
-                $is_below_minimun_in = false;
-                if($query_aux->num_rows() > 0){
-                    foreach ($query_aux->result() as $row_aux) {
-                        $data = array();
-                        if ($row_aux->amount >= 12000){
-                            $negocios_pai=0;
-                            if($row_aux->amount>=12000 && $row_aux->amount<110000){
-                                $negocios_pai=1;
-                            }if($row_aux->amount>=110000 && $row_aux->amount<500000){
-                                $negocios_pai=2;
-                            }if($row_aux->amount>=500000){
-                                $negocios_pai=3;
-                            }
-                            $data = array('ramo' => 1,
-                                          'policy_number' => $row_aux->policy_number, 
-                                          'negocio_pai' => $negocios_pai,
-                                          'date_pai' => $row_aux->date_pai, 
-                                          'creation_date' => $row_aux->date,
-                                          'last_update' => $row_aux->last_updated
-                            );
-                            //$result = $this->db->insert('negocios_pai_per_policy', $data);
-                        }else{
-                            if(!($is_below_minimun_in)){
-                                $data = array('ramo' => 1,
-                                          'policy_number' => $row->policy_number, 
-                                          'negocio_pai' => $row->negocio_pai,
-                                          'date_pai' => $row->date_pai, 
-                                          'creation_date' => $row->creation_date,
-                                          'last_update' => $row->last_updated
-                                );
-                                $is_below_minimun_in = true;
-                                //$result = $this->db->insert('negocios_pai_per_policy', $data);
-                            }
-                        }
-                    }
-                    $query_aux->free_result();
-                }
+                $policies[] = "'".$row->policy_number."'";
             }
         }
         $query->free_result();
+        $sql_str_policies=(implode(",", $policies));
+        $sql_str_aux = "Select payments.policy_number, amount, payment_date as date_pai, date, payments.last_updated, policy_negocio_pai.negocio_pai
+                                from payments 
+                                join policy_negocio_pai on policy_negocio_pai.policy_number = payments.policy_number
+                                where payments.policy_number in(".$sql_str_policies.") 
+                                order by payments.policy_number asc, payments.payment_date desc";
+        $query_aux=$this->db->query($sql_str_aux);
+        if($query_aux->num_rows() > 0){
+            $previous_policy="0";
+            foreach ($query_aux->result() as $row_aux){
+
+                if ($row_aux->amount >= 12000){
+                    $negocios_pai=0;
+                    if($row_aux->amount>=12000 && $row_aux->amount<110000){
+                        $negocios_pai=1;
+                    }if($row_aux->amount>=110000 && $row_aux->amount<500000){
+                        $negocios_pai=2;
+                    }if($row_aux->amount>=500000){
+                        $negocios_pai=3;
+                    }
+                    $data = array('ramo' => 1,
+                                  'policy_number' => $row_aux->policy_number, 
+                                  'negocio_pai' => $negocios_pai,
+                                  'date_pai' => $row_aux->date_pai, 
+                                  'creation_date' => $row_aux->date,
+                                  'last_update' => $row_aux->last_updated
+                    );
+                    $result = $this->db->insert('negocios_pai_per_policy', $data);
+                }else{
+                    if(strcmp($row_aux->policy_number, $previous_policy) != 0){
+                        $data = array('ramo' => 1,
+                                      'policy_number' => $row_aux->policy_number, 
+                                      'negocio_pai' => $row_aux->negocio_pai,
+                                      'date_pai' => $row_aux->date_pai, 
+                                      'creation_date' => $row_aux->date,
+                                      'last_update' => $row_aux->last_updated
+                        );
+                        $result = $this->db->insert('negocios_pai_per_policy', $data);
+                    }
+                }
+                $previous_policy=$row_aux->policy_number;
+            }
+        }
+        $query_aux->free_result();
         return 0;
     }
 
@@ -3095,7 +3101,7 @@ class User extends CI_Model
 
     private function _getNegocioPai($count_requested = TRUE, $agent_id = null, $filter = array())
     {
-        //$this->rebuildNegociosPai();
+        $this->rebuildNegociosPai();
         $sql_date_filter = '';
         $sql_agent_filter = '';
         $sql_plus = "`valid_for_report` = '1' AND `year_prime` = '1' ";
@@ -3152,26 +3158,27 @@ class User extends CI_Model
         $select_plus = '';
         $join_plus = '';
         $field_plus = '';
+        $group_plus = '';
         if (!$count_requested) {
             $select_plus = "`policies`.`name` as `asegurado`, `policies`.`period` as `plazo`, ";
             $join_plus = ' LEFT OUTER JOIN `policies` ON `policies`.`uid`= `payments`.`policy_number` 
                             LEFT JOIN `work_order` ON `work_order`.`policy_id`= `policies`.`id`';
             $field_plus = ', `work_order`.`id` AS `work_order_uid`';
+            $group_plus = ',`work_order`.`id`';
         }
-        $sql_str = "SELECT `policy_negocio_pai`.ramo,
-        `policy_negocio_pai`.policy_number,
-        `policy_negocio_pai`.negocio_pai,
-        DATE_FORMAT(`policy_negocio_pai`.date_pai,'%Y-%m-%d') as `date_pai`,
-        `policy_negocio_pai`.creation_date,
-        `policy_negocio_pai`.last_updated, " . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments` 
+        $sql_str = "SELECT `negocios_pai_per_policy`.ramo,
+        `negocios_pai_per_policy`.policy_number,
+        `negocios_pai_per_policy`.negocio_pai,
+        DATE_FORMAT(`negocios_pai_per_policy`.date_pai,'%Y-%m-%d') as `date_pai`,
+        `negocios_pai_per_policy`.creation_date,
+        `negocios_pai_per_policy`.last_update, " . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments` 
                         JOIN `agents` ON `agents`.`id`=`payments`.`agent_id` 
                         JOIN `users` ON `users`.`id`=`agents`.`user_id` 
-
-                        LEFT JOIN `policy_negocio_pai` ON `policy_negocio_pai`.`policy_number` =`payments`.`policy_number` " . $join_plus . " 
+                        LEFT JOIN `negocios_pai_per_policy` ON `negocios_pai_per_policy`.`policy_number` =`payments`.`policy_number` " . $join_plus . " 
                         WHERE " .
             $sql_plus .
-            $sql_agent_filter . " AND if(`payments`.amount > 12000,1 ,0)
-                        AND `policy_negocio_pai`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
+            $sql_agent_filter . " 
+                        AND `negocios_pai_per_policy`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`,`negocios_pai_per_policy`.`date_pai`".$group_plus;
 
 
         $query = $this->db->query($sql_str);
