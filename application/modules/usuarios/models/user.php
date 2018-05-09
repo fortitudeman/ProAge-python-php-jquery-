@@ -2413,7 +2413,7 @@ class User extends CI_Model
          **/
         if (empty($userid)) return false;
 
-        $this->db->select('users.*, agents.connection_date, agents.id as agent_id');
+        $this->db->select('users.*, agents.connection_date, agents.id as agent_id, agents.generation_vida');
         $this->db->from('agents');
         $this->db->join('users', 'users.id=agents.user_id');
         $this->db->where('users.id', $userid);
@@ -2448,7 +2448,7 @@ class User extends CI_Model
                 'aceptadas' => $this->getAceptadas($row->agent_id, $filter),
                 'iniciales' => $this->getIniciales($row->agent_id, $filter),
                 'renovacion' => $this->getRenovacion($row->agent_id, $filter),
-                'generacion' => $this->get_agent_generation($row->connection_date),
+                'generacion' => $row->generation_vida,
             );
         }
         return $report;
@@ -3876,7 +3876,7 @@ AND
     {
         if (empty($user_id)) return false;
 
-        $this->db->select('users.*, agents.connection_date, agents.id as agent_id');
+        $this->db->select('users.*, agents.connection_date, agents.id as agent_id, agents.generation_vida');
         $this->db->from('users');
         $this->db->join('agents', 'agents.user_id=users.id');
         $this->db->where('users.id =', $user_id);
@@ -3891,7 +3891,7 @@ AND
                 $row->agent_name = $row->company_name;
             else
                 $row->agent_name = $row->name . ' ' . $row->lastnames;
-            $row->generacion = $this->get_agent_generation($row->connection_date);
+            $row->generacion = $row->generation_vida;
             $row->uids = $this->getAgentsUids($row->agent_id);
             return $row;
         }
@@ -3999,36 +3999,26 @@ AND
             $this->load->helper('agent/generations'); //Archivo con la funcion de calculo de fechas iniciales y finales
             $this->_set_year_filter($filter);
             log_message('debug', 'custom_period_from: ' . $this->custom_period_from);
-            $generationDateRange = getGeneracionDateRange($filter['query']['generacion'], $this->custom_period_from, $is_vida);
-            if (isset($generationDateRange['init'])) {
-                $begin = $generationDateRange['init'];
-            } else {
-                $begin = 0;
-            }
-            if (isset($generationDateRange['end'])) {
-                $end = $generationDateRange['end'];
-            } else {
-                $end = 0;
-            }
             $with_filter = TRUE;
             log_message('debug', 'Begin date: ' . $begin);
             log_message('debug', 'End Date: ' . $end);
+
+            $generacion_ramo = $is_vida ? "generation_vida" : "generation_gmm";
+
             if ($generacion == 'consolidado') {
-                $this->db->where("((`agents`.`connection_date` < '$begin') AND (`agents`.`connection_date` IS NOT NULL ) AND (`agents`.`connection_date` != '0000-00-00') AND (`agents`.`connection_date` != ''))", NULL, FALSE);
+                $this->db->where("(`agents`.`$generacion_ramo` = 'Consolidado')", NULL, FALSE);
             } elseif ($generacion == 'generacion_1') {
-                $this->db->where("((`agents`.`connection_date` >= '$begin') AND (`agents`.`connection_date` IS NOT NULL ) AND (`agents`.`connection_date` != '0000-00-00') AND (`agents`.`connection_date` != ''))", NULL, FALSE);
-            } else {
-                $this->db->where("(((`agents`.`connection_date` >= '$begin') AND (`agents`.`connection_date` < '$end')) AND (`agents`.`connection_date` IS NOT NULL ) AND (`agents`.`connection_date` != '0000-00-00') AND (`agents`.`connection_date` != ''))", NULL, FALSE);
+                $this->db->where("(`agents`.`$generacion_ramo` = 'Generación 1')", NULL, FALSE);
+            }elseif ($generacion == 'generacion_2') {
+                $this->db->where("(`agents`.`$generacion_ramo` = 'Generación 2')", NULL, FALSE);
+            }elseif ($generacion == 'generacion_3') {
+                $this->db->where("(`agents`.`$generacion_ramo` = 'Generación 3')", NULL, FALSE);
+            }elseif ($generacion == 'generacion_4') {
+                $this->db->where("(`agents`.`$generacion_ramo` = 'Generación 4')", NULL, FALSE);
             }
         }
     }
 
-    public function get_agent_generation($connection_date = '', $is_vida = true)
-    {
-        $this->load->helper('agent/generations');
-        $generation_id = getGeneracionByConnection($connection_date, "", $is_vida);
-        return getGeneracionTitleByID($generation_id);
-    }
 
     public function generic_get($table = null, $where = null, $limit = null, $offset = 0, $order_by = null)
     {
