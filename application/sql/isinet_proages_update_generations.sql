@@ -53,7 +53,7 @@ BEGIN
 							  				       when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 3 then 3
 							  			           when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 4 then 4
 							  			           when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) >= 5 then 5
-							  			           end)
+							  			           end);
             END IF;
         END IF;
     END IF;
@@ -106,5 +106,5 @@ DROP EVENT updateGenerationsAgentsVida;
 
 -- Alter statement 
 ALTER TABLE `proages`.`agents` 
-ADD COLUMN `generation_gmm` INT(11) NULL AFTER `generation_vida`,
-ADD COLUMN `generation_vida` INT(11) NULL AFTER `generation_gmm`;
+ADD COLUMN `generation_gmm` INT(11) NULL,
+ADD COLUMN `generation_vida` INT(11) NULL;
