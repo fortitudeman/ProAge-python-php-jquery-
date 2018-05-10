@@ -2,14 +2,14 @@
 
 /*
 
-  Author		Ulises Rodríguez
-  Site:			http://www.ulisesrodriguez.com
-  Twitter:		https://twitter.com/#!/isc_ulises
-  Facebook:		http://www.facebook.com/ISC.Ulises
-  Github:		https://github.com/ulisesrodriguez
-  Email:		ing.ulisesrodriguez@gmail.com
-  Skype:		systemonlinesoftware
-  Location:		Guadalajara Jalisco Mexíco
+  Author        Ulises Rodríguez
+  Site:         http://www.ulisesrodriguez.com
+  Twitter:      https://twitter.com/#!/isc_ulises
+  Facebook:     http://www.facebook.com/ISC.Ulises
+  Github:       https://github.com/ulisesrodriguez
+  Email:        ing.ulisesrodriguez@gmail.com
+  Skype:        systemonlinesoftware
+  Location:     Guadalajara Jalisco Mexíco
 
 
 */
@@ -34,7 +34,7 @@ class User extends CI_Model
 
 
     /*
- *	CRUD Functions, dynamic table.
+ *  CRUD Functions, dynamic table.
  **/
 
 
@@ -140,12 +140,12 @@ class User extends CI_Model
             $agents[$row->user_id] = $row->id;
 
         /*
-		 SELECT id, name, lastnames, email
-		 FROM `users`
-		 JOIN users_vs_user_roles ON users_vs_user_roles.user_id=users.id
-		 WHERE users_vs_user_roles.user_role_id=1;
+         SELECT id, name, lastnames, email
+         FROM `users`
+         JOIN users_vs_user_roles ON users_vs_user_roles.user_id=users.id
+         WHERE users_vs_user_roles.user_role_id=1;
 
-		*/
+        */
         $this->db->select('id, name, lastnames, email, company_name,  manager_id, date, last_updated');
         $this->db->from('users');
 
@@ -198,11 +198,11 @@ class User extends CI_Model
 
             // Getting Types
             /*
-			SELECT user_roles.name
-			FROM `users_vs_user_roles`
-			JOIN  `user_roles` ON user_roles.id=`users_vs_user_roles`.user_role_id
-			WHERE users_vs_user_roles.user_id=1;
-			*/
+            SELECT user_roles.name
+            FROM `users_vs_user_roles`
+            JOIN  `user_roles` ON user_roles.id=`users_vs_user_roles`.user_role_id
+            WHERE users_vs_user_roles.user_id=1;
+            */
 
 
             $tipo = '';
@@ -225,11 +225,11 @@ class User extends CI_Model
 
             // Getting Clave
             /*
-				SELECT agent_uids.uid
-				FROM agents
-				JOIN agent_uids ON agent_uids.agent_id=agents.id
-				WHERE agent_uids.type='clave' AND agents.user_id=2;
-			*/
+                SELECT agent_uids.uid
+                FROM agents
+                JOIN agent_uids ON agent_uids.agent_id=agents.id
+                WHERE agent_uids.type='clave' AND agents.user_id=2;
+            */
             $clave = '';
             $this->db->select('agent_uids.uid');
             $this->db->from('agents');
@@ -248,11 +248,11 @@ class User extends CI_Model
 
             // Getting Clave
             /*
-				SELECT agent_uids.uid
-				FROM agents
-				JOIN agent_uids ON agent_uids.agent_id=agents.id
-				WHERE agent_uids.type='national' AND agents.user_id=2;
-			*/
+                SELECT agent_uids.uid
+                FROM agents
+                JOIN agent_uids ON agent_uids.agent_id=agents.id
+                WHERE agent_uids.type='national' AND agents.user_id=2;
+            */
             $national = '';
             $this->db->select('agent_uids.uid');
             $this->db->from('agents');
@@ -271,11 +271,11 @@ class User extends CI_Model
 
             // Getting Clave
             /*
-				SELECT agent_uids.uid
-				FROM agents
-				JOIN agent_uids ON agent_uids.agent_id=agents.id
-				WHERE agent_uids.type='provincial' AND agents.user_id=2;
-			*/
+                SELECT agent_uids.uid
+                FROM agents
+                JOIN agent_uids ON agent_uids.agent_id=agents.id
+                WHERE agent_uids.type='provincial' AND agents.user_id=2;
+            */
             $provincial = '';
             $this->db->select('agent_uids.uid');
             $this->db->from('agents');
@@ -444,9 +444,9 @@ class User extends CI_Model
         if (isset($find['rol']) and !empty($find['rol'])) {
 
             /*
-				JOIN users ON users.id=users_vs_user_roles.user_id
-				WHERE users_vs_user_roles.user_role_id=1;
-			*/
+                JOIN users ON users.id=users_vs_user_roles.user_id
+                WHERE users_vs_user_roles.user_role_id=1;
+            */
 
             $this->db->join('users_vs_user_roles', 'users_vs_user_roles.user_id=users.id');
             $this->db->where(array('users_vs_user_roles.user_role_id' => $find['rol']));
@@ -529,10 +529,10 @@ class User extends CI_Model
             //print_r( $value[0] );
             /*print_r( $fprint_r( $find['advanced'] );ind['advanced'] );
 
-			JOIN `agents` ON agents.user_id=users.id
-			JOIN `agent_uids` ON `agent_uids`.`agent_id`=agents.id
-			WHERE type='' AND uid='';
-			*/
+            JOIN `agents` ON agents.user_id=users.id
+            JOIN `agent_uids` ON `agent_uids`.`agent_id`=agents.id
+            WHERE type='' AND uid='';
+            */
 
             //exit;
 
@@ -573,11 +573,11 @@ class User extends CI_Model
 
             // Getting Types
             /*
-			SELECT user_roles.name
-			FROM `users_vs_user_roles`
-			JOIN  `user_roles` ON user_roles.id=`users_vs_user_roles`.user_role_id
-			WHERE users_vs_user_roles.user_id=1;
-			*/
+            SELECT user_roles.name
+            FROM `users_vs_user_roles`
+            JOIN  `user_roles` ON user_roles.id=`users_vs_user_roles`.user_role_id
+            WHERE users_vs_user_roles.user_id=1;
+            */
 
             $tipo = '';
             $this->db->select('user_roles.name');
@@ -596,11 +596,11 @@ class User extends CI_Model
 
             // Getting Clave
             /*
-				SELECT agent_uids.uid
-				FROM agents
-				JOIN agent_uids ON agent_uids.agent_id=agents.id
-				WHERE agent_uids.type='clave' AND agents.user_id=2;
-			*/
+                SELECT agent_uids.uid
+                FROM agents
+                JOIN agent_uids ON agent_uids.agent_id=agents.id
+                WHERE agent_uids.type='clave' AND agents.user_id=2;
+            */
             $clave = '';
             $this->db->select('agent_uids.uid');
             $this->db->from('agents');
@@ -617,11 +617,11 @@ class User extends CI_Model
 
             // Getting Clave
             /*
-				SELECT agent_uids.uid
-				FROM agents
-				JOIN agent_uids ON agent_uids.agent_id=agents.id
-				WHERE agent_uids.type='national' AND agents.user_id=2;
-			*/
+                SELECT agent_uids.uid
+                FROM agents
+                JOIN agent_uids ON agent_uids.agent_id=agents.id
+                WHERE agent_uids.type='national' AND agents.user_id=2;
+            */
             $national = '';
             $this->db->select('agent_uids.uid');
             $this->db->from('agents');
@@ -638,11 +638,11 @@ class User extends CI_Model
 
             // Getting Clave
             /*
-				SELECT agent_uids.uid
-				FROM agents
-				JOIN agent_uids ON agent_uids.agent_id=agents.id
-				WHERE agent_uids.type='provincial' AND agents.user_id=2;
-			*/
+                SELECT agent_uids.uid
+                FROM agents
+                JOIN agent_uids ON agent_uids.agent_id=agents.id
+                WHERE agent_uids.type='provincial' AND agents.user_id=2;
+            */
             $provincial = '';
             $this->db->select('agent_uids.uid');
             $this->db->from('agents');
@@ -751,11 +751,11 @@ class User extends CI_Model
 
             // Getting Types
             /*
-			SELECT user_roles.name
-			FROM `users_vs_user_roles`
-			JOIN  `user_roles` ON user_roles.id=`users_vs_user_roles`.user_role_id
-			WHERE users_vs_user_roles.user_id=1;
-			*/
+            SELECT user_roles.name
+            FROM `users_vs_user_roles`
+            JOIN  `user_roles` ON user_roles.id=`users_vs_user_roles`.user_role_id
+            WHERE users_vs_user_roles.user_id=1;
+            */
 
 
             $tipo = '';
@@ -776,11 +776,11 @@ class User extends CI_Model
 
             // Getting Clave
             /*
-				SELECT agent_uids.uid
-				FROM agents
-				JOIN agent_uids ON agent_uids.agent_id=agents.id
-				WHERE agent_uids.type='clave' AND agents.user_id=2;
-			*/
+                SELECT agent_uids.uid
+                FROM agents
+                JOIN agent_uids ON agent_uids.agent_id=agents.id
+                WHERE agent_uids.type='clave' AND agents.user_id=2;
+            */
             $clave = '';
             $this->db->select('agent_uids.uid');
             $this->db->from('agents');
@@ -799,11 +799,11 @@ class User extends CI_Model
 
             // Getting Clave
             /*
-				SELECT agent_uids.uid
-				FROM agents
-				JOIN agent_uids ON agent_uids.agent_id=agents.id
-				WHERE agent_uids.type='national' AND agents.user_id=2;
-			*/
+                SELECT agent_uids.uid
+                FROM agents
+                JOIN agent_uids ON agent_uids.agent_id=agents.id
+                WHERE agent_uids.type='national' AND agents.user_id=2;
+            */
             $national = '';
             $this->db->select('agent_uids.uid');
             $this->db->from('agents');
@@ -822,11 +822,11 @@ class User extends CI_Model
 
             // Getting Clave
             /*
-				SELECT agent_uids.uid
-				FROM agents
-				JOIN agent_uids ON agent_uids.agent_id=agents.id
-				WHERE agent_uids.type='provincial' AND agents.user_id=2;
-			*/
+                SELECT agent_uids.uid
+                FROM agents
+                JOIN agent_uids ON agent_uids.agent_id=agents.id
+                WHERE agent_uids.type='provincial' AND agents.user_id=2;
+            */
             $provincial = '';
             $this->db->select('agent_uids.uid');
             $this->db->from('agents');
@@ -845,10 +845,10 @@ class User extends CI_Model
 
             // Representatives
             /*
-				SELECT *
-				FROM `representatives`
-				WHERE `user_id`=3
-			*/
+                SELECT *
+                FROM `representatives`
+                WHERE `user_id`=3
+            */
             $representatives = '';
             $this->db->select();
             $this->db->from('representatives');
@@ -903,9 +903,9 @@ class User extends CI_Model
         if (isset($find['rol']) and !empty($find['rol'])) {
 
             /*
-				JOIN users ON users.id=users_vs_user_roles.user_id
-				WHERE users_vs_user_roles.user_role_id=1;
-			*/
+                JOIN users ON users.id=users_vs_user_roles.user_id
+                WHERE users_vs_user_roles.user_role_id=1;
+            */
 
             $this->db->join('users_vs_user_roles', 'users_vs_user_roles.user_id=users.id');
             $this->db->where(array('users_vs_user_roles.user_role_id' => $find['rol']));
@@ -1006,10 +1006,10 @@ class User extends CI_Model
             //print_r( $value[0] );
             /*print_r( $fprint_r( $find['advanced'] );ind['advanced'] );
 
-			JOIN `agents` ON agents.user_id=users.id
-			JOIN `agent_uids` ON `agent_uids`.`agent_id`=agents.id
-			WHERE type='' AND uid='';
-			*/
+            JOIN `agents` ON agents.user_id=users.id
+            JOIN `agent_uids` ON `agent_uids`.`agent_id`=agents.id
+            WHERE type='' AND uid='';
+            */
 
             //exit;
 
@@ -1055,11 +1055,11 @@ class User extends CI_Model
 
             // Getting Types
             /*
-			SELECT user_roles.name
-			FROM `users_vs_user_roles`
-			JOIN  `user_roles` ON user_roles.id=`users_vs_user_roles`.user_role_id
-			WHERE users_vs_user_roles.user_id=1;
-			*/
+            SELECT user_roles.name
+            FROM `users_vs_user_roles`
+            JOIN  `user_roles` ON user_roles.id=`users_vs_user_roles`.user_role_id
+            WHERE users_vs_user_roles.user_id=1;
+            */
 
 
             $tipo = '';
@@ -1080,11 +1080,11 @@ class User extends CI_Model
 
             // Getting Clave
             /*
-				SELECT agent_uids.uid
-				FROM agents
-				JOIN agent_uids ON agent_uids.agent_id=agents.id
-				WHERE agent_uids.type='clave' AND agents.user_id=2;
-			*/
+                SELECT agent_uids.uid
+                FROM agents
+                JOIN agent_uids ON agent_uids.agent_id=agents.id
+                WHERE agent_uids.type='clave' AND agents.user_id=2;
+            */
             $clave = '';
             $this->db->select('agent_uids.uid');
             $this->db->from('agents');
@@ -1103,11 +1103,11 @@ class User extends CI_Model
 
             // Getting Clave
             /*
-				SELECT agent_uids.uid
-				FROM agents
-				JOIN agent_uids ON agent_uids.agent_id=agents.id
-				WHERE agent_uids.type='national' AND agents.user_id=2;
-			*/
+                SELECT agent_uids.uid
+                FROM agents
+                JOIN agent_uids ON agent_uids.agent_id=agents.id
+                WHERE agent_uids.type='national' AND agents.user_id=2;
+            */
             $national = '';
             $this->db->select('agent_uids.uid');
             $this->db->from('agents');
@@ -1126,11 +1126,11 @@ class User extends CI_Model
 
             // Getting Clave
             /*
-				SELECT agent_uids.uid
-				FROM agents
-				JOIN agent_uids ON agent_uids.agent_id=agents.id
-				WHERE agent_uids.type='provincial' AND agents.user_id=2;
-			*/
+                SELECT agent_uids.uid
+                FROM agents
+                JOIN agent_uids ON agent_uids.agent_id=agents.id
+                WHERE agent_uids.type='provincial' AND agents.user_id=2;
+            */
             $provincial = '';
             $this->db->select('agent_uids.uid');
             $this->db->from('agents');
@@ -1149,10 +1149,10 @@ class User extends CI_Model
 
             // Representatives
             /*
-				SELECT *
-				FROM `representatives`
-				WHERE `user_id`=3
-			*/
+                SELECT *
+                FROM `representatives`
+                WHERE `user_id`=3
+            */
             $representatives = '';
             $this->db->select();
             $this->db->from('representatives');
@@ -1433,9 +1433,9 @@ class User extends CI_Model
 
 
         $query = $this->db->query(' SELECT DISTINCT(users.name), users.id  
-									FROM `users_vs_user_roles` 
-									JOIN users ON users.id = `user_id` 
-									WHERE user_role_id=3;');
+                                    FROM `users_vs_user_roles` 
+                                    JOIN users ON users.id = `user_id` 
+                                    WHERE user_role_id=3;');
 
 
         if ($query->num_rows() == 0) return false;
@@ -1459,9 +1459,9 @@ class User extends CI_Model
 
 
         $query = $this->db->query(' SELECT DISTINCT(users.name), users.id  
-									FROM `users_vs_user_roles` 
-									JOIN users ON users.id = `user_id` 
-									WHERE user_role_id=3;');
+                                    FROM `users_vs_user_roles` 
+                                    JOIN users ON users.id = `user_id` 
+                                    WHERE user_role_id=3;');
 
 
         if ($query->num_rows() == 0) return false;
@@ -1505,9 +1505,9 @@ class User extends CI_Model
     {
 
         /*
-			SELECT agents.id, users.name FROM agents
-			JOIN users ON users.id=agents.user_id;
-		*/
+            SELECT agents.id, users.name FROM agents
+            JOIN users ON users.id=agents.user_id;
+        */
         $this->db->select('agents.id, users.name, users.lastnames, users.company_name');
         $this->db->from('agents');
         $this->db->join('users', 'users.id=agents.user_id');
@@ -1560,11 +1560,11 @@ class User extends CI_Model
         if (empty($id)) return false;
 
         /*
-			SELECT users.name, users.company_name
-			FROM agents
-			JOIN users ON users.id=agents.user_id
-			WHERE agents.id=5;
-		*/
+            SELECT users.name, users.company_name
+            FROM agents
+            JOIN users ON users.id=agents.user_id
+            WHERE agents.id=5;
+        */
         $this->db->select('users.name, users.company_name, users.lastnames ');
         $this->db->from('agents');
         $this->db->join('users', 'users.id=agents.user_id');
@@ -1592,7 +1592,19 @@ class User extends CI_Model
 
     }
 
-// Getting user_id
+    // Getting generation by id
+    public function getGenerationByAgentId($id = null, $vida = true){
+        $this->db->select('agents.generation_vida, agents.generation_gmm');
+        $this->db->from('agents');
+        $this->db->where('agents.id =', $id);
+        $query = $this->db->get();
+        foreach ($query->result() as $row){
+            $generation = $vida ? $row->generation_vida : $row->generation_gmm;
+        }
+        return $generation;
+    }
+
+    // Getting user_id
     public function getUserIdByAgentId($id = null)
     {
 
@@ -1600,10 +1612,10 @@ class User extends CI_Model
 
 
         /*
-			SELECT user_id
-			FROM agents
-			WHERE agents.id=5;
-		*/
+            SELECT user_id
+            FROM agents
+            WHERE agents.id=5;
+        */
         $this->db->select('user_id');
         $this->db->from('agents');
         $this->db->where('agents.id =', $id);
@@ -1632,10 +1644,10 @@ class User extends CI_Model
 
 
         /*
-			SELECT id
-			FROM agents
-			WHERE agents.user_id=5;
-		*/
+            SELECT id
+            FROM agents
+            WHERE agents.user_id=5;
+        */
         $this->db->select('id');
         $this->db->from('agents');
         $this->db->where('agents.user_id =', $user);
@@ -1667,12 +1679,12 @@ class User extends CI_Model
         if (empty($uid)) return false;
 
         /*
-			SELECT users.company_name, users.name, users.lastnames
-			FROM agent_uids
-			JOIN `agents` ON `agents`.id=agent_uids.agent_id
-			JOIN `users` ON `users`.id=agents.user_id
-			WHERE agent_uids.`uid`='1421424';
-		*/
+            SELECT users.company_name, users.name, users.lastnames
+            FROM agent_uids
+            JOIN `agents` ON `agents`.id=agent_uids.agent_id
+            JOIN `users` ON `users`.id=agents.user_id
+            WHERE agent_uids.`uid`='1421424';
+        */
         //14011 en vez de P0014011.
 
         $uidorigin = $uid;
@@ -1755,10 +1767,10 @@ class User extends CI_Model
         if (empty($uid)) return false;
 
         /*
-			SELECT id
-			FROM agent_uids
-			WHERE agent_uids.uid='';
-		*/
+            SELECT id
+            FROM agent_uids
+            WHERE agent_uids.uid='';
+        */
 
         $uidorigin = $uid;
 
@@ -1876,11 +1888,11 @@ class User extends CI_Model
 
             if (isset($filter['query']['agent']) and !empty($filter['query']['agent']) and $filter['query']['agent'] != 1) {
                 /*
-				<option value="">Seleccione</option>
-				<option value="1">Todos</option>
-				<option value="2">Vigentes</option>
-				<option value="3">Cancelados</option>
-				*/
+                <option value="">Seleccione</option>
+                <option value="1">Todos</option>
+                <option value="2">Vigentes</option>
+                <option value="3">Cancelados</option>
+                */
                 if ($filter['query']['agent'] == 2)
                     $this->db->where('users.disabled', 0);
                 if ($filter['query']['agent'] == 3)
@@ -1901,9 +1913,9 @@ class User extends CI_Model
                         unset($policy_filter[$key]);
                 }
                 $policy_filter = array_unique($policy_filter);
-                /*				$this->db->select( 'payments.policy_number' );
-				$this->db->join( 'payments', 'payments.agent_id=agents.id' );
-				$this->db->where_in('policy_number', $policy_filter);*/
+                /*              $this->db->select( 'payments.policy_number' );
+                $this->db->join( 'payments', 'payments.agent_id=agents.id' );
+                $this->db->where_in('policy_number', $policy_filter);*/
                 $this->db->select('payments.policy_number, policies.uid');
                 $this->db->join('payments', 'payments.agent_id=agents.id');
                 $this->db->join('policies_vs_users', 'policies_vs_users.user_id=agents.id');
@@ -1924,7 +1936,7 @@ class User extends CI_Model
         if ($meta) {
             $report[0] = array(
                 'cua' => 'CUA',
-//			'name' => 'AGENTE',
+//          'name' => 'AGENTE',
                 'name' => 'Agentes',
                 'generacion' => 'GEN',
                 'negocios' => 'NEGOCIOS',
@@ -2207,8 +2219,8 @@ class User extends CI_Model
         return $data_row;
     }
 
-    /*	report export helper methods
-	TODO: use them in the ot module also (currently used in the director module only
+    /*  report export helper methods
+    TODO: use them in the ot module also (currently used in the director module only
 */
     private function _format_export_generic($data, $ramo)
     {
@@ -2235,7 +2247,7 @@ class User extends CI_Model
                             'negociopai' => 'Negocios PAI',
                             'prima' => 'Primas Pagadas',
                             'tramite' => 'Negocios en Tramite',
-                            'tramite_prima' => 'Primas en Tramite',    //	(not in $data)
+                            'tramite_prima' => 'Primas en Tramite',    //   (not in $data)
                             'pendientes' => 'Negocios Pendientes',
                             'pendientes_primas' => 'Primas Pendientes', //  (not in $data)
                             'cobranza' => 'Cobranza instalada',
@@ -2276,7 +2288,7 @@ class User extends CI_Model
                             $data_row['negocios_proyectados'] += (int)$data_row['negociopai'];
                         else
                             $data_row['negocios_proyectados'] += (int)$data_row['negocio'];
-//							(int)$data_row['tramite'] + (int)$data_row['negocio']; // to make consistent with report on screen
+//                          (int)$data_row['tramite'] + (int)$data_row['negocio']; // to make consistent with report on screen
                         $data_row['negocios_proyectados_primas'] =
                             (float)$data_row['prima'] +
                             (float)$data_row['pendientes_primas'] + (float)$data_row['tramite_prima'] +
@@ -2402,7 +2414,7 @@ class User extends CI_Model
         return $result;
     }
 
-    /*	End report export helper methods
+    /*  End report export helper methods
 */
     public function getReportAgent($userid = null, $filter = array())
     {
@@ -2423,7 +2435,7 @@ class User extends CI_Model
             return false;
         $report = array();
         foreach ($query->result() as $row) {
-//		$this->getPrimasDueDates( $row->agent_id, $filter); // This does not seem a good idea here
+//      $this->getPrimasDueDates( $row->agent_id, $filter); // This does not seem a good idea here
 
             $name = null;
             if (empty($row->company_name))
@@ -2461,10 +2473,10 @@ class User extends CI_Model
         if (empty($agent))
             return FALSE;
         /*
-	SELECT *
-	FROM `agent_uids`
-	WHERE `agent_id` =
-	*/
+    SELECT *
+    FROM `agent_uids`
+    WHERE `agent_id` =
+    */
 
         $this->db->select();
         $this->db->from('agent_uids');
@@ -2560,10 +2572,10 @@ class User extends CI_Model
             }
 
             /*
-			<option value="1">Mes</option>
-			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
-			<option value="3">Año</option>
-			*/
+            <option value="1">Mes</option>
+            <option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+            <option value="3">Año</option>
+            */
             if (isset($filter['query']['periodo']) and !empty($filter['query']['periodo'])) {
                 if ($filter['query']['periodo'] == 1) {
                     $year = date('Y');
@@ -2614,7 +2626,7 @@ class User extends CI_Model
 
         if ($count_requested) {
             if (isset($filter['query']) && isset($filter['query']['min_amount']))
-//				$this->db->where(array('ABS(amount)  >= ' => '5000'));
+//              $this->db->where(array('ABS(amount)  >= ' => '5000'));
                 $this->db->where(array('ABS(amount)  >= ' => $this->pai_threshold));
             if ($agent_id && is_array($agent_id)) {
                 $this->db->where_in('agent_id', $agent_id);
@@ -2691,12 +2703,12 @@ class User extends CI_Model
 
             if ($query->num_rows() > 0) {
                 if ($agent_id && !is_array($agent_id))
-//					$result = (int)$query->row()->count;
+//                  $result = (int)$query->row()->count;
                     $result = $query->row()->total_amount;
                 else {
                     $result = array();
                     foreach ($query->result() as $row)
-//						$result[$row->n_agent_id] = $row->count;
+//                      $result[$row->n_agent_id] = $row->count;
                         $result[$row->n_agent_id] = $row->total_amount;
                 }
             }
@@ -2789,10 +2801,10 @@ class User extends CI_Model
 
         if (!empty($filter) && !empty($filter['query']['periodo'])) {
             /*
-			<option value="1">Mes</option>
-			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
-			<option value="3">Año</option>
-			*/
+            <option value="1">Mes</option>
+            <option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+            <option value="3">Año</option>
+            */
             switch ($filter['query']['periodo']) {
                 case 1:
                     $year = date('Y');
@@ -2823,7 +2835,7 @@ class User extends CI_Model
                     $year = date('Y');
                     $this->db->where(array(
                         'policy_adjusted_primas.due_date >= ' => $year . '-01-01',
-//						'policy_adjusted_primas.due_date <= ' => $year . '-12-31 23:59:59'
+//                      'policy_adjusted_primas.due_date <= ' => $year . '-12-31 23:59:59'
                     ));
                     $period_end = $year . '-12-31 23:59:59';
                     break;
@@ -2846,11 +2858,11 @@ class User extends CI_Model
         }
 
         /*
-			<option value="">Seleccione</option>
-			<option value="1">Todos</option>
-			<option value="2">Vigentes</option>
-			<option value="3">Cancelados</option>
-		*/
+            <option value="">Seleccione</option>
+            <option value="1">Todos</option>
+            <option value="2">Vigentes</option>
+            <option value="3">Cancelados</option>
+        */
         if (isset($filter['query']['agent']) and !empty($filter['query']['agent']) and $filter['query']['agent'] != 1) {
             if ($filter['query']['agent'] == 2) {
                 $this->db->where('users.disabled', 0);
@@ -3082,10 +3094,10 @@ class User extends CI_Model
         return $result;
     }
 
-    /*	public function getCountNegocioPai( $agent_id = null, $filter = array() )
-	{
-		return $this->_getNegocioPai(TRUE, $agent_id, $filter);
-	}
+    /*  public function getCountNegocioPai( $agent_id = null, $filter = array() )
+    {
+        return $this->_getNegocioPai(TRUE, $agent_id, $filter);
+    }
 */
 
     public function getNegocioPai($agent_id = null, $filter = array())
@@ -3241,8 +3253,8 @@ class User extends CI_Model
     {
 
         $sql = "SELECT `payments`.*
-	    FROM `payments`
-	    WHERE `valid_for_report` = '1' 
+        FROM `payments`
+        WHERE `valid_for_report` = '1' 
             AND `year_prime` = '1'  
             AND `product_group` = '" . $product_group . "' AND `policy_number` = '" . $policy . "' ORDER BY `payment_date` ASC";
         $total = 0;
@@ -3322,7 +3334,7 @@ class User extends CI_Model
             $this->db->join('policies', 'policies.uid=payments.policy_number');
             $this->db->join('work_order', 'work_order.policy_id=policies.id');
         }
-//		$where = array( 'year_prime' => 1, 'valid_for_report' => 1);
+//      $where = array( 'year_prime' => 1, 'valid_for_report' => 1);
         if ($agent_id && !is_array($agent_id))
             $where['agent_id'] = $agent_id;
 
@@ -3336,10 +3348,10 @@ class User extends CI_Model
             }
 
             /*
-			<option value="1">Mes</option>
-			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
-			<option value="3">Año</option>
-			*/
+            <option value="1">Mes</option>
+            <option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+            <option value="3">Año</option>
+            */
             if (isset($filter['query']['periodo']) and !empty($filter['query']['periodo'])) {
                 if ($filter['query']['periodo'] == 1) {
                     $year = date('Y');
@@ -3411,8 +3423,8 @@ class User extends CI_Model
             $query->free_result();
             return $prima;
         } else {
-//			if ($agent_id && is_array($agent_id))
-//				$this->db->where_in('agent_id', $agent_id);
+//          if ($agent_id && is_array($agent_id))
+//              $this->db->where_in('agent_id', $agent_id);
 
             $result = $this->complement_payments($query);
             return $result;
@@ -3466,9 +3478,9 @@ class User extends CI_Model
 * the extra payment that depends on payment interval and currency
 * the period selected in the filter (note: the period is not taken into account any more):
     1: 1 month prima
-	2: 3 month prima if ramo is Vida (1)
-	   4 month prima if ramo is not Vida
-	3: 12 months prima
+    2: 3 month prima if ramo is Vida (1)
+       4 month prima if ramo is not Vida
+    3: 12 months prima
 */
     public function get_adjusted_prima($policy_id, $ramo = 1, $period = 2)
     {
@@ -3515,33 +3527,33 @@ AND
         if (empty($user_id) && !is_array($user_id)) return 0;
 
         /*
-		SELECT DISTINCT( policies_vs_users.policy_id ) AS policy_id
-		FROM work_order_types
-		JOIN work_order ON work_order.work_order_type_id=work_order_types.id
-		JOIN policies ON policies.id=work_order.policy_id
-		JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
-		JOIN agents ON agents.id=policies_vs_users.user_id
-		JOIN users ON users.id=agents.user_id
-		WHERE ( work_order.work_order_status_id=5 OR  work_order.work_order_status_id=9 )
-		AND ( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )
-		AND policies_vs_users.user_id=7
-		*/
+        SELECT DISTINCT( policies_vs_users.policy_id ) AS policy_id
+        FROM work_order_types
+        JOIN work_order ON work_order.work_order_type_id=work_order_types.id
+        JOIN policies ON policies.id=work_order.policy_id
+        JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
+        JOIN agents ON agents.id=policies_vs_users.user_id
+        JOIN users ON users.id=agents.user_id
+        WHERE ( work_order.work_order_status_id=5 OR  work_order.work_order_status_id=9 )
+        AND ( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )
+        AND policies_vs_users.user_id=7
+        */
         /*
-		$this->db->query(
+        $this->db->query(
 
-		   'SELECT DISTINCT( policies_vs_users.policy_id ) AS policy_id
-			FROM work_order_types
-			JOIN work_order ON work_order.work_order_type_id=work_order_types.id
-			JOIN policies ON policies.id=work_order.policy_id
-			JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
-			JOIN agents ON agents.id=policies_vs_users.user_id
-			JOIN users ON users.id=agents.user_id
-			WHERE ( work_order.work_order_status_id=5 OR  work_order.work_order_status_id=9 )
-			AND ( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )
-			AND policies_vs_users.user_id='.$user_id
-		);
+           'SELECT DISTINCT( policies_vs_users.policy_id ) AS policy_id
+            FROM work_order_types
+            JOIN work_order ON work_order.work_order_type_id=work_order_types.id
+            JOIN policies ON policies.id=work_order.policy_id
+            JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
+            JOIN agents ON agents.id=policies_vs_users.user_id
+            JOIN users ON users.id=agents.user_id
+            WHERE ( work_order.work_order_status_id=5 OR  work_order.work_order_status_id=9 )
+            AND ( work_order_types.patent_id =47 OR work_order_types.patent_id=90 )
+            AND policies_vs_users.user_id='.$user_id
+        );
 
-		*/
+        */
 
         $this->db->select('DISTINCT( policies_vs_users.policy_id ) AS policy_id, policies_vs_users.user_id, policies_vs_users.percentage,work_order.id AS work_order_id');
         $this->db->from('work_order_types');
@@ -3580,10 +3592,10 @@ AND
             foreach ($query->result() as $row) {
                 $tramite['adjusted_prima'] += $this->get_adjusted_prima($row->policy_id, $ramo, $period) * ($row->percentage / 100);
                 /*
-			SELECT SUM( prima )
-			FROM policies
-			WHERE id=9
-			*/
+            SELECT SUM( prima )
+            FROM policies
+            WHERE id=9
+            */
                 $this->db->select_sum('prima');
                 $this->db->from('policies');
                 $this->db->where(array('id' => $row->policy_id));
@@ -3623,15 +3635,15 @@ AND
     {
         if (empty($user_id) && !is_array($user_id)) return 0;
         /*
-		SELECT DISTINCT( policies_vs_users.policy_id ) AS policy_id
-		FROM policies
-		JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
-		JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
-		JOIN agents ON agents.id=policies_vs_users.user_id
-		JOIN users ON users.id=agents.user_id
-		WHERE work_order.work_order_status_id=7
-		AND policies_vs_users.user_id=7
-		*/
+        SELECT DISTINCT( policies_vs_users.policy_id ) AS policy_id
+        FROM policies
+        JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
+        JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
+        JOIN agents ON agents.id=policies_vs_users.user_id
+        JOIN users ON users.id=agents.user_id
+        WHERE work_order.work_order_status_id=7
+        AND policies_vs_users.user_id=7
+        */
         $this->db->select('DISTINCT( policies_vs_users.policy_id ) AS policy_id, policies_vs_users.user_id, policies_vs_users.percentage, work_order.id AS work_order_id');
         $this->db->from('policies');
         $this->db->join('policies_vs_users', 'policies_vs_users.policy_id=policies.id');
@@ -3671,9 +3683,9 @@ AND
                     $adjusted_prima = $this->get_adjusted_prima($row->policy_id, $ramo, $period);
                 $aceptadas['adjusted_prima'] += $adjusted_prima * $row->percentage / 100;
                 /*
-		SELECT SUM( prima )
-		FROM policies
-		WHERE id=1*/
+        SELECT SUM( prima )
+        FROM policies
+        WHERE id=1*/
                 $this->db->select_sum('prima');
                 $this->db->from('policies');
                 $this->db->where(array('id' => $row->policy_id));
@@ -3714,14 +3726,14 @@ AND
 
         if (empty($user_id)) return 0;
         /*
-	SELECT COUNT( DISTINCT( policies_vs_users.policy_id ) ) AS policy_id
-	FROM policies
-	JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
-	JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
-	JOIN agents ON agents.id=policies_vs_users.user_id
-	JOIN users ON users.id=agents.user_id
-	WHERE policies_vs_users.user_id=7
-	*/
+    SELECT COUNT( DISTINCT( policies_vs_users.policy_id ) ) AS policy_id
+    FROM policies
+    JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
+    JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
+    JOIN agents ON agents.id=policies_vs_users.user_id
+    JOIN users ON users.id=agents.user_id
+    WHERE policies_vs_users.user_id=7
+    */
 
         $this->db->select('COUNT( DISTINCT( policies_vs_users.policy_id ) ) AS policy_id');
         $this->db->from('policies');
@@ -3748,10 +3760,10 @@ AND
         foreach ($query->result() as $row) {
 
             /*
-		SELECT count(*) as count
-		FROM payments
-		WHERE `policy_id`=1
-		*/
+        SELECT count(*) as count
+        FROM payments
+        WHERE `policy_id`=1
+        */
 
 
             $this->db->select('SUM(amount) as count');
@@ -3782,14 +3794,14 @@ AND
 
         if (empty($user_id)) return 0;
         /*
-	SELECT COUNT( DISTINCT( policies_vs_users.policy_id ) ) AS policy_id
-	FROM policies
-	JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
-	JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
-	JOIN agents ON agents.id=policies_vs_users.user_id
-	JOIN users ON users.id=agents.user_id
-	WHERE policies_vs_users.user_id=7
-	*/
+    SELECT COUNT( DISTINCT( policies_vs_users.policy_id ) ) AS policy_id
+    FROM policies
+    JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
+    JOIN  work_order ON work_order.policy_id=policies_vs_users.policy_id
+    JOIN agents ON agents.id=policies_vs_users.user_id
+    JOIN users ON users.id=agents.user_id
+    WHERE policies_vs_users.user_id=7
+    */
 
         $this->db->select('COUNT( DISTINCT( policies_vs_users.policy_id ) ) AS policy_id');
         $this->db->from('policies');
@@ -3815,10 +3827,10 @@ AND
         foreach ($query->result() as $row) {
 
             /*
-		SELECT count(*) as count
-		FROM payments
-		WHERE `policy_id`=1
-		*/
+        SELECT count(*) as count
+        FROM payments
+        WHERE `policy_id`=1
+        */
 
             $this->db->select('SUM(amount) as count');
             $this->db->from('payments');
@@ -3925,11 +3937,11 @@ AND
 
             if (isset($filter['query']['agent']) and !empty($filter['query']['agent']) and $filter['query']['agent'] != 1) {
                 /*
-				<option value="">Seleccione</option>
-				<option value="1">Todos</option>
-				<option value="2">Vigentes</option>
-				<option value="3">Cancelados</option>
-				*/
+                <option value="">Seleccione</option>
+                <option value="1">Todos</option>
+                <option value="2">Vigentes</option>
+                <option value="3">Cancelados</option>
+                */
                 if ($filter['query']['agent'] == 2) {
                     $this->db->where('users.disabled', 0);
                     $with_filter = TRUE;
@@ -4050,10 +4062,10 @@ AND
                 $this->db->where('product_group', $filter['query']['ramo']);
 
             /*
-			<option value="1">Mes</option>
-			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
-			<option value="3">Año</option>
-			*/
+            <option value="1">Mes</option>
+            <option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+            <option value="3">Año</option>
+            */
             if (isset($filter['query']['periodo']) and !empty($filter['query']['periodo'])) {
                 if ($filter['query']['periodo'] == 1) {
                     $year = date('Y');
@@ -4122,10 +4134,10 @@ AND
 
         if (!empty($filter) && !empty($filter['query']['periodo'])) {
             /*
-			<option value="1">Mes</option>
-			<option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
-			<option value="3">Año</option>
-			*/
+            <option value="1">Mes</option>
+            <option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+            <option value="3">Año</option>
+            */
             switch ($filter['query']['periodo']) {
                 case 1:
                     $year = date('Y');
@@ -4171,11 +4183,11 @@ AND
             }
         }
         /*
-			<option value="">Seleccione</option>
-			<option value="1">Todos</option>
-			<option value="2">Vigentes</option>
-			<option value="3">Cancelados</option>
-		*/
+            <option value="">Seleccione</option>
+            <option value="1">Todos</option>
+            <option value="2">Vigentes</option>
+            <option value="3">Cancelados</option>
+        */
         if (isset($filter['query']['agent']) and !empty($filter['query']['agent']) and $filter['query']['agent'] != 1) {
 
             if ($filter['query']['agent'] == 2)

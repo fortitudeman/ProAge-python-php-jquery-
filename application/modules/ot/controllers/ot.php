@@ -392,7 +392,13 @@
 									));
 									redirect( 'ot', 'refresh' );
 								}
-
+								$generation_vida = NULL;
+								$generation_gmm = NULL;
+								if ($this->input->post( 'ramo' ) == 1){
+									$generation_vida = $this->user->getGenerationByAgentId($this->input->post('agent-select'));
+								}else{
+									$generation_gmm = $this->user->getGenerationByAgentId($this->input->post('agent-select'),false);
+								}
 								$ot = array(
 									'user' => $this->sessions['id'],
 									'policy_id' => $policyId,
@@ -405,7 +411,9 @@
 									'comments' => $this->input->post('comments'),
 									'duration' => '',
 									'last_updated' => date( 'Y-m-d H:s:i' ),
-									'date' => date( 'Y-m-d H:s:i' )
+									'date' => date( 'Y-m-d H:s:i' ),
+									'agent_generation_vida' => $generation_vida,
+									'agent_generation_gmm' => $generation_gmm
 								);
 
 				// Save OT
@@ -1621,7 +1629,14 @@ public function import_payments()
 						);
 						$this->work_order->generic_delete('payments', $where);
 					}
+					$generation_vida = NULL;
+					$generation_gmm = NULL;
 					foreach( $file_array as $item ){
+						if ($posted_ramo == 1) {
+							$generation_vida = $this->user->getGenerationByAgentId($item->agent_id);
+						}else{
+							$generation_gmm = $this->user->getGenerationByAgentId($item->agent_id,false);
+						}
 				// Verify policy
 				//$policy = $this->work_order->getPolicyByUid( $item->uid );
 						$payment_date = strtotime( $item->payment_date );
@@ -1639,9 +1654,11 @@ public function import_payments()
 							'date' => date( 'Y-m-d H:i:s' ),
 							'import_date' => $item->import_date,
 							'imported_agent_name' => $item->imported_agent_name,
-							'imported_folio' => $item->imported_folio
+							'imported_folio' => $item->imported_folio,
+							'agent_generation_vida' => $generation_vida,
+							'agent_generation_gmm' => $generation_gmm
 						);
-						$user_id = $this->user->getUserIdByAgentId( $item->agent_id);
+						$user_id = $this->user->getUserIdByAgentId($item->agent_id);
 						if (!$user_id)
 						{
 							$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
