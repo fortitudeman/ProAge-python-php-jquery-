@@ -1,27 +1,48 @@
 -- get generation of agent Vida
-SELECT 
+SELECT
   DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0
   AS generation FROM agents where user_id = some_id;
 
 -- get generation of agent GMM
 SELECT (TIMESTAMPDIFF(MONTH, '2018-04-02', NOW()) - 4) div 12
--- update generation of agent vida
+
+-- update generation of agent vida in agent table
 UPDATE `agents`
-SET    generation_vida = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) <= 1 then 'Generación 1' 
+SET    generation_vida = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) <= 1 then 'Generación 1'
 						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 2 then 'Generación 2'
 						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 3 then 'Generación 3'
 						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 4 then 'Generación 4'
 						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) >= 5 then 'Consolidado'
 						  end);
 
--- update generation of agent GMM
+-- update generation of agent GMM in agent table
 UPDATE `agents`
-SET    generation_gmm = (case when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 <= 1 then 'Generación 1' 
+SET    generation_gmm = (case when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 <= 1 then 'Generación 1'
 						  when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 = 2 then 'Generación 2'
 						  when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 = 3 then 'Generación 3'
 						  when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 = 4 then 'Generación 4'
 						  when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 >= 5 then 'Consolidado'
 						  end);
+
+-- update generation of agent vida in payments table
+UPDATE agents, payments
+SET    payments.agent_generation_vida = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) <= 1 then 'Generación 1'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 2 then 'Generación 2'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 3 then 'Generación 3'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 4 then 'Generación 4'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) >= 5 then 'Consolidado'
+                          end)
+where agents.user_id = payments.agent_id;
+
+-- update generation of agent GMM in payments table
+UPDATE agents, payments
+SET    payments.agent_generation_gmm = (case when (TIMESTAMPDIFF(MONTH, connection_date, payments.payment_date) - 4) div 12 <= 1 then 'Generación 1'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 = 2 then 'Generación 2'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 = 3 then 'Generación 3'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 = 4 then 'Generación 4'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 >= 5 then 'Consolidado'
+                          end)
+where agents.user_id = payments.agent_id;
 
 -- event Schendule Vida
 DELIMITER $$
@@ -41,19 +62,19 @@ BEGIN
     SET rightMonth = month(NOW());
     SET mm = MINUTE(rightnow);
 
-    IF (DATE(rightnow) = LAST_DAY(DATE(rightnow)) AND rightMonth = 3 ) 
-    	OR (DATE(rightnow) = LAST_DAY(DATE(rightnow)) AND rightMonth = 6 ) 
-    	OR (DATE(rightnow) = LAST_DAY(DATE(rightnow)) AND rightMonth = 9 ) 
+    IF (DATE(rightnow) = LAST_DAY(DATE(rightnow)) AND rightMonth = 3 )
+    	OR (DATE(rightnow) = LAST_DAY(DATE(rightnow)) AND rightMonth = 6 )
+    	OR (DATE(rightnow) = LAST_DAY(DATE(rightnow)) AND rightMonth = 9 )
     	OR (DATE(rightnow) = LAST_DAY(DATE(rightnow)) AND rightMonth = 12 ) THEN
         IF hh = 23 THEN
             IF mm = 50 THEN
                 	UPDATE `agents`
-					SET    generation_vida = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) <= 1 then 1 
+					SET    generation_vida = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) <= 1 then 1
 							  				       when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 2 then 2
 							  				       when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 3 then 3
 							  			           when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 4 then 4
 							  			           when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) >= 5 then 5
-							  			           end)
+							  			           end);
             END IF;
         END IF;
     END IF;
@@ -80,13 +101,13 @@ BEGIN
     SET rightMonth = month(NOW());
     SET mm = MINUTE(rightnow);
 
-    IF (DATE(rightnow) = LAST_DAY(DATE(rightnow)) AND rightMonth = 4 ) 
-    	OR (DATE(rightnow) = LAST_DAY(DATE(rightnow)) AND rightMonth = 8 ) 
+    IF (DATE(rightnow) = LAST_DAY(DATE(rightnow)) AND rightMonth = 4 )
+    	OR (DATE(rightnow) = LAST_DAY(DATE(rightnow)) AND rightMonth = 8 )
     	OR (DATE(rightnow) = LAST_DAY(DATE(rightnow)) AND rightMonth = 12 ) THEN
         IF hh = 23 THEN
             IF mm = 50 THEN
                 	UPDATE `agents`
-					SET    generation_gmm = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) <= 1 then 1 
+					SET    generation_gmm = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) <= 1 then 1
 							  				       when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 2 then 2
 							  				       when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 3 then 3
 							  			           when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 4 then 4
@@ -99,12 +120,12 @@ BEGIN
 END $$
 
 DELIMITER ;
-							  
--- Down events			  
+
+-- Down events
 DROP EVENT updateGenerationsAgentsGMM;
 DROP EVENT updateGenerationsAgentsVida;
 
--- Alter statement 
-ALTER TABLE `proages`.`agents` 
-ADD COLUMN `generation_gmm` INT(11) NULL AFTER `generation_vida`,
-ADD COLUMN `generation_vida` INT(11) NULL AFTER `generation_gmm`;
+-- Alter statement
+ALTER TABLE `proages`.`agents`
+ADD COLUMN `generation_gmm` INT(11) NULL,
+ADD COLUMN `generation_vida` INT(11) NULL;
