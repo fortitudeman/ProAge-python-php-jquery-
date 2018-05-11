@@ -395,9 +395,9 @@
 								$generation_vida = NULL;
 								$generation_gmm = NULL;
 								if ($this->input->post( 'ramo' ) == 1){
-									$generation_vida = $this->user->getGenerationByAgentId($this->input->post('agent-select'));
+									$generation_vida = $this->user->getGenerationByAgentId($agents['user_id']);
 								}else{
-									$generation_gmm = $this->user->getGenerationByAgentId($this->input->post('agent-select'),false);
+									$generation_gmm = $this->user->getGenerationByAgentId($agents['user_id'],false);
 								}
 								$ot = array(
 									'user' => $this->sessions['id'],

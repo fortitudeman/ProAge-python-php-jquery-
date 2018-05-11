@@ -44,6 +44,26 @@ SET    payments.agent_generation_gmm = (case when (TIMESTAMPDIFF(MONTH, connecti
                           end)
 where agents.user_id = payments.agent_id;
 
+-- update generation of agent vida in work_order table
+UPDATE agents, work_order
+SET    work_order.agent_generation_vida = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) <= 1 then 'Generación 1'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 2 then 'Generación 2'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 3 then 'Generación 3'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 4 then 'Generación 4'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) >= 5 then 'Consolidado'
+                          end)
+where agents.user_id = work_order.user;
+
+-- update generation of agent GMM in work_order table
+UPDATE agents, work_order
+SET    work_order.agent_generation_gmm = (case when (TIMESTAMPDIFF(MONTH, connection_date, work_order.creation_date) - 4) div 12 <= 1 then 'Generación 1'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, work_order.creation_date) - 4) div 12 = 2 then 'Generación 2'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, work_order.creation_date) - 4) div 12 = 3 then 'Generación 3'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, work_order.creation_date) - 4) div 12 = 4 then 'Generación 4'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, work_order.creation_date) - 4) div 12 >= 5 then 'Consolidado'
+                          end)
+where agents.user_id = work_order.user;
+
 -- event Schendule Vida
 DELIMITER $$
 
