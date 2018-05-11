@@ -2788,18 +2788,19 @@ class User extends CI_Model
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
                 $dates=array();
-                $months=1;
+                $months=0;
                 for ($i=0;$i<$row->count_dates;$i++){
-                    $months=$i;
-                    if($row->count_dates==4){
-                        $months=3;
-                    }else if ($row->count_dates==2){
-                        $months=6;
-                    }
                     $date = date("Y-m-d");
                     if($i==0){
                         $date=$row->due_date;
                     }else{
+                        if($row->count_dates==4){
+                            $months=$months+3;
+                        }else if ($row->count_dates==2){
+                            $months=$months+6;
+                        }else{
+                            $months=$i;
+                        }
                         $str_date="".$row->due_date." +".$months." Month";
                         $date = date("Y-m-d",strtotime($str_date));
                     }
