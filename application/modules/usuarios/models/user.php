@@ -2760,14 +2760,14 @@ class User extends CI_Model
                     }else{
                         $interval=2;
                     }
-                    for ($i=0;$i<$interval;$i++){
-                        $months=1;
+                    for ($i=1;$i<=$interval;$i++){
+                        $months=$i;
                         if($interval==4){
                             $months=3;
                         }else if ($interval==2){
                             $months=6;
                         }
-                        $str_date="".$row->creation_date." +".$i." Month";
+                        $str_date="".$row->creation_date." +".$months." Month";
                         $data = array('policy_id' => $row->id, 
                                       'adjusted_prima' => $row->prima/$interval,
                                       'due_date' => date("Y-m-d",strtotime($str_date))
