@@ -2761,18 +2761,60 @@ class User extends CI_Model
                         $interval=2;
                     }
                     for ($i=0;$i<$interval;$i++){
+                        $months=1;
+                        if($interval==4){
+                            $months=3;
+                        }else if ($interval==2){
+                            $months=6;
+                        }
+                        $str_date="".$row->creation_date." +".$i." Month";
                         $data = array('policy_id' => $row->id, 
                                       'adjusted_prima' => $row->prima/$interval,
-                                      'due_date' => $row->creation_date
+                                      'due_date' => date("Y-m-d",strtotime($str_date))
                         );
                         $result = $this->db->insert('policy_adjusted_primas', $data);
                     }
                 }   
             }
         }
+        $this->rebuildDatesCobranza();
         $query->free_result();
         return 0;
     }
+
+    public function rebuildDatesCobranza(){
+        $sql_str = "select policy_id, adjusted_prima, due_date, COUNT(*) as count_dates FROM policy_adjusted_primas GROUP BY policy_id,due_date HAVING count_dates > 1";
+        $query = $this->db->query($sql_str);
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+                $dates=array();
+                $months=1;
+                for ($i=1;$i<=$row->count_dates;$i++){
+                    $months=$i;
+                    if($row->count_dates==4){
+                        $months=3;
+                    }else if ($row->count_dates==2){
+                        $months=6;
+                    }
+                    $date = date("Y-m-d");
+                    if($i==1){
+                        $date=$row->due_date;
+                    }else{
+                        $str_date="".$row->due_date." +".$months." Month";
+                        $date = date("Y-m-d",strtotime($str_date));
+                    }
+                    $data = array('policy_id' => $row->policy_id, 
+                                  'adjusted_prima' => $row->adjusted_prima,
+                                  'due_date' => $date
+                    );
+                    $dates[]=$data;
+                }
+                $this->db->delete('policy_adjusted_primas',array('policy_id' => $row->policy_id));
+                $this->db->insert_batch('policy_adjusted_primas', $dates);
+            }
+        }
+    }
+
 
     // Common method for getting sum of cobranza (first param = TRUE) and details of cobranza (first param = FALSE)
     private function _getCobranza($sum_requested = TRUE, $agent_id = null, $filter = array())
@@ -2782,6 +2824,7 @@ class User extends CI_Model
         $policy_uids = array();
         $policy_ids = array();
         $this->checkCobranzasInDB();
+        $this->rebuildDatesCobranza();
 
 // 1. Get policy numbers that have a payment due in the period selected
         $this->db->select('policy_adjusted_primas.*, policies.payment_interval_id, policies.uid, policies.name as asegurado, products.name as product_name, work_order.work_order_status_id, work_order.creation_date, policies_vs_users.user_id as agent_ident, users.disabled, work_order.id as work_order_uid');
