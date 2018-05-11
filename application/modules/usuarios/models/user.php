@@ -2748,7 +2748,7 @@ class User extends CI_Model
                     }else{
                         $interval=2;
                     }
-                    for ($i=1;$i<=$interval;$i++){
+                    for ($i=0;$i<=$interval;$i++){
                         $months=$i;
                         if($interval==4){
                             $months=3;
@@ -2777,7 +2777,7 @@ class User extends CI_Model
             foreach ($query->result() as $row) {
                 $dates=array();
                 $months=1;
-                for ($i=1;$i<=$row->count_dates;$i++){
+                for ($i=0;$i<$row->count_dates;$i++){
                     $months=$i;
                     if($row->count_dates==4){
                         $months=3;
@@ -2785,7 +2785,7 @@ class User extends CI_Model
                         $months=6;
                     }
                     $date = date("Y-m-d");
-                    if($i==1){
+                    if($i==0){
                         $date=$row->due_date;
                     }else{
                         $str_date="".$row->due_date." +".$months." Month";
