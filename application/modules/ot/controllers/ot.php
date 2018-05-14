@@ -16,13 +16,13 @@
   class Ot extends CI_Controller {
 
 
-  	public $view = array();
+	public $view = array();
 
-  	public $sessions = array();
+	public $sessions = array();
 
-  	public $user_vs_rol = array();
+	public $user_vs_rol = array();
 
-  	public $roles_vs_access = array();
+	public $roles_vs_access = array();
 
 	public $access = false; // Force security
 
@@ -152,125 +152,126 @@
 				}
 
 // Show all records
-				public function index(){
+		public function index(){
 
-		// Load Model
-					$this->load->model( array( 'work_order', 'user' ) );
-		// Load Helpers
-					$this->load->helper( array('date', 'filter', 'ot') );
+// Load Model
+			$this->load->model( array( 'work_order', 'user' ) );
+// Load Helpers
+			$this->load->helper( array('date', 'filter', 'ot') );
 
-					if (count($_POST))
-					{
-						update_custom_period($this->input->post('cust_period_from'),
-							$this->input->post('cust_period_to'), FALSE);
-					}
+			if (count($_POST))
+			{
+				update_custom_period($this->input->post('cust_period_from'),
+					$this->input->post('cust_period_to'), FALSE);
+			}
 
-					$other_filters = array();
-					get_generic_filter($other_filters, array());
+			$other_filters = array();
+			get_generic_filter($other_filters, array());
 
-					$gerente_str = '';
-					$agente_str = '<option value="">Todos</option>';
-					$ramo_tramite_types = array();
-					$patent_type_ramo = 0;
-					prepare_ot_form($other_filters, $gerente_str, $agente_str, $ramo_tramite_types, $patent_type_ramo);
+			$gerente_str = '';
+			$agente_str = '<option value="">Todos</option>';
+			$ramo_tramite_types = array();
+			$patent_type_ramo = 0;
+			prepare_ot_form($other_filters, $gerente_str, $agente_str, $ramo_tramite_types, $patent_type_ramo);
 
-					$add_js = '
-					<script type="text/javascript">
-					$( document ).ready( function(){
-						proagesOverview.tramiteTypes = {' .
-						implode(', ', $ramo_tramite_types) . '
-					};
-					$( "#patent-type").html(proagesOverview.tramiteTypes[' . $patent_type_ramo . ']);
-				});
-				</script>
-				';
+			$add_js = '
+			<script type="text/javascript">
+			$( document ).ready( function(){
+				proagesOverview.tramiteTypes = {' .
+				implode(', ', $ramo_tramite_types) . '
+			};
+			$( "#patent-type").html(proagesOverview.tramiteTypes[' . $patent_type_ramo . ']);
+		});
+		</script>
+		';
 
 //      $ramo = isset($other_filters['ramo']) ? $other_filters['ramo'] : 1;
-				$ramo = 55;
-		// Config view
-				$this->view = array(
+		$ramo = 55;
+// Config view
+		$this->view = array(
 
-					'title' => 'Orden de trabajo',
-		   // Permisions
-					'user' => $this->sessions,
-					'user_vs_rol' => $this->user_vs_rol,
-					'roles_vs_access' => $this->roles_vs_access,
-					'access_create' => $this->access_create,
-					'access_update' => $this->access_update,
-					'access_delete' => $this->access_delete,
-					'access_all' => $this->access_all,
-					'css' => array(
-						'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',
-						'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
-						'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
-						'
-						<style>
-						.filterstable {margin-left: 2em; width:80%;}
-						.filterstable th {text-align: left;}
-						</style>',
-					),
-					'scripts' => array(
-						'
-						<script type="text/javascript">
-						$( document ).ready( function(){
-							Config.findUrl = "ot/find.html";
-						});
-						</script>
-						',
-						'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
-						'<script src="'.base_url().'ot/assets/scripts/list_js.js"></script>',
-						'<script src="'.base_url().'scripts/config.js"></script>',
-						$add_js,
-						'<script src="'.base_url().'ot/assets/scripts/overview.js"></script>',
-						'<script type="text/javascript" src="'. base_url() .'scripts/select_period.js"></script>',
-					),
-		  'content' => 'ot/list', // View to load
-		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'period_fields' => show_period_fields('ot_reporte', $ramo),
-		  'agents' => $agente_str,
-		  'gerentes' => $gerente_str,
-		  'other_filters' => $other_filters
-		);
+			'title' => 'Orden de trabajo',
+   // Permisions
+			'user' => $this->sessions,
+			'user_vs_rol' => $this->user_vs_rol,
+			'roles_vs_access' => $this->roles_vs_access,
+			'access_create' => $this->access_create,
+			'access_update' => $this->access_update,
+			'access_delete' => $this->access_delete,
+			'access_all' => $this->access_all,
+			'css' => array(
+				'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',
+				'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
+				'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
+				'
+				<style>
+				.filterstable {margin-left: 2em; width:80%;}
+				.filterstable th {text-align: left;}
+				</style>',
+			),
+			'scripts' => array(
+				'
+				<script type="text/javascript">
+				$( document ).ready( function(){
+					Config.findUrl = "ot/find.html";
+				});
+				</script>
+				',
+				'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
+				'<script src="'.base_url().'ot/assets/scripts/list_js.js"></script>',
+				'<script src="'.base_url().'scripts/config.js"></script>',
+				$add_js,
+				'<script src="'.base_url().'ot/assets/scripts/overview.js"></script>',
+				'<script type="text/javascript" src="'. base_url() .'scripts/select_period.js"></script>',
+			),
+				'content' => 'ot/list', // View to load
+				'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+				'period_fields' => show_period_fields('ot_reporte', $ramo),
+				'agents' => $agente_str,
+				'gerentes' => $gerente_str,
+				'other_filters' => $other_filters
+			);
 
-		// Render view
-				$this->load->view( 'index', $this->view );
-			}
-
-
-// Getting Filter
-// Copied and pasted to the code of agent/find:
-			public function find(){
-
-		// If is not ajax request redirect
-				if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
-
-		// Load Model
-				$this->load->model( 'work_order' );
-
-		// Load Helper
-				$this->load->helper( array( 'ot', 'date', 'filter' ) );
-				if (count($_POST))
-				{
-					update_custom_period($this->input->post('cust_period_from'),
-						$this->input->post('cust_period_to'), FALSE);
-				}
-				$other_filters = array();
-				$data = get_ot_data($other_filters, $this->access_all);
-
-				$view_data = array('data' => $data);
-				$this->load->view('ot/list_render', $view_data);
-			}
+// Render view
+		$this->load->view( 'index', $this->view );
+	}
 
 
-			public function find_scripts(){
+	// Getting Filter
+	// Copied and pasted to the code of agent/find:
+	public function find(){
 
-		// If is not ajax request redirect
-				if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
+								'expired_date' => $this->input->post( 'expired_date' ),
+	// If is not ajax request redirect
+		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
+
+	// Load Model
+		$this->load->model( 'work_order' );
+
+	// Load Helper
+		$this->load->helper( array( 'ot', 'date', 'filter' ) );
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+		}
+		$other_filters = array();
+		$data = get_ot_data($other_filters, $this->access_all);
+
+		$view_data = array('data' => $data);
+		$this->load->view('ot/list_render', $view_data);
+	}
 
 
-				echo " $( '.popup' ).hide(); $( '.btn-hide' ).bind( 'click', function(){ $( '.popup' ).hide(); });  ";exit;
+	public function find_scripts(){
 
-			}
+// If is not ajax request redirect
+		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
+
+
+		echo " $( '.popup' ).hide(); $( '.btn-hide' ).bind( 'click', function(){ $( '.popup' ).hide(); });  ";exit;
+
+	}
 
 
 
@@ -281,438 +282,439 @@
 
 
 // Create new role
-			public function create(){
+	public function create(){
 
-		// Check access teh user for create
-				if( $this->access_create == false ){
-			// Set false message
-					$this->session->set_flashdata( 'message', array(
-						'type' => false,
-						'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Crear", Informe a su administrador para que le otorge los permisos necesarios.'
-					));
-					redirect( 'ot', 'refresh' );
-				}
-
-				if( !empty( $_POST ) ){
-					$this->form_validation->set_rules('ramo', 'Ramo', 'required');
-					$this->form_validation->set_rules('ot', 'Número de OT', 'is_unique[work_order.uid]');
-					$this->form_validation->set_rules('work_order_type_id', 'Tipo de tramite', 'required');
-					$this->form_validation->set_rules('subtype', 'Sub tipo', 'required');
-
-			// IF IS A NEW BUSSINESS
-					if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' )
-					{
-				// Validations
-						$this->form_validation->set_rules('product_id', 'Producto', 'required|xxs_clean');
-						$this->form_validation->set_rules('currency_id', 'Moneda', 'required|xxs_clean');
-						$this->form_validation->set_rules('prima', ' Prima anual',
-							'trim|decimal_or_integer');
-						$this->form_validation->set_rules('payment_interval_id', 'Conducto', 'required|xxs_clean');
-						$this->form_validation->set_rules('payment_method_id', 'Forma de pago', 'required|xxs_clean');
-						$this->form_validation->set_rules('name', 'Nombre', 'required|strtoupper|xxs_clean');
-				//$this->form_validation->set_rules('lastname_father', 'Apellido paterno', 'required|xxs_clean');
-				//$this->form_validation->set_rules('lastname_mother', 'Apellido materno', 'required|xxs_clean');
-					}
-					else
-					{
-						$this->form_validation->set_rules('name', 'Nombre', 'strtoupper');
-					}
-
-			// Run Validation
-					if ( $this->form_validation->run() == TRUE ){
-				// Load Model
-						$this->load->model( 'work_order' );
-						$controlSaved = true;
-						$policyId = 0;
-
-				// Save new bussiness
-				//if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' ){
-						if( !empty( $_POST['product_id'] ) )
-						{
-							$current_date = date( 'Y-m-d H:i:s' );
-							$field_values = array(
-								'last_updated' => $current_date,
-							);
-							if (! $this->_process_update_db_policy_prima(
-								$current_date, $field_values))
-							{
-					// Set false message
-								$this->session->set_flashdata( 'message', array(
-									'type' => false,
-									'message' => 'No se pudo convertir la prima.'
-								));
-								redirect( 'ot/create', 'refresh' );
-							}
-							$policy = array_merge($field_values, array(
-								'product_id' => $this->input->post( 'product_id' ),
-								'period' => $this->input->post( 'period' ),
-								'payment_method_id' => $this->input->post( 'payment_method_id' ),
-								'uid' => $this->input->post( 'uid' ),
-								'name' => $this->input->post( 'name' ),
-								'lastname_father' => $this->input->post( 'lastname_father' ),
-								'lastname_mother' => $this->input->post( 'lastname_mother' ),
-								'year_premium' => $this->input->post( 'year_premium' ),
-								'expired_date' => $this->input->post( 'expired_date' ),
-								'date' => $current_date
-							));
-
-						} else {
-							$policy = array(
-								'name' => $this->input->post( 'name' ),
-								'uid' => $this->input->post( 'uid' ),
-								'last_updated' => date( 'Y-m-d H:i:s' ),
-								'date' => date( 'Y-m-d H:i:s' )
-							);
-						}
-						if ( $controlSaved &&
-							$this->work_order->create( 'policies', $policy ) == false )
-							$controlSaved = false;
-
-							$policyId = $this->work_order->insert_id();
-
-				// Agents Adds
-							$agents = array();
-							for( $i=0; $i<=count( $this->input->post('agent') ); $i++ )
-								if( !empty(  $_POST['agent'][$i] ) )
-									$agents[] = array(
-										'user_id' => $_POST['agent'][$i],
-										'policy_id' => $policyId,
-										'percentage' => $_POST['porcentaje'][$i],
-										'since' => date( 'Y-m-d H:i:s' )
-									);
-
-								if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false )
-									$controlSaved = false;
-				//}
-								if( $controlSaved == false ){
-					// Set false message
-									$this->session->set_flashdata( 'message', array(
-										'type' => false,
-										'message' => 'No se puede crear la orden de trabajo Poliza, consulte a su administrador.'
-									));
-									redirect( 'ot', 'refresh' );
-								}
-								$generation_vida = NULL;
-								$generation_gmm = NULL;
-								if ($this->input->post( 'ramo' ) == 1){
-									$generation_vida = $this->user->getGenerationByAgentId($agents['user_id']);
-								}else{
-									$generation_gmm = $this->user->getGenerationByAgentId($agents['user_id'],false);
-								}
-								$ot = array(
-									'user' => $this->sessions['id'],
-									'policy_id' => $policyId,
-									'product_group_id' => $this->input->post( 'ramo' ),
-									'work_order_type_id' => $this->input->post( 'subtype' ),
-									'work_order_status_id' => 5,
-									'work_order_responsible_id' => 0,
-									'uid' => $this->input->post( 'ot' ),
-									'creation_date' => $this->input->post('creation_date'),
-									'comments' => $this->input->post('comments'),
-									'duration' => '',
-									'last_updated' => date( 'Y-m-d H:s:i' ),
-									'date' => date( 'Y-m-d H:s:i' ),
-									'agent_generation_vida' => $generation_vida,
-									'agent_generation_gmm' => $generation_gmm
-								);
-
-				// Save OT
-								if( $this->work_order->create( 'work_order', $ot ) == false )
-									$controlSaved = false;
-
-								if( $controlSaved == false ){
-					// Set false message
-									$this->session->set_flashdata( 'message', array(
-										'type' => false,
-										'message' => 'No se puede crear la orden de trabajo, consulte a su administrador.'
-									));
-									redirect( 'ot', 'refresh' );
-								}
-
-				// Send Email
-								$notification = $this->input->post('notification');
-								if ($notification !== FALSE)
-								{
-					//Get aditional emails
-									$aditional_emails = trim($this->input->post('emails'));
-
-					//Filter string for valid emails only
-									if(!empty($aditional_emails)){
-										$arr_emails = explode(",", $aditional_emails);
-										$valid_emails = array();
-										foreach ($arr_emails as $email_aditional) {
-											if(filter_var($email_aditional, FILTER_VALIDATE_EMAIL))
-												$valid_emails[] = $email_aditional;
-										}
-										$aditional_emails = implode(",", $valid_emails);
-									}
-
-
-									$this->load->library( 'mailer' );
-									$notification = $this->work_order->getNotification();
-									$this->mailer->notifications( $notification, null, null, array(
-										'from' => $this->sessions['email'],
-										'reply-to' => $this->sessions['email'],
-										'bcc' => /*$this->sessions['email'].(!empty($this->sessions['email2']) ? ",".$this->sessions['email2'] : "").*/(!empty($aditional_emails) ? ",".$aditional_emails : "")
-									)
-								);
-								}
-
-								if( $controlSaved == true ){
-					// Set false message
-									$this->session->set_flashdata( 'message', array(
-										'type' => true,
-										'message' => 'Se ha creado el registro correctamente.'
-									));
-									redirect( 'ot', 'refresh' );
-								}
-							}
-						}
-		// Load Model
-						$this->load->model( 'work_order' );
-		// Get products
-						$product = $this->work_order->getProductsOptions();
-		//Get Currency
-						$currency = $this->work_order->getCurrencyOptions();
-		// Get Payments intervals
-						$payment_intervals = $this->work_order->getPaymentIntervalOptions();
-		// Get Conduct (payment mode)
-						$payment_conduct = $this->work_order->getPaymentMethodsConductoOptions();
-		// Get Agents
-						$agents = $this->user->getAgents();
-
-						$add_js = '
-						<script type="text/javascript">
-						$("#prima").on("change keyup", function(event) {
-							if ( event.target.validity.valid ) {
-//      if ( ! event.target.validity.patternMismatch ) {
-								$("#prima-error").hide();
-							} else {
-								$("#prima-error").show();
-							}
-						});
-						';
-
-						$base_url = base_url();
-		// Config view
-						$this->view = array(
-							'title' => 'Crear OT',
-		   // Permisions
-							'user' => $this->sessions,
-							'user_vs_rol' => $this->user_vs_rol,
-							'roles_vs_access' => $this->roles_vs_access,
-							'css' => array(),
-							'scripts' =>  array(
-								'<script type="text/javascript" src="' .
-								$base_url . 'plugins/jquery-validation/jquery.validate.js"></script>',
-								'<script type="text/javascript" src="' .
-								$base_url . 'plugins/jquery-validation/es_validator.js"></script>',
-//            '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-								'<script src="' .
-								$base_url . 'ot/assets/scripts/create.js"></script>',
-								'<script src="' .
-								$base_url . 'scripts/config.js"></script>',
-								$add_js
-							),
-		  'content' => 'ot/create', // View to load
-		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'product' => $product,
-		  'currency' => $currency,
-		  'payment_intervals' => $payment_intervals,
-		  'payment_conduct' => $payment_conduct,
-		  'agents' => $agents
-		);
-
-		// Render view
-						$this->load->view( 'index', $this->view );
-					}
-
-	// Getting type tramite
-					public function typetramite(){
-
-		// If is not ajax request redirect
-						if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
-
-		// Load Model
-						$this->load->model( 'work_order' );
-
-						$options = $this->work_order->getTypeTramite( $this->input->post( 'ramo' ) );
-						echo $options;
-
-						return;
-					}
-
-	// Getting sub type
-					public function subtype(){
-
-		// If is not ajax request redirect
-						if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
-
-		// Load Model
-						$this->load->model( 'work_order' );
-
-						$options = $this->work_order->getSubType( $this->input->post( 'type' ) );
-						echo $options;
-						return;
-					}
-
-					public function period(){
-
-		// If is not ajax request redirect
-						if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
-		// Load Model
-						$this->load->model( 'work_order' );
-						$options = $this->work_order->getPeriod( $this->input->post( 'id' ) );
-		//print_r($_POST);
-						echo $options;
-						return;
-					}
-/**
- *  Condig Policies
- **/
-public function policies(){
-
-		// If is not ajax request redirect
-	if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
-		// Load Model
-	$this->load->model( 'work_order' );
-	$options = $this->work_order->getPolicies( $this->input->post( 'ramo' ) );
-		//print_r($_POST);
-	echo $options;
-
-	return;
-}
-
-/**
- *  Create policies
- **/
-
-public function create_policy(){
-
-	exit;
-		// Check access teh user for create
+	// Check access teh user for create
 	if( $this->access_create == false ){
-			// Set false message
-		$this->session->set_flashdata( 'message', array(
-			'type' => false,
-			'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Crear Politica.", Informe a su administrador para que le otorge los permisos necesarios.'
-		));
-		redirect( 'ot', 'refresh' );
+	// Set false message
+	$this->session->set_flashdata( 'message', array(
+		'type' => false,
+		'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Crear", Informe a su administrador para que le otorge los permisos necesarios.'
+	));
+	redirect( 'ot', 'refresh' );
 	}
-		// Load model
-	$this->load->model( array( 'work_order', 'user' ) );
-		// Save the record
+
 	if( !empty( $_POST ) ){
-			// Validations
-		$this->form_validation->set_rules('ramo', 'Ramo', 'required|xxs_clean');
+	$this->form_validation->set_rules('ramo', 'Ramo', 'required');
+	$this->form_validation->set_rules('ot', 'Número de OT', 'is_unique[work_order.uid]');
+	$this->form_validation->set_rules('work_order_type_id', 'Tipo de tramite', 'required');
+	$this->form_validation->set_rules('subtype', 'Sub tipo', 'required');
+
+	// IF IS A NEW BUSSINESS
+	if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' )
+	{
+	// Validations
 		$this->form_validation->set_rules('product_id', 'Producto', 'required|xxs_clean');
 		$this->form_validation->set_rules('currency_id', 'Moneda', 'required|xxs_clean');
+		$this->form_validation->set_rules('prima', ' Prima anual',
+			'trim|decimal_or_integer');
 		$this->form_validation->set_rules('payment_interval_id', 'Conducto', 'required|xxs_clean');
 		$this->form_validation->set_rules('payment_method_id', 'Forma de pago', 'required|xxs_clean');
 		$this->form_validation->set_rules('name', 'Nombre', 'required|strtoupper|xxs_clean');
-		$this->form_validation->set_rules('lastname_father', 'Apellido paterno', 'required|xxs_clean');
-		$this->form_validation->set_rules('lastname_mother', 'Apellido materno', 'required|xxs_clean');
-			//$this->form_validation->set_rules('agent[]', 'Agente', 'required|xxs_clean');
-			//$this->form_validation->set_rules('porcentaje[]', 'Porcentaje', 'required|xxs_clean');
-			// Run Validation
-		if ( $this->form_validation->run() == TRUE ){
-			$controlSave = true;
-			$policy = array(
+	//$this->form_validation->set_rules('lastname_father', 'Apellido paterno', 'required|xxs_clean');
+	//$this->form_validation->set_rules('lastname_mother', 'Apellido materno', 'required|xxs_clean');
+	}
+	else
+	{
+		$this->form_validation->set_rules('name', 'Nombre', 'strtoupper');
+	}
+
+	// Run Validation
+	if ( $this->form_validation->run() == TRUE ){
+	// Load Model
+		$this->load->model( 'work_order' );
+		$controlSaved = true;
+		$policyId = 0;
+
+	// Save new bussiness
+	//if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' ){
+		if( !empty( $_POST['product_id'] ) )
+		{
+			$current_date = date( 'Y-m-d H:i:s' );
+			$field_values = array(
+				'last_updated' => $current_date,
+			);
+			if (! $this->_process_update_db_policy_prima(
+				$current_date, $field_values))
+			{
+	// Set false message
+				$this->session->set_flashdata( 'message', array(
+					'type' => false,
+					'message' => 'No se pudo convertir la prima.'
+				));
+				redirect( 'ot/create', 'refresh' );
+			}
+			$policy = array_merge($field_values, array(
 				'product_id' => $this->input->post( 'product_id' ),
-				'currency_id' => $this->input->post( 'currency_id' ),
-				'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
+				'period' => $this->input->post( 'period' ),
 				'payment_method_id' => $this->input->post( 'payment_method_id' ),
 				'uid' => $this->input->post( 'uid' ),
 				'name' => $this->input->post( 'name' ),
 				'lastname_father' => $this->input->post( 'lastname_father' ),
 				'lastname_mother' => $this->input->post( 'lastname_mother' ),
 				'year_premium' => $this->input->post( 'year_premium' ),
-				'expired_date' => $this->input->post( 'expired_date' ),
+				'expired_date' => $current_date,
+				'date' => $current_date
+			));
+
+		} else {
+			$policy = array(
+				'name' => $this->input->post( 'name' ),
+				'uid' => $this->input->post( 'uid' ),
 				'last_updated' => date( 'Y-m-d H:i:s' ),
-				'date' => date( 'Y-m-d H:i:s' )
-
+				'date' => date( 'Y-m-d H:i:s' ),
 			);
+		}
+		if ( $controlSaved &&
+			$this->work_order->create( 'policies', $policy ) == false )
+			$controlSaved = false;
 
-			if( $this->work_order->create( 'policies', $policy ) == false )
-				$controlSave = false;
 			$policyId = $this->work_order->insert_id();
-
-				// Agents Adds
+			//get generation
+			$generation_vida = NULL;
+			$generation_gmm = NULL;
+			// Agents Adds
 			$agents = array();
 			for( $i=0; $i<=count( $this->input->post('agent') ); $i++ )
+				if ($this->input->post( 'ramo' ) == 1){
+					$generation_vida = $this->user->getGenerationByAgentId($agents['user_id']);
+				}else{
+					$generation_gmm = $this->user->getGenerationByAgentId($agents['user_id'],false);
+				}
 				if( !empty(  $_POST['agent'][$i] ) )
 					$agents[] = array(
 						'user_id' => $_POST['agent'][$i],
 						'policy_id' => $policyId,
 						'percentage' => $_POST['porcentaje'][$i],
-						'since' => date( 'Y-m-d H:i:s' )
+						'since' => date( 'Y-m-d H:i:s' ),
+						'agent_generation_vida' => $generation_vida,
+						'agent_generation_gmm' => $generation_gmm
 					);
 
-				if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false );
-				$controlSave = false;
-
-				if( $controlSave == true ){
-					  // Set true message
-					$this->session->set_flashdata( 'message', array(
-						'type' => true,
-						'message' => 'Se agrego la nueva politica.'
-					));
-					redirect( 'ot/create', 'refresh' );
-
-				}else{
-					// Set true message
+				if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false )
+					$controlSaved = false;
+	//}
+				if( $controlSaved == false ){
+	// Set false message
 					$this->session->set_flashdata( 'message', array(
 						'type' => false,
-						'message' => 'Ocurrio un error no se puede guardar la nueva politica, consulte a su administrador.'
+						'message' => 'No se puede crear la orden de trabajo Poliza, consulte a su administrador.'
 					));
-					redirect( 'ot/create', 'refresh' );
+					redirect( 'ot', 'refresh' );
+				}
+				$ot = array(
+					'user' => $this->sessions['id'],
+					'policy_id' => $policyId,
+					'product_group_id' => $this->input->post( 'ramo' ),
+					'work_order_type_id' => $this->input->post( 'subtype' ),
+					'work_order_status_id' => 5,
+					'work_order_responsible_id' => 0,
+					'uid' => $this->input->post( 'ot' ),
+					'creation_date' => $this->input->post('creation_date'),
+					'comments' => $this->input->post('comments'),
+					'duration' => '',
+					'last_updated' => date( 'Y-m-d H:s:i' ),
+					'date' => date( 'Y-m-d H:s:i' )
+				);
+
+	// Save OT
+				if( $this->work_order->create( 'work_order', $ot ) == false )
+					$controlSaved = false;
+
+				if( $controlSaved == false ){
+	// Set false message
+					$this->session->set_flashdata( 'message', array(
+						'type' => false,
+						'message' => 'No se puede crear la orden de trabajo, consulte a su administrador.'
+					));
+					redirect( 'ot', 'refresh' );
+				}
+
+	// Send Email
+				$notification = $this->input->post('notification');
+				if ($notification !== FALSE)
+				{
+	//Get aditional emails
+					$aditional_emails = trim($this->input->post('emails'));
+
+	//Filter string for valid emails only
+					if(!empty($aditional_emails)){
+						$arr_emails = explode(",", $aditional_emails);
+						$valid_emails = array();
+						foreach ($arr_emails as $email_aditional) {
+							if(filter_var($email_aditional, FILTER_VALIDATE_EMAIL))
+								$valid_emails[] = $email_aditional;
+						}
+						$aditional_emails = implode(",", $valid_emails);
+					}
+
+
+					$this->load->library( 'mailer' );
+					$notification = $this->work_order->getNotification();
+					$this->mailer->notifications( $notification, null, null, array(
+						'from' => $this->sessions['email'],
+						'reply-to' => $this->sessions['email'],
+						'bcc' => /*$this->sessions['email'].(!empty($this->sessions['email2']) ? ",".$this->sessions['email2'] : "").*/(!empty($aditional_emails) ? ",".$aditional_emails : "")
+					)
+				);
+				}
+
+				if( $controlSaved == true ){
+	// Set false message
+					$this->session->set_flashdata( 'message', array(
+						'type' => true,
+						'message' => 'Se ha creado el registro correctamente.'
+					));
+					redirect( 'ot', 'refresh' );
 				}
 			}
-			exit;
 		}
-
-		// Get products
+	// Load Model
+		$this->load->model( 'work_order' );
+	// Get products
 		$product = $this->work_order->getProductsOptions();
-
-		//Get Currency
+	//Get Currency
 		$currency = $this->work_order->getCurrencyOptions();
-
-		// Get Payment intervals
+	// Get Payments intervals
 		$payment_intervals = $this->work_order->getPaymentIntervalOptions();
-
-		// Get Conduct
+	// Get Conduct (payment mode)
 		$payment_conduct = $this->work_order->getPaymentMethodsConductoOptions();
-
-		// Get Agents
+	// Get Agents
 		$agents = $this->user->getAgents();
 
-		// Config view
+		$add_js = '
+		<script type="text/javascript">
+		$("#prima").on("change keyup", function(event) {
+			if ( event.target.validity.valid ) {
+	//      if ( ! event.target.validity.patternMismatch ) {
+				$("#prima-error").hide();
+			} else {
+				$("#prima-error").show();
+			}
+		});
+		';
+
+		$base_url = base_url();
+	// Config view
 		$this->view = array(
-			'title' => 'Crear Politica',
-		   // Permisions
+			'title' => 'Crear OT',
+	// Permisions
 			'user' => $this->sessions,
 			'user_vs_rol' => $this->user_vs_rol,
 			'roles_vs_access' => $this->roles_vs_access,
 			'css' => array(),
 			'scripts' =>  array(
-				'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
-				'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-				'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-				'<script src="'.base_url().'ot/assets/scripts/create_polocy.js"></script>',
-				'<script src="'.base_url().'scripts/config.js"></script>'
+				'<script type="text/javascript" src="' .
+				$base_url . 'plugins/jquery-validation/jquery.validate.js"></script>',
+				'<script type="text/javascript" src="' .
+				$base_url . 'plugins/jquery-validation/es_validator.js"></script>',
+	//            '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+				'<script src="' .
+				$base_url . 'ot/assets/scripts/create.js"></script>',
+				'<script src="' .
+				$base_url . 'scripts/config.js"></script>',
+				$add_js
 			),
-		  'content' => 'ot/create_policy', // View to load
-		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'product' => $product,
-		  'currency' => $currency,
-		  'payment_intervals' => $payment_intervals,
-		  'payment_conduct' => $payment_conduct,
-		  'agents' => $agents
+			'content' => 'ot/create', // View to load
+			'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+			'product' => $product,
+			'currency' => $currency,
+			'payment_intervals' => $payment_intervals,
+			'payment_conduct' => $payment_conduct,
+			'agents' => $agents
+	);
 
-		);
-		// Render view
+	// Render view
 		$this->load->view( 'index', $this->view );
 	}
+
+		// Getting type tramite
+	public function typetramite(){
+
+		// If is not ajax request redirect
+		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
+
+		// Load Model
+		$this->load->model( 'work_order' );
+
+		$options = $this->work_order->getTypeTramite( $this->input->post( 'ramo' ) );
+		echo $options;
+
+		return;
+	}
+
+	// Getting sub type
+	public function subtype(){
+
+		// If is not ajax request redirect
+		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
+
+		// Load Model
+		$this->load->model( 'work_order' );
+
+		$options = $this->work_order->getSubType( $this->input->post( 'type' ) );
+		echo $options;
+		return;
+	}
+
+	public function period(){
+
+		// If is not ajax request redirect
+		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
+		// Load Model
+		$this->load->model( 'work_order' );
+		$options = $this->work_order->getPeriod( $this->input->post( 'id' ) );
+		//print_r($_POST);
+		echo $options;
+		return;
+	}
+
+	/**
+	 *  Condig Policies
+	 **/
+	public function policies(){
+
+		// If is not ajax request redirect
+		if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
+			// Load Model
+		$this->load->model( 'work_order' );
+		$options = $this->work_order->getPolicies( $this->input->post( 'ramo' ) );
+			//print_r($_POST);
+		echo $options;
+
+		return;
+	}
+
+	/**
+	 *  Create policies
+	 **/
+
+	public function create_policy(){
+
+		exit;
+			// Check access teh user for create
+		if( $this->access_create == false ){
+				// Set false message
+			$this->session->set_flashdata( 'message', array(
+				'type' => false,
+				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Crear Politica.", Informe a su administrador para que le otorge los permisos necesarios.'
+			));
+			redirect( 'ot', 'refresh' );
+		}
+			// Load model
+		$this->load->model( array( 'work_order', 'user' ) );
+			// Save the record
+		if( !empty( $_POST ) ){
+				// Validations
+			$this->form_validation->set_rules('ramo', 'Ramo', 'required|xxs_clean');
+			$this->form_validation->set_rules('product_id', 'Producto', 'required|xxs_clean');
+			$this->form_validation->set_rules('currency_id', 'Moneda', 'required|xxs_clean');
+			$this->form_validation->set_rules('payment_interval_id', 'Conducto', 'required|xxs_clean');
+			$this->form_validation->set_rules('payment_method_id', 'Forma de pago', 'required|xxs_clean');
+			$this->form_validation->set_rules('name', 'Nombre', 'required|strtoupper|xxs_clean');
+			$this->form_validation->set_rules('lastname_father', 'Apellido paterno', 'required|xxs_clean');
+			$this->form_validation->set_rules('lastname_mother', 'Apellido materno', 'required|xxs_clean');
+				//$this->form_validation->set_rules('agent[]', 'Agente', 'required|xxs_clean');
+				//$this->form_validation->set_rules('porcentaje[]', 'Porcentaje', 'required|xxs_clean');
+				// Run Validation
+			if ( $this->form_validation->run() == TRUE ){
+				$controlSave = true;
+				$policy = array(
+					'product_id' => $this->input->post( 'product_id' ),
+					'currency_id' => $this->input->post( 'currency_id' ),
+					'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
+					'payment_method_id' => $this->input->post( 'payment_method_id' ),
+					'uid' => $this->input->post( 'uid' ),
+					'name' => $this->input->post( 'name' ),
+					'lastname_father' => $this->input->post( 'lastname_father' ),
+					'lastname_mother' => $this->input->post( 'lastname_mother' ),
+					'year_premium' => $this->input->post( 'year_premium' ),
+					'expired_date' => $this->input->post( 'expired_date' ),
+					'last_updated' => date( 'Y-m-d H:i:s' ),
+					'date' => date( 'Y-m-d H:i:s' )
+
+				);
+
+				if( $this->work_order->create( 'policies', $policy ) == false )
+					$controlSave = false;
+				$policyId = $this->work_order->insert_id();
+
+					// Agents Adds
+				$agents = array();
+				for( $i=0; $i<=count( $this->input->post('agent') ); $i++ )
+					if( !empty(  $_POST['agent'][$i] ) )
+						$agents[] = array(
+							'user_id' => $_POST['agent'][$i],
+							'policy_id' => $policyId,
+							'percentage' => $_POST['porcentaje'][$i],
+							'since' => date( 'Y-m-d H:i:s' )
+						);
+
+					if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false );
+					$controlSave = false;
+
+					if( $controlSave == true ){
+						  // Set true message
+						$this->session->set_flashdata( 'message', array(
+							'type' => true,
+							'message' => 'Se agrego la nueva politica.'
+						));
+						redirect( 'ot/create', 'refresh' );
+
+					}else{
+						// Set true message
+						$this->session->set_flashdata( 'message', array(
+							'type' => false,
+							'message' => 'Ocurrio un error no se puede guardar la nueva politica, consulte a su administrador.'
+						));
+						redirect( 'ot/create', 'refresh' );
+					}
+				}
+				exit;
+			}
+
+			// Get products
+			$product = $this->work_order->getProductsOptions();
+
+			//Get Currency
+			$currency = $this->work_order->getCurrencyOptions();
+
+			// Get Payment intervals
+			$payment_intervals = $this->work_order->getPaymentIntervalOptions();
+
+			// Get Conduct
+			$payment_conduct = $this->work_order->getPaymentMethodsConductoOptions();
+
+			// Get Agents
+			$agents = $this->user->getAgents();
+
+			// Config view
+			$this->view = array(
+				'title' => 'Crear Politica',
+			   // Permisions
+				'user' => $this->sessions,
+				'user_vs_rol' => $this->user_vs_rol,
+				'roles_vs_access' => $this->roles_vs_access,
+				'css' => array(),
+				'scripts' =>  array(
+					'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+					'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+					'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+					'<script src="'.base_url().'ot/assets/scripts/create_polocy.js"></script>',
+					'<script src="'.base_url().'scripts/config.js"></script>'
+				),
+			  'content' => 'ot/create_policy', // View to load
+			  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+			  'product' => $product,
+			  'currency' => $currency,
+			  'payment_intervals' => $payment_intervals,
+			  'payment_conduct' => $payment_conduct,
+			  'agents' => $agents
+
+			);
+			// Render view
+			$this->load->view( 'index', $this->view );
+		}
 
 
 	// Get Options for a new select
@@ -796,7 +798,7 @@ public function create_policy(){
 				'work_order_status_id' => 6,
 				'work_order_reason_id' => $this->input->post( 'work_order_reason_id' ),
 				'work_order_responsible_id' => $this->input->post( 'work_order_responsible_id' ),
-//              'creation_date' => '0000-00-00 00:00:00', // Quitar el tiempo
+	//              'creation_date' => '0000-00-00 00:00:00', // Quitar el tiempo
 				'comments' => $comments_posted,
 				'last_updated' => date( 'd-m-Y H:i:s' )
 			);
@@ -855,79 +857,27 @@ public function create_policy(){
 		$this->load->view( 'index', $this->view );
 	}
 
-	public function desactivar( $ot = null ){
+		public function desactivar( $ot = null ){
 
-		$this->load->model( 'work_order' );
-		$work_order = array(
-			'work_order_status_id' => 9,
-			'creation_date' => date( 'Y-m-d H:i:s' ), // Quitar el tiempo
-			'last_updated' => date( 'Y-m-d H:i:s' )
-		);
-		if ( $ot &&
-			$this->work_order->update( 'work_order', $ot, $work_order ) &&
-			( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
-				!== FALSE)
-		)
-		{
-			// Send Email
-			if ($this->uri->rsegment(4, 1) == 1)
-				$this->_send_notification($ot, $updated);
-			// Set true message
-			$this->session->set_flashdata( 'message', array(
-				'type' => true,
-				'message' => 'Se ha guardado el registro correctamente.'
-			));
-			redirect( 'ot', 'refresh' );
-		}else{
-			// Set true message
-			$this->session->set_flashdata( 'message', array(
-				'type' => false,
-				'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
-			));
-			redirect( 'ot', 'refresh' );
-		}
-		exit;
-	}
-
-	public function cancelar( $ot = null ){
-
-		// Check access teh user for create
-		if( $this->access_delete == false ){
-			// Set false message
-			$this->session->set_flashdata( 'message', array(
-				'type' => false,
-				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Cancelar.", Informe a su administrador para que le otorge los permisos necesarios.'
-			));
-			redirect( 'ot', 'refresh' );
-		}
-
-		// Load Model
-		$this->load->model( 'work_order' );
-		// Save Record
-		if( !empty( $_POST ) ){
+			$this->load->model( 'work_order' );
 			$work_order = array(
-				'work_order_status_id' => 2,
-				'work_order_reason_id' => $this->input->post( 'work_order_reason_id' ),
-				'work_order_responsible_id' => $this->input->post( 'work_order_responsible_id' ),
-				'notes' => $this->input->post( 'notes' ),
-				'last_updated' => date( 'd-m-Y H:i:s' )
+				'work_order_status_id' => 9,
+				'creation_date' => date( 'Y-m-d H:i:s' ), // Quitar el tiempo
+				'last_updated' => date( 'Y-m-d H:i:s' )
 			);
-
-			if ( $this->work_order->update( 'work_order', $ot, $work_order ) &&
+			if ( $ot &&
+				$this->work_order->update( 'work_order', $ot, $work_order ) &&
 				( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
 					!== FALSE)
 			)
 			{
 				// Send Email
-				$notification = $this->input->post('notification');
-				if ($notification !== FALSE)
+				if ($this->uri->rsegment(4, 1) == 1)
 					$this->_send_notification($ot, $updated);
-
 				// Set true message
 				$this->session->set_flashdata( 'message', array(
 					'type' => true,
 					'message' => 'Se ha guardado el registro correctamente.'
-
 				));
 				redirect( 'ot', 'refresh' );
 			}else{
@@ -940,65 +890,117 @@ public function create_policy(){
 			}
 			exit;
 		}
-		$data = $this->work_order->getOtActivateDesactivate( $ot );
 
-		// Config view
-		$this->view = array(
-			'title' => 'Desactivar OT',
-		   // Permisions
-			'user' => $this->sessions,
-			'user_vs_rol' => $this->user_vs_rol,
-			'roles_vs_access' => $this->roles_vs_access,
-			'css' => array(),
-			'scripts' =>  array(
-				'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
-				'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-				'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-				'<script src="'.base_url().'ot/assets/scripts/activate_desactivate.js"></script>',
-				'<script src="'.base_url().'scripts/config.js"></script>'
-			),
-		  'content' => 'ot/cancelar', // View to load
-		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'ot' => $ot,
-		  'reason' => $this->work_order->getReason( $data[0]['product_group_id'], 2, $data[0]['work_order_reason_id'] ),
-		  'responsibles' => $this->work_order->getResponsibles(  $data[0]['work_order_responsible_id'] ),
-		  'data' => $data
-		);
+		public function cancelar( $ot = null ){
 
-		// Render view
-		$this->load->view( 'index', $this->view );
-	}
+			// Check access teh user for create
+			if( $this->access_delete == false ){
+				// Set false message
+				$this->session->set_flashdata( 'message', array(
+					'type' => false,
+					'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Cancelar.", Informe a su administrador para que le otorge los permisos necesarios.'
+				));
+				redirect( 'ot', 'refresh' );
+			}
 
-	private function _send_notification($order_id, $updated)
-	{
-		$notification = $this->work_order->getNotification( $order_id );
-		if ($notification && isset($notification[0]))
-		{
-			$from_reply_to = array(
-				'from' => $this->sessions['email'],
-				'reply-to' => $this->sessions['email']/*,
-				'bcc' => $this->sessions['email'].(!empty($this->sessions['email2']) ? ",". $this->sessions['email2'] : "")*/
+			// Load Model
+			$this->load->model( 'work_order' );
+			// Save Record
+			if( !empty( $_POST ) ){
+				$work_order = array(
+					'work_order_status_id' => 2,
+					'work_order_reason_id' => $this->input->post( 'work_order_reason_id' ),
+					'work_order_responsible_id' => $this->input->post( 'work_order_responsible_id' ),
+					'notes' => $this->input->post( 'notes' ),
+					'last_updated' => date( 'd-m-Y H:i:s' )
+				);
+
+				if ( $this->work_order->update( 'work_order', $ot, $work_order ) &&
+					( ($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
+						!== FALSE)
+				)
+				{
+					// Send Email
+					$notification = $this->input->post('notification');
+					if ($notification !== FALSE)
+						$this->_send_notification($ot, $updated);
+
+					// Set true message
+					$this->session->set_flashdata( 'message', array(
+						'type' => true,
+						'message' => 'Se ha guardado el registro correctamente.'
+
+					));
+					redirect( 'ot', 'refresh' );
+				}else{
+					// Set true message
+					$this->session->set_flashdata( 'message', array(
+						'type' => false,
+						'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
+					));
+					redirect( 'ot', 'refresh' );
+				}
+				exit;
+			}
+			$data = $this->work_order->getOtActivateDesactivate( $ot );
+
+			// Config view
+			$this->view = array(
+				'title' => 'Desactivar OT',
+			   // Permisions
+				'user' => $this->sessions,
+				'user_vs_rol' => $this->user_vs_rol,
+				'roles_vs_access' => $this->roles_vs_access,
+				'css' => array(),
+				'scripts' =>  array(
+					'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+					'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+					'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+					'<script src="'.base_url().'ot/assets/scripts/activate_desactivate.js"></script>',
+					'<script src="'.base_url().'scripts/config.js"></script>'
+				),
+			  'content' => 'ot/cancelar', // View to load
+			  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+			  'ot' => $ot,
+			  'reason' => $this->work_order->getReason( $data[0]['product_group_id'], 2, $data[0]['work_order_reason_id'] ),
+			  'responsibles' => $this->work_order->getResponsibles(  $data[0]['work_order_responsible_id'] ),
+			  'data' => $data
 			);
-/*          $creator = $this->work_order->generic_get( 'users', array('id' => $updated[0]->user), 1);
-			if ($creator)
+
+			// Render view
+			$this->load->view( 'index', $this->view );
+		}
+
+		private function _send_notification($order_id, $updated)
+		{
+			$notification = $this->work_order->getNotification( $order_id );
+			if ($notification && isset($notification[0]))
 			{
 				$from_reply_to = array(
-					'from' => $creator[0]->email,
-					'reply-to' =>  $creator[0]->email);
-				}*/
-				$responsible = $this->work_order->getResponsiblesById( $notification[0]['work_order_responsible_id'] );
-				$reason = $this->work_order->getReasonById( $notification[0]['work_order_reason_id'] );
-				$this->load->library( 'mailer' );
-				if (!$responsible || !$reason || !isset($responsible[0]) || !isset($reason[0]))
+					'from' => $this->sessions['email'],
+					'reply-to' => $this->sessions['email']/*,
+					'bcc' => $this->sessions['email'].(!empty($this->sessions['email2']) ? ",". $this->sessions['email2'] : "")*/
+				);
+	/*          $creator = $this->work_order->generic_get( 'users', array('id' => $updated[0]->user), 1);
+				if ($creator)
 				{
-					$this->mailer->notifications( $notification, null, null, $from_reply_to );
-				}
-				else
-				{
-					$this->mailer->notifications( $notification, $reason[0]['name'], $responsible[0]['name'], $from_reply_to );
+					$from_reply_to = array(
+						'from' => $creator[0]->email,
+						'reply-to' =>  $creator[0]->email);
+					}*/
+					$responsible = $this->work_order->getResponsiblesById( $notification[0]['work_order_responsible_id'] );
+					$reason = $this->work_order->getReasonById( $notification[0]['work_order_reason_id'] );
+					$this->load->library( 'mailer' );
+					if (!$responsible || !$reason || !isset($responsible[0]) || !isset($reason[0]))
+					{
+						$this->mailer->notifications( $notification, null, null, $from_reply_to );
+					}
+					else
+					{
+						$this->mailer->notifications( $notification, $reason[0]['name'], $responsible[0]['name'], $from_reply_to );
+					}
 				}
 			}
-		}
 
 	/**
 	 *  Aceptar y rechazar
@@ -1044,8 +1046,7 @@ public function create_policy(){
 	}
 
 	public function rechazar( $ot = null){
-
-	// Load Model
+		// Load Model
 		$this->load->model( 'work_order' );
 		if( !empty( $_POST ) ){
 			$work_order = array(
@@ -1058,19 +1059,19 @@ public function create_policy(){
 				(($updated = $this->work_order->generic_get( 'work_order', array('id' => $ot), 1))
 					!== FALSE))
 			{
-			// Send Email
+				// Send Email
 				$send_notification = $this->input->post('notification');
 				if ($send_notification == 1)
 					$this->_send_notification($ot, $updated);
 
-			// Set true message
+				// Set true message
 				$this->session->set_flashdata( 'message', array(
 					'type' => true,
 					'message' => 'Se ha guardado el registro correctamente.'
 				));
 				redirect( 'ot', 'refresh' );
 			}else{
-			// Set true message
+				// Set true message
 				$this->session->set_flashdata( 'message', array(
 					'type' => false,
 					'message' => 'Ocurrio un error el registro no puede ser guardado, consulte a su administrador.'
@@ -1078,10 +1079,10 @@ public function create_policy(){
 				redirect( 'ot', 'refresh' );
 			}
 		}
-	// Config view
+		// Config view
 		$this->view = array(
 			'title' => 'Desactivar OT',
-	   // Permisions
+	   		// Permisions
 			'user' => $this->sessions,
 			'user_vs_rol' => $this->user_vs_rol,
 			'roles_vs_access' => $this->roles_vs_access,
@@ -1093,13 +1094,13 @@ public function create_policy(){
 				'<script src="'.base_url().'ot/assets/scripts/activate_desactivate.js"></script>',
 				'<script src="'.base_url().'scripts/config.js"></script>'
 			),
-	  'content' => 'ot/cancelar', // View to load
-	  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-	  'ot' => $ot,
-	  'rechazar' => 1
+				'content' => 'ot/cancelar', // View to load
+				'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+				'ot' => $ot,
+				'rechazar' => 1
 	);
 
-	// Render view
+		// Render view
 		$this->load->view( 'index', $this->view );
 	}
 
@@ -1223,7 +1224,7 @@ public function create_policy(){
 	}
 */
 
-// update work order
+	// update work order
 	public function update( $ot = null ){
 
 		// Check access teh user for create
@@ -1299,9 +1300,9 @@ public function create_policy(){
 				'<script src="'.base_url().'ot/assets/scripts/update.js"></script>',
 				'<script src="'.base_url().'scripts/config.js"></script>'
 			),
-		  'content' => 'ot/update', // View to load
-		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		  'data' => $data
+		  		'content' => 'ot/update', // View to load
+		  		'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+		  		'data' => $data
 		);
 
 		// Render view
@@ -1333,273 +1334,213 @@ public function create_policy(){
 			7 => 'payment_date',
 			8 => 'uid',
 			10 => 'amount',
-//          11 => 'is_new',
+			//          11 => 'is_new',
 			11 => 'year_prime',
 		),
 	);
-/**
- *  Payments
- **/
-public function import_payments()
-{
-		// Check access teh for import
-	if( $this->access_import_payments == false ){
-			// Set false message
-		$this->session->set_flashdata( 'message', array(
-			'type' => false,
-			'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Importar", Informe a su administrador para que le otorge los permisos necesarios.'
-		));
-		redirect( '/', 'refresh' );
-	}
-	$save_setting = @ini_get('auto_detect_line_endings');
-	@ini_set('auto_detect_line_endings', true);
-	$posted_month = null;
-	$posted_year = null;
-	$tmp_file = null;
-	$file_array = array();
-	$process = '';
-	$work_orders = array();
-	if( !empty( $_FILES ) ){
-// 1: Upload the file to import
-		$process = 'change-index';
-		$product = $_POST['product'];
-		$name = explode( '.', $_FILES['file']['name'] );
-		if( $name[1] == 'xls' ){
-				// Load Library
-			$this->load->library( 'reader_excel' );
-			$file = $this->reader_excel->upload();
-			if( !empty( $file ) ){
-				$this->reader_excel->setInstance( $file );
-				$file_array = $this->reader_excel->reader();
-				$this->_check_import_file_length($file_array, $file);
-			}
-			$tmp_file = $file;
-		}
-		elseif( $name[1] == 'csv' ){
-				// Load Library
-			$this->load->library( 'reader_csv' );
-			$file = $this->reader_csv->upload();
-			if( !empty( $file ) ){
-				$this->reader_csv->setInstance( $file );
-				$file_array = $this->reader_csv->reader();
-				$this->_check_import_file_length($file_array, $file);
-			}
-			$tmp_file = $file;
-		}
-		$fecha = explode("-", $file_array[0][8]);
-		$posted_month = $file_array[0][10];
-		$posted_year = $fecha[0];
-		if (!$tmp_file)
-		{
+	/**
+	 *  Payments
+	 **/
+	public function import_payments()
+	{
+			// Check access teh for import
+		if( $this->access_import_payments == false ){
+				// Set false message
 			$this->session->set_flashdata( 'message', array(
 				'type' => false,
-				'message' => 'El archivo esta inválido.'
+				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Importar", Informe a su administrador para que le otorge los permisos necesarios.'
 			));
-			redirect( '/ot/import_payments', 'refresh' );
+			redirect( '/', 'refresh' );
 		}
-	}
-		// Change index
-// 2: "Pre import"
-	if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'change-index' ){
-		if (!isset($_POST['product']) || ($_POST['product'] < 1) || ($_POST['product'] > 3))
-		{
-			$this->session->set_flashdata( 'message', array(
-				'type' => false,
-				'message' => 'Ocurrio un error. Consulte a su administrador.'
-			));
-			redirect( '/ot/import_payments', 'refresh' );
-		}
-		$process = 'choose-agents';
-		$select_agents = false;
-		$product = (int) $_POST['product'];
-			// Load Model
-
-		$this->load->model( array( 'work_order', 'usuarios/user' ) );
-		$tmp_file = $_POST['tmp_file'];
-		$name = explode( '.', $tmp_file );
-		if( $name[1] == 'xls' ){
-				// Load Library
-			$this->load->library( 'reader_excel' );
-			if( !empty( $tmp_file ) ){
-				$this->reader_excel->setInstance( $tmp_file );
-				$file_array = $this->reader_excel->reader();
-			}
-		}else{
-				// Load Library
-			$this->load->library( 'reader_csv' );
-			if( !empty( $tmp_file ) ){
-				$this->reader_csv->setInstance( $tmp_file );
-				$file_array = $this->reader_csv->reader();
-			}
-		}
-		$fecha = explode("-", $file_array[0][8]);
-		$posted_month = $file_array[0][10];
-		$posted_year = $fecha[0];
-		unset( $_POST['tmp_file'], $_POST['process'], $_POST['product'] );
-		
-		$this->load->helper('date');
-		$fields_to_import = $this->imported_fields[$product];
-		for( $i=0; $i<=count( $file_array ); $i++ ){
-			$this->db->close();
-			$this->db->initialize();
-// Prepare the import
-			if( isset( $file_array[$i] ) )
-			{
-				$always_imported = array(
-					'imported_folio' => $file_array[$i][4],
-					'imported_agent_name' => $file_array[$i][11],
-					'import_date' => sprintf("%04d-%02d-01", $posted_year, $posted_month));
-
-///////////////////////////////
-				$sometimes_imported = array();
-				foreach ($fields_to_import as $key => $value)
-				{
-					$sometimes_imported[$value] = $file_array[$i][$key];	
-					switch ($value)
-					{
-						case 'clave':
-						$sometimes_imported['agent'] = $this->user->getAgentByFolio( $sometimes_imported[$value], 'clave', $i  );
-						$sometimes_imported['agent_id'] = $this->user->getIdAgentByFolio( $sometimes_imported[$value], 'clave' );
-						break;
-						case 'agent_uidsnational':
-						$sometimes_imported['agent'] = $this->user->getAgentByFolio( $sometimes_imported[$value], 'national', $i  );
-						$sometimes_imported['agent_id'] = $this->user->getIdAgentByFolio( $sometimes_imported[$value], 'national' );
-						break;
-						case 'agent_uidsprovincial':
-						$sometimes_imported['agent'] = $this->user->getAgentByFolio( $sometimes_imported[$value], 'provincial', $i  );
-						$sometimes_imported['agent_id'] = $this->user->getIdAgentByFolio( $sometimes_imported[$value], 'provincial' );
-						break;
-						case 'uid':
-/*                              $file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '00000' );
-								$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '0000' );
-								$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '000' );
-								$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '00' );
-								$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '0' );*/
-								$sometimes_imported[$value] = ltrim( $sometimes_imported[$value], '0' );
-								break;
-								case 'year_prime':
-								if ($product == 3)
-									$sometimes_imported[$value] = (strtoupper($sometimes_imported[$value]) == 'N') ? 1 : 2;
-								break;
-								case 'amount':
-								break;
-								case 'payment_date':
-								if (!my_check_date($sometimes_imported[$value]))
-								{
-									$this->session->set_flashdata( 'message', array(
-										'type' => false,
-										'message' => 'No se pudo importar el archivo porque contiene fecha(s) de pago invalida(s).'
-									));
-									redirect( '/ot/import_payments', 'refresh' );
-								}
-								break;
-								case 'is_new':
-//                              if ($product == 3)
-//                                  $sometimes_imported[$value] = (strtoupper($sometimes_imported[$value]) == 'N') ? 1 : 0;
-								break;
-								case 'name':
-								break;
-								default:
-								break;
-							}
-							$file_array[$i]['wathdo'] = '';
-							$sometimes_imported['wathdo'] = '';
-/*                      if( isset( $sometimes_imported['year_prime'] ) and ($sometimes_imported['year_prime'] == 1 ) &&
-							isset($sometimes_imported['uid']))
-						{
-							$policy = $this->work_order->getPolicyByUid( $sometimes_imported['uid'] );
-							if( empty( $policy ) )
-								$sometimes_imported['wathdo'] = $this->work_order->getWathdo( $i );
-							else
-								$sometimes_imported['wathdo'] =  $this->work_order->getByPolicyUid( $sometimes_imported['uid'] );
-						}
-*/
-					}
-					$file_array[$i] = array_merge($sometimes_imported, $always_imported);
-					if (!$select_agents &&
-						(strpos($sometimes_imported['agent'], '<select name=') === 0))
-						$select_agents = TRUE;
-					}
-				}
-
-			if (!$select_agents) // agent assignment not needed => go directly to preview
-			$process = 'preview';
-
-// Here: $file_array contains an array of arrays - each of these arrays are indexed by the fields to import
-			// Load Model
-			$this->load->helper('file');
-			$time = time();
-			$filename = "./application/modules/ot/assets/tmp/payments_".$time.".json";
-			write_file($filename, json_encode($file_array));
-			$this->session->set_userdata('tmp_payment_file', $filename);
-			for( $i=0; $i<=count( $file_array ); $i++ )
-				unset( $file_array[$i]['agent_id'] );
-		}
-
-// 3: Allow user to assign agents to payments
-		// Change Selects Agents
-		if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'choose-agents' ){
-			// Load Helper
-			$this->load->helper('file');
-			$filename = $this->session->userdata('tmp_payment_file');
-			$file_array = read_file($filename);
-			unlink($filename);
-			if (!$file_array)
-				$this->_abort_import(1);
-			$file_array = json_decode( $file_array );
-			if (!$file_array)
-				$this->_abort_import(2);
-			$tmp_file = $_POST['tmp_file'];
-			$process = 'preview';
+		$save_setting = @ini_get('auto_detect_line_endings');
+		@ini_set('auto_detect_line_endings', true);
+		$posted_month = null;
+		$posted_year = null;
+		$tmp_file = null;
+		$file_array = array();
+		$process = '';
+		$work_orders = array();
+		if( !empty( $_FILES ) ){
+	// 1: Upload the file to import
+			$process = 'change-index';
 			$product = $_POST['product'];
-			unset( $_POST['tmp_file'], $_POST['process'],  $_POST['product'] );
-			$i=0;
-			foreach( $file_array as $value ){
-				if( isset( $_POST['agent_id'][$i] ) and is_numeric( $_POST['agent_id'][$i] ) ){
-					$file_array[$i]->agent_id =  $_POST['agent_id'][$i];
-					$file_array[$i]->agent = $this->user->getAgentsById( $_POST['agent_id'][$i] );
-					$timestamp = strtotime( date( 'Y-m-d H:s:i' ) );
-
-					if( isset( $file_array[$i]->agent_uidsnational ) ){
-						$exist = $this->user->getIdAgentByFolio( $file_array[$i]->agent_uidsnational, 'national'  );
-						$uids_agens = array(
-							'agent_id' => $file_array[$i]->agent_id,
-							'type' => 'national',
-							'uid' =>  $file_array[$i]->agent_uidsnational,
-							'last_updated' => $timestamp,
-							'date' => $timestamp
-						);
-						if( empty( $exist ) )
-							$this->user->create( 'agent_uids', $uids_agens );
-					}
-
-					if(  isset( $file_array[$i]->agent_uidsprovincial ) ){
-						$exist = $this->user->getIdAgentByFolio( $file_array[$i]->agent_uidsprovincial, 'provincial' );
-						$uids_agens = array(
-							'agent_id' => $file_array[$i]->agent_id,
-							'type' => 'provincial',
-							'uid' =>  $file_array[$i]->agent_uidsprovincial,
-							'last_updated' => $timestamp,
-							'date' => $timestamp
-						);
-						if( empty( $exist ) )
-							$this->user->create( 'agent_uids', $uids_agens );
-					}
+			$name = explode( '.', $_FILES['file']['name'] );
+			if( $name[1] == 'xls' ){
+					// Load Library
+				$this->load->library( 'reader_excel' );
+				$file = $this->reader_excel->upload();
+				if( !empty( $file ) ){
+					$this->reader_excel->setInstance( $file );
+					$file_array = $this->reader_excel->reader();
+					$this->_check_import_file_length($file_array, $file);
 				}
+				$tmp_file = $file;
+			}
+			elseif( $name[1] == 'csv' ){
+					// Load Library
+				$this->load->library( 'reader_csv' );
+				$file = $this->reader_csv->upload();
+				if( !empty( $file ) ){
+					$this->reader_csv->setInstance( $file );
+					$file_array = $this->reader_csv->reader();
+					$this->_check_import_file_length($file_array, $file);
+				}
+				$tmp_file = $file;
+			}
+			$fecha = explode("-", $file_array[0][8]);
+			$posted_month = $file_array[0][10];
+			$posted_year = $fecha[0];
+			if (!$tmp_file)
+			{
+				$this->session->set_flashdata( 'message', array(
+					'type' => false,
+					'message' => 'El archivo esta inválido.'
+				));
+				redirect( '/ot/import_payments', 'refresh' );
+			}
+		}
+			// Change index
+	// 2: "Pre import"
+		if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'change-index' ){
+			if (!isset($_POST['product']) || ($_POST['product'] < 1) || ($_POST['product'] > 3))
+			{
+				$this->session->set_flashdata( 'message', array(
+					'type' => false,
+					'message' => 'Ocurrio un error. Consulte a su administrador.'
+				));
+				redirect( '/ot/import_payments', 'refresh' );
+			}
+			$process = 'choose-agents';
+			$select_agents = false;
+			$product = (int) $_POST['product'];
+				// Load Model
 
-				$i++;
+			$this->load->model( array( 'work_order', 'usuarios/user' ) );
+			$tmp_file = $_POST['tmp_file'];
+			$name = explode( '.', $tmp_file );
+			if( $name[1] == 'xls' ){
+					// Load Library
+				$this->load->library( 'reader_excel' );
+				if( !empty( $tmp_file ) ){
+					$this->reader_excel->setInstance( $tmp_file );
+					$file_array = $this->reader_excel->reader();
+				}
+			}else{
+					// Load Library
+				$this->load->library( 'reader_csv' );
+				if( !empty( $tmp_file ) ){
+					$this->reader_csv->setInstance( $tmp_file );
+					$file_array = $this->reader_csv->reader();
+				}
+			}
+			$fecha = explode("-", $file_array[0][8]);
+			$posted_month = $file_array[0][10];
+			$posted_year = $fecha[0];
+			unset( $_POST['tmp_file'], $_POST['process'], $_POST['product'] );
+			
+			$this->load->helper('date');
+			$fields_to_import = $this->imported_fields[$product];
+			for( $i=0; $i<=count( $file_array ); $i++ ){
+				$this->db->close();
+				$this->db->initialize();
+	// Prepare the import
+				if( isset( $file_array[$i] ) )
+				{
+					$always_imported = array(
+						'imported_folio' => $file_array[$i][4],
+						'imported_agent_name' => $file_array[$i][11],
+						'import_date' => sprintf("%04d-%02d-01", $posted_year, $posted_month));
+
+	///////////////////////////////
+					$sometimes_imported = array();
+					foreach ($fields_to_import as $key => $value)
+					{
+						$sometimes_imported[$value] = $file_array[$i][$key];	
+						switch ($value)
+						{
+							case 'clave':
+							$sometimes_imported['agent'] = $this->user->getAgentByFolio( $sometimes_imported[$value], 'clave', $i  );
+							$sometimes_imported['agent_id'] = $this->user->getIdAgentByFolio( $sometimes_imported[$value], 'clave' );
+							break;
+							case 'agent_uidsnational':
+							$sometimes_imported['agent'] = $this->user->getAgentByFolio( $sometimes_imported[$value], 'national', $i  );
+							$sometimes_imported['agent_id'] = $this->user->getIdAgentByFolio( $sometimes_imported[$value], 'national' );
+							break;
+							case 'agent_uidsprovincial':
+							$sometimes_imported['agent'] = $this->user->getAgentByFolio( $sometimes_imported[$value], 'provincial', $i  );
+							$sometimes_imported['agent_id'] = $this->user->getIdAgentByFolio( $sometimes_imported[$value], 'provincial' );
+							break;
+							case 'uid':
+	/*                              $file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '00000' );
+									$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '0000' );
+									$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '000' );
+									$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '00' );
+									$file_array[$i]['uid']=ltrim( $file_array[$i]['uid'], '0' );*/
+									$sometimes_imported[$value] = ltrim( $sometimes_imported[$value], '0' );
+									break;
+									case 'year_prime':
+									if ($product == 3)
+										$sometimes_imported[$value] = (strtoupper($sometimes_imported[$value]) == 'N') ? 1 : 2;
+									break;
+									case 'amount':
+									break;
+									case 'payment_date':
+									if (!my_check_date($sometimes_imported[$value]))
+									{
+										$this->session->set_flashdata( 'message', array(
+											'type' => false,
+											'message' => 'No se pudo importar el archivo porque contiene fecha(s) de pago invalida(s).'
+										));
+										redirect( '/ot/import_payments', 'refresh' );
+									}
+									break;
+									case 'is_new':
+	//                              if ($product == 3)
+	//                                  $sometimes_imported[$value] = (strtoupper($sometimes_imported[$value]) == 'N') ? 1 : 0;
+									break;
+									case 'name':
+									break;
+									default:
+									break;
+								}
+								$file_array[$i]['wathdo'] = '';
+								$sometimes_imported['wathdo'] = '';
+	/*                      if( isset( $sometimes_imported['year_prime'] ) and ($sometimes_imported['year_prime'] == 1 ) &&
+								isset($sometimes_imported['uid']))
+							{
+								$policy = $this->work_order->getPolicyByUid( $sometimes_imported['uid'] );
+								if( empty( $policy ) )
+									$sometimes_imported['wathdo'] = $this->work_order->getWathdo( $i );
+								else
+									$sometimes_imported['wathdo'] =  $this->work_order->getByPolicyUid( $sometimes_imported['uid'] );
+							}
+	*/
+						}
+						$file_array[$i] = array_merge($sometimes_imported, $always_imported);
+						if (!$select_agents &&
+							(strpos($sometimes_imported['agent'], '<select name=') === 0))
+							$select_agents = TRUE;
+						}
+					}
+
+				if (!$select_agents) // agent assignment not needed => go directly to preview
+				$process = 'preview';
+
+	// Here: $file_array contains an array of arrays - each of these arrays are indexed by the fields to import
+				// Load Model
+				$this->load->helper('file');
+				$time = time();
+				$filename = "./application/modules/ot/assets/tmp/payments_".$time.".json";
+				write_file($filename, json_encode($file_array));
+				$this->session->set_userdata('tmp_payment_file', $filename);
+				for( $i=0; $i<=count( $file_array ); $i++ )
+					unset( $file_array[$i]['agent_id'] );
 			}
 
-			write_file($filename, json_encode($file_array));
-			for( $i=0; $i<=count( $file_array ); $i++ )
-				if( isset( $file_array[$i]->agent_id ) )
-					unset( $file_array[$i]->agent_id );
-			}
-
-		// Preview
-			if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'preview' ){
-		  // Load Model
-				$this->load->model( array( 'work_order', 'usuarios/user' ) );
+	// 3: Allow user to assign agents to payments
+			// Change Selects Agents
+			if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'choose-agents' ){
+				// Load Helper
 				$this->load->helper('file');
 				$filename = $this->session->userdata('tmp_payment_file');
 				$file_array = read_file($filename);
@@ -1609,709 +1550,769 @@ public function import_payments()
 				$file_array = json_decode( $file_array );
 				if (!$file_array)
 					$this->_abort_import(2);
+				$tmp_file = $_POST['tmp_file'];
+				$process = 'preview';
 				$product = $_POST['product'];
-				$controlSaved = true;
-				$i = 1;
-				$message = array( 'type' => false );
+				unset( $_POST['tmp_file'], $_POST['process'],  $_POST['product'] );
+				$i=0;
+				foreach( $file_array as $value ){
+					if( isset( $_POST['agent_id'][$i] ) and is_numeric( $_POST['agent_id'][$i] ) ){
+						$file_array[$i]->agent_id =  $_POST['agent_id'][$i];
+						$file_array[$i]->agent = $this->user->getAgentsById( $_POST['agent_id'][$i] );
+						$timestamp = strtotime( date( 'Y-m-d H:s:i' ) );
 
-				if (!count($file_array))
-				{
-					$message['message'][0][0]['saved'] = 'No se pudo importar el archivo: los datos de preimportacion no existen mas.';
-				}
-				else
-				{
-					$posted_ramo = $this->input->post('product');
-					if (isset($file_array[0]) && isset($file_array[0]->import_date) && $posted_ramo)
-					{
-						$where = array(
-							'import_date' => $file_array[0]->import_date,
-							'product_group' => (int)$posted_ramo
-						);
-						$this->work_order->generic_delete('payments', $where);
+						if( isset( $file_array[$i]->agent_uidsnational ) ){
+							$exist = $this->user->getIdAgentByFolio( $file_array[$i]->agent_uidsnational, 'national'  );
+							$uids_agens = array(
+								'agent_id' => $file_array[$i]->agent_id,
+								'type' => 'national',
+								'uid' =>  $file_array[$i]->agent_uidsnational,
+								'last_updated' => $timestamp,
+								'date' => $timestamp
+							);
+							if( empty( $exist ) )
+								$this->user->create( 'agent_uids', $uids_agens );
+						}
+
+						if(  isset( $file_array[$i]->agent_uidsprovincial ) ){
+							$exist = $this->user->getIdAgentByFolio( $file_array[$i]->agent_uidsprovincial, 'provincial' );
+							$uids_agens = array(
+								'agent_id' => $file_array[$i]->agent_id,
+								'type' => 'provincial',
+								'uid' =>  $file_array[$i]->agent_uidsprovincial,
+								'last_updated' => $timestamp,
+								'date' => $timestamp
+							);
+							if( empty( $exist ) )
+								$this->user->create( 'agent_uids', $uids_agens );
+						}
 					}
-					$generation_vida = NULL;
-					$generation_gmm = NULL;
-					foreach( $file_array as $item ){
-						if ($posted_ramo == 1) {
-							$generation_vida = $this->user->getGenerationByAgentId($item->agent_id);
-						}else{
-							$generation_gmm = $this->user->getGenerationByAgentId($item->agent_id,false);
-						}
-				// Verify policy
-				//$policy = $this->work_order->getPolicyByUid( $item->uid );
-						$payment_date = strtotime( $item->payment_date );
-						$stringed_payment_date = date( 'Y-m-d', $payment_date );
-						$payment = array(
-							'product_group' => $product,
-							'agent_id' => $item->agent_id,
-							'year_prime' => $item->year_prime,
-							'currency_id' => 1,
-							'amount' => $item->amount,
-							'payment_date' => $stringed_payment_date,
-							'business' => $item->is_new,
-							'policy_number' => $item->uid,
-							'last_updated' => date( 'Y-m-d H:i:s' ),
-							'date' => date( 'Y-m-d H:i:s' ),
-							'import_date' => $item->import_date,
-							'imported_agent_name' => $item->imported_agent_name,
-							'imported_folio' => $item->imported_folio,
-							'agent_generation_vida' => $generation_vida,
-							'agent_generation_gmm' => $generation_gmm
-						);
-						$user_id = $this->user->getUserIdByAgentId($item->agent_id);
-						if (!$user_id)
-						{
-							$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
-						}
 
-						else
-						{
-							if( $this->work_order->replace( 'payments', $payment ) == false )
-								$controlSaved = false;
-
-							$policy = $this->work_order->getPolicyByUid( $item->uid, false );
-
-							if ($controlSaved && $policy)
-							{
-								$this->user->create_negocio_pai($item->uid,$product);
-								if ($policy[0]['currency_id'] == 1)
-									$item_amount = $item->amount;
-							else // if policy in USD, convert payment amount from MXN to USD
-								// using the exchange rate at payment's payment date
-							{
-								$this->load->model('exchange_rate_model');
-								$item_amount = $this->exchange_rate_model->convert_prima(
-									$item->amount, 1, 2, $stringed_payment_date);
-							}
-							$prima_total = $policy[0]['prima_entered'];
-							if ($policy[0]['payment_interval_id'] == 1) {
-								$interval_pay = 12;
-							} elseif ($policy[0]['payment_interval_id'] == 2) {
-								$interval_pay = 3;
-							}elseif ($policy[0]['payment_interval_id'] == 3) {
-								$interval_pay = 2;
-							}elseif ($policy[0]['payment_interval_id'] == 4) {
-								$interval_pay = 1;
-							}
-							if (($item_amount != FALSE) && ($prima_total/$interval_pay) >= $item_amount)
-							{
-								$ot = $this->work_order->getWorkOrderByPolicy(  $policy[0]['id'] );
-								if( !empty( $ot ) )
-								{
-									$work_order = array( 'work_order_status_id' => 4 );
-									$this->work_order->update( 'work_order',
-										$ot[0]['id'], $work_order );
-								}
-							}
-						}
-
-						if($policy){
-							$po = $this->work_order->getWorkOrderByPolicy($policy[0]['id']);
-							$work_orders[] = $po[0];
-						}
-						if( $controlSaved == false )
-							$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
-					}
 					$i++;
 				}
-			}
-			if( !isset( $message['message'] ) ){
 
-				$message['type'] = true;
-				$message['message'] = 'El archivo se importo correctamente.';
-			}
-			// Clean System
-			$tmp_file = $_POST['tmp_file'];
-			$name = explode( '.', $tmp_file );
-			if( $name[1] == 'xls' ){
-				// Load Library
-				$this->load->library( 'reader_excel' );
-				if( !empty( $tmp_file ) ){
-					$this->reader_excel->setInstance( $tmp_file );
-					$this->reader_excel->drop();
+				write_file($filename, json_encode($file_array));
+				for( $i=0; $i<=count( $file_array ); $i++ )
+					if( isset( $file_array[$i]->agent_id ) )
+						unset( $file_array[$i]->agent_id );
 				}
-			}else{
-				// Load Library
-				$this->load->library( 'reader_csv' );
-				if( !empty( $tmp_file ) ){
-					$this->reader_csv->setInstance( $tmp_file );
-					$this->reader_csv->drop();
+
+			// Preview
+				if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'preview' ){
+			  // Load Model
+					$this->load->model( array( 'work_order', 'usuarios/user' ) );
+					$this->load->helper('file');
+					$filename = $this->session->userdata('tmp_payment_file');
+					$file_array = read_file($filename);
+					unlink($filename);
+					if (!$file_array)
+						$this->_abort_import(1);
+					$file_array = json_decode( $file_array );
+					if (!$file_array)
+						$this->_abort_import(2);
+					$product = $_POST['product'];
+					$controlSaved = true;
+					$i = 1;
+					$message = array( 'type' => false );
+
+					if (!count($file_array))
+					{
+						$message['message'][0][0]['saved'] = 'No se pudo importar el archivo: los datos de preimportacion no existen mas.';
+					}
+					else
+					{
+						$posted_ramo = $this->input->post('product');
+						if (isset($file_array[0]) && isset($file_array[0]->import_date) && $posted_ramo)
+						{
+							$where = array(
+								'import_date' => $file_array[0]->import_date,
+								'product_group' => (int)$posted_ramo
+							);
+							$this->work_order->generic_delete('payments', $where);
+						}
+						$generation_vida = NULL;
+						$generation_gmm = NULL;
+						foreach( $file_array as $item ){
+							if ($posted_ramo == 1) {
+								$generation_vida = $this->user->getGenerationByAgentId($item->agent_id);
+							}else{
+								$generation_gmm = $this->user->getGenerationByAgentId($item->agent_id,false);
+							}
+					// Verify policy
+					//$policy = $this->work_order->getPolicyByUid( $item->uid );
+							$payment_date = strtotime( $item->payment_date );
+							$stringed_payment_date = date( 'Y-m-d', $payment_date );
+							$payment = array(
+								'product_group' => $product,
+								'agent_id' => $item->agent_id,
+								'year_prime' => $item->year_prime,
+								'currency_id' => 1,
+								'amount' => $item->amount,
+								'payment_date' => $stringed_payment_date,
+								'business' => $item->is_new,
+								'policy_number' => $item->uid,
+								'last_updated' => date( 'Y-m-d H:i:s' ),
+								'date' => date( 'Y-m-d H:i:s' ),
+								'import_date' => $item->import_date,
+								'imported_agent_name' => $item->imported_agent_name,
+								'imported_folio' => $item->imported_folio,
+								'agent_generation_vida' => $generation_vida,
+								'agent_generation_gmm' => $generation_gmm
+							);
+							$user_id = $this->user->getUserIdByAgentId($item->agent_id);
+							if (!$user_id)
+							{
+								$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
+							}
+
+							else
+							{
+								if( $this->work_order->replace( 'payments', $payment ) == false )
+									$controlSaved = false;
+
+								$policy = $this->work_order->getPolicyByUid( $item->uid, false );
+
+								if ($controlSaved && $policy)
+								{
+									$this->user->create_negocio_pai($item->uid,$product);
+									if ($policy[0]['currency_id'] == 1)
+										$item_amount = $item->amount;
+								else // if policy in USD, convert payment amount from MXN to USD
+									// using the exchange rate at payment's payment date
+								{
+									$this->load->model('exchange_rate_model');
+									$item_amount = $this->exchange_rate_model->convert_prima(
+										$item->amount, 1, 2, $stringed_payment_date);
+								}
+								$prima_total = $policy[0]['prima_entered'];
+								if ($policy[0]['payment_interval_id'] == 1) {
+									$interval_pay = 12;
+								} elseif ($policy[0]['payment_interval_id'] == 2) {
+									$interval_pay = 3;
+								}elseif ($policy[0]['payment_interval_id'] == 3) {
+									$interval_pay = 2;
+								}elseif ($policy[0]['payment_interval_id'] == 4) {
+									$interval_pay = 1;
+								}
+								if (($item_amount != FALSE) && ($prima_total/$interval_pay) >= $item_amount)
+								{
+									$ot = $this->work_order->getWorkOrderByPolicy(  $policy[0]['id'] );
+									if( !empty( $ot ) )
+									{
+										$work_order = array( 'work_order_status_id' => 4 );
+										$this->work_order->update( 'work_order',
+											$ot[0]['id'], $work_order );
+									}
+								}
+							}
+
+							if($policy){
+								$po = $this->work_order->getWorkOrderByPolicy($policy[0]['id']);
+								$work_orders[] = $po[0];
+							}
+							if( $controlSaved == false )
+								$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
+						}
+						$i++;
+					}
 				}
+				if( !isset( $message['message'] ) ){
+
+					$message['type'] = true;
+					$message['message'] = 'El archivo se importo correctamente.';
+				}
+				// Clean System
+				$tmp_file = $_POST['tmp_file'];
+				$name = explode( '.', $tmp_file );
+				if( $name[1] == 'xls' ){
+					// Load Library
+					$this->load->library( 'reader_excel' );
+					if( !empty( $tmp_file ) ){
+						$this->reader_excel->setInstance( $tmp_file );
+						$this->reader_excel->drop();
+					}
+				}else{
+					// Load Library
+					$this->load->library( 'reader_csv' );
+					if( !empty( $tmp_file ) ){
+						$this->reader_csv->setInstance( $tmp_file );
+						$this->reader_csv->drop();
+					}
+				}
+				$process = "finished";
 			}
-			$process = "finished";
+
+			@ini_set('auto_detect_line_endings', $save_setting);
+
+			// Load Model
+			$this->load->model( 'work_order' );
+			$products = $this->work_order->getProductsGroupsOptions();
+
+			// Config view
+			$this->view = array(
+
+				'title' => 'Ot Importar',
+			   // Permisions
+				'user' => $this->sessions,
+				'user_vs_rol' => $this->user_vs_rol,
+				'roles_vs_access' => $this->roles_vs_access,
+				'css' => array(
+					'<link href="'. base_url() .'ot/assets/style/import_payments.css" rel="stylesheet">'
+				),
+				'scripts' =>  array(
+					'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+					'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+	//            '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+					'<script type="text/javascript">$( document ).ready( function(){ $( "#formfile" ).validate(); });</script>',
+					'<script src="'.base_url().'scripts/config.js"></script>',
+					'<script src="'.base_url().'ot/assets/scripts/import.js"></script>'
+				),
+			  'content' => 'ot/import_payments', // View to load
+			  'products' => $products,
+			  'access_delete' => $this->access_delete,
+			  'message' => $this->session->flashdata('message') // Return Message, true and false if have
+			);
+			if( isset( $message ) ){
+				$this->view['message'] = $message;
+				unset( $tmp_file, $file_array );
+			}
+			if( isset( $tmp_file ) and !empty( $tmp_file ) )
+				$this->view['tmp_file'] = $tmp_file;
+			if( isset( $process ) and !empty( $process ) )
+				$this->view['process'] = $process;
+			if( isset( $product ) and !empty( $product ) )
+				$this->view['product'] = $product;
+			if( isset( $file_array ) and !empty( $file_array ) )
+				$this->view['file_array'] = $file_array;
+			if( isset( $work_orders ) and !empty( $work_orders ) )
+				$this->view['work_orders'] = $work_orders;
+			$this->view['month'] = $posted_month;
+			$this->view['year'] = $posted_year;
+
+			// Render view
+			$this->load->view('index',$this->view );
 		}
 
-		@ini_set('auto_detect_line_endings', $save_setting);
 
-		// Load Model
-		$this->load->model( 'work_order' );
-		$products = $this->work_order->getProductsGroupsOptions();
+	/**
+	 *  Reports
+	 **/
+	public function reporte()
+	{
+			// Check access for report
+		if( $this->access_report == false )
+		{
+				// Set false message
+			$this->session->set_flashdata( 'message', array
+				(
+					'type' => false,
+					'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Ver Reporte", Informe a su administrador para que le otorge los permisos necesarios.'
+				));
+			redirect( '/', 'refresh' );
+		}
 
-		// Config view
+		$agent_array = array();
+		$other_filters = array();
+		$this->load->helper( array('ot', 'filter' ));
+		if (count($_POST))
+		{
+			update_custom_period($this->input->post('cust_period_from'),
+				$this->input->post('cust_period_to'), FALSE);
+		}
+		$data = $this->_init_report($agent_array, $other_filters);
+
+			// Load model
+		$this->load->model( array( 'usuarios/user', 'work_order' ) );
+
+		unset( $data[0] );
+
+		$agent_multi = array();
+		foreach ( $agent_array as $key => $value )
+		{
+			$agent_multi[] = "\n'$value [ID: $key]'";
+		}
+		$inline_js =
+		'
+		<script type="text/javascript">
+		$( document ).ready( function(){
+			var agentList = [' . implode(',', $agent_multi) . '
+		];
+
+		function split( val ) {
+		return val.split( /\n\s*/ );
+	}
+	function extractLast( term ) {
+		return split( term ).pop();
+	}
+	$( ".submit-form").bind("click", function( event ) {
+		$( "#form").submit();
+	})
+	$( "#clear-agent-filter").bind("click", function( event ) {
+		$( "#agent-name" ).val("");
+		$( "#form").submit();
+	})
+	$( "#agent-name" )
+			// don\'t navigate away from the field on tab when selecting an item
+	.bind( "keydown", function( event ) {
+		if ( event.keyCode === $.ui.keyCode.TAB &&
+			$( this ).data( "ui-autocomplete" ).menu.active ) {
+				event.preventDefault();
+			}
+		})
+		/*          .bind( "change", function( event ) {
+			alert("changed!");
+		})*/
+		.autocomplete({
+			minLength: 0,
+			source: function( request, response ) {
+						// delegate back to autocomplete, but extract the last term
+				response( $.ui.autocomplete.filter(
+					agentList, extractLast( request.term ) ) );
+				},
+				focus: function() {
+						// prevent value inserted on focus
+					return false;
+				},
+				select: function( event, ui ) {
+					var terms = split( this.value );
+						// remove the current input
+					terms.pop();
+						// add the selected item
+					terms.push( ui.item.value );
+						// add placeholder to get the comma-and-space at the end
+					terms.push( "" );
+					this.value = terms.join( "\n" );
+					$( "#form").submit();
+					return false;
+				}
+			})
+		});
+		</script>
+		';
+
+		$filter_data = array(
+			'manager' => $this->user->getSelectsGerentes2(),
+			'period_fields' => show_period_fields('ot_reporte', $other_filters['ramo']),
+			'other_filters' => $other_filters,
+			'export_xls' => $this->access_export_xls,
+			'report_columns' => $this->load->view('filters/report_columns', array(), true)
+		);
+		$filter_view = $this->load->view('filters/report', $filter_data, true);
+
+			// Config view
 		$this->view = array(
 
-			'title' => 'Ot Importar',
-		   // Permisions
+			'title' => 'Ot Ver reporte',
+			   // Permisions
 			'user' => $this->sessions,
 			'user_vs_rol' => $this->user_vs_rol,
 			'roles_vs_access' => $this->roles_vs_access,
+	//        'export_xls' => $this->access_export_xls,
 			'css' => array(
-				'<link href="'. base_url() .'ot/assets/style/import_payments.css" rel="stylesheet">'
+	//          '<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
+				'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',
+				'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->',
+				'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">',
+				'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
+				'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
+				'<style>
+				.fancybox_blanco {color: #CCCCFF;}
+				.fancybox_blanco:hover{color: #FFFFFF;}
+				</style>',
+			),
+			'scripts' =>  array(
+				'<script type="text/javascript" src="'.base_url().'scripts/jquery.cookie.js"></script>',
+				'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
+				'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
+				//'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+				//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',
+				'<script src="'. base_url() .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
+				'<script>window.jQuery || document.write ("<script src='. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js><\/script>");</script>',
+				'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.ddslick.js"></script>',
+				'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
+				'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
+				'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',
+				'<script src="'.base_url().'scripts/config.js"></script>'   ,
+				'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
+				'<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>',
+				'<script type="text/javascript" src="'. base_url() .'scripts/select_period.js"></script>',
+				'<script type="text/javascript" src="'. base_url() .'scripts/report_columns.js"></script>',
+				$inline_js,
+				'
+				<script type="text/javascript">
+				function payment_popup(params) {
+					$.fancybox.showLoading();
+					$.post("' . base_url() . 'ot/payment_popup.html", jQuery.param(params) + "&" + $("#form").serialize(), function(data) {
+
+						if (data) {
+							$.fancybox({
+								content:data
+							});
+							return false;
+						}
+					});
+				}
+				</script>
+				'         ),
+	//        'manager' => $this->user->getSelectsGerentes2(),
+			  'content' => 'ot/report', // View to load
+			  'data' => $data,
+			  'tata' => $_POST,
+	//        'period_fields' => show_period_fields('ot_reporte', $other_filters['ramo']),
+	//        'other_filters' => $other_filters,
+			  'filter_view' => $filter_view,
+			  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
+			);
+			// Render view
+		$this->load->view( 'index', $this->view );
+	}
+
+	/**
+	 *  Reports Popup
+	 **/
+	// Copied and pasted to the code of agent/reporte_popup.html:
+	public function reporte_popup()
+	{
+		$this->load->helper('ot/ot');
+		reporte_popup('ot');
+	}
+
+	// Popup pertaining to payments (NOTE: copied and pasted of agent/.../payment_popup.html code)
+	public function payment_popup()
+	{
+		$data = array('values' => FALSE,
+			'access_update' => $this->access_update,
+			'access_delete' => $this->access_delete,
+		);
+		$this->load->model('usuarios/user');
+		$filter = array();
+		$posted_filter_query = $this->input->post('query');
+		if ( ($posted_filter_query !== FALSE) )
+			$filter['query'] = $posted_filter_query;
+
+		$request_type = $this->input->post('type');
+		switch ( $request_type )
+		{
+			case 'negocio':
+			$data['values'] = $this->user->getNegocioDetails( $this->input->post('for_agent_id'), $filter );
+			break;
+			case 'negociopai':
+			$data['values'] = $this->user->getNegocioPai( $this->input->post('for_agent_id'), $filter );
+			break;
+			case 'prima':
+			$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );
+			break;
+			case 'cartera':
+			$data['values'] = $this->user->getCarteraDetails( $this->input->post('for_agent_id'), $filter );
+			break;
+			case 'cobranza':
+			$data['values'] = $this->user->getCobranzaDetails( $this->input->post('for_agent_id'), $filter );
+			$this->load->view('popup_cobranza', $data);
+			return;
+			break;
+			default:
+			exit('Ocurrio un error. Consulte a su administrador.');
+			break;
+		}
+		$this->load->view('popup_payment', $data);
+	}
+
+	public function reporte_popupa()
+	{
+		$work_order_ids = $this->input->post('wrk_ord_ids');
+		$data['is_poliza'] = $this->input->post('is_poliza');
+		$data['gmm'] = $this->input->post('gmm');
+		$work_ids = explode(',',$work_order_ids);
+		$this->load->model('work_order');
+
+		$this->view = array(
+			'css' => array(
+				'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
+				'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
+				<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
+				'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
 			),
 			'scripts' =>  array(
 				'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
 				'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-//            '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-				'<script type="text/javascript">$( document ).ready( function(){ $( "#formfile" ).validate(); });</script>',
-				'<script src="'.base_url().'scripts/config.js"></script>',
-				'<script src="'.base_url().'ot/assets/scripts/import.js"></script>'
-			),
-		  'content' => 'ot/import_payments', // View to load
-		  'products' => $products,
-		  'access_delete' => $this->access_delete,
-		  'message' => $this->session->flashdata('message') // Return Message, true and false if have
-		);
-		if( isset( $message ) ){
-			$this->view['message'] = $message;
-			unset( $tmp_file, $file_array );
-		}
-		if( isset( $tmp_file ) and !empty( $tmp_file ) )
-			$this->view['tmp_file'] = $tmp_file;
-		if( isset( $process ) and !empty( $process ) )
-			$this->view['process'] = $process;
-		if( isset( $product ) and !empty( $product ) )
-			$this->view['product'] = $product;
-		if( isset( $file_array ) and !empty( $file_array ) )
-			$this->view['file_array'] = $file_array;
-		if( isset( $work_orders ) and !empty( $work_orders ) )
-			$this->view['work_orders'] = $work_orders;
-		$this->view['month'] = $posted_month;
-		$this->view['year'] = $posted_year;
-
-		// Render view
-		$this->load->view('index',$this->view );
-	}
-
-
-/**
- *  Reports
- **/
-public function reporte()
-{
-		// Check access for report
-	if( $this->access_report == false )
-	{
-			// Set false message
-		$this->session->set_flashdata( 'message', array
-			(
-				'type' => false,
-				'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Ver Reporte", Informe a su administrador para que le otorge los permisos necesarios.'
+				'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+				//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',
+				'<script src="'. base_url() .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
+				'<script>window.jQuery || document.write ("<script src='. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js><\/script>");</script>',
+				'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.ddslick.js"></script>',
+				'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>',
+				'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',
+				'<script src="'.base_url().'scripts/config.js"></script>'   ,
+				'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
+				'<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
 			));
-		redirect( '/', 'refresh' );
-	}
 
-	$agent_array = array();
-	$other_filters = array();
-	$this->load->helper( array('ot', 'filter' ));
-	if (count($_POST))
-	{
-		update_custom_period($this->input->post('cust_period_from'),
-			$this->input->post('cust_period_to'), FALSE);
-	}
-	$data = $this->_init_report($agent_array, $other_filters);
-
-		// Load model
-	$this->load->model( array( 'usuarios/user', 'work_order' ) );
-
-	unset( $data[0] );
-
-	$agent_multi = array();
-	foreach ( $agent_array as $key => $value )
-	{
-		$agent_multi[] = "\n'$value [ID: $key]'";
-	}
-	$inline_js =
-	'
-	<script type="text/javascript">
-	$( document ).ready( function(){
-		var agentList = [' . implode(',', $agent_multi) . '
-	];
-
-	function split( val ) {
-	return val.split( /\n\s*/ );
-}
-function extractLast( term ) {
-	return split( term ).pop();
-}
-$( ".submit-form").bind("click", function( event ) {
-	$( "#form").submit();
-})
-$( "#clear-agent-filter").bind("click", function( event ) {
-	$( "#agent-name" ).val("");
-	$( "#form").submit();
-})
-$( "#agent-name" )
-		// don\'t navigate away from the field on tab when selecting an item
-.bind( "keydown", function( event ) {
-	if ( event.keyCode === $.ui.keyCode.TAB &&
-		$( this ).data( "ui-autocomplete" ).menu.active ) {
-			event.preventDefault();
+		$results = array();
+		foreach($work_ids as $work_order_id)
+		{
+			$results[] = $this->work_order->pop_up_data($work_order_id);
 		}
-	})
-	/*          .bind( "change", function( event ) {
-		alert("changed!");
-	})*/
-	.autocomplete({
-		minLength: 0,
-		source: function( request, response ) {
-					// delegate back to autocomplete, but extract the last term
-			response( $.ui.autocomplete.filter(
-				agentList, extractLast( request.term ) ) );
-			},
-			focus: function() {
-					// prevent value inserted on focus
-				return false;
-			},
-			select: function( event, ui ) {
-				var terms = split( this.value );
-					// remove the current input
-				terms.pop();
-					// add the selected item
-				terms.push( ui.item.value );
-					// add placeholder to get the comma-and-space at the end
-				terms.push( "" );
-				this.value = terms.join( "\n" );
-				$( "#form").submit();
-				return false;
-			}
-		})
-	});
-	</script>
-	';
-
-	$filter_data = array(
-		'manager' => $this->user->getSelectsGerentes2(),
-		'period_fields' => show_period_fields('ot_reporte', $other_filters['ramo']),
-		'other_filters' => $other_filters,
-		'export_xls' => $this->access_export_xls,
-		'report_columns' => $this->load->view('filters/report_columns', array(), true)
-	);
-	$filter_view = $this->load->view('filters/report', $filter_data, true);
-
-		// Config view
-	$this->view = array(
-
-		'title' => 'Ot Ver reporte',
-		   // Permisions
-		'user' => $this->sessions,
-		'user_vs_rol' => $this->user_vs_rol,
-		'roles_vs_access' => $this->roles_vs_access,
-//        'export_xls' => $this->access_export_xls,
-		'css' => array(
-//          '<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
-			'<link href="'. base_url() .'ot/assets/style/theme.default.css" rel="stylesheet">',
-			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->',
-			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">',
-			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
-			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
-			'<style>
-			.fancybox_blanco {color: #CCCCFF;}
-			.fancybox_blanco:hover{color: #FFFFFF;}
-			</style>',
-		),
-		'scripts' =>  array(
-			'<script type="text/javascript" src="'.base_url().'scripts/jquery.cookie.js"></script>',
-			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
-			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-			//'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-			//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',
-			'<script src="'. base_url() .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
-			'<script>window.jQuery || document.write ("<script src='. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js><\/script>");</script>',
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.ddslick.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter-2.14.5.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.widgets-2.14.5.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',
-			'<script src="'.base_url().'scripts/config.js"></script>'   ,
-			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
-			'<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'scripts/select_period.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'scripts/report_columns.js"></script>',
-			$inline_js,
-			'
-			<script type="text/javascript">
-			function payment_popup(params) {
-				$.fancybox.showLoading();
-				$.post("' . base_url() . 'ot/payment_popup.html", jQuery.param(params) + "&" + $("#form").serialize(), function(data) {
-
-					if (data) {
-						$.fancybox({
-							content:data
-						});
-						return false;
-					}
-				});
-			}
-			</script>
-			'         ),
-//        'manager' => $this->user->getSelectsGerentes2(),
-		  'content' => 'ot/report', // View to load
-		  'data' => $data,
-		  'tata' => $_POST,
-//        'period_fields' => show_period_fields('ot_reporte', $other_filters['ramo']),
-//        'other_filters' => $other_filters,
-		  'filter_view' => $filter_view,
-		  'message' => $this->session->flashdata('message'), // Return Message, true and false if have
-		);
-		// Render view
-	$this->load->view( 'index', $this->view );
-}
-
-/**
- *  Reports Popup
- **/
-// Copied and pasted to the code of agent/reporte_popup.html:
-public function reporte_popup()
-{
-	$this->load->helper('ot/ot');
-	reporte_popup('ot');
-}
-
-// Popup pertaining to payments (NOTE: copied and pasted of agent/.../payment_popup.html code)
-public function payment_popup()
-{
-	$data = array('values' => FALSE,
-		'access_update' => $this->access_update,
-		'access_delete' => $this->access_delete,
-	);
-	$this->load->model('usuarios/user');
-	$filter = array();
-	$posted_filter_query = $this->input->post('query');
-	if ( ($posted_filter_query !== FALSE) )
-		$filter['query'] = $posted_filter_query;
-
-	$request_type = $this->input->post('type');
-	switch ( $request_type )
-	{
-		case 'negocio':
-		$data['values'] = $this->user->getNegocioDetails( $this->input->post('for_agent_id'), $filter );
-		break;
-		case 'negociopai':
-		$data['values'] = $this->user->getNegocioPai( $this->input->post('for_agent_id'), $filter );
-		break;
-		case 'prima':
-		$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );
-		break;
-		case 'cartera':
-		$data['values'] = $this->user->getCarteraDetails( $this->input->post('for_agent_id'), $filter );
-		break;
-		case 'cobranza':
-		$data['values'] = $this->user->getCobranzaDetails( $this->input->post('for_agent_id'), $filter );
-		$this->load->view('popup_cobranza', $data);
-		return;
-		break;
-		default:
-		exit('Ocurrio un error. Consulte a su administrador.');
-		break;
+		$data['values'] = $results;
+		$this->load->view('popup_report',$data);
 	}
-	$this->load->view('popup_payment', $data);
-}
 
-public function reporte_popupa()
-{
-	$work_order_ids = $this->input->post('wrk_ord_ids');
-	$data['is_poliza'] = $this->input->post('is_poliza');
-	$data['gmm'] = $this->input->post('gmm');
-	$work_ids = explode(',',$work_order_ids);
-	$this->load->model('work_order');
+	 /**
+	 *  Reports Popup
+	 **/
+	 public function reporte_popup_later()
+	 {
+			//$data['value'] = $this->uri->segment(3);
+		$this->load->model(array('work_order'));
+		$data['values'] = $this->work_order->pop_up_data();
+		$result = $this->load->view('popup_report',$data);
+		echo json_encode($result);
+	 }
 
-	$this->view = array(
-		'css' => array(
-			'<link href="'. base_url() .'ot/assets/style/report.css" rel="stylesheet">',
-			'<!--<link rel="stylesheet" href="'. base_url() .'ot/assets/style/normalize.min.css">-->
-			<link rel="stylesheet" href="'. base_url() .'ot/assets/style/main.css">',
-			'<link rel="stylesheet" href="'. base_url() .'ot/assets/style/jquery.fancybox.css">'
-		),
-		'scripts' =>  array(
-			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/jquery.validate.js"></script>',
-			'<script type="text/javascript" src="'.base_url().'plugins/jquery-validation/es_validator.js"></script>',
-			'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
-			//'<script type="text/javascript" language="javascript" src="'. base_url() .'ot/assets/plugins/DataTables/media/js/jquery.dataTables.js"<script>',
-			'<script src="'. base_url() .'ot/assets/scripts/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>',
-			'<script>window.jQuery || document.write ("<script src='. base_url() .'ot/assets/scripts/vendor/jquery-1.10.1.min.js><\/script>");</script>',
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.ddslick.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/jquery.tablesorter.js"></script>',
-			'<script type="text/javascript" src="'. base_url() .'ot/assets/scripts/main.js"></script>',
-			'<script src="'.base_url().'scripts/config.js"></script>'   ,
-			'<script src="'.base_url().'ot/assets/scripts/report.js"></script>',
-			'<script src="'.base_url().'ot/assets/scripts/jquery.fancybox.js"></script>'
-		));
-
-	$results = array();
-	foreach($work_ids as $work_order_id)
+	/**
+	 *  Email Popup
+	 **/
+	public function email_popup()
 	{
-		$results[] = $this->work_order->pop_up_data($work_order_id);
+			//$data['email_address'] = $this->uri->segment(3);
+		$tata = $this->input->post("work_ids");
+		$email = $this->input->post("email");
+		$data['Id'] = substr($tata,9, -1);
+		$data['username'] = $this->sessions['username'];
+		$this->load->view('popup_email',$data);
 	}
-	$data['values'] = $results;
-	$this->load->view('popup_report',$data);
-}
 
- /**
- *  Reports Popup
- **/
- public function reporte_popup_later()
- {
-		//$data['value'] = $this->uri->segment(3);
- 	$this->load->model(array('work_order'));
- 	$data['values'] = $this->work_order->pop_up_data();
- 	$result = $this->load->view('popup_report',$data);
- 	echo json_encode($result);
- }
+	 /**
+	 *  Send Email
+	 **/
+	 public function send_email()
+	 {
+		$email_address = $this->input->post('email_address');
+		$email_body = $this->input->post('email_body');
+		$this->load->library('email');
+		$this->email->set_mailtype("html");
+		$this->email->from('proAges@example.com','proAges');
+		$this->email->to($email_address);
+		$this->email->subject('Email from proAges');
+		$this->email->message($email_body);
 
-/**
- *  Email Popup
- **/
-public function email_popup()
-{
-		//$data['email_address'] = $this->uri->segment(3);
-	$tata = $this->input->post("work_ids");
-	$email = $this->input->post("email");
-	$data['Id'] = substr($tata,9, -1);
-	$data['username'] = $this->sessions['username'];
-	$this->load->view('popup_email',$data);
-}
+		$result = $this->email->send();
+		echo json_encode($result);
+	 }
 
- /**
- *  Send Email
- **/
- public function send_email()
- {
- 	$email_address = $this->input->post('email_address');
- 	$email_body = $this->input->post('email_body');
- 	$this->load->library('email');
- 	$this->email->set_mailtype("html");
- 	$this->email->from('proAges@example.com','proAges');
- 	$this->email->to($email_address);
- 	$this->email->subject('Email from proAges');
- 	$this->email->message($email_body);
+	 private function _report_export_helper($value, $ramo = 'vida_gmm')
+	 {
+		if ($ramo == 'vida_gmm')
+			$data_row = array(
+				'name' => $value['name'],
+				'uids' => '',
+				'connection_date' => '',
+				'negocio' => $value['negocio'],
+				'negociopai' => 0,
+				'prima' => $value['prima'],
+				'tramite' => 0,
+				'tramite_prima' => 0,
+				'pendientes' => 0,
+				'pendientes_primas' => 0,
+				'cobranza' => 0,
+				'negocios_proyectados' => 0,
+				'negocios_proyectados_primas' => 0,
+				'cartera' => 0,
+			);
+		else
+			$data_row = array(
+				'name' => $value['name'],
+				'uids' => '',
+				'connection_date' => '',
+				'iniciales' => $value['iniciales'],
+				'renovaciones' => $value['renovacion'],
+				'totales' => (int)$value['iniciales']+(int)$value['renovacion']
+			);
+		if ( !empty( $value['uids'][0]['type'] ) && ($value['uids'][0]['type'] == 'clave')
+			&& !empty( $value['uids'][0]['uid'] ))
+			$data_row['uids'] =  $value['uids'][0]['uid'];
+		else
+			$data_row['uids'] = 'Sin clave asignada';
 
- 	$result = $this->email->send();
- 	echo json_encode($result);
- }
+		if ( !empty( $value['connection_date'] ) && ($value['connection_date'] != '0000-00-00' ))
+			$data_row['connection_date'] =  $value['connection_date'];
+		else
+			$data_row['connection_date'] = 'No Conectado';
 
- private function _report_export_helper($value, $ramo = 'vida_gmm')
- {
- 	if ($ramo == 'vida_gmm')
- 		$data_row = array(
- 			'name' => $value['name'],
- 			'uids' => '',
- 			'connection_date' => '',
- 			'negocio' => $value['negocio'],
- 			'negociopai' => 0,
- 			'prima' => $value['prima'],
- 			'tramite' => 0,
- 			'tramite_prima' => 0,
- 			'pendientes' => 0,
- 			'pendientes_primas' => 0,
- 			'cobranza' => 0,
- 			'negocios_proyectados' => 0,
- 			'negocios_proyectados_primas' => 0,
- 			'cartera' => 0,
- 		);
- 	else
- 		$data_row = array(
- 			'name' => $value['name'],
- 			'uids' => '',
- 			'connection_date' => '',
- 			'iniciales' => $value['iniciales'],
- 			'renovaciones' => $value['renovacion'],
- 			'totales' => (int)$value['iniciales']+(int)$value['renovacion']
- 		);
- 	if ( !empty( $value['uids'][0]['type'] ) && ($value['uids'][0]['type'] == 'clave')
- 		&& !empty( $value['uids'][0]['uid'] ))
- 		$data_row['uids'] =  $value['uids'][0]['uid'];
- 	else
- 		$data_row['uids'] = 'Sin clave asignada';
+		return $data_row;
+	 }
 
- 	if ( !empty( $value['connection_date'] ) && ($value['connection_date'] != '0000-00-00' ))
- 		$data_row['connection_date'] =  $value['connection_date'];
- 	else
- 		$data_row['connection_date'] = 'No Conectado';
+	 public function report_export()
+	 {
+		$agent_array = array();
+		$other_filters = array();
+		$data = $this->_init_report($agent_array, $other_filters);
+		$data_report = array();
+			// Load Helper
+		$this->load->helper( array( 'usuarios/csv', 'ot' ) );
 
- 	return $data_row;
- }
+		if( empty( $_POST ) or isset( $_POST['query']['ramo'] )  and $_POST['query']['ramo'] !=3  )
+			{ // Vida or GMM
+				$total_negocio=0;
+				$total_negocio_pai=0;
+				$total_primas_pagadas=0;
+				$total_negocios_tramite=0;
+				$total_primas_tramite=0;
+				$total_negocio_pendiente=0;
+				$total_primas_pendientes=0;
+				$total_cartera = 0;
+				$total_negocios_proyectados=0;
+				$total_primas_proyectados=0;
+				$total_cobranza = 0;
 
- public function report_export()
- {
- 	$agent_array = array();
- 	$other_filters = array();
- 	$data = $this->_init_report($agent_array, $other_filters);
- 	$data_report = array();
-		// Load Helper
- 	$this->load->helper( array( 'usuarios/csv', 'ot' ) );
-
- 	if( empty( $_POST ) or isset( $_POST['query']['ramo'] )  and $_POST['query']['ramo'] !=3  )
-		{ // Vida or GMM
-			$total_negocio=0;
-			$total_negocio_pai=0;
-			$total_primas_pagadas=0;
-			$total_negocios_tramite=0;
-			$total_primas_tramite=0;
-			$total_negocio_pendiente=0;
-			$total_primas_pendientes=0;
-			$total_cartera = 0;
-			$total_negocios_proyectados=0;
-			$total_primas_proyectados=0;
-			$total_cobranza = 0;
-
-			if( !empty( $data ) )
-			{
-				foreach ( $data as $key => $value )
+				if( !empty( $data ) )
 				{
-					if ($key == 0)
-						$data_report[] = array(
-							'name' => 'Agentes',
-							'uids' => 'Clave única',
-							'connection_date' => 'Fecha de conexión',
-							'negocio' => 'Negocios Pagados',
-							'negociopai' => 'Negocios PAI',
-							'prima' => 'Primas Pagadas',
-							'tramite' => 'Negocios en Tramite',
-							'tramite_prima' => 'Primas en Tramite', //  (not in $data)
-							'pendientes' => 'Negocios Pendientes',
-							'pendientes_primas' => 'Primas Pendientes', //  (not in $data)
-							'cobranza' => 'Cobranza instalada',
-							'negocios_proyectados' => 'Negocios Proyectados',
-							'negocios_proyectados_primas' => 'Primas Proyectadas',
-							'cartera' => 'Cartera',
-						);
-					else
+					foreach ( $data as $key => $value )
 					{
-						$data_row = $this->_report_export_helper($value, 'vida_gmm');
-
-						if ( is_array( $value['negociopai'] ))
-							$data_row['negociopai'] = count( $value['negociopai'] );
+						if ($key == 0)
+							$data_report[] = array(
+								'name' => 'Agentes',
+								'uids' => 'Clave única',
+								'connection_date' => 'Fecha de conexión',
+								'negocio' => 'Negocios Pagados',
+								'negociopai' => 'Negocios PAI',
+								'prima' => 'Primas Pagadas',
+								'tramite' => 'Negocios en Tramite',
+								'tramite_prima' => 'Primas en Tramite', //  (not in $data)
+								'pendientes' => 'Negocios Pendientes',
+								'pendientes_primas' => 'Primas Pendientes', //  (not in $data)
+								'cobranza' => 'Cobranza instalada',
+								'negocios_proyectados' => 'Negocios Proyectados',
+								'negocios_proyectados_primas' => 'Primas Proyectadas',
+								'cartera' => 'Cartera',
+							);
 						else
-							$data_row['negociopai'] = $value['negociopai'];
-						if ( isset( $value['tramite']['count'] ) )
 						{
-							$data_row['tramite'] = $value['tramite']['count'];
-							$data_row['tramite_prima'] = $value['tramite']['adjusted_prima'];
+							$data_row = $this->_report_export_helper($value, 'vida_gmm');
+
+							if ( is_array( $value['negociopai'] ))
+								$data_row['negociopai'] = count( $value['negociopai'] );
+							else
+								$data_row['negociopai'] = $value['negociopai'];
+							if ( isset( $value['tramite']['count'] ) )
+							{
+								$data_row['tramite'] = $value['tramite']['count'];
+								$data_row['tramite_prima'] = $value['tramite']['adjusted_prima'];
+							}
+							if( isset( $value['aceptadas']['count'] ) )
+							{
+								$data_row['pendientes'] = $value['aceptadas']['count'];
+								$data_row['pendientes_primas'] = $value['aceptadas']['adjusted_prima'];
+							}
+							if ( isset( $value['cartera'] ) )
+								$data_row['cartera'] = $value['cartera'];
+							if ( isset( $value['cobranza']) && isset($value['cobranza']['total_due_past'])
+								&& isset($value['cobranza']['total_due_future'])
+								&& isset($value['cobranza']['total_paid']) )
+								$data_row['cobranza'] = $value['cobranza']['total_due_past'] +
+							$value['cobranza']['total_due_future'] -
+							$value['cobranza']['total_paid'];
+
+							$data_row['negocios_proyectados'] = (int)$data_row['pendientes'] +
+							(int)$data_row['tramite'];
+							if ($_POST['query']['ramo'] == 1)
+								$data_row['negocios_proyectados'] += (int)$data_row['negociopai'];
+							else
+								$data_row['negocios_proyectados'] += (int)$data_row['negocio'];
+
+							$data_row['negocios_proyectados_primas'] =
+							(float)$data_row['prima'] +
+							(float)$data_row['pendientes_primas'] + (float)$data_row['tramite_prima'] +
+							(float)$data_row['cobranza'];
+
+							$total_negocio += (int)$data_row['negocio'];
+							$total_negocio_pai += (int)$data_row['negociopai'];
+							$total_primas_pagadas += (float)$data_row['prima'];
+							$total_negocios_tramite += (int)$data_row['tramite'];
+							$total_primas_tramite += (float)$data_row['tramite_prima'];
+							$total_negocio_pendiente += (int)$data_row['pendientes'];
+							$total_primas_pendientes += (float)$data_row['pendientes_primas'];
+							$total_negocios_proyectados += (int)$data_row['negocios_proyectados'];
+							$total_primas_proyectados += (float)$data_row['negocios_proyectados_primas'];
+							$total_cartera += (float)$data_row['cartera'];
+							$total_cobranza += (float)$data_row['cobranza'];
+
+							$data_row['prima'] = '$ '.$data_row['prima'];
+							$data_row['tramite_prima'] = '$ '.$data_row['tramite_prima'];
+							$data_row['cartera'] = '$ '.$data_row['cartera'];
+							$data_row['cobranza'] = '$ '. number_format($data_row['cobranza']);
+
+							$data_row['pendientes_primas'] = '$ '.$data_row['pendientes_primas'];
+							$data_row['negocios_proyectados_primas'] = '$ '.$data_row['negocios_proyectados_primas'];
+							$data_report[] = $data_row;
 						}
-						if( isset( $value['aceptadas']['count'] ) )
-						{
-							$data_row['pendientes'] = $value['aceptadas']['count'];
-							$data_row['pendientes_primas'] = $value['aceptadas']['adjusted_prima'];
-						}
-						if ( isset( $value['cartera'] ) )
-							$data_row['cartera'] = $value['cartera'];
-						if ( isset( $value['cobranza']) && isset($value['cobranza']['total_due_past'])
-							&& isset($value['cobranza']['total_due_future'])
-							&& isset($value['cobranza']['total_paid']) )
-							$data_row['cobranza'] = $value['cobranza']['total_due_past'] +
-						$value['cobranza']['total_due_future'] -
-						$value['cobranza']['total_paid'];
-
-						$data_row['negocios_proyectados'] = (int)$data_row['pendientes'] +
-						(int)$data_row['tramite'];
-						if ($_POST['query']['ramo'] == 1)
-							$data_row['negocios_proyectados'] += (int)$data_row['negociopai'];
-						else
-							$data_row['negocios_proyectados'] += (int)$data_row['negocio'];
-
-						$data_row['negocios_proyectados_primas'] =
-						(float)$data_row['prima'] +
-						(float)$data_row['pendientes_primas'] + (float)$data_row['tramite_prima'] +
-						(float)$data_row['cobranza'];
-
-						$total_negocio += (int)$data_row['negocio'];
-						$total_negocio_pai += (int)$data_row['negociopai'];
-						$total_primas_pagadas += (float)$data_row['prima'];
-						$total_negocios_tramite += (int)$data_row['tramite'];
-						$total_primas_tramite += (float)$data_row['tramite_prima'];
-						$total_negocio_pendiente += (int)$data_row['pendientes'];
-						$total_primas_pendientes += (float)$data_row['pendientes_primas'];
-						$total_negocios_proyectados += (int)$data_row['negocios_proyectados'];
-						$total_primas_proyectados += (float)$data_row['negocios_proyectados_primas'];
-						$total_cartera += (float)$data_row['cartera'];
-						$total_cobranza += (float)$data_row['cobranza'];
-
-						$data_row['prima'] = '$ '.$data_row['prima'];
-						$data_row['tramite_prima'] = '$ '.$data_row['tramite_prima'];
-						$data_row['cartera'] = '$ '.$data_row['cartera'];
-						$data_row['cobranza'] = '$ '. number_format($data_row['cobranza']);
-
-						$data_row['pendientes_primas'] = '$ '.$data_row['pendientes_primas'];
-						$data_row['negocios_proyectados_primas'] = '$ '.$data_row['negocios_proyectados_primas'];
-						$data_report[] = $data_row;
 					}
-				}
 
-				$data_report[] = array(
-					'name' => 'Totales: ',
-					'uids' => '',
-					'connection_date' => '',
-					'negocio' => $total_negocio,
-					'negociopai' => $total_negocio_pai,
-					'prima' => '$ '.$total_primas_pagadas,
-					'tramite' => $total_negocios_tramite,
-					'tramite_prima' => '$ '.$total_primas_tramite,
-					'pendientes' => $total_negocio_pendiente,
-					'pendientes_primas' => '$ '.$total_primas_pendientes,
-					'cobranza' => '$ ' . number_format($total_cobranza),
-					'negocios_proyectados' => $total_negocios_proyectados,
-					'negocios_proyectados_primas' => '$ ' . number_format($total_primas_proyectados),
-					'cartera' => '$ ' . number_format($total_cartera),
-				);
-			}
-		} else
-		{ // Autos
-			$iniciales=0;
-			$renovacion=0;
-			$totalgeneral=0;
-			if( !empty( $data ) )
-			{
-				foreach ( $data as $key => $value )
+					$data_report[] = array(
+						'name' => 'Totales: ',
+						'uids' => '',
+						'connection_date' => '',
+						'negocio' => $total_negocio,
+						'negociopai' => $total_negocio_pai,
+						'prima' => '$ '.$total_primas_pagadas,
+						'tramite' => $total_negocios_tramite,
+						'tramite_prima' => '$ '.$total_primas_tramite,
+						'pendientes' => $total_negocio_pendiente,
+						'pendientes_primas' => '$ '.$total_primas_pendientes,
+						'cobranza' => '$ ' . number_format($total_cobranza),
+						'negocios_proyectados' => $total_negocios_proyectados,
+						'negocios_proyectados_primas' => '$ ' . number_format($total_primas_proyectados),
+						'cartera' => '$ ' . number_format($total_cartera),
+					);
+				}
+			} else
+			{ // Autos
+				$iniciales=0;
+				$renovacion=0;
+				$totalgeneral=0;
+				if( !empty( $data ) )
 				{
-					if ($key == 0)
-						$data_report[] = array(
-							'name' => 'Agentes',
-							'uids' => 'Clave única',
-							'connection_date' => 'Fecha de conexión',
-							'iniciales' => 'Iniciales',
-							'renovaciones' => 'Renovaciones',
-							'totales' =>  'Totales'
-						);
-					else
+					foreach ( $data as $key => $value )
 					{
-						$data_row = $this->_report_export_helper($value, 'autos');
-						$iniciales += (int)$value['iniciales'];
-						$renovacion +=(int) $value['renovacion'];
-						$totalgeneral += $data_row['totales'];
+						if ($key == 0)
+							$data_report[] = array(
+								'name' => 'Agentes',
+								'uids' => 'Clave única',
+								'connection_date' => 'Fecha de conexión',
+								'iniciales' => 'Iniciales',
+								'renovaciones' => 'Renovaciones',
+								'totales' =>  'Totales'
+							);
+						else
+						{
+							$data_row = $this->_report_export_helper($value, 'autos');
+							$iniciales += (int)$value['iniciales'];
+							$renovacion +=(int) $value['renovacion'];
+							$totalgeneral += $data_row['totales'];
 
-						$data_report[] = $data_row;
+							$data_report[] = $data_row;
+						}
 					}
+					$data_report[] = array(
+						'name' => 'Totales: ',
+						'uids' => '',
+						'connection_date' => '',
+						'iniciales' => $iniciales,
+						'renovaciones' => $renovacion,
+						'totalgeneral' => $totalgeneral
+					);
 				}
-				$data_report[] = array(
-					'name' => 'Totales: ',
-					'uids' => '',
-					'connection_date' => '',
-					'iniciales' => $iniciales,
-					'renovaciones' => $renovacion,
-					'totalgeneral' => $totalgeneral
-				);
 			}
+
+			array_to_csv($data_report, 'proages_report.csv');
+
+			if( is_file( 'proages_report.csv' ) )
+				echo file_get_contents( 'proages_report.csv' );
+
+			if( is_file( 'proages_report.csv' ) )
+				unlink( 'proages_report.csv' );
 		}
 
-		array_to_csv($data_report, 'proages_report.csv');
-
-		if( is_file( 'proages_report.csv' ) )
-			echo file_get_contents( 'proages_report.csv' );
-
-		if( is_file( 'proages_report.csv' ) )
-			unlink( 'proages_report.csv' );
-	}
-
-// Init report processing (reporte and exportar)
+	// Init report processing (reporte and exportar)
 	private function _init_report(&$agent_array, &$other_filters)
 	{
 		$data = array();

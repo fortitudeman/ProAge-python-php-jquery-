@@ -10,7 +10,7 @@
   Skype:
   Location:		Mexíco
 
-  	
+
 */
 class Policy_model extends CI_Model
 {
@@ -27,7 +27,7 @@ class Policy_model extends CI_Model
 	public function set_table( $table )
 	{
 		$this->table = $table;
-	}	
+	}
 
 /**
   Initialize the table `policy_adjusted_primas`
@@ -129,7 +129,7 @@ AND
 		$result = TRUE;
 
 		$this->db->order_by('due_date', 'asc');
-		$query = $this->db->get_where('policy_adjusted_primas', 
+		$query = $this->db->get_where('policy_adjusted_primas',
 			array('policy_id' => $policy_id), 1, 0);
 		if ($query->num_rows() == 0)
 			return $result;
@@ -157,17 +157,17 @@ AND
                 ", NULL, FALSE);
 
 		$query = $this->db->get();
-                
+
 		$new_rows = array();
 		foreach ($query->result_array() as $row)
 		{
 			$row['date'] = $start_date;
 			$this->_prepare_adjusted_primas($row, $new_rows);
 		}
-                
+
 		if ($new_rows)
 		{
-			if ($this->db->delete('policy_adjusted_primas', 
+			if ($this->db->delete('policy_adjusted_primas',
 				array('policy_id' => $new_rows[0]['policy_id'])))
 			{
 				$result = $this->db->insert_batch('policy_adjusted_primas', $new_rows);
@@ -186,7 +186,7 @@ AND
 	{
 		list($year, $month, $day_time) = explode('-', $row['date']);
 		list($day, $time) = explode(' ', $day_time);
-		$row['prima'] = $row['prima'] * (1 + $row['extra_percentage']);
+		$row['prima'] = $row['prima'] * 1;
 		switch ($row['payment_interval_id'])
 		{
 			case 1: // mensual payment
@@ -264,7 +264,7 @@ AND
 	{
 		$deleted = 0;
 		$to_delete = count($policy_dates);
-		foreach ($policy_dates as $policy_date)	
+		foreach ($policy_dates as $policy_date)
 		{
 			$policy_date_arr = explode('_', $policy_date);
 			if (isset($policy_date_arr[0]) && isset($policy_date_arr[1]))
@@ -322,7 +322,7 @@ AND
 			$query->free_result();
 			$this->db->flush_cache();
 			$to_update = array();
-			$this->db->select( 
+			$this->db->select(
 				'policies.id as policy_id, policies.prima, policies.last_updated, exchange_rates.id as xrate_id, exchange_rates.date, exchange_rates.rate' );
 			$this->db->join( 'exchange_rates',
 				'exchange_rates.date=DATE(policies.last_updated)', 'right' );
