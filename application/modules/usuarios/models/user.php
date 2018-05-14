@@ -3157,7 +3157,7 @@ class User extends CI_Model
 
     private function _getNegocioPai($count_requested = TRUE, $agent_id = null, $filter = array())
     {
-        $this->rebuildNegociosPai();
+        //$this->rebuildNegociosPai();
         $sql_date_filter = '';
         $sql_agent_filter = '';
         $sql_plus = "`valid_for_report` = '1' AND `year_prime` = '1' ";
