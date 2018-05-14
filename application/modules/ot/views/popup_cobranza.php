@@ -147,6 +147,7 @@ $semaphores = array(
 		$semaphore = $semaphores['red'];
 		$policy_cobranza = $value['prima_due_future'] + $value['prima_due_past'] - $value['paid'];
 ?>
+<?php if($policy_cobranza > 0): ?>
         <tr class="payment_row" id="tr-<?php echo $value['policy_id'] ?>">
             <td><?php echo $semaphore ?></td>
             <td>
@@ -179,6 +180,7 @@ $future_due_dates_arr = explode('|', $value['due_dates_future']);
 $paid_v = (int)$value['paid'];
 $adjusted_prima = (int)$value['adjusted_prima'];
 ?>
+<?php endif ?>
 				<ul class="detailed_dates" style="display: none">
 <?php foreach($past_due_dates_arr as $date_value) :
 if ($date_value) :
