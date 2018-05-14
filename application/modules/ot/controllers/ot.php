@@ -353,7 +353,7 @@
 				'lastname_father' => $this->input->post( 'lastname_father' ),
 				'lastname_mother' => $this->input->post( 'lastname_mother' ),
 				'year_premium' => $this->input->post( 'year_premium' ),
-				'expired_date' => $current_date,
+				'expired_date' => $this->input->post( 'expired_date' ),
 				'date' => $current_date
 			));
 
