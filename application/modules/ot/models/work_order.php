@@ -2,7 +2,7 @@
 /*
 
   Author		Ulises Rodríguez
-  Site:			http://www.ulisesrodriguez.com	
+  Site:			http://www.ulisesrodriguez.com
   Twitter:		https://twitter.com/#!/isc_ulises
   Facebook:		http://www.facebook.com/ISC.Ulises
   Github:		https://github.com/ulisesrodriguez
@@ -10,21 +10,21 @@
   Skype:		systemonlinesoftware
   Location:		Guadalajara Jalisco Mexíco
 
-  	
+
 */
 class Work_order extends CI_Model{
-	
+
 	private $data = array();
-	
+
 	private $insertId;
-	
-		
+
+
 	public function __construct(){
-		
+
         parent::__construct();
-			
+
     }
-	
+
 
 /*
  *	CRUD Functions, dynamic table.
@@ -33,98 +33,98 @@ class Work_order extends CI_Model{
 
 // Add
 	public function create( $table = '', $values = array() ){
-        
-		
+
+
 		if( empty( $table ) or empty( $values ) ) return false;
-		
-			
+
+
 		if( $this->db->insert( $table, $values ) ){
-			
+
 			$this->insertId = $this->db->insert_id();
-			
+
 			return true;
-		
+
 		}else
-		
+
 			return false;
-       
+
     }
-	
+
 	public function replace( $table = '', $values = array() ){
-        
-		
+
+
 		if( empty( $table ) or empty( $values ) ) return false;
-		
-			
+
+
 		if( $this->db->replace( $table, $values ) ){
-			
+
 			$this->insertId = $this->db->insert_id();
-			
+
 			return true;
-		
+
 		}else
-		
+
 			return false;
-       
+
     }
-	
+
 	public function create_banch( $table = '', $values = array() ){
-        
-		
+
+
 		if( empty( $table ) or empty( $values ) ) return false;
-				
-			
+
+
 		if( $this->db->insert_batch( $table, $values ) ){
-									
+
 			return true;
-		
+
 		}else
-		
+
 			return false;
-       
+
     }
-	
-	
-	
-	
+
+
+
+
 
 /**
  |	Update
- **/ 
+ **/
 
     public function update( $table = '', $id = 0, $values = array() ){
-        
+
 		if( empty( $table ) or empty( $values ) or empty( $id ) ) return false;
-	
-		
+
+
         if( $this->db->update( $table, $values, array( 'id' => $id ) ) )
-			
+
 			return true;
-        
+
 		else
-        	
+
 			return false;
-        
-		
+
+
     }
 
 /**
- |	Remove 
- **/ 	
+ |	Remove
+ **/
 	 public function delete( $table = '', $id ){
-        
+
 		if( empty( $table ) or empty( $id ) ) return false;
-					   
+
 			if( $this->db->delete( $table, array('id' => $id ) ) )
-			
+
 					return true;
-			
+
 			else
-			
+
 				return false;
-			
-			
-				
+
+
+
     }
 
 
@@ -145,20 +145,20 @@ class Work_order extends CI_Model{
 
 /**
  |	Getting for overview
- **/ 
-	
+ **/
+
 /*	public function overview( $user = null, $start = 0, $limit = null ) {
-		
+
 		/*
-			
+
 			SELECT product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*
 			FROM `work_order`
 			JOIN product_group ON product_group.id=work_order.product_group_id
-			JOIN work_order_types ON work_order_types.id=work_order.work_order_type_id 
+			JOIN work_order_types ON work_order_types.id=work_order.work_order_type_id
 			JOIN work_order_status ON work_order_status.id=work_order.work_order_status_id;
-			
+
 		*/
-/*		
+/*
 		$this->db->select( 'product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
 		$this->db->from( 'work_order' );
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
@@ -168,25 +168,25 @@ class Work_order extends CI_Model{
 		$this->db->or_where( 'work_order.work_order_status_id', 5  );
 		$this->db->or_where( 'work_order.work_order_status_id', 6  );
 		$this->db->or_where( 'work_order.work_order_status_id', 7  );
-		
-		
+
+
 		if( !empty( $user ) )
 			$this->db->where( 'work_order.user', $user );
-		
+
 		if ( $start && !empty( $limit ) )
 			$this->db->limit( $limit, $start );
 		$query = $this->db->get();
-		
-		
+
+
 		if ($query->num_rows() == 0) return false;
 
 		$ot = array();
-		
+
 		foreach ($query->result() as $row) {
-			
+
 			$type_tramite = $this->getParentsWorkTipes( $row->work_order_type_id );
 
-			$ot[] = array( 
+			$ot[] = array(
 		    	'id' => $row->id,
 				'uid' => $row->uid,
 				'policy' => $this->getPolicyBuId( $row->policy_id ),
@@ -198,19 +198,19 @@ class Work_order extends CI_Model{
 		    	'work_order_status_id' => $row->work_order_status_id,
 				'status_name' =>  $row->status_name,
 				'creation_date' =>  $row->creation_date,
-				'duration' =>  $row->duration,				
+				'duration' =>  $row->duration,
 				'last_updated' =>  $row->last_updated,
 				'date' =>  $row->date
 		    );
 
 		}
-			
+
 		return $ot;
-		
-		
+
+
    }
 */
-	
+
 
 
 // Count records for pagination
@@ -230,49 +230,49 @@ class Work_order extends CI_Model{
 		$row = $query->row_array();
 		return !empty($row) ? $row["payment_date"] : "0000-00-00";
 	}
-	
-	
-	
+
+
+
 // Notifications
 	public function getNotification( $id = null ){
-						
+
 		/*
-			
+
 			SELECT product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*
 			FROM `work_order`
 			JOIN product_group ON product_group.id=work_order.product_group_id
-			JOIN work_order_types ON work_order_types.id=work_order.work_order_type_id 
+			JOIN work_order_types ON work_order_types.id=work_order.work_order_type_id
 			JOIN work_order_status ON work_order_status.id=work_order.work_order_status_id;
-			
+
 		*/
-		
+
 		$this->db->select( 'product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
 		$this->db->from( 'work_order' );
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
 		$this->db->join( 'work_order_types', 'work_order_types.id=work_order.work_order_type_id ' );
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
-		
-		if( !empty(  $id ) )				
+
+		if( !empty(  $id ) )
 			$this->db->where( 'work_order.id', $id );
-		
+
 		$this->db->order_by( 'work_order.id', 'desc' );
-		
-		
-						
+
+
+
 		$this->db->limit( 1 );
-		
+
 		$query = $this->db->get();
-		
-		
+
+
 		if ($query->num_rows() == 0) return false;
-		
+
 		$ot = array();
-		
+
 		foreach ($query->result() as $row) {
-			
+
 			$type_tramite = $this->getParentsWorkTipes( $row->work_order_type_id );
 
-			$ot[] = array( 
+			$ot[] = array(
 		    	'id' => $row->id,
 				'uid' => $row->uid,
 				'work_order_status_id' => $row->work_order_status_id,
@@ -286,35 +286,35 @@ class Work_order extends CI_Model{
 				'type_name' => $row->type_name,
 		    	'status_name' =>  $row->status_name,
 				'creation_date' =>  $row->creation_date,
-				'duration' =>  $row->duration,			
-				'comments' => $row->comments,	
+				'duration' =>  $row->duration,
+				'comments' => $row->comments,
 				'last_updated' =>  $row->last_updated,
 				'date' =>  $row->date
 		    );
 
 		}
-				
+
 		return $ot;
-		
-	}	
-	
-	
+
+	}
+
+
 	public function getResponsiblesById( $id = null ){
-		
+
 		if( empty( $id ) ) return false;
-		
+
 		$this->db->where( 'id', $id );
-		
+
 		$query = $this->db->get( 'work_order_responsibles' );
-		
+
 		if ($query->num_rows() == 0) return false;
-		
-		
+
+
 		$responsibles = array();
-		
+
 		foreach ($query->result() as $row) {
-			
-			$responsibles[] = array( 
+
+			$responsibles[] = array(
 		    	'id' => $row->id,
 				'name' => $row->name,
 				'last_updated' =>  $row->last_updated,
@@ -322,26 +322,26 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-				
+
 		return $responsibles;
 	}
-	
+
 	public function getReasonById( $id = null ){
-		
+
 		if( empty( $id ) ) return false;
-		
+
 		$this->db->where( 'id', $id );
-		
+
 		$query = $this->db->get( 'work_order_reason' );
-		
+
 		if ($query->num_rows() == 0) return false;
-		
-		
+
+
 		$reason = array();
-		
+
 		foreach ($query->result() as $row) {
-			
-			$reason[] = array( 
+
+			$reason[] = array(
 		    	'id' => $row->id,
 				'name' => $row->name,
 				'last_updated' =>  $row->last_updated,
@@ -349,38 +349,38 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-				
+
 		return $reason;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
 /**
  *	Getting for update
  **/
 	public function getById( $ot = null ){
-		
+
 		if( empty( $ot ) )return false;
-		
-		
+
+
 		$this->db->where( 'id', $ot );
 		$this->db->limit( 1 );
-		
+
 		$query  = $this->db->get( 'work_order' );
-		
-		
+
+
 		if ($query->num_rows() == 0) return false;
-		
+
 		$ot = array();
-		
+
 		foreach ($query->result() as $row) {
 
-			$ot[] = array( 
+			$ot[] = array(
 		    	'id' => $row->id,
 				'product_group_id' => $row->product_group_id,
 				'policy_id' => $row->policy_id ,
@@ -392,39 +392,39 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-				
+
 		return $ot;
-		
-		
+
+
 	}
-	
-	
+
+
 	public function getParentsWorkTipes( $type = null ){
-		
+
 		if( empty( $type ) )return false;
-		
+
 		//SELECT patent_id FROM `work_order_types` WHERE id=61;
 		$this->db->select( 'patent_id' );
 		$this->db->where( 'id', $type );
 		$this->db->limit( 1 );
-		
+
 		$query  = $this->db->get( 'work_order_types' );
-		
-		
+
+
 		if ($query->num_rows() == 0) return false;
-		
+
 		$type = array();
-		
+
 		foreach ($query->result() as $row) {
 
-			$type[] = array( 
+			$type[] = array(
 		    	'type' => $row->patent_id
 		    );
 
 		}
-						
+
 		return $type[0]['type'];
-		
+
 	}
 
 	// OTs filtered
@@ -436,7 +436,7 @@ class Work_order extends CI_Model{
 		{
 			$this->db->select( 'agents.id' );
 			$this->db->from( 'agents' );
-			$this->db->join('users', 'users.id = agents.user_id');			
+			$this->db->join('users', 'users.id = agents.user_id');
 			$this->db->join( 'users_vs_user_roles', 'users_vs_user_roles.user_id=users.id '  );
 			$this->db->where( 'manager_id', (int) $gerente );
 			$this->db->where( 'users_vs_user_roles.user_role_id', 1 );
@@ -525,7 +525,7 @@ class Work_order extends CI_Model{
 			if( $periodo == 1 ) // Month
 				$this->db->where(  array(
 					'work_order.creation_date >= ' => date( 'Y' ) . '-' . (date( 'm' )) . '-01',
-					'work_order.creation_date < ' => date('Y-m', mktime(0, 0, 0, date('m') + 1, date('d'), date('Y'))) . '-01')); 
+					'work_order.creation_date < ' => date('Y-m', mktime(0, 0, 0, date('m') + 1, date('d'), date('Y'))) . '-01'));
 			if( $periodo == 2 ) // Trimester or cuatrimester depending ramo
 			{
 				$this->load->helper('tri_cuatrimester');
@@ -541,7 +541,7 @@ class Work_order extends CI_Model{
 			}
 			if(  $periodo == 3 ) // Year
 				$this->db->where( array(
-					'work_order.creation_date >= ' => date( 'Y' ) .'-01-01', 
+					'work_order.creation_date >= ' => date( 'Y' ) .'-01-01',
 					'work_order.creation_date <=' => date( 'Y-m-d' ) . ' 23:59:59') );
 
 			if( $periodo == 4 ) // Custom
@@ -557,7 +557,7 @@ class Work_order extends CI_Model{
 					'work_order.creation_date >= ' => $from . ' 00:00:00',
 					'work_order.creation_date <=' => $to . ' 23:59:59') );
 			}
-		}	
+		}
 
 		// Agent
 		if  ( isset($filter['agent']) && ( $agent = $filter['agent'] ) )
@@ -565,7 +565,7 @@ class Work_order extends CI_Model{
 			/**
 			 JOIN policies_vs_users ON policies_vs_users.policy_id=work_order.policy_id
 			 WHERE policies_vs_users.user_id=1
-			*/		
+			*/
 			$this->db->join( 'policies_vs_users AS policies_users_A', 'policies_users_A.policy_id=work_order.policy_id' );
 			$this->db->where( 'policies_users_A.user_id', (int) $agent );
 
@@ -573,7 +573,7 @@ class Work_order extends CI_Model{
 		// Complete Gerente filtering
 		if ( count($agentes_gerentes) ) {
 			$this->db->join( 'policies_vs_users AS policies_users_B', 'policies_users_B.policy_id=work_order.policy_id' );
-			$this->db->where_in( 'policies_users_B.user_id', $agentes_gerentes );		
+			$this->db->where_in( 'policies_users_B.user_id', $agentes_gerentes );
 		}
 		execute_filters("find-new-1");
 		$query = $this->db->get();
@@ -603,7 +603,7 @@ class Work_order extends CI_Model{
 		}
 		$query_parent_type_name->free_result();
 
-		$agents = array();		
+		$agents = array();
 		$this->db->select( ' policies_vs_users.policy_id as id_of_policy, policies_vs_users.percentage, policies_vs_users.user_id AS agent_id, users.name, users.lastnames, users.company_name, users.email, users.id as user_id, users.manager_id ' )
 			->from( 'policies_vs_users' )
 			->join( 'agents', 'agents.id=policies_vs_users.user_id' )
@@ -640,8 +640,8 @@ class Work_order extends CI_Model{
 		}
 		return $ot;
    }
- 
-// Getting for filters	
+
+// Getting for filters
 	public function find( $access_all = false ) {
 
 		$agentes_gerentes = array();
@@ -650,7 +650,7 @@ class Work_order extends CI_Model{
 			strlen($gerente) ){
 			$this->db->select( 'agents.id' );
 			$this->db->from( 'agents' );
-			$this->db->join('users', 'users.id = agents.user_id');			
+			$this->db->join('users', 'users.id = agents.user_id');
 			$this->db->join( 'users_vs_user_roles', 'users_vs_user_roles.user_id=users.id '  );
 			$this->db->where( 'manager_id', (int) $gerente );
 			$this->db->where( 'users_vs_user_roles.user_role_id', 1 );
@@ -721,13 +721,13 @@ class Work_order extends CI_Model{
 		}
 
 		// Periodo
-		if ( ( ( $periodo = $this->input->post('periodo') ) !== FALSE ) && 
+		if ( ( ( $periodo = $this->input->post('periodo') ) !== FALSE ) &&
 			( ( $periodo == 1 ) || (  $periodo == 2 ) || ( $periodo == 3 ) || ( $periodo == 4) ) )
 		{
 			if( $periodo == 1 ) // Month
 				$this->db->where(  array(
 					'work_order.creation_date >= ' => date( 'Y' ) . '-' . (date( 'm' )) . '-01',
-					'work_order.creation_date < ' => date('Y-m', mktime(0, 0, 0, date('m') + 1, date('d'), date('Y'))) . '-01')); 
+					'work_order.creation_date < ' => date('Y-m', mktime(0, 0, 0, date('m') + 1, date('d'), date('Y'))) . '-01'));
 			if( $periodo == 2 ) // Trimester or cuatrimester depending ramo
 			{
 				$this->load->helper('tri_cuatrimester');
@@ -743,7 +743,7 @@ class Work_order extends CI_Model{
 			}
 			if(  $periodo == 3 ) // Year
 				$this->db->where( array(
-					'work_order.creation_date >= ' => date( 'Y' ) .'-01-01', 
+					'work_order.creation_date >= ' => date( 'Y' ) .'-01-01',
 					'work_order.creation_date <=' => date( 'Y-m-d' ) . ' 23:59:59') );
 
 			if( $periodo == 4 ) // Custom
@@ -759,7 +759,7 @@ class Work_order extends CI_Model{
 					'work_order.creation_date >= ' => $from . ' 00:00:00',
 					'work_order.creation_date <=' => $to . ' 23:59:59') );
 			}
-		}	
+		}
 
 		// Agent
 		if  ( ( ( $agent = $this->input->post('agent') ) !== FALSE ) &&
@@ -767,7 +767,7 @@ class Work_order extends CI_Model{
 			/**
 			 JOIN policies_vs_users ON policies_vs_users.policy_id=work_order.policy_id
 			 WHERE policies_vs_users.user_id=1
-			*/		
+			*/
 			$this->db->join( 'policies_vs_users AS policies_users_A', 'policies_users_A.policy_id=work_order.policy_id' );
 			$this->db->where( 'policies_users_A.user_id', (int) $agent );
 
@@ -775,7 +775,7 @@ class Work_order extends CI_Model{
 		// Complete Gerente filtering
 		if ( count($agentes_gerentes) ) {
 			$this->db->join( 'policies_vs_users AS policies_users_B', 'policies_users_B.policy_id=work_order.policy_id' );
-			$this->db->where_in( 'policies_users_B.user_id', $agentes_gerentes );		
+			$this->db->where_in( 'policies_users_B.user_id', $agentes_gerentes );
 		}
 
 		$query = $this->db->get();
@@ -806,7 +806,7 @@ class Work_order extends CI_Model{
 		}
 		$query_parent_type_name->free_result();
 
-		$agents = array();		
+		$agents = array();
 		$this->db->select( ' policies_vs_users.policy_id as id_of_policy, policies_vs_users.percentage, policies_vs_users.user_id AS agent_id, users.name, users.lastnames, users.company_name, users.email, users.id as user_id ' )
 			->from( 'policies_vs_users' )
 			->join( 'agents', 'agents.id=policies_vs_users.user_id' )
@@ -841,15 +841,15 @@ class Work_order extends CI_Model{
 		}
 		return $ot;
    }
-	
-	
-	
+
+
+
    public function getWorkOrderById( $id = null ){
-   		
+
 		if( empty( $id ) ) return false;
-				
-		
-		
+
+
+
 		$this->db->select( 'product_group.name as group_name, work_order_types.name as type_name, work_order_status.name as status_name, work_order.*' );
 		$this->db->from( 'work_order' );
 		$this->db->join( 'product_group', 'product_group.id=work_order.product_group_id' );
@@ -857,19 +857,19 @@ class Work_order extends CI_Model{
 		$this->db->join( 'work_order_status', 'work_order_status.id=work_order.work_order_status_id' );
 		$this->db->where( 'work_order.id', $id );
 		$this->db->limit(1);
-		
-		
+
+
 		$query = $this->db->get();
-	
+
 		if ($query->num_rows() == 0) return false;
-		
+
 		$ot = array();
-		
+
 		foreach ($query->result() as $row) {
-			
+
 			$type_tramite = $this->getParentsWorkTipes( $row->work_order_type_id );
-			
-			$ot[] = array( 
+
+			$ot[] = array(
 		    	'id' => $row->id,
 				'uid' => $row->uid,
 				'policy_id' => $row->policy_id,
@@ -891,33 +891,33 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-		
-						
+
+
 		return $ot;
-   
+
    }
-   
+
    public function getWorkOrderByPolicy( $policy = null ){
-   		
+
 		if( empty( $policy ) ) return false;
-		
-				
+
+
 		$this->db->where( 'policy_id', $policy );
 		$this->db->limit(1);
-		
-		
+
+
 		$query = $this->db->get( 'work_order' );
-		
+
 		$ot = array();
-		
+
 		if ($query->num_rows() == 0) return false;
-		
-		
+
+
 		foreach ($query->result() as $row) {
-			
+
 			$type_tramite = $this->getParentsWorkTipes( $row->work_order_type_id );
-			
-			$ot[] = array( 
+
+			$ot[] = array(
 		    	'id' => $row->id,
 				'uid' => $row->uid,
 				'policy_id' => $row->policy_id,
@@ -932,11 +932,11 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-		
-			
+
+
 		return $ot;
-   
-   }	
+
+   }
 
    public function getWorkOrdersGroupBy($filter, $group = array()){
    		//Default fields
@@ -970,7 +970,7 @@ class Work_order extends CI_Model{
    		$this->db->join('work_order_types', 'work_order_types.id = work_order.work_order_type_id');
    		$this->db->join('work_order_types as work_order_patent', 'work_order_types.patent_id = work_order_patent.id');
    		$this->db->join('products', 'products.id = policies.product_id', 'right');
-   		
+
    		//Remove NTU, Excedido and Canceladas
    		$this->db->where_not_in("work_order_status.id", array(2, 3, 10));
 
@@ -1001,7 +1001,7 @@ class Work_order extends CI_Model{
 			if( $periodo == 1 ) // Month
 				$this->db->where(  array(
 					'work_order.creation_date >= ' => date( 'Y' ) . '-' . (date( 'm' )) . '-01',
-					'work_order.creation_date < ' => date('Y-m', mktime(0, 0, 0, date('m') + 1, date('d'), date('Y'))) . '-01')); 
+					'work_order.creation_date < ' => date('Y-m', mktime(0, 0, 0, date('m') + 1, date('d'), date('Y'))) . '-01'));
 			if( $periodo == 2 ) // Trimester or cuatrimester depending ramo
 			{
 				$this->db->where( array(
@@ -1011,7 +1011,7 @@ class Work_order extends CI_Model{
 			}
 			if(  $periodo == 3 ) // Year
 				$this->db->where( array(
-					'work_order.creation_date >= ' => date( 'Y' ) .'-01-01', 
+					'work_order.creation_date >= ' => date( 'Y' ) .'-01-01',
 					'work_order.creation_date <=' => date( 'Y-m-d' ) . ' 23:59:59') );
 
 			if( $periodo == 4 ) // Custom
@@ -1027,7 +1027,7 @@ class Work_order extends CI_Model{
 					'work_order.creation_date >= ' => $from . ' 00:00:00',
 					'work_order.creation_date <=' => $to . ' 23:59:59') );
 			}
-		}	
+		}
 		if(isset($filter["where"]))
 			$this->db->where($filter["where"]);
 
@@ -1075,7 +1075,7 @@ class Work_order extends CI_Model{
    		//$filter["where"] = array("work_order_status.id" => 4);
 
    		$work_orders = $this->getWorkOrdersGroupBy($filter);
-   		
+
    		//Declare aditional parameters for the generations array
    		$params = array("primas", "solicitudes");
    		//Create generations array
@@ -1094,55 +1094,55 @@ class Work_order extends CI_Model{
 
 /**
  *	Functions Policies
- **/		
+ **/
 
 	// Get Policy by Id
 	public function getPolicyBuId( $id = null ){
-		
+
 		if( empty( $id ) ) return false;
 		/*
-			
-			SELECT * 
+
+			SELECT *
 			FROM policies
 			WHERE id=1
 
-			
+
 		*/
-		$this->db->select( 'policies.*, payment_methods.name as payment_method_name, payment_intervals.name as payment_intervals_name' );		
-		$this->db->join( 'payment_methods', 'payment_methods.id=policies.payment_method_id' );	
-		$this->db->join( 'payment_intervals', 'payment_intervals.id=policies.payment_interval_id' );	
+		$this->db->select( 'policies.*, payment_methods.name as payment_method_name, payment_intervals.name as payment_intervals_name' );
+		$this->db->join( 'payment_methods', 'payment_methods.id=policies.payment_method_id' );
+		$this->db->join( 'payment_intervals', 'payment_intervals.id=policies.payment_interval_id' );
 		$this->db->where( 'policies.id', $id );
 		$this->db->limit(1);
 		$query = $this->db->get('policies');
-		
-		
+
+
 		if ($query->num_rows() == 0) {
-		
-				
-			$this->db->select();		
+
+
+			$this->db->select();
 			$this->db->where( 'policies.id', $id );
 			$this->db->limit(1);
 			$query = $this->db->get('policies');
-			
-			
-			
+
+
+
 			if ($query->num_rows() == 0) return false;
-		
-		
+
+
 		}
-		
+
 		$policy = array();
-		
+
 		foreach ($query->result() as $row) {
-			
+
 			$payment_intervals_name='';
 			$payment_method_name='';
 			if( isset( $row->payment_intervals_name ) )
 				$payment_intervals_name=$row->payment_intervals_name;
 			if( isset( $row->payment_method_name ) )
-				$payment_method_name=$row->payment_method_name;	
-			
-			$policy[] = array( 
+				$payment_method_name=$row->payment_method_name;
+
+			$policy[] = array(
 		    	'id' => $row->id,
 		    	'product_id' => $row->product_id,
 				'currency_id' => $row->currency_id,
@@ -1165,26 +1165,26 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-		
+
 		return $policy;
-		
+
 	}
-	
+
 	public function getProductsByPolicy( $policy = null ){
-		
+
 		if( empty( $policy ) ) return false;
-		
+
 		$this->db->where( 'id', $policy );
 		$this->db->limit(1);
 		$query = $this->db->get('products');
-		
+
 		if ($query->num_rows() == 0) return false;
-		
+
 		$products = array();
-		
+
 		foreach ($query->result() as $row) {
 
-			$products[] = array( 
+			$products[] = array(
 		    	'id' => $row->id,
 		    	'platform_id' => $row->platform_id,
 				'product_group_id' => $row->product_group_id,
@@ -1196,17 +1196,17 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-		
+
 		return $products;
-		
+
 	}
-	
-	
+
+
 	public function getAgentsByPolicy( $policy = null ){
-		
+
 		if( empty( $policy ) ) return false;
 		/*
-		SELECT policies_vs_users.percentage, users.name, users.lastnames 
+		SELECT policies_vs_users.percentage, users.name, users.lastnames
 		FROM policies_vs_users
 		JOIN agents ON agents.id=policies_vs_users.user_id
 		JOIN users ON users.id=agents.user_id
@@ -1218,11 +1218,11 @@ class Work_order extends CI_Model{
 		$this->db->join( 'users', 'users.id=agents.user_id ' );
 		$this->db->where( 'policies_vs_users.policy_id', $policy );
 		$query = $this->db->get();
-		
+
 		if ($query->num_rows() == 0) return false;
-		
+
 		$agents = array();
-		
+
 		foreach ($query->result() as $row) {
 
 			$agents[] = array(
@@ -1236,7 +1236,7 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-		
+
 		return $agents;
 	}
 
@@ -1259,10 +1259,10 @@ class Work_order extends CI_Model{
 		$query = $this->db->get('policies');
 		if ($query->num_rows() == 0)
 			return false;
-		
+
 		$policy = array();
 		foreach ($query->result() as $row) {
-			$policy[] = array( 
+			$policy[] = array(
 		    	'id' => $row->id,
 		    	'currency_id' => $row->currency_id,
 				'prima' => $row->prima,
@@ -1274,7 +1274,7 @@ class Work_order extends CI_Model{
 	}
 
 	public function getByPolicyUid( $policy_uid = null ){
-		
+
 		if( empty( $policy_uid ) ) return false;
 		/*
 		SELECT work_order.id, work_order.uid,  policies.name
@@ -1283,19 +1283,19 @@ class Work_order extends CI_Model{
 		WHERE policies.uid*/
 		$this->db->select( 'work_order.id, work_order.uid,  policies.name' );
 		$this->db->from( 'work_order' );
-		$this->db->join( 'policies', 'policies.id=work_order.policy_id' );		
+		$this->db->join( 'policies', 'policies.id=work_order.policy_id' );
 		$this->db->where( 'policies.uid', $policy_uid );
-		
+
 		$query = $this->db->get();
-		
+
 		if ($query->num_rows() == 0) return false;
-		
-		
+
+
 		foreach ($query->result() as $row)
-		
+
 			return $row->uid.' - '.$row->name;
-		
-		
+
+
 	}
 
 
@@ -1309,100 +1309,100 @@ class Work_order extends CI_Model{
 
 // Getting typetramite for ramo
 	public function getTypeTramite( $ramo = null ){
-		
-		
+
+
 		if( empty( $ramo ) ) return false;
-		
-		
+
+
 		// SELECT * FROM `work_order_types` WHERE patent_id=1 and duration=0;
-		
-		$options = '<option value="">Seleccione</option>';	
-		
+
+		$options = '<option value="">Seleccione</option>';
+
 		$this->db->where( array( 'patent_id' => $ramo, 'duration' => 0 ) );
-		
+
 		$query = $this->db->get( 'work_order_types' );
-		
-		
+
+
 		if ($query->num_rows() == 0) return $options;
-		
-				
+
+
 		foreach ($query->result() as $row)
-			
-			$options .= '<option value="'.$row->id.'">'.$row->name.'</option>';	
-			
-		
+
+			$options .= '<option value="'.$row->id.'">'.$row->name.'</option>';
+
+
 		return $options;
-		
+
 	}
-	
-	
+
+
 	public function getTypeTramiteId( $id = null ){
-		
-		
+
+
 		if( empty( $id ) ) return false;
-		
-		
+
+
 		// SELECT * FROM `work_order_types` WHERE patent_id=1 and duration=0;
-						
+
 		$this->db->where( array( 'id' => $id ) );
 		$this->db->limit(1);
-		
+
 		$query = $this->db->get( 'work_order_types' );
-		
-		
+
+
 		if ($query->num_rows() == 0) return $options;
-		
+
 		$type = array();
-				
+
 		foreach ($query->result() as $row)
-			
+
 			$type[] = array( 'id' => $row->id,  'name' => $row->name );
-			
-		
+
+
 		return $type[0];
-		
+
 	}
 
 // Getting getSubType for type
 	public function getSubType( $type = null ){
-		
-		
+
+
 		if( empty( $type ) ) return false;
-		
-		
+
+
 		// SELECT * FROM `work_order_types` WHERE patent_id=1 and duration!=0;
-		
-		$options = '<option value="">Seleccione</option>';	
-		
+
+		$options = '<option value="">Seleccione</option>';
+
 		$this->db->where( array( 'patent_id' => $type, 'duration !=' => 0 ) );
-		
+
 		$query = $this->db->get( 'work_order_types' );
-		
-		
+
+
 		if ($query->num_rows() == 0) return $options;
-		
-				
+
+
 		foreach ($query->result() as $row)
-			
-			$options .= '<option value="'.$row->id.'">'.$row->name.'</option>';	
-			
-		
+
+			$options .= '<option value="'.$row->id.'">'.$row->name.'</option>';
+
+
 		return $options;
-		
+
 	}
-	
+
 	public function getPeriod( $product = null, $as_string = TRUE ){
-		
+
 		$this->db->select( 'period' );
 
 		if( !empty( $product ) )
 			$this->db->where( array( 'id' => $product ) );
-		
+
 		$this->db->limit(1);
 
 		$query = $this->db->get( 'products' );
-		
-		$options = '<option value="">Seleccione</option>';	
+
+		$options = '<option value="">Seleccione</option>';
 		$result_array = array();
 
 		if ($query->num_rows() == 0) {
@@ -1421,19 +1421,19 @@ class Work_order extends CI_Model{
 			return $result_array;
 		}
 
-		$explode = explode( '-', $period[0] );	
+		$explode = explode( '-', $period[0] );
 		if( is_array( $explode ) and isset( $explode[1] ) ){
 			for( $i = (int)$explode[0]; $i <= (int) $explode[1]; $i++ ) {
 				$options .= '<option value="'.$i.'">'.$i.'</option>';
 				$result_array[$i] = $i;
 			}
 		}else{
-			$explode = explode( ',', $period[0] );	
+			$explode = explode( ',', $period[0] );
 			foreach( $explode as $value ) {
 				$options .= '<option value="'.$value.'">'.$value.'</option>';
 				$result_array[$value] = $value;
 			}
-		}	
+		}
 		//print_r( $period );
 		//exit;
 		if ($as_string)
@@ -1445,36 +1445,36 @@ class Work_order extends CI_Model{
  *	Get Policies
  **/
 	public function getPolicies( $product = null ){
-		
-		
+
+
 		if( empty( $product ) ) return false;
-				
+
 		/*
-			SELECT policies.id, products.name as product_name 
+			SELECT policies.id, products.name as product_name
 			FROM policies
 			JOIN products ON products.id=policies.product_id
 		*/
-		
-		$options = '<option value="">Seleccione</option>';	
-		
-		
-							
+
+		$options = '<option value="">Seleccione</option>';
+
+
+
 		$this->db->where( array( 'product_id' => $product ) );
-		
+
 		$query = $this->db->get( 'policies' );
-		
+
 		//print_r( $query );
-		
+
 		if ($query->num_rows() == 0) return $options;
-		
-		
+
+
 		foreach ($query->result() as $row)
-			
-			$options .= '<option value="'.$row->id.'">'.$row->name.'</option>';	
-			
-		
+
+			$options .= '<option value="'.$row->id.'">'.$row->name.'</option>';
+
+
 		return $options;
-		
+
 	}
 
 
@@ -1489,46 +1489,46 @@ class Work_order extends CI_Model{
 	}
 
 	public function getProductsGroupsOptions(){
-				
-		$query = $this->db->get( 'product_group' );	
-			
+
+		$query = $this->db->get( 'product_group' );
+
 		$options = '<option value="">Seleccione</option>';
-		
-		
+
+
 		if ($query->num_rows() == 0) return $options;
-		
-				
+
+
 		foreach ($query->result() as $row) {
 
-			$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 
-		    
+			$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>';
+
 		}
-		
+
 		return $options;
-		
+
 	}
-	
+
 	public function getProducts( $product_group = null ){
-		
-			
+
+
 		//SELECT * FROM `products` WHERE product_group_id=1;
 		if( !empty( $product_group ) )
-			
+
 			$this->db->where( array( 'product_group_id' => $product_group ) );
 		$this->db->order_by('name', 'asc');
-			
-		
-		$query = $this->db->get( 'products' );	
-			
-		
-		
+
+
+		$query = $this->db->get( 'products' );
+
+
+
 		if ($query->num_rows() == 0) return false;
-		
+
 		$products = array();
-		
+
 		foreach ($query->result() as $row) {
 
-			$products[] = array( 
+			$products[] = array(
 		    	'id' => $row->id,
 		    	'platform_id' => $row->platform_id,
 				'product_group_id' => $row->product_group_id,
@@ -1540,40 +1540,40 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-		
+
 		return $products;
-		
+
 	}
-	
-	
+
+
 	public function getProductsOptions( $product_group = null ){
-		
-			
+
+
 		//SELECT * FROM `products` WHERE product_group_id=1;
 		$this->db->select( 'products.*, product_group.name as group_name' );
 		$this->db->join( 'product_group', 'product_group.id = products.product_group_id' );
-		
+
 		if( !empty( $product_group ) )
-			
+
 			$this->db->where( array( 'products.product_group_id' => $product_group ) );
-			
-		
-		$query = $this->db->get( 'products' );	
-			
+
+
+		$query = $this->db->get( 'products' );
+
 		$options = '<option value="">Seleccione</option>';
-		
-		
+
+
 		if ($query->num_rows() == 0) return $options;
-		
-				
+
+
 		foreach ($query->result() as $row) {
 
-			$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 
-		    
+			$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>';
+
 		}
-		
+
 		return $options;
-		
+
 	}
 
 
@@ -1582,16 +1582,16 @@ class Work_order extends CI_Model{
  *	Currency
  **/
 	public function getCurrency(){
-				
-		$query = $this->db->get( 'currencies' );	
-					
+
+		$query = $this->db->get( 'currencies' );
+
 		if ($query->num_rows() == 0) return false;
-		
+
 		$currency = array();
-		
+
 		foreach ($query->result() as $row) {
 
-			$currency[] = array( 
+			$currency[] = array(
 		    	'id' => $row->id,
 		    	'name' => $row->name,
 				'label' => $row->label,
@@ -1600,27 +1600,27 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-		
+
 		return $currency;
-		
+
 	}
-	
+
 	public function getCurrencyOptions(){
-				
-		$query = $this->db->get( 'currencies' );	
-		
+
+		$query = $this->db->get( 'currencies' );
+
 		$options = '<option value="">Seleccione</option>';
-					
+
 		if ($query->num_rows() == 0) return $options;
-						
+
 		foreach ($query->result() as $row) {
 
-			$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 
+			$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>';
 
 		}
-		
+
 		return $options;
-		
+
 	}
 
 
@@ -1628,16 +1628,16 @@ class Work_order extends CI_Model{
  *	Payments Methods
  **/
 	public function getPaymentMethods(){
-				
-		$query = $this->db->get( 'payment_intervals' );	
-					
+
+		$query = $this->db->get( 'payment_intervals' );
+
 		if ($query->num_rows() == 0) return false;
-		
+
 		$payment = array();
-		
+
 		foreach ($query->result() as $row) {
 
-			$payment[] = array( 
+			$payment[] = array(
 		    	'id' => $row->id,
 		    	'name' => $row->name,
 				'label' => $row->label,
@@ -1646,9 +1646,9 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-		
+
 		return $payment;
-		
+
 	}
 /**
  *	Payments Intervals as array
@@ -1661,37 +1661,37 @@ class Work_order extends CI_Model{
  *	Payments Intervals as string
  **/
 	public function getPaymentIntervalOptions(){
-				
-		$query = $this->db->get( 'payment_intervals' );	
-		
+
+		$query = $this->db->get( 'payment_intervals' );
+
 		$options = '<option value="">Seleccione</option>';
-					
+
 		if ($query->num_rows() == 0) return $options;
-						
+
 		foreach ($query->result() as $row) {
 
-			$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 
+			$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>';
 
 		}
-		
+
 		return $options;
-		
+
 	}
 
 /**
- *	Payments Methods Conducto (payment method) as array 
+ *	Payments Methods Conducto (payment method) as array
  **/
 	public function getPaymentMethodsConducto(){
-				
-		$query = $this->db->get( 'payment_methods' );	
-					
+
+		$query = $this->db->get( 'payment_methods' );
+
 		if ($query->num_rows() == 0) return false;
-		
+
 		$payment = array();
-		
+
 		foreach ($query->result() as $row) {
 
-			$payment[] = array( 
+			$payment[] = array(
 		    	'id' => $row->id,
 		    	'name' => $row->name,
 				'label' => $row->label,
@@ -1700,45 +1700,45 @@ class Work_order extends CI_Model{
 		    );
 
 		}
-		
+
 		return $payment;
-		
+
 	}
 /**
- *	Payments Methods Conducto (payment method) as string 
- **/	
+ *	Payments Methods Conducto (payment method) as string
+ **/
 	public function getPaymentMethodsConductoOptions(){
-				
-		$query = $this->db->get( 'payment_methods' );	
-		
+
+		$query = $this->db->get( 'payment_methods' );
+
 		$options = '<option value="">Seleccione</option>';
-					
+
 		if ($query->num_rows() == 0) return $options;
-						
+
 		foreach ($query->result() as $row) {
 
-			$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 
+			$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>';
 
 		}
-		
+
 		return $options;
-		
+
 	}
 
 /**
  *	Activate / Desactivate
- **/	
+ **/
  	public function getOtActivateDesactivate( $ot = null ){
-		
+
 		if( empty( $ot ) )
 			return false;
 
-		$this->db->where( 'id', $ot );		
-		$query = $this->db->get( 'work_order' );	
+		$this->db->where( 'id', $ot );
+		$query = $this->db->get( 'work_order' );
 		$ot = array();
 		foreach ($query->result() as $row)
 		{
-			$ot[] = array( 
+			$ot[] = array(
 		    	'id' => $row->id,
 		    	'product_group_id' => $row->product_group_id,
 				'work_order_status_id' => $row->work_order_status_id,
@@ -1757,15 +1757,15 @@ class Work_order extends CI_Model{
 			return false;
 
 		$this->db->select( 'policy_id' );
-		$this->db->where( 'id', $ot );		
+		$this->db->where( 'id', $ot );
 		$this->db->limit(1);
-		$query = $this->db->get( 'work_order' );	
+		$query = $this->db->get( 'work_order' );
 		if ($query->num_rows() == 0)
 			return false;
 
 		$policies = array();
 		foreach ($query->result() as $row)
-			$policies[] = array( 
+			$policies[] = array(
 		    	'policy_id' => $row->policy_id
 		    );
 
@@ -1777,195 +1777,195 @@ class Work_order extends CI_Model{
 		$this->db->group_by('name');
 		$this->db->order_by('name', 'asc');
 		if(isset($args["not_in"]))
-			foreach ($args["not_in"] as $column => $values) 
+			foreach ($args["not_in"] as $column => $values)
 				$this->db->where_not_in($column, $values);
-			
+
 		$query = $this->db->get('work_order_status');
 		return $query->result_array();
 	}
-	
- 
+
+
 	public function getStatus( $work_order_status = null ){
-				
-		$query = $this->db->get( 'work_order_status' );	
-		
+
+		$query = $this->db->get( 'work_order_status' );
+
 		$options = '<option value="">Seleccione</option>';
-					
+
 		if ($query->num_rows() == 0) return $options;
-						
+
 		foreach ($query->result() as $row) {
-			
+
 			if( !empty( $work_order_status ) and $work_order_status == $row->id )
-			
-				$options  .= '<option selected="selected" value="'.$row->id.'">'.$row->name.'</option>'; 
-			
+
+				$options  .= '<option selected="selected" value="'.$row->id.'">'.$row->name.'</option>';
+
 			else
-				
-				$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 	
+
+				$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>';
 
 		}
-		
+
 		return $options;
-		
+
 	}
 
 	public function getReason( $group = null, $work_order_status = null, $work_order_reason = null ){
-				
-		
+
+
 		// And Where
 		if( !empty( $group ) )
 			$this->db->where( 'product_group_id', $group );
-		
-		
+
+
 		if( !empty( $work_order_status ) )
-			$this->db->where( 'work_order_status_id', $work_order_status );	
-		
-		
-		$query = $this->db->get( 'work_order_reason' );	
-		
-		
+			$this->db->where( 'work_order_status_id', $work_order_status );
+
+
+		$query = $this->db->get( 'work_order_reason' );
+
+
 		$options = '<option value="">Seleccione</option>';
-					
+
 		if ($query->num_rows() == 0){ return $options; }
-						
+
 		foreach ($query->result() as $row) {
 
 			if( !empty( $work_order_reason ) and $work_order_reason == $row->id )
-			
-				$options  .= '<option selected="selected" value="'.$row->id.'">'.$row->name.'</option>'; 
-			
+
+				$options  .= '<option selected="selected" value="'.$row->id.'">'.$row->name.'</option>';
+
 			else
-				
-				$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 	
+
+				$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>';
 
 		}
-		
-				
+
+
 		return $options;
-		
+
 	}
 
 	public function getResponsibles( $work_order_responsibles = null ){
-				
-		$query = $this->db->get( 'work_order_responsibles' );	
-		
+
+		$query = $this->db->get( 'work_order_responsibles' );
+
 		$options = '<option value="">Seleccione</option>';
-					
+
 		if ($query->num_rows() == 0) return $options;
-						
+
 		foreach ($query->result() as $row) {
 
 			if( !empty( $work_order_responsibles ) and $work_order_responsibles == $row->id )
-			
-				$options  .= '<option selected="selected" value="'.$row->id.'">'.$row->name.'</option>'; 
-			
+
+				$options  .= '<option selected="selected" value="'.$row->id.'">'.$row->name.'</option>';
+
 			else
-				
-				$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>'; 	
+
+				$options  .= '<option value="'.$row->id.'">'.$row->name.'</option>';
 
 		}
-		
+
 		return $options;
-		
+
 	}
-	
+
 
 
 /**
  *	Import payments
- **/	
+ **/
   public function importPaymentsTmp( $data = array() ){
-  		
+
 		if( empty( $data ) ) return false;
-		
-		$query = $this->db->get( 'payments_tmp' );	
-  		
+
+		$query = $this->db->get( 'payments_tmp' );
+
 		if ($query->num_rows() == 0){  $this->db->insert( 'payments_tmp', array( 'data' => json_encode( $data ) ) ); return;  }
-  		
+
 		$id = null;
-		
-		foreach ($query->result() as $row)			
-		
+
+		foreach ($query->result() as $row)
+
 			$id	= $row->id;
-		
-  		
-	   $this->db->delete( 'payments_tmp', array('id' => $id ) );	
-	   
+
+
+	   $this->db->delete( 'payments_tmp', array('id' => $id ) );
+
 	   $this->db->insert( 'payments_tmp', array( 'data' => json_encode( $data ) ) );
-	   
-	   return true;	
-  
+
+	   return true;
+
   }
-  
+
    public function removeImportPaymentsTmp(){
-  				
-		$query = $this->db->get( 'payments_tmp' );	
-  		
+
+		$query = $this->db->get( 'payments_tmp' );
+
 		if ($query->num_rows() == 0){  return true; }
-  		
+
 		$id = null;
-		
-		foreach ($query->result() as $row)			
-		
+
+		foreach ($query->result() as $row)
+
 			$id	= $row->id;
-		
-  		
-	   $this->db->delete( 'payments_tmp', array('id' => $id ) );	
-	   
-	   return true;	
-  
+
+
+	   $this->db->delete( 'payments_tmp', array('id' => $id ) );
+
+	   return true;
+
   }
-  
+
   public function getImportPaymentsTmp(){
-  				
-		$query = $this->db->get( 'payments_tmp' );	
-  		
+
+		$query = $this->db->get( 'payments_tmp' );
+
 		if ($query->num_rows() == 0){  return true; }
-  		
+
 		$data = array();
-		
-		foreach ($query->result() as $row)			
-		
+
+		foreach ($query->result() as $row)
+
 			$data[]= array( 'id' => $row->id, 'data' => $row->data );  ;
-		
-  	
-	   return $data;	
-  
+
+
+	   return $data;
+
   }
-  
+
   public function checkPayment( $uid = null, $prima = null, $payment_date = null, $user_id = null ){
-	 
+
 	if( empty( $uid ) ) return false;
 	if( empty( $prima ) ) return false;
 	if( empty( $payment_date ) ) return false;
 	if( empty( $user_id ) ) return false;
-	
+
 	/*
-	    SELECT * 
+	    SELECT *
 		FROM policies
 		JOIN policies_vs_users ON policies_vs_users.policy_id=policies.id
 		JOIN payments ON payments.policy_id=policies.id
-		WHERE policies.uid='' 
+		WHERE policies.uid=''
 		AND policies.prima >=''
 		AND payments.payment_date=''
 		AND policies_vs_users.user_id='';
 	*/
-	
+
 	$this->db->select();
 	$this->db->from( 'payments' );
 	$this->db->where( array( 'policy_number' => $uid, 'amount >=' => $prima, 'payment_date' => $payment_date, 'agent_id' => $user_id ) );
-	
-	
-	$query = $this->db->get();	
-		
+
+
+	$query = $this->db->get();
+
 	if ($query->num_rows() == 0)  return true;
-		
+
 	return false;
-	
+
   }
-  
+
 	  public function getWathdo( $i = 0 ){
-	
+
 		/*
 		SELECT work_order.id, work_order.uid,  policies.name
 		FROM work_order
@@ -1973,10 +1973,10 @@ class Work_order extends CI_Model{
    	    JOIN work_order_types ON work_order_types.id=work_order.work_order_type_id
 		WHERE work_order.work_order_status_id=7
 		AND ( work_order_types.patent_id=90
-		OR work_order_types.patent_id=47 )   
+		OR work_order_types.patent_id=47 )
 		*//*
 		$query = $this->db->query(
-			
+
 		   'SELECT work_order.id, work_order.uid,  policies.name
 			FROM work_order
 			JOIN policies ON policies.id=work_order.policy_id
@@ -1984,65 +1984,65 @@ class Work_order extends CI_Model{
 			WHERE work_order.work_order_status_id=7
 			AND ( work_order_types.patent_id=90
 			OR work_order_types.patent_id=47 )'
-			
+
 		);*/
-		
+
 		$this->db->select( 'work_order.id, work_order.uid,  policies.name' );
 		$this->db->from( 'work_order' );
 		$this->db->join( 'policies', 'policies.id=work_order.policy_id' );
 		$this->db->join( 'work_order_types', ' work_order_types.id=work_order.work_order_type_id' );
-		$this->db->where( 'work_order.work_order_status_id', 7 );	
+		$this->db->where( 'work_order.work_order_status_id', 7 );
 		$this->db->where( '( work_order_types.patent_id=90 OR work_order_types.patent_id=47 )' );
 		$this->db->order_by( 'policies.name', 'asc' );
-		
-		$query = $this->db->get(); 
-  	
+
+		$query = $this->db->get();
+
 		$options = '<select name="assing['.$i.']" class="required"><option value="">Seleccione OT relacionada</option>';
-				
-		if ($query->num_rows() == 0){  
-			
-			
+
+		if ($query->num_rows() == 0){
+
+
 			$options .= '<option value="noasignar" selected>No asignar a OT</option></select>';
-			
-				
-			return $options; 
-		
+
+
+			return $options;
+
 		}
-		
+
 		$options .= '<option value="noasignar" selected>No asignar a OT</option>';
-		
-		foreach ($query->result() as $row)			
-			
+
+		foreach ($query->result() as $row)
+
 			$options .= '<option value="'.$row->id.'">'.$row->uid.' - '.$row->name.'</option>';
-		
-		
+
+
 		$options .= '</select>';
-		
+
 		return $options;
   }
-  
-  
+
+
   public function getWathdoPayment( $policy = null ){
-		
+
 		if( empty( $policy ) ) return false;
 		/*
-		SELECT * 
+		SELECT *
 		FROM `payments`
 		WHERE `policy_id`='1'
 		*/
 		$this->db->select();
 		$this->db->from( 'payments' );
-		$this->db->where( 'policy_id', $policy );	
-		
-		$query = $this->db->get(); 
-  	
-		if ($query->num_rows() == 0) return true;		
-		
+		$this->db->where( 'policy_id', $policy );
+
+		$query = $this->db->get();
+
+		if ($query->num_rows() == 0) return true;
+
 		return false;
   }
-  
+
   public function getOtPolicyAssing( $ot = null ){
- 	
+
 		if( empty( $ot ) ) return 'No se encontro la ot';
 		/*
 		SELECT work_order.id, work_order.uid,  policies.name
@@ -2050,28 +2050,28 @@ class Work_order extends CI_Model{
 		JOIN policies ON policies.id=work_order.policy_id
 		WHERE work_order.work_order_status_id=7
 		*/
-	
-	
-	
+
+
+
 		$this->db->select( ' work_order.id, work_order.uid,  policies.name');
 		$this->db->from( 'work_order' );
 		$this->db->join( 'policies', 'policies.id=work_order.policy_id' );
-		$this->db->where( array( 'work_order.id ' =>  $ot  ) );	
-		
-		$query = $this->db->get(); 
-  	
-		if ($query->num_rows() == 0) return 'No se encontro la ot';		
-		
-		
-		foreach ($query->result() as $row)	
-			
+		$this->db->where( array( 'work_order.id ' =>  $ot  ) );
+
+		$query = $this->db->get();
+
+		if ($query->num_rows() == 0) return 'No se encontro la ot';
+
+
+		foreach ($query->result() as $row)
+
 			return $row->uid.' - '.$row->name;
-		
-		
+
+
 		return true;
- 
+
   }
- 
+
 // The variable name $agent_id below is misleading: what should be passed is `users`.`id`
 	function pop_up_data($work_order_id, $agent_id, $add_where = null)
 	{
@@ -2094,7 +2094,7 @@ class Work_order extends CI_Model{
 		$this->db->join('users agent_user','agents.user_id = agent_user.id','left');
 
 		$this->db->join('products','policies.product_id = products.id','left');
-		$this->db->join('payment_intervals','policies.payment_interval_id = payment_intervals.id','left'); 
+		$this->db->join('payment_intervals','policies.payment_interval_id = payment_intervals.id','left');
 		$this->db->join('payment_methods','policies.payment_method_id = payment_methods.id','left');
 		$this->db->join('currencies','policies.currency_id = currencies.id','left');
 		$this->db->join('work_order_types','work_order.work_order_type_id = work_order_types.id','left');
@@ -2111,7 +2111,7 @@ class Work_order extends CI_Model{
 
 		$this->db->select('email,name');
 		$this->db->from('users_vs_user_roles');
-		$this->db->where('users_vs_user_roles.user_role_id',4); 
+		$this->db->where('users_vs_user_roles.user_role_id',4);
 		$this->db->join('users','users_vs_user_roles.user_id = users.id');
 		$query_later = $this->db->get();
 		$result['director'] = $query_later->result();
@@ -2144,7 +2144,7 @@ class Work_order extends CI_Model{
 			);
 	}
 
-// Search values 
+// Search values
 	public function generic_search( $table = null, $searched = null, $like = null,
 		$limit = null, $offset = 0 )
 	{
@@ -2162,10 +2162,10 @@ class Work_order extends CI_Model{
 
 		$q = $this->db->get();
 
-		return ($q->num_rows() > 0) ? $q->result() : FALSE;		
+		return ($q->num_rows() > 0) ? $q->result() : FALSE;
 	}
-	
-	
+
+
 // Generic row retrieval
 
 	public function generic_get( $table = null, $where = null, $limit = null, $offset = 0 ) {
@@ -2183,12 +2183,12 @@ class Work_order extends CI_Model{
 
 		$q = $this->db->get();
 
-		return ($q->num_rows() > 0) ? $q->result() : FALSE;		
+		return ($q->num_rows() > 0) ? $q->result() : FALSE;
 	}
 
 // Another generic update method
 	public function generic_update( $table = null, $values = null, $where = null, $limit = null, $offset = 0 ) {
-		if (( $table === null ) ||  !is_array($values) || !count($values)) 
+		if (( $table === null ) ||  !is_array($values) || !count($values))
 			return FALSE;
 
 		$where = is_array($where) ? $where : array();
@@ -2275,7 +2275,7 @@ class Work_order extends CI_Model{
 				$selected = ($key == $selected_option) ? ' selected="selected"' : '';
 				$options .= '<option value="' . $key . '"' . $selected . '>' . $value . '</option>';
 			}
-			$all_tramite_types .= 
+			$all_tramite_types .=
 				'<optgroup label="Ramo = ' . $ramos[$key_ramo] . '">' . $options . '</optgroup>';
 			$options = $key_ramo . " : '" . '<option value="">Todos</option>' . $options . "'";
 			$ramo_tramite_types[$key_ramo] = "\n" . $options;
@@ -2285,10 +2285,10 @@ class Work_order extends CI_Model{
 		return $ramo_tramite_types;
 	}
 
-	// Operation statistics	
+	// Operation statistics
 	private $operation_where = array();
 	private $operation_where_in = array();
-	public function init_operations($user_id = NULL, $periodo = NULL, $ramo = NULL) 
+	public function init_operations($user_id = NULL, $periodo = NULL, $ramo = NULL)
 	{
 //		if (($user_id === NULL) || ($periodo === NULL))
 		if (!$periodo)
@@ -2300,10 +2300,10 @@ class Work_order extends CI_Model{
 		switch ($periodo)
 		{
 			case 1: // Month
-				$this->operation_where['work_order.creation_date >= '] = 
-					date( 'Y' ) . '-' . (date( 'm' )) . '-01'; 
-				$this->operation_where['work_order.creation_date < '] = 
-					date('Y-m', mktime(0, 0, 0, date('m') + 1, date('d'), date('Y'))) . '-01'; 
+				$this->operation_where['work_order.creation_date >= '] =
+					date( 'Y' ) . '-' . (date( 'm' )) . '-01';
+				$this->operation_where['work_order.creation_date < '] =
+					date('Y-m', mktime(0, 0, 0, date('m') + 1, date('d'), date('Y'))) . '-01';
 				break;
 			case 2:  // Trimester
 			case 5:  // Cuatrimester
@@ -2528,7 +2528,7 @@ class Work_order extends CI_Model{
 		if (!$get_ot_list)
 			$this->db->group_by('products.id');
 		$query = $this->db->get();
-                
+
 		if ($query->num_rows() == 0)
 			return $ot;
 
@@ -2562,7 +2562,7 @@ class Work_order extends CI_Model{
 				$ot[$key]['is_editable'] = $this->is_editable( $value['product_group_id'], $value['tramite_type'], $value['work_order_status_id'] );
 				$ot[$key]['is_nuevo_negocio'] = $this->is_nuevo_negocio( $value['product_group_id'], $value['tramite_type']);
 			}
-		} 
+		}
 		else
 		{
 			foreach ($query->result() as $row)
@@ -2624,7 +2624,7 @@ class Work_order extends CI_Model{
 				'NTU' => 0,
 				'pagada' => 0,
 				'pendientes_pago' => 0
-				);		
+				);
 		}
 		else
 		{
@@ -2684,25 +2684,25 @@ class Work_order extends CI_Model{
 			$result[$row->agent_id] = $row->count;
 		return $result;
 	}
-        
+
         public function mark_polizas_as_paid(){
             //$this->db->replace('policy_negocio_pai', array('ramo'=>2,'policy_number'=>'240932327','negocio_pai'=>'3','date_pai'=>'2001-12-13 00:00:00','creation_date'=>'2001-12-14 00:00:00'));
-           
+
             $num =0;
             $sql = "SELECT `payments`.*
 	    FROM `payments`
-	    WHERE `valid_for_report` = '1' 
-            AND `year_prime` = '1'  
+	    WHERE `valid_for_report` = '1'
+            AND `year_prime` = '1'
             GROUP BY `policy_number` ORDER BY `payment_date` ASC";
-            
+
             $query = $this->db->query($sql);
-            
+
             foreach ($query->result() as $row)
             {
                 $sql2 = "SELECT `payments`.*
                         FROM `payments`
-                        WHERE `valid_for_report` = '1' 
-                        AND `year_prime` = '1'  
+                        WHERE `valid_for_report` = '1'
+                        AND `year_prime` = '1'
                         AND `policy_number` = '".$row->policy_number."' ORDER BY `payment_date` ASC";
                 $q = $this->db->query($sql2);
                 $total = 0;
@@ -2716,8 +2716,8 @@ class Work_order extends CI_Model{
                         $payment_date = $payment->payment_date;
                         $flag = false;
                         }
-                    }   
-                    
+                    }
+
                     if($total > 500000){
                         $data = array('ramo'=>$row->product_group,'policy_number'=>$row->policy_number,'negocio_pai'=>'3','date_pai'=>$payment_date,'creation_date'=>date("Y-m-d H:i:s"));
                         $this->db->replace('policy_negocio_pai',$data);
@@ -2729,12 +2729,12 @@ class Work_order extends CI_Model{
                         $this->db->replace('policy_negocio_pai',$data);
                     }else{
                         $this->db->where('policy_number',$row->policy_number)->delete('policy_negocio_pai');
-                    }                   
+                    }
                 $num++;
             }
             echo "Registros agregados:".$num;
         }
-        
+
               /**
          * Check if a order work is already PAI
          */
@@ -2749,11 +2749,11 @@ class Work_order extends CI_Model{
             foreach ($query->result() as $row){
                 $total += $row->amount;
                 $pai = 0;
-               
+
                     if($this->db->where("policy_number",$row->policy_number)->get("policy_negocio_pai")->num_rows() > 0){
                         $this->db->where("policy_number",$row->policy_number);
                         $this->db->update("policy_negocio_pai",array("pai_date"=>$row->payment_date));
-                        break;    
+                        break;
                     }else{
                         if($total > 500000){
                         $pai = 3;
@@ -2763,7 +2763,7 @@ class Work_order extends CI_Model{
 				'negocio_pai' => $pai,
 				'creation_date' => date('Y-m-d H:i:s'),
                                 'pai_date' => $row->payment_date
-				)); 
+				));
                         break;
                         }elseif($total > 110000){
                             $pai = 2;
@@ -2773,7 +2773,7 @@ class Work_order extends CI_Model{
 				'negocio_pai' => $pai,
 				'creation_date' => date('Y-m-d H:i:s'),
                                 'pai_date' => $row->payment_date
-				)); 
+				));
                         break;
                         }elseif($total > 12000){
                             $pai =1 ;
@@ -2783,11 +2783,11 @@ class Work_order extends CI_Model{
 				'negocio_pai' => $pai,
 				'creation_date' => date('Y-m-d H:i:s'),
                                 'pai_date' => $row->payment_date
-				)); 
+				));
                         break;
                         }
-                    
-                   
+
+
                     }
             }
         }
