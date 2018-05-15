@@ -373,19 +373,14 @@
 							// Agents Adds
 							$agents = array();
 							for( $i=0; $i<=count( $this->input->post('agent') ); $i++ )
-								if ($this->input->post( 'ramo' ) == 1){
-									$generation_vida = $this->user->getGenerationByAgentId($_POST['agent'][$i]);
-								}else{
-									$generation_gmm = $this->user->getGenerationByAgentId($_POST['agent'][$i],false);
-								}
 								if( !empty(  $_POST['agent'][$i] ) )
 									$agents[] = array(
 										'user_id' => $_POST['agent'][$i],
 										'policy_id' => $policyId,
 										'percentage' => $_POST['porcentaje'][$i],
 										'since' => date( 'Y-m-d H:i:s' ),
-										'agent_generation_vida' => $generation_vida,
-										'agent_generation_gmm' => $generation_gmm
+										'agent_generation_vida' => ($this->input->post( 'ramo' ) == 1) ? $this->user->getGenerationByAgentId($_POST['agent'][$i],false) : NULL,
+										'agent_generation_gmm' => ($this->input->post( 'ramo' ) == 2) ? $this->user->getGenerationByAgentId($_POST['agent'][$i],false) : NULL
 									);
 
 								if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false )
