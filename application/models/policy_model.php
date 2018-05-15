@@ -45,7 +45,7 @@ class Policy_model extends CI_Model
 			if ($query->num_rows() > 0)
 				return;
 
-			$this->db->select('`work_order`.`work_order_status_id`, `work_order`.`product_group_id`, `work_order_types`.`patent_id`, `policies`.`id`, `policies`.`prima`, `policies`.`payment_interval_id`, `policies`.`date`, `extra_payment`.`extra_percentage`', FALSE);
+			$this->db->select('`work_order`.`work_order_status_id`, `work_order`.`product_group_id`, `work_order_types`.`patent_id`, `policies`.`id`, `policies`.`prima`, `policies`.`payment_interval_id`, `policies`.`date`, `extra_payment`.`extra_percentage`,`work_order`.`creation_date`', FALSE);
 			$this->db->from(array('work_order', 'work_order_types', 'policies', 'products', 'extra_payment'));
 			$this->db->where("
 `work_order_types`.`id`=`work_order`.`work_order_type_id`
@@ -91,7 +91,7 @@ OR
 	{
 		if (!$ot_id)
 			return FALSE;
-		$this->db->select('`work_order`.`work_order_status_id`, `policies`.`id`, `policies`.`prima`, `policies`.`payment_interval_id`, `policies`.`date`, `extra_payment`.`extra_percentage`', FALSE);
+		$this->db->select('`work_order`.`work_order_status_id`, `policies`.`id`, `policies`.`prima`, `policies`.`payment_interval_id`, `policies`.`date`, `extra_payment`.`extra_percentage`,`work_order`.`creation_date`', FALSE);
 		$this->db->from(array('work_order', 'policies', 'products', 'extra_payment'));
 		$this->db->where("
 `work_order`.`policy_id` = `policies`.`id`
@@ -136,7 +136,7 @@ AND
 		$old_policy_adjusted_prima = $query->row();
 		$start_date = $old_policy_adjusted_prima->due_date . ' 00:01:00';
 
-		$this->db->select('`work_order`.`work_order_status_id`, `work_order`.`product_group_id`, `work_order_types`.`patent_id`, `policies`.`id`, `policies`.`prima`, `policies`.`payment_interval_id`, `policies`.`date`, `extra_payment`.`extra_percentage`', FALSE);
+		$this->db->select('`work_order`.`work_order_status_id`, `work_order`.`product_group_id`, `work_order_types`.`patent_id`, `policies`.`id`, `policies`.`prima`, `policies`.`payment_interval_id`, `policies`.`date`, `extra_payment`.`extra_percentage`,`work_order`.`creation_date`', FALSE);
 		$this->db->from(array('work_order', 'work_order_types', 'policies', 'products', 'extra_payment'));
 		$this->db->where("
                 `work_order`.`id` = '$ot_id'
@@ -186,7 +186,7 @@ AND
 	{
 		list($year, $month, $day_time) = explode('-', $row['date']);
 		list($day, $time) = explode(' ', $day_time);
-		$row['prima'] = $row['prima'] * 1;
+		$row['prima'] = (date('Y',strtotime($row['creation_date'])) == date('Y')) ? $row['prima'] * 1 : $row['prima'] * (1 + $row['extra_percentage']);
 		switch ($row['payment_interval_id'])
 		{
 			case 1: // mensual payment
