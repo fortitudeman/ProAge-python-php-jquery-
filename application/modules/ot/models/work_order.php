@@ -1071,6 +1071,7 @@ class Work_order extends CI_Model{
 
    public function getWorkOrdersGroupByGeneracion($filter){
    		$this->load->helper('agent/generations');
+   		$this->load->model('usuarios/user');
    		//work_order_status = Pagadas
    		//$filter["where"] = array("work_order_status.id" => 4);
 
@@ -1083,7 +1084,23 @@ class Work_order extends CI_Model{
 
    		foreach ($work_orders as $order) {
    			//get generation index of this order
-   			$index = getGeneracionByConnection($order["connection_date"]);
+   			$generation = ($order["ramo"] == 1) ? $this->user->getGenerationByAgentId($order["agent_id"]) : $this->user->getGenerationByAgentId($order["agent_id"], false);
+   			if ($generation == "Generación 1") {
+   				$generaciones["generacion_1"]["primas"] += $order["prima"];
+   				$generaciones["generacion_1"]["solicitudes"]++;
+   			}elseif ($generation == "Generación 2") {
+   				$generaciones["generacion_2"]["primas"] += $order["prima"];
+   				$generaciones["generacion_2"]["solicitudes"]++;
+   			}elseif ($generation == "Generación 3") {
+   				$generaciones["generacion_3"]["primas"] += $order["prima"];
+   				$generaciones["generacion_3"]["solicitudes"]++;
+   			}elseif ($generation == "Generación 4") {
+   				$generaciones["generacion_4"]["primas"] += $order["prima"];
+   				$generaciones["generacion_4"]["solicitudes"]++;
+   			}elseif ($generation == "consolidado") {
+   				$generaciones["consolidado"]["primas"] += $order["prima"];
+   				$generaciones["consolidado"]["solicitudes"]++;
+   			}
 
    			$generaciones[$index]["primas"] += $order["prima"];
    			$generaciones[$index]["solicitudes"]++;
