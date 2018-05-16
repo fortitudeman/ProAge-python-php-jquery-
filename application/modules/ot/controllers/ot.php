@@ -280,12 +280,12 @@
 
 
 
-// Create new role
-			public function create(){
+	// Create new role
+	public function create(){
 
-		// Check access teh user for create
+				// Check access teh user for create
 				if( $this->access_create == false ){
-			// Set false message
+					// Set false message
 					$this->session->set_flashdata( 'message', array(
 						'type' => false,
 						'message' => 'No tiene permisos para ingresar en esta sección "Orden de trabajo Crear", Informe a su administrador para que le otorge los permisos necesarios.'
@@ -299,10 +299,10 @@
 					$this->form_validation->set_rules('work_order_type_id', 'Tipo de tramite', 'required');
 					$this->form_validation->set_rules('subtype', 'Sub tipo', 'required');
 
-			// IF IS A NEW BUSSINESS
+					// IF IS A NEW BUSSINESS
 					if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' )
 					{
-				// Validations
+						// Validations
 						$this->form_validation->set_rules('product_id', 'Producto', 'required|xxs_clean');
 						$this->form_validation->set_rules('currency_id', 'Moneda', 'required|xxs_clean');
 						$this->form_validation->set_rules('prima', ' Prima anual',
@@ -310,22 +310,22 @@
 						$this->form_validation->set_rules('payment_interval_id', 'Conducto', 'required|xxs_clean');
 						$this->form_validation->set_rules('payment_method_id', 'Forma de pago', 'required|xxs_clean');
 						$this->form_validation->set_rules('name', 'Nombre', 'required|strtoupper|xxs_clean');
-				//$this->form_validation->set_rules('lastname_father', 'Apellido paterno', 'required|xxs_clean');
-				//$this->form_validation->set_rules('lastname_mother', 'Apellido materno', 'required|xxs_clean');
+						//$this->form_validation->set_rules('lastname_father', 'Apellido paterno', 'required|xxs_clean');
+						//$this->form_validation->set_rules('lastname_mother', 'Apellido materno', 'required|xxs_clean');
 					}
 					else
 					{
 						$this->form_validation->set_rules('name', 'Nombre', 'strtoupper');
 					}
 
-			// Run Validation
+					// Run Validation
 					if ( $this->form_validation->run() == TRUE ){
-				// Load Model
+						// Load Model
 						$this->load->model( 'work_order' );
 						$controlSaved = true;
 						$policyId = 0;
 
-				// Save new bussiness
+						// Save new bussiness
 				//if( $this->input->post( 'work_order_type_id' ) == '90' or $this->input->post( 'work_order_type_id' ) == '47' ){
 						if( !empty( $_POST['product_id'] ) )
 						{
@@ -336,7 +336,7 @@
 							if (! $this->_process_update_db_policy_prima(
 								$current_date, $field_values))
 							{
-					// Set false message
+								// Set false message
 								$this->session->set_flashdata( 'message', array(
 									'type' => false,
 									'message' => 'No se pudo convertir la prima.'
@@ -370,7 +370,7 @@
 
 							$policyId = $this->work_order->insert_id();
 
-				// Agents Adds
+							// Agents Adds
 							$agents = array();
 							for( $i=0; $i<=count( $this->input->post('agent') ); $i++ )
 								if( !empty(  $_POST['agent'][$i] ) )
@@ -378,27 +378,23 @@
 										'user_id' => $_POST['agent'][$i],
 										'policy_id' => $policyId,
 										'percentage' => $_POST['porcentaje'][$i],
-										'since' => date( 'Y-m-d H:i:s' )
+										'since' => date( 'Y-m-d H:i:s' ),
+										'agent_generation_vida' => ($this->input->post( 'ramo' ) == 1) ? $this->user->getGenerationByAgentId($_POST['agent'][$i],false) : NULL,
+										'agent_generation_gmm' => ($this->input->post( 'ramo' ) == 2) ? $this->user->getGenerationByAgentId($_POST['agent'][$i],false) : NULL
 									);
 
 								if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false )
 									$controlSaved = false;
 				//}
 								if( $controlSaved == false ){
-					// Set false message
+									// Set false message
 									$this->session->set_flashdata( 'message', array(
 										'type' => false,
 										'message' => 'No se puede crear la orden de trabajo Poliza, consulte a su administrador.'
 									));
 									redirect( 'ot', 'refresh' );
 								}
-								$generation_vida = NULL;
-								$generation_gmm = NULL;
-								if ($this->input->post( 'ramo' ) == 1){
-									$generation_vida = $this->user->getGenerationByAgentId($agents['user_id']);
-								}else{
-									$generation_gmm = $this->user->getGenerationByAgentId($agents['user_id'],false);
-								}
+
 								$ot = array(
 									'user' => $this->sessions['id'],
 									'policy_id' => $policyId,
@@ -411,17 +407,15 @@
 									'comments' => $this->input->post('comments'),
 									'duration' => '',
 									'last_updated' => date( 'Y-m-d H:s:i' ),
-									'date' => date( 'Y-m-d H:s:i' ),
-									'agent_generation_vida' => $generation_vida,
-									'agent_generation_gmm' => $generation_gmm
+									'date' => date( 'Y-m-d H:s:i' )
 								);
 
-				// Save OT
+								// Save OT
 								if( $this->work_order->create( 'work_order', $ot ) == false )
 									$controlSaved = false;
 
 								if( $controlSaved == false ){
-					// Set false message
+									// Set false message
 									$this->session->set_flashdata( 'message', array(
 										'type' => false,
 										'message' => 'No se puede crear la orden de trabajo, consulte a su administrador.'
@@ -429,14 +423,14 @@
 									redirect( 'ot', 'refresh' );
 								}
 
-				// Send Email
+								// Send Email
 								$notification = $this->input->post('notification');
 								if ($notification !== FALSE)
 								{
-					//Get aditional emails
+									//Get aditional emails
 									$aditional_emails = trim($this->input->post('emails'));
 
-					//Filter string for valid emails only
+									//Filter string for valid emails only
 									if(!empty($aditional_emails)){
 										$arr_emails = explode(",", $aditional_emails);
 										$valid_emails = array();
@@ -459,7 +453,7 @@
 								}
 
 								if( $controlSaved == true ){
-					// Set false message
+									// Set false message
 									$this->session->set_flashdata( 'message', array(
 										'type' => true,
 										'message' => 'Se ha creado el registro correctamente.'
@@ -468,17 +462,17 @@
 								}
 							}
 						}
-		// Load Model
+						// Load Model
 						$this->load->model( 'work_order' );
-		// Get products
+						// Get products
 						$product = $this->work_order->getProductsOptions();
-		//Get Currency
+						//Get Currency
 						$currency = $this->work_order->getCurrencyOptions();
-		// Get Payments intervals
+						// Get Payments intervals
 						$payment_intervals = $this->work_order->getPaymentIntervalOptions();
-		// Get Conduct (payment mode)
+						// Get Conduct (payment mode)
 						$payment_conduct = $this->work_order->getPaymentMethodsConductoOptions();
-		// Get Agents
+						// Get Agents
 						$agents = $this->user->getAgents();
 
 						$add_js = '
@@ -494,10 +488,10 @@
 						';
 
 						$base_url = base_url();
-		// Config view
+						// Config view
 						$this->view = array(
 							'title' => 'Crear OT',
-		   // Permisions
+		   					// Permisions
 							'user' => $this->sessions,
 							'user_vs_rol' => $this->user_vs_rol,
 							'roles_vs_access' => $this->roles_vs_access,
@@ -507,7 +501,7 @@
 								$base_url . 'plugins/jquery-validation/jquery.validate.js"></script>',
 								'<script type="text/javascript" src="' .
 								$base_url . 'plugins/jquery-validation/es_validator.js"></script>',
-//            '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
+								//'<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.js"></script>',
 								'<script src="' .
 								$base_url . 'ot/assets/scripts/create.js"></script>',
 								'<script src="' .
@@ -523,17 +517,17 @@
 		  'agents' => $agents
 		);
 
-		// Render view
+						// Render view
 						$this->load->view( 'index', $this->view );
 					}
 
-	// Getting type tramite
+					// Getting type tramite
 					public function typetramite(){
 
-		// If is not ajax request redirect
+						// If is not ajax request redirect
 						if( !$this->input->is_ajax_request() )  redirect( '/', 'refresh' );
 
-		// Load Model
+						// Load Model
 						$this->load->model( 'work_order' );
 
 						$options = $this->work_order->getTypeTramite( $this->input->post( 'ramo' ) );
@@ -1436,7 +1430,7 @@ public function import_payments()
 		$posted_month = $file_array[0][10];
 		$posted_year = $fecha[0];
 		unset( $_POST['tmp_file'], $_POST['process'], $_POST['product'] );
-		
+
 		$this->load->helper('date');
 		$fields_to_import = $this->imported_fields[$product];
 		for( $i=0; $i<=count( $file_array ); $i++ ){
@@ -1454,7 +1448,7 @@ public function import_payments()
 				$sometimes_imported = array();
 				foreach ($fields_to_import as $key => $value)
 				{
-					$sometimes_imported[$value] = $file_array[$i][$key];	
+					$sometimes_imported[$value] = $file_array[$i][$key];
 					switch ($value)
 					{
 						case 'clave':
@@ -1629,14 +1623,7 @@ public function import_payments()
 						);
 						$this->work_order->generic_delete('payments', $where);
 					}
-					$generation_vida = NULL;
-					$generation_gmm = NULL;
 					foreach( $file_array as $item ){
-						if ($posted_ramo == 1) {
-							$generation_vida = $this->user->getGenerationByAgentId($item->agent_id);
-						}else{
-							$generation_gmm = $this->user->getGenerationByAgentId($item->agent_id,false);
-						}
 				// Verify policy
 				//$policy = $this->work_order->getPolicyByUid( $item->uid );
 						$payment_date = strtotime( $item->payment_date );
@@ -1654,11 +1641,9 @@ public function import_payments()
 							'date' => date( 'Y-m-d H:i:s' ),
 							'import_date' => $item->import_date,
 							'imported_agent_name' => $item->imported_agent_name,
-							'imported_folio' => $item->imported_folio,
-							'agent_generation_vida' => $generation_vida,
-							'agent_generation_gmm' => $generation_gmm
+							'imported_folio' => $item->imported_folio
 						);
-						$user_id = $this->user->getUserIdByAgentId($item->agent_id);
+						$user_id = $this->user->getUserIdByAgentId( $item->agent_id);
 						if (!$user_id)
 						{
 							$message['message'][0][$i]['saved'] = 'La linea '.$i.' no se ha podido importar';
