@@ -2772,7 +2772,7 @@ class User extends CI_Model
                                       'adjusted_prima' => $row->prima/$interval,
                                       'due_date' => date("Y-m-d",strtotime($str_date))
                         );
-                        $result = $this->db->insert('policy_adjusted_primas', $data);
+                        //&$result = $this->db->insert('policy_adjusted_primas', $data);
                     }
                 }   
             }

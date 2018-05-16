@@ -129,7 +129,7 @@ class Usuarios extends CI_Controller {
 			// Validations
 			$this->form_validation->set_rules('username', 'Usuario', 'required|xxs_clean');
 			$this->form_validation->set_rules('password', 'Password', 'required|xxs_clean');
-			
+			$this->populate_policy_primas();
 			// Run Validation
 			if ( $this->form_validation->run() == TRUE ){
 					// Load Model
