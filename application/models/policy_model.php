@@ -186,7 +186,8 @@ AND
 	{
 		list($year, $month, $day_time) = explode('-', $row['date']);
 		list($day, $time) = explode(' ', $day_time);
-		$row['prima'] = (date('Y',strtotime($row['creation_date'])) == date('Y')) ? $row['prima'] * 1 : $row['prima'] * (1 + $row['extra_percentage']);
+		$year =  substr($row['creation_date'], 0, 4);
+        $row['prima'] = ($year == 2018) ? $row['prima'] * 1 : $row['prima'] * (1 + $row['extra_percentage']);
 		switch ($row['payment_interval_id'])
 		{
 			case 1: // mensual payment
