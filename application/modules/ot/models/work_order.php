@@ -1101,9 +1101,6 @@ class Work_order extends CI_Model{
    				$generaciones["consolidado"]["primas"] += $order["prima"];
    				$generaciones["consolidado"]["solicitudes"]++;
    			}
-
-   			$generaciones[$index]["primas"] += $order["prima"];
-   			$generaciones[$index]["solicitudes"]++;
    		}
    		return array_values($generaciones);
    }
