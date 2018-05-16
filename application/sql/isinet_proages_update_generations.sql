@@ -32,7 +32,7 @@ SET    payments.agent_generation_vida = (case when (DATE_FORMAT(FROM_DAYS(TO_DAY
                           when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 4 then 'Generación 4'
                           when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) >= 5 then 'Consolidado'
                           end)
-where agents.user_id = payments.agent_id and payments.product_group = 1;
+where agents.id = payments.agent_id and payments.product_group = 1;
 
 -- update generation of agent GMM in payments table
 UPDATE agents, payments
@@ -42,7 +42,7 @@ SET    payments.agent_generation_gmm = (case when (TIMESTAMPDIFF(MONTH, connecti
                           when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 = 4 then 'Generación 4'
                           when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 >= 5 then 'Consolidado'
                           end)
-where agents.user_id = payments.agent_id and payments.product_group = 2;
+where agents.id = payments.agent_id and payments.product_group = 2;
 
 -- update generation of agent vida in work_order table
 UPDATE agents, work_order
