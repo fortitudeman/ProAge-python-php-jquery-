@@ -415,52 +415,19 @@ class rpm extends CI_Model{
 
         switch ($filter["generacion"]) {
             case 'Generacion 1':
-                $dateRange = getGeneracionDateRange('generacion_1',
-                    date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
-                    $ramo == 1);
-                $begin = $dateRange["init"];
-                $whered .= ' AND a.connection_date >= ?';
-                array_push($dwhere, $begin);
+                $whered .= ($filter["ramo"] == 1) ? " AND py.agent_generation_vida = 'Generación 1'" : " AND py.agent_generation_gmm = 'Generación 1'";
                 break;
             case 'Generacion 2':
-                $dateRange = getGeneracionDateRange('generacion_2',
-                    date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
-                    $ramo == 1);
-                $begin = $dateRange["init"];
-                $end = $dateRange["end"];
-                $whered .= ' AND a.connection_date >= ? AND a.connection_date < ?';
-                array_push($dwhere, $begin);
-                array_push($dwhere, $end);
+                $whered .= ($filter["ramo"] == 1) ? " AND py.agent_generation_vida = 'Generación 2'" : " AND py.agent_generation_gmm = 'Generación 2'";
                 break;
             case 'Generacion 3':
-                $dateRange = getGeneracionDateRange('generacion_3',
-                    date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
-                    $ramo == 1);
-                $begin = $dateRange["init"];
-                $end = $dateRange["end"];
-                $whered .= ' AND a.connection_date >= ? AND a.connection_date < ?';
-                array_push($dwhere, $begin);
-                array_push($dwhere, $end);
+                $whered .= ($filter["ramo"] == 1) ? " AND py.agent_generation_vida = 'Generación 3'" : " AND py.agent_generation_gmm = 'Generación 3'";
                 break;
             case 'Generacion 4':
-                if ($filter["ramo"] == 1) {
-                    $dateRange = getGeneracionDateRange('generacion_4',
-                        date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
-                        $ramo == 1);
-                    $begin = $dateRange["init"];
-                    $end = $dateRange["end"];
-                    $whered .= ' AND a.connection_date >= ? AND a.connection_date < ?';
-                    array_push($dwhere, $begin);
-                    array_push($dwhere, $end);
-                }
+                $whered .= ($filter["ramo"] == 1) ? " AND py.agent_generation_vida = 'Generación 4'" : " AND py.agent_generation_gmm = 'Generación 4'";
                 break;
             case 'Consolidado':
-                $dateRange = getGeneracionDateRange('consolidado',
-                    date('Y') == $year ? date('Y-m-d') : $year . '-12-31',
-                    $ramo == 1);
-                $begin = $dateRange["init"];
-                $whered .= ' AND a.connection_date <= ?';
-                array_push($dwhere, $begin);
+                $whered .= ($filter["ramo"] == 1) ? " AND py.agent_generation_vida = 'Consolidado'" : " AND py.agent_generation_gmm = 'Consolidado'";
                 break;
         }
 
