@@ -1097,7 +1097,7 @@ class Work_order extends CI_Model{
    			}elseif ($generation == "Generación 4") {
    				$generaciones["generacion_4"]["primas"] += $order["prima"];
    				$generaciones["generacion_4"]["solicitudes"]++;
-   			}elseif ($generation == "consolidado") {
+   			}elseif ($generation == "Consolidado") {
    				$generaciones["consolidado"]["primas"] += $order["prima"];
    				$generaciones["consolidado"]["solicitudes"]++;
    			}
