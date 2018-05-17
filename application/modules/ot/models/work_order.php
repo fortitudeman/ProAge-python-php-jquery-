@@ -1084,7 +1084,7 @@ class Work_order extends CI_Model{
 
    		foreach ($work_orders as $order) {
    			//get generation index of this order
-   			$generation = ($order["ramo"] == 1) ? $this->user->getGenerationByAgentId($order["agent_id"]) : $this->user->getGenerationByAgentId($order["agent_id"], false);
+   			$generation = ($order["ramo"] == 1) ? $this->user->getGenerationByOtId($order["policy_id"]) : $this->user->getGenerationByOtId($order["policy_id"], false);
    			if ($generation == "Generación 1") {
    				$generaciones["generacion_1"]["primas"] += $order["prima"];
    				$generaciones["generacion_1"]["solicitudes"]++;

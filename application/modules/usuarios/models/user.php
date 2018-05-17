@@ -1604,6 +1604,18 @@ class User extends CI_Model
         return $generation;
     }
 
+ // Getting generation by id
+    public function getGenerationByOtId($id = null, $vida = true){
+        $this->db->select('policies_vs_users.generation_vida, policies_vs_users.generation_gmm');
+        $this->db->from('policies_vs_users');
+        $this->db->where('policies_vs_users.policy_id =', $id);
+        $query = $this->db->get();
+        foreach ($query->result() as $row){
+            $generation = $vida ? $row->generation_vida : $row->generation_gmm;
+        }
+        return $generation;
+    }
+
     // Getting user_id
     public function getUserIdByAgentId($id = null)
     {

@@ -196,7 +196,6 @@ class Usuarios extends CI_Controller {
 		$inserted_rows = $this->_populate_policy_primas();
 		$this->benchmark->mark('code_end');
 		$elapsed = $this->benchmark->elapsed_time('code_start', 'code_end');
-		echo "$inserted_rows inserted in the new table in $elapsed sec..";
 	}
 
 	private function _populate_policy_primas()
