@@ -102,8 +102,13 @@ $ignore_image = '
                     
             </td>
             <td>
-                <?php if($value->work_order_uid):?>
-                    <?php $ot_url= $base_url."/ot/ver_ot/".$value->work_order_uid.".html"?>
+                <?php 
+
+                    $this->load->model('usuarios/user'); 
+                    $work_order_uid = $this->user->getWOId($value->policy_number);
+                ?>
+                <?php if($work_order_uid)):?>
+                    <?php $ot_url= $base_url."/ot/ver_ot/".$work_order_uid.".html"?>
                     <a href="<?php echo $ot_url ?>" class="payment_row" target="_blank"><?php echo $value->policy_number ?></a>
                 <?php else:?>
                     <?php echo $value->policy_number ?>

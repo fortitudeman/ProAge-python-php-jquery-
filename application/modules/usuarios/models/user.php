@@ -3381,11 +3381,7 @@ class User extends CI_Model
         $this->db->from('payments');
         $this->db->join('agents', 'agents.id=payments.agent_id');
         $this->db->join('users', 'users.id=agents.user_id');
-        if (!$sum_requested) {
-            $this->db->join('policies', 'policies.uid=payments.policy_number');
-            $this->db->join('work_order', 'work_order.policy_id=policies.id');
-        }
-//      $where = array( 'year_prime' => 1, 'valid_for_report' => 1);
+        //      $where = array( 'year_prime' => 1, 'valid_for_report' => 1);
         if ($agent_id && !is_array($agent_id))
             $where['agent_id'] = $agent_id;
 
@@ -3474,8 +3470,8 @@ class User extends CI_Model
             $query->free_result();
             return $prima;
         } else {
-//          if ($agent_id && is_array($agent_id))
-//              $this->db->where_in('agent_id', $agent_id);
+        //          if ($agent_id && is_array($agent_id))
+        //              $this->db->where_in('agent_id', $agent_id);
 
             $result = $this->complement_payments($query);
             return $result;
@@ -4273,6 +4269,15 @@ AND
             }
         }
         $query->free_result();
+    }
+
+    public function getWOId($id){
+        $this->db->select('work_order.id');
+        $this->db->from('policies');
+        $this->db->join('work_order','work_order.policy_id=policies.id');
+        $this->db->where('policies.uid =', $id);
+        $query = $this->db->get();
+        return $query->result();
     }
 }
 
