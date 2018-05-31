@@ -4277,7 +4277,7 @@ AND
         $this->db->join('work_order','work_order.policy_id=policies.id');
         $this->db->where('policies.uid =', $id);
         $query = $this->db->get();
-        return $query->result();
+        return $query->first_row();
     }
 }
 
