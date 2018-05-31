@@ -4272,12 +4272,13 @@ AND
     }
 
     public function getWOId($id){
-        $this->db->select('work_order.id');
+        $this->db->select('work_order.id as id, policies.uid as uid');
         $this->db->from('policies');
         $this->db->join('work_order','work_order.policy_id=policies.id');
         $this->db->where('policies.uid =', $id);
         $query = $this->db->get();
-        return $query->first_row();
+        $result = $query->row();
+        return $result;
     }
 }
 

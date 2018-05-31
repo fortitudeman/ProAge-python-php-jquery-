@@ -966,6 +966,11 @@ $( document ).ready( function(){
 				break;
 			case 'prima':
 				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );
+				$variable = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );
+				foreach ($variable as $key ) {
+					$array_wo[] = $this->user->getWOId($key->policy_number);
+				}
+				$data['wo'] = $array_wo;
 				break;
 			case 'cartera':
 				$data['values'] = $this->user->getCarteraDetails( $this->input->post('for_agent_id'), $filter );
