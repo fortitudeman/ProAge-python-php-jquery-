@@ -102,12 +102,18 @@ $ignore_image = '
                     
             </td>
             <td>
-                <?php if($value->work_order_uid):?>
-                    <?php $ot_url= $base_url."/ot/ver_ot/".$value->work_order_uid.".html"?>
+                <?php foreach ($wo as $key) {
+                    if ($key->uid = $value->policy_number) {
+                        $wo_id = $key->id;
+                    }
+                } ?>
+                <?php if(isset($wo_id)):?>
+                    <?php $ot_url= $base_url."/ot/ver_ot/".$wo_id.".html"?>
                     <a href="<?php echo $ot_url ?>" class="payment_row" target="_blank"><?php echo $value->policy_number ?></a>
                 <?php else:?>
                     <?php echo $value->policy_number ?>
                 <?php endif?>
+                <?php unset($wo_id); ?>
             </td>
 <?php if ($is_negocio_pai): ?>
             <td>
