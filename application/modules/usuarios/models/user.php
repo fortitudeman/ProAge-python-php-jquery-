@@ -1707,8 +1707,8 @@ class User extends CI_Model
             $uid = ltrim($uid, '0');
 
             //$this->db->where( 'agent_uids.type', 'national' );
-
-            $this->db->where('(agent_uids.uid=\'' . $uidorigin . '\' OR agent_uids.uid=\'' . $uid . '\')');
+            $query = array('agent_uids.uid' => $uidorigin, 'agent_uids.uid' => $uid);
+            $this->db->or_like($query);
 
 
         }
@@ -1724,7 +1724,8 @@ class User extends CI_Model
 
             //$this->db->where( 'agent_uids.type', 'provincial' );
 
-            $this->db->where('(agent_uids.uid=\'' . $uidorigin . '\' OR agent_uids.uid=\'' . $uid . '\')');
+            $query = array('agent_uids.uid' => $uidorigin, 'agent_uids.uid' => $uid);
+            $this->db->or_like($query);
         }
 
         $this->db->limit(1);
@@ -1790,7 +1791,8 @@ class User extends CI_Model
 
             //$this->db->where( 'agent_uids.type', 'national' );
 
-            $this->db->where('(agent_uids.uid=\'' . $uidorigin . '\' OR agent_uids.uid=\'' . $uid . '\')');
+            $query = array('agent_uids.uid' => $uidorigin, 'agent_uids.uid' => $uid);
+            $this->db->or_like($query);
 
 
         }
@@ -1806,7 +1808,8 @@ class User extends CI_Model
 
             //$this->db->where( 'agent_uids.type', 'provincial' );
 
-            $this->db->where('(agent_uids.uid=\'' . $uidorigin . '\' OR agent_uids.uid=\'' . $uid . '\')');
+            $query = array('agent_uids.uid' => $uidorigin, 'agent_uids.uid' => $uid);
+            $this->db->or_like($query);
         }
         $this->db->limit(1);
         $this->db->order_by('id', 'asc');
