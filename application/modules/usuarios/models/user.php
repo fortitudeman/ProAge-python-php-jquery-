@@ -3230,7 +3230,7 @@ class User extends CI_Model
         `negocios_pai_per_policy`.negocio_pai,
         DATE_FORMAT(`negocios_pai_per_policy`.date_pai,'%Y-%m-%d') as `date_pai`,
         `negocios_pai_per_policy`.creation_date,
-        `negocios_pai_per_policy`.last_updated, " . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments` 
+        `negocios_pai_per_policy`.last_update, " . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments` 
                         JOIN `agents` ON `agents`.`id`=`payments`.`agent_id` 
                         JOIN `users` ON `users`.`id`=`agents`.`user_id` 
                         LEFT JOIN `negocios_pai_per_policy` ON `negocios_pai_per_policy`.`policy_number` =`payments`.`policy_number` " . $join_plus . " 
