@@ -3133,25 +3133,25 @@ class User extends CI_Model
     }
 
 
-    public function getCountNegocioPai($agent_id = null, $filter = array())
-    {
-        if (empty($agent_id))
-            return 0;
-        $filter['query']['min_amount'] = TRUE;
-        $result = 0;
-        $array_scalar = $this->_getNegocios(TRUE, $agent_id, $filter);
-        if (!is_numeric($array_scalar))
-            log_message('error', 'application/modules/usuarios/models/user.php - getCountNegocioPai() - not int - ' . print_r($array_scalar, TRUE));
-        elseif ($array_scalar > 0)
-            $result = array_fill(0, $array_scalar, 0);
-        return $result;
-    }
+    // public function getCountNegocioPai($agent_id = null, $filter = array())
+    // {
+    //     if (empty($agent_id))
+    //         return 0;
+    //     $filter['query']['min_amount'] = TRUE;
+    //     $result = 0;
+    //     $array_scalar = $this->_getNegocios(TRUE, $agent_id, $filter);
+    //     if (!is_numeric($array_scalar))
+    //         log_message('error', 'application/modules/usuarios/models/user.php - getCountNegocioPai() - not int - ' . print_r($array_scalar, TRUE));
+    //     elseif ($array_scalar > 0)
+    //         $result = array_fill(0, $array_scalar, 0);
+    //     return $result;
+    // }
 
-    /*  public function getCountNegocioPai( $agent_id = null, $filter = array() )
+      public function getCountNegocioPai( $agent_id = null, $filter = array() )
     {
         return $this->_getNegocioPai(TRUE, $agent_id, $filter);
     }
-*/
+
 
     public function getNegocioPai($agent_id = null, $filter = array())
     {
@@ -3225,19 +3225,19 @@ class User extends CI_Model
             $field_plus = ', `work_order`.`id` AS `work_order_uid`';
             $group_plus = ',`work_order`.`id`';
         }
-        $sql_str = "SELECT `policy_negocio_pai`.ramo,
-        `policy_negocio_pai`.policy_number,
-        `policy_negocio_pai`.negocio_pai,
-        DATE_FORMAT(`policy_negocio_pai`.date_pai,'%Y-%m-%d') as `date_pai`,
-        `policy_negocio_pai`.creation_date,
-        `policy_negocio_pai`.last_updated, " . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments` 
+        $sql_str = "SELECT `pai_business`.ramo,
+        `pai_business`.policy_number,
+        `pai_business`.pai,
+        DATE_FORMAT(`pai_business`.date_pai,'%Y-%m-%d') as `date_pai`,
+        `pai_business`.creation_date,
+        `pai_business`.last_updated, " . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments` 
                         JOIN `agents` ON `agents`.`id`=`payments`.`agent_id` 
                         JOIN `users` ON `users`.`id`=`agents`.`user_id` 
-                        LEFT JOIN `policy_negocio_pai` ON `policy_negocio_pai`.`policy_number` =`payments`.`policy_number` " . $join_plus . " 
+                        LEFT JOIN `pai_business` ON `pai_business`.`policy_number` =`payments`.`policy_number` " . $join_plus . " 
                         WHERE " .
             $sql_plus .
             $sql_agent_filter . " 
-                        AND `policy_negocio_pai`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
+                        AND `pai_business`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
 
 
         $query = $this->db->query($sql_str);
