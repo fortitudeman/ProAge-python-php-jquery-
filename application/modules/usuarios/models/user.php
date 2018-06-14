@@ -3312,7 +3312,7 @@ class User extends CI_Model
         $data = array(
             'ramo' => $product_group,
             'policy_number' => $policy,
-            'negocio_pai' => $pai,
+            'pai' => $pai,
             'date_pai' => $date_pai,
             'creation_date' => date('Y-m-d H:i:s')
         );
