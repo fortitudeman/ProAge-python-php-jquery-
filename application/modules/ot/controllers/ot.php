@@ -1651,7 +1651,7 @@ public function import_payments()
 
 						else
 						{
-							$this->user->create_negocio_pai($item->uid,$product, $item->amount, $stringed_payment_date);
+							$this->user->create_negocio_pai($item->uid,$product, $stringed_payment_date);
 							if( $this->work_order->replace( 'payments', $payment ) == false )
 								$controlSaved = false;
 

@@ -1868,11 +1868,11 @@ implode(', ', $ramo_tramite_types) . '
 			$type = 'provincial';
 			$generation_gmm = $this->user->getGenerationByAgentId($agent_id,false);
 		}
+		$amount = $this->input->post('amount');
 
 		$folio = $this->user->generic_get('agent_uids',
 			array('agent_id' => $agent_id, 'type' => $type),
 				1, 0, 'id asc');
-		$amount = $this->input->post('amount');
 		$payment = array(
 			'product_group' => $product_group,
 			'agent_id' => $agent_id,
@@ -1889,14 +1889,15 @@ implode(', ', $ramo_tramite_types) . '
 			'imported_agent_name' => trim($parts[0]),
 			'imported_folio' => isset($folio[0]) ? $folio[0]->uid : '',
 			'agent_generation_vida' => $generation_vida,
-			'agent_generation_gmm' => $generation_gmm
+			'agent_generation_gmm' => $generation_gmm,
+			'pai_business' => $this->user->get_negocio_pai($payment_date, $policy_number, $amount)
 		);
 
 		$user_id = $this->user->getUserIdByAgentId( $agent_id);
 
-		$this->user->create_negocio_pai($payment['policy_number'],$product_group, $amount, $payment_date);
 		if ($user_id && ($result = $this->work_order->create( 'payments', $payment )))
 		{
+            $this->user->create_negocio_pai($payment['policy_number'],$product_group, $payment_date);
 			$policy = $this->work_order->getPolicyByUid(  $payment['policy_number'] );
 			if ($policy && 
 				( (float)$policy[0]['prima'] >= (float)$payment['amount'] ))

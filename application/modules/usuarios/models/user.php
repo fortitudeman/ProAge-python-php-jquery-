@@ -3301,9 +3301,9 @@ class User extends CI_Model
         }
     }
 
-    public function create_negocio_pai($policy, $product_group, $amount, $date_pai){
+    public function create_negocio_pai($policy, $product_group, $date_pai){
         $total = get_total_payment($policy);
-        $pai = is_negocio_pai($total + $amount, date('Y', strtotime($date_pai)));
+        $pai = is_negocio_pai($total, date('Y', strtotime($date_pai)));
         $last_pai = last_pai($policy);
         $data = array(
             'ramo' => $product_group,
