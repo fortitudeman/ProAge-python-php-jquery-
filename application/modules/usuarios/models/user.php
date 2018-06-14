@@ -3313,7 +3313,7 @@ class User extends CI_Model
             'creation_date' => date('Y-m-d H:i:s')
         );
 
-        if (!$exist){
+        if ($pai != $last_pai){
             $this->db->insert('pai_business', $data);
         }
     }
@@ -3393,7 +3393,7 @@ class User extends CI_Model
         $this->db->where('pai_business.policy_number', $id);
         $this->db->order_by('pai', "desc");
         $this->db->limit(1);
-        return $this->db->get()->row()->total;
+        return $this->db->get()->row()->pai;
     }
 
     private function _create_negocio_pai_rows($row)
