@@ -1872,12 +1872,13 @@ implode(', ', $ramo_tramite_types) . '
 		$folio = $this->user->generic_get('agent_uids',
 			array('agent_id' => $agent_id, 'type' => $type),
 				1, 0, 'id asc');
+		$amount = $this->input->post('amount');
 		$payment = array(
 			'product_group' => $product_group,
 			'agent_id' => $agent_id,
 			'year_prime' => $this->input->post('year_prime'),
 			'currency_id' => 1,
-			'amount' => $this->input->post('amount'),
+			'amount' => $amount,
 			'payment_date' => $payment_date,
 			'business' => (int)$this->input->post('business'),
 			'policy_number' => trim($this->input->post('policy_number')),
@@ -1893,9 +1894,9 @@ implode(', ', $ramo_tramite_types) . '
 
 		$user_id = $this->user->getUserIdByAgentId( $agent_id);
 
+		$this->user->create_negocio_pai($payment['policy_number'],$product_group, $amount, $payment_date);
 		if ($user_id && ($result = $this->work_order->create( 'payments', $payment )))
 		{
-            $this->user->create_negocio_pai($payment['policy_number'],$product_group);
 			$policy = $this->work_order->getPolicyByUid(  $payment['policy_number'] );
 			if ($policy && 
 				( (float)$policy[0]['prima'] >= (float)$payment['amount'] ))

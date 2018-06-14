@@ -3303,44 +3303,105 @@ class User extends CI_Model
         }
     }
 
-    public function create_negocio_pai($policy, $product_group)
-    {
-
-        $sql = "SELECT `payments`.*
-        FROM `payments`
-        WHERE `valid_for_report` = '1' 
-            AND `year_prime` = '1'  
-            AND `product_group` = '" . $product_group . "' AND `policy_number` = '" . $policy . "' ORDER BY `payment_date` ASC";
-        $total = 0;
-        $query = $this->db->query($sql);
-        $flag = true;
-        $payment_date = '';
-        $data = array();
-        if ($query->num_rows() > 0) {
-            foreach ($query->result() as $row) {
-                $total += (int)$row->amount;
-                if ($flag && $total > 12000 and $total < 110000) {
-                    $payment_date = $row->payment_date;
-                    $flag = false;
-                } elseif (!$flag && $total > 110000 and $total < 500000) {
-                    $payment_date = $row->payment_date;
-                    $flag = true;
-                }elseif ($flag && $total > 500000) {
-                    $payment_date = $row->payment_date;
-                    $flag = false;
-                }
-            }
-            if ($total > 500000) {
-                $data = array('ramo' => $row->product_group, 'policy_number' => $row->policy_number, 'negocio_pai' => '3', 'date_pai' => $payment_date, 'creation_date' => date("Y-m-d H:i:s"));
-                $this->db->replace('policy_negocio_pai', $data);
-            } elseif ($total > 110000) {
-                $data = array('ramo' => $row->product_group, 'policy_number' => $row->policy_number, 'negocio_pai' => '2', 'date_pai' => $payment_date, 'creation_date' => date("Y-m-d H:i:s"));
-                $this->db->replace('policy_negocio_pai', $data);
-            } elseif ($total > 12000) {
-                $data = array('ramo' => $row->product_group, 'policy_number' => $row->policy_number, 'negocio_pai' => '1', 'date_pai' => $payment_date, 'creation_date' => date("Y-m-d H:i:s"));
-                $this->db->replace('policy_negocio_pai', $data);
-            }
+    public function create_negocio_pai($policy, $product_group, $amount, $date_pai){
+        $total = get_total_payment($policy);
+        $pai = is_negocio_pai($total + $amount, date('Y', strtotime($date_pai)));
+        if ($pai != 0) {
+            $exist = pai_exist($policy, $pai);
         }
+        $data = array(
+            'ramo' => $product_group,
+            'policy_number' => $policy,
+            'negocio_pai' => $pai,
+            'date_pai' => $date_pai,
+            'creation_date' => date('Y-m-d H:i:s')
+        );
+
+        if (!$exist){
+            $this->db->insert('pai_business', $data);
+        }
+    }
+
+    public function get_total_payment($policy){
+        $this->db->select_sum('amount as total');
+        $this->db->from('payments');
+        $this->db->where('payments.policy_number', $id);
+        return $this->db->get()->row()->total;
+    }
+
+    public function is_negocio_pai($total, $year){
+        switch ($year) {
+            case 2018:
+                return calculate_eight_seven($total);
+                break;
+            case 2017:
+                return calculate_eight_seven($total);
+                break;
+            case 2016:
+                return calculate_six($total);
+                break;
+            case 2015:
+                return calculate_five($total);
+                break;
+            case 2014:
+                return calculate_four($total);
+                break;
+            default:
+                return null;
+                break;
+        }
+    }
+
+    public function calculate_eight_seven($total){
+        if ($total >= 12000 && $total <= 110000) {
+            return 1;
+        }elseif ($total >= 110000 && $total <= 500000) {
+            return 2;
+        }elseif ($total >= 500000) {
+            return 3;
+        }
+        return 0;
+    }
+
+    public function calculate_six($total){
+        if ($total >= 12000 && $total <= 100000) {
+            return 1;
+        }elseif ($total >= 100000 && $total <= 500000) {
+            return 2;
+        }elseif ($total >= 500000) {
+            return 3;
+        }
+        return 0;
+    }
+
+    public function calculate_five($total){
+        if ($total >= 10000 && $total <= 100000) {
+            return 1;
+        }elseif ($total >= 100000 && $total <= 500000) {
+            return 2;
+        }elseif ($total >= 500000) {
+            return 3;
+        }
+        return 0;
+    }
+
+    public function calculate_four($total){
+        if($total > 10000)
+            return 1;
+        return 0;
+    }
+
+    public function pai_exist($policy, $pai){
+        $exist = false;
+        $this->db->select('pai_business.*');
+        $this->db->from('pai_business');
+        $this->db->where('pai_business.policy_number', $id);
+        $this->db->where('pai_business.pai', $pai);
+        $query = $this->db->get();
+        if ($query->num_rows() > 0) {
+            $exist = true;
+        }
+        return $exist;
     }
 
     private function _create_negocio_pai_rows($row)

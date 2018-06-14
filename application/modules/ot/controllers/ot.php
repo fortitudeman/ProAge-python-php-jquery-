@@ -1651,6 +1651,7 @@ public function import_payments()
 
 						else
 						{
+							$this->user->create_negocio_pai($item->uid,$product, $item->amount, $stringed_payment_date);
 							if( $this->work_order->replace( 'payments', $payment ) == false )
 								$controlSaved = false;
 
@@ -1658,7 +1659,6 @@ public function import_payments()
 
 							if ($controlSaved && $policy)
 							{
-								$this->user->create_negocio_pai($item->uid,$product);
 								if ($policy[0]['currency_id'] == 1)
 									$item_amount = $item->amount;
 							else // if policy in USD, convert payment amount from MXN to USD
