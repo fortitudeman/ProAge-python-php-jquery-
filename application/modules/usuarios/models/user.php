@@ -3228,9 +3228,7 @@ class User extends CI_Model
         $sql_str = "SELECT `pai_business`.ramo,
         `pai_business`.policy_number,
         `pai_business`.pai,
-        DATE_FORMAT(`pai_business`.date_pai,'%Y-%m-%d') as `date_pai`,
-        `pai_business`.creation_date,
-        `pai_business`.last_updated, " . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments` 
+        DATE_FORMAT(`pai_business`.date_pai,'%Y-%m-%d') as `date_pai`," . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments` 
                         JOIN `agents` ON `agents`.`id`=`payments`.`agent_id` 
                         JOIN `users` ON `users`.`id`=`agents`.`user_id` 
                         LEFT JOIN `pai_business` ON `pai_business`.`policy_number` =`payments`.`policy_number` " . $join_plus . " 
