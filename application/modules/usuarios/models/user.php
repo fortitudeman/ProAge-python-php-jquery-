@@ -3304,9 +3304,7 @@ class User extends CI_Model
     public function create_negocio_pai($policy, $product_group, $amount, $date_pai){
         $total = get_total_payment($policy);
         $pai = is_negocio_pai($total + $amount, date('Y', strtotime($date_pai)));
-        if ($pai != 0) {
-            $exist = pai_exist($policy, $pai);
-        }
+        $last_pai = last_pai($policy);
         $data = array(
             'ramo' => $product_group,
             'policy_number' => $policy,
@@ -3389,17 +3387,13 @@ class User extends CI_Model
         return 0;
     }
 
-    public function pai_exist($policy, $pai){
-        $exist = false;
-        $this->db->select('pai_business.*');
+    public function last_pai($policy){
+        $this->db->select('pai_business.pai');
         $this->db->from('pai_business');
         $this->db->where('pai_business.policy_number', $id);
-        $this->db->where('pai_business.pai', $pai);
-        $query = $this->db->get();
-        if ($query->num_rows() > 0) {
-            $exist = true;
-        }
-        return $exist;
+        $this->db->order_by('pai', "desc");
+        $this->db->limit(1);
+        return $this->db->get()->row()->total;
     }
 
     private function _create_negocio_pai_rows($row)
