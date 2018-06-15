@@ -1432,9 +1432,9 @@ class User extends CI_Model
     {
 
 
-        $query = $this->db->query(' SELECT DISTINCT(users.name), users.id  
-                                    FROM `users_vs_user_roles` 
-                                    JOIN users ON users.id = `user_id` 
+        $query = $this->db->query(' SELECT DISTINCT(users.name), users.id
+                                    FROM `users_vs_user_roles`
+                                    JOIN users ON users.id = `user_id`
                                     WHERE user_role_id=3;');
 
 
@@ -1458,9 +1458,9 @@ class User extends CI_Model
     {
 
 
-        $query = $this->db->query(' SELECT DISTINCT(users.name), users.id  
-                                    FROM `users_vs_user_roles` 
-                                    JOIN users ON users.id = `user_id` 
+        $query = $this->db->query(' SELECT DISTINCT(users.name), users.id
+                                    FROM `users_vs_user_roles`
+                                    JOIN users ON users.id = `user_id`
                                     WHERE user_role_id=3;');
 
 
@@ -2551,7 +2551,7 @@ class User extends CI_Model
                 $this->db->select('payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name');
             }else{
                 $this->db->select('payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name, work_order.id as work_order_uid');
-            } 
+            }
         }
         $this->db->from('payments');
         $this->db->join('agents', 'agents.id=payments.agent_id');
@@ -2771,13 +2771,13 @@ class User extends CI_Model
                             $months=6;
                         }
                         $str_date="".$row->creation_date." +".$months." Month";
-                        $data = array('policy_id' => $row->id, 
+                        $data = array('policy_id' => $row->id,
                                       'adjusted_prima' => $row->prima/$interval,
                                       'due_date' => date("Y-m-d",strtotime($str_date))
                         );
                         $result = $this->db->insert('policy_adjusted_primas', $data);
                     }
-                }   
+                }
             }
         }
         $this->rebuildDatesCobranza();
@@ -2807,7 +2807,7 @@ class User extends CI_Model
                         $str_date="".$row->due_date." +".$months." Month";
                         $date = date("Y-m-d",strtotime($str_date));
                     }
-                    $data = array('policy_id' => $row->policy_id, 
+                    $data = array('policy_id' => $row->policy_id,
                                   'adjusted_prima' => $row->adjusted_prima,
                                   'due_date' => $date
                     );
@@ -3073,7 +3073,7 @@ class User extends CI_Model
     }
 
     public function rebuildNegociosPai(){
-        $sql_str = "Select policy_negocio_pai.* from policy_negocio_pai 
+        $sql_str = "Select policy_negocio_pai.* from policy_negocio_pai
                     left join negocios_pai_per_policy on policy_negocio_pai.policy_number = negocios_pai_per_policy.policy_number
                     where negocios_pai_per_policy.policy_number is null
                     and policy_negocio_pai.negocio_pai != 0";
@@ -3087,9 +3087,9 @@ class User extends CI_Model
         $query->free_result();
         $sql_str_policies=(implode(",", $policies));
         $sql_str_aux = "Select payments.policy_number, amount, payment_date as date_pai, date, payments.last_updated, policy_negocio_pai.negocio_pai
-                                from payments 
+                                from payments
                                 join policy_negocio_pai on policy_negocio_pai.policy_number = payments.policy_number
-                                where payments.policy_number in(".$sql_str_policies.") 
+                                where payments.policy_number in(".$sql_str_policies.")
                                 order by payments.policy_number asc, payments.payment_date desc";
         $query_aux=$this->db->query($sql_str_aux);
         if($query_aux->num_rows() > 0){
@@ -3106,9 +3106,9 @@ class User extends CI_Model
                         $negocios_pai=3;
                     }
                     $data = array('ramo' => 1,
-                                  'policy_number' => $row_aux->policy_number, 
+                                  'policy_number' => $row_aux->policy_number,
                                   'negocio_pai' => $negocios_pai,
-                                  'date_pai' => $row_aux->date_pai, 
+                                  'date_pai' => $row_aux->date_pai,
                                   'creation_date' => $row_aux->date,
                                   'last_update' => $row_aux->last_updated
                     );
@@ -3116,9 +3116,9 @@ class User extends CI_Model
                 }else{
                     if(strcmp($row_aux->policy_number, $previous_policy) != 0){
                         $data = array('ramo' => 1,
-                                      'policy_number' => $row_aux->policy_number, 
+                                      'policy_number' => $row_aux->policy_number,
                                       'negocio_pai' => $row_aux->negocio_pai,
-                                      'date_pai' => $row_aux->date_pai, 
+                                      'date_pai' => $row_aux->date_pai,
                                       'creation_date' => $row_aux->date,
                                       'last_update' => $row_aux->last_updated
                         );
@@ -3220,7 +3220,7 @@ class User extends CI_Model
         $group_plus = '';
         if (!$count_requested) {
             $select_plus = "`policies`.`name` as `asegurado`, `policies`.`period` as `plazo`, ";
-            $join_plus = ' LEFT OUTER JOIN `policies` ON `policies`.`uid`= `payments`.`policy_number` 
+            $join_plus = ' LEFT OUTER JOIN `policies` ON `policies`.`uid`= `payments`.`policy_number`
                             LEFT JOIN `work_order` ON `work_order`.`policy_id`= `policies`.`id`';
             $field_plus = ', `work_order`.`id` AS `work_order_uid`';
             $group_plus = ',`work_order`.`id`';
@@ -3228,13 +3228,13 @@ class User extends CI_Model
         $sql_str = "SELECT `pai_business`.ramo,
         `pai_business`.policy_number,
         `pai_business`.pai,
-        DATE_FORMAT(`pai_business`.date_pai,'%Y-%m-%d') as `date_pai`," . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments` 
-                        JOIN `agents` ON `agents`.`id`=`payments`.`agent_id` 
-                        JOIN `users` ON `users`.`id`=`agents`.`user_id` 
-                        LEFT JOIN `pai_business` ON `pai_business`.`policy_number` =`payments`.`policy_number` " . $join_plus . " 
+        DATE_FORMAT(`pai_business`.date_pai,'%Y-%m-%d') as `date_pai`," . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments`
+                        JOIN `agents` ON `agents`.`id`=`payments`.`agent_id`
+                        JOIN `users` ON `users`.`id`=`agents`.`user_id`
+                        LEFT JOIN `pai_business` ON `pai_business`.`policy_number` =`payments`.`policy_number` " . $join_plus . "
                         WHERE " .
             $sql_plus .
-            $sql_agent_filter . " 
+            $sql_agent_filter . "
                         AND `pai_business`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
 
 
@@ -3302,9 +3302,10 @@ class User extends CI_Model
     }
 
     public function create_negocio_pai($policy, $product_group, $date_pai){
-        $total = get_total_payment($policy);
-        $pai = is_negocio_pai($total, date('Y', strtotime($date_pai)));
-        $last_pai = last_pai($policy);
+        $pai_exists = 0;
+        $total = $this->get_total_payment($policy);
+        $pai = $this->is_negocio_pai($total, date('Y', strtotime($date_pai)));
+        $last_pai = $this->last_pai($policy);
         $data = array(
             'ramo' => $product_group,
             'policy_number' => $policy,
@@ -3312,36 +3313,48 @@ class User extends CI_Model
             'date_pai' => $date_pai,
             'creation_date' => date('Y-m-d H:i:s')
         );
+        
+//       echo ("<br><br>DEBUG INFO FOR POLICY ID =" . $policy);
+//       echo ("<br><br>Total Payment = " . $total . "<br>Negocios PAI = " . $pai . "<br>Hubo un ultimo PAI?" . $last_pai . "<br>========================================<br>");
+        
 
-        if ($pai != $last_pai){
+        if ($pai != $last_pai && $pai > 0){
+            echo ("<br><br>Ingresando datos la BD de PAI_BUSINESS");
             $this->db->insert('pai_business', $data);
         }
     }
 
+
     public function get_total_payment($policy){
-        $this->db->select_sum('amount as total');
+        $this->db->select_sum('amount', 'total');
         $this->db->from('payments');
-        $this->db->where('payments.policy_number', $id);
+        $this->db->where('payments.policy_number', $policy);
         return $this->db->get()->row()->total;
     }
 
     public function is_negocio_pai($total, $year){
         switch ($year) {
+                
             case 2018:
-                return calculate_eight_seven($total);
+                return $this->calculate_eight_seven($total);
                 break;
+                
             case 2017:
-                return calculate_eight_seven($total);
+                return $this->calculate_eight_seven($total);
                 break;
+                
             case 2016:
-                return calculate_six($total);
+                return $this->calculate_six($total);
                 break;
+                
             case 2015:
-                return calculate_five($total);
+                return $this->calculate_five($total);
                 break;
+                
             case 2014:
-                return calculate_four($total);
+                return $this->calculate_four($total);
                 break;
+                    
             default:
                 return null;
                 break;
