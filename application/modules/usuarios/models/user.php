@@ -1956,7 +1956,7 @@ class User extends CI_Model
             $report[0] = array(
                 'name' => 'Agentes',
                 'negocio' => 'Negocios Pagados',
-                'negociopai' => 'Negocios Pal',
+                'negociopai' => 'Negocios Pai',
                 'prima' => 'Primas Pagadas',
                 'tramite' => 'Negocios en Tramite',
                 'tramite_prima' => 'Primas en Tramite',
@@ -3225,18 +3225,31 @@ class User extends CI_Model
             $field_plus = ', `work_order`.`id` AS `work_order_uid`';
             $group_plus = ',`work_order`.`id`';
         }
-        $sql_str = "SELECT `pai_business`.ramo,
-        `pai_business`.policy_number,
-        `pai_business`.pai,
-        DATE_FORMAT(`pai_business`.date_pai,'%Y-%m-%d') as `date_pai`," . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments`
+        $sql_str = "SELECT `payments`.product_group,
+        `payments`.policy_number,
+        `payments`.pai_business AS 'pai',
+        DATE_FORMAT(`payments`.payment_date,'%Y-%m-%d') as `date_pai`," . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments`
                         JOIN `agents` ON `agents`.`id`=`payments`.`agent_id`
-                        JOIN `users` ON `users`.`id`=`agents`.`user_id`
-                        LEFT JOIN `pai_business` ON `pai_business`.`policy_number` =`payments`.`policy_number` " . $join_plus . "
+                        JOIN `users` ON `users`.`id`=`agents`.`user_id` " . $join_plus . "
                         WHERE " .
             $sql_plus .
             $sql_agent_filter . "
-                        AND `pai_business`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
+                        AND `payments`.`payment_date` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
+        
 
+//        $sql_str = "SELECT `pai_business`.ramo,
+//        `pai_business`.policy_number,
+//        `pai_business`.pai,
+//        DATE_FORMAT(`pai_business`.date_pai,'%Y-%m-%d') as `date_pai`," . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments`
+//                        JOIN `agents` ON `agents`.`id`=`payments`.`agent_id`
+//                        JOIN `users` ON `users`.`id`=`agents`.`user_id`
+//                        LEFT JOIN `pai_business` ON `pai_business`.`policy_number` =`payments`.`policy_number` " . $join_plus . "
+//                        WHERE " .
+//            $sql_plus .
+//            $sql_agent_filter . "
+//                        AND `pai_business`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
+        
+        echo $sql_str;
 
         $query = $this->db->query($sql_str);
         if ($query->num_rows() > 0) {
@@ -3301,10 +3314,12 @@ class User extends CI_Model
         }
     }
 
-    public function create_negocio_pai($policy, $product_group, $date_pai){
-        $pai_exists = 0;
-        $total = $this->get_total_payment($policy);
-        $pai = $this->is_negocio_pai($total, date('Y', strtotime($date_pai)));
+    public function create_negocio_pai($policy, $product_group, $date_pai,$amount){
+        $total = $this->get_total_payment($policy, $date_pai) + $amount;
+        $pai_total = $this->is_negocio_pai($total, date('Y', strtotime($date_pai)));
+        $stored_pai = $this->get_stored_pai($policy, $date_pai);
+        $pai = $pai_total - $stored_pai;
+        
         $last_pai = $this->last_pai($policy);
         $data = array(
             'ramo' => $product_group,
@@ -3318,17 +3333,28 @@ class User extends CI_Model
 //       echo ("<br><br>Total Payment = " . $total . "<br>Negocios PAI = " . $pai . "<br>Hubo un ultimo PAI?" . $last_pai . "<br>========================================<br>");
         
 
-        if ($pai != $last_pai && $pai > 0){
-            echo ("<br><br>Ingresando datos la BD de PAI_BUSINESS");
+        if ($pai > 0){
+//          echo ("<br><br>Ingresando datos la BD de PAI_BUSINESS");
             $this->db->insert('pai_business', $data);
         }
+        return $pai;
     }
 
+    //Function used to get the sum of all PAI Business, receiving a Policy number as a parameter. 
+    public function get_stored_pai($policy, $date){
+        $this->db->select_sum('pai_business', 'pai_total');
+        $this->db->from('payments');
+        $condition_array = array('payments.policy_number' => $policy, 'payments.year_prime' => 1, 'payments.payment_date <=' => $date);
+        $this->db->where($condition_array);
+        return $this->db->get()->row()->pai_total; 
+    }
 
-    public function get_total_payment($policy){
+    //Function used to get the sum of all payments made, receiving a Policy number as a parameter.
+    public function get_total_payment($policy, $date){
         $this->db->select_sum('amount', 'total');
         $this->db->from('payments');
-        $this->db->where('payments.policy_number', $policy);
+        $condition_array = array('payments.policy_number' => $policy, 'payments.year_prime' => 1, 'payments.payment_date <=' => $date);
+        $this->db->where($condition_array);
         return $this->db->get()->row()->total;
     }
 
@@ -3362,9 +3388,9 @@ class User extends CI_Model
     }
 
     public function calculate_eight_seven($total){
-        if ($total >= 12000 && $total <= 110000) {
+        if ($total >= 12000 && $total < 110000) {
             return 1;
-        }elseif ($total >= 110000 && $total <= 500000) {
+        }elseif ($total >= 110000 && $total < 500000) {
             return 2;
         }elseif ($total >= 500000) {
             return 3;
@@ -3373,9 +3399,9 @@ class User extends CI_Model
     }
 
     public function calculate_six($total){
-        if ($total >= 12000 && $total <= 100000) {
+        if ($total >= 12000 && $total < 100000) {
             return 1;
-        }elseif ($total >= 100000 && $total <= 500000) {
+        }elseif ($total >= 100000 && $total < 500000) {
             return 2;
         }elseif ($total >= 500000) {
             return 3;
@@ -3384,9 +3410,9 @@ class User extends CI_Model
     }
 
     public function calculate_five($total){
-        if ($total >= 10000 && $total <= 100000) {
+        if ($total >= 10000 && $total < 100000) {
             return 1;
-        }elseif ($total >= 100000 && $total <= 500000) {
+        }elseif ($total >= 100000 && $total < 500000) {
             return 2;
         }elseif ($total >= 500000) {
             return 3;
@@ -3395,7 +3421,7 @@ class User extends CI_Model
     }
 
     public function calculate_four($total){
-        if($total > 10000)
+        if($total >= 10000)
             return 1;
         return 0;
     }

@@ -1628,6 +1628,7 @@ public function import_payments()
 				//$policy = $this->work_order->getPolicyByUid( $item->uid );
 						$payment_date = strtotime( $item->payment_date );
 						$stringed_payment_date = date( 'Y-m-d', $payment_date );
+                        $pai = $this->user->create_negocio_pai($item->uid,$product, $stringed_payment_date,$item->amount);
 						$payment = array(
 							'product_group' => $product,
 							'agent_id' => $item->agent_id,
@@ -1636,6 +1637,7 @@ public function import_payments()
 							'amount' => $item->amount,
 							'payment_date' => $stringed_payment_date,
 							'business' => $item->is_new,
+                            'pai_business' => $pai,
 							'policy_number' => $item->uid,
 							'last_updated' => date( 'Y-m-d H:i:s' ),
 							'date' => date( 'Y-m-d H:i:s' ),
@@ -1651,7 +1653,6 @@ public function import_payments()
 
 						else
 						{
-							$this->user->create_negocio_pai($item->uid,$product, $stringed_payment_date);
 							if( $this->work_order->replace( 'payments', $payment ) == false )
 								$controlSaved = false;
 
