@@ -956,6 +956,8 @@ $( document ).ready( function(){
 			$filter['query'] = $posted_filter_query;
 
 		$request_type = $this->input->post('type');
+        
+        //Switch statement to determine what kind of popup will get called, depending on the type requested by post.
 		switch ( $request_type )
 		{
 			case 'negocio':
@@ -963,6 +965,9 @@ $( document ).ready( function(){
 				break;
 			case 'negociopai':
 				$data['values'] = $this->user->getNegocioPai( $this->input->post('for_agent_id'), $filter );
+                //Debug Printing, TO REMOVE LATER
+                print_r($data['values']);
+                //exit();
 				break;
 			case 'prima':
 				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );

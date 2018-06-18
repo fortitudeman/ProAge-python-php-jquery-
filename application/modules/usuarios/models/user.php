@@ -3249,7 +3249,7 @@ class User extends CI_Model
 //            $sql_agent_filter . "
 //                        AND `pai_business`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
         
-        echo $sql_str;
+        //echo $sql_str;
 
         $query = $this->db->query($sql_str);
         if ($query->num_rows() > 0) {
@@ -3346,6 +3346,7 @@ class User extends CI_Model
         $this->db->from('payments');
         $condition_array = array('payments.policy_number' => $policy, 'payments.year_prime' => 1, 'payments.payment_date <=' => $date);
         $this->db->where($condition_array);
+        $this->db->order_by('payment_date', 'DESC');
         return $this->db->get()->row()->pai_total; 
     }
 
