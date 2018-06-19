@@ -3249,7 +3249,7 @@ class User extends CI_Model
 //            $sql_agent_filter . "
 //                        AND `pai_business`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
         
-        //echo $sql_str;
+        
 
         $query = $this->db->query($sql_str);
         if ($query->num_rows() > 0) {
@@ -3263,9 +3263,9 @@ class User extends CI_Model
                 $row->product_name = '';
                 if ($count_requested) {
                     if (isset($result[$row->agent_id]))
-                        $result[$row->agent_id] += $row->negocio_pai;
+                        $result[$row->agent_id] += $row->pai;
                     else
-                        $result[$row->agent_id] = $row->negocio_pai;
+                        $result[$row->agent_id] = $row->pai;
                 } else {
                     if ($row->policy_number) {
                         $policy_rows[] = $row->policy_number;
@@ -3304,7 +3304,7 @@ class User extends CI_Model
                     }
                 }
             }
-
+            //echo $sql_str;    
             return $result;
         } else {
             if ($count_requested)
@@ -3319,44 +3319,39 @@ class User extends CI_Model
         $pai_total = $this->is_negocio_pai($total, date('Y', strtotime($date_pai)));
         $stored_pai = $this->get_stored_pai($policy, $date_pai);
         $pai = $pai_total - $stored_pai;
-        
-        $last_pai = $this->last_pai($policy);
-        $data = array(
-            'ramo' => $product_group,
-            'policy_number' => $policy,
-            'pai' => $pai,
-            'date_pai' => $date_pai,
-            'creation_date' => date('Y-m-d H:i:s')
-        );
-        
-//       echo ("<br><br>DEBUG INFO FOR POLICY ID =" . $policy);
-//       echo ("<br><br>Total Payment = " . $total . "<br>Negocios PAI = " . $pai . "<br>Hubo un ultimo PAI?" . $last_pai . "<br>========================================<br>");
-        
 
-        if ($pai > 0){
-//          echo ("<br><br>Ingresando datos la BD de PAI_BUSINESS");
-            $this->db->insert('pai_business', $data);
-        }
         return $pai;
     }
 
     //Function used to get the sum of all PAI Business, receiving a Policy number as a parameter. 
     public function get_stored_pai($policy, $date){
-        $this->db->select_sum('pai_business', 'pai_total');
-        $this->db->from('payments');
-        $condition_array = array('payments.policy_number' => $policy, 'payments.year_prime' => 1, 'payments.payment_date <=' => $date);
-        $this->db->where($condition_array);
-        $this->db->order_by('payment_date', 'DESC');
-        return $this->db->get()->row()->pai_total; 
+        $sql = "SELECT SUM(pai_business) AS pai_total FROM payments WHERE policy_number = ? 
+                AND year_prime = 1 AND payment_date BETWEEN (
+	           SELECT payment_date as fecha FROM proages.payments WHERE 
+               policy_number = ? ORDER BY payment_date ASC LIMIT 1) AND ?;";
+        $q = $this->db->query($sql, array($policy, $policy, $date));
+        return $q->row()->pai_total;
+        
+//        $this->db->select_sum('pai_business', 'pai_total');
+//        $this->db->from('payments');
+//        $condition_array = array('payments.policy_number' => $policy, 'payments.payment_date <=' => $date);
+//        $this->db->where($condition_array);
+//        $this->db->order_by('payment_date', 'ASC');
+//        return $this->db->get()->row()->pai_total; 
     }
 
     //Function used to get the sum of all payments made, receiving a Policy number as a parameter.
     public function get_total_payment($policy, $date){
-        $this->db->select_sum('amount', 'total');
-        $this->db->from('payments');
-        $condition_array = array('payments.policy_number' => $policy, 'payments.year_prime' => 1, 'payments.payment_date <=' => $date);
-        $this->db->where($condition_array);
-        return $this->db->get()->row()->total;
+        $sql = "SELECT SUM(amount) AS total FROM payments WHERE policy_number = ? 
+                AND year_prime = 1 AND payment_date BETWEEN (
+	           SELECT payment_date as fecha FROM proages.payments WHERE 
+               policy_number = ? ORDER BY payment_date ASC LIMIT 1) AND ?;";
+        $q = $this->db->query($sql, array($policy, $policy, $date));
+//        $this->db->select_sum('amount', 'total');
+//        $this->db->from('payments');
+//        $condition_array = array('payments.policy_number' => $policy, 'payments.year_prime' => 1, 'payments.payment_date <=' => $date);
+//        $this->db->where($condition_array);
+        return $q->row()->total;
     }
 
     public function is_negocio_pai($total, $year){

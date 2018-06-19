@@ -1,5 +1,4 @@
 <?php
-//print_r($data);
 $post_data = isset($_POST['query']) ? ',prev_post:'. json_encode($_POST['query']) : '';
 $base_url = base_url();
 $segments = $this->uri->rsegment_array();

@@ -966,7 +966,8 @@ $( document ).ready( function(){
 			case 'negociopai':
 				$data['values'] = $this->user->getNegocioPai( $this->input->post('for_agent_id'), $filter );
                 //Debug Printing, TO REMOVE LATER
-                print_r($data['values']);
+                //print_r($data['values']);
+                echo count($data['values']);
                 //exit();
 				break;
 			case 'prima':
@@ -1878,7 +1879,10 @@ implode(', ', $ramo_tramite_types) . '
 		$folio = $this->user->generic_get('agent_uids',
 			array('agent_id' => $agent_id, 'type' => $type),
 				1, 0, 'id asc');
-        $pai = $this->user->create_negocio_pai($payment['policy_number'],$product_group, $payment_date, $amount);
+        $pai = 0;
+        if ($this->input->post('year_prime') == 1){
+            $pai = $this->user->create_negocio_pai($payment['policy_number'],$product_group, $payment_date, $amount);
+        }
 		$payment = array(
 			'product_group' => $product_group,
 			'agent_id' => $agent_id,

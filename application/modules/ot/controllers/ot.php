@@ -1641,7 +1641,7 @@ public function import_payments()
 							'amount' => $item->amount,
 							'payment_date' => $stringed_payment_date,
 							'business' => $item->is_new,
-                            'pai_business' => $this->user->create_negocio_pai($item->uid, $product, $stringed_payment_date,$item->amount)/*$pai*/,
+                            'pai_business' => $pai,
 							'policy_number' => $item->uid,
 							'last_updated' => date( 'Y-m-d H:i:s' ),
 							'date' => date( 'Y-m-d H:i:s' ),
