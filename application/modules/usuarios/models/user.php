@@ -3249,7 +3249,6 @@ class User extends CI_Model
                             $result[$pai_key]->amount += $prima_detail->amount;
                     }
                 }
-
                 if ($policy_rows) {
                     $policy_row_array = array();
                     $query = $this->db
@@ -3266,6 +3265,7 @@ class User extends CI_Model
                     if (!empty($policy_row_array[$pai_value->policy_number])) {
                         $result[$pai_key]->product_name =
                             $policy_row_array[$pai_value->policy_number]->product_name;
+                        $result[$pai_key]->pai_business = $this->get_stored_pai($pai_value->policy_number, $result[$pai_key]->date_pai);
                     }
                 }
             }
