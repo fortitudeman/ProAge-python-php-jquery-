@@ -3292,30 +3292,20 @@ class User extends CI_Model
     public function get_stored_pai($policy, $date){
         $sql = "SELECT SUM(pai_business) AS pai_total FROM payments WHERE policy_number = ? 
                 AND year_prime = 1 AND payment_date BETWEEN (
-	           SELECT payment_date as fecha FROM proages.payments WHERE 
+	           SELECT payment_date as fecha FROM payments WHERE 
                policy_number = ? ORDER BY payment_date ASC LIMIT 1) AND ?;";
         $q = $this->db->query($sql, array($policy, $policy, $date));
         return $q->row()->pai_total;
-        
-//        $this->db->select_sum('pai_business', 'pai_total');
-//        $this->db->from('payments');
-//        $condition_array = array('payments.policy_number' => $policy, 'payments.payment_date <=' => $date);
-//        $this->db->where($condition_array);
-//        $this->db->order_by('payment_date', 'ASC');
-//        return $this->db->get()->row()->pai_total; 
+
     }
 
     //Function used to get the sum of all payments made, receiving a Policy number as a parameter.
     public function get_total_payment($policy, $date){
         $sql = "SELECT SUM(amount) AS total FROM payments WHERE policy_number = ? 
                 AND year_prime = 1 AND payment_date BETWEEN (
-	           SELECT payment_date as fecha FROM proages.payments WHERE 
+	           SELECT payment_date as fecha FROM payments WHERE 
                policy_number = ? ORDER BY payment_date ASC LIMIT 1) AND ?;";
         $q = $this->db->query($sql, array($policy, $policy, $date));
-//        $this->db->select_sum('amount', 'total');
-//        $this->db->from('payments');
-//        $condition_array = array('payments.policy_number' => $policy, 'payments.year_prime' => 1, 'payments.payment_date <=' => $date);
-//        $this->db->where($condition_array);
         return $q->row()->total;
     }
 
