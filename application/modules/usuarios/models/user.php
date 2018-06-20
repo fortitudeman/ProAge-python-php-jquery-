@@ -3132,27 +3132,6 @@ class User extends CI_Model
         return 0;
     }
 
-
-    // public function getCountNegocioPai($agent_id = null, $filter = array())
-    // {
-    //     if (empty($agent_id))
-    //         return 0;
-    //     $filter['query']['min_amount'] = TRUE;
-    //     $result = 0;
-    //     $array_scalar = $this->_getNegocios(TRUE, $agent_id, $filter);
-    //     if (!is_numeric($array_scalar))
-    //         log_message('error', 'application/modules/usuarios/models/user.php - getCountNegocioPai() - not int - ' . print_r($array_scalar, TRUE));
-    //     elseif ($array_scalar > 0)
-    //         $result = array_fill(0, $array_scalar, 0);
-    //     return $result;
-    // }
-
-      public function getCountNegocioPai( $agent_id = null, $filter = array() )
-    {
-        return $this->_getNegocioPai(TRUE, $agent_id, $filter);
-    }
-
-
     public function getNegocioPai($agent_id = null, $filter = array())
     {
         return $this->_getNegocioPai(FALSE, $agent_id, $filter);
@@ -3160,7 +3139,6 @@ class User extends CI_Model
 
     private function _getNegocioPai($count_requested = TRUE, $agent_id = null, $filter = array())
     {
-        //$this->rebuildNegociosPai();
         $sql_date_filter = '';
         $sql_agent_filter = '';
         $sql_plus = "`valid_for_report` = '1' AND `year_prime` = '1' ";
@@ -3225,31 +3203,18 @@ class User extends CI_Model
             $field_plus = ', `work_order`.`id` AS `work_order_uid`';
             $group_plus = ',`work_order`.`id`';
         }
-        $sql_str = "SELECT `payments`.product_group,
+        $sql_str = "SELECT `payments`.product_group as ramo,
         `payments`.policy_number,
-        `payments`.pai_business AS 'pai',
-        DATE_FORMAT(`payments`.payment_date,'%Y-%m-%d') as `date_pai`," . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments`
+        `payments`.pai_business,
+        DATE_FORMAT(`payments`.payment_date,'%Y-%m-%d') as `date_pai`,
+        `payments`.import_date as creation_date,
+        `payments`.last_updated," . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments`
                         JOIN `agents` ON `agents`.`id`=`payments`.`agent_id`
                         JOIN `users` ON `users`.`id`=`agents`.`user_id` " . $join_plus . "
                         WHERE " .
             $sql_plus .
             $sql_agent_filter . "
                         AND `payments`.`payment_date` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
-        
-
-//        $sql_str = "SELECT `pai_business`.ramo,
-//        `pai_business`.policy_number,
-//        `pai_business`.pai,
-//        DATE_FORMAT(`pai_business`.date_pai,'%Y-%m-%d') as `date_pai`," . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments`
-//                        JOIN `agents` ON `agents`.`id`=`payments`.`agent_id`
-//                        JOIN `users` ON `users`.`id`=`agents`.`user_id`
-//                        LEFT JOIN `pai_business` ON `pai_business`.`policy_number` =`payments`.`policy_number` " . $join_plus . "
-//                        WHERE " .
-//            $sql_plus .
-//            $sql_agent_filter . "
-//                        AND `pai_business`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
-        
-        
 
         $query = $this->db->query($sql_str);
         if ($query->num_rows() > 0) {
@@ -3263,9 +3228,9 @@ class User extends CI_Model
                 $row->product_name = '';
                 if ($count_requested) {
                     if (isset($result[$row->agent_id]))
-                        $result[$row->agent_id] += $row->pai;
+                        $result[$row->agent_id] += $row->pai_business;
                     else
-                        $result[$row->agent_id] = $row->pai;
+                        $result[$row->agent_id] = $row->pai_business;
                 } else {
                     if ($row->policy_number) {
                         $policy_rows[] = $row->policy_number;

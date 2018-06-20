@@ -966,8 +966,6 @@ $( document ).ready( function(){
 			case 'negociopai':
 				$data['values'] = $this->user->getNegocioPai( $this->input->post('for_agent_id'), $filter );
                 //Debug Printing, TO REMOVE LATER
-                //print_r($data['values']);
-                echo count($data['values']);
                 //exit();
 				break;
 			case 'prima':
