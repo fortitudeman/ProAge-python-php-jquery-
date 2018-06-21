@@ -69,7 +69,7 @@ $base_url = base_url();
 									else
 										current.parents('.payment_row').hide();
 								}
-								if ( confirm( 'Se pudo eliminar los registros correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?' ) )
+								if ( confirm( 'Se pudo eliminar los registros correctamente. ¿Quiere usted recargar la página web para actualizar las cifras?' ) )
 									window.location.reload();
 								else
 									toHandle.remove();
