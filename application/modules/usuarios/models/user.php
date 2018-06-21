@@ -3073,63 +3073,23 @@ class User extends CI_Model
     }
 
     public function rebuildNegociosPai(){
-        $sql_str = "Select policy_negocio_pai.* from policy_negocio_pai
-                    left join negocios_pai_per_policy on policy_negocio_pai.policy_number = negocios_pai_per_policy.policy_number
-                    where negocios_pai_per_policy.policy_number is null
-                    and policy_negocio_pai.negocio_pai != 0";
-        $query = $this->db->query($sql_str);
-        $policies = array();
+        //Code used to rebuild the entire database record of Negocios PAI
+        $sql_rebuildPai = "SELECT * FROM payments WHERE pai_business IS NULL;";
+        $query = $this->db->query($sql_rebuildPai);
+        
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
-                $policies[] = "'".$row->policy_number."'";
+                //$stringed_payment_date = date( 'Y-m-d', strtotime( $row->payment_date ));
+                $pai = 0;
+            if ($row->year_prime == 1){
+                $pai = $this->user->create_negocio_pai($row->policy_number, $row->product_group, $row->payment_date, $item->amount);
             }
-        }
-        $query->free_result();
-        $sql_str_policies=(implode(",", $policies));
-        $sql_str_aux = "Select payments.policy_number, amount, payment_date as date_pai, date, payments.last_updated, policy_negocio_pai.negocio_pai
-                                from payments
-                                join policy_negocio_pai on policy_negocio_pai.policy_number = payments.policy_number
-                                where payments.policy_number in(".$sql_str_policies.")
-                                order by payments.policy_number asc, payments.payment_date desc";
-        $query_aux=$this->db->query($sql_str_aux);
-        if($query_aux->num_rows() > 0){
-            $previous_policy="0";
-            foreach ($query_aux->result() as $row_aux){
-
-                if ($row_aux->amount >= 12000){
-                    $negocios_pai=0;
-                    if($row_aux->amount>=12000 && $row_aux->amount<110000){
-                        $negocios_pai=1;
-                    }if($row_aux->amount>=110000 && $row_aux->amount<500000){
-                        $negocios_pai=2;
-                    }if($row_aux->amount>=500000){
-                        $negocios_pai=3;
-                    }
-                    $data = array('ramo' => 1,
-                                  'policy_number' => $row_aux->policy_number,
-                                  'negocio_pai' => $negocios_pai,
-                                  'date_pai' => $row_aux->date_pai,
-                                  'creation_date' => $row_aux->date,
-                                  'last_update' => $row_aux->last_updated
-                    );
-                    $result = $this->db->insert('negocios_pai_per_policy', $data);
-                }else{
-                    if(strcmp($row_aux->policy_number, $previous_policy) != 0){
-                        $data = array('ramo' => 1,
-                                      'policy_number' => $row_aux->policy_number,
-                                      'negocio_pai' => $row_aux->negocio_pai,
-                                      'date_pai' => $row_aux->date_pai,
-                                      'creation_date' => $row_aux->date,
-                                      'last_update' => $row_aux->last_updated
-                        );
-                        $result = $this->db->insert('negocios_pai_per_policy', $data);
-                    }
-                }
-                $previous_policy=$row_aux->policy_number;
+            $sql_updatePai = "UPDATE payments SET pai_business = ? WHERE pay_tbl_id = ?;";
+            $q = $this->db->query($sql_updatePai, array($pai, $row->pay_tbl_id));
+                
             }
-        }
-        $query_aux->free_result();
-        return 0;
+        
+        
     }
 
     public function getNegocioPai($agent_id = null, $filter = array())

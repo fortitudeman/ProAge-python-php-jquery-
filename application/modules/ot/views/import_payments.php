@@ -75,7 +75,13 @@
 		</li>
 	</ul>
   </div>
-
+  
+<div class="loading-message" style="display:none">
+   <div class="alert alert-info">
+       <small class="text">Importando archivo, por favor espere...</small>
+   </div>
+</div>
+ 
   <div class="row-fluid sortable">
 	<div class="box span12">
 		<div class="box-header well" data-original-title>
@@ -441,11 +447,11 @@
 		</div>
 
 		<div id="actions-buttons-forms-send" class="form-actions">
-			<button type="submit" class="btn btn-primary">Importar</button>
+			<button type="submit" onclick="javascript: showLoadingScreen()" class="btn btn-primary">Importar</button>
 			<input type="button" class="btn" onclick="javascript: history.back()" value="Cancelar">
 		</div>
 
-
+    
 	</form>
 
 <?php endif; ?>

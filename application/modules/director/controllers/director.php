@@ -1927,7 +1927,9 @@ implode(', ', $ramo_tramite_types) . '
 	}
 
 //////// Below are page duplicated in ot, agent and director modules
-	public function change_negocio_pai()
+    
+	//Function used to update negocio pai using the select box.
+    public function change_negocio_pai()
 	{
 		if ( !$this->input->is_ajax_request() )
 			redirect( 'director.html', 'refresh' );
@@ -1944,7 +1946,7 @@ implode(', ', $ramo_tramite_types) . '
 			foreach ($negocio_pai as $id => $value)
 			{
 				$result = $this->work_order->generic_update(
-					'policy_negocio_pai', array('negocio_pai' => (int) $value), array('policy_number' => (int) $id), 1, 0) ?
+					'payments', array('pai_business' => (int) $value), array('policy_number' => (int) $id), 1, 0) ?
 						'1' : '0';
 				echo json_encode($result);
 				exit();
