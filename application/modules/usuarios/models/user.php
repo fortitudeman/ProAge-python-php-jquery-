@@ -3073,23 +3073,20 @@ class User extends CI_Model
     }
 
     public function rebuildNegociosPai(){
-        //Code used to rebuild the entire database record of Negocios PAI
-        $sql_rebuildPai = "SELECT * FROM payments WHERE pai_business IS NULL;";
-        $query = $this->db->query($sql_rebuildPai);
+        //Code used to rebuild the payments table to record of Negocios PAI
+        $rebuiltTotal = 0;
+        $sqlRebuildPai = "SELECT * FROM payments WHERE year_prime = 1;";
+        $query = $this->db->query($sqlRebuildPai);
         
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
-                //$stringed_payment_date = date( 'Y-m-d', strtotime( $row->payment_date ));
-                $pai = 0;
-            if ($row->year_prime == 1){
                 $pai = $this->user->create_negocio_pai($row->policy_number, $row->product_group, $row->payment_date, $item->amount);
+                $sqlUpdatePai = "UPDATE payments SET pai_business = ? WHERE pay_tbl_id = ?;";
+                $this->db->query($sqlUpdatePai, array($pai, $row->pay_tbl_id));
+                $rebuiltTotal++;
             }
-            $sql_updatePai = "UPDATE payments SET pai_business = ? WHERE pay_tbl_id = ?;";
-            $q = $this->db->query($sql_updatePai, array($pai, $row->pay_tbl_id));
-                
-            }
-        
-        
+        }
+        return $rebuiltTotal;
     }
 
     public function getNegocioPai($agent_id = null, $filter = array())

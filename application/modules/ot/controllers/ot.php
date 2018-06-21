@@ -3119,6 +3119,13 @@ public function recalculate_adjusted($ot){
 					$this->uri->segment(5)
 					$this->policy_model->getPolicyBuId();*/
 				}
+      
+  public function rebuildpai(){
+      $total = $this->user->rebuildNegociosPai();
+      if ($total>0){
+        redirect('director.html', 'refresh');
+      }    
+  }   
 				/* End of file ot.php */
 				/* Location: ./application/controllers/ot.php */
 			}
