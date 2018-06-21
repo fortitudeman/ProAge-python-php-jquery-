@@ -121,9 +121,9 @@ $ignore_image = '
             <td>
 <form class="negocio_pai_field">
 <select class="span1" name="negocio_pai[<?php echo $value->policy_number ?>]">
-<option value="-3" <?php if ($value->pai_business == -3) echo 'selected="selected"'; ?>>-3</option>
-<option value="-2" <?php if ($value->pai_business == -2) echo 'selected="selected"'; ?>>-2</option>
-<option value="-1" <?php if ($value->pai_business == -1) echo 'selected="selected"'; ?>>-1</option>
+<option value="-3" <?php if ($value->pai_business === -3) echo 'selected="selected"'; ?>>-3</option>
+<option value="-2" <?php if ($value->pai_business === -2) echo 'selected="selected"'; ?>>-2</option>
+<option value="-1" <?php if ($value->pai_business === -1) echo 'selected="selected"'; ?>>-1</option>
 <option value="0" <?php if ($value->pai_business == 0) echo 'selected="selected"'; ?>>0</option>
 <option value="1" <?php if ($value->pai_business == 1) echo 'selected="selected"'; ?>>1</option>
 <option value="2" <?php if ($value->pai_business == 2) echo 'selected="selected"'; ?>>2</option>
