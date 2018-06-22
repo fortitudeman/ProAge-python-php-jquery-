@@ -1944,7 +1944,7 @@ implode(', ', $ramo_tramite_types) . '
 			foreach ($negocio_pai as $id => $value)
 			{
 				$result = $this->work_order->generic_update(
-					'payments', array('pai_business' => (int) $value), array('pay_tbl_id' => (int)$i), 1, 0) ?
+					'payments', array('pai_business' => (int) $value), array('pay_tbl_id' => (int)$id), 1, 0) ?
 						'1' : '0';
 				echo json_encode($result);
 				exit();

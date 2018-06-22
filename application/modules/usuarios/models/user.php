@@ -3075,7 +3075,7 @@ class User extends CI_Model
     public function rebuildNegociosPai(){
         //Code used to rebuild the payments table to record of Negocios PAI
         $rebuiltTotal = 0;
-        $sqlRebuildPai = "SELECT * FROM payments WHERE year_prime = 1;";
+        $sqlRebuildPai = "SELECT * FROM payments WHERE year_prime = 1 AND payment_date BETWEEN'2014-01-01' AND now()";
         $query = $this->db->query($sqlRebuildPai);
         
         if ($query->num_rows() > 0) {
@@ -3184,7 +3184,7 @@ class User extends CI_Model
                     $row->plazo = '';
                 $row->product_name = '';
                 if ($count_requested) {
-                    $result[$row->agent_id] = $this->getTotalPaiByAgent($row->agent_id, $row->date_pai);
+                    $result[$row->agent_id] = $this->getTotalPaiByAgent($row->agent_id, $start_date, $end_date);
                 } else {
                     if ($row->policy_number) {
                         $policy_rows[] = $row->policy_number;
@@ -3201,7 +3201,7 @@ class User extends CI_Model
                     foreach ($prima_details as $prima_detail) {
                         if ($result[$pai_key]->policy_number == $prima_detail->policy_number)
                             $result[$pai_key]->amount += $prima_detail->amount;
-                            $result[$pai_key]->pai_business = $this->get_stored_pai($pai_value->policy_number, $result[$pai_key]->date_pai);
+                            $result[$pai_key]->pai_business = $this->getTotalPaiByPolicy($pai_value->policy_number, $start_date, $end_date);
                     }
                 }
                 if ($policy_rows) {
@@ -3253,15 +3253,22 @@ class User extends CI_Model
 
     }
 
-    public function getTotalPaiByAgent($agentId, $date){
+    public function getTotalPaiByAgent($agentId, $startDate, $end_date){
         $sql = "SELECT SUM(pai_business) AS pai_total FROM payments WHERE agent_id = ? 
-                AND year_prime = 1 AND payment_date BETWEEN (
-               SELECT payment_date as fecha FROM payments WHERE 
-               agent_id = ? ORDER BY payment_date ASC LIMIT 1) AND ?;";
-        $q = $this->db->query($sql, array($agentId, $agentId, $date));
+                AND year_prime = 1 AND payment_date BETWEEN ? AND ?;";
+        $q = $this->db->query($sql, array($agentId, $startDate, $end_date));
         return $q->row()->pai_total;
 
     }
+
+    public function getTotalPaiByPolicy($policy, $startDate, $end_date){
+        $sql = "SELECT SUM(pai_business) AS pai_total FROM payments WHERE policy_number = ? 
+                AND year_prime = 1 AND payment_date BETWEEN ? AND ?;";
+        $q = $this->db->query($sql, array($policy, $startDate, $end_date));
+        return $q->row()->pai_total;
+
+    }
+
     //Function used to get the sum of all payments made, receiving a Policy number as a parameter.
     public function get_total_payment($policy, $date){
         $sql = "SELECT SUM(amount) AS total FROM payments WHERE policy_number = ? 
