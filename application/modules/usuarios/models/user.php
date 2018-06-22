@@ -3184,10 +3184,7 @@ class User extends CI_Model
                     $row->plazo = '';
                 $row->product_name = '';
                 if ($count_requested) {
-                    if (isset($result[$row->agent_id]))
-                        $result[$row->agent_id] += $row->pai_business;
-                    else
-                        $result[$row->agent_id] = $row->pai_business;
+                    $result[$row->agent_id] = $this->getTotalPaiByAgent($row->agent_id, $row->date_pai);
                 } else {
                     if ($row->policy_number) {
                         $policy_rows[] = $row->policy_number;
@@ -3204,6 +3201,7 @@ class User extends CI_Model
                     foreach ($prima_details as $prima_detail) {
                         if ($result[$pai_key]->policy_number == $prima_detail->policy_number)
                             $result[$pai_key]->amount += $prima_detail->amount;
+                            $result[$pai_key]->pai_business = $this->get_stored_pai($pai_value->policy_number, $result[$pai_key]->date_pai);
                     }
                 }
                 if ($policy_rows) {
@@ -3222,7 +3220,6 @@ class User extends CI_Model
                     if (!empty($policy_row_array[$pai_value->policy_number])) {
                         $result[$pai_key]->product_name =
                             $policy_row_array[$pai_value->policy_number]->product_name;
-                        $result[$pai_key]->pai_business = $this->get_stored_pai($pai_value->policy_number, $result[$pai_key]->date_pai);
                     }
                 }
             }
@@ -3256,6 +3253,15 @@ class User extends CI_Model
 
     }
 
+    public function getTotalPaiByAgent($agentId, $date){
+        $sql = "SELECT SUM(pai_business) AS pai_total FROM payments WHERE agent_id = ? 
+                AND year_prime = 1 AND payment_date BETWEEN (
+               SELECT payment_date as fecha FROM payments WHERE 
+               agent_id = ? ORDER BY payment_date ASC LIMIT 1) AND ?;";
+        $q = $this->db->query($sql, array($agentId, $agentId, $date));
+        return $q->row()->pai_total;
+
+    }
     //Function used to get the sum of all payments made, receiving a Policy number as a parameter.
     public function get_total_payment($policy, $date){
         $sql = "SELECT SUM(amount) AS total FROM payments WHERE policy_number = ? 
