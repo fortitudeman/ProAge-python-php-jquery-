@@ -965,8 +965,7 @@ $( document ).ready( function(){
 				break;
 			case 'negociopai':
 				$data['values'] = $this->user->getNegocioPai( $this->input->post('for_agent_id'), $filter );
-                //Debug Printing, TO REMOVE LATER
-                //exit();
+				print_r($data['values']);
 				break;
 			case 'prima':
 				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );
@@ -1946,7 +1945,7 @@ implode(', ', $ramo_tramite_types) . '
 			foreach ($negocio_pai as $id => $value)
 			{
 				$result = $this->work_order->generic_update(
-					'payments', array('pai_business' => (int) $value), array('policy_number' => strval($id)), 1, 0) ?
+					'payments', array('pai_business' => (int) $value), array('pay_tbl_id' => (int)$i), 1, 0) ?
 						'1' : '0';
 				echo json_encode($result);
 				exit();
