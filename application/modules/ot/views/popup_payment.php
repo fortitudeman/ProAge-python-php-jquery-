@@ -55,13 +55,7 @@ $ignore_image = '
     <thead>
         <tr id="popup_tr">
             <?php if ($for_agent_id === FALSE) : ?><th width="200px">Agente</th><?php endif; ?>
-            <th>
-                <?php if ($is_negocio_pai): ?>
-                    Fecha PAI
-                <?php else: ?>
-                    Fecha de pago
-                <?php endif ?>
-            </th>
+            <th>Fecha</th>
             <th>Poliza</th>
 <?php if ($is_negocio_pai): ?>
             <th>Negocio PAI</th>
@@ -96,11 +90,7 @@ $ignore_image = '
             </td>
 <?php endif; ?>
             <td>
-                <?php if ($is_negocio_pai)
-                        echo $value->date_pai; 
-                    else
-                        echo $value->payment_date;
-                ?>
+                <?php echo $value->payment_date;?>
                     
             </td>
             <td>
@@ -120,14 +110,15 @@ $ignore_image = '
 <?php if ($is_negocio_pai): ?>
             <td>
 <form class="negocio_pai_field">
-<select class="span1" name="negocio_pai[<?php echo $value->policy_number ?>]">
-<option value="-3" <?php if ($value->pai_business === -3) echo 'selected="selected"'; ?>>-3</option>
-<option value="-2" <?php if ($value->pai_business === -2) echo 'selected="selected"'; ?>>-2</option>
-<option value="-1" <?php if ($value->pai_business === -1) echo 'selected="selected"'; ?>>-1</option>
-<option value="0" <?php if ($value->pai_business == 0) echo 'selected="selected"'; ?>>0</option>
+<select class="span1" name="negocio_pai[<?php echo $value->pay_tbl_id ?>]">
+<option value="1" <?php  echo 'selected="selected"'; ?>> </option>
 <option value="1" <?php if ($value->pai_business == 1) echo 'selected="selected"'; ?>>1</option>
 <option value="2" <?php if ($value->pai_business == 2) echo 'selected="selected"'; ?>>2</option>
 <option value="3" <?php if ($value->pai_business == 3) echo 'selected="selected"'; ?>>3</option>
+<option value="0" <?php if ($value->pai_business == 0) echo 'selected="selected"'; ?>>0</option>
+<option value="-1" <?php if ($value->pai_business == -1) echo 'selected="selected"'; ?>>-1</option>
+<option value="-2" <?php if ($value->pai_business == -2) echo 'selected="selected"'; ?>>-2</option>
+<option value="-3" <?php if ($value->pai_business == -3) echo 'selected="selected"'; ?>>-3</option>
 </select>
 </form>
 			</td>
