@@ -722,7 +722,7 @@ implode(', ', $ramo_tramite_types) . '
 				$data['values'] = $this->user->getNegocioDetails( $this->input->post('for_agent_id'), $filter );
 				break;
 			case 'negociopai':
-				$data['values'] = $this->user->getNegocioPai( $this->input->post('for_agent_id'), $filter );
+				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter, true);
 				break;
 			case 'prima':
 				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );
@@ -841,10 +841,10 @@ implode(', ', $ramo_tramite_types) . '
 	}
 
 //////// Below are page duplicated in ot, agent and director modules
-	public function change_negocio_pai()
+    public function change_negocio_pai()
 	{
 		if ( !$this->input->is_ajax_request() )
-			redirect( 'agent.html', 'refresh' );
+			redirect( 'director.html', 'refresh' );
 
 		if ( !$this->access_update )
 		{
@@ -858,7 +858,7 @@ implode(', ', $ramo_tramite_types) . '
 			foreach ($negocio_pai as $id => $value)
 			{
 				$result = $this->work_order->generic_update(
-					'policy_negocio_pai', array('negocio_pai' => (int) $value), array('id' => (int) $id), 1, 0) ?
+					'payments', array('pai_business' => (int) $value), array('pay_tbl_id' => (int)$id), 1, 0) ?
 						'1' : '0';
 				echo json_encode($result);
 				exit();
