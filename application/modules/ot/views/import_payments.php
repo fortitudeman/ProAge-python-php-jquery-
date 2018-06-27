@@ -55,7 +55,9 @@
 	'percentage' => 'Porcentaje',
 	'product_id' => 'Ramo',
 //	'name' => 'Asegurado',
-	'name' => 'Nombre del agente importado'
+	'name' => 'Nombre del agente importado',
+    'allocated_prime' => 'Prima a Ubicar',
+    'bonus_prime' => 'Prima Pago Bonos',
   );
   $fields_not_shown = array('wathdo', 'imported_folio', 'imported_agent_name', 'import_date', '');
   $is_posted = (count($_POST) > 0);
@@ -133,13 +135,18 @@
 							</div>
 						</div>
 
-						<label class="control-label text-error" for="inputError">Tipo de archivo: </label>
+						<label class="control-label text-error" for="inputError">Ramo: </label>
 						<div class="controls">
 							<select name="product" class="required" style="width: 8em">
-								<?php if( isset( $products ) and !empty( $products ) ) echo $products; ?>
+                                <option value="">Seleccione</option>
+                                <option value="1">Vida - Previo</option>
+                                <option value="4">Vida - SELO</option>
+                                <option value="2">GMM</option>
+                                <!--<option value="3">Auto</option>-->
+								<?php //if( isset( $products ) and !empty( $products ) ) echo $products; ?>
 							</select>
 						</div>
-
+						<br>
 					</fieldset>
 					<div id="actions-buttons-forms" class="form-actions">
 						<button id="btnImport" type="submit" class="btn btn-primary">Cargar</button>
@@ -173,10 +180,15 @@
 						</div>
 
 						<div class="control-group">
-							<label class="control-label text-error" for="inputError">Tipo de archivo: </label>
+							<label class="control-label text-error" for="inputError">Ramo: </label>
 							<div class="controls">
 								<select name="product_type_delete" class="required" id="product-type-delete" style="width: 8em">
-									<?php if( isset( $products ) and !empty( $products ) ) echo $products; ?>
+                                <option value="">Seleccione</option>
+                                <option value="1">Vida - Previo</option>
+                                <option value="4">Vida - SELO</option>
+                                <option value="2">GMM</option>
+                                <!--<option value="3">Auto</option>-->
+								<?php //if( isset( $products ) and !empty( $products ) ) echo $products; ?>
 								</select>
 							</div>
 						</div>
