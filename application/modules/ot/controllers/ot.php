@@ -1620,6 +1620,10 @@ public function import_payments()
 				$controlSaved = true;
 				$i = 1;
 				$message = array( 'type' => false );
+                
+                if ($product == 4){ //If the selectbox option picked was 4 (Vida SELO), then we have to set it as 1 again for proper storing on the database
+                    $product = 1;
+                }
 
 				if (!count($file_array))
 				{
@@ -1660,7 +1664,9 @@ public function import_payments()
 							'date' => date( 'Y-m-d H:i:s' ),
 							'import_date' => $item->import_date,
 							'imported_agent_name' => $item->imported_agent_name,
-							'imported_folio' => $item->imported_folio
+							'imported_folio' => $item->imported_folio,
+                            'allocated_prime' => $item->allocated_prime,
+                            'bonus_prime' => $item->bonus_prime
 						);
 						$user_id = $this->user->getUserIdByAgentId( $item->agent_id);
 						if (!$user_id)
