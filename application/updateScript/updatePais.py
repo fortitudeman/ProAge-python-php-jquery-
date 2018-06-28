@@ -54,14 +54,17 @@ try:
             if  rows > 0:
                 for row in cur:
                     cursor.execute("SELECT SUM(pai_business) as totalPai FROM payments WHERE policy_number = %s", row["policy_number"])
+                    result_set = cursor.fetchall()
+                    for second in result_set:
+                        totalPai = second['totalPai']
                     if row['policy_number'] in updatePai:
                         updatePai[row['policy_number']]['id'] = row['pay_tbl_id']
                         updatePai[row['policy_number']]['amount'] += row['amount']
                         pai = calculatePai(
-                            updatePai[row['policy_number']]['amount'], year) - cursor["totalPai"]
+                            updatePai[row['policy_number']]['amount'], year) - totalPai
                     else:
                         updatePai = {row['policy_number']: {'amount': row['amount'], 'date': row['payment_date'], 'id': row['pay_tbl_id']}}
-                        pai = calculatePai(row['amount'], year) - cursor["totalPai"]
+                        pai = calculatePai(row['amount'], year) - totalPai
 
                     valuesUpdate = (pai, updatePai[row['policy_number']]['id'])
 
