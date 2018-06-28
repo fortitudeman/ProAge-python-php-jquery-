@@ -60,7 +60,8 @@ try:
                     cursor.execute("SELECT SUM(pai_business) as totalPai FROM payments WHERE policy_number = %s", row["policy_number"])
                     result_set = cursor.fetchall()
                     for second in result_set:
-                        totalPai = second['totalPai']
+                        if second['totalPai'] is not None:
+                            totalPai = second['totalPai']
                     if row['policy_number'] in updatePai:
                         updatePai[row['policy_number']]['id'] = row['pay_tbl_id']
                         updatePai[row['policy_number']]['amount'] += row['amount']
