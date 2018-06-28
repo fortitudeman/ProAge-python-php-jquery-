@@ -24,19 +24,16 @@ try:
             if  rows > 0:
                 for row in cur:
                     cursor.execute("SELECT SUM(pai_business) as totalPai FROM payments WHERE policy_number = %s", row["policy_number"])
-                    actualDate = 0 if (not updatePai['policy_number']['date']) else updatePai['policy_number']['date'] 
-                    if row['policy_number'] in updatePai and compareDates(actualDate, row['payment_date']):
-                        
+                    if row['policy_number'] in updatePai:
                         updatePai[row['policy_number']]['id'] = row['pay_tbl_id']
                         updatePai[row['policy_number']]['amount'] += row['amount']
                         pai = calculatePai(
                             updatePai['amount'], row['payment_date']) - cursor["totalPai"]
                     
                     else:
-                        updatePai[row['policy_number']]['amount'] = row['amount']
-                        updatePai[row['policy_number']]['date'] = row['payment_date']
-                        pai = calculatePai(
-                            updatePai['amount'], row['payment_date']) - cursor["totalPai"]
+                        updatePai = {row['policy_number']: {'amount': row['amount'], 'date': row['payment_date'], 'id': row['pay_tbl_id']}}
+                        pai = calculatePai(updatePai[row['policy_number']]['amount'], row['payment_date']) - cursor["totalPai"]
+
                     valuesUpdate = (pai, updatePai[row['policy_number']]['id'])
 
                     cur.execute(update, valuesUpdate)
