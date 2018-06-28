@@ -28,11 +28,11 @@ try:
                         updatePai[row['policy_number']]['id'] = row['pay_tbl_id']
                         updatePai[row['policy_number']]['amount'] += row['amount']
                         pai = calculatePai(
-                            updatePai['amount'], row['payment_date']) - cursor["totalPai"]
+                            updatePai[row['policy_number']]['amount'], row['payment_date']) - cursor["totalPai"]
                     
                     else:
                         updatePai = {row['policy_number']: {'amount': row['amount'], 'date': row['payment_date'], 'id': row['pay_tbl_id']}}
-                        pai = calculatePai(updatePai[row['policy_number']]['amount'], row['payment_date']) - cursor["totalPai"]
+                        pai = calculatePai(row['amount'], row['payment_date']) - cursor["totalPai"]
 
                     valuesUpdate = (pai, updatePai[row['policy_number']]['id'])
 
