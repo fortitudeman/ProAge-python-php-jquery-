@@ -56,6 +56,7 @@ try:
             rows = cur.execute(sql, values)
             if  rows > 0:
                 for row in cur:
+                    totalPai = 0
                     cursor.execute("SELECT SUM(pai_business) as totalPai FROM payments WHERE policy_number = %s", row["policy_number"])
                     result_set = cursor.fetchall()
                     for second in result_set:
