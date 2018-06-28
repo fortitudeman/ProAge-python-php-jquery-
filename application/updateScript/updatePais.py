@@ -49,9 +49,9 @@ months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 totalRows = 0
 try:
     for year in years:
-        print('Year: %s', year)
+        print("Year: %s", year)
         for month in months:
-            print ('Month: %s', month)
+            print ("Month: %s", month)
             values = (year, month, year, month)
             rows = cur.execute(sql, values)
             if  rows > 0:
@@ -68,13 +68,13 @@ try:
                     else:
                         updatePai = {row['policy_number']: {'amount': row['amount'], 'date': row['payment_date'], 'id': row['pay_tbl_id']}}
                         pai = calculatePai(row['amount'], year) - totalPai
+                    if pai != 0:
+                        valuesUpdate = (pai, updatePai[row['policy_number']]['id'])
 
-                    valuesUpdate = (pai, updatePai[row['policy_number']]['id'])
-
-                    cur.execute(update, valuesUpdate)
-                    db.commit()
-                    totalRows += 1
-        print('Rows affected: %s', totalRows)
+                        cur.execute(update, valuesUpdate)
+                        db.commit()
+                        totalRows += 1
+        print("Rows affected: %s", totalRows)
 finally:
     cur.close()
     db.close()
