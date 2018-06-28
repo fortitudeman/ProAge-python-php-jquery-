@@ -4,26 +4,24 @@ import datetime
 import MySQLdb
 import MySQLdb.cursors
 
-def calculatePai(amount, payDate):
+def calculatePai(amount, year):
 
     pai = 0
-    date = datetime.datetime.strptime(payDate, "%Y-%m-%d")
-
-    if date.year == 2018 or date.year == 2017:
+    if year == 2018 or year == 2017:
         if amount >= 12000 and amount < 110000:
             pai = 1
         elif amount >= 110000 and amount < 500000:
             pai = 2
         elif amount >= 500000:
             pai = 3
-    elif date.year == 2016:
+    elif year == 2016:
         if amount >= 12000 and amount < 100000:
             pai = 1
         elif amount >= 100000 and amount < 500000:
             pai = 2
         elif amount >= 500000:
             pai = 3
-    elif date.year == 2015:
+    elif year == 2015:
         if amount >= 10000 and amount < 100000:
             pai = 1
         elif amount >= 100000 and amount < 500000:
@@ -34,14 +32,6 @@ def calculatePai(amount, payDate):
         if amount >= 10000:
             pai = 1
     return pai
-
-def compareDates(dateOne, dateTwo):
-
-    if dateOne != 0 and dateTwo != 0:
-        first = datetime.datetime.strptime(dateOne, "%Y-%m-%d")
-        second = datetime.datetime.strptime(dateTwo, "%Y-%m-%d")
-        return True if (first.month == second.month and first.year == second.year) else False
-    return False
 
 
 db = MySQLdb.connect(host="proages-db.coroolzydzjr.us-east-1.rds.amazonaws.com", 
@@ -68,11 +58,10 @@ try:
                         updatePai[row['policy_number']]['id'] = row['pay_tbl_id']
                         updatePai[row['policy_number']]['amount'] += row['amount']
                         pai = calculatePai(
-                            updatePai[row['policy_number']]['amount'], row['payment_date']) - cursor["totalPai"]
-                    
+                            updatePai[row['policy_number']]['amount'], year) - cursor["totalPai"]
                     else:
                         updatePai = {row['policy_number']: {'amount': row['amount'], 'date': row['payment_date'], 'id': row['pay_tbl_id']}}
-                        pai = calculatePai(row['amount'], row['payment_date']) - cursor["totalPai"]
+                        pai = calculatePai(row['amount'], year) - cursor["totalPai"]
 
                     valuesUpdate = (pai, updatePai[row['policy_number']]['id'])
 
