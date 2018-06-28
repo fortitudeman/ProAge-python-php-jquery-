@@ -57,25 +57,30 @@ try:
             if  rows > 0:
                 for row in cur:
                     totalPai = 0
-                    cursor.execute("SELECT SUM(pai_business) as totalPai FROM payments WHERE policy_number = %s", row["policy_number"])
+                    total = 0
+
+                    cursor.execute(
+                        "SELECT SUM(pai_business) as totalPai FROM payments WHERE policy_number = %s", row["policy_number"])
                     result_set = cursor.fetchall()
                     for second in result_set:
                         if second['totalPai'] is not None:
                             totalPai = second['totalPai']
-                    if row['policy_number'] in updatePai:
-                        updatePai[row['policy_number']]['id'] = row['pay_tbl_id']
-                        updatePai[row['policy_number']]['amount'] += row['amount']
-                        pai = calculatePai(
-                            updatePai[row['policy_number']]['amount'], year) - totalPai
-                    else:
-                        updatePai = {row['policy_number']: {'amount': row['amount'], 'date': row['payment_date'], 'id': row['pay_tbl_id']}}
-                        pai = calculatePai(row['amount'], year) - totalPai
-                    if pai != 0:
-                        valuesUpdate = (pai, updatePai[row['policy_number']]['id'])
+                    
+                    cursor.execute(
+                        "SELECT SUM(amount) as total FROM payments WHERE policy_number = %s", row["policy_number"])
+                    result_set = cursor.fetchall()
+                    for second in result_set:
+                        if second['total'] is not None:
+                            total = second['total']
 
+                    pai = calculatePai(total, year) - totalPai
+                    
+                    if pai != 0:
+                        valuesUpdate = (pai, row["pay_tbl_id"])
                         cur.execute(update, valuesUpdate)
                         db.commit()
                         totalRows += 1
+
         print("Rows affected: %s", totalRows)
 finally:
     cur.close()
