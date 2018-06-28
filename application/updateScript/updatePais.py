@@ -46,9 +46,12 @@ update = "UPDATE payments SET pai_business = %s WHERE pay_tbl_id = %s"
 updatePai = dict()
 years = [2014, 2015, 2016, 2017,  2018]
 months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+totalRows = 0
 try:
     for year in years:
+        print('Year: %s', year)
         for month in months:
+            print ('Month: %s', month)
             values = (year, month, year, month)
             rows = cur.execute(sql, values)
             if  rows > 0:
@@ -69,8 +72,9 @@ try:
                     valuesUpdate = (pai, updatePai[row['policy_number']]['id'])
 
                     cur.execute(update, valuesUpdate)
-                    cursor.clear()
-                cur.clear()
+                    db.commit()
+                    totalRows += 1
+        print('Rows affected: %s', totalRows)
 finally:
     cur.close()
     db.close()
