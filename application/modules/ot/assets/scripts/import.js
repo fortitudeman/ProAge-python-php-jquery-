@@ -5,6 +5,11 @@
 			this.binder();
 			this.render();
 		},
+        
+        showLoadingScreen: function(){
+            document.getElementsByClassName('row-fluid sortable')[0].style.visibility = 'hidden';
+            document.getElementsByClassName('loading-message')[0].style.visibility = 'block';
+        },
 		cacheDom: function() {
 			this.$formDelete = $("#import-delete");
 			this.$product = $("#product-type-delete");

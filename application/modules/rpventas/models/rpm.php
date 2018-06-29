@@ -550,14 +550,13 @@ class rpm extends CI_Model{
 	}
 
 	public function getNumBusiness($year, $ramo, $filter){
-		$this->db->select('sum(negocio_pai) as val', FALSE);
-		$this->db->join('policies po', 'po.uid = policy_negocio_pai.policy_number', 'LEFT');
+		$this->db->select('sum(pai_business) as val', FALSE); 
 		if(!empty($filter["product"])){
 			$this->db->where('po.product_id', $filter["product"]);
 		}
-		$this->db->where('ramo', $ramo);
-		$this->db->where('year(date_pai)', $year);
-		$q = $this->db->get('policy_negocio_pai');
+		$this->db->where('product_group', $ramo);
+		$this->db->where('year(payment_date)', $year);
+		$q = $this->db->get('payments');
 		$result = $q->row_array();
 		$val = $result['val'];
 		$num = 0;

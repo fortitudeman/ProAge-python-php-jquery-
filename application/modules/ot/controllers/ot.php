@@ -1303,7 +1303,7 @@ public function create_policy(){
 	}
 
 	private $imported_fields = array(
-		1 => array( // Vida
+		1 => array( // Vida / Previo de Ventas
 			4 => 'agent_uidsnational',
 			5 => 'uid',
 			6 => 'year_prime',
@@ -1329,6 +1329,17 @@ public function create_policy(){
 			10 => 'amount',
 //          11 => 'is_new',
 			11 => 'year_prime',
+		),
+		4 => array( // Vida / SELO Produccion
+			4 => 'agent_uidsnational',
+			5 => 'uid',
+			6 => 'year_prime',
+			7 => 'amount',
+			8 => 'payment_date',
+			9 => 'is_new',
+			11 => 'name',
+            15 => 'allocated_prime',
+            16 => 'bonus_prime'
 		),
 	);
 /**
@@ -1395,7 +1406,7 @@ public function import_payments()
 		// Change index
 // 2: "Pre import"
 	if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'change-index' ){
-		if (!isset($_POST['product']) || ($_POST['product'] < 1) || ($_POST['product'] > 3))
+		if (!isset($_POST['product']) || ($_POST['product'] < 1) || ($_POST['product'] > 4))
 		{
 			$this->session->set_flashdata( 'message', array(
 				'type' => false,
@@ -1426,6 +1437,8 @@ public function import_payments()
 				$file_array = $this->reader_csv->reader();
 			}
 		}
+        
+        //Section used to check the month included on the imported file
 		$fecha = explode("-", $file_array[0][8]);
 		$posted_month = $file_array[0][10];
 		$posted_year = $fecha[0];
@@ -1628,6 +1641,11 @@ public function import_payments()
 				//$policy = $this->work_order->getPolicyByUid( $item->uid );
 						$payment_date = strtotime( $item->payment_date );
 						$stringed_payment_date = date( 'Y-m-d', $payment_date );
+                        $pai = 0;
+                        if ($item->year_prime == 1){
+                            $pai = $this->user->create_negocio_pai($item->uid, $product, $stringed_payment_date,$item->amount);
+                        }
+                        
 						$payment = array(
 							'product_group' => $product,
 							'agent_id' => $item->agent_id,
@@ -1636,6 +1654,7 @@ public function import_payments()
 							'amount' => $item->amount,
 							'payment_date' => $stringed_payment_date,
 							'business' => $item->is_new,
+                            'pai_business' => $pai,
 							'policy_number' => $item->uid,
 							'last_updated' => date( 'Y-m-d H:i:s' ),
 							'date' => date( 'Y-m-d H:i:s' ),
@@ -1658,7 +1677,6 @@ public function import_payments()
 
 							if ($controlSaved && $policy)
 							{
-								$this->user->create_negocio_pai($item->uid,$product);
 								if ($policy[0]['currency_id'] == 1)
 									$item_amount = $item->amount;
 							else // if policy in USD, convert payment amount from MXN to USD
@@ -3114,6 +3132,13 @@ public function recalculate_adjusted($ot){
 					$this->uri->segment(5)
 					$this->policy_model->getPolicyBuId();*/
 				}
+      
+  public function rebuildpai(){
+      $total = $this->user->rebuildNegociosPai();
+      if ($total>0){
+        redirect('director.html', 'refresh');
+      }    
+  }   
 				/* End of file ot.php */
 				/* Location: ./application/controllers/ot.php */
 			}

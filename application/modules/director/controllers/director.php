@@ -956,13 +956,16 @@ $( document ).ready( function(){
 			$filter['query'] = $posted_filter_query;
 
 		$request_type = $this->input->post('type');
+        
+        //Switch statement to determine what kind of popup will get called, depending on the type requested by post.
 		switch ( $request_type )
 		{
 			case 'negocio':
 				$data['values'] = $this->user->getNegocioDetails( $this->input->post('for_agent_id'), $filter );
 				break;
 			case 'negociopai':
-				$data['values'] = $this->user->getNegocioPai( $this->input->post('for_agent_id'), $filter );
+				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter, true);
+				$data['negociopai'] = array ("negociopai" => true);
 				break;
 			case 'prima':
 				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );
@@ -1868,18 +1871,24 @@ implode(', ', $ramo_tramite_types) . '
 			$type = 'provincial';
 			$generation_gmm = $this->user->getGenerationByAgentId($agent_id,false);
 		}
+		$amount = $this->input->post('amount');
 
 		$folio = $this->user->generic_get('agent_uids',
 			array('agent_id' => $agent_id, 'type' => $type),
 				1, 0, 'id asc');
+        $pai = 0;
+        if ($this->input->post('year_prime') == 1){
+            $pai = $this->user->create_negocio_pai($payment['policy_number'],$product_group, $payment_date, $amount);
+        }
 		$payment = array(
 			'product_group' => $product_group,
 			'agent_id' => $agent_id,
 			'year_prime' => $this->input->post('year_prime'),
 			'currency_id' => 1,
-			'amount' => $this->input->post('amount'),
+			'amount' => $amount,
 			'payment_date' => $payment_date,
 			'business' => (int)$this->input->post('business'),
+            'pai_business' => $pai,
 			'policy_number' => trim($this->input->post('policy_number')),
 			'valid_for_report' => $valid_for_report ? 1 : 0,
 			'last_updated' => $now,
@@ -1890,12 +1899,13 @@ implode(', ', $ramo_tramite_types) . '
 			'agent_generation_vida' => $generation_vida,
 			'agent_generation_gmm' => $generation_gmm
 		);
-
+        
+        print_r($payment);
+        exit();
 		$user_id = $this->user->getUserIdByAgentId( $agent_id);
 
 		if ($user_id && ($result = $this->work_order->create( 'payments', $payment )))
 		{
-            $this->user->create_negocio_pai($payment['policy_number'],$product_group);
 			$policy = $this->work_order->getPolicyByUid(  $payment['policy_number'] );
 			if ($policy && 
 				( (float)$policy[0]['prima'] >= (float)$payment['amount'] ))
@@ -1916,7 +1926,9 @@ implode(', ', $ramo_tramite_types) . '
 	}
 
 //////// Below are page duplicated in ot, agent and director modules
-	public function change_negocio_pai()
+    
+	//Function used to update negocio pai using the select box.
+    public function change_negocio_pai()
 	{
 		if ( !$this->input->is_ajax_request() )
 			redirect( 'director.html', 'refresh' );
@@ -1933,7 +1945,7 @@ implode(', ', $ramo_tramite_types) . '
 			foreach ($negocio_pai as $id => $value)
 			{
 				$result = $this->work_order->generic_update(
-					'policy_negocio_pai', array('negocio_pai' => (int) $value), array('policy_number' => (int) $id), 1, 0) ?
+					'payments', array('pai_business' => (int) $value), array('pay_tbl_id' => (int)$id), 1, 0) ?
 						'1' : '0';
 				echo json_encode($result);
 				exit();

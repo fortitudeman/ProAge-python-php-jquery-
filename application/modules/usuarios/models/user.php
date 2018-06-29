@@ -1432,9 +1432,9 @@ class User extends CI_Model
     {
 
 
-        $query = $this->db->query(' SELECT DISTINCT(users.name), users.id  
-                                    FROM `users_vs_user_roles` 
-                                    JOIN users ON users.id = `user_id` 
+        $query = $this->db->query(' SELECT DISTINCT(users.name), users.id
+                                    FROM `users_vs_user_roles`
+                                    JOIN users ON users.id = `user_id`
                                     WHERE user_role_id=3;');
 
 
@@ -1458,9 +1458,9 @@ class User extends CI_Model
     {
 
 
-        $query = $this->db->query(' SELECT DISTINCT(users.name), users.id  
-                                    FROM `users_vs_user_roles` 
-                                    JOIN users ON users.id = `user_id` 
+        $query = $this->db->query(' SELECT DISTINCT(users.name), users.id
+                                    FROM `users_vs_user_roles`
+                                    JOIN users ON users.id = `user_id`
                                     WHERE user_role_id=3;');
 
 
@@ -1956,7 +1956,7 @@ class User extends CI_Model
             $report[0] = array(
                 'name' => 'Agentes',
                 'negocio' => 'Negocios Pagados',
-                'negociopai' => 'Negocios Pal',
+                'negociopai' => 'Negocios Pai',
                 'prima' => 'Primas Pagadas',
                 'tramite' => 'Negocios en Tramite',
                 'tramite_prima' => 'Primas en Tramite',
@@ -2551,7 +2551,7 @@ class User extends CI_Model
                 $this->db->select('payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name');
             }else{
                 $this->db->select('payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name, work_order.id as work_order_uid');
-            } 
+            }
         }
         $this->db->from('payments');
         $this->db->join('agents', 'agents.id=payments.agent_id');
@@ -2771,13 +2771,13 @@ class User extends CI_Model
                             $months=6;
                         }
                         $str_date="".$row->creation_date." +".$months." Month";
-                        $data = array('policy_id' => $row->id, 
+                        $data = array('policy_id' => $row->id,
                                       'adjusted_prima' => $row->prima/$interval,
                                       'due_date' => date("Y-m-d",strtotime($str_date))
                         );
                         $result = $this->db->insert('policy_adjusted_primas', $data);
                     }
-                }   
+                }
             }
         }
         $this->rebuildDatesCobranza();
@@ -2807,7 +2807,7 @@ class User extends CI_Model
                         $str_date="".$row->due_date." +".$months." Month";
                         $date = date("Y-m-d",strtotime($str_date));
                     }
-                    $data = array('policy_id' => $row->policy_id, 
+                    $data = array('policy_id' => $row->policy_id,
                                   'adjusted_prima' => $row->adjusted_prima,
                                   'due_date' => $date
                     );
@@ -3073,63 +3073,20 @@ class User extends CI_Model
     }
 
     public function rebuildNegociosPai(){
-        $sql_str = "Select policy_negocio_pai.* from policy_negocio_pai 
-                    left join negocios_pai_per_policy on policy_negocio_pai.policy_number = negocios_pai_per_policy.policy_number
-                    where negocios_pai_per_policy.policy_number is null
-                    and policy_negocio_pai.negocio_pai != 0";
-        $query = $this->db->query($sql_str);
-        $policies = array();
+        //Code used to rebuild the payments table to record of Negocios PAI
+        $rebuiltTotal = 0;
+        $sqlRebuildPai = "SELECT * FROM payments WHERE year_prime = 1 AND payment_date BETWEEN'2014-01-01' AND now()";
+        $query = $this->db->query($sqlRebuildPai);
+        
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
-                $policies[] = "'".$row->policy_number."'";
+                $pai = $this->user->create_negocio_pai($row->policy_number, $row->product_group, $row->payment_date, $item->amount);
+                $sqlUpdatePai = "UPDATE payments SET pai_business = ? WHERE pay_tbl_id = ?;";
+                $this->db->query($sqlUpdatePai, array($pai, $row->pay_tbl_id));
+                $rebuiltTotal++;
             }
         }
-        $query->free_result();
-        $sql_str_policies=(implode(",", $policies));
-        $sql_str_aux = "Select payments.policy_number, amount, payment_date as date_pai, date, payments.last_updated, policy_negocio_pai.negocio_pai
-                                from payments 
-                                join policy_negocio_pai on policy_negocio_pai.policy_number = payments.policy_number
-                                where payments.policy_number in(".$sql_str_policies.") 
-                                order by payments.policy_number asc, payments.payment_date desc";
-        $query_aux=$this->db->query($sql_str_aux);
-        if($query_aux->num_rows() > 0){
-            $previous_policy="0";
-            foreach ($query_aux->result() as $row_aux){
-
-                if ($row_aux->amount >= 12000){
-                    $negocios_pai=0;
-                    if($row_aux->amount>=12000 && $row_aux->amount<110000){
-                        $negocios_pai=1;
-                    }if($row_aux->amount>=110000 && $row_aux->amount<500000){
-                        $negocios_pai=2;
-                    }if($row_aux->amount>=500000){
-                        $negocios_pai=3;
-                    }
-                    $data = array('ramo' => 1,
-                                  'policy_number' => $row_aux->policy_number, 
-                                  'negocio_pai' => $negocios_pai,
-                                  'date_pai' => $row_aux->date_pai, 
-                                  'creation_date' => $row_aux->date,
-                                  'last_update' => $row_aux->last_updated
-                    );
-                    $result = $this->db->insert('negocios_pai_per_policy', $data);
-                }else{
-                    if(strcmp($row_aux->policy_number, $previous_policy) != 0){
-                        $data = array('ramo' => 1,
-                                      'policy_number' => $row_aux->policy_number, 
-                                      'negocio_pai' => $row_aux->negocio_pai,
-                                      'date_pai' => $row_aux->date_pai, 
-                                      'creation_date' => $row_aux->date,
-                                      'last_update' => $row_aux->last_updated
-                        );
-                        $result = $this->db->insert('negocios_pai_per_policy', $data);
-                    }
-                }
-                $previous_policy=$row_aux->policy_number;
-            }
-        }
-        $query_aux->free_result();
-        return 0;
+        return $rebuiltTotal;
     }
 
 
@@ -3160,7 +3117,6 @@ class User extends CI_Model
 
     private function _getNegocioPai($count_requested = TRUE, $agent_id = null, $filter = array())
     {
-        $this->rebuildNegociosPai();
         $sql_date_filter = '';
         $sql_agent_filter = '';
         $sql_plus = "`valid_for_report` = '1' AND `year_prime` = '1' ";
@@ -3220,25 +3176,23 @@ class User extends CI_Model
         $group_plus = '';
         if (!$count_requested) {
             $select_plus = "`policies`.`name` as `asegurado`, `policies`.`period` as `plazo`, ";
-            $join_plus = ' LEFT OUTER JOIN `policies` ON `policies`.`uid`= `payments`.`policy_number` 
+            $join_plus = ' LEFT OUTER JOIN `policies` ON `policies`.`uid`= `payments`.`policy_number`
                             LEFT JOIN `work_order` ON `work_order`.`policy_id`= `policies`.`id`';
             $field_plus = ', `work_order`.`id` AS `work_order_uid`';
             $group_plus = ',`work_order`.`id`';
         }
-        $sql_str = "SELECT `negocios_pai_per_policy`.ramo,
-        `negocios_pai_per_policy`.policy_number,
-        `negocios_pai_per_policy`.negocio_pai,
-        DATE_FORMAT(`negocios_pai_per_policy`.date_pai,'%Y-%m-%d') as `date_pai`,
-        `negocios_pai_per_policy`.creation_date,
-        `negocios_pai_per_policy`.last_update, " . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments` 
-                        JOIN `agents` ON `agents`.`id`=`payments`.`agent_id` 
-                        JOIN `users` ON `users`.`id`=`agents`.`user_id` 
-                        LEFT JOIN `negocios_pai_per_policy` ON `negocios_pai_per_policy`.`policy_number` =`payments`.`policy_number` " . $join_plus . " 
+        $sql_str = "SELECT `payments`.product_group as ramo,
+        `payments`.policy_number,
+        `payments`.pai_business,
+        DATE_FORMAT(`payments`.payment_date,'%Y-%m-%d') as `date_pai`,
+        `payments`.import_date as creation_date,
+        `payments`.last_updated," . $select_plus . " `payments`.* , `users`.`name` AS `first_name`, `users`.`lastnames` AS `last_name`, `users`.`company_name` AS `company_name`". $field_plus ." FROM `payments`
+                        JOIN `agents` ON `agents`.`id`=`payments`.`agent_id`
+                        JOIN `users` ON `users`.`id`=`agents`.`user_id` " . $join_plus . "
                         WHERE " .
             $sql_plus .
-            $sql_agent_filter . " 
-                        AND `negocios_pai_per_policy`.`date_pai` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
-
+            $sql_agent_filter . "
+                        AND `payments`.`payment_date` BETWEEN '" . $start_date . "' AND '" . $end_date . "' GROUP BY `payments`.`policy_number`, `payments`.`agent_id`";
 
         $query = $this->db->query($sql_str);
         if ($query->num_rows() > 0) {
@@ -3251,10 +3205,7 @@ class User extends CI_Model
                     $row->plazo = '';
                 $row->product_name = '';
                 if ($count_requested) {
-                    if (isset($result[$row->agent_id]))
-                        $result[$row->agent_id] += $row->negocio_pai;
-                    else
-                        $result[$row->agent_id] = $row->negocio_pai;
+                    $result[$row->agent_id] = $this->getTotalPaiByAgent($row->agent_id, $start_date, $end_date);
                 } else {
                     if ($row->policy_number) {
                         $policy_rows[] = $row->policy_number;
@@ -3271,9 +3222,9 @@ class User extends CI_Model
                     foreach ($prima_details as $prima_detail) {
                         if ($result[$pai_key]->policy_number == $prima_detail->policy_number)
                             $result[$pai_key]->amount += $prima_detail->amount;
+                            $result[$pai_key]->pai_business = $this->getTotalPaiByPolicy($pai_value->policy_number, $start_date, $end_date);
                     }
                 }
-
                 if ($policy_rows) {
                     $policy_row_array = array();
                     $query = $this->db
@@ -3293,7 +3244,7 @@ class User extends CI_Model
                     }
                 }
             }
-
+            //echo $sql_str;    
             return $result;
         } else {
             if ($count_requested)
@@ -3303,44 +3254,127 @@ class User extends CI_Model
         }
     }
 
-    public function create_negocio_pai($policy, $product_group)
-    {
+    public function create_negocio_pai($policy, $product_group, $date_pai,$amount){
+        $total = $this->get_total_payment($policy, $date_pai) + $amount;
+        $pai_total = $this->is_negocio_pai($total, date('Y', strtotime($date_pai)));
+        $stored_pai = $this->get_stored_pai($policy, $date_pai);
+        $pai = $pai_total - $stored_pai;
 
-        $sql = "SELECT `payments`.*
-        FROM `payments`
-        WHERE `valid_for_report` = '1' 
-            AND `year_prime` = '1'  
-            AND `product_group` = '" . $product_group . "' AND `policy_number` = '" . $policy . "' ORDER BY `payment_date` ASC";
-        $total = 0;
-        $query = $this->db->query($sql);
-        $flag = true;
-        $payment_date = '';
-        $data = array();
-        if ($query->num_rows() > 0) {
-            foreach ($query->result() as $row) {
-                $total += (int)$row->amount;
-                if ($flag && $total > 12000 and $total < 110000) {
-                    $payment_date = $row->payment_date;
-                    $flag = false;
-                } elseif (!$flag && $total > 110000 and $total < 500000) {
-                    $payment_date = $row->payment_date;
-                    $flag = true;
-                }elseif ($flag && $total > 500000) {
-                    $payment_date = $row->payment_date;
-                    $flag = false;
-                }
-            }
-            if ($total > 500000) {
-                $data = array('ramo' => $row->product_group, 'policy_number' => $row->policy_number, 'negocio_pai' => '3', 'date_pai' => $payment_date, 'creation_date' => date("Y-m-d H:i:s"));
-                $this->db->replace('policy_negocio_pai', $data);
-            } elseif ($total > 110000) {
-                $data = array('ramo' => $row->product_group, 'policy_number' => $row->policy_number, 'negocio_pai' => '2', 'date_pai' => $payment_date, 'creation_date' => date("Y-m-d H:i:s"));
-                $this->db->replace('policy_negocio_pai', $data);
-            } elseif ($total > 12000) {
-                $data = array('ramo' => $row->product_group, 'policy_number' => $row->policy_number, 'negocio_pai' => '1', 'date_pai' => $payment_date, 'creation_date' => date("Y-m-d H:i:s"));
-                $this->db->replace('policy_negocio_pai', $data);
-            }
+        return $pai;
+    }
+
+    //Function used to get the sum of all PAI Business, receiving a Policy number as a parameter. 
+    public function get_stored_pai($policy, $date){
+        $sql = "SELECT SUM(pai_business) AS pai_total FROM payments WHERE policy_number = ? 
+                AND year_prime = 1 AND payment_date BETWEEN (
+	           SELECT payment_date as fecha FROM payments WHERE 
+               policy_number = ? ORDER BY payment_date ASC LIMIT 1) AND ?;";
+        $q = $this->db->query($sql, array($policy, $policy, $date));
+        return $q->row()->pai_total;
+
+    }
+
+    public function getTotalPaiByAgent($agentId, $startDate, $end_date){
+        $sql = "SELECT SUM(pai_business) AS pai_total FROM payments WHERE product_group = 1 and agent_id = ? 
+                AND year_prime = 1 AND payment_date BETWEEN ? AND ?;";
+        $q = $this->db->query($sql, array($agentId, $startDate, $end_date));
+        return $q->row()->pai_total;
+
+    }
+
+    public function getTotalPaiByPolicy($policy, $startDate, $end_date){
+        $sql = "SELECT SUM(pai_business) AS pai_total FROM payments WHERE product_group = 1 and  policy_number = ? 
+                AND year_prime = 1 AND payment_date BETWEEN ? AND ?;";
+        $q = $this->db->query($sql, array($policy, $startDate, $end_date));
+        return $q->row()->pai_total;
+
+    }
+
+    //Function used to get the sum of all payments made, receiving a Policy number as a parameter.
+    public function get_total_payment($policy, $date){
+        $sql = "SELECT SUM(amount) AS total FROM payments WHERE policy_number = ? 
+                AND year_prime = 1 AND payment_date BETWEEN (
+	           SELECT payment_date as fecha FROM payments WHERE 
+               policy_number = ? ORDER BY payment_date ASC LIMIT 1) AND ?;";
+        $q = $this->db->query($sql, array($policy, $policy, $date));
+        return $q->row()->total;
+    }
+
+    public function is_negocio_pai($total, $year){
+        switch ($year) {
+                
+            case 2018:
+                return $this->calculate_eight_seven($total);
+                break;
+                
+            case 2017:
+                return $this->calculate_eight_seven($total);
+                break;
+                
+            case 2016:
+                return $this->calculate_six($total);
+                break;
+                
+            case 2015:
+                return $this->calculate_five($total);
+                break;
+                
+            case 2014:
+                return $this->calculate_four($total);
+                break;
+                    
+            default:
+                return null;
+                break;
         }
+    }
+
+    public function calculate_eight_seven($total){
+        if ($total >= 12000 && $total < 110000) {
+            return 1;
+        }elseif ($total >= 110000 && $total < 500000) {
+            return 2;
+        }elseif ($total >= 500000) {
+            return 3;
+        }
+        return 0;
+    }
+
+    public function calculate_six($total){
+        if ($total >= 12000 && $total < 100000) {
+            return 1;
+        }elseif ($total >= 100000 && $total < 500000) {
+            return 2;
+        }elseif ($total >= 500000) {
+            return 3;
+        }
+        return 0;
+    }
+
+    public function calculate_five($total){
+        if ($total >= 10000 && $total < 100000) {
+            return 1;
+        }elseif ($total >= 100000 && $total < 500000) {
+            return 2;
+        }elseif ($total >= 500000) {
+            return 3;
+        }
+        return 0;
+    }
+
+    public function calculate_four($total){
+        if($total >= 10000)
+            return 1;
+        return 0;
+    }
+
+    public function last_pai($policy){
+        $this->db->select('pai_business.pai');
+        $this->db->from('pai_business');
+        $this->db->where('pai_business.policy_number', $id);
+        $this->db->order_by('pai', "desc");
+        $this->db->limit(1);
+        return $this->db->get()->row()->pai;
     }
 
     private function _create_negocio_pai_rows($row)
@@ -3361,10 +3395,13 @@ class User extends CI_Model
         return $this->_getPrima(TRUE, $agent_id, $filter);
     }
 
-    public function getPrimaDetails($agent_id = null, $filter = array())
+    public function getPrimaDetails($agent_id = null, $filter = array(), $pop = false)
     {
-
-        return $this->_getPrima(FALSE, $agent_id, $filter);
+        if ($pop) {
+            return $this->_getPaiPop(FALSE, $agent_id, $filter);
+        }else{
+            return $this->_getPrima(FALSE, $agent_id, $filter);
+        }
     }
 
 // Common method for getting sum of prima (first param = TRUE) and details of prima (first param = FALSE)
@@ -3481,6 +3518,118 @@ class User extends CI_Model
         }
     }
 
+    private function _getPaiPop($sum_requested = TRUE, $agent_id = null,
+                               $filter = array(), $where = array('year_prime' => 1, 'valid_for_report' => 1))
+    {
+        if (empty($agent_id) && $sum_requested)
+            return 0;
+
+        if ($sum_requested) {
+            if ($agent_id && is_array($agent_id))
+                $this->db->select('SUM(amount) AS primas, SUM(amount * add_perc / 100 ) AS primas_plus, payments.agent_id as n_agent_id');
+            else
+                $this->db->select('SUM(amount) AS primas, SUM(amount * add_perc / 100 ) AS primas_plus');
+        } else
+            $this->db->select(' payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name');
+        $this->db->from('payments');
+        $this->db->join('agents', 'agents.id=payments.agent_id');
+        $this->db->join('users', 'users.id=agents.user_id');
+        //      $where = array( 'year_prime' => 1, 'valid_for_report' => 1);
+        if ($agent_id && !is_array($agent_id))
+            $where['agent_id'] = $agent_id;
+
+        $this->db->where($where);
+        $this->db->where('pai_business !=',0);
+        if (!empty($filter)) {
+
+            if (isset($filter['query']['ramo']) and !empty($filter['query']['ramo'])) {
+
+                $this->db->where('product_group', $filter['query']['ramo']);
+            }
+
+            /*
+            <option value="1">Mes</option>
+            <option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+            <option value="3">Año</option>
+            */
+            if (isset($filter['query']['periodo']) and !empty($filter['query']['periodo'])) {
+                if ($filter['query']['periodo'] == 1) {
+                    $year = date('Y');
+                    $month = date('m');
+                    $next_month = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
+                    $this->db->where(array(
+                        'payment_date >= ' => $year . '-' . $month . '-01',
+                        'payment_date < ' => $next_month,
+                    ));
+                }
+                if ($filter['query']['periodo'] == 2) {
+                    $this->load->helper('tri_cuatrimester');
+                    if (isset($filter['query']['ramo']) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3)
+                        $begin_end = get_tri_cuatrimester($this->cuatrimestre(), 'cuatrimestre');
+                    else
+                        $begin_end = get_tri_cuatrimester($this->trimestre(), 'trimestre');
+
+                    if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
+                        $this->db->where(array(
+                            'payment_date >= ' => $begin_end['begind'],
+                            'payment_date <=' => $begin_end['end']));
+                }
+                if ($filter['query']['periodo'] == 3) {
+                    $year = date('Y');
+                    $this->db->where(array(
+                        'payment_date >= ' => $year . '-01-01',
+                        'payment_date <= ' => $year . '-12-31 23:59:59'
+                    ));
+                }
+                if ($filter['query']['periodo'] == 4) {
+                    $from = $this->custom_period_from;
+                    $to = $this->custom_period_to;
+                    if (($from === FALSE) || ($to === FALSE)) {
+                        $from = date('Y-m-d');
+                        $to = $from;
+                    }
+                    $this->db->where(array(
+                        'payment_date >= ' => $from . ' 00:00:00',
+                        'payment_date <=' => $to . ' 23:59:59'));
+                }
+            }
+
+            if (!$agent_id && isset($filter['query']['agent_name']) and !empty($filter['query']['agent_name'])) {
+                $this->_get_agent_filter_where($filter['query']['agent_name']);
+                if ($this->agent_name_where_in)
+                    $this->db->where_in('agent_id', $this->agent_name_where_in);
+            }
+        }
+        if ($agent_id && is_array($agent_id))
+            $this->db->where_in('agent_id', $agent_id);
+        if ($sum_requested && $agent_id && is_array($agent_id))
+            $this->db->group_by('payments.agent_id');
+
+        $query = $this->db->get();
+
+        if ($sum_requested) {
+            if ($query->num_rows() == 0) return 0;
+
+            if ($agent_id && !is_array($agent_id)) {
+                foreach ($query->result() as $row) {
+                    $prima = (float)$row->primas + (float)$row->primas_plus;
+                }
+            } else {
+                $prima = array();
+                foreach ($query->result() as $row) {
+                    $prima[$row->n_agent_id] = (float)$row->primas + (float)$row->primas_plus;
+                }
+            }
+            $query->free_result();
+            return $prima;
+        } else {
+        //          if ($agent_id && is_array($agent_id))
+        //              $this->db->where_in('agent_id', $agent_id);
+
+            $result = $this->complement_payments($query);
+            return $result;
+        }
+    }
     private function complement_payments(&$query = null)
     {
         $result = array();
