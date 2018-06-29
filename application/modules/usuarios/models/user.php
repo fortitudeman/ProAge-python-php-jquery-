@@ -3254,7 +3254,7 @@ class User extends CI_Model
     }
 
     public function getTotalPaiByAgent($agentId, $startDate, $end_date){
-        $sql = "SELECT SUM(pai_business) AS pai_total FROM payments WHERE agent_id = ? 
+        $sql = "SELECT SUM(pai_business) AS pai_total FROM payments WHERE product_group = 1 and agent_id = ? 
                 AND year_prime = 1 AND payment_date BETWEEN ? AND ?;";
         $q = $this->db->query($sql, array($agentId, $startDate, $end_date));
         return $q->row()->pai_total;
@@ -3262,7 +3262,7 @@ class User extends CI_Model
     }
 
     public function getTotalPaiByPolicy($policy, $startDate, $end_date){
-        $sql = "SELECT SUM(pai_business) AS pai_total FROM payments WHERE policy_number = ? 
+        $sql = "SELECT SUM(pai_business) AS pai_total FROM payments WHERE product_group = 1 and  policy_number = ? 
                 AND year_prime = 1 AND payment_date BETWEEN ? AND ?;";
         $q = $this->db->query($sql, array($policy, $startDate, $end_date));
         return $q->row()->pai_total;
