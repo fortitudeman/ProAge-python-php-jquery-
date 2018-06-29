@@ -1260,6 +1260,7 @@ $( document ).ready( function(){
 			'ramo' => 1,
 			'gerente' => '',
 			'agent' => '',
+            'prime_type' => 'amount',
 			'generacion' => '', // not sure if this should not be 1 instead
 			'agent_name' => '',
 			'policy_num' => '',

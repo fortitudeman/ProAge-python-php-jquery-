@@ -526,6 +526,12 @@ if ( ! function_exists('get_ot_data'))
 				)
 				$other_filters['agent'] = $_POST['agent'];
 
+            if ( isset($_POST['prime_type']) &&
+				( ($_POST['prime_type'] === '') || 
+				$CI->form_validation->is_natural_no_zero($_POST['prime_type']))
+				)
+				$other_filters['prime_type'] = $_POST['prime_type'];
+
 			if ( isset($_POST['patent_type']) &&
 				( ($_POST['patent_type'] === '') || 
 				 $CI->form_validation->is_natural_no_zero($_POST['patent_type']) )

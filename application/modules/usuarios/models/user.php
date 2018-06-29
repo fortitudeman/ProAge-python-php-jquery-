@@ -18,6 +18,7 @@ class User extends CI_Model
 {
 
     private $data = array();
+    //private $prime_type = $other_filters['prime_type'];
 
     private $insertId;
     private $agent_name_where_in = null;
@@ -3391,7 +3392,6 @@ class User extends CI_Model
 
     public function getPrima($agent_id = null, $filter = array())
     {
-
         return $this->_getPrima(TRUE, $agent_id, $filter);
     }
 
@@ -3410,12 +3410,11 @@ class User extends CI_Model
     {
         if (empty($agent_id) && $sum_requested)
             return 0;
-
         if ($sum_requested) {
             if ($agent_id && is_array($agent_id))
-                $this->db->select('SUM(amount) AS primas, SUM(amount * add_perc / 100 ) AS primas_plus, payments.agent_id as n_agent_id');
+                $this->db->select('SUM('.$filter[query][prime_type].') AS primas, SUM(amount * add_perc / 100 ) AS primas_plus, payments.agent_id as n_agent_id');
             else
-                $this->db->select('SUM(amount) AS primas, SUM(amount * add_perc / 100 ) AS primas_plus');
+                $this->db->select('SUM('.$filter[query][prime_type].') AS primas, SUM(amount * add_perc / 100 ) AS primas_plus');
         } else
             $this->db->select('payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name');
         $this->db->from('payments');
