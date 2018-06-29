@@ -67,7 +67,7 @@ try:
                             totalPai = second['totalPai']
                     
                     cursor.execute(
-                        "SELECT SUM(amount) as total FROM payments WHERE policy_number = %s", row["policy_number"])
+                        "SELECT SUM(amount) as total FROM payments WHERE policy_number = %s and year_prime = 1", row["policy_number"])
                     result_set = cursor.fetchall()
                     for second in result_set:
                         if second['total'] is not None:

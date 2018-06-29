@@ -3374,10 +3374,13 @@ class User extends CI_Model
         return $this->_getPrima(TRUE, $agent_id, $filter);
     }
 
-    public function getPrimaDetails($agent_id = null, $filter = array())
+    public function getPrimaDetails($agent_id = null, $filter = array(), $pop = false)
     {
-
-        return $this->_getPrima(FALSE, $agent_id, $filter);
+        if ($pop) {
+            return $this->_getPaiPop(FALSE, $agent_id, $filter);
+        }else{
+            return $this->_getPrima(FALSE, $agent_id, $filter);
+        }
     }
 
 // Common method for getting sum of prima (first param = TRUE) and details of prima (first param = FALSE)
@@ -3494,6 +3497,118 @@ class User extends CI_Model
         }
     }
 
+    private function _getPaiPop($sum_requested = TRUE, $agent_id = null,
+                               $filter = array(), $where = array('year_prime' => 1, 'valid_for_report' => 1))
+    {
+        if (empty($agent_id) && $sum_requested)
+            return 0;
+
+        if ($sum_requested) {
+            if ($agent_id && is_array($agent_id))
+                $this->db->select('SUM(amount) AS primas, SUM(amount * add_perc / 100 ) AS primas_plus, payments.agent_id as n_agent_id');
+            else
+                $this->db->select('SUM(amount) AS primas, SUM(amount * add_perc / 100 ) AS primas_plus');
+        } else
+            $this->db->select(' payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name');
+        $this->db->from('payments');
+        $this->db->join('agents', 'agents.id=payments.agent_id');
+        $this->db->join('users', 'users.id=agents.user_id');
+        //      $where = array( 'year_prime' => 1, 'valid_for_report' => 1);
+        if ($agent_id && !is_array($agent_id))
+            $where['agent_id'] = $agent_id;
+
+        $this->db->where($where);
+        $this->db->where('pai_business !=',0);
+        if (!empty($filter)) {
+
+            if (isset($filter['query']['ramo']) and !empty($filter['query']['ramo'])) {
+
+                $this->db->where('product_group', $filter['query']['ramo']);
+            }
+
+            /*
+            <option value="1">Mes</option>
+            <option value="2">Trimestre (Vida) o cuatrimestre (GMM)</option>
+            <option value="3">Año</option>
+            */
+            if (isset($filter['query']['periodo']) and !empty($filter['query']['periodo'])) {
+                if ($filter['query']['periodo'] == 1) {
+                    $year = date('Y');
+                    $month = date('m');
+                    $next_month = date('Y-m', mktime(0, 0, 0, date("m") + 1, date("d"), date("Y"))) . '-01';
+                    $this->db->where(array(
+                        'payment_date >= ' => $year . '-' . $month . '-01',
+                        'payment_date < ' => $next_month,
+                    ));
+                }
+                if ($filter['query']['periodo'] == 2) {
+                    $this->load->helper('tri_cuatrimester');
+                    if (isset($filter['query']['ramo']) and $filter['query']['ramo'] == 2 or $filter['query']['ramo'] == 3)
+                        $begin_end = get_tri_cuatrimester($this->cuatrimestre(), 'cuatrimestre');
+                    else
+                        $begin_end = get_tri_cuatrimester($this->trimestre(), 'trimestre');
+
+                    if (isset($begin_end) && isset($begin_end['begind']) && isset($begin_end['end']))
+                        $this->db->where(array(
+                            'payment_date >= ' => $begin_end['begind'],
+                            'payment_date <=' => $begin_end['end']));
+                }
+                if ($filter['query']['periodo'] == 3) {
+                    $year = date('Y');
+                    $this->db->where(array(
+                        'payment_date >= ' => $year . '-01-01',
+                        'payment_date <= ' => $year . '-12-31 23:59:59'
+                    ));
+                }
+                if ($filter['query']['periodo'] == 4) {
+                    $from = $this->custom_period_from;
+                    $to = $this->custom_period_to;
+                    if (($from === FALSE) || ($to === FALSE)) {
+                        $from = date('Y-m-d');
+                        $to = $from;
+                    }
+                    $this->db->where(array(
+                        'payment_date >= ' => $from . ' 00:00:00',
+                        'payment_date <=' => $to . ' 23:59:59'));
+                }
+            }
+
+            if (!$agent_id && isset($filter['query']['agent_name']) and !empty($filter['query']['agent_name'])) {
+                $this->_get_agent_filter_where($filter['query']['agent_name']);
+                if ($this->agent_name_where_in)
+                    $this->db->where_in('agent_id', $this->agent_name_where_in);
+            }
+        }
+        if ($agent_id && is_array($agent_id))
+            $this->db->where_in('agent_id', $agent_id);
+        if ($sum_requested && $agent_id && is_array($agent_id))
+            $this->db->group_by('payments.agent_id');
+
+        $query = $this->db->get();
+
+        if ($sum_requested) {
+            if ($query->num_rows() == 0) return 0;
+
+            if ($agent_id && !is_array($agent_id)) {
+                foreach ($query->result() as $row) {
+                    $prima = (float)$row->primas + (float)$row->primas_plus;
+                }
+            } else {
+                $prima = array();
+                foreach ($query->result() as $row) {
+                    $prima[$row->n_agent_id] = (float)$row->primas + (float)$row->primas_plus;
+                }
+            }
+            $query->free_result();
+            return $prima;
+        } else {
+        //          if ($agent_id && is_array($agent_id))
+        //              $this->db->where_in('agent_id', $agent_id);
+
+            $result = $this->complement_payments($query);
+            return $result;
+        }
+    }
     private function complement_payments(&$query = null)
     {
         $result = array();
