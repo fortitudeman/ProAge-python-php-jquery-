@@ -1305,7 +1305,9 @@ $( document ).ready( function(){
 			if ( isset($_POST['activity_view']) && 
 				(($_POST['activity_view'] == 'normal') || ($_POST['activity_view'] != 'efectividad')) )
 				$filters_to_save['activity_view'] = $_POST['activity_view'];
-
+			if (isset($_POST['query']['prime_type'])) {
+				$filters_to_save['prime_type'] = $_POST['query']['prime_type'];
+			}
 			if (isset($_POST['coordinator_name']))
 				$filters_to_save['coordinators'] = extract_coordinator_name($_POST['coordinator_name']);
 			$this->custom_filters->set_filters_to_save($filters_to_save);
