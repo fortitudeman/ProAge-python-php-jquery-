@@ -473,7 +473,7 @@ implode(', ', $ramo_tramite_types) . '
 		$this->misc_filters['agent_name'] = $this->agent->agent_id;
 
 		$agent_array = array();
-		$other_filters = array();
+		$other_filters = array('prime_type' => 'amount');
 		$default_week = array();
 
 		$filter = $this->_init_filter();
@@ -930,7 +930,8 @@ implode(', ', $ramo_tramite_types) . '
 	{
 		$default_filter = get_filter_period();
 		$this->other_filters = array(
-			'ramo' => 1);
+			'ramo' => 1,
+			'prime_type' => 'amount');
 		get_generic_filter($this->other_filters, array());
 		$filter = array('ramo' => 1, 'periodo' => get_filter_period());
 		if (count($_POST))
@@ -945,6 +946,9 @@ implode(', ', $ramo_tramite_types) . '
 				$filter['periodo'] = $_POST['query']['periodo'];
 			}
 			$filters_to_save = array();
+			if (isset($_POST['query']['prime_type'])) {
+				$filters_to_save['prime_type'] = $_POST['query']['prime_type'];
+			}
 			if ( isset($_POST['query']['ramo']) && $this->form_validation->is_natural_no_zero($_POST['query']['ramo']) &&
 				($_POST['query']['ramo'] <= 3) )
 			{
