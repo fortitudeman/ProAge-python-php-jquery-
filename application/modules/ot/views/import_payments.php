@@ -184,8 +184,7 @@
 							<div class="controls">
 								<select name="product_type_delete" class="required" id="product-type-delete" style="width: 8em">
                                 <option value="">Seleccione</option>
-                                <option value="1">Vida - Previo</option>
-                                <option value="4">Vida - SELO</option>
+                                <option value="1">Vida</option>
                                 <option value="2">GMM</option>
                                 <!--<option value="3">Auto</option>-->
 								<?php //if( isset( $products ) and !empty( $products ) ) echo $products; ?>
