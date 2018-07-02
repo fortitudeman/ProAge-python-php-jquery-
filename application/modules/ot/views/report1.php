@@ -42,7 +42,9 @@ $popup_segment = $is_director_module ? 'director' : 'ot';
     
     $prime_tag_array = array('amount' => 'Primas<br>Pagadas','allocated_prime' => 'Primas <br> para Ubicar', 'bonus_prime' => 'Primas para <br> pago de Bono');
     $prime_tag = $prime_tag_array[$_POST['query']['prime_type']];
-    echo $prime_tag;
+
+    if (empty($_POST['query']['prime_type']))
+        $prime_tag = $prime_tag_array['amount'];
 //    $tata = json_encode($tata);
 	if (is_array($tata))
 		$tata = json_encode($tata);
