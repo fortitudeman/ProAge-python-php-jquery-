@@ -3408,13 +3408,16 @@ class User extends CI_Model
     private function _getPrima($sum_requested = TRUE, $agent_id = null,
                                $filter = array(), $where = array('year_prime' => 1, 'valid_for_report' => 1))
     {
+        $prime_requested = $filter[query][prime_type];
+        if (empty($filter[query][prime_type]))
+            $prime_requested = 'amount';
         if (empty($agent_id) && $sum_requested)
             return 0;
         if ($sum_requested) {
             if ($agent_id && is_array($agent_id))
-                $this->db->select('SUM('.$filter[query][prime_type].') AS primas, SUM(amount * add_perc / 100 ) AS primas_plus, payments.agent_id as n_agent_id');
+                $this->db->select('SUM('.$prime_requested.') AS primas, SUM(amount * add_perc / 100 ) AS primas_plus, payments.agent_id as n_agent_id');
             else
-                $this->db->select('SUM('.$filter[query][prime_type].') AS primas, SUM(amount * add_perc / 100 ) AS primas_plus');
+                $this->db->select('SUM('.$prime_requested.') AS primas, SUM(amount * add_perc / 100 ) AS primas_plus');
         } else
             $this->db->select('payments.*, users.name as first_name, users.lastnames as last_name, users.company_name as company_name');
         $this->db->from('payments');
