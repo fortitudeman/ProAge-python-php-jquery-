@@ -7,6 +7,7 @@ $base_url = base_url();
 <script type="text/javascript">
 	var currentModule = "";
 <?php
+    $prime_requested = $_POST['query']['prime_type'];
 	$segments = $this->uri->rsegment_array();
 	if (isset($segments[1]))
 		echo 'var currentModule = "' . $segments[1] . '";';
@@ -134,9 +135,9 @@ $ignore_image = '
                     <td style="text-align: right; padding-right: 2.5em"><?php echo $value->year_prime ?></td>
         <?php endif ?>
 
-        			<td class="prima-value" style="text-align: right; padding-right: 2.5em"><?php echo number_format($value->amount * (1 + ($value->add_perc / 100)), 2);?></td>
+        			<td class="prima-value" style="text-align: right; padding-right: 2.5em"><?php echo number_format($value->$prime_requested * (1 + ($value->add_perc / 100)), 2);?></td>
         			<td style="text-align: right; padding-right: 2.5em">
-        <span style="display: none" class="ori-prima"><?php echo $value->amount; ?></span>
+        <span style="display: none" class="ori-prima"><?php echo $value->$prime_requested; ?></span>
         <span class="add-perc-display"><?php echo 100 + $value->add_perc;?></span>
         &nbsp;
         <a href="javascript: void(0);" class="add-perc-show"><i class="icon-edit" title="Editar"></i></a>
@@ -160,7 +161,7 @@ $ignore_image = '
         echo $delete_image;
         ?>
         <form class="payment_detail_form" method="post" action="#">
-        <input type="hidden" name="amount" value="<?php echo $value->amount ?>" />
+        <input type="hidden" name="amount" value="<?php echo $value->$prime_requested ?>" />
         <input type="hidden" name="payment_date" value="<?php echo $value->payment_date ?>" />
         <input type="hidden" name="policy_number" value="<?php echo $value->policy_number ?>" />
         <input type="hidden" class="payment_action" name="payment_action" value="" />
@@ -233,9 +234,9 @@ $ignore_image = '
                     <td style="text-align: right; padding-right: 2.5em"><?php echo $value->year_prime ?></td>
         <?php endif ?>
 
-                    <td class="prima-value" style="text-align: right; padding-right: 2.5em"><?php echo number_format($value->amount * (1 + ($value->add_perc / 100)), 2);?></td>
+                    <td class="prima-value" style="text-align: right; padding-right: 2.5em"><?php echo number_format($value->$prime_requested * (1 + ($value->add_perc / 100)), 2);?></td>
                     <td style="text-align: right; padding-right: 2.5em">
-        <span style="display: none" class="ori-prima"><?php echo $value->amount; ?></span>
+        <span style="display: none" class="ori-prima"><?php echo $value->$prime_requested; ?></span>
         <span class="add-perc-display"><?php echo 100 + $value->add_perc;?></span>
         &nbsp;
         <a href="javascript: void(0);" class="add-perc-show"><i class="icon-edit" title="Editar"></i></a>
@@ -259,7 +260,7 @@ $ignore_image = '
         echo $delete_image;
         ?>
         <form class="payment_detail_form" method="post" action="#">
-        <input type="hidden" name="amount" value="<?php echo $value->amount ?>" />
+        <input type="hidden" name="amount" value="<?php echo $value->$prime_requested ?>" />
         <input type="hidden" name="payment_date" value="<?php echo $value->payment_date ?>" />
         <input type="hidden" name="policy_number" value="<?php echo $value->policy_number ?>" />
         <input type="hidden" class="payment_action" name="payment_action" value="" />
