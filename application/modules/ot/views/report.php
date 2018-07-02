@@ -70,7 +70,6 @@ $selected_period = get_filter_period();
                             </form>
 
                             <?php
-                            print_r($data);
                             if (empty($_POST) or isset($_POST['query']['ramo']) and $_POST['query']['ramo'] != 3) { 
                                 
                                 if(!empty($_POST) and $_POST['query']['ramo']==1) {
