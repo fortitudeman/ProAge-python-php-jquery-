@@ -21,6 +21,7 @@
         <a href="javascript: void(0);" tabindex="1" id="month-select">Mes actual</a><br />
 <?php if ($ramo <= 3) : ?>
         <a href="javascript: void(0);" tabindex="2" id="tri-cuatri-select"><?php if ($ramo == 1) echo 'Trimestre'; else echo 'Cuatrimestre'; ?> actual</a><br />
+        <a href="javascript: void(0);" tabindex="8" id="lastTrimester"><?php if ($ramo == 1) echo 'Trimestre'; else echo 'Cuatrimestre'; ?> Anterior</a><br />
 <?php else : ?>
         <a href="javascript: void(0);" tabindex="6" id="tri-select">Trimestre actual</a><br />
         <a href="javascript: void(0);" tabindex="7" id="cuatri-select">Cuatrimestre actual</a><br />
