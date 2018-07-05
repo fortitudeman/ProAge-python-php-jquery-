@@ -315,7 +315,7 @@ $( document ).ready(function() {
 	$("#lastTrimester").bind("click", function(e) {
 		
 		$("#cust_period_from").val('2018-03-01');
-		$("#cust_period_to").val('2018-06-01');
+		$("#cust_period_to").val('2018-06-30');
 		defFrom = $("#cust_period_from").val();
 		defTo = $("#cust_period_to").val();
 	});
