@@ -44,7 +44,7 @@ cursor = db.cursor()
 sql = "SELECT * FROM payments WHERE year_prime = 1 and payment_date between '%s-%s-01' and LAST_DAY('%s-%s-01')"
 update = "UPDATE payments SET pai_business = %s WHERE pay_tbl_id = %s"
 totalAmount = ("SELECT SUM(amount) as total FROM payments WHERE policy_number = %s and year_prime = 1 and "
-    "BETWEEN( SELECT payment_date as fecha FROM payments WHERE policy_number= %s ORDER BY payment_date ASC LIMIT 1) AND %s")
+    "payment_date BETWEEN (SELECT payment_date as fecha FROM payments WHERE policy_number= %s ORDER BY payment_date ASC LIMIT 1) AND %s")
 
 updatePai = dict()
 years = [2014, 2015, 2016, 2017,  2018]
