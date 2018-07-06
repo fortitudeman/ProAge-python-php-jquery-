@@ -43,6 +43,9 @@ cur = db.cursor()
 cursor = db.cursor()
 sql = "SELECT * FROM payments WHERE year_prime = 1 and payment_date between '%s-%s-01' and LAST_DAY('%s-%s-01')"
 update = "UPDATE payments SET pai_business = %s WHERE pay_tbl_id = %s"
+totalAmount = ("SELECT SUM(amount) as total FROM payments WHERE policy_number = %s and year_prime = 1 and "
+    "BETWEEN( SELECT payment_date as fecha FROM payments WHERE policy_number= %s ORDER BY payment_date ASC LIMIT 1) AND %s")
+
 updatePai = dict()
 years = [2014, 2015, 2016, 2017,  2018]
 months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
@@ -66,8 +69,9 @@ try:
                         if second['totalPai'] is not None:
                             totalPai = second['totalPai']
                     
-                    cursor.execute(
-                        "SELECT SUM(amount) as total FROM payments WHERE policy_number = %s and year_prime = 1", row["policy_number"])
+                    amountValues = (
+                        row["policy_number"], row["policy_number"], row["payment_date"])
+                    cursor.execute(totalAmount, amountValues)
                     result_set = cursor.fetchall()
                     for second in result_set:
                         if second['total'] is not None:
