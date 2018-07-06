@@ -51,6 +51,7 @@ years = [2014, 2015, 2016, 2017,  2018]
 months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 totalRows = 0
 try:
+    cur.execute("UPDATE paymentss SET pai_business = 0")
     for year in years:
         print("Year: %s", year)
         for month in months:
