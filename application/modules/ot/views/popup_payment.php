@@ -64,6 +64,7 @@ $ignore_image = '
             <th>Plazo</th>
 
             <th>Agente importado</th>
+            <th>Generación de agente</th>
             <th>Folio importado</th>
 <?php if ($is_cartera): ?>
             <th>Año</th>
@@ -73,6 +74,10 @@ $ignore_image = '
             <th style="text-align: right; padding-right: 3em">Prima para <br>pago de bono</th>
             <!--<th style="text-align: right; padding-right: 3em">% para pago de bono (en %)</th>-->
             <th style="text-align: right; padding-right: 2em">Negocio</th>
+            <?php if ($access_update){
+                echo '<th style="text-align: right; padding-right: 2em"></th>';
+            }
+            ?>
         </tr>
     </thead>
     <tbody>
@@ -230,6 +235,7 @@ $ignore_image = '
                     <td><?php echo $value->plazo ? $value->plazo : 'No disponible'?></td>
 
                     <td><?php echo $value->imported_agent_name ? $value->imported_agent_name : 'No disponible'?></td>
+                    <td><?php echo $value->agent_generation ? $value->agent_generation : 'No disponible'?></td>
                     <td><?php echo $value->imported_folio ? $value->imported_folio : 'No disponible'?></td>
 
         <?php if ($is_cartera): ?>
@@ -259,6 +265,7 @@ $ignore_image = '
             echo "&nbsp;&nbsp;&nbsp;&nbsp;";
         else:
         if ( $access_update && $value->valid_for_report ) :
+            echo '<td style="width: 110px; text-align: right; padding-right: 2.5em">';
             echo $ignore_image;
         endif;
         echo $delete_image;
