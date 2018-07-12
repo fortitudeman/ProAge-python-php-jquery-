@@ -4434,6 +4434,18 @@ AND
         $result = $query->row();
         return $result;
     }
+
+    public function generationByAgentId($date,$agentId){
+        $sql = "SELECT (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS('$date')-TO_DAYS(connection_date)), '%Y')+0) <= 1 then 'Generación 1'
+						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS('$date')-TO_DAYS(connection_date)), '%Y')+0) = 2 then 'Generación 2'
+						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS('$date')-TO_DAYS(connection_date)), '%Y')+0) = 3 then 'Generación 3'
+						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS('$date')-TO_DAYS(connection_date)), '%Y')+0) = 4 then 'Generación 4'
+						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS('$date')-TO_DAYS(connection_date)), '%Y')+0) >= 5 then 'Consolidado'
+						  end)  AS generation FROM agents where id = '$agentId';";
+        $q = $this->db->query($sql);
+        return $q->row()->generation;
+    }
+
 }
 
 ?>

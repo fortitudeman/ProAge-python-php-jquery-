@@ -146,6 +146,15 @@ DROP EVENT updateGenerationsAgentsGMM;
 DROP EVENT updateGenerationsAgentsVida;
 
 -- Alter statement
-ALTER TABLE `proages`.`agents`
+ALTER TABLE `agents`
 ADD COLUMN `generation_gmm` INT(11) NULL,
 ADD COLUMN `generation_vida` INT(11) NULL;
+
+--New changes for tables 
+ALTER TABLE `payments` 
+DROP COLUMN `agent_generation_gmm`,
+CHANGE COLUMN `agent_generation_vida` `agent_generation` VARCHAR(45) NULL DEFAULT NULL ;
+
+ALTER TABLE `policies_vs_users` 
+DROP COLUMN `agent_generation_gmm`,
+CHANGE COLUMN `agent_generation_vida` `agent_generation` VARCHAR(45) NULL DEFAULT NULL ;

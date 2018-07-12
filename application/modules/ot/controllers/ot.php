@@ -1649,7 +1649,7 @@ public function import_payments()
                         if ($item->year_prime == 1){
                             $pai = $this->user->create_negocio_pai($item->uid, $product, $stringed_payment_date,$item->amount);
                         }
-                        
+                        $generation = $this->user->generationByAgentId($stringed_payment_date, $item->agent_id);
 						$payment = array(
 							'product_group' => $product,
 							'agent_id' => $item->agent_id,
@@ -1665,6 +1665,7 @@ public function import_payments()
 							'import_date' => $item->import_date,
 							'imported_agent_name' => $item->imported_agent_name,
 							'imported_folio' => $item->imported_folio,
+							'agent_generation' => $generation,
                             'allocated_prime' => $item->allocated_prime,
                             'bonus_prime' => $item->bonus_prime
 						);
