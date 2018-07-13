@@ -379,8 +379,9 @@
 										'policy_id' => $policyId,
 										'percentage' => $_POST['porcentaje'][$i],
 										'since' => date( 'Y-m-d H:i:s' ),
-										'agent_generation_vida' => ($this->input->post( 'ramo' ) == 1) ? $this->user->getGenerationByAgentId($_POST['agent'][$i],false) : NULL,
-										'agent_generation_gmm' => ($this->input->post( 'ramo' ) == 2) ? $this->user->getGenerationByAgentId($_POST['agent'][$i],false) : NULL
+										'agent_generation' => ($this->input->post( 'product_id' ) == 1) ? 
+											$this->user->generationByAgentIdVida($this->input->post('creation_date'),$_POST['agent'][$i]) : 
+											$this->user->generationByAgentIdGmm($this->input->post('creation_date'),$_POST['agent'][$i])
 									);
 
 								if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false )
@@ -1649,7 +1650,6 @@ public function import_payments()
                         if ($item->year_prime == 1){
                             $pai = $this->user->create_negocio_pai($item->uid, $product, $stringed_payment_date,$item->amount);
                         }
-                        $generation = $this->user->generationByAgentId($stringed_payment_date, $item->agent_id);
 						$payment = array(
 							'product_group' => $product,
 							'agent_id' => $item->agent_id,
@@ -1665,7 +1665,9 @@ public function import_payments()
 							'import_date' => $item->import_date,
 							'imported_agent_name' => $item->imported_agent_name,
 							'imported_folio' => $item->imported_folio,
-							'agent_generation' => $generation,
+							'agent_generation' => ($this->input->post( 'ramo' ) == 1) ? 
+								$this->user->generationByAgentIdVida($stringed_payment_date,$item->agent_id) : 
+								$this->user->generationByAgentIdGmm($stringed_payment_date,$item->agent_id),
                             'allocated_prime' => $item->allocated_prime,
                             'bonus_prime' => $item->bonus_prime
 						);

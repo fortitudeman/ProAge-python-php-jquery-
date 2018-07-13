@@ -1859,21 +1859,12 @@ implode(', ', $ramo_tramite_types) . '
 			echo $result;
 			return;
 		}
-		$generation_vida = NULL;
-		$generation_gmm = NULL;
 		$now = date( 'Y-m-d H:i:s' );
 		$product_group = $this->input->post('product_group');
 		$parts = explode('[ID: ', $this->input->post('agent_id'));
 		$agent_id = str_replace(']', '', $parts[1]);
 		$valid_for_report = $this->input->post('valid_for_report');
 		$payment_date = $this->input->post('payment_date');
-		if ($product_group == 1){
-			$type = 'national';
-			$generation_vida = $this->user->getGenerationByAgentId($agent_id);
-		}else{
-			$type = 'provincial';
-			$generation_gmm = $this->user->getGenerationByAgentId($agent_id,false);
-		}
 		$amount = $this->input->post('amount');
 
 		$folio = $this->user->generic_get('agent_uids',
@@ -1899,12 +1890,11 @@ implode(', ', $ramo_tramite_types) . '
 			'import_date' => $payment_date,
 			'imported_agent_name' => trim($parts[0]),
 			'imported_folio' => isset($folio[0]) ? $folio[0]->uid : '',
-			'agent_generation_vida' => $generation_vida,
-			'agent_generation_gmm' => $generation_gmm
+			'agent_generation' => ($product_group == 1) ? 
+				$this->user->generationByAgentIdVida($payment_date,$agent_id) : 
+				$this->user->generationByAgentIdGmm($payment_date,$agent_id)
 		);
         
-        print_r($payment);
-        exit();
 		$user_id = $this->user->getUserIdByAgentId( $agent_id);
 
 		if ($user_id && ($result = $this->work_order->create( 'payments', $payment )))

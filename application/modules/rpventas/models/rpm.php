@@ -193,7 +193,7 @@ class rpm extends CI_Model{
 		        case 'generacion_1':
 		            $sql = "SELECT SUM(py.amount) as total
 		                    FROM payments AS py
-		                    WHERE py.agent_generation_vida = 'Generación 1'
+		                    WHERE py.agent_generation = 'Generación 1'
 		                    AND py.product_group = ?
 		                    AND py.payment_date like ?
 		                    AND py.agent_id = ?";
@@ -202,7 +202,7 @@ class rpm extends CI_Model{
 		        case 'generacion_2':
 		            $sql = "SELECT SUM(py.amount) as total
 		                    FROM payments AS py
-		                    WHERE py.agent_generation_vida = 'Generación 2'
+		                    WHERE py.agent_generation = 'Generación 2'
 		                    AND py.product_group = ?
 		                    AND py.payment_date like ?
 		                    AND py.agent_id = ?";
@@ -211,7 +211,7 @@ class rpm extends CI_Model{
 		        case 'generacion_3':
 		            $sql = "SELECT SUM(py.amount) as total
 		                    FROM payments AS py
-		                    WHERE py.agent_generation_vida = 'Generación 3'
+		                    WHERE py.agent_generation = 'Generación 3'
 		                    AND py.product_group = ?
 		                    AND py.payment_date like ?
 		                    AND py.agent_id = ?";
@@ -220,7 +220,7 @@ class rpm extends CI_Model{
 		        case 'generacion_4':
 		            $sql = "SELECT SUM(py.amount) as total
 		                    FROM payments AS py
-		                    WHERE py.agent_generation_vida = 'Generación 4'
+		                    WHERE py.agent_generation = 'Generación 4'
 		                    AND py.product_group = ?
 		                    AND py.payment_date like ?
 		                    AND py.agent_id = ?";
@@ -229,7 +229,7 @@ class rpm extends CI_Model{
 		        case 'consolidado':
 		            $sql = "SELECT SUM(py.amount) as total
 		                    FROM payments AS py
-		                    WHERE py.agent_generation_vida = 'Consolidado'
+		                    WHERE py.agent_generation = 'Consolidado'
 		                    AND py.product_group = ?
 		                    AND py.payment_date like ?
 		                    AND py.agent_id = ?";
@@ -241,7 +241,7 @@ class rpm extends CI_Model{
 		        case 'generacion_1':
 		            $sql = "SELECT SUM(py.amount) as total
 		                    FROM payments AS py
-		                    WHERE py.agent_generation_vida = 'Generación 1'
+		                    WHERE py.agent_generation = 'Generación 1'
 		                    AND py.product_group = ?
 		                    AND py.payment_date like ?";
 		            $q = $this->db->query($sql, array($ramo, $year."%"));
@@ -249,7 +249,7 @@ class rpm extends CI_Model{
 		        case 'generacion_2':
 		            $sql = "SELECT SUM(py.amount) as total
 		                    FROM payments AS py
-		                    WHERE py.agent_generation_vida = 'Generación 2'
+		                    WHERE py.agent_generation = 'Generación 2'
 		                    AND py.product_group = ?
 		                    AND py.payment_date like ?";
 		            $q = $this->db->query($sql, array($ramo, $year."%"));
@@ -257,7 +257,7 @@ class rpm extends CI_Model{
 		        case 'generacion_3':
 		            $sql = "SELECT SUM(py.amount) as total
 		                    FROM payments AS py
-		                    WHERE py.agent_generation_vida = 'Generación 3'
+		                    WHERE py.agent_generation = 'Generación 3'
 		                    AND py.product_group = ?
 		                    AND py.payment_date like ?";
 		            $q = $this->db->query($sql, array($ramo, $year."%"));
@@ -265,7 +265,7 @@ class rpm extends CI_Model{
 		        case 'generacion_4':
 		            $sql = "SELECT SUM(py.amount) as total
 		                    FROM payments AS py
-		                    WHERE py.agent_generation_vida = 'Generación 4'
+		                    WHERE py.agent_generation = 'Generación 4'
 		                    AND py.product_group = ?
 		                    AND py.payment_date like ?";
 		            $q = $this->db->query($sql, array($ramo, $year."%"));
@@ -273,7 +273,7 @@ class rpm extends CI_Model{
 		        case 'consolidado':
 		            $sql = "SELECT SUM(py.amount) as total
 		                    FROM payments AS py
-		                    WHERE py.agent_generation_vida = 'Consolidado'
+		                    WHERE py.agent_generation = 'Consolidado'
 		                    AND py.product_group = ?
 		                    AND py.payment_date like ?";
 		            $q = $this->db->query($sql, array($ramo, $year."%"));
@@ -415,19 +415,19 @@ class rpm extends CI_Model{
 
         switch ($filter["generacion"]) {
             case 'Generacion 1':
-                $whered .= ($filter["ramo"] == 1) ? " AND py.agent_generation_vida = 'Generación 1'" : " AND py.agent_generation_gmm = 'Generación 1'";
+                $whered .= " AND py.agent_generation = 'Generación 1'";
                 break;
             case 'Generacion 2':
-                $whered .= ($filter["ramo"] == 1) ? " AND py.agent_generation_vida = 'Generación 2'" : " AND py.agent_generation_gmm = 'Generación 2'";
+                $whered .= " AND py.agent_generation = 'Generación 2'";
                 break;
             case 'Generacion 3':
-                $whered .= ($filter["ramo"] == 1) ? " AND py.agent_generation_vida = 'Generación 3'" : " AND py.agent_generation_gmm = 'Generación 3'";
+                $whered .= " AND py.agent_generation = 'Generación 3'";
                 break;
             case 'Generacion 4':
-                $whered .= ($filter["ramo"] == 1) ? " AND py.agent_generation_vida = 'Generación 4'" : " AND py.agent_generation_gmm = 'Generación 4'";
+                $whered .= " AND py.agent_generation = 'Generación 4'";
                 break;
             case 'Consolidado':
-                $whered .= ($filter["ramo"] == 1) ? " AND py.agent_generation_vida = 'Consolidado'" : " AND py.agent_generation_gmm = 'Consolidado'";
+                $whered .= " AND py.agent_generation = 'Consolidado'" ;
                 break;
         }
 
