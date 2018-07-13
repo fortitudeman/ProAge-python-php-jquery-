@@ -56,8 +56,8 @@
 	'product_id' => 'Ramo',
 //	'name' => 'Asegurado',
 	'name' => 'Nombre del agente importado',
-    'allocated_prime' => 'Prima a Ubicar',
-    'bonus_prime' => 'Prima Pago Bonos',
+    'allocated_prime' => 'Prima a ubicar',
+    'bonus_prime' => 'Prima para pago de bono',
   );
   $fields_not_shown = array('wathdo', 'imported_folio', 'imported_agent_name', 'import_date', '');
   $is_posted = (count($_POST) > 0);

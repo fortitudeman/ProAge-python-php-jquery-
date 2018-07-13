@@ -386,11 +386,13 @@ class Director extends CI_Controller {
 		$base_url = base_url();
 
 		$report_lines = '';
-
+		$imported_date_requested = "amount";
 		$ramo = 1;
 		if (isset($this->query_filters['query']) && isset($this->query_filters['query']['ramo']))
 			$ramo = $this->query_filters['query']['ramo'];
-		$imported_date = $this->work_order->getLastPaymentImportedDate($ramo);
+		if (isset($this->query_filters['query']) && isset($this->query_filters['query']['prime_type']))
+			$imported_date_requested = $this->query_filters['query']['prime_type'];
+		$imported_date = $this->work_order->getLastPaymentImportedDate($ramo, $imported_date_requested);
 
 		if ($page == 'sales_planning')
 		{

@@ -64,13 +64,20 @@ $ignore_image = '
             <th>Plazo</th>
 
             <th>Agente importado</th>
-            <th>Folio importado</th>
+            <th style="text-align: right; padding-right: 3em">Generación de agente</th>
+            <th style="text-align: right; padding-right: 2em">Folio importado</th>
 <?php if ($is_cartera): ?>
             <th>Año</th>
 <?php endif ?>
             <th style="text-align: right; padding-right: 3em">Prima (en $)</th>
-            <th style="text-align: right; padding-right: 3em">% para pago de bono (en %)</th>
-            <th style="text-align: right; padding-right: 7em">Negocio</th>
+            <th style="text-align: right; padding-right: 3em">Prima a ubicar</th>
+            <th style="text-align: right; padding-right: 3em">Prima para <br>pago de bono</th>
+            <!--<th style="text-align: right; padding-right: 3em">% para pago de bono (en %)</th>-->
+            <th style="text-align: right; padding-right: 2em">Negocio</th>
+            <?php if ($access_update){
+                echo '<th style="text-align: right; padding-right: 2em"></th>';
+            }
+            ?>
         </tr>
     </thead>
     <tbody>
@@ -228,25 +235,28 @@ $ignore_image = '
                     <td><?php echo $value->plazo ? $value->plazo : 'No disponible'?></td>
 
                     <td><?php echo $value->imported_agent_name ? $value->imported_agent_name : 'No disponible'?></td>
-                    <td><?php echo $value->imported_folio ? $value->imported_folio : 'No disponible'?></td>
+                    <td style="text-align: right; padding-right: 3em"><?php echo $value->agent_generation ? $value->agent_generation : 'No disponible'?></td>
+                    <td style="text-align: right; padding-right: 2em"><?php echo $value->imported_folio ? $value->imported_folio : 'No disponible'?></td>
 
         <?php if ($is_cartera): ?>
                     <td style="text-align: right; padding-right: 2.5em"><?php echo $value->year_prime ?></td>
         <?php endif ?>
 
-                    <td class="prima-value" style="text-align: right; padding-right: 2.5em"><?php echo number_format($value->$prime_requested * (1 + ($value->add_perc / 100)), 2);?></td>
-                    <td style="text-align: right; padding-right: 2.5em">
+                    <td class="prima-value" style="text-align: right; padding-right: 1.5em"><?php echo number_format($value->amount * (1 + (0 / 100)), 2, '.', ',')?></td>
+                    <td class="prima-value" style="text-align: right; padding-right: 1.5em"><?php echo number_format($value->allocated_prime, 2, '.', ',') ?: '0' ?></td>
+                    <td class="prima-value" style="text-align: right; padding-right: 1.5em"><?php echo number_format($value->bonus_prime, 2, '.', ',') ?: '0' ?></td>
+                    <!--<td style="text-align: right; padding-right: 2.5em">-->
         <span style="display: none" class="ori-prima"><?php echo $value->$prime_requested; ?></span>
-        <span class="add-perc-display"><?php echo 100 + $value->add_perc;?></span>
+        <!--<span class="add-perc-display"><//?php echo 100 + $value->add_perc;?></span>
         &nbsp;
         <a href="javascript: void(0);" class="add-perc-show"><i class="icon-edit" title="Editar"></i></a>
         <form class="add-perc-edit" style="display: inline; white-space: nowrap;">
-        <input class="form-control input-sm perc-value" max="999" step="1" type="number" maxlength="3" style="font-size: 1em; width: 3.5em;" value="<?php echo 100 + $value->add_perc;?>">
+        <input class="form-control input-sm perc-value" max="999" step="1" type="number" maxlength="3" style="font-size: 1em; width: 3.5em;" value="<//?php echo 100 + $value->add_perc;?>">
         <a href="javascript: void(0);" class="add-perc-ok"><i class="icon-ok" title="OK"></i></a>
 
-        <input class="add_perc_real" name="add_perc[<?php echo $value->pay_tbl_id ?>]" class="form-control input-sm" max="999" step="1" type="hidden" maxlength="3" style="font-size: 1em; width: 3.5em;" value="<?php echo $value->add_perc;?>">
+        <input class="add_perc_real" name="add_perc[<//?php echo $value->pay_tbl_id ?>]" class="form-control input-sm" max="999" step="1" type="hidden" maxlength="3" style="font-size: 1em; width: 3.5em;" value="<?php echo $value->add_perc;?>">
 
-        </form>
+        </form>-->
                     </td>
                     <td style="width: 110px; text-align: right; padding-right: 2.5em">
         <span style="padding-left: 2.5em; padding-right: 1.5em; text-align: right;"><?php echo $value->business;?></span>
@@ -255,6 +265,7 @@ $ignore_image = '
             echo "&nbsp;&nbsp;&nbsp;&nbsp;";
         else:
         if ( $access_update && $value->valid_for_report ) :
+            echo '<td style="width: 110px; text-align: right; padding-right: 2.5em">';
             echo $ignore_image;
         endif;
         echo $delete_image;

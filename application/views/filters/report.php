@@ -52,9 +52,9 @@ $base_url = base_url();
                                             </th>
                                             <th>
                                                 <select id="prime_type" name="query[prime_type]" class="select2" style="width:180px;" onchange="this.form.submit();">
-                                                    <option value="amount" <?php if (!$other_filters['prime_type'] || ($other_filters['prime_type'] == "amount")) echo 'selected="selected"' ?>>Primas Pagadas</option>
-                                                    <option value="allocated_prime" <?php if ($other_filters['prime_type'] == "allocated_prime") echo 'selected="selected"' ?>>Prima a Ubicar</option>
-                                                    <option value="bonus_prime" <?php if ($other_filters['prime_type'] == "bonus_prime") echo 'selected="selected"' ?>>Prima para pago de bono</option>
+                                                    <option value="amount" <?php if (!$other_filters['prime_type'] || ($other_filters['prime_type'] == "amount")) echo 'selected="selected"' ?>>Primas totales</option>
+                                                    <option value="allocated_prime" <?php if ($other_filters['prime_type'] == "allocated_prime") echo 'selected="selected"' ?>>Primas a ubicar</option>
+                                                    <option value="bonus_prime" <?php if ($other_filters['prime_type'] == "bonus_prime") echo 'selected="selected"' ?>>Primas para pago de bono</option>
                                                 </select>
                                             </th>
                                             <th>

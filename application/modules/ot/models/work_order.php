@@ -223,9 +223,16 @@ class Work_order extends CI_Model{
 	}
 
 // Last payment imported date
-	public function getLastPaymentImportedDate($ramo){
+	public function getLastPaymentImportedDate($ramo, $requested = "amount"){
 		$this->db->select_max("payment_date");
 		$this->db->where('product_group', $ramo);
+		if ($requested == "amount"){
+			$this->db->where('allocated_prime', null);
+			$this->db->where('bonus_prime', null);
+		} else if ($requested == "allocated_prime" || $requested == "bonus_prime"){
+			$where = 'allocated_prime is not null or bonus_prime is not null';
+			$this->db->where($where);
+		}
 		$query = $this->db->get('payments');
 		$row = $query->row_array();
 		return !empty($row) ? $row["payment_date"] : "0000-00-00";
