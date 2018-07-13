@@ -64,8 +64,8 @@ $ignore_image = '
             <th>Plazo</th>
 
             <th>Agente importado</th>
-            <th>Generación de agente</th>
-            <th>Folio importado</th>
+            <th style="text-align: right; padding-right: 3em">Generación de agente</th>
+            <th style="text-align: right; padding-right: 2em">Folio importado</th>
 <?php if ($is_cartera): ?>
             <th>Año</th>
 <?php endif ?>
@@ -235,16 +235,16 @@ $ignore_image = '
                     <td><?php echo $value->plazo ? $value->plazo : 'No disponible'?></td>
 
                     <td><?php echo $value->imported_agent_name ? $value->imported_agent_name : 'No disponible'?></td>
-                    <td><?php echo $value->agent_generation ? $value->agent_generation : 'No disponible'?></td>
-                    <td><?php echo $value->imported_folio ? $value->imported_folio : 'No disponible'?></td>
+                    <td style="text-align: right; padding-right: 3em"><?php echo $value->agent_generation ? $value->agent_generation : 'No disponible'?></td>
+                    <td style="text-align: right; padding-right: 2em"><?php echo $value->imported_folio ? $value->imported_folio : 'No disponible'?></td>
 
         <?php if ($is_cartera): ?>
                     <td style="text-align: right; padding-right: 2.5em"><?php echo $value->year_prime ?></td>
         <?php endif ?>
 
-                    <td class="prima-value" style="text-align: right; padding-right: 2.5em"><?php echo number_format($value->$prime_requested, 2);?></td>
-                    <td class="prima-value" style="text-align: right; padding-right: 2.5em"><?php echo number_format($value->allocated_prime ,2) ? $value->allocated_prime : '0' ?></td>
-                    <td class="prima-value" style="text-align: right; padding-right: 2.5em"><?php echo number_format($value->bonus_prime,2) ? $value->bonus_prime : '0' ?></td>
+                    <td class="prima-value" style="text-align: right; padding-right: 1.5em"><?php echo number_format($value->amount * (1 + (0 / 100)), 2, '.', ',')?></td>
+                    <td class="prima-value" style="text-align: right; padding-right: 1.5em"><?php echo number_format($value->allocated_prime, 2, '.', ',') ?: '0' ?></td>
+                    <td class="prima-value" style="text-align: right; padding-right: 1.5em"><?php echo number_format($value->bonus_prime, 2, '.', ',') ?: '0' ?></td>
                     <!--<td style="text-align: right; padding-right: 2.5em">-->
         <span style="display: none" class="ori-prima"><?php echo $value->$prime_requested; ?></span>
         <!--<span class="add-perc-display"><//?php echo 100 + $value->add_perc;?></span>
