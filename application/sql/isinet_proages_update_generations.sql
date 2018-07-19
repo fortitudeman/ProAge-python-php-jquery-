@@ -8,59 +8,59 @@ SELECT (TIMESTAMPDIFF(MONTH, '2018-04-02', NOW()) - 4) div 12
 
 -- update generation of agent vida in agent table
 UPDATE `agents`
-SET    generation_vida = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) <= 1 then 'Generación 1'
-						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 2 then 'Generación 2'
-						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 3 then 'Generación 3'
-						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 4 then 'Generación 4'
-						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) >= 5 then 'Consolidado'
+SET    generation_vida = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 0 then 'Generación 1'
+						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 1 then 'Generación 2'
+						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 2 then 'Generación 3'
+						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) = 3 then 'Generación 4'
+						  when (DATE_FORMAT(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(connection_date)), '%Y')+0) >= 4 then 'Consolidado'
 						  end);
 
 -- update generation of agent GMM in agent table
 UPDATE `agents`
-SET    generation_gmm = (case when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 <= 1 then 'Generación 1'
-						  when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 = 2 then 'Generación 2'
-						  when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 = 3 then 'Generación 3'
-						  when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 = 4 then 'Generación 4'
-						  when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 >= 5 then 'Consolidado'
+SET    generation_gmm = (case when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 = 0 then 'Generación 1'
+						  when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 = 1 then 'Generación 2'
+						  when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 = 2 then 'Generación 3'
+						  when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 = 3 then 'Generación 4'
+						  when (TIMESTAMPDIFF(MONTH, connection_date, NOW()) - 4) div 12 >= 4 then 'Consolidado'
 						  end);
 
 -- update generation of agent vida in payments table
 UPDATE agents, payments
-SET    payments.agent_generation = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) <= 1 then 'Generación 1'
-                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 2 then 'Generación 2'
-                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 3 then 'Generación 3'
-                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 4 then 'Generación 4'
-                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) >= 5 then 'Consolidado'
+SET    payments.agent_generation = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 0 then 'Generación 1'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 1 then 'Generación 2'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 2 then 'Generación 3'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 3 then 'Generación 4'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(payments.payment_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) >= 4 then 'Consolidado'
                           end)
 where agents.id = payments.agent_id and payments.product_group = 1;
 
 -- update generation of agent GMM in payments table
 UPDATE agents, payments
-SET    payments.agent_generation = (case when (TIMESTAMPDIFF(MONTH, connection_date, payments.payment_date) - 4) div 12 <= 1 then 'Generación 1'
-                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 = 2 then 'Generación 2'
-                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 = 3 then 'Generación 3'
-                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 = 4 then 'Generación 4'
-                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 >= 5 then 'Consolidado'
+SET    payments.agent_generation = (case when (TIMESTAMPDIFF(MONTH, connection_date, payments.payment_date) - 4) div 12 = 0 then 'Generación 1'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 = 1 then 'Generación 2'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 = 2 then 'Generación 3'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 = 3 then 'Generación 4'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, payments.payment_date) - 4) div 12 >= 4 then 'Consolidado'
                           end)
 where agents.id = payments.agent_id and payments.product_group = 2;
 
 -- update generation of agent vida in work_order table
 UPDATE agents, work_order
-SET    work_order.agent_generation = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) <= 1 then 'Generación 1'
-                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 2 then 'Generación 2'
-                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 3 then 'Generación 3'
-                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 4 then 'Generación 4'
-                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) >= 5 then 'Consolidado'
+SET    work_order.agent_generation = (case when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 0 then 'Generación 1'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 1 then 'Generación 2'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 2 then 'Generación 3'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) = 3 then 'Generación 4'
+                          when (DATE_FORMAT(FROM_DAYS(TO_DAYS(DATE_FORMAT(work_order.creation_date, '%Y-%m-%d %H:%i'))-TO_DAYS(agents.connection_date)), '%Y')+0) >= 4 then 'Consolidado'
                           end)
 where agents.user_id = work_order.user;
 
 -- update generation of agent GMM in work_order table
 UPDATE agents, work_order
-SET    work_order.agent_generation = (case when (TIMESTAMPDIFF(MONTH, connection_date, work_order.creation_date) - 4) div 12 <= 1 then 'Generación 1'
-                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, work_order.creation_date) - 4) div 12 = 2 then 'Generación 2'
-                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, work_order.creation_date) - 4) div 12 = 3 then 'Generación 3'
-                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, work_order.creation_date) - 4) div 12 = 4 then 'Generación 4'
-                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, work_order.creation_date) - 4) div 12 >= 5 then 'Consolidado'
+SET    work_order.agent_generation = (case when (TIMESTAMPDIFF(MONTH, connection_date, work_order.creation_date) - 4) div 12 = 0 then 'Generación 1'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, work_order.creation_date) - 4) div 12 = 1 then 'Generación 2'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, work_order.creation_date) - 4) div 12 = 2 then 'Generación 3'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, work_order.creation_date) - 4) div 12 = 3 then 'Generación 4'
+                          when (TIMESTAMPDIFF(MONTH, agents.connection_date, work_order.creation_date) - 4) div 12 >= 4 then 'Consolidado'
                           end)
 where agents.user_id = work_order.user;
 
