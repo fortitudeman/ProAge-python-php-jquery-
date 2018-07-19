@@ -223,13 +223,13 @@ class Work_order extends CI_Model{
 	}
 
 // Last payment imported date
-	public function getLastPaymentImportedDate($ramo, $requested = "amount"){
+	public function getLastPaymentImportedDate($ramo, $requested = "vida"){
 		$this->db->select_max("payment_date");
 		$this->db->where('product_group', $ramo);
-		if ($requested == "amount"){
-			$this->db->where('allocated_prime', null);
-			$this->db->where('bonus_prime', null);
-		} else if ($requested == "allocated_prime" || $requested == "bonus_prime"){
+		if ($requested == "vida"){
+			$where = 'allocated_prime is null or bonus_prime is null';
+			$this->db->where($where);
+		} else if ($requested == "selo"){
 			$where = 'allocated_prime is not null or bonus_prime is not null';
 			$this->db->where($where);
 		}
