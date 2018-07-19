@@ -23,7 +23,7 @@ $base_url = base_url();
 
 <?php if ($values):
 $is_cartera = ($this->input->post('type') === 'cartera');
-$is_negocio_pai = ($values[0]->pai_business != null) ? true : false;
+$is_negocio_pai = true;
 $base_url = base_url();
 $additional_form_fields = '';
 if (($for_agent_id = $this->input->post('for_agent_id')) !== FALSE)
@@ -262,13 +262,15 @@ $ignore_image = '
         <span style="padding-left: 2.5em; padding-right: 1.5em; text-align: right;"><?php echo $value->business;?></span>
         <?php
         if ($is_negocio_pai):
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;";
+            if ( $access_update && $value->valid_for_report ) :
+                echo '<td style="width: 110px; text-align: right; padding-right: 2.5em">';
+                echo $ignore_image;
+                echo $delete_image;
+            endif;
+            
         else:
-        if ( $access_update && $value->valid_for_report ) :
-            echo '<td style="width: 110px; text-align: right; padding-right: 2.5em">';
-            echo $ignore_image;
-        endif;
-        echo $delete_image;
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;";
+        
         ?>
         <form class="payment_detail_form" method="post" action="#">
         <input type="hidden" name="amount" value="<?php echo $value->$prime_requested ?>" />
