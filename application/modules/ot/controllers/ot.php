@@ -2732,6 +2732,8 @@ private function _process_update_db_policy_prima($current_date, &$field_values)
 {
 	$prima_entered = $this->input->post( 'prima' );
 	$currency_id = $this->input->post('currency_id');
+	$allocated_prime = $this->input->post('allocatedPrime');
+	$bonus_prime = $this->input->post('bonusPrime');
 	if ($currency_id == 2)
 	{
 		// if entered in USD, compute prima by converting to MXN
@@ -2748,6 +2750,8 @@ private function _process_update_db_policy_prima($current_date, &$field_values)
 	$field_values = array_merge($field_values, array(
 		'prima' => $prima,
 		'prima_entered' => $prima_entered,
+		'allocated_prime' => $allocated_prime,
+		'bonus_prime' => $bonus_prime,
 		'currency_id' => $currency_id,
 		'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
 		'last_updated' => $current_date,
@@ -3129,6 +3133,33 @@ public function markAsPaid(){
 	));
 	redirect( 'ot', 'refresh' );
 }
+
+public function getNewPrimas(){
+
+	$product = $this->input->post( 'product' );
+	$prima_entered = $this->input->post( 'prima' );
+	$currency_id = $this->input->post('currency');
+	$period = $this->input->post( 'period' );
+
+	$prima = $this->convertCurrency($prima_entered, $currency_id);
+
+	$primasCal = $this->calculateBonusUbicar($prima,$period, $product);
+	
+	echo json_encode($primasCal);
+}
+
+public function convertCurrency($prima_entered, $currency_id){
+	$this->load->model('exchange_rate_model');
+	return ($currency_id == 2) ? 
+		$this->exchange_rate_model->convert_prima($prima_entered, $currency_id,1) :
+		$prima_entered;
+}
+
+public function calculateBonusUbicar($prima, $period, $product){
+	$this->load->model('user');
+	return $this->user->getPercentagePrimas($prima, $period, $product);
+}
+
 public function recalculate_adjusted($ot){
 	$this->load->model('policy_model');
 	$this->load->model( 'work_order' );

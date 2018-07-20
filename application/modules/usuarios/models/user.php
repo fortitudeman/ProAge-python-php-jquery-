@@ -4456,6 +4456,16 @@ AND
         $q = $this->db->query($sql);
         return $q->row()->generation;
     }
+    
+	public function getPercentagePrimas($prima, $period, $product){
+		$sql = "SELECT ('$prima' * perc.allocated_prime) as allocatedPrime, ('$prima' * perc.bonus_prime) as bonusPrime from products as prod
+			JOIN products_percentage as perc on prod.id = perc.idProducts
+			JOIN products_period as period on perc.id = period.idPerc
+			WHERE prod.id = '$product'
+			and period.period = '$period';";
+		$query = $this->db->query($sql);
+        return $query->row();
+	}
 
 }
 
