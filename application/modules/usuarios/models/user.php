@@ -2832,7 +2832,7 @@ class User extends CI_Model
         $this->rebuildDatesCobranza();
 
 // 1. Get policy numbers that have a payment due in the period selected
-        $this->db->select('policy_adjusted_primas.*, policies.payment_interval_id, policies.uid, policies.name as asegurado, products.name as product_name, work_order.work_order_status_id, work_order.creation_date, policies_vs_users.user_id as agent_ident, users.disabled, work_order.id as work_order_uid');
+        $this->db->select('policy_adjusted_primas.*, policies.payment_interval_id, policies.prima as prima, policies.uid, policies.name as asegurado, products.name as product_name, work_order.work_order_status_id, work_order.creation_date, policies_vs_users.user_id as agent_ident, users.disabled, work_order.id as work_order_uid');
         $this->db->from('policy_adjusted_primas');
         $this->db->join('work_order', 'work_order.policy_id=policy_adjusted_primas.policy_id');
         $this->db->join('policies', 'policies.id=policy_adjusted_primas.policy_id');
@@ -2970,7 +2970,10 @@ class User extends CI_Model
                         'product_name' => $row->product_name,
                         'asegurado' => $row->asegurado,
                         'paid' => 0,
+                        'prima' => $row->prima,
                         'adjusted_prima' => $row->adjusted_prima,
+                        'prima_ubicar' => $row->prima_ubicar,
+                        'prima_bono' => $row->prima_bono,
                         'prima_due_future' => 0,
                         'prima_due_past' => 0,
                         'due_dates_future' => '',

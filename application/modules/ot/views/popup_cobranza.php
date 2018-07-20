@@ -131,6 +131,9 @@ $semaphores = array(
             <th style="width: 20px"></th>
             <th>Poliza</th>
             <th style="text-align: right; padding-right: 3em">Cobranza instalada</th>
+			<th style="text-align: right; padding-right: 3em">Prima total</th>
+			<th style="text-align: right; padding-right: 3em">Prima a ubicar</th>
+			<th style="text-align: right; padding-right: 3em">Prima para pago de bono</th>
             <th>Producto</th>
             <th style="width: 220px">Asegurado</th>
             <th style="width: 150px">Forma de pago</th>
@@ -162,6 +165,27 @@ $semaphores = array(
 				<span>
 
 					<?php echo number_format($policy_cobranza , 2); ?>
+					
+				</span>
+			</td>
+			<td class="cobranza-v" style="text-align: right; padding-right: 2.5em">$ 
+				<span>
+
+					<?php echo number_format($value[prima], 2); ?>
+					
+				</span>
+			</td>
+			<td class="cobranza-v" style="text-align: right; padding-right: 2.5em">$ 
+				<span>
+
+					<?php echo number_format($prima_ubicar , 2); ?>
+					
+				</span>
+			</td>
+			<td class="cobranza-v" style="text-align: right; padding-right: 2.5em">$ 
+				<span>
+
+					<?php echo number_format($prima_bono , 2); ?>
 					
 				</span>
 			</td>
