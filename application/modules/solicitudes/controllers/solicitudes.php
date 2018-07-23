@@ -640,7 +640,6 @@ class solicitudes extends CI_Controller {
 		$this->custom_filters->set_filters_to_save($other_filters);
 		$this->custom_filters->set_current_filters($other_filters);
 		generic_set_report_filter( $other_filters, array() );
-		print_r($other_filters);
 		return $other_filters;
 	}
 }
