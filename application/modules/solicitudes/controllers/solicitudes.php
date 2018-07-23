@@ -214,6 +214,7 @@ class solicitudes extends CI_Controller {
 		$args = array( "not_in" => array("id" => array(2, 3, 10)) );
 		$status = makeDropdown($this->work_order->getStatusArray($args), "name", "name");
 		$agents = makeDropdown($this->user->getAgentsArray(), "id", "name");
+		$gerentes = makeDropdown($this->user->getSelectsGerentes2(),"id","name");
 		unset($ramos[3]);
 
 		$this->load->helper('sort');
@@ -295,6 +296,7 @@ class solicitudes extends CI_Controller {
 			'products' => $products,
 			'status' => $status,
 			'agents' => $agents,
+			'gerentes' => $gerentes,
 			'wo_general' => $work_orders_general,
 			'wo_agents' => $work_orders_agents,
 			'wo_status' => $work_orders_status,
@@ -589,6 +591,7 @@ class solicitudes extends CI_Controller {
 			"periodo" => 2,
 			"ramo" => '',
 			"agent" => '',
+			"gerente" => '',
 			"status" => '',
 			"product" => '',
 
@@ -637,6 +640,8 @@ class solicitudes extends CI_Controller {
 		$this->custom_filters->set_filters_to_save($other_filters);
 		$this->custom_filters->set_current_filters($other_filters);
 		generic_set_report_filter( $other_filters, array() );
+		//echo("<br><br>");
+		//print_r($other_filters);
 		return $other_filters;
 	}
 }
