@@ -104,7 +104,7 @@ if ($is_sales_planning) :?>
 
                             <p class="line" style="margin-bottom: 0">
                               <?php if(isset($last_date)): ?>
-                                Información de pagos Vida actualizada al: <?= $last_date ?>
+                                Información de pagos actualizada al: <?= $last_date ?>
                               <?php endif; ?>
                               &nbsp;
                               <br>
