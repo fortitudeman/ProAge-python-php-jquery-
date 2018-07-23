@@ -622,6 +622,10 @@ class solicitudes extends CI_Controller {
 				$_POST['agent'] === ''))
 				$other_filters['agent'] = $_POST['agent'];
 
+			if (isset($_POST['gerente']) && ($this->form_validation->is_natural_no_zero($_POST['gerente']) || 
+				$_POST['gerente'] === ''))
+				$other_filters['gerente'] = $_POST['gerente'];
+
 			if (isset($_POST['product']) && ($this->form_validation->is_natural_no_zero($_POST['product']) || 
 				$_POST['product'] === ''))
 				$other_filters['product'] = $_POST['product'];
