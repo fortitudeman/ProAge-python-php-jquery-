@@ -14,6 +14,9 @@
 			<th>Agentes:<br />
 			<?= form_dropdown('agent', $agents, $other_filters["agent"], 'id="agent" class="filter-field filter-select" style="width:250px"') ?>
 			</th>
+			<th>Gerentes:<br />
+			<?= form_dropdown('gerente', $gerentes, $other_filters["gerente"], 'id="gerente" class="filter-field filter-select" style="width:250px"') ?>
+			</th>
 			<th>Producto:<br />
 			<?= form_dropdown('product', $products, $other_filters["product"], 'id="product" class="filter-field filter-select" style="width: 150px"') ?>
 			</th>

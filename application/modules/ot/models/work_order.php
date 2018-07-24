@@ -984,6 +984,8 @@ class Work_order extends CI_Model{
    		if(isset($filter["nuevos_negocios"]))
    			$this->db->where_in('work_order_types.patent_id', array(47, 90));
 
+		if(isset($filter["gerente"]))
+		   $this->db->where('users.manager_id',$filter["gerente"]);
    		$ramo = $filter["ramo"];
    		$periodo = (int) $filter["periodo"];
    		$producto = $filter["product"];

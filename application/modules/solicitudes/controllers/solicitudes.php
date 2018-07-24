@@ -214,6 +214,7 @@ class solicitudes extends CI_Controller {
 		$args = array( "not_in" => array("id" => array(2, 3, 10)) );
 		$status = makeDropdown($this->work_order->getStatusArray($args), "name", "name");
 		$agents = makeDropdown($this->user->getAgentsArray(), "id", "name");
+		$gerentes = makeDropdown($this->user->getSelectsGerentes2(),"id","name");
 		unset($ramos[3]);
 
 		$this->load->helper('sort');
@@ -295,6 +296,7 @@ class solicitudes extends CI_Controller {
 			'products' => $products,
 			'status' => $status,
 			'agents' => $agents,
+			'gerentes' => $gerentes,
 			'wo_general' => $work_orders_general,
 			'wo_agents' => $work_orders_agents,
 			'wo_status' => $work_orders_status,
@@ -589,6 +591,7 @@ class solicitudes extends CI_Controller {
 			"periodo" => 2,
 			"ramo" => '',
 			"agent" => '',
+			"gerente" => '',
 			"status" => '',
 			"product" => '',
 
@@ -621,6 +624,10 @@ class solicitudes extends CI_Controller {
 			if (isset($_POST['agent']) && ($this->form_validation->is_natural_no_zero($_POST['agent']) || 
 				$_POST['agent'] === ''))
 				$other_filters['agent'] = $_POST['agent'];
+
+			if (isset($_POST['gerente']) && ($this->form_validation->is_natural_no_zero($_POST['gerente']) || 
+				$_POST['gerente'] === ''))
+				$other_filters['gerente'] = $_POST['gerente'];
 
 			if (isset($_POST['product']) && ($this->form_validation->is_natural_no_zero($_POST['product']) || 
 				$_POST['product'] === ''))
