@@ -182,7 +182,7 @@
                     </div>
                   </div>
 
-                  <div class="control-group allocatedPrime">
+                  <!-- <div class="control-group allocatedPrime">
                     <label class="control-label text-error" for="inputError">Prima para ubicar
                     <br>en pesos mexicanos</label>
                     <div class="controls">
@@ -201,7 +201,7 @@
                       <span id="prima-error" style="display: none">Campo invalido</span>
 
                     </div>
-                  </div>
+                  </div> -->
 
                   <div class="control-group typtramite">
                     <label class="control-label text-error" for="inputError">Conducto<br /><div id="loadpaymentmethod"></div></label>

@@ -89,8 +89,8 @@ $( document ).ready(function() {
 	$( '.subtype' ).hide();
 	$( '#formpoliza' ).hide();
 	$( '.poliza' ).hide();
-	$(".allocatedPrime").hide();
-	$(".bonusPrime").hide();
+	// $(".allocatedPrime").hide();
+	// $(".bonusPrime").hide();
 	
 	
 	
@@ -318,51 +318,51 @@ $( document ).ready(function() {
 		
 	});
 	
-	$('#prima').bind('change', function(){
-		getPrimas();
-	});
+// 	$('#prima').bind('change', function(){
+// 		getPrimas();
+// 	});
 	
-	$('#currency_id').bind('change', function () {
-		getPrimas();
-	});
+// 	$('#currency_id').bind('change', function () {
+// 		getPrimas();
+// 	});
 
-	$('#period').bind('change', function () {
-		getPrimas();
-	});
+// 	$('#period').bind('change', function () {
+// 		getPrimas();
+// 	});
 
-	$('#product_id').bind('change', function () {
-		getPrimas();
-	});
+// 	$('#product_id').bind('change', function () {
+// 		getPrimas();
+// 	});
 
-	function getPrimas(){
-		var Data = {
-			currency: parseInt($("#currency_id").val()),
-			prima: parseInt($("#prima").val()),
-			period: parseInt($("#period").val()),
-			product: parseInt($("#product_id").val())
-		};
-		$.ajax({
-			type: "POST",
-			url: Config.base_url() + 'ot/getNewPrimas',
-			data: Data,
-			success: function (response) {
-				var data = JSON.parse(response);
-				if (data.length != 0) {
-					$("#allocatedPrime").val(data.allocatedPrime);
-					$("#bonusPrime").val(data.bonusPrime);
-					$(".allocatedPrime").show();
-					$(".bonusPrime").show();
-				} else {
-					$(".allocatedPrime").hide();
-					$(".bonusPrime").hide();
-				}
-			}, 
-			error: function () {
-				alert("Invalide!");
-			}
-		});
-	}
-});
+// 	function getPrimas(){
+// 		var Data = {
+// 			currency: parseInt($("#currency_id").val()),
+// 			prima: parseInt($("#prima").val()),
+// 			period: parseInt($("#period").val()),
+// 			product: parseInt($("#product_id").val())
+// 		};
+// 		$.ajax({
+// 			type: "POST",
+// 			url: Config.base_url() + 'ot/getNewPrimas',
+// 			data: Data,
+// 			success: function (response) {
+// 				var data = JSON.parse(response);
+// 				if (data.length != 0) {
+// 					$("#allocatedPrime").val(data.allocatedPrime);
+// 					$("#bonusPrime").val(data.bonusPrime);
+// 					$(".allocatedPrime").show();
+// 					$(".bonusPrime").show();
+// 				} else {
+// 					$(".allocatedPrime").hide();
+// 					$(".bonusPrime").hide();
+// 				}
+// 			}, 
+// 			error: function () {
+// 				alert("Invalide!");
+// 			}
+// 		});
+// 	}
+// });
 
 
 // Adding Fields

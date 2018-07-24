@@ -2732,8 +2732,8 @@ private function _process_update_db_policy_prima($current_date, &$field_values)
 {
 	$prima_entered = $this->input->post( 'prima' );
 	$currency_id = $this->input->post('currency_id');
-	$allocated_prime = $this->input->post('allocatedPrime');
-	$bonus_prime = $this->input->post('bonusPrime');
+	// $allocated_prime = $this->input->post('allocatedPrime');
+	// $bonus_prime = $this->input->post('bonusPrime');
 	if ($currency_id == 2)
 	{
 		// if entered in USD, compute prima by converting to MXN
@@ -2750,8 +2750,8 @@ private function _process_update_db_policy_prima($current_date, &$field_values)
 	$field_values = array_merge($field_values, array(
 		'prima' => $prima,
 		'prima_entered' => $prima_entered,
-		'allocated_prime' => $allocated_prime,
-		'bonus_prime' => $bonus_prime,
+		// 'allocated_prime' => $allocated_prime,
+		// 'bonus_prime' => $bonus_prime,
 		'currency_id' => $currency_id,
 		'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
 		'last_updated' => $current_date,
