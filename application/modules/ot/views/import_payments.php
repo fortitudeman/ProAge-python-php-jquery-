@@ -55,7 +55,9 @@
 	'percentage' => 'Porcentaje',
 	'product_id' => 'Ramo',
 //	'name' => 'Asegurado',
-	'name' => 'Nombre del agente importado'
+	'name' => 'Nombre del agente importado',
+    'allocated_prime' => 'Prima a ubicar',
+    'bonus_prime' => 'Prima para pago de bono',
   );
   $fields_not_shown = array('wathdo', 'imported_folio', 'imported_agent_name', 'import_date', '');
   $is_posted = (count($_POST) > 0);
@@ -75,7 +77,13 @@
 		</li>
 	</ul>
   </div>
-
+  
+<div class="loading-message" style="display:none">
+   <div class="alert alert-info">
+       <small class="text">Importando archivo, por favor espere...</small>
+   </div>
+</div>
+ 
   <div class="row-fluid sortable">
 	<div class="box span12">
 		<div class="box-header well" data-original-title>
@@ -127,13 +135,18 @@
 							</div>
 						</div>
 
-						<label class="control-label text-error" for="inputError">Tipo de archivo: </label>
+						<label class="control-label text-error" for="inputError">Ramo: </label>
 						<div class="controls">
 							<select name="product" class="required" style="width: 8em">
-								<?php if( isset( $products ) and !empty( $products ) ) echo $products; ?>
+                                <option value="">Seleccione</option>
+                                <option value="1">Vida - Previo</option>
+                                <option value="4">Vida - SELO</option>
+                                <option value="2">GMM</option>
+                                <!--<option value="3">Auto</option>-->
+								<?php //if( isset( $products ) and !empty( $products ) ) echo $products; ?>
 							</select>
 						</div>
-
+						<br>
 					</fieldset>
 					<div id="actions-buttons-forms" class="form-actions">
 						<button id="btnImport" type="submit" class="btn btn-primary">Cargar</button>
@@ -167,10 +180,14 @@
 						</div>
 
 						<div class="control-group">
-							<label class="control-label text-error" for="inputError">Tipo de archivo: </label>
+							<label class="control-label text-error" for="inputError">Ramo: </label>
 							<div class="controls">
 								<select name="product_type_delete" class="required" id="product-type-delete" style="width: 8em">
-									<?php if( isset( $products ) and !empty( $products ) ) echo $products; ?>
+                                <option value="">Seleccione</option>
+                                <option value="1">Vida</option>
+                                <option value="2">GMM</option>
+                                <!--<option value="3">Auto</option>-->
+								<?php //if( isset( $products ) and !empty( $products ) ) echo $products; ?>
 								</select>
 							</div>
 						</div>
@@ -441,11 +458,11 @@
 		</div>
 
 		<div id="actions-buttons-forms-send" class="form-actions">
-			<button type="submit" class="btn btn-primary">Importar</button>
+			<button type="submit" onclick="javascript: showLoadingScreen()" class="btn btn-primary">Importar</button>
 			<input type="button" class="btn" onclick="javascript: history.back()" value="Cancelar">
 		</div>
 
-
+    
 	</form>
 
 <?php endif; ?>

@@ -310,7 +310,15 @@ $( document ).ready(function() {
 		parentForm = $(this).parents("form");
 		$( "#cust_period-form" ).dialog( "open" );
 		return false;
-	})
+	});
+
+	$("#lastTrimester").bind("click", function(e) {
+		
+		$("#cust_period_from").val('2018-04-01');
+		$("#cust_period_to").val('2018-06-30');
+		defFrom = $("#cust_period_from").val();
+		defTo = $("#cust_period_to").val();
+	});
 
 	$("#periodo-links a").bind( "click", function(){
 		var periodoHidden = $(this).attr("tabindex");

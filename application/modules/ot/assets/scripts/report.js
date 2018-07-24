@@ -241,14 +241,14 @@ $( document ).ready(function() {
 			otAction = 'mark_ntu';
 			confirmMessage = '¿Esta seguro que quiere marcar la OT como NTU?';
 			errorMessage_1 = 'No se pudo marcar la OT como NTU. Informe a su administrador.';
-			errorMessageOK = 'Se marco la OT como NTU correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?';
+			errorMessageOK = 'Se marco la OT como NTU correctamente. ¿Quiere usted recargar la página web para actualizar las cifras?';
 			url = Config.base_url() + currentModule + '/mark_ntu.html';
 		} else if (current.hasClass('mark-pagada')) {
 			otAction = 'mark-pagada';
 			newStatus = 'pagada';
 			confirmMessage = '¿Esta seguro que quiere marcar la OT como pagada?';
 			errorMessage_1 = 'No se pudo marcar la OT como pagada. Informe a su administrador.';
-			errorMessageOK = 'Se marco la OT como pagada correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?';
+			errorMessageOK = 'Se marco la OT como pagada correctamente. ¿Quiere usted recargar la página web para actualizar las cifras?';
 			url = Config.base_url() + currentModule + '/mark_paid.html';
 		} else
 			return false;
@@ -350,7 +350,7 @@ $( document ).ready(function() {
 							break;
 						case '1':
 						//  refresh the whole page to reflect the change
-							if ( confirm( 'Se pudo cambiar el % adicional para pago de bono correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?' ) )
+							if ( confirm( 'Se pudo cambiar el % adicional para pago de bono correctamente. ¿Quiere usted recargar la página web para actualizar las cifras?' ) )
 								window.location.reload();
 							current.siblings(".add-perc-display").text(entered + 100);
 							var newPrima = parseFloat(current.siblings(".ori-prima").text());
@@ -389,13 +389,13 @@ $( document ).ready(function() {
 			confirmMessage = '¿Esta seguro que desea ignorar el pago ?';
 			errorMessage_1 = 'No se pudo marcar el pago como ignorado. Informe a su administrador.';
 			errorMessage0 = 'Ocurrio un error, no se pudo guardar el pago, consulte a su administrador.';
-			errorMessageOK = 'Se marco el pago como ignorado correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?';
+			errorMessageOK = 'Se marco el pago como ignorado correctamente. ¿Quiere usted recargar la página web para actualizar las cifras?';
 		} else if (current.hasClass('payment_delete')) {
 			paymentAction = 'payment_delete';
 			confirmMessage = '¿Esta seguro que desea borrar el pago ?';
 			errorMessage_1 = 'No se pudo borrar el pago. Informe a su administrador.';
 			errorMessage0 = 'Ocurrio un error, no se pudo borrar el pago, consulte a su administrador.';
-			errorMessageOK = 'Se pudo borrar el pago correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?';
+			errorMessageOK = 'Se pudo borrar el pago correctamente. ¿Quiere usted recargar la página web para actualizar las cifras?';
 		} else
 			return false;
 		if ( confirm( confirmMessage ) ) {
@@ -463,7 +463,7 @@ $( document ).ready(function() {
 							break;
 						case '1':
 						//  refresh the whole page to reflect the change
-							if ( confirm( 'Se pudo cambiar el número de negocios PAI correctamente. ¿Quiere usted racargar la página web para actualizar las cifras?' ) )
+							if ( confirm( 'Se pudo cambiar el número de negocios PAI correctamente. ¿Quiere usted recargar la página web para actualizar las cifras?' ) )
 								window.location.reload();
 
 							break;

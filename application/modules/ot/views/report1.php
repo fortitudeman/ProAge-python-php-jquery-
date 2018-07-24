@@ -38,7 +38,13 @@ $popup_segment = $is_director_module ? 'director' : 'ot';
     $total_cartera = 0;
     $total_negocios_proyectados = 0;
     $total_primas_proyectados = 0;
-	$total_cobranza = 0;
+    $total_cobranza = 0;
+    
+    $prime_tag_array = array('amount' => 'Primas<br>Pagadas','allocated_prime' => 'Primas <br> para Ubicar', 'bonus_prime' => 'Primas para <br> pago de Bono');
+    $prime_tag = $prime_tag_array[$_POST['query']['prime_type']];
+
+    if (empty($_POST['query']['prime_type']))
+        $prime_tag = $prime_tag_array['amount'];
 //    $tata = json_encode($tata);
 	if (is_array($tata))
 		$tata = json_encode($tata);
@@ -50,7 +56,7 @@ $popup_segment = $is_director_module ? 'director' : 'ot';
             <th id="table_agents" class="header_manager" style="text-align:center; ">Agentes</th>
             <th id="total_negocio" class="header_manager" style="width:70px; text-align:center; ">Negocios Pagados</th>
             <th id="total_negocio_pai" class="header_manager" style="width:70px; text-align:center; ">Negocios<br>PAI</th>
-            <th id="total_primas_pagadas" class="header_manager" style="width:100px; text-align:center; ">Primas<br>Pagadas</th>
+            <th id="total_primas_pagadas" class="header_manager" style="width:100px; text-align:center; "><?php echo $prime_tag; ?></th>
             <th id="total_negocios_tramite" class="header_manager" style="width:70px; text-align:center; ">Negocios <br> en  Tramite</th>
             <th id="total_primas_tramite" class="header_manager" style="width:100px; text-align:center; ">Primas <br> en Tramite</th>
             <th id="total_negocio_pendiente" class="header_manager" style="width:70px; text-align:center; ">Negocios Pendientes</th>
@@ -254,7 +260,7 @@ $popup_segment = $is_director_module ? 'director' : 'ot';
             <td class="pagadas-recap" style="width:100px;text-align:right"><div class="numeros">
             <a class="numeros fancybox_blanco" href="javascript:void" title="Haga click aqui para ver los detalles" onclick="payment_popup({type: 'prima'})">
               $<?php echo number_format($total_primas_pagadas,2) ?></a>
-            </div>Primas Pagadas
+            </div><?php echo $prime_tag; ?>
             </td>
             <td style="width:70px; text-align:center;" class="celda_gris_roja tramite-recap"><div class="numeros"><?php echo $total_negocios_tramite ?></div> Negocios en <br>  Tramite</td>
             <td style="width:100px;text-align:right" class="celda_gris_roja tramite-recap"><div class="numeros">$<?php echo number_format($total_primas_tramite) ?></div> En Tramite</td>

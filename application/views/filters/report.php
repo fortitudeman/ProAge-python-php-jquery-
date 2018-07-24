@@ -21,21 +21,21 @@ $base_url = base_url();
                                     <thead>
                                         <tr style="vertical-align: top;">
                                             <th>
-<?php echo $period_fields ?>
-<select id="periodo_form" name="periodo" style="width: 175px" title="Período">
-	  <option value="<?php echo $selected_period ?>"></option>
-</select>
-<input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
-<?php if (isset($selection_filters) && isset($selection_filters['begin']) && isset($selection_filters['end'])): ?>
-<input type="hidden" value="<?php echo $selection_filters['begin'] ?>" id="start-d" name="start_d" />
-<input type="hidden" value="<?php echo $selection_filters['end'] ?>" id="end-d" name="end_d" />
-<?php endif; ?>
+                                                <?php echo $period_fields ?>
+                                                <select id="periodo_form" name="periodo" style="width: 175px" title="Período">
+                                                      <option value="<?php echo $selected_period ?>"></option>
+                                                </select>
+                                                <input type="hidden" value="<?php echo $selected_period ?>" id="periodo" name="query[periodo]" />
+                                                <?php if (isset($selection_filters) && isset($selection_filters['begin']) && isset($selection_filters['end'])): ?>
+                                                <input type="hidden" value="<?php echo $selection_filters['begin'] ?>" id="start-d" name="start_d" />
+                                                <input type="hidden" value="<?php echo $selection_filters['end'] ?>" id="end-d" name="end_d" />
+                                                <?php endif; ?>
 
                                             </th>
                                             <th>
                                                 <input type="hidden" id="gerente_value" value="<?php echo $other_filters['gerente']; ?>" />
                                                 <select id="gerente" name="query[gerente]" class="select" style="width:145px;" onchange="this.form.submit();">
-                                                    <option value="">Todos los gerentes</option>                                        
+                                                    <option value="">   Todos los gerentes</option>                                        
                                                     <?php if (!empty($manager)): foreach ($manager as $value): ?>
 
                                                     <option <?php if ($other_filters['gerente'] == $value['id']) echo 'selected="selected"' ?> value="<?php echo $value['id'] ?>"><?php echo $value['name'] ?></option>
@@ -48,6 +48,13 @@ $base_url = base_url();
                                                     <option value="" <?php if (!$other_filters['agent'] || ($other_filters['agent'] == 1)) echo 'selected="selected"' ?>>Todos los agentes</option>
                                                     <option value="2" <?php if ($other_filters['agent'] == 2) echo 'selected="selected"' ?>>Cancelados</option>
                                                     <option value="3" <?php if ($other_filters['agent'] == 3) echo 'selected="selected"' ?>>Vigentes</option>
+                                                </select>
+                                            </th>
+                                            <th>
+                                                <select id="prime_type" name="query[prime_type]" class="select2" style="width:180px;" onchange="this.form.submit();">
+                                                    <option value="amount" <?php if (!$other_filters['prime_type'] || ($other_filters['prime_type'] == "amount")) echo 'selected="selected"' ?>>Primas totales</option>
+                                                    <option value="allocated_prime" <?php if ($other_filters['prime_type'] == "allocated_prime") echo 'selected="selected"' ?>>Primas a ubicar</option>
+                                                    <option value="bonus_prime" <?php if ($other_filters['prime_type'] == "bonus_prime") echo 'selected="selected"' ?>>Primas para pago de bono</option>
                                                 </select>
                                             </th>
                                             <th>

@@ -379,8 +379,9 @@
 										'policy_id' => $policyId,
 										'percentage' => $_POST['porcentaje'][$i],
 										'since' => date( 'Y-m-d H:i:s' ),
-										'agent_generation_vida' => ($this->input->post( 'ramo' ) == 1) ? $this->user->getGenerationByAgentId($_POST['agent'][$i],false) : NULL,
-										'agent_generation_gmm' => ($this->input->post( 'ramo' ) == 2) ? $this->user->getGenerationByAgentId($_POST['agent'][$i],false) : NULL
+										'agent_generation' => ($this->input->post( 'product_id' ) == 1) ? 
+											$this->user->generationByAgentIdVida($this->input->post('creation_date'),$_POST['agent'][$i]) : 
+											$this->user->generationByAgentIdGmm($this->input->post('creation_date'),$_POST['agent'][$i])
 									);
 
 								if( $this->work_order->create_banch( 'policies_vs_users', $agents ) == false )
@@ -1303,7 +1304,7 @@ public function create_policy(){
 	}
 
 	private $imported_fields = array(
-		1 => array( // Vida
+		1 => array( // Vida / Previo de Ventas
 			4 => 'agent_uidsnational',
 			5 => 'uid',
 			6 => 'year_prime',
@@ -1329,6 +1330,17 @@ public function create_policy(){
 			10 => 'amount',
 //          11 => 'is_new',
 			11 => 'year_prime',
+		),
+		4 => array( // Vida / SELO Produccion
+			4 => 'agent_uidsnational',
+			5 => 'uid',
+			6 => 'year_prime',
+			7 => 'amount',
+			8 => 'payment_date',
+			9 => 'is_new',
+			11 => 'name',
+            15 => 'allocated_prime',
+            16 => 'bonus_prime'
 		),
 	);
 /**
@@ -1395,7 +1407,7 @@ public function import_payments()
 		// Change index
 // 2: "Pre import"
 	if( !empty( $_POST ) and isset( $_POST['process'] ) and $_POST['process'] == 'change-index' ){
-		if (!isset($_POST['product']) || ($_POST['product'] < 1) || ($_POST['product'] > 3))
+		if (!isset($_POST['product']) || ($_POST['product'] < 1) || ($_POST['product'] > 4))
 		{
 			$this->session->set_flashdata( 'message', array(
 				'type' => false,
@@ -1426,6 +1438,8 @@ public function import_payments()
 				$file_array = $this->reader_csv->reader();
 			}
 		}
+        
+        //Section used to check the month included on the imported file
 		$fecha = explode("-", $file_array[0][8]);
 		$posted_month = $file_array[0][10];
 		$posted_year = $fecha[0];
@@ -1607,6 +1621,10 @@ public function import_payments()
 				$controlSaved = true;
 				$i = 1;
 				$message = array( 'type' => false );
+                
+                if ($product == 4){ //If the selectbox option picked was 4 (Vida SELO), then we have to set it as 1 again for proper storing on the database
+                    $product = 1;
+                }
 
 				if (!count($file_array))
 				{
@@ -1628,6 +1646,10 @@ public function import_payments()
 				//$policy = $this->work_order->getPolicyByUid( $item->uid );
 						$payment_date = strtotime( $item->payment_date );
 						$stringed_payment_date = date( 'Y-m-d', $payment_date );
+                        $pai = 0;
+                        if ($item->year_prime == 1){
+                            $pai = $this->user->create_negocio_pai($item->uid, $product, $stringed_payment_date,$item->amount);
+                        }
 						$payment = array(
 							'product_group' => $product,
 							'agent_id' => $item->agent_id,
@@ -1636,12 +1658,18 @@ public function import_payments()
 							'amount' => $item->amount,
 							'payment_date' => $stringed_payment_date,
 							'business' => $item->is_new,
+                            'pai_business' => $pai,
 							'policy_number' => $item->uid,
 							'last_updated' => date( 'Y-m-d H:i:s' ),
 							'date' => date( 'Y-m-d H:i:s' ),
 							'import_date' => $item->import_date,
 							'imported_agent_name' => $item->imported_agent_name,
-							'imported_folio' => $item->imported_folio
+							'imported_folio' => $item->imported_folio,
+							'agent_generation' => ($this->input->post( 'ramo' ) == 1) ? 
+								$this->user->generationByAgentIdVida($stringed_payment_date,$item->agent_id) : 
+								$this->user->generationByAgentIdGmm($stringed_payment_date,$item->agent_id),
+                            'allocated_prime' => $item->allocated_prime,
+                            'bonus_prime' => $item->bonus_prime
 						);
 						$user_id = $this->user->getUserIdByAgentId( $item->agent_id);
 						if (!$user_id)
@@ -1658,7 +1686,6 @@ public function import_payments()
 
 							if ($controlSaved && $policy)
 							{
-								$this->user->create_negocio_pai($item->uid,$product);
 								if ($policy[0]['currency_id'] == 1)
 									$item_amount = $item->amount;
 							else // if policy in USD, convert payment amount from MXN to USD
@@ -2705,6 +2732,8 @@ private function _process_update_db_policy_prima($current_date, &$field_values)
 {
 	$prima_entered = $this->input->post( 'prima' );
 	$currency_id = $this->input->post('currency_id');
+	$allocated_prime = $this->input->post('allocatedPrime');
+	$bonus_prime = $this->input->post('bonusPrime');
 	if ($currency_id == 2)
 	{
 		// if entered in USD, compute prima by converting to MXN
@@ -2721,6 +2750,8 @@ private function _process_update_db_policy_prima($current_date, &$field_values)
 	$field_values = array_merge($field_values, array(
 		'prima' => $prima,
 		'prima_entered' => $prima_entered,
+		'allocated_prime' => $allocated_prime,
+		'bonus_prime' => $bonus_prime,
 		'currency_id' => $currency_id,
 		'payment_interval_id' => $this->input->post( 'payment_interval_id' ),
 		'last_updated' => $current_date,
@@ -3102,6 +3133,33 @@ public function markAsPaid(){
 	));
 	redirect( 'ot', 'refresh' );
 }
+
+public function getNewPrimas(){
+
+	$product = $this->input->post( 'product' );
+	$prima_entered = $this->input->post( 'prima' );
+	$currency_id = $this->input->post('currency');
+	$period = $this->input->post( 'period' );
+
+	$prima = $this->convertCurrency($prima_entered, $currency_id);
+
+	$primasCal = $this->calculateBonusUbicar($prima,$period, $product);
+	
+	echo json_encode($primasCal);
+}
+
+public function convertCurrency($prima_entered, $currency_id){
+	$this->load->model('exchange_rate_model');
+	return ($currency_id == 2) ? 
+		$this->exchange_rate_model->convert_prima($prima_entered, $currency_id,1) :
+		$prima_entered;
+}
+
+public function calculateBonusUbicar($prima, $period, $product){
+	$this->load->model('user');
+	return $this->user->getPercentagePrimas($prima, $period, $product);
+}
+
 public function recalculate_adjusted($ot){
 	$this->load->model('policy_model');
 	$this->load->model( 'work_order' );
@@ -3114,6 +3172,13 @@ public function recalculate_adjusted($ot){
 					$this->uri->segment(5)
 					$this->policy_model->getPolicyBuId();*/
 				}
+      
+  public function rebuildpai(){
+      $total = $this->user->rebuildNegociosPai();
+      if ($total>0){
+        redirect('director.html', 'refresh');
+      }    
+  }   
 				/* End of file ot.php */
 				/* Location: ./application/controllers/ot.php */
 			}

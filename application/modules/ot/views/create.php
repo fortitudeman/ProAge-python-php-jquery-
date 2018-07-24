@@ -182,6 +182,27 @@
                     </div>
                   </div>
 
+                  <div class="control-group allocatedPrime">
+                    <label class="control-label text-error" for="inputError">Prima para ubicar
+                    <br>en pesos mexicanos</label>
+                    <div class="controls">
+
+                      <input style="height: 1.7em; outline: none" type="number" pattern="[0-9]+([\.][0-9]+)?" step="0.01" value="<?php echo set_value('allocatedPrime'); ?>" class="input-xlarge focused" id="allocatedPrime" name="allocatedPrime" readonly />
+                      <span id="prima-error" style="display: none">Campo invalido</span>
+
+                    </div>
+                  </div>
+
+                  <div class="control-group bonusPrime">
+                    <label class="control-label text-error" for="inputError">Prima para pago de bono
+                    <br>en pesos mexicanos</label>
+                    <div class="controls">
+                      <input style="height: 1.7em; outline: none" type="number" pattern="[0-9]+([\.][0-9]+)?" step="0.01" value="<?php echo set_value('bonusPrime'); ?>" class="input-xlarge focused" id="bonusPrime" name="bonusPrime" readonly />
+                      <span id="prima-error" style="display: none">Campo invalido</span>
+
+                    </div>
+                  </div>
+
                   <div class="control-group typtramite">
                     <label class="control-label text-error" for="inputError">Conducto<br /><div id="loadpaymentmethod"></div></label>
                     <div class="controls">

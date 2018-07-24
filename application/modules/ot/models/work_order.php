@@ -223,9 +223,16 @@ class Work_order extends CI_Model{
 	}
 
 // Last payment imported date
-	public function getLastPaymentImportedDate($ramo){
+	public function getLastPaymentImportedDate($ramo, $requested = "vida"){
 		$this->db->select_max("payment_date");
 		$this->db->where('product_group', $ramo);
+		if ($requested == "vida"){
+			$where = 'allocated_prime is null or bonus_prime is null';
+			$this->db->where($where);
+		} else if ($requested == "selo"){
+			$where = 'allocated_prime is not null or bonus_prime is not null';
+			$this->db->where($where);
+		}
 		$query = $this->db->get('payments');
 		$row = $query->row_array();
 		return !empty($row) ? $row["payment_date"] : "0000-00-00";
@@ -977,6 +984,8 @@ class Work_order extends CI_Model{
    		if(isset($filter["nuevos_negocios"]))
    			$this->db->where_in('work_order_types.patent_id', array(47, 90));
 
+		if(isset($filter["gerente"]))
+		   $this->db->where('users.manager_id',$filter["gerente"]);
    		$ramo = $filter["ramo"];
    		$periodo = (int) $filter["periodo"];
    		$producto = $filter["product"];

@@ -40,6 +40,8 @@
             <th style="width:90px;"><div>Conducto</div></th>
             <th style="width:90px;"><div>Moneda</div></th>
             <th style="width:90px;"><div>Prima</div></th>
+            <th style="width:90px;"><div>Prima a ubicar</div></th>
+            <th style="width:90px;"><div>Prima para <br>pago de bono</div></th>
             <th>&nbsp;</th>
         </tr>
     </thead>

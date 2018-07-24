@@ -473,7 +473,7 @@ implode(', ', $ramo_tramite_types) . '
 		$this->misc_filters['agent_name'] = $this->agent->agent_id;
 
 		$agent_array = array();
-		$other_filters = array();
+		$other_filters = array('prime_type' => 'amount');
 		$default_week = array();
 
 		$filter = $this->_init_filter();
@@ -722,7 +722,8 @@ implode(', ', $ramo_tramite_types) . '
 				$data['values'] = $this->user->getNegocioDetails( $this->input->post('for_agent_id'), $filter );
 				break;
 			case 'negociopai':
-				$data['values'] = $this->user->getNegocioPai( $this->input->post('for_agent_id'), $filter );
+				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter, true);
+				$data['negociopai'] = array ("negociopai" => true);
 				break;
 			case 'prima':
 				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );
@@ -841,10 +842,10 @@ implode(', ', $ramo_tramite_types) . '
 	}
 
 //////// Below are page duplicated in ot, agent and director modules
-	public function change_negocio_pai()
+    public function change_negocio_pai()
 	{
 		if ( !$this->input->is_ajax_request() )
-			redirect( 'agent.html', 'refresh' );
+			redirect( 'director.html', 'refresh' );
 
 		if ( !$this->access_update )
 		{
@@ -858,7 +859,7 @@ implode(', ', $ramo_tramite_types) . '
 			foreach ($negocio_pai as $id => $value)
 			{
 				$result = $this->work_order->generic_update(
-					'policy_negocio_pai', array('negocio_pai' => (int) $value), array('id' => (int) $id), 1, 0) ?
+					'payments', array('pai_business' => (int) $value), array('pay_tbl_id' => (int)$id), 1, 0) ?
 						'1' : '0';
 				echo json_encode($result);
 				exit();
@@ -929,7 +930,8 @@ implode(', ', $ramo_tramite_types) . '
 	{
 		$default_filter = get_filter_period();
 		$this->other_filters = array(
-			'ramo' => 1);
+			'ramo' => 1,
+			'prime_type' => 'amount');
 		get_generic_filter($this->other_filters, array());
 		$filter = array('ramo' => 1, 'periodo' => get_filter_period());
 		if (count($_POST))
@@ -944,6 +946,9 @@ implode(', ', $ramo_tramite_types) . '
 				$filter['periodo'] = $_POST['query']['periodo'];
 			}
 			$filters_to_save = array();
+			if (isset($_POST['query']['prime_type'])) {
+				$filters_to_save['prime_type'] = $_POST['query']['prime_type'];
+			}
 			if ( isset($_POST['query']['ramo']) && $this->form_validation->is_natural_no_zero($_POST['query']['ramo']) &&
 				($_POST['query']['ramo'] <= 3) )
 			{

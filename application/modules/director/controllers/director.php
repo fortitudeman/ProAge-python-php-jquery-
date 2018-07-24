@@ -386,25 +386,25 @@ class Director extends CI_Controller {
 		$base_url = base_url();
 
 		$report_lines = '';
-
+		$imported_date_requested = "amount";
 		$ramo = 1;
 		if (isset($this->query_filters['query']) && isset($this->query_filters['query']['ramo']))
 			$ramo = $this->query_filters['query']['ramo'];
-		$imported_date = $this->work_order->getLastPaymentImportedDate($ramo);
-
+		$imported_date = $this->work_order->getLastPaymentImportedDate($ramo, "vida");
+		$imported_date_selo = $this->work_order->getLastPaymentImportedDate($ramo, "selo");
 		if ($page == 'sales_planning')
 		{
 			unset( $data[0] );
 			switch ($ramo)
 			{
 				case 2:
-					$report_lines = $this->load->view('ot/report2', array('data' => $data, 'tata' => 2, "last_date" => $imported_date), TRUE);
+					$report_lines = $this->load->view('ot/report2', array('data' => $data, 'tata' => 2, "last_date" => $imported_date, "last_date_selo" => $imported_date_selo), TRUE);
 				break;
 				case 3:
 					$report_lines = $this->load->view('ot/report3', array('data' => $data, 'tata' => 3), TRUE);
 				break;
 				default:
-					$report_lines = $this->load->view('ot/report1', array('data' => $data, 'tata' => 1, "last_date" => $imported_date), TRUE);
+					$report_lines = $this->load->view('ot/report1', array('data' => $data, 'tata' => 1, "last_date" => $imported_date, "last_date_selo" => $imported_date_selo), TRUE);
 				break;
 			}
 		}
@@ -956,13 +956,16 @@ $( document ).ready( function(){
 			$filter['query'] = $posted_filter_query;
 
 		$request_type = $this->input->post('type');
+        
+        //Switch statement to determine what kind of popup will get called, depending on the type requested by post.
 		switch ( $request_type )
 		{
 			case 'negocio':
 				$data['values'] = $this->user->getNegocioDetails( $this->input->post('for_agent_id'), $filter );
 				break;
 			case 'negociopai':
-				$data['values'] = $this->user->getNegocioPai( $this->input->post('for_agent_id'), $filter );
+				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter, true);
+				$data['negociopai'] = array ("negociopai" => true);
 				break;
 			case 'prima':
 				$data['values'] = $this->user->getPrimaDetails( $this->input->post('for_agent_id'), $filter );
@@ -1257,6 +1260,7 @@ $( document ).ready( function(){
 			'ramo' => 1,
 			'gerente' => '',
 			'agent' => '',
+            'prime_type' => 'amount',
 			'generacion' => '', // not sure if this should not be 1 instead
 			'agent_name' => '',
 			'policy_num' => '',
@@ -1301,7 +1305,9 @@ $( document ).ready( function(){
 			if ( isset($_POST['activity_view']) && 
 				(($_POST['activity_view'] == 'normal') || ($_POST['activity_view'] != 'efectividad')) )
 				$filters_to_save['activity_view'] = $_POST['activity_view'];
-
+			if (isset($_POST['query']['prime_type'])) {
+				$filters_to_save['prime_type'] = $_POST['query']['prime_type'];
+			}
 			if (isset($_POST['coordinator_name']))
 				$filters_to_save['coordinators'] = extract_coordinator_name($_POST['coordinator_name']);
 			$this->custom_filters->set_filters_to_save($filters_to_save);
@@ -1853,33 +1859,30 @@ implode(', ', $ramo_tramite_types) . '
 			echo $result;
 			return;
 		}
-		$generation_vida = NULL;
-		$generation_gmm = NULL;
 		$now = date( 'Y-m-d H:i:s' );
 		$product_group = $this->input->post('product_group');
 		$parts = explode('[ID: ', $this->input->post('agent_id'));
 		$agent_id = str_replace(']', '', $parts[1]);
 		$valid_for_report = $this->input->post('valid_for_report');
 		$payment_date = $this->input->post('payment_date');
-		if ($product_group == 1){
-			$type = 'national';
-			$generation_vida = $this->user->getGenerationByAgentId($agent_id);
-		}else{
-			$type = 'provincial';
-			$generation_gmm = $this->user->getGenerationByAgentId($agent_id,false);
-		}
+		$amount = $this->input->post('amount');
 
 		$folio = $this->user->generic_get('agent_uids',
 			array('agent_id' => $agent_id, 'type' => $type),
 				1, 0, 'id asc');
+        $pai = 0;
+        if ($this->input->post('year_prime') == 1){
+            $pai = $this->user->create_negocio_pai($payment['policy_number'],$product_group, $payment_date, $amount);
+        }
 		$payment = array(
 			'product_group' => $product_group,
 			'agent_id' => $agent_id,
 			'year_prime' => $this->input->post('year_prime'),
 			'currency_id' => 1,
-			'amount' => $this->input->post('amount'),
+			'amount' => $amount,
 			'payment_date' => $payment_date,
 			'business' => (int)$this->input->post('business'),
+            'pai_business' => $pai,
 			'policy_number' => trim($this->input->post('policy_number')),
 			'valid_for_report' => $valid_for_report ? 1 : 0,
 			'last_updated' => $now,
@@ -1887,15 +1890,15 @@ implode(', ', $ramo_tramite_types) . '
 			'import_date' => $payment_date,
 			'imported_agent_name' => trim($parts[0]),
 			'imported_folio' => isset($folio[0]) ? $folio[0]->uid : '',
-			'agent_generation_vida' => $generation_vida,
-			'agent_generation_gmm' => $generation_gmm
+			'agent_generation' => ($product_group == 1) ? 
+				$this->user->generationByAgentIdVida($payment_date,$agent_id) : 
+				$this->user->generationByAgentIdGmm($payment_date,$agent_id)
 		);
-
+        
 		$user_id = $this->user->getUserIdByAgentId( $agent_id);
 
 		if ($user_id && ($result = $this->work_order->create( 'payments', $payment )))
 		{
-            $this->user->create_negocio_pai($payment['policy_number'],$product_group);
 			$policy = $this->work_order->getPolicyByUid(  $payment['policy_number'] );
 			if ($policy && 
 				( (float)$policy[0]['prima'] >= (float)$payment['amount'] ))
@@ -1916,7 +1919,9 @@ implode(', ', $ramo_tramite_types) . '
 	}
 
 //////// Below are page duplicated in ot, agent and director modules
-	public function change_negocio_pai()
+    
+	//Function used to update negocio pai using the select box.
+    public function change_negocio_pai()
 	{
 		if ( !$this->input->is_ajax_request() )
 			redirect( 'director.html', 'refresh' );
@@ -1933,7 +1938,7 @@ implode(', ', $ramo_tramite_types) . '
 			foreach ($negocio_pai as $id => $value)
 			{
 				$result = $this->work_order->generic_update(
-					'policy_negocio_pai', array('negocio_pai' => (int) $value), array('policy_number' => (int) $id), 1, 0) ?
+					'payments', array('pai_business' => (int) $value), array('pay_tbl_id' => (int)$id), 1, 0) ?
 						'1' : '0';
 				echo json_encode($result);
 				exit();

@@ -107,6 +107,11 @@ if ($is_sales_planning) :?>
                                 Información de pagos actualizada al: <?= $last_date ?>
                               <?php endif; ?>
                               &nbsp;
+                              <br>
+                              <?php if(isset($last_date)): ?>
+                                Información de pagos SELO actualizada al: <?= $last_date_selo ?>
+                              <?php endif; ?>
+                              &nbsp;
                             </p>
                             <form id="form" method="post">
 								<input type="hidden" name="query[ramo]" id="ramo" value="<?php echo $other_filters['ramo'] ?>" />
